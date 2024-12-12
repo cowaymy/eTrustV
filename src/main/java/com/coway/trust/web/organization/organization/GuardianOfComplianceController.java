@@ -283,24 +283,28 @@ public class GuardianOfComplianceController {
 	@RequestMapping(value = "/guardianofComplianceViewPop.do")
 	public String GuardianofComplianceViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		logger.debug("guardianofComplianceViewPop.............");
+		logger.debug("params : {}", params);
+
 		params.put("typeId", "1389");
 		params.put("inputId", "1");
 		params.put("separator", "-");
 
 		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
-		params.put("typeId", "1390");
-		params.put("inputId", "1");
-		params.put("separator", "-");
-
-		List<EgovMap> documentsCodeList = guardianOfComplianceService.selectReasonCodeList(params);
-
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
-		model.put("documentsCodeList", documentsCodeList);
 
 		EgovMap guardianofCompliance = guardianOfComplianceService.selectGuardianofComplianceInfo(params);
 
 		model.put("guardianofCompliance", guardianofCompliance);
+
+		params.put("CASE_CATEGORY", guardianofCompliance.get("reqstCtgry"));
+
+		List<EgovMap> documentsCodeList = guardianOfComplianceService.getSubCatList(params);
+
+		model.put("documentsCodeList", documentsCodeList);
+
+		model.put("pageAuth", params.get("isMod"));
 
 		// 호출될 화면
 		return "organization/organization/guardianofComplianceViewPop";
@@ -315,18 +319,17 @@ public class GuardianOfComplianceController {
 
 		List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
 
-		params.put("typeId", "1390");
-		params.put("inputId", "1");
-		params.put("separator", "-");
-
-		List<EgovMap> documentsCodeList = guardianOfComplianceService.selectReasonCodeList(params);
-
 		model.put("caseCategoryCodeList", caseCategoryCodeList);
-		model.put("documentsCodeList", documentsCodeList);
 
 		EgovMap guardianofCompliance = guardianOfComplianceService.selectGuardianofComplianceInfo(params);
 
 		model.put("guardianofCompliance", guardianofCompliance);
+
+		params.put("CASE_CATEGORY", guardianofCompliance.get("reqstCtgry"));
+
+		List<EgovMap> documentsCodeList = guardianOfComplianceService.getSubCatList(params);
+
+		model.put("documentsCodeList", documentsCodeList);
 
 		// 호출될 화면
 		return "organization/organization/guardianofComplianceViewLimitPop";
@@ -464,4 +467,87 @@ public class GuardianOfComplianceController {
 
 		return ResponseEntity.ok(fileInfo);
 	}
+
+	  @RequestMapping(value = "/getSubCatList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getSubCatList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getSubCatList.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getSubCatList.do===============================");
+
+	    List<EgovMap> getErrDetilList = guardianOfComplianceService.getSubCatList(params);
+	    return ResponseEntity.ok(getErrDetilList);
+	  }
+
+	    @RequestMapping(value = "/guardianofComplianceApproveLinePop.do")
+	    public String guardianofComplianceApproveLinePop(@RequestParam Map<String, Object> params, ModelMap model) {
+	        logger.debug("guardianofComplianceApproveLinePop.do");
+	        logger.debug("params :: " + params);
+
+	        return "organization/organization/guardianofComplianceApproveLinePop";
+	    }
+
+		@RequestMapping(value = "/guardianofComplianceApprovalPop.do")
+		public String guardianofComplianceApprovalPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+			params.put("typeId", "1389");
+			params.put("inputId", "1");
+			params.put("separator", "-");
+
+			List<EgovMap> caseCategoryCodeList = guardianOfComplianceService.selectReasonCodeList(params);
+
+			model.put("caseCategoryCodeList", caseCategoryCodeList);
+
+			EgovMap guardianofCompliance = guardianOfComplianceService.selectGuardianofComplianceInfo(params);
+
+			model.put("guardianofCompliance", guardianofCompliance);
+
+			params.put("CASE_CATEGORY", guardianofCompliance.get("reqstCtgry"));
+
+			List<EgovMap> documentsCodeList = guardianOfComplianceService.getSubCatList(params);
+
+			model.put("documentsCodeList", documentsCodeList);
+
+			// 호출될 화면
+			return "organization/organization/guardianofComplianceApprovalPop";
+		}
+
+		@RequestMapping(value = "/gocApprove.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> gocApprove(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+			logger.debug("gocApprove====================================>>  " + params);
+
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+			params.put("userName", sessionVO.getUserName());
+			params.put("userFullname", sessionVO.getUserFullname());
+
+
+			String comPlianceNo = guardianOfComplianceService.gocApprove(params, sessionVO);
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(comPlianceNo);
+			return ResponseEntity.ok(message);
+		}
+
+		@RequestMapping(value = "/gocReject.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> gocReject(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+			logger.debug("gocReject====================================>>  " + params);
+
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+			params.put("userName", sessionVO.getUserName());
+			params.put("userFullname", sessionVO.getUserFullname());
+
+
+			guardianOfComplianceService.gocReject(params, sessionVO);
+
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(params);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			return ResponseEntity.ok(message);
+		}
 }

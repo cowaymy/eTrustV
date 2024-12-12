@@ -38,4 +38,10 @@ public interface GuardianOfComplianceService {
 
 	List<EgovMap> selectGuardianofComplianceListSearch(Map<String, Object> params);
 
+	List<EgovMap> getSubCatList(Map<String, Object> params);
+
+	String gocApprove(Map<String, Object> params,SessionVO sessionVo);
+
+	void gocReject(Map<String, Object> params,SessionVO sessionVo);
+
 }

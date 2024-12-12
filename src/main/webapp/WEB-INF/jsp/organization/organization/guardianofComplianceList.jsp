@@ -16,6 +16,7 @@ $(document).ready(function() {
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {
 	    requestid = AUIGrid.getCellValue(myGridID, event.rowIndex, "requestid");
+	    isMod = "${PAGE_AUTH.funcUserDefine4}";
 	});
 
 });
@@ -39,9 +40,26 @@ function ComplianceListGrid() {
         headerText : "Request Status",
         editable : false,
         width : 150
-    }, {
+    },{
         dataField : "requestcreateat",
         headerText : "Request Date",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },{
+        dataField : "approvalName",
+        headerText : "Approval by",
+        editable : false,
+        width : 180
+    },{
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : 150
+    },{
+        dataField : "approvalDatetime",
+        headerText : "Approval Date",
         editable : false,
         width : 150,
         dataType : "date",
@@ -51,18 +69,25 @@ function ComplianceListGrid() {
         headerText : "Order No",
         editable : false,
         width : 200
-    },{
+    },
+    /*{
         dataField : "comboOrdNo",
         headerText : "Order No2",
         editable : false,
         width : 200
-    },   {
+    },*/
+    {
         dataField : "memCode",
         headerText : "Person Involved",
         editable : false,
         width : 150,
         visible : true
-    }, {
+    },{
+        dataField : "picName",
+        headerText : "PIC",
+        editable : false,
+        width : 150
+    },{
         dataField : "state",
         headerText : "Installation State",
         editable : false,
@@ -72,13 +97,20 @@ function ComplianceListGrid() {
         headerText : "Case Category",
         editable : false,
         width : 200
-    }, {
+    },{
+        dataField : "resnDescSub",
+        headerText : "Sub Category",
+        editable : false,
+        width : 200
+    },
+    {
         dataField : "requestrefdate",
         headerText : "Complaint Date",
         editable : false,
         width : 150,
         dataType : "date",
-        formatString : "dd/mm/yyyy"
+        formatString : "dd/mm/yyyy",
+        visible : false
     },
     /////////////////////////// ADDITIONAL FIELD ////////////////////////////// ALEX-21072020
    /*  {
@@ -101,18 +133,22 @@ function ComplianceListGrid() {
         visible : false
     }, */ {
         dataField : "respnsUpdated",
-        headerText : "Responded at",
+        headerText : "Responded Date",
         editable : false,
         width : 150,
         dataType : "date",
         formatString : "dd/mm/yyyy",
-        visible : false
-    }, {
+    },{
         dataField : "respnsMsg",
         headerText : "Remark",
         editable : false,
         width : 150,
         visible : false
+    },{
+        dataField : "caseNo",
+        headerText : "Case No",
+        editable : false,
+        width : 150,
     }
     /////////////////////////// ADDITIONAL FIELD //////////////////////////////
     ];
@@ -159,28 +195,62 @@ function ExcelListGrid() {
         editable : false,
         width : 150
     }, {
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : 150
+    },{
+        dataField : "approvalUserId",
+        headerText : "Approval User Id",
+        visible  : false,
+        editable : false,
+    },{
         dataField : "requestcreateat",
         headerText : "Request Date",
         editable : false,
         width : 150,
         dataType : "date",
         formatString : "dd/mm/yyyy"
-    }, {
+    },{
+        dataField : "approvalUserId",
+        headerText : "Approval by",
+        visible  : false,
+        editable : false,
+    },{
+        dataField : "approvalStatus",
+        headerText : "Approval Status",
+        editable : false,
+        width : 150
+    },{
+        dataField : "approvalDatetime",
+        headerText : "Approval Date",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },{
         dataField : "salesOrdNo",
         headerText : "Order No",
         editable : false,
         width : 200
-    }, {
+    },
+    /* {
         dataField : "comboOrdNo",
         headerText : "Order No2",
         editable : false,
         width : 200
-    }, {
+    }, */
+    {
         dataField : "memCode",
         headerText : "Person Involved",
         editable : false,
         width : 150
-    }, {
+    },{
+        dataField : "picName",
+        headerText : "PIC",
+        editable : false,
+        width : 150
+    },{
         dataField : "state",
         headerText : "Installation State",
         editable : false,
@@ -190,7 +260,14 @@ function ExcelListGrid() {
         headerText : "Case Category",
         editable : false,
         width : 200
-    }, {
+    },{
+        dataField : "resnDescSub",
+        headerText : "Sub Category",
+        editable : false,
+        width : 200
+    },
+    /*
+    {
         dataField : "requestrefdate",
         headerText : "Complaint Date",
         editable : false,
@@ -198,6 +275,7 @@ function ExcelListGrid() {
         dataType : "date",
         formatString : "dd/mm/yyyy"
     },
+    */
     /////////////////////////// ADDITIONAL FIELD ////////////////////////////// ALEX-21072020
     /*
     {
@@ -219,7 +297,7 @@ function ExcelListGrid() {
         width : 150
     }, {
         dataField : "respnsUpdated",
-        headerText : "Responded at",
+        headerText : "Responded Date",
         editable : false,
         width : 150,
         dataType : "date",
@@ -310,7 +388,7 @@ function fn_complianceView() {
             return;
         }
 
-    Common.popupDiv("/organization/compliance/guardianofComplianceViewPop.do?reqstId=" + requestid, null, null, true, '_compensationEditPop');
+    Common.popupDiv("/organization/compliance/guardianofComplianceViewPop.do?reqstId=" + requestid  + "&isMod=" + isMod, null, null, true, '_compensationEditPop');
 
 }
 
@@ -322,8 +400,27 @@ function fn_complianceViewLimit() {
             return;
         }
 
-    Common.popupDiv("/organization/compliance/guardianofComplianceViewLimitPop.do?reqstId=" + requestid, null, null, true, '_compensationEditPop');
+    Common.popupDiv("/organization/compliance/guardianofComplianceViewLimitPop.do?reqstId=" + requestid + "&isMod=" + isMod, null, null, true, '_compensationEditPop');
 
+}
+
+function fn_Approve(event, rowIndex) {
+
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    if (selectedItems.length <= 0) {
+        Common.alert("<b>No request selected.</b>");
+        return;
+    }
+
+	 var USER_ID     = '${SESSION_INFO.userId}';
+	 var approvalUserId = selectedItems[0].item.approvalUserId
+
+	if(USER_ID == approvalUserId){
+		 Common.popupDiv("/organization/compliance/guardianofComplianceApprovalPop.do?reqstId=" + requestid + "&isMod=" + isMod, null, null, true, '_compensationEditPop');
+    }else{
+        Common.alert("Approval User not match");
+        return false;
+    }
 }
 
 $(function() {
@@ -345,6 +442,11 @@ $("#download").click(function() {
 function fn_setOptGrpClass() {
     $("optgroup").attr("class" , "optgroup_text")
 }
+
+function getSelectedRowIndex() {
+    return AUIGrid.getSelectedIndex(myGridID); // This should return the row index of the selected row
+}
+
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -363,6 +465,9 @@ function fn_setOptGrpClass() {
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceViewLimit()"><span class="view"></span>Requester View</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Approve(event, getSelectedRowIndex())"><span class="view"></span>Approval</a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>

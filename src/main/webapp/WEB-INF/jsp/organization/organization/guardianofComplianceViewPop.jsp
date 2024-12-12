@@ -14,11 +14,14 @@ $(document).ready(function(){
 
 	doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'changePerson', 'S', 'fn_setOptGrpClass');//product 생성
 
+	doGetComboData('/common/selectCodeList.do', { groupCode : 608 , orderValue : 'CODE'}, '${guardianofCompliance.action}', 'cmbactionStatus', 'S');
+	doGetComboData('/common/selectCodeList.do', { groupCode : 607 , orderValue : 'CODE'}, '${guardianofCompliance.eyeReward}', 'cmbeyeward', 'S');
+
     var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
     $("#caseCategory option[value='"+ reqstCtgry +"']").attr("selected", true);
 
     var reqstCtgrySub = "${guardianofCompliance.reqstCtgrySub}";
-    $("#docType option[value='"+ reqstCtgrySub +"']").attr("selected", true);
+    $("#caseCategory2 option[value='"+ reqstCtgrySub +"']").attr("selected", true);
 
     var reqstStus = "${guardianofCompliance.reqstStusId}";
 
@@ -41,7 +44,7 @@ $(document).ready(function(){
         }
     }
 
-    console.log("Person In Charge :: " + "${guardianofCompliance.personInChrg}");
+    //console.log("Person In Charge :: " + "${guardianofCompliance.personInChrg}");
     $("#changePerson option[value='" + "${guardianofCompliance.personInChrg}" +"']").attr("selected", true);
 
     $("#cmbreqStatus option[value='" + "${guardianofCompliance.reqstStusId}" + "']").attr('selected', true);
@@ -55,6 +58,23 @@ function fn_GuardianRemarkGrid() {
         editable : false,
         width : 80
     }, {
+        dataField : "approvalStusId",
+        headerText : "Approval Status",
+        editable : false,
+        width : 120
+    },{
+        dataField : "approvalUserName",
+        headerText : "Approval By",
+        editable : false,
+        width : 120
+    },{
+        dataField : "approvalDatetime",
+        headerText : "Approval Date",
+        editable : false,
+        width : 120,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },{
         dataField : "respnsMsg",
         headerText : "Remark",
         editable : false,
@@ -130,19 +150,29 @@ function fn_guardianRemark(){
     });
 }
 
-function fn_caseChange (val) {
+function fn_caseChange(val) {
 
-    if(val == '2144' ){
-        $("select[name=docType]").removeAttr("disabled");
-        $("select[name=docType]").removeClass("w100p disabled");
-        $("select[name=docType]").addClass("w100p");
-     }else{
-          $("#docType").val("");
-          $("select[name=docType]").attr('disabled', 'disabled');
-          $("select[name=docType]").addClass("disabled");
-          //$("select[name=docType]").addClass("w100p");
-     }
+	var CASE_CATEGORY = val;
 
+    $("#caseCategory2").empty();
+
+    $.ajax({
+        url: '/organization/compliance/getSubCatList.do',
+        method: 'GET',
+        data: { CASE_CATEGORY: CASE_CATEGORY },
+        success: function(response) {
+
+            $("#caseCategory2").empty();
+            $("#caseCategory2").append('<option value="">Choose One</option>');
+
+            $.each(response, function(index, item) {
+                $("#caseCategory2").append('<option value="' + item.codeId + '">' + item.codeName + '</option>');
+            });
+        },
+        error: function() {
+            console.error("Error fetching the subcategories.");
+        }
+    });
 }
 
 function fn_validation(){
@@ -151,8 +181,8 @@ function fn_validation(){
             return false;
     }
     if($("#caseCategory").val() == "2144"){
-        if($("#docType").val() == ""){
-            Common.alert("Please select a case detail");
+        if($("#caseCategory2").val() == "1"){
+            Common.alert("Please select a sub case");
             return false;
         }
     }
@@ -177,42 +207,92 @@ function fn_validation(){
 }
 
 function fn_save(){
-    if(fn_validation()){
-    	var formData = Common.getFormData("saveForm");
-    	var obj = $("#saveForm").serializeJSON();
-	    $.each(obj, function(key, value) {
-	        formData.append(key, value);
-	      });
+	  if ($("#cmbreqStatus").val() == '36' || $("#cmbreqStatus").val() == '10') {
+	        // Open the approval line popup
+	        fn_approveLinePop(function(approvalResult) {
 
-        Common.ajaxFile("/organization/compliance/saveGuardianCompliance2.do",formData , function(result) {
-            console.log("성공.");
-            Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
-        });
-        /*
-    	if($("#cmbreqStatus").val() == '36'){
-    		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
-                console.log("성공.");
-                Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
-    	});
-    	}
-    	else{
-    		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
-                console.log("성공.");
-                if(result.data){
-                    Common.alert("Compliance call Log saved.<br />", fn_guardianViewPopClose());
-                }else{
-                    Common.alert("Compliance call Log saved Fail.<br />");
+	            // Only continue if the approval is finished
+	            if (approvalResult === 'submit') {  // Proceed only if the approval is successful
+
+	                if (fn_validation()) {
+
+	                    var formData = Common.getFormData("saveForm");
+	                    var obj = $("#saveForm").serializeJSON();
+	                    $.each(obj, function(key, value) {
+	                        formData.append(key, value);
+	                    });
+// console.log("saving...");
+// console.log(formData.get("memCodeField"));
+	                    Common.ajaxFile("/organization/compliance/saveGuardianCompliance2.do", formData, function(result) {
+	                        console.log("성공.");
+	                        if ($("#cmbreqStatus").val() == '1' || $("#cmbreqStatus").val() == '60') {
+//     	                        Common.alert("Compliance call Log saved.<br /> Case No : " + result.data + "<br />", function() {
+//     	                            fn_guardianViewPopClose();
+//     	                        });
+	                            Common.alert("Compliance Saved.<br /> ", function() {
+	                            	fn_guardianViewPopClose();
+	                            });
+	                        }else{
+                                Common.alert("Compliance Pending for Approval.<br /> ", function() {
+                                	fn_guardianViewPopClose();
+                                  });
+	                        }
+	                    });
+	                }
+	            } else {
+	                // If approval is denied or not completed, show a message or handle the rejection
+	                Common.alert("Approval process not completed please try again.",fn_closePopAndReload);
+	            }
+	        });
+	    } else {
+	        // If status is not 36 or 10, directly save without approval process
+	        if (fn_validation()) {
+	            var formData = Common.getFormData("saveForm");
+	            var obj = $("#saveForm").serializeJSON();
+	            $.each(obj, function(key, value) {
+	                formData.append(key, value);
+	            });
+
+	            Common.ajaxFile("/organization/compliance/saveGuardianCompliance2.do", formData, function(result) {
+	                console.log("성공.");
+	                Common.alert("Compliance call Log saved.<br /> Case No : " + result.data + "<br />", function() {
+	                    fn_guardianViewPopClose();
+	                });
+	            });
+
+	            /*
+                if($("#cmbreqStatus").val() == '36'){
+                    Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
+                          console.log("성공.");
+                          Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
+                });
                 }
-            });
-    	}
-        */
-    }
-    fn_complianceSearch();
+                else{
+                    Common.ajax("POST", "/organization/compliance/saveGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
+                          console.log("성공.");
+                          if(result.data){
+                              Common.alert("Compliance call Log saved.<br />", fn_guardianViewPopClose());
+                          }else{
+                              Common.alert("Compliance call Log saved Fail.<br />");
+                          }
+                      });
+                }
+                */
+	        }
+	    }
+	    fn_complianceSearch();
 }
 
 function fn_guardianViewPopClose() {
-
     $('#btnGuarViewClose').click();
+}
+
+$('#btnGuarViewClose').click(function() {
+    location.reload();
+});
+
+function fn_closePopAndReload() {
+    window.location.reload();
 }
 
 function fn_memberListNew(){
@@ -273,6 +353,92 @@ function fileDown(rowIndex){
 	});
 }
 
+$('#btnMemberPop').click(function() {
+    Common.popupDiv("/common/memberPop.do", {
+      callPrgm : "COMPLIANCE_VIEW"
+    }, null, true);
+  });
+
+$('#personInvolved').change(function() {
+    fn_loadOrderSalesman(null, $('#personInvolved').val());
+  });
+
+function fn_loadOrderSalesman(memId, memCode) {
+
+    console.log('fn_loadOrderSalesman memId:' + memId);
+    console.log('fn_loadOrderSalesman memCd:' + memCode);
+
+    fn_clearOrderSalesman();
+
+    Common
+        .ajax(
+            "GET",
+            "/sales/order/selectMemberByMemberIDCode.do",
+            {
+              memId : memId,
+              memCode : memCode
+            },
+            function(memInfo) {
+
+              if (memInfo == null || memInfo == 'undefined') {
+                //              Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                Common
+                    .alert('<spring:message code="sal.alert.msg.memNotFoundInput" arguments="'+memCode+'"/>');
+              } else {
+                $('#personInvolved').val(memInfo.memCode);
+                $('#personInvolvedId').val(memInfo.memId);
+              }
+            });
+  }
+
+function fn_clearOrderSalesman() {
+    $('#personInvolved').val('');
+    $('#personInvolvedId').val('');
+  }
+
+function fn_approveLinePop(callback) {
+    console.log("fn_approveLinePop");
+
+    // Open the approval line popup
+    Common.popupDiv("/organization/compliance/guardianofComplianceApproveLinePop.do", null, function(result) {
+        // Handle callback when the popup is opened or an action is performed
+        console.log("Popup opened with result:", result);
+    }, true, "approveLineSearchPop");
+
+    // Check if callback is a valid function
+    if (typeof callback !== 'function') {
+        console.error("Error: callback is not a function");
+        return;  // Exit early if the callback is not a function
+    }
+
+    // Add event listeners for the submit and close buttons inside the popup
+    $(document).on('click', '#submit', function() {
+
+        var gridData = AUIGrid.getGridData(approveLineGridID);
+        var selectedRow = gridData[selectRowIdx];
+        var memCode = selectedRow ? selectedRow.memCode : null;
+
+        // Check if memCode is available
+        if (!memCode) {
+            alert("Please select Approval Line to proceed.");
+            return;  // Prevent submission if no selection is made
+        }else{
+        	 //console.log("Received memCode in main JSP:", memCode);
+
+        	document.getElementById("memCodeField").value = memCode;
+        }
+
+        // If data is selected, trigger the callback with 'submit'
+        callback('submit');
+        $('#approveLineSearchPop').remove();
+    });
+
+    $(document).on('click', '#closepop', function() {
+        callback('denied');
+        $('#approveLineSearchPop').remove();
+    });
+}
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -323,7 +489,7 @@ function fileDown(rowIndex){
 <input type="hidden" title="" placeholder="" class="" id="hidActionId" name=actionId value="${guardianofCompliance.reqstActnId}"/>
 <input type="hidden" title="" placeholder="" class="" id="hidFileName" name=hidFileName value="${guardianofCompliance.reqstAttach}"/>
 <input type="hidden" title="" placeholder="" class="" id="hidGroupID" name=groupId value="${guardianofCompliance.reqstAtchFileGrpId}"/>
-
+<input type="hidden" title="" placeholder="" class="" id="memCodeField" name="memCodeField" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -367,9 +533,17 @@ function fileDown(rowIndex){
 </tr>
 <tr>
     <th scope="row">Person Involved</th>
-    <td colspan="3">
-    <input type="text" title=""  name="personInvolved" id=""personInvolved"" class="readonly " style="width:100%;" readonly="readonly" value="${guardianofCompliance.memCode}"/>
+    <td colspan="2">
+    <input type="text" title=""  name="personInvolved" id="personInvolved" class="readonly" style="width:100%;" readonly="readonly" value="${guardianofCompliance.memCode}"/>
+     <input type="hidden" title=""  name="personInvolvedId" id="personInvolvedId" class="readonly"  readonly="readonly"  value="${guardianofCompliance.reqstMemId}"/>
     </td>
+    <td>
+      <c:if test="${pageAuth == 'Y'}">
+    <a id="btnMemberPop" href="#" class="search_btn"><img
+          src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+          alt="search" /></a>
+     </c:if>
+     </td>
     <th scope="row">Case Category</th>
     <td colspan="3">
         <select class="w100p" id="caseCategory" name="caseCategory" onchange="fn_caseChange(this.value);">
@@ -385,13 +559,13 @@ function fileDown(rowIndex){
     <th scope="row"></th>
     <td colspan="3">
     </td>
-    <th scope="row">Types of Documents</th>
-    <td colspan="3">
-    <select class="w100p"  id="docType" name="docType">
+    <th scope="row">Sub Category</th>
+        <td colspan="3">
+        <select class="w100p" id="caseCategory2" name="caseCategory2">
              <c:forEach var="list" items="${documentsCodeList}" varStatus="status">
                  <option value="${list.codeId}">${list.codeName } </option>
             </c:forEach>
-    </select>
+        </select>
     </td>
 </tr>
 <tr>
@@ -433,6 +607,7 @@ function fileDown(rowIndex){
     <th scope="row">Request Status</th>
     <td colspan="3">
     <select class="w100p"  id="cmbreqStatus" name="cmbreqStatus">
+        <option value="1">Active</option>
         <option value="60">In Progress</option>
         <option value="36">Closed</option>
         <option value="10">Cancelled</option>
@@ -442,6 +617,16 @@ function fileDown(rowIndex){
     <th scope="row">Person In Charge</th>
     <td colspan="3">
         <select id="changePerson" name="changePerson" class="w100p"></select>
+    </td>
+</tr>
+<tr id = "status">
+    <th scope="row">ACTION</th>
+    <td colspan="3">
+    <select class="w100p"  id="cmbactionStatus" name="cmbactionStatus"></select>
+    </td>
+    <th scope="row">EYE REWARD</th>
+     <td colspan="3">
+    <select class="w100p"  id="cmbeyeward" name="cmbeyeward"></select>
     </td>
 </tr>
 <tr>
@@ -470,12 +655,6 @@ function fileDown(rowIndex){
     <ul class="center_btns" id="save">
         <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
     </ul>
-
-
-
-
-
-
 
 </article><!-- tap_area end -->
 

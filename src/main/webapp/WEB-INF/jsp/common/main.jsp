@@ -1160,8 +1160,8 @@ console.log(result);
 }
 </style>
 <!-- [Woongjin Jun] Tab -->
-<section id="content2" style="width: 100%; height: 1000; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
-    <div id="mainTabs" style="width: 100%; height: 1000; border: 1px; color: black;">
+<section id="content2" style="width: 100%; height: auto; border: 1px; color: black; display: none; overflow-x: hidden; overflow-y: auto;">
+    <div id="mainTabs" style="width: 100%; height: auto; border: 1px; color: black;">
         <ul id="mainTabTitle" style="padding-right: 300px;">
             <div style="position: absolute; top: 15px; right: 270px;"><a href="javascript:;" id="btnTabPrev" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">&lt;</a></div>
             <div style="position: absolute; top: 15px; right: 232px;"><a href="javascript:;" id="btnTabNext" class="ui-state-default" style="padding:3px 10px; font-weight:bold;">&gt;</a></div>

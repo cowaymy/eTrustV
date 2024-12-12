@@ -19,14 +19,14 @@ $(document).ready(function(){
 
             var reqstStus = "${guardianofCompliance.reqstStusId}";
 
-                if(reqstStus == 36 || reqstStus == 10){
-                    $('#complianceRem').addClass("readonly");
-                    $('#save').addClass("blind");
-                }
-                else{
-                    $('#save').removeClass("blind");
-                    $('#complianceRem').removeClass("readonly");
-                }
+//                 if(reqstStus == 36 || reqstStus == 10){
+//                     $('#complianceRem').addClass("readonly");
+//                     $('#save').addClass("blind");
+//                 }
+//                 else{
+//                     $('#save').removeClass("blind");
+//                     $('#complianceRem').removeClass("readonly");
+//                 }
 
 
 });
@@ -38,7 +38,24 @@ function fn_GuardianRemarkGrid() {
         headerText : "Status",
         editable : false,
         width : 80
-    }, {
+    },{
+        dataField : "approvalStusId",
+        headerText : "Approval Status",
+        editable : false,
+        width : 120
+    },{
+        dataField : "approvalUserName",
+        headerText : "Approval By",
+        editable : false,
+        width : 120
+    },{
+        dataField : "approvalDatetime",
+        headerText : "Approval Date",
+        editable : false,
+        width : 120,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },{
         dataField : "respnsMsg",
         headerText : "Remark",
         editable : false,
@@ -127,6 +144,8 @@ function fn_save(){
 function fn_guardianViewPopClose() {
 
     $('#btnGuarViewClose').click();
+
+    location.reload();
 }
 
 function fn_memberListNew(){
@@ -149,12 +168,60 @@ function fn_memberListNew(){
     });
 }
 
+function fn_approve() {
+    var formData = Common.getFormData("saveForm");
+
+    var obj = $("#saveForm").serializeJSON();
+
+    $.each(obj, function(key, value) {
+      formData.append(key, value);
+    });
+
+     Common.ajaxFile("/organization/compliance/gocApprove.do", formData, function(result) {
+     console.log(result);
+        //Common.alert('Aprroved.', fn_closePopRefreshSearch);
+
+//         Common.alert("Compliance call Log saved.<br /> Case No : " + result.data + "<br />", function() {
+//         	fn_closePopRefreshSearch();
+//         });
+
+        Common.alert("Compliance Aprroved.<br /> ", function() {
+            fn_closePopRefreshSearch();
+        });
+
+    });
+}
+
+function fn_reject() {
+	var formData = Common.getFormData("saveForm");
+
+	var obj = $("#saveForm").serializeJSON();
+
+    $.each(obj, function(key, value) {
+      formData.append(key, value);
+    });
+
+
+    Common.ajaxFile("/organization/compliance/gocReject.do", formData, function(result) {
+        console.log(result);
+        //Common.alert('Rejected', fn_closePopRefreshSearch);
+
+        Common.alert("Compliance Rejected.<br /> ", function() {
+        	fn_closePopRefreshSearch();
+        });
+    });
+}
+
+function fn_closePopRefreshSearch() {
+    $("#guardianofComplianceApprovalPop").remove();
+    location.reload();
+}
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Guardian of Coway View</h1>
+<h1>View Approve</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="btnGuarViewClose">CLOSE</a></p></li>
 </ul>
@@ -177,7 +244,34 @@ function fn_memberListNew(){
     <td>
     <span>${guardianofCompliance.reqstNo }</span>
     </td>
+    <th scope="row"></th>
+    <td>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Submission Date</th>
+    <td>
+    <span>${guardianofCompliance.reqstUpdDt }</span>
+    </td>
+     <th scope="row"></th>
+    <td>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Person in Charge</th>
+    <td>
+    <span>${guardianofCompliance.personInChrgName }</span>
+    </td>
+     <th scope="row"></th>
+    <td>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Approval Status</th>
+    <td colspan="3">
+    <span>-Request By ${guardianofCompliance.memName } [${guardianofCompliance.reqstCrtDt }]<br /> -Pending By ${guardianofCompliance.approvalName }</span>
 
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -199,7 +293,14 @@ function fn_memberListNew(){
 <input type="hidden" title="" placeholder="" class="" id="hidOrderId" name=orderId value="${guardianofCompliance.reqstOrdId}"/>
 <input type="hidden" title="" placeholder="" class="" id="hidActionId" name=actionId value="${guardianofCompliance.reqstActnId}"/>
 <input type="hidden" title="" placeholder="" class="" id="hidFileName" name=hidFileName value="${guardianofCompliance.reqstAttach}"/>
-<input type="hidden" title="" placeholder="" class="" id="hidGroupID" name=groupId value="${guardianofCompliance.reqstAtchFileGrpId}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidGroupId" name=groupId value="${guardianofCompliance.reqstAtchFileGrpId}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidFileId" name=fileId value="${guardianofCompliance.reqstAtchFileGrpId}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidCmbreqStatus" name=cmbreqStatus value="${guardianofCompliance.reqstStusId}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidComplianceContent" name=complianceContent value="${guardianofCompliance.reqstCntnt}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidCmbactionStatus" name=cmbactionStatus value="${guardianofCompliance.action}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidCmbeyeward" name=cmbeyeward value="${guardianofCompliance.eyeReward}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidMemCodeField" name=memCodeField value="${guardianofCompliance.approvalCode}"/>
+<input type="hidden" title="" placeholder="" class="" id="hidChangePerson" name=changePerson value="${guardianofCompliance.reqstMemId}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -262,7 +363,7 @@ function fn_memberListNew(){
     <th scope="row"></th>
     <td colspan="3">
     </td>
-    <th scope="row">Types of Documents</th>
+    <th scope="row">Sub Case Category</th>
     <td colspan="3">
     <select class="w100p disabled"  id="caseCategory2" name="caseCategory2" disabled="disabled" >
              <c:forEach var="list" items="${documentsCodeList}" varStatus="status">
@@ -304,7 +405,8 @@ function fn_memberListNew(){
 </form>
 
     <ul class="center_btns" id="save">
-        <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
+        <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_approve()">Approve</a></p></li>
+         <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_reject()">Reject</a></p></li>
     </ul>
 
 

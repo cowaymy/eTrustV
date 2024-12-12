@@ -3,10 +3,11 @@
 <script type="text/javaScript">
   var myGridID_order;
   var complianceList;
+  var asMalfuncResnId;
   $(document).ready(function() {
 
     //doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1389, inputId : 1, separator : '-'}, '', 'caseCategory', 'S'); //Reason Code
-    //doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1390, inputId : 1, separator : '-'}, '', 'docType', 'S'); //Reason Code
+    //CodeId('/common/selectReasonCodeList.do', {typeId : 1390, inputId : 1, separator : '-'}, '', 'docType', 'S'); //Reason Code
     /*
      $("#caseCategory").change(function(){
 
@@ -24,6 +25,8 @@
      }
 
      }); */
+
+	  fn_caseChange();
 
   });
 
@@ -162,11 +165,15 @@
       Common.alert("Please select a case category");
       return false;
     }
-    if ($("#caseCategory1").val() == '2144') {
-      if ($("#docType").val() == "" || $("#docType").val() == '1' || $("#docType").val() == null) {
-        Common.alert("Please select a types of documents");
+//     if ($("#caseCategory1").val() == '2144') {
+//       if ($("#docType").val() == "" || $("#docType").val() == '1' || $("#docType").val() == null) {
+//         Common.alert("Please select a types of documents");
+//         return false;
+//       }
+//     }
+    if ($("#caseCategory2").val() == "" || $("#caseCategory2").val() == '1') {
+        Common.alert("Please select a sub category");
         return false;
-      }
     }
     if (FormUtil.isEmpty($('#reqstRefDt').val().trim())) {
       Common.alert("Please select a complaint date");
@@ -223,17 +230,12 @@
   }
 
   function fn_caseChange(val) {
-    if (val == '2144') {
-      $("select[name=docType]").removeAttr("disabled");
-      $("select[name=docType]").removeClass("w100p disabled");
-      $("select[name=docType]").addClass("w100p");
-    } else {
-      $("#docType").val("");
-      $("select[name=docType]").attr('disabled', 'disabled');
-      $("select[name=docType]").addClass("disabled");
-      //$("select[name=docType]").addClass("w100p");
-    }
+    var CASE_CATEGORY = $("#caseCategory1").val();
+
+    $("#caseCategory2 option").remove();
+    doGetCombo('/organization/compliance/getSubCatList.do?CASE_CATEGORY=' + CASE_CATEGORY, '', '', 'caseCategory2', 'S');
   }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -274,14 +276,8 @@
                   </c:forEach>
                 </select>
               </td>
-              <th scope="row">Types of Documents</th>
-              <td colspan="3">
-                <select class="w100p disabled" disabled="disabled" id="docType" name="docType">
-                  <c:forEach var="list" items="${documentsCodeList}" varStatus="status">
-                    <option value="${list.codeId}">${list.codeName }</option>
-                  </c:forEach>
-                </select>
-              </td>
+              <th scope="row">Sub Category</th>
+              <td colspan="3"><select id='caseCategory2' name='caseCategory2' class="w100p"></select></td>
             </tr>
             <tr>
               <th scope="row">Complaint Date</th>

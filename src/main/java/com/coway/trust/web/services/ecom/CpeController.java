@@ -646,7 +646,7 @@ public class CpeController {
 	}
 
 	@RequestMapping(value = "/ecpeDscBranchSearchPop.do")
-	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String ecpeDscBranchSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		logger.debug("ecpeDscBranchSearchPop =====================================>>  " + params);
 

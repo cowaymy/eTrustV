@@ -52,5 +52,12 @@ public interface GuardianOfComplianceMapper {
 
 	List<EgovMap> selectGuardianofComplianceListSearch(Map<String, Object> params);
 
+	List<EgovMap> getSubCatList(Map<String, Object> params);
+
+	void gocApprove(Map<String, Object> params);
+
+	void gocReject(Map<String, Object> params);
+
+	void insertGuarSubApprove(Map<String, Object> params);
 }
 

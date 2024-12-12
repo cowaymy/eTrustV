@@ -479,12 +479,10 @@
      </select>
 
       <select id="getPicList" parameterType="Map" resultType="egovMap">
-                    select
-                     PIC_USER_ID STK_ID
-                    ,PIC_NAME C1
-                    ,CASE WHEN IS_AVAL = 1 then 'Available Officer' else 'Unavailable Officer' end CODE_NAME
-                    from SAL0267D
-                    where STUS_ID = '1'
-                    order by IS_AVAL desc , PIC_NAME
+            SELECT
+                 CODE STK_ID
+                ,CODE_NAME C1
+                ,CASE WHEN DISAB = 0 then 'Available Officer' else 'Unavailable Officer' end CODE_NAME
+                FROM SYS0013M WHERE CODE_MASTER_ID = '605'
      </select>
 </mapper>

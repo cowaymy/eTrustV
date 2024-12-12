@@ -382,7 +382,15 @@
                 Project1.RESPNS_UPDATED ,
                 Project1.RESPNS_MSG,
                 Project1.CASE_NO,
-                NVL(Project1.COMBO_ORD_NO ,  ' - ') COMBO_ORD_NO
+                NVL(Project1.COMBO_ORD_NO ,  ' - ') COMBO_ORD_NO,
+                Project1.PIC_NAME,
+                NVL(Project1.RESN_DESC_SUB ,  'Others') RESN_DESC_SUB,
+                NVL(Project1.APPROVAL_STATUS ,  ' - ') APPROVAL_STATUS,
+                NVL(Project1.APPROVAL_USER_ID ,  '0') APPROVAL_USER_ID,
+                NVL(Project1.APPROVAL_NAME ,  ' - ') APPROVAL_USER_ID,
+                Project1.APPROVAL_DATETIME,
+                NVL(Project1.APPROVAL_NAME ,  ' - ') APPROVAL_NAME
+
             FROM (
                 SELECT
                     Filter1.REQUESTID REQUESTID  ,
@@ -407,7 +415,12 @@
                     Filter1.RESPNS_MSG,
                     Filter1.CASE_NO,
                     Filter1.PIC_NAME,
-                    Filter1.COMBO_ORD_NO
+                    Filter1.COMBO_ORD_NO,
+                    Filter1.RESN_DESC_SUB,
+                    Filter1.APPROVAL_STATUS,
+                    Filter1.APPROVAL_USER_ID,
+                    Filter1.APPROVAL_DATETIME,
+                    Filter1.APPROVAL_NAME
                 FROM (
                     SELECT
                         Extent1.REQST_ID REQUESTID  ,
@@ -433,17 +446,24 @@
                         Extent1.REQST_NO CASE_NO,
                         Extent11.NAME PIC_NAME,
                         Extent11.PIC_USER_ID,
-                        COMBO.SALES_ORD_NO COMBO_ORD_NO
+                        COMBO.SALES_ORD_NO COMBO_ORD_NO,
+                        Extent12.RESN_DESC RESN_DESC_SUB,
+                        T1.NAME AS  APPROVAL_STATUS,
+                        Extent1.APPROVAL_USER_ID,
+                        Extent1.APPROVAL_DATETIME,
+                        Extent12.USER_FULL_NAME APPROVAL_NAME
+
                     FROM MSC0043M Extent1
                     LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
                     LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
-                    LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+                    LEFT JOIN ORG0001D Extent4  ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
                     LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
                     LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
                     LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
                     LEFT JOIN SAL0023D Extent8   ON Extent8.CUST_ADD_ID = Extent2.CUST_ADD_ID
-                    LEFT JOIN SYS0064M Extent10  ON Extent10.AREA_ID = Extent8.AREA_ID
-                    LEFT JOIN MSC0044M Extent9   ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
+                    LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent8.AREA_ID
+                    LEFT JOIN SYS0032M Extent12 ON Extent12.RESN_ID = Extent1.REQST_CTGRY_SUB
+                    LEFT JOIN MSC0044M Extent9  ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
                                                 AND Extent9.RESPNS_ID in (
                                                     SELECT MAX(a.RESPNS_ID)
                                                     from MSC0044M a , MSC0043M b
@@ -468,6 +488,9 @@
                                                 AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
                   LEFT JOIN SAL0001D COMBO ON COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
                                                           OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID
+                  LEFT JOIN SYS0038M T1   ON T1.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+                  LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+
                     WHERE 1=1
             ]]>
                     <if test="caseCategoryList != null and caseCategoryList != '' ">
@@ -520,7 +543,7 @@
                         REQST_ATTACH,  REQST_OR_TYPE_ID, REQST_REM, REQST_STUS_ID, REQST_CRT_DT,
                         REQST_CRT_USER_ID, REQST_UPD_DT, REQST_UPD_USER_ID, REQST_ACTN_ID, REQST_ATCH_FILE_GRP_ID )
             VALUES (
-                         MSC0043M_REQST_ID_SEQ.NEXTVAL,#{guardianNo} ,  #{guardianCaseCategory}, #{guardianCaseDetail},
+                         MSC0043M_REQST_ID_SEQ.NEXTVAL,#{guardianNo} ,  #{guardianCaseCategory}, #{guardianSubCaseCategory},
                         #{orderId}, TO_DATE(#{complaintDate},'dd-mm-yyyy') , #{memberId}, #{complaintRemark},
                         #{hidFileName} , #{memTypeId}, null, '1', SYSDATE,
                         #{reqstCrtUserId}, SYSDATE, #{reqstUpdUserId}, #{ActionId}, #{groupId}
@@ -549,6 +572,7 @@
 			           TO_CHAR(Extent1.REQST_REF_DT, 'DD/MM/YYYY') REQST_REF_DT,
 			           Extent1.REQST_MEM_ID REQST_MEM_ID,
 			           Extent5.MEM_CODE MEM_CODE,
+                       Extent5.NAME MEM_NAME,
 			           Extent1.REQST_CNTNT REQST_CNTNT,
 			           Extent1.REQST_ATTACH REQST_ATTACH,
 			           Extent1.REQST_OR_TYPE_ID REQST_OR_TYPE_ID,
@@ -564,7 +588,15 @@
                        Extent10.USER_NAME USER_NAME1,
 			           Extent1.REQST_ACTN_ID REQST_ACTN_ID,
 			           Extent1.REQST_ATCH_FILE_GRP_ID REQST_ATCH_FILE_GRP_ID,
-			           Extent11.CMPLNC_PERSON_IN_CHRG PERSON_IN_CHRG
+			           Extent11.CMPLNC_PERSON_IN_CHRG PERSON_IN_CHRG,
+                       Extent11.MEM_CODE  || ' / '  || Extent11.NAME  AS PERSON_IN_CHRG_NAME,
+                       Extent1.ACTION,
+                       Extent1.EYE_REWARD,
+                       Extent12.HR_CODE APPROVAL_CODE,
+                       NVL(Extent12.USER_FULL_NAME ,  ' - ') APPROVAL_NAME,
+                       NVL(Extent13.NAME ,  ' - ') APPROVAL_STATUS,
+                       TO_CHAR(Extent1.APPROVAL_DATETIME, 'DD/MM/YYYY') as APPROVAL_DATETIME
+
 			  FROM MSC0043M Extent1
 			  LEFT JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
 			  LEFT JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -583,7 +615,8 @@
                             B.CMPLNC_SO_ID,
                             D.USER_ID PIC_USER_ID,
                             C.CMPLNC_PERSON_IN_CHRG,
-                            E.NAME
+                            E.NAME,
+                            E.MEM_CODE
                         FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
                         WHERE A.CMPLNC_ID = B.CMPLNC_ID
                           AND A.CMPLNC_ID = C.CMPLNC_ID
@@ -591,6 +624,8 @@
                           AND D.HR_CODE = E.MEM_CODE
                     ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
                                                 AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
+                LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+                LEFT JOIN SYS0038M Extent13 ON Extent13.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
 			 WHERE 1 = 1
 			   AND Extent1.REQST_ID  = #{reqstId} AND ROWNUM = 1
 		</select>
@@ -612,7 +647,10 @@
                        Extent13.ATCH_FILE_ID,
                        Extent13.ATCH_FILE_NAME,
                        Extent13.FILE_SUB_PATH,
-                       Extent13.PHYSICL_FILE_NAME
+                       Extent13.PHYSICL_FILE_NAME,
+                       NVL(Extent14.NAME ,  ' - ') APPROVAL_STUS_ID,
+                       NVL(Extent15.USER_FULL_NAME ,  ' - ') APPROVAL_USER_NAME,
+                       TO_CHAR(Extent1.APPROVAL_DATETIME, 'DD/MM/YYYY') APPROVAL_DATETIME
 
                   FROM MSC0044M Extent1
                          LEFT JOIN MSC0043M Extent2   ON Extent2.REQST_ID = Extent1.PAPARAZ_REQST_ID
@@ -621,6 +659,8 @@
                          LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.RESPNS_UPDATOR
                          LEFT JOIN SYS0070M Extent12 ON Extent12.ATCH_FILE_GRP_ID = Extent1.FILE_ID and Extent1.FILE_ID != 0
                          LEFT JOIN SYS0071D Extent13 ON Extent13.ATCH_FILE_ID = Extent12.ATCH_FILE_ID and Extent1.FILE_ID != 0
+                         LEFT JOIN SYS0038M Extent14  ON Extent14.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+                         LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent1.APPROVAL_USER_ID
                  WHERE  Extent1.PAPARAZ_REQST_ID = #{reqstId}
                   order by Extent1.RESPNS_ID
 
@@ -656,7 +696,12 @@
                   REQST_REM = #{guardianRemark},
                   REQST_CTGRY = #{guardianCaseCategory},
                   REQST_CTGRY_SUB = #{guardianCaseDetail},
-                  REQST_UPD_USER_ID = #{guardianCreateBy}
+                  REQST_UPD_USER_ID = #{guardianCreateBy},
+                  REQST_MEM_ID = #{guardianpersonInvolvedId},
+                  APPROVAL_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode}),
+                  APPROVAL_STUS_ID = #{guardianApprovalStatusId},
+                  ACTION = #{guardianAction},
+                  EYE_REWARD = #{guardianEyeward}
            WHERE  ( REQST_ID = #{reqstId} )
      </update>
 
@@ -676,6 +721,10 @@
          , RESPNS_UPDATOR
          , RESPNS_UPDATED
          , FILE_ID
+         , APPROVAL_USER_ID
+         , APPROVAL_STUS_ID
+         , ACTION
+         , EYE_REWARD
           )
          VALUES (
           #{respnsId}
@@ -687,6 +736,10 @@
          , #{guardianUpdatedBy}
          , sysdate
          , #{fileId}
+         , (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode})
+         , #{guardianApprovalStatusId}
+         , #{guardianAction}
+         , #{guardianEyeward}
          )
   </insert>
 
@@ -1178,13 +1231,81 @@
           FROM SYS0082M Extent1
          WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
         ]]>
-    </select>
+     </select>
 
-         <update id="updateDocNo" parameterType="Map">
+     <update id="updateDocNo" parameterType="Map">
      <![CDATA[
         UPDATE SYS0082M
          SET DOC_NO = #{nextDocNo}
            WHERE  ( DOC_NO_ID = #{docNoId} )
         ]]>
     </update>
+
+    <select id="getSubCatList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT
+     T4.RESN_ID AS CODE_ID,
+     T4.RESN_DESC AS CODE_NAME
+     FROM SYS0032M T1
+    LEFT JOIN SYS0033M T2 ON T2.RESN_ID = T1.RESN_ID
+    LEFT JOIN SYS0033M T3 ON T3.RESN_PARENT_GRP_ID = T2.RESN_ID
+    LEFT JOIN SYS0032M T4 ON T4.RESN_ID = T3.RESN_ID
+    WHERE T2.RESN_ID = #{CASE_CATEGORY}
+    ]]>
+  </select>
+
+   <update id="gocApprove" parameterType="Map">
+      UPDATE MSC0043M
+      SET REQST_UPD_DT = sysdate,
+             APPROVAL_STUS_ID = '5'
+      WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+   <update id="gocReject" parameterType="Map">
+      UPDATE MSC0043M
+      SET REQST_UPD_DT = sysdate,
+             APPROVAL_STUS_ID = null,
+             APPROVAL_USER_ID = null,
+             REQST_STUS_ID = '60'
+      WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+     <insert id="insertGuarSubApprove" parameterType="Map">
+           <selectKey keyProperty="respnsId" resultType="int" order="BEFORE">
+           (SELECT DECODE(COUNT(RESPNS_ID),0 , 1 , MAX(RESPNS_ID)+1) FROM MSC0044M )
+           </selectKey>
+
+           INSERT INTO MSC0044M (
+              RESPNS_ID
+            , PAPARAZ_REQST_ID
+            , RESPNS_MSG
+            , RESPNS_STUS_ID
+            , RESPNS_CREATOR
+            , RESPNS_CREATED
+            , RESPNS_UPDATOR
+            , RESPNS_UPDATED
+            , FILE_ID
+            , APPROVAL_USER_ID
+            , APPROVAL_STUS_ID
+            , APPROVAL_DATETIME
+            , ACTION
+            , EYE_REWARD
+             )
+            VALUES (
+             #{respnsId}
+            , #{reqstId}
+            , #{guardianRemark}
+            , #{guardianStatusId}
+            , #{guardianCreateBy}
+            , sysdate
+            , #{guardianUpdatedBy}
+            , sysdate
+            , #{fileId}
+            , (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode})
+            , #{guardianApprovalStatusId}
+            , SYSDATE
+            , #{guardianAction}
+            , #{guardianEyeward}
+            )
+     </insert>
 </mapper>

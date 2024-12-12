@@ -72,7 +72,8 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 
 		params.put("guardianNo",guardianNo);
 		params.put("guardianCaseCategory",params.get("caseCategory1") != null && params.get("caseCategory1") !=""  ? Integer.parseInt(params.get("caseCategory1").toString()) : 0 );
-		params.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
+		params.put("guardianSubCaseCategory",params.get("caseCategory2") != null && params.get("caseCategory2") !=""  ? Integer.parseInt(params.get("caseCategory2").toString()) : 0 );
+		//params.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
 		params.put("complaintDate", params.get("reqstRefDt").toString());
 		/*params.put("orderId", Integer.parseInt(params.get("searchOrderId").toString()));*/
 		params.put("orderId", params.get("searchOrderId") != null && params.get("searchOrderId") !=""  ?  Integer.parseInt(params.get("searchOrderId").toString()) : 0 );
@@ -171,6 +172,17 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     		guar.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
     		guar.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		guar.put("guardianCreateBy", sessionVo.getUserId());
+    		guar.put("guardianpersonInvolvedId",Integer.parseInt(params.get("personInvolvedId").toString()));
+    		guar.put("guardianAction", params.get("cmbactionStatus") != null && !params.get("cmbactionStatus").toString().isEmpty() ? params.get("cmbactionStatus").toString() : null);
+    		guar.put("guardianEyeward", params.get("cmbeyeward") != null && !params.get("cmbeyeward").toString().isEmpty() ? params.get("cmbeyeward").toString() : null);
+    		if (params.get("memCodeField") != null && !params.get("memCodeField").toString().isEmpty() && (params.get("cmbreqStatus").toString().equals("10") || params.get("cmbreqStatus").toString().equals("36"))) {
+    		    guar.put("guardianApprovalCode", params.get("memCodeField").toString());
+    		    guar.put("guardianApprovalStatusId", "60");
+    		} else {
+    		    guar.put("guardianApprovalCode", null);  // You can assign null if condition is not met
+    		    guar.put("guardianApprovalStatusId", null);  // You can assign null if condition is not met
+    		}
+
     		//guar.put("fileId", params.get("fileId"));
     		 //insert
     		guardianOfComplianceMapper.updateGuar(guar);//Update MSC0043M
@@ -186,76 +198,86 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
     		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());
     		guar_sub.put("fileId", params.get("fileId") != null && params.get("fileId") !=""  ? Integer.parseInt(params.get("fileId").toString()) : 0);
+    		guar_sub.put("guardianAction", params.get("cmbactionStatus") != null && !params.get("cmbactionStatus").toString().isEmpty() ? params.get("cmbactionStatus").toString() : null);
+    		guar_sub.put("guardianEyeward", params.get("cmbeyeward") != null && !params.get("cmbeyeward").toString().isEmpty() ? params.get("cmbeyeward").toString() : null);
+    		if (params.get("memCodeField") != null && !params.get("memCodeField").toString().isEmpty() &&
+    		    (params.get("cmbreqStatus").toString().equals("10") || params.get("cmbreqStatus").toString().equals("36"))) {
+    		    guar_sub.put("guardianApprovalCode", params.get("memCodeField").toString());
+    		    guar_sub.put("guardianApprovalStatusId", "60");
+    		} else {
+    		    guar_sub.put("guardianApprovalCode", null);  // If condition is not met, assign null
+    		    guar_sub.put("guardianApprovalStatusId", null);  // Assign null if condition is not met
+    		}
+
     		 //insert
     		guardianOfComplianceMapper.insertGuarSub(guar_sub); //Insert to MSC0044M
 
+    	if ( params.get("cmbreqStatus").toString().equals("1") || params.get("cmbreqStatus").toString().equals("60")) {
+    		caseNo = getDocNo("148");
+    		complianceNo = caseNo.get("docNo").toString();
+    		params.put("complianceNo", complianceNo);
+    		ID=148;
+    		nextDocNo = getNextDocNo("CCL",caseNo.get("docNo").toString());
+    		logger.debug("nextDocNo : {}",nextDocNo);
+    		caseNo.put("nextDocNo", nextDocNo);
+    		memberListMapper.updateDocNo(caseNo);
+
+    		Map<String, Object> com =new HashMap<String, Object>();
+
+    		com.put("complianceId", 0);
+    		com.put("complianceNo", complianceNo);
+    		if("".equals(params.get("memId").toString())) {
+    		    com.put("memberId",0);
+    		} else {
+    		    com.put("memberId", Integer.parseInt(params.get("memId").toString()));
+    		}
+    		com.put("complianceStatusId", 1);
+    		com.put("complianceCreatAt", "");
+    		com.put("complianceCreateBy", sessionVo.getUserId());
+    		com.put("complianceUpdateAt", "");
+    		com.put("complianceUpdateBy", sessionVo.getUserId());
+    		 //insert
+    		guardianOfComplianceMapper.insertCom(com); //INSERT TO MSC0005D
+
+    		int complianceId = guardianOfComplianceMapper.selectComplianceId();
 
 
+        	Map<String, Object> co = new HashMap<String, Object>();
+        	co.put("complianceId", complianceId);
+        	co.put("complianceSOID", Integer.parseInt(params.get("orderId").toString()));
+        	co.put("complianceStatusId", 1);
+        	co.put("complianceRemark", "");
 
-		caseNo = getDocNo("148");
-		complianceNo = caseNo.get("docNo").toString();
-		params.put("complianceNo", complianceNo);
-		ID=148;
-		nextDocNo = getNextDocNo("CCL",caseNo.get("docNo").toString());
-		logger.debug("nextDocNo : {}",nextDocNo);
-		caseNo.put("nextDocNo", nextDocNo);
-		memberListMapper.updateDocNo(caseNo);
-
-		Map<String, Object> com =new HashMap<String, Object>();
-
-		com.put("complianceId", 0);
-		com.put("complianceNo", complianceNo);
-		if("".equals(params.get("memId").toString())) {
-		    com.put("memberId",0);
-		} else {
-		    com.put("memberId", Integer.parseInt(params.get("memId").toString()));
-		}
-		com.put("complianceStatusId", 1);
-		com.put("complianceCreatAt", "");
-		com.put("complianceCreateBy", sessionVo.getUserId());
-		com.put("complianceUpdateAt", "");
-		com.put("complianceUpdateBy", sessionVo.getUserId());
-		 //insert
-		guardianOfComplianceMapper.insertCom(com); //INSERT TO MSC0005D
-
-		int complianceId = guardianOfComplianceMapper.selectComplianceId();
+        	guardianOfComplianceMapper.insertComplianceOrder(co); //INSERT TO MSC0006D
 
 
-    	Map<String, Object> co = new HashMap<String, Object>();
-    	co.put("complianceId", complianceId);
-    	co.put("complianceSOID", Integer.parseInt(params.get("orderId").toString()));
-    	co.put("complianceStatusId", 1);
-    	co.put("complianceRemark", "");
+    		Map<String, Object> com_sub =new HashMap<String, Object>();
 
-    	guardianOfComplianceMapper.insertComplianceOrder(co); //INSERT TO MSC0006D
-
-
-		Map<String, Object> com_sub =new HashMap<String, Object>();
-
-		//String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
-		logger.debug("PARAMS111 : {}",params.get("complianceRem").toString());
-		com_sub.put("complianceItemId", 0);
-		com_sub.put("complianceId", complianceId);
-		com_sub.put("complianceSOID", null);
-		com_sub.put("complianceStatusId", 1 );
-		com_sub.put("complianceActionId", params.get("actionId") != null && params.get("actionId") !=""  ? Integer.parseInt(params.get("actionId").toString()) : 0 );
-		com_sub.put("complianceFollowUpId", 0 );
-		com_sub.put("complianceReceivedDate", params.get("custCplntDt").toString());
-		com_sub.put("complianceClosedDate", null );
-		com_sub.put("complianceRemark", params.get("complianceRem").toString());
-		com_sub.put("complianceCaseCategory", params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
-		com_sub.put("complianceDocType", params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
-		com_sub.put("complianceFinding", 0);
-		com_sub.put("complianceCollectAmt", 0);
-		com_sub.put("complianceFinalAction",  0 );
-		com_sub.put("complianceHasAttachment", true);
-		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString());
-		com_sub.put("complianceCreateAt", "");
-		com_sub.put("complianceCreateBy", sessionVo.getUserId());
-		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
-		com_sub.put("complianceGroupId", Integer.parseInt(params.get("groupId").toString()));
-		//insert
-		guardianOfComplianceMapper.insertComSub(com_sub);//INSERT TO MSC0007D
+    		//String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
+    		logger.debug("PARAMS111 : {}",params.get("complianceRem").toString());
+    		com_sub.put("complianceItemId", 0);
+    		com_sub.put("complianceId", complianceId);
+    		com_sub.put("complianceSOID", null);
+    		com_sub.put("complianceStatusId", 1 );
+    		com_sub.put("complianceActionId", params.get("actionId") != null && params.get("actionId") !=""  ? Integer.parseInt(params.get("actionId").toString()) : 0 );
+    		com_sub.put("complianceFollowUpId", 0 );
+    		com_sub.put("complianceReceivedDate", params.get("custCplntDt").toString());
+    		com_sub.put("complianceClosedDate", null );
+    		com_sub.put("complianceRemark", params.get("complianceRem").toString());
+    		com_sub.put("complianceCaseCategory", params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+    		com_sub.put("complianceDocType", params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
+    		com_sub.put("complianceFinding", 0);
+    		com_sub.put("complianceCollectAmt", 0);
+    		com_sub.put("complianceFinalAction",  0 );
+    		com_sub.put("complianceHasAttachment", true);
+    		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString());
+    		com_sub.put("complianceCreateAt", "");
+    		com_sub.put("complianceCreateBy", sessionVo.getUserId());
+    		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
+    		com_sub.put("complianceGroupId", Integer.parseInt(params.get("groupId").toString()));
+    		//insert
+    		guardianOfComplianceMapper.insertComSub(com_sub);//INSERT TO MSC0007D
+    		}
 		}
 		return complianceNo;
 
@@ -371,4 +393,151 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		return guardianOfComplianceMapper.selectReasonCodeList(params);
 	}
 
+	@Override
+	public List<EgovMap> getSubCatList(Map<String, Object> params) {
+		return guardianOfComplianceMapper.getSubCatList(params);
+  }
+
+	@Override
+	public String  gocApprove(Map<String, Object> params,SessionVO sessionVo) {
+		logger.debug("gocApprove : {}",params.toString());
+		EgovMap caseNo = null; // 각가 docNo, docNoId, prefix구함
+		String nextDocNo= "";
+		String complianceNo = "";
+		int ID = 0;
+        EgovMap guardian = guardianOfComplianceMapper.selectGuardianNoValue(params);
+
+		if(guardian != null){
+    		Map<String, Object> guar =new HashMap<String, Object>();
+
+    		guar.put("reqstId", Integer.parseInt(params.get("reqstId").toString()));
+
+    		 //insert
+    		guardianOfComplianceMapper.gocApprove(guar);//Update MSC0043M
+
+
+            Map<String, Object> guar_sub =new HashMap<String, Object>();
+
+            guar_sub.put("reqstId", Integer.parseInt(params.get("reqstId").toString()));
+            guar_sub.put("guardianStatusId",Integer.parseInt(params.get("cmbreqStatus").toString()));
+            guar_sub.put("guardianRemark",params.get("complianceContent").toString());
+    		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
+    		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());
+    		guar_sub.put("fileId", params.get("fileId") != null && params.get("fileId") !=""  ? Integer.parseInt(params.get("fileId").toString()) : 0);
+    		guar_sub.put("guardianAction", params.get("cmbactionStatus") != null && !params.get("cmbactionStatus").toString().isEmpty() ? params.get("cmbactionStatus").toString() : null);
+    		guar_sub.put("guardianEyeward", params.get("cmbeyeward") != null && !params.get("cmbeyeward").toString().isEmpty() ? params.get("cmbeyeward").toString() : null);
+    		guar_sub.put("guardianApprovalCode", params.get("memCodeField").toString());
+    		guar_sub.put("guardianApprovalStatusId", "5");
+
+
+    		 //insert
+    		guardianOfComplianceMapper.insertGuarSubApprove(guar_sub); //Insert to MSC0044M
+
+
+		caseNo = getDocNo("148");
+		complianceNo = caseNo.get("docNo").toString();
+		params.put("complianceNo", complianceNo);
+		ID=148;
+		nextDocNo = getNextDocNo("CCL",caseNo.get("docNo").toString());
+		logger.debug("nextDocNo : {}",nextDocNo);
+		caseNo.put("nextDocNo", nextDocNo);
+		memberListMapper.updateDocNo(caseNo);
+
+		Map<String, Object> com =new HashMap<String, Object>();
+
+		com.put("complianceId", 0);
+		com.put("complianceNo", complianceNo);
+		if("".equals(params.get("memId").toString())) {
+		    com.put("memberId",0);
+		} else {
+		    com.put("memberId", Integer.parseInt(params.get("memId").toString()));
+		}
+		com.put("complianceStatusId", 1);
+		com.put("complianceCreatAt", "");
+		com.put("complianceCreateBy", sessionVo.getUserId());
+		com.put("complianceUpdateAt", "");
+		com.put("complianceUpdateBy", sessionVo.getUserId());
+		 //insert
+		guardianOfComplianceMapper.insertCom(com); //INSERT TO MSC0005D
+
+		int complianceId = guardianOfComplianceMapper.selectComplianceId();
+
+
+    	Map<String, Object> co = new HashMap<String, Object>();
+    	co.put("complianceId", complianceId);
+    	co.put("complianceSOID", Integer.parseInt(params.get("orderId").toString()));
+    	co.put("complianceStatusId", 1);
+    	co.put("complianceRemark", "");
+
+    	guardianOfComplianceMapper.insertComplianceOrder(co); //INSERT TO MSC0006D
+
+
+		Map<String, Object> com_sub =new HashMap<String, Object>();
+
+		//String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
+		logger.debug("gocApprove : {}",params.get("complianceRem").toString());
+		com_sub.put("complianceItemId", 0);
+		com_sub.put("complianceId", complianceId);
+		com_sub.put("complianceSOID", null);
+		com_sub.put("complianceStatusId", 1 );
+		com_sub.put("complianceActionId", params.get("actionId") != null && params.get("actionId") !=""  ? Integer.parseInt(params.get("actionId").toString()) : 0 );
+		com_sub.put("complianceFollowUpId", 0 );
+		com_sub.put("complianceReceivedDate", params.get("custCplntDt").toString());
+		com_sub.put("complianceClosedDate", null );
+		com_sub.put("complianceRemark", params.get("complianceRem").toString());
+		com_sub.put("complianceCaseCategory", params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+		com_sub.put("complianceDocType", params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
+		com_sub.put("complianceFinding", 0);
+		com_sub.put("complianceCollectAmt", 0);
+		com_sub.put("complianceFinalAction",  0 );
+		com_sub.put("complianceHasAttachment", true);
+		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString());
+		com_sub.put("complianceCreateAt", "");
+		com_sub.put("complianceCreateBy", sessionVo.getUserId());
+		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
+		com_sub.put("complianceGroupId", Integer.parseInt(params.get("groupId").toString()));
+		//insert
+		guardianOfComplianceMapper.insertComSub(com_sub);//INSERT TO MSC0007D
+		}
+		return complianceNo;
+
+	}
+
+	@Override
+	public void gocReject(Map<String, Object> params,SessionVO sessionVo) {
+		logger.debug("gocReject : {}",params.toString());
+		EgovMap caseNo = null; // 각가 docNo, docNoId, prefix구함
+		String nextDocNo= "";
+		String complianceNo = "";
+		int ID = 0;
+        EgovMap guardian = guardianOfComplianceMapper.selectGuardianNoValue(params);
+
+		if(guardian != null){
+    		Map<String, Object> guar =new HashMap<String, Object>();
+
+    		guar.put("reqstId", Integer.parseInt(params.get("reqstId").toString()));
+
+    		 //insert
+    		guardianOfComplianceMapper.gocReject(guar);//Update MSC0043M
+
+            Map<String, Object> guar_sub =new HashMap<String, Object>();
+
+            guar_sub.put("reqstId", Integer.parseInt(params.get("reqstId").toString()));
+            guar_sub.put("guardianStatusId",Integer.parseInt(params.get("cmbreqStatus").toString()));
+            guar_sub.put("guardianRemark",params.get("complianceContent").toString());
+            guar_sub.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+            guar_sub.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
+    		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
+    		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());
+    		guar_sub.put("fileId", params.get("fileId") != null && params.get("fileId") !=""  ? Integer.parseInt(params.get("fileId").toString()) : 0);
+    		guar_sub.put("guardianAction", params.get("cmbactionStatus") != null && !params.get("cmbactionStatus").toString().isEmpty() ? params.get("cmbactionStatus").toString() : null);
+    		guar_sub.put("guardianEyeward", params.get("cmbeyeward") != null && !params.get("cmbeyeward").toString().isEmpty() ? params.get("cmbeyeward").toString() : null);
+    		guar_sub.put("guardianApprovalCode", params.get("memCodeField").toString());
+    		guar_sub.put("guardianApprovalStatusId", "6");
+
+    		 //insert
+    		guardianOfComplianceMapper.insertGuarSub(guar_sub); //Insert to MSC0044M
+
+		}
+	}
 }
