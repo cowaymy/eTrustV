@@ -550,6 +550,7 @@
                          AND POP_FLG = 'A'
                          AND VALID_FR <![CDATA[<=]]> SYSDATE
                          AND VALID_TO <![CDATA[>=]]> SYSDATE
+                         and rownum = 1
                         ) POP_ID
                     </otherwise>
                 </choose>
