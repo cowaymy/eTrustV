@@ -1753,98 +1753,101 @@
   </select>
 
   <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
-SELECT MST.*
-         , TO_CHAR(SUB.AMT) AS sales_Price
-    FROM (SELECT DISTINCT MST.*
-               , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS filter_Barcd_Serial_No
-               , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date
-               , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time
-               , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS last_Chg_Date_Origin
-               , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS last_Chg_Time_Origin
-               , TO_CHAR (A.SRV_FILTER_PRIOD) AS parts_Period
-          FROM (SELECT TO_CHAR (B.CUST_ID) as CUST_ID,
-                       TO_CHAR (B.SALES_ORD_ID) AS sales_Orderid,
-                       TO_CHAR (B.SALES_ORD_NO) AS sales_Order_No,
-                       TO_CHAR (A.AS_NO) AS service_No,
-                       TO_CHAR (D.STK_CODE) AS product_Code,
-                       TO_CHAR (F.STK_CODE) AS part_Code,
-                       TO_CHAR (F.STK_ID) AS part_Id,
-                       TO_CHAR (F.STK_DESC) AS part_Name,
-                       TO_CHAR (NVL(H.SERIALCHK, '')) AS filter_Barcd_Chk_YN,
-                       TO_CHAR (NVL(H.IS_SMO, '')) AS is_Smo,
-                       TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS is_Serial_Replace,
-                       TO_CHAR (F.STK_TYPE_ID) AS part_Type,
-                       <!-- TO_CHAR (TRIM(E.LEAD_TM_OFFSET)) AS parts_Period, -->
-                       TO_CHAR (E.COMPNT_QTY) AS quanity,
-                       TO_CHAR(S5D.ASR_ITM_PART_QTY) AS chg_Qty ,
-                       TO_CHAR(S5D.ASR_ITM_CHRG_FOC) AS charges_Foc ,
-                       CASE WHEN TO_NUMBER(S5D.ASR_ITM_PART_QTY, '99999') <![CDATA[ > ]]> 0
-                         THEN 'Y'
-                         ELSE 'N' END AS chg_Y_N,
-                       ''  AS ex_Chgid,
-                       CASE WHEN X2.ASR_ITM_PART_ID in ('1917','1915') THEN 'PS2'
-                        ELSE ''
-                        END AS PS_REMARK
-                FROM ( SELECT *
-                       FROM SVC0001D
-                       WHERE AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userId})
-                         AND AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) AND LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' ))
-                         AND AS_STUS_ID <![CDATA[ <> ]]> 4
-                ) A
-                INNER JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
-                INNER JOIN SAL0002D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
-                INNER JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
-                INNER JOIN ( SELECT LOG43.MATRL_NO
-                                  , LOG44.*
-                             FROM LOG0043M LOG43
-                             INNER JOIN LOG0044D LOG44 ON LOG43.BOM = LOG44.BOM
-                               AND TRUNC(SYSDATE) BETWEEN LOG44.VALID_FROM_DT AND LOG44.VALID_TO_DT
-                               AND NVL(LOG44.DEL_INDICT,'N') != 'Y'
-                           ) E ON D.STK_CODE = E.MATRL_NO OR E.MATRL_NO = (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = D.MASTER_STK_ID)
-                INNER JOIN SYS0026M F ON E.BOM_COMPNT = F.STK_CODE
-                LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
-                LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID    AND  S5D.ASR_ITM_PART_ID=    F.STK_ID
-                LEFT OUTER JOIN ( SELECT S26.STK_CODE,
-                                                     S26.IS_SMO,
-                                                     S26.IS_SERIAL_REPLC,
-                                               CASE WHEN STK_TYPE_ID = '62' THEN 'N' ELSE NVL(S26.SERIAL_CHK , 'N') END AS SERIALCHK
-                                        FROM SYS0026M S26
-                                        WHERE 1 = 1
-                                          AND S26.STUS_CODE_ID = 1
-                ) H ON F.STK_CODE = H.STK_CODE
-
-                LEFT OUTER JOIN (
-                select  ase.AS_ID, ase.AS_SO_ID, asd.ASR_ITM_PART_ID
-            FROM SVC0001D ase
-                 JOIN SVC0004D asm   ON ase.AS_ID = asm.AS_ENTRY_ID AND AS_STUS_ID = 4
-                 JOIN SVC0005D asd   ON asm.AS_RESULT_ID = asd.AS_RESULT_ID  AND asm.AS_RESULT_STUS_ID = 4
-                 JOIN ORG0001D M   ON M.MEM_ID = asm.AS_CT_ID WHERE asm.AS_RESULT_ID in
-                 (
-                  SELECT *  FROM (
-                    SELECT DISTINCT asm.AS_RESULT_ID
-                FROM SVC0001D ase JOIN SVC0004D asm ON ase.AS_ID = asm.AS_ENTRY_ID AND AS_STUS_ID = 4
-               JOIN SVC0005D asd ON asm.AS_RESULT_ID = asd.AS_RESULT_ID AND asm.AS_RESULT_STUS_ID = 4 AND asd.ASR_ITM_PART_ID in ('1917','1915') -- 116 NEO SENSE FILTER 11'
-                 AND asm.AS_RESULT_NO = (
-                 SELECT (SELECT MAX(AS_RESULT_NO) FROM SVC0004D WHERE AS_ENTRY_ID = ase.AS_ID) FROM DUAL )
-                    ORDER BY AS_RESULT_ID DESC )
-                                    )
-                )X2 ON A.AS_SO_ID = X2.AS_SO_ID
-
-           ) MST LEFT OUTER JOIN (SELECT A.SRV_SO_ID
-                                       , B.*
-                                  FROM SAL0090D A
-                                     , SAL0087D B
-                                  WHERE A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
-                                    AND B.SRV_FILTER_STUS_ID = 1
-                                  ) A ON MST.sales_Orderid = A.SRV_SO_ID AND MST.part_Id = A.SRV_FILTER_STK_ID
-                        ORDER BY MST.sales_Orderid
-    ) MST LEFT OUTER JOIN (SELECT STK_ID,
-                                  AMT
-                           FROM SAL0016M
-                           WHERE APP_TYPE_ID = '67'
-                             AND STUS_CODE_ID = 1
-                             AND AMT > 0
-    ) SUB ON MST.part_Id = SUB.STK_ID
+    SELECT MST.*
+             , TO_CHAR(SUB.AMT) AS SALES_PRICE
+    FROM ( SELECT DISTINCT MST.*
+                                      , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS FILTER_BARCD_SERIAL_NO
+                                      , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS LAST_CHG_DATE
+                                      , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS LAST_CHG_TIME
+                                      , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS LAST_CHG_DATE_ORIGIN
+                                      , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS LAST_CHG_TIME_ORIGIN
+                                      , TO_CHAR (A.SRV_FILTER_PRIOD) AS PARTS_PERIOD
+               FROM (SELECT TO_CHAR (B.CUST_ID) AS CUST_ID,
+                                    TO_CHAR (B.SALES_ORD_ID) AS SALES_ORDERID,
+                                    TO_CHAR (B.SALES_ORD_NO) AS SALES_ORDER_NO,
+                                    TO_CHAR (A.AS_NO) AS SERVICE_NO,
+                                    TO_CHAR (D.STK_CODE) AS PRODUCT_CODE,
+                                    TO_CHAR (F.STK_CODE) AS PART_CODE,
+                                    TO_CHAR (F.STK_ID) AS PART_ID,
+                                    TO_CHAR (F.STK_DESC) AS PART_NAME,
+                                    TO_CHAR (NVL(H.SERIALCHK, '')) AS FILTER_BARCD_CHK_YN,
+                                    TO_CHAR (NVL(H.IS_SMO, '')) AS IS_SMO,
+                                    TO_CHAR (NVL(H.IS_SERIAL_REPLC, '')) AS IS_SERIAL_REPLACE,
+                                    TO_CHAR (F.STK_TYPE_ID) AS PART_TYPE,
+                                    <!-- TO_CHAR (TRIM(E.LEAD_TM_OFFSET)) AS parts_Period, -->
+                                    TO_CHAR (E.COMPNT_QTY) AS QUANITY,
+                                    TO_CHAR(S5D.ASR_ITM_PART_QTY) AS CHG_QTY ,
+                                    TO_CHAR(S5D.ASR_ITM_CHRG_FOC) AS CHARGES_FOC ,
+                                    CASE WHEN TO_NUMBER(S5D.ASR_ITM_PART_QTY, '99999') <![CDATA[ > ]]> 0
+                                              THEN 'Y'
+                                              ELSE 'N' END AS CHG_Y_N,
+                                    ''  AS EX_CHGID,
+                                    CASE WHEN X2.ASR_ITM_PART_ID IN ('1917','1915') 
+                                              THEN 'PS2'
+                                              ELSE '' END AS PS_REMARK
+                         FROM ( SELECT *
+                                    FROM SVC0001D
+                                    WHERE AS_MEM_ID = ( SELECT MEM_ID 
+                                                                      FROM ORG0001D 
+                                                                      WHERE MEM_CODE = #{userId})
+                                        AND AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) 
+                                        AND LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' ))
+                                        AND AS_STUS_ID <![CDATA[ <> ]]> 4
+                         ) A INNER JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
+                              INNER JOIN SAL0002D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
+                              INNER JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+                              INNER JOIN ( SELECT LOG43.MATRL_NO
+                                                           , LOG44.*
+                                                  FROM LOG0043M LOG43
+                                                  INNER JOIN LOG0044D LOG44 ON LOG43.BOM = LOG44.BOM
+                                                                                           AND TRUNC(SYSDATE) BETWEEN LOG44.VALID_FROM_DT AND LOG44.VALID_TO_DT
+                                                                                           AND NVL(LOG44.DEL_INDICT,'N') != 'Y'
+                              ) E ON D.STK_CODE = E.MATRL_NO OR E.MATRL_NO = (SELECT STK_CODE FROM SYS0026M WHERE STK_ID = D.MASTER_STK_ID)
+                              INNER JOIN SYS0026M F ON E.BOM_COMPNT = F.STK_CODE
+                              LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
+                              LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID    AND  S5D.ASR_ITM_PART_ID=    F.STK_ID
+                              LEFT OUTER JOIN ( SELECT S26.STK_CODE,
+                                                                    S26.IS_SMO,
+                                                                    S26.IS_SERIAL_REPLC,
+                                                                    NVL(TRIM(S26.SERIAL_CHK) , 'N') AS SERIALCHK
+                                                         FROM SYS0026M S26
+                                                         WHERE 1 = 1
+                                                             AND S26.STUS_CODE_ID = 1
+                              ) H ON F.STK_CODE = H.STK_CODE
+                              LEFT OUTER JOIN ( SELECT ASE.AS_ID
+                                                                   , ASE.AS_SO_ID
+                                                                   , ASD.ASR_ITM_PART_ID
+                                                         FROM SVC0001D ASE
+                                                         JOIN SVC0004D ASM ON ASE.AS_ID = ASM.AS_ENTRY_ID AND AS_STUS_ID = 4
+                                                         JOIN SVC0005D ASD ON ASM.AS_RESULT_ID = ASD.AS_RESULT_ID  AND ASM.AS_RESULT_STUS_ID = 4
+                                                         JOIN ORG0001D M ON M.MEM_ID = ASM.AS_CT_ID WHERE ASM.AS_RESULT_ID IN ( SELECT *  
+                                                                                                                                                                             FROM ( SELECT DISTINCT ASM.AS_RESULT_ID
+                                                                                                                                                                                        FROM SVC0001D ASE 
+                                                                                                                                                                                        JOIN SVC0004D ASM ON ASE.AS_ID = ASM.AS_ENTRY_ID 
+                                                                                                                                                                                                                    AND AS_STUS_ID = 4
+                                                                                                                                                                                        JOIN SVC0005D ASD ON ASM.AS_RESULT_ID = ASD.AS_RESULT_ID 
+                                                                                                                                                                                                                    AND ASM.AS_RESULT_STUS_ID = 4 
+                                                                                                                                                                                                                    AND ASD.ASR_ITM_PART_ID IN ('1917','1915') -- 116 NEO SENSE FILTER 11'
+                                                                                                                                                                                                                    AND ASM.AS_RESULT_NO = ( SELECT (SELECT MAX(AS_RESULT_NO) FROM SVC0004D WHERE AS_ENTRY_ID = ASE.AS_ID) FROM DUAL )
+                                                                                                                                                                                        ORDER BY AS_RESULT_ID DESC )
+                                                         )
+                              ) X2 ON A.AS_SO_ID = X2.AS_SO_ID
+               ) MST LEFT OUTER JOIN ( SELECT A.SRV_SO_ID
+                                                            , B.*
+                                                   FROM SAL0090D A
+                                                          , SAL0087D B
+                                                   WHERE A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+                                                       AND B.SRV_FILTER_STUS_ID = 1
+               ) A ON MST.SALES_ORDERID = A.SRV_SO_ID 
+                  AND MST.PART_ID = A.SRV_FILTER_STK_ID
+                  ORDER BY MST.SALES_ORDERID
+    ) MST LEFT OUTER JOIN ( SELECT STK_ID,
+                                                   AMT
+                                        FROM SAL0016M
+                                        WHERE APP_TYPE_ID = '67'
+                                            AND STUS_CODE_ID = 1
+                                            AND AMT > 0
+    ) SUB ON MST.PART_ID = SUB.STK_ID
   </select>
 
   <select id="afterServiceParts_b" parameterType="Map" resultType="egovMap">
