@@ -546,22 +546,15 @@
 			))
 		</if>
 		AND ( 1 = Extent1.ORD_STUS_ID )
-		<choose>
-            <when test="userBranchId != null and userBranchId != '' ">
-                AND Extent1.KEYIN_BRNCH_ID = #{userBranchId}
-            </when>
-            <otherwise>
-                <if test="keyInBranchList != '' and keyInBranchList != null">
-                 AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
-                 Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
-                <foreach collection="keyInBranchList" index="index"
-                separator=",">
-                '${keyInBranchList[index]}'
-                </foreach>
-                ))
-                </if>
-            </otherwise>
-         </choose>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+         AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
+         Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
+            <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+            </foreach>
+          ))
+        </if>
+
 		<if test="dscBranchList != '' and dscBranchList != null">
 			AND ( (CASE WHEN ( Extent1.DSC_BRNCH_ID IS NOT NULL ) THEN
 			Extent1.DSC_BRNCH_ID ELSE 0 END) IN (
@@ -745,21 +738,13 @@
         <if test='pdpaMonth != null and pdpaMonth != 0'>
             AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
         </if>
-         <choose>
-            <when test="userBranchId != null and userBranchId != '' ">
-            	AND Extent1.BRNCH_ID = #{userBranchId}
-            </when>
-            <otherwise>
-            	<if test="keyInBranchList != '' and keyInBranchList != null">
-            		AND Extent1.BRNCH_ID IN (
-            		<foreach collection="keyInBranchList" index="index"
-            			separator=",">
-            			'${keyInBranchList[index]}'
-            		</foreach>
-            		)
-            	</if>
-            </otherwise>
-         </choose>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
         <if test="custId != '' ">
             AND Extent1.CUST_ID = #{custId}
         </if>

@@ -137,14 +137,10 @@ function fn_report(viewType){
 
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY')+1 )";
     }
-    if("${SESSION_INFO.roleId}" == 256) {
-        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
-    }
-    else {
-        if($("#cmbKeyBranch :selected").index() > 0) {
-            keyInBranch = $("#cmbKeyBranch :selected").text();
-            whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
-        }
+   
+    if($("#cmbKeyBranch :selected").index() > 0) {
+        keyInBranch = $("#cmbKeyBranch :selected").text();
+        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
     }
 
 	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
@@ -221,7 +217,13 @@ function fn_report(viewType){
 
 }
 
-CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+if("${SESSION_INFO.roleId}" == "256" ) {
+    CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+    $('#cmbKeyBranch').prop("disabled", true);
+}
+else {
+    CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+} 
 CommonCombo.make('cmbSubmitBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </script>

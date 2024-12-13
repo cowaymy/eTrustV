@@ -27,7 +27,7 @@
             $("#grpCode").attr("readonly", true);
             $("#deptCode").attr("readonly", true);
         }
-
+        
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
             if(IS_3RD_PARTY == '0') {
@@ -52,6 +52,12 @@
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
 
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
+        
+        if("${SESSION_INFO.roleId}" == "256" ) {
+        	doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', "${SESSION_INFO.userBranchId}", 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+        	$('#listKeyinBrnchId').multipleSelect("disable");
+         }
+   
     });
 
     function fn_setOptGrpClass() {

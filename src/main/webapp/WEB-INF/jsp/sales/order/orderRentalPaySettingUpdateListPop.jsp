@@ -174,15 +174,10 @@ function fn_report(){
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpOrderDateTo+"', 'MM/dd/YY'))";
     }
 
-    if("${SESSION_INFO.roleId}" == 256) {
-        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
-    }
-    else {
-    	if($("#cmbKeyBranch :selected").index() > 0){
+    if($("#cmbKeyBranch :selected").index() > 0){
             whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
-        }
     }
-
+   
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -221,9 +216,15 @@ function cmbAppType_OnItemChecked(){
 
 }
 
- CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+ 
+ if("${SESSION_INFO.roleId}" == "256" ) {
+	 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+     $('#cmbKeyBranch').prop("disabled", true);
+ }
+ else {
+	 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+ } 
  CommonCombo.make('cmbBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
-
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

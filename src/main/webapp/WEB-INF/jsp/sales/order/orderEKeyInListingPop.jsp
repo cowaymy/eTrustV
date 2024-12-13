@@ -20,6 +20,17 @@ $('.multy_select').change(function() {
    width: '100%'
 });
 
+$(document).ready(function(){ 
+	if("${SESSION_INFO.roleId}" == "256" ) {
+	    doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '${SESSION_INFO.userBranchId}', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+	    $('#_brnchId').multipleSelect("disable");
+	}
+	else {
+		doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        $('#_brnchId').multipleSelect("checkAll");
+    } 
+});
+
 function fn_multiCombo(){
 
     $('#_brnchId').change(function() {
@@ -28,9 +39,6 @@ function fn_multiCombo(){
         selectAll: true, // 전체선택
         width: '100%'
     });
-    $('#_brnchId').multipleSelect("checkAll");
-
-
 }
 
 $.fn.clearForm = function() {
@@ -123,7 +131,7 @@ function fn_report(viewType){
         whereSQL += " AND (doc.DOC_SUB_DT BETWEEN TO_DATE('"+dpSubmitDateFr+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+dpSubmitDateTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
     }
 
-   /*  if($('#_brnchId :selected').length > 0){
+     if($('#_brnchId :selected').length > 0){
         whereSQL += " AND (";
 
         $('#_brnchId :selected').each(function(i, mul){
@@ -140,31 +148,7 @@ function fn_report(viewType){
         });
         whereSQL += ") ";
     }
-    runNo = 0; */
-    
-    if("${SESSION_INFO.roleId}" == 256) {
-        whereSQL += " AND BRNCH.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
-    }
-    else {
-         if($('#_brnchId :selected').length > 0){
-                whereSQL += " AND (";
-
-                $('#_brnchId :selected').each(function(i, mul){
-                    if(runNo > 0){
-                        whereSQL += " OR BRNCH.BRNCH_ID = '"+$(mul).val()+"' ";
-                        keyInBranch += ", "+$(mul).text();
-
-                    }else{
-                        whereSQL += " BRNCH.BRNCH_ID = '"+$(mul).val()+"' ";
-                        keyInBranch += $(mul).text();
-
-                    }
-                    runNo += 1;
-                });
-                whereSQL += ") ";
-            }
-            runNo = 0;
-    }
+    runNo = 0; 
 
     if($("#cmbMemType :selected").index() > 0){
     	memType = $("#cmbMemType :selected").val();
@@ -201,7 +185,6 @@ function fn_report(viewType){
     $("#form #V_SELECTSQL").val("");
     $("#form #V_FULLSQL").val("");
 
-
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -210,8 +193,6 @@ function fn_report(viewType){
     Common.report("form", option);
 
 }
-
-doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
 
 </script>
 
