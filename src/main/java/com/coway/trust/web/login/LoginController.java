@@ -99,36 +99,15 @@ public class LoginController {
 	    Base32 codec =  new  Base32();
 	    //Generate authentication key
 	    //String  encodedKey =  new  String (codec.encode("leo.ham@coway.com.my".getBytes()));
-	    SecureRandom secureRandom = new SecureRandom();
+
 	    String email = (String) params.get("email");
 	    String memCode = (String) params.get("memCode");
 	    String userName = (String) params.get("userName");
 	    String isHideQR = (String) params.get("isCheckMfa");
 	    String userId = (String) params.get("userId");
-	    String mfaKey = (String) params.get("mfaKey");
-	    String userTypeId = (String) params.get("userTypeId");
-
-
-	    byte[] secretKey2 = new byte[10];
-	  	byte[] bEncodedKey =  codec.encode(secretKey2);
-	    String  encodedKey =  "";
-
-	    if (mfaKey != null && mfaKey != "" && !mfaKey.isEmpty() && (isHideQR.equals("1") || isHideQR.equals("2") || isHideQR.equals("3"))){
-	    	encodedKey = mfaKey;
-	    }
-
-	    else if ((mfaKey == null || mfaKey == "" || mfaKey.isEmpty()) && (isHideQR.equals("1") || isHideQR.equals("2"))){
-	    	secretKey2 = Arrays.copyOf(email.getBytes(),  10 );
-	    	bEncodedKey =  codec.encode(secretKey2);
-		    encodedKey =  new  String (bEncodedKey);
-	    }
-
-	    else {
-	        secureRandom.nextBytes(secretKey2);
-	    	bEncodedKey =  codec.encode(secretKey2);
-		    encodedKey =  new  String (bEncodedKey);
-	    }
-
+	    byte [] secretKey =  Arrays.copyOf(email.getBytes(),  10 );
+	  	    byte []bEncodedKey =  codec.encode(secretKey);
+	    String  encodedKey =  new  String (bEncodedKey);
 	    //Generate barcode address
 	    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
 
@@ -138,10 +117,6 @@ public class LoginController {
 	    model.addAttribute( "memCode" , memCode);
 	    model.addAttribute( "isHideQR" , isHideQR);
 	    model.addAttribute( "userId" , userId);
-	    model.addAttribute( "email" , email);
-	    model.addAttribute( "userTypeId" , userTypeId);
-
-	    LOGGER.debug("secretKey2 : {}", secretKey2);
 
 	    LOGGER.debug("encodedKey : {}", encodedKey);
 	    LOGGER.debug("QrUrl : {}", QrUrl);
@@ -195,11 +170,7 @@ public class LoginController {
 	else {
 
 		LOGGER.info("uuuserrr{}", userId);
-		params.put("userId", userId);
-		params.put("mfaKey", encodedKey);
-		params.put("mfaFlag", 1);
-
-		loginService.updateCheckMfaFlag(params);
+		loginService.updateCheckMfaFlag(userId);
 		message.setCode(AppConstants.SUCCESS);
 		message.setData("");
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -344,10 +315,10 @@ public class LoginController {
 
 			loginService.saveLoginHistory(loginHistory);
 
-			//if(params.get("isCheckedMfa").equals("Y") || loginVO.getCheckMfaFlag() == 2){
+			if(params.get("isCheckedMfa").equals("Y") || loginVO.getCheckMfaFlag() == 2){
 				HttpSession session = sessionHandler.getCurrentSession();
 				session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
-			//}
+			}
 
 			message.setData(loginVO);
 
@@ -1188,79 +1159,79 @@ public class LoginController {
 	}
 
 
-	@RequestMapping(value = "/checkResetMFAEmail.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> checkResetMFAEmail(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
-
-		params.put("cowayMail", "@COWAY.COM.MY");
-		LOGGER.info("###params: " + params.toString());
-
-		// to check if new QR code will be sent to coway format email
-		int result =  loginService.checkResetMFAEmail(params);
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(result);
-
-		return ResponseEntity.ok(message);
-	}
-
-
-	@RequestMapping(value = "/requestMFAReset.do" , method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> requestMFAReset(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model)  throws  Exception {
-
-	ReturnMessage message = new ReturnMessage();
-
-	LOGGER.info("params{}",  params);
-
-	try {
-
-    	int userId = Integer. parseInt((String) params.get("userId"));
-    	Base32 codec =  new  Base32();
-	    //Generate authentication key
-	    SecureRandom secureRandom = new SecureRandom();
-	    String email = (String) params.get("email");
-	    String memCode = (String) params.get("memCode");
-
-	    byte[] secretKey = new byte[10];
-	  	byte[] bEncodedKey =  codec.encode(secretKey);
-	    String encodedKey =  "";
-
-	    secureRandom.nextBytes(secretKey);
-	    bEncodedKey =  codec.encode(secretKey);
-		encodedKey =  new  String (bEncodedKey);
-
-	    //Generate barcode address
-	    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
-	    boolean isEmailSent = false;
-
-
-    	LOGGER.info("uuuserrr{}", userId);
-    	params.put("userId", userId);
-    	params.put("mfaKey", encodedKey);
-    	params.put("mfaFlag", 3);
-    	params.put("qrLink", QrUrl);
-
-    	isEmailSent = loginService.sendResetMFAEmail(params);
-
-    	if(isEmailSent){
-        	loginService.updateCheckMfaFlag(params);
-        	message.setCode(AppConstants.SUCCESS);
-        	message.setData("");
-        	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-    	}
-    	else {
-    		message.setCode(AppConstants.FAIL);
-    		message.setData("");
-    		message.setMessage("Kindly check with administrator");
-    	}
-
-
-	} catch (Exception e){
-	LOGGER.error(e.toString());
-	}
-
-	return ResponseEntity.ok(message);
-	}
+//	@RequestMapping(value = "/checkResetMFAEmail.do", method = RequestMethod.GET)
+//	public ResponseEntity<ReturnMessage> checkResetMFAEmail(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
+//
+//		params.put("cowayMail", "@COWAY.COM.MY");
+//		LOGGER.info("###params: " + params.toString());
+//
+//		// to check if new QR code will be sent to coway format email
+//		int result =  loginService.checkResetMFAEmail(params);
+//
+//		ReturnMessage message = new ReturnMessage();
+//		message.setCode(AppConstants.SUCCESS);
+//		message.setData(result);
+//
+//		return ResponseEntity.ok(message);
+//	}
+//
+//
+//	@RequestMapping(value = "/requestMFAReset.do" , method = RequestMethod.POST)
+//	public ResponseEntity<ReturnMessage> requestMFAReset(@RequestBody Map<String, Object> params, HttpServletRequest request, ModelMap model)  throws  Exception {
+//
+//	ReturnMessage message = new ReturnMessage();
+//
+//	LOGGER.info("params{}",  params);
+//
+//	try {
+//
+//    	int userId = Integer. parseInt((String) params.get("userId"));
+//    	Base32 codec =  new  Base32();
+//	    //Generate authentication key
+//	    SecureRandom secureRandom = new SecureRandom();
+//	    String email = (String) params.get("email");
+//	    String memCode = (String) params.get("memCode");
+//
+//	    byte[] secretKey = new byte[10];
+//	  	byte[] bEncodedKey =  codec.encode(secretKey);
+//	    String encodedKey =  "";
+//
+//	    secureRandom.nextBytes(secretKey);
+//	    bEncodedKey =  codec.encode(secretKey);
+//		encodedKey =  new  String (bEncodedKey);
+//
+//	    //Generate barcode address
+//	    String  QrUrl =  getQRBarcodeURL( memCode, email, encodedKey);
+//	    boolean isEmailSent = false;
+//
+//
+//    	LOGGER.info("uuuserrr{}", userId);
+//    	params.put("userId", userId);
+//    	params.put("mfaKey", encodedKey);
+//    	params.put("mfaFlag", 3);
+//    	params.put("qrLink", QrUrl);
+//
+//    	isEmailSent = loginService.sendResetMFAEmail(params);
+//
+//    	if(isEmailSent){
+//        	loginService.updateCheckMfaFlag(params);
+//        	message.setCode(AppConstants.SUCCESS);
+//        	message.setData("");
+//        	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//    	}
+//    	else {
+//    		message.setCode(AppConstants.FAIL);
+//    		message.setData("");
+//    		message.setMessage("Kindly check with administrator");
+//    	}
+//
+//
+//	} catch (Exception e){
+//	LOGGER.error(e.toString());
+//	}
+//
+//	return ResponseEntity.ok(message);
+//	}
 
 
 
