@@ -1762,7 +1762,7 @@
                                       , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS LAST_CHG_DATE_ORIGIN
                                       , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS LAST_CHG_TIME_ORIGIN
                                       , TO_CHAR (A.SRV_FILTER_PRIOD) AS PARTS_PERIOD
-                                      , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS SYS_FILTER_BARCD_SERAIL_NO_OLD,
+                                      , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS SYS_FILTER_BARCD_SERAIL_NO_OLD
                                       , NULL AS IS_FILL_FILTER_INFO
                FROM (SELECT TO_CHAR (B.CUST_ID) AS CUST_ID,
                                     TO_CHAR (B.SALES_ORD_ID) AS SALES_ORDERID,
