@@ -1762,7 +1762,8 @@
                                       , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS LAST_CHG_DATE_ORIGIN
                                       , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS LAST_CHG_TIME_ORIGIN
                                       , TO_CHAR (A.SRV_FILTER_PRIOD) AS PARTS_PERIOD
-                                      , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS SYS_FILTER_BARCD_SERAIL_NO_OLD
+                                      , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS SYS_FILTER_BARCD_SERAIL_NO_OLD,
+                                      , NULL AS IS_FILL_FILTER_INFO,
                FROM (SELECT TO_CHAR (B.CUST_ID) AS CUST_ID,
                                     TO_CHAR (B.SALES_ORD_ID) AS SALES_ORDERID,
                                     TO_CHAR (B.SALES_ORD_NO) AS SALES_ORDER_NO,
@@ -1779,7 +1780,7 @@
                                     TO_CHAR (E.COMPNT_QTY) AS QUANITY,
                                     TO_CHAR(S5D.ASR_ITM_PART_QTY) AS CHG_QTY ,
                                     TO_CHAR(S5D.ASR_ITM_CHRG_FOC) AS CHARGES_FOC ,
-                                    TO_CHAR(NVL(S5D.FILTER_BARCD_SERIAL_NO,'')) AS FILTER_BARCD_SERAIL_NO, 
+                                    TO_CHAR(NVL(S5D.FILTER_BARCD_SERIAL_NO,'')) AS FILTER_BARCD_SERAIL_NO,
                                     TO_CHAR(NVL(S5D.FILTER_SRL_UNMATCH_RSN,'')) FILTER_SERIAL_UNMATCH_REASON,
                                     TO_CHAR(NVL(S5D.OLD_FILTER_BARCD_SERIAL_NO,'')) FILTER_BARCD_SERAIL_NO_OLD,
                                     CASE WHEN TO_NUMBER(S5D.ASR_ITM_PART_QTY, '99999') <![CDATA[ > ]]> 0
