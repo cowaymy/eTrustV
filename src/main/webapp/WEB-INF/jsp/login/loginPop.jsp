@@ -199,7 +199,7 @@ function fn_popAccept() {
         Common.alert("* Please agree the terms and conditions.");
         return false;
     }
-    Common.alert("${applicantId}");
+    Common.alert("${popId}");
 
     Common.ajax("GET", "/login/popAccept.do", {choice: "Y", popId: "${popId}", applicantId: "${applicantId}"}, function(result) {
         if(result.message == "success.") {

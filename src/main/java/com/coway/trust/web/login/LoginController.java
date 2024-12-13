@@ -610,12 +610,12 @@ public class LoginController {
 					params.put("pendingAgmt", "Y");
 					params.put("applicantId", item1.get("aplctnId") != null ? item1.get("aplctnId").toString() : "0");
 
-					if(consentExist > 0 && ("115".equals(item1.get("roleType")) ||
+					/*if(consentExist > 0 && ("115".equals(item1.get("roleType")) ||
 					   "121".equals(item1.get("roleType")) ||
 					   "352".equals(item1.get("roleType")) || "351".equals(item1.get("roleType")))
 					  ) {
 					    params.put("consentFlg", "Y");
-					}
+					}*/
 				}
 				// Accepted (Existing Members)
 				else if ("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
@@ -715,58 +715,67 @@ public class LoginController {
 						LOGGER.debug("===========roleType============" + item1.get("roleType"));
 
 						LOGGER.debug("============ ACCEPTED =============");
-						params.put("popType", "A");
-						params.put("roleId", item1.get("roleType"));
-						EgovMap aggrementCrtDt = new EgovMap();
-						aggrementCrtDt = (EgovMap) loginService.getPopDtls(params);
-						LOGGER.debug("============ aggrementCrtDt =============" + aggrementCrtDt);
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						Date agreeCrtDt = sdf.parse(aggrementCrtDt.get("crtDt").toString().substring(0, 10));
-						LOGGER.debug("============ agreeCrtDt =============" + agreeCrtDt);
 
-						// here start the validation
-						params.put("roleId", "356");
-						try {
-							Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
-							LOGGER.debug("===========joinDT============" + joinDt);
-							Date cnfmDate = sdf.parse(cnfmDt);
-							LOGGER.debug("===========cnfmDate data type============" + cnfmDate.getClass().getName());
+						if ( item1.get("popId") != null){
+							// do not check agreement last sign date
+						} else {
 
-							Date currDate = new Date(); // Current Date
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(currDate);
+    						params.put("popType", "A");
+    						params.put("roleId", item1.get("roleType"));
+    						EgovMap aggrementCrtDt = new EgovMap();
+    						aggrementCrtDt = (EgovMap) loginService.getPopDtls(params);
+    						LOGGER.debug("============ aggrementCrtDt =============" + aggrementCrtDt);
+    						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    						Date agreeCrtDt = sdf.parse(aggrementCrtDt.get("crtDt").toString().substring(0, 10));
+    						LOGGER.debug("============ agreeCrtDt =============" + agreeCrtDt);
 
-							Calendar c = Calendar.getInstance();
-							c.setTime(joinDt);
-							c.add(Calendar.YEAR, 1);
-							Date currRenewalDt = new Date();
-							currRenewalDt = c.getTime();
+    						// here start the validation
+    						params.put("roleId", "356");
+    						try {
+    							Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
+    							LOGGER.debug("===========joinDT============" + joinDt);
+    							Date cnfmDate = sdf.parse(cnfmDt);
+    							LOGGER.debug("===========cnfmDate data type============" + cnfmDate.getClass().getName());
 
-							if (cnfmDate.compareTo(agreeCrtDt) < 0 && joinDt.compareTo(agreeCrtDt) < 0
-									&& currDate.compareTo(agreeCrtDt) >= 0) {
-								LOGGER.debug("===========AAAAAAAAAAAAAA============");
-								params.put("popType", "A");
-							}
+    							Date currDate = new Date(); // Current Date
+    							Calendar cal = Calendar.getInstance();
+    							cal.setTime(currDate);
 
-							// if(currDate.compareTo(currRenewalDt) < 0 )
-							else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0
-									&& currDate.compareTo(currRenewalDt) >= 0) {
-								LOGGER.debug("===========BBBBBBBBBBBBBBBBBB============");
-								params.put("popType", "A");
-							} else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
-								params.put("popType", "M");
-							} else {
-								params.put("popType", "-");
-							}
-						} catch (Exception e) {
-							LOGGER.error(e.toString());
+    							Calendar c = Calendar.getInstance();
+    							c.setTime(joinDt);
+    							c.add(Calendar.YEAR, 1);
+    							Date currRenewalDt = new Date();
+    							currRenewalDt = c.getTime();
+
+    							if (cnfmDate.compareTo(agreeCrtDt) < 0 && joinDt.compareTo(agreeCrtDt) < 0
+    									&& currDate.compareTo(agreeCrtDt) >= 0) {
+    								LOGGER.debug("===========AAAAAAAAAAAAAA============");
+    								params.put("popType", "A");
+    							}
+
+    							// if(currDate.compareTo(currRenewalDt) < 0 )
+    							else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0
+    									&& currDate.compareTo(currRenewalDt) >= 0) {
+    								LOGGER.debug("===========BBBBBBBBBBBBBBBBBB============");
+    								params.put("popType", "A");
+    							} else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
+    								params.put("popType", "M");
+    							} else {
+    								params.put("popType", "-");
+    							}
+    						} catch (Exception e) {
+    							LOGGER.error(e.toString());
+    						}
 						}
 					}
 					// HP, CD, HT
-                    else if(consentExist > 0 &&
-                            itemConsent == null &&
-                            "4".equals(item1.get("memLvl").toString()) &&
-                            ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))) {
+                    else if(
+                    		consentExist > 0 &&
+//                            itemConsent == null &&
+                            //"4".equals(item1.get("memLvl").toString()) &&
+                            ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))
+                            && params.get("pendingAgmt") != null && params.get("pendingAgmt").toString().equals("Y")
+                    		) {
                         LOGGER.info("HP :: ORG0036D empty");
                         params.put("popType", "C");
                     }
@@ -799,8 +808,9 @@ public class LoginController {
 
 		/*
 		 * For Organization ::
-		 * Agreement :: highest precedence
-		 * Memo :: 2nd
+		 * Consent (COBC) :: highest precedence
+		 * Agreement :: 2nd highest precedence
+		 * Memo :: 3rd
 		 * Notice :: Lowest (Generally configured for all type users inclusive staff)
 		 */
 		if(!"A".equals(popType) && !"M".equals(popType) && noticeExist > 0) {
@@ -816,7 +826,8 @@ public class LoginController {
 	                params.put("popType", "N");
 	            } else if(memLvl == 4) {
 	                if("-".equals(popType) || "".equals(popType)) {
-	                    if(consentExist > 0 && itemConsent == null) {
+	                   // if(consentExist > 0 && itemConsent == null) {
+	                    if(consentExist > 0 && itemConsent != null) { // Hui Ding, 13/12/2024
 	                        params.put("popType", "C");
 	                    } else {
 	                        params.put("popType", "N");
@@ -830,7 +841,8 @@ public class LoginController {
 	             * Subject to change if required
 	             */
 	            if(!"A".equals(popType)) {
-	                if(consentExist > 0 && itemConsent == null) {
+	                //if(consentExist > 0 && itemConsent == null) {
+	                if(consentExist > 0 && itemConsent != null) {// Hui Ding, 13/12/2024
 	                    params.put("popType", "C");
 	                } else {
 	                    params.put("popType", "N");

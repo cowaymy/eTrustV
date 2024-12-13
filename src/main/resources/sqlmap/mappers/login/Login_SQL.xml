@@ -391,8 +391,8 @@
             AND A.POP_ID = #{popId}
         </if>
       AND POP_FLG = 'A'
-      <!-- AND VALID_FR <![CDATA[<=]]> SYSDATE
-      AND VALID_TO <![CDATA[>=]]> SYSDATE -->
+      AND VALID_FR <![CDATA[<=]]> SYSDATE
+      AND VALID_TO <![CDATA[>=]]> SYSDATE
     </select>
 
     <select id="checkNotice" parameterType="Map" resultType="int">
@@ -549,7 +549,7 @@
                          AND POP_FLG = 'A'
                          AND VALID_FR <![CDATA[<=]]> SYSDATE
                          AND VALID_TO <![CDATA[>=]]> SYSDATE
-                         and rownum = 1
+
                         ) POP_ID
                     </otherwise>
                 </choose>
