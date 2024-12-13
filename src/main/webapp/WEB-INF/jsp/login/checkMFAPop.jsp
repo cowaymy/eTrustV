@@ -95,7 +95,7 @@ function mfaPopUpClose()
            </p>
            </li>
            </ul>
-           <c:if test="${isHideQR eq '1' and userTypeId eq '4'}">
+           <c:if test="${isHideQR eq '1' and (userTypeId eq '4' or userTypeId eq '6')}">
            <br>
 <!--            <ul class="login_opt">
  -->           <ul class="login_opt" style="list-style-type: none; padding: 0; margin-top: 20px;">
