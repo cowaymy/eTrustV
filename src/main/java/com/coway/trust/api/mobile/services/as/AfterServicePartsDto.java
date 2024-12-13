@@ -74,7 +74,7 @@ public class AfterServicePartsDto {
 
   private String filterBarcdSerialNoOld;
 
-  private String filterBarcdSerailNo;
+  private String filterBarcdSerialNo;
 
   private String filterSerialUnmatchReason;
 
@@ -274,12 +274,12 @@ public class AfterServicePartsDto {
     this.filterBarcdSerialNoOld = filterBarcdSerialNoOld;
   }
 
-  public String getFilterBarcdSerailNo() {
-    return filterBarcdSerailNo;
+  public String getFilterBarcdSerialNo() {
+    return filterBarcdSerialNo;
   }
 
-  public void setFilterBarcdSerailNo( String filterBarcdSerailNo ) {
-    this.filterBarcdSerailNo = filterBarcdSerailNo;
+  public void setFilterBarcdSerialNo( String filterBarcdSerialNo ) {
+    this.filterBarcdSerialNo = filterBarcdSerialNo;
   }
 
   public String getFilterSerialUnmatchReason() {
