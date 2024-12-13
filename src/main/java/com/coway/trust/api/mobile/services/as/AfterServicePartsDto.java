@@ -72,13 +72,15 @@ public class AfterServicePartsDto {
 
   private String psRemark;
 
-  private String sysFilterBarcdSerailNoOld;
+  private String filterBarcdSerialNoOld;
 
   private String filterBarcdSerailNo;
 
-  private String filterSerailUnmatchReason;
+  private String filterSerialUnmatchReason;
 
-  private String filterBarcdSerailNoOld;
+  private String sysFilterBarcdSerialNoOld;
+
+  private String isFillFilterInfo;
 
   public String getFilterBarcdChkYn() {
     return filterBarcdChkYn;
@@ -264,12 +266,12 @@ public class AfterServicePartsDto {
     this.chargeYN = chargeYN;
   }
 
-  public String getSysFilterBarcdSerailNoOld() {
-    return sysFilterBarcdSerailNoOld;
+  public String getFilterBarcdSerialNoOld() {
+    return filterBarcdSerialNoOld;
   }
 
-  public void setSysFilterBarcdSerailNoOld( String sysFilterBarcdSerailNoOld ) {
-    this.sysFilterBarcdSerailNoOld = sysFilterBarcdSerailNoOld;
+  public void setFilterBarcdSerialNoOld( String filterBarcdSerialNoOld ) {
+    this.filterBarcdSerialNoOld = filterBarcdSerialNoOld;
   }
 
   public String getFilterBarcdSerailNo() {
@@ -280,20 +282,28 @@ public class AfterServicePartsDto {
     this.filterBarcdSerailNo = filterBarcdSerailNo;
   }
 
-  public String getFilterSerailUnmatchReason() {
-    return filterSerailUnmatchReason;
+  public String getFilterSerialUnmatchReason() {
+    return filterSerialUnmatchReason;
   }
 
-  public void setFilterSerailUnmatchReason( String filterSerailUnmatchReason ) {
-    this.filterSerailUnmatchReason = filterSerailUnmatchReason;
+  public void setFilterSerialUnmatchReason( String filterSerialUnmatchReason ) {
+    this.filterSerialUnmatchReason = filterSerialUnmatchReason;
   }
 
-  public String getFilterBarcdSerailNoOld() {
-    return filterBarcdSerailNoOld;
+  public String getSysFilterBarcdSerialNoOld() {
+    return sysFilterBarcdSerialNoOld;
   }
 
-  public void setFilterBarcdSerailNoOld( String filterBarcdSerailNoOld ) {
-    this.filterBarcdSerailNoOld = filterBarcdSerailNoOld;
+  public void setSysFilterBarcdSerialNoOld( String sysFilterBarcdSerialNoOld ) {
+    this.sysFilterBarcdSerialNoOld = sysFilterBarcdSerialNoOld;
+  }
+
+  public String getIsFillFilterInfo() {
+    return isFillFilterInfo;
+  }
+
+  public void setIsFillFilterInfo( String isFillFilterInfo ) {
+    this.isFillFilterInfo = isFillFilterInfo;
   }
 
   public static AfterServicePartsDto create( EgovMap egovMap ) {
