@@ -7,6 +7,7 @@ var verCnt = 0;
 var userType = "";
 
 $(document).ready(function() {
+	debugger;
 console.log("loginPop.jsp");
     //$("#PDF").attr("hidden", true);
     //$("#dlPDF").attr("hidden", true);
@@ -87,6 +88,7 @@ console.log("loginPop.jsp");
             $("#agreementRejectBtn").attr("hidden", true);
         }
     }
+
 
     // Consent Letter/Additional Pop Up type
     if("${popType}" != "A" && "${popType}" != "M" && "${popType}" != "B" && "${popType}" != "N") {
@@ -197,8 +199,9 @@ function fn_popAccept() {
         Common.alert("* Please agree the terms and conditions.");
         return false;
     }
+    Common.alert("${applicantId}");
 
-    Common.ajax("GET", "/login/popAccept.do", {choice: "Y", popId: "${popId}"}, function(result) {
+    Common.ajax("GET", "/login/popAccept.do", {choice: "Y", popId: "${popId}", applicantId: "${applicantId}"}, function(result) {
         if(result.message == "success.") {
             $("#loginForm").attr({
                 action: getContextPath() + "/common/main.do",

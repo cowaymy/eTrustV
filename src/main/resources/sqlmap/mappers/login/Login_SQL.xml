@@ -316,7 +316,9 @@
             C.NRIC,
             E.NAME BANK_NAME,
             C.BANK_ACC_NO,
-            F.MEM_LVL
+            F.MEM_LVL,
+            D.POP_ID,
+            D.APLCTN_ID
         FROM SYS0047M A
         INNER JOIN SYS0045M B
             ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
@@ -384,10 +386,14 @@
         </if>
         <if test='popType == "N" or popType == "C" '>
             AND POP_TYPE = #{popType}
-            AND VALID_FR <![CDATA[<=]]> SYSDATE
-            AND VALID_TO <![CDATA[>=]]> SYSDATE
+
+        </if>
+        <if test='popId > 0 '> <!-- Added by Hui Ding. 12/12/2024 -->
+            AND A.POP_ID = #{popId}
         </if>
       AND POP_FLG = 'A'
+      <!-- AND VALID_FR <![CDATA[<=]]> SYSDATE
+      AND VALID_TO <![CDATA[>=]]> SYSDATE -->
     </select>
 
     <select id="checkNotice" parameterType="Map" resultType="int">
@@ -509,6 +515,22 @@
             AND VALID_FR <![CDATA[<=]]> SYSDATE
             AND VALID_TO <![CDATA[>=]]> SYSDATE
         )
+    </select>
+
+    <!-- To pop COC consent. Hui Ding, 12/12/2024 -->
+    <select id="getConsentDtls2" parameterType="Map" resultType="egovMap">
+       SELECT
+            A.USER_ID,
+            B.MEM_ID,
+            D.POP_ID,
+            A.ACTION_DT,
+            C.APLCTN_ID
+        FROM ORG0036D A
+        LEFT JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+        JOIN ORG0003D C ON B.APLICNT_ID = C.APLCTN_ID AND A.POP_ID = C.POP_ID  AND C.CNFM = 0 AND C.STUS_ID = 44 AND C.CNFM_DT = '01/01/1900'
+        LEFT JOIN SYS0091M D ON C.POP_ID = D.POP_ID AND D.POP_TYPE = 'C' AND D.POP_FLG = 'A' AND D.VALID_FR <![CDATA[<=]]> SYSDATE AND D.VALID_TO <![CDATA[>=]]> SYSDATE
+        WHERE USER_ID = #{userId}
+
     </select>
 
     <update id="loginPopAccept" parameterType="Map">
@@ -711,4 +733,5 @@
      <update id="updateResetMFA" parameterType="Map">
         update sys0047m set CHECK_MFA = 3, MFA_KEY = #{mfaKey} where USER_ID = #{userId}
     </update>
+
 </mapper>

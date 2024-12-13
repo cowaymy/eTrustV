@@ -99,4 +99,6 @@ public interface LoginMapper {
 
   void updateResetMFA(Map<String, Object> params);
 
+  EgovMap getConsentDtls2(Map<String, Object> params);
+
 }

@@ -54,8 +54,7 @@ import com.coway.trust.util.CommonUtils;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loginService")
-public class LoginServiceImpl
-  implements LoginService {
+public class LoginServiceImpl implements LoginService {
   private static final Logger LOGGER = LoggerFactory.getLogger( LoginServiceImpl.class );
 
   @Autowired
@@ -207,6 +206,11 @@ public class LoginServiceImpl
   @Override
   public EgovMap getDtls( Map<String, Object> params ) {
     return loginMapper.getDtls( params );
+  }
+
+  @Override
+  public EgovMap getConsentDtls2( Map<String, Object> params ) {
+    return loginMapper.getConsentDtls2( params );
   }
 
   @Override
@@ -600,4 +604,5 @@ public class LoginServiceImpl
 
 		return isSuccess;
 	}
+
 }

@@ -530,6 +530,7 @@
 	                                    $("#verBankAccNo").val(aResult.verBankAccNo);
 	                                    $("#verBankName").val(aResult.verBankName);
 	                                    $("#consentFlg").val(aResult.consentFlg);
+	                                    $("#applicantId").val(aResult.applicantId);
 	                                    Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
 	                                }
 	                            } else {
@@ -785,6 +786,7 @@
             <input type="hidden" id="verBankName" name="verBankName" value=""/>
             <input type="hidden" id="consentFlg" name="consentFlg" value=""/>
             <input type="hidden" id="isCheckedMfa" name="isCheckedMfa" value="${isCheckedMfa}"/>
+            <input type="hidden" id="applicantId" name="applicantId" value=""/>
 
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust1.png" alt="Coway"/></h2>

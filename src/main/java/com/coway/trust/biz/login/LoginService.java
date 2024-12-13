@@ -83,5 +83,6 @@ public interface LoginService {
 
   boolean sendResetMFAEmail(Map<String, Object> params);
 
+  public EgovMap getConsentDtls2( Map<String, Object> params );
 
 }
