@@ -20,11 +20,17 @@ var retTerListData = [
 ];
 
 function fn_report() {
+    if($("#listProductCat").val() == null || $("#listProductCat").val() == ''){
+        Common.alert('Please select a product category.');
+        return;
+     }
 
-    if($("#listProductId").val() == null || $("#listProductId").val() == ''){
-       Common.alert('<spring:message code="sal.alert.msg.plzSelPrd" />');
-       return;
-    }
+    if($("#listProductCat").val() != null && $("#listProductCat").val() == '9999'){
+        if($("#listProductId").val() == null || $("#listProductId").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzSelPrd" />' + ' as this option requires product selection');
+            return;
+         }
+     }
 
     if($("#listRentStus").val() == null || $("#listRentStus").val() == ''){
         Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStus" />');
@@ -40,6 +46,11 @@ function fn_report() {
     var stkId = $("#listProductId").val();
     var stkDesc = $("#listProductId option:selected").text();
     var rentStus = $("#listRentStus").val();
+
+    if(stkId == null || stkId == ""){
+    	stkId=0;
+    	stkDesc = "All";
+    }
 
     if (reportType == 'RAW') {
 
@@ -107,6 +118,7 @@ function fn_whereSQL() {
 	let isExtrade = $("#dataForm #listExtrade option:selected").val();
 	let listRentalType = $("#dataForm #listRentalType option:selected").val();
 	let listMattressType = $("#dataForm #listMattressType option:selected").val();
+	let listProductCat = $("#dataForm #listProductCat option:selected").val();
 
 	let whereSQL = '';
 
@@ -120,6 +132,10 @@ function fn_whereSQL() {
 
     if( !FormUtil.isEmpty(listMattressType) ){
         whereSQL += " AND A.HC_PACK = '" + listMattressType + "'";
+    }
+
+    if( !FormUtil.isEmpty(listProductCat) ){
+        whereSQL += " AND A.ACC_DEBT_OPNG_STOCK_CAT_ID = '" + listProductCat + "'";
     }
 
 	return whereSQL;
