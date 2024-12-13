@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -24,9 +22,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.EgovFormBasedFileVo;
 
 import org.apache.commons.codec.binary.Base32;
 import org.slf4j.Logger;
@@ -38,7 +33,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,15 +48,16 @@ import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.login.SsoLoginService;
 import com.coway.trust.biz.logistics.survey.SurveyService;
+import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
-import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.util.Precondition;
-import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -78,6 +73,9 @@ public class LoginController {
 
 	@Autowired
 	private SurveyService surveyService;
+
+	@Autowired
+	private MemberListService memberListService;
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -346,10 +344,10 @@ public class LoginController {
 
 			loginService.saveLoginHistory(loginHistory);
 
-			if(params.get("isCheckedMfa").equals("Y") || loginVO.getCheckMfaFlag() == 2){
+			//if(params.get("isCheckedMfa").equals("Y") || loginVO.getCheckMfaFlag() == 2){
 				HttpSession session = sessionHandler.getCurrentSession();
 				session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
-			}
+			//}
 
 			message.setData(loginVO);
 
@@ -542,6 +540,7 @@ public class LoginController {
 		model.put("verNRIC", params.get("verNRIC"));
 		model.put("verBankAccNo", params.get("verBankAccNo"));
 		model.put("verBankName", params.get("verBankName"));
+		model.put("applicantId", params.get("applicantId"));
 
 		if(params.containsKey("consentFlg")) {
 		    model.put("consentFlg", params.get("consentFlg"));
@@ -583,6 +582,7 @@ public class LoginController {
 		model.put("userType", (String) params.get("loginUserType"));
 
 		params.put("userId", sessionVO.getUserId());
+		params.put("popType", "N"); // Defaulty set N - no pop
 
 		int noticeExist = loginService.checkNotice();
 
@@ -590,7 +590,8 @@ public class LoginController {
 		int consentExist = loginService.checkConsent();
 		EgovMap itemConsent = null;
 		if(consentExist > 0) {
-		    itemConsent = loginService.getConsentDtls(params);
+		   // itemConsent = loginService.getConsentDtls(params);
+			itemConsent = loginService.getConsentDtls2(params);
 		}
 
 		// Get User type, role/contract type, agreement status (if applicable)
@@ -632,6 +633,11 @@ public class LoginController {
 					LOGGER.debug("============ PENDING =============");
 					params.put("roleId", item1.get("roleType"));
 					params.put("popType", "A");
+
+					params.put("popId", item1.get("popId")); // Hui Ding, 12/12/2024
+
+					params.put("pendingAgmt", "Y");
+					params.put("applicantId", item1.get("aplctnId") != null ? item1.get("aplctnId").toString() : "0");
 
 					if(consentExist > 0 && ("115".equals(item1.get("roleType")) ||
 					   "121".equals(item1.get("roleType")) ||
@@ -875,6 +881,17 @@ public class LoginController {
 		}
 		*/
 
+
+		// Added for showing COBC consent if pop id assigned. Hui Ding, 13/12/2024
+		if (params.get("popId") != null && !params.get("popId").toString().equals("")
+				&& params.get("pendingAgmt") != null && params.get("pendingAgmt").toString().equals("Y")){
+
+			LOGGER.debug("*****params.get('popId')" + params.get("popId").toString());
+			LOGGER.debug("*****applicantId" + params.get("applicantId").toString());
+			params.put("popType", "C");
+			params.put("consentFlg", "Y");
+		}
+
  		EgovMap item2 = new EgovMap();
 		item2 = (EgovMap) loginService.getPopDtls(params);
 
@@ -891,6 +908,8 @@ public class LoginController {
 				popInfo.put("popAck1", item2.get("popAck1"));
 				popInfo.put("popAck2", item2.get("popAck2"));
 				popInfo.put("popAck3", item2.get("popAck3"));
+				popInfo.put("applicantId", params.get("applicantId"));
+
 				LOGGER.debug("============ popInfo =============" + popInfo);
 			} else {
 				popInfo.put("popFlName", "-");
@@ -990,11 +1009,24 @@ public class LoginController {
 	    LOGGER.debug("========== popAccent.do ==========");
 	    LOGGER.debug("params : {}", params);
 
+	    ReturnMessage message = new ReturnMessage();
 	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
         params.put("userId", sessionVO.getUserId());
 	    int acceptPop = loginService.loginPopAccept(params);
 
-	    ReturnMessage message = new ReturnMessage();
+	    try {
+    	    // reuse to update accepted consent agreement. Hui Ding, 13/12/2024
+	    	Map<String, Object> uptPrm = new HashMap<String, Object>();
+	    	uptPrm.put("cnfm", 1);
+	    	uptPrm.put("stusId", 5);
+	    	uptPrm.put("userId", params.get("applicantId"));
+
+    	    memberListService.updateHpCfm(uptPrm);
+	    } catch(Exception e){
+	    	message.setCode(AppConstants.FAIL);
+    	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	    }
+
 	    message.setCode(AppConstants.SUCCESS);
 	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
