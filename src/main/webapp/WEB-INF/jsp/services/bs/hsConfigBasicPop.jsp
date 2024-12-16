@@ -14,6 +14,7 @@
     // HS Configuration @ Service mode only update in history logs and month end update on changed service mode
     var srvType = '${serviceType.srvType}';
     var srvTypeChangeCnt = '${srvTypeChgTimes}';
+    var isChgSrvType = false;
 
     var srvTypeChgHistoryLogGridID;
 
@@ -104,6 +105,7 @@
 
              //$("#orgGrCombo option:eq(1)").attr("selected", "selected");
 
+
                // [Project ID 7139026265] Self Service (DIY) Project add by Fannie - 05/12/2024
               // HS Configuration @ Service mode only update in history logs and month end update on changed service mode
                 if(srvType == ''){
@@ -111,7 +113,7 @@
                }else{
             	    $("#cmbSrvType option[value="+srvType +"]").attr("selected", true);
                }
-             
+
                $("#txtSrvTypeChangeCount").val(srvTypeChangeCnt);
 
                if(appType == "REN" && totOutStandingAmt == "0.00"){
@@ -132,6 +134,7 @@
 
                 document.getElementById("cmbSrvType").addEventListener("change", function(){
                 	  var selectedValue = this.value;
+                	  isChgSrvType = true;
 
                 	  if(selectedValue === "SS"){
                           $("#entry_cmbServiceMem").prop("disabled",true);
@@ -150,15 +153,11 @@
      function fn_getHSConfigBasicInfo(){
             Common.ajax("GET", "/services/bs/getHSConfigBasicInfo.do", $("#frmBasicInfo").serialize(), function(result) {
                   console.log("fn_getHSConfigBasicInfo.");
-                 // console.log("cmbServiceMemList {}" + result);
              });
      }
 
      function fn_doSave(){
           Common.ajax("GET", "/services/bs/checkMemCode", { hscodyId : $('#entry_cmbServiceMem').val() }, function(result) {
-              console.log("::::::::::::::ajax::::::::::::::");
-              console.log(result);
-
               if (!fn_validBasicInfo()) {
                   return;
               }
@@ -232,12 +231,13 @@
                    faucetExch: $('#faucet_exch').prop("checked") ? '1': '0',
                    serviceType: $('#cmbSrvType').val(),
                    serviceTypeChangeCount: $('#txtSrvTypeChangeCount').val(),
-                   oldSrvType: $('#oldSvcType').val(),
+                   oldSrvType: $('#oldSvcType').val() == "" ? '${configBasicInfo.srvType}' : srvType,
                    appTypeId: '${promoInfo.appTypeId}',
                    ordSrvPacId: '${promoInfo.srvPacId}',
                    ordMthRentAmt: '${promoInfo.mthRentAmt}',
                    promoItmPv : '${promoInfo.promoItmPv}',
-                   promoItmPvSs : '${promoInfo.promoItmPvSs}'
+                   promoItmPvSs : '${promoInfo.promoItmPvSs}',
+                   isChgSrvType : isChgSrvType
         }
 
         var  saveForm ={
@@ -320,8 +320,12 @@
             <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
             <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
             <input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
-            <input type="hidden" name="oldSvcType" id="oldSvcType" value="${serviceType.srvType}"/>
-
+            <c:if test="${serviceType.srvType != ''}">
+                <input type="hidden" name="oldSvcType" id="oldSvcType" value="${serviceType.srvType}"/>
+            </c:if>
+            <c:if test="${serviceType.srvType == ''}">
+                 <input type="hidden" name="oldSvcType" id="oldSvcType" value="${configBasicInfo.srvType}"/>
+            </c:if>
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

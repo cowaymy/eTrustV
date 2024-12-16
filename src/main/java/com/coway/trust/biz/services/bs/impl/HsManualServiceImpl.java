@@ -1036,7 +1036,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       /* Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024 */
       String originalSrvType = hsBasicmap.get("oldSrvType").toString();
       String serviceType = hsBasicmap.get("serviceType").toString();
-
+   
       // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
       // calculate the PV for SS Rebate
       int promoItmPv = Integer.parseInt(hsBasicmap.get("promoItmPv").toString());
@@ -1046,8 +1046,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       hsBasicmap.put("srvUpdateAt", sessionVO.getUserId());
 
       // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
-      if(hsBasicmap.get("serviceType") != null){
-          if(!originalSrvType.equals(serviceType)) {
+        if(hsBasicmap.get("isChgSrvType").toString().equals("true")) {
 
         	  // [Project ID 7139026265] Self Service (DIY) Project - count the SAL0090H records add by Fannie - 05/12/2024
         	  Map<String, Object> cntSrvTypeHistory = new HashMap<String, Object>();
@@ -1121,9 +1120,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                            hsManualMapper.insertPvSSRebate(pay0367);
                     }
                }
-               sal0090.put("srvType", hsBasicmap.get("oldSrvType"));
            }
-      }
 
       // sal0090.put("SrvUpdateAt", SYSDATE);
       // hsManualMapper.updateHsSVC0006D(sal0090);

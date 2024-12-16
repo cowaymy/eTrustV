@@ -2294,10 +2294,7 @@
 		SRV_BS_WEEK = #{srvBsWeek},
 		SRV_BS_GEN = #{availability},
 		FAUCET_EXCH = #{faucetExch},
-        <if test="srvType != null and srvType != ''">
-            SRV_TYPE = #{srvType},
-        </if>
-		<!-- Added By Chew Kah Kit -->
+     <!-- Added By Chew Kah Kit -->
 		SRV_UPD_USER_ID = #{srvUpdateAt},
 		SRV_UPD_DT = SYSDATE
 		WHERE SRV_CONFIG_ID = #{srvConfigId}
@@ -5192,7 +5189,7 @@ SELECT DISTINCT A.ORD_ID FROM (
     <select id="getSrvTypeChgTm" parameterType="Map" resultType="Integer">
         SELECT COUNT(*) CNT
         FROM SAL0090H
-        WHERE SRV_SO_ID = #{salesOrdId}       
+        WHERE SRV_SO_ID = #{salesOrdId}
     </select>
 
      <select id="getPromoItemInfo" parameterType="Map" resultType="egovMap">
