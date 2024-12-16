@@ -167,8 +167,12 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO1());
 			orderVO.setPreOrdId(orderVO.getMatPreOrdId());
 			orderVO.setMatAppTyId(orderVO.getSalesOrderMVO().getAppTypeId());
-
-			orderRegisterService.registerOrder(orderVO, sessionVO);
+			try{
+				orderRegisterService.registerOrder(orderVO, sessionVO);
+			}
+			catch(Exception e){
+				throw new ApplicationException(AppConstants.FAIL, "Fail to update due to record had been updated. Please SEARCH the record again later.");
+			}
 			matOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
 			matOrdId =  CommonUtils.intNvl(orderVO.getSalesOrderMVO().getSalesOrdId());
 			if("".equals(matOrdNo)) { // not insert - Mattress order
@@ -195,8 +199,12 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			orderVO.setSalesOrderDVO(orderVO.getSalesOrderDVO2());
 			orderVO.setAccClaimAdtVO(orderVO.getAccClaimAdtVO2());
 			orderVO.setPreOrdId(orderVO.getFraPreOrdId());
-
-			orderRegisterService.registerOrder(orderVO, sessionVO);
+			try{
+				orderRegisterService.registerOrder(orderVO, sessionVO);
+			}
+			catch(Exception e){
+				throw new ApplicationException(AppConstants.FAIL, "Fail to update due to record had been updated. Please SEARCH the record again later.");
+			}
 			fraOrdNo = orderVO.getSalesOrderMVO().getSalesOrdNo();
 			if("".equals(fraOrdNo)) { // not insert - frame order
 				throw new ApplicationException(AppConstants.FAIL, "Order Register Failed. - Frame");

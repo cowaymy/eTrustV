@@ -2067,11 +2067,11 @@
         },  function(jqXHR, textStatus, errorThrown) {
         	$("#btnConfirm_RW").show();
             try {
-                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b><b>' + jqXHR.responseJSON.message + "</b>");
+                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b> : <b>' + jqXHR.responseJSON.message + "</b>");
             } catch (e) {
                 console.log(e);
             }
-            alert("Fail : " + jqXHR.responseJSON.message);
+            //alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
 
