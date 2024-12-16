@@ -57,12 +57,14 @@ function fn_report() {
       $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
       $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
       $("#dataForm #V_RENTSTUS").val(rentStus);
+      $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (reportType == 'AGING') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Aging.rpt");
         $("#dataForm #reportDownFileName").val("PLTV_Aging_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
         $("#dataForm #V_RENTSTUS").val(rentStus);
+        $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (rentStus == 'SUS' && reportType == 'SUS_COUNT') {
 
@@ -93,11 +95,13 @@ function fn_report() {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_RET_TER.rpt");
         $("#dataForm #reportDownFileName").val("PLTV_Last_RET_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (rentStus == 'RET_TER' && reportType == 'RET_TER_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_RET_TER_SumYM.rpt");
         $("#dataForm #reportDownFileName").val("PLTV_RET_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     }
 
@@ -139,6 +143,19 @@ function fn_whereSQL() {
     }
 
 	return whereSQL;
+}
+
+function fn_whereSQL2() {
+
+	let listProductCat = $("#dataForm #listProductCat option:selected").val();
+
+	let whereSQL2 = '';
+
+    if( !FormUtil.isEmpty(listProductCat) ){
+    	whereSQL2 += " AND ACC_DEBT_OPNG_STOCK_CAT_ID = '" + listProductCat + "'";
+    }
+
+	return whereSQL2;
 }
 
 $(function(){
@@ -195,6 +212,7 @@ function fn_setOptGrpClass() {
     <input type="hidden" id="V_STKID" name="V_STKID" />
     <input type="hidden" id="V_RENTSTUS" name="V_RENTSTUS" />
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+    <input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
