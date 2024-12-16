@@ -9,5 +9,5 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("ProcurementApiMapper")
 public interface ProcurementApiMapper {
 	List<EgovMap> selectCostCtrGLaccBudgetCdInfo(Map<String, Object> params);
-	List<EgovMap> selectVendorPaymentRecord();
+	List<EgovMap> selectVendorPaymentRecord(Map<String, Object> params);
 }

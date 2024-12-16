@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ProcurementApiService;
 import com.coway.trust.biz.api.vo.procurement.CostCenterReqForm;
+import com.coway.trust.biz.api.vo.procurement.VendorPaymentReqForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -34,10 +35,10 @@ public class ProcurementApiController {
     public ResponseEntity<EgovMap> getCostCtrGLaccBudgetCdInfo(HttpServletRequest request, @ModelAttribute CostCenterReqForm params) throws Exception {
         return ResponseEntity.ok(procurementApiService.getCostCtrGLaccBudgetCdInfo(request, params));
     }
-    
+
     @ApiOperation(value = "/getVendorPaymentRecord", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/getVendorPaymentRecord", method = RequestMethod.GET)
-    public ResponseEntity<EgovMap> getVendorPaymentRecord(HttpServletRequest request) throws Exception {
-        return ResponseEntity.ok(procurementApiService.getVendorPaymentRecord(request));
+    public ResponseEntity<EgovMap> getVendorPaymentRecord(HttpServletRequest request, @ModelAttribute VendorPaymentReqForm params) throws Exception {
+        return ResponseEntity.ok(procurementApiService.getVendorPaymentRecord(request, params));
     }
 }

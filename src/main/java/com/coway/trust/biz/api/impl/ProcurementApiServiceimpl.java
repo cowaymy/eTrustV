@@ -19,8 +19,10 @@ import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.ProcurementApiService;
 import com.coway.trust.biz.api.vo.procurement.CostCenterInfoVO;
 import com.coway.trust.biz.api.vo.procurement.CostCenterReqForm;
+import com.coway.trust.biz.api.vo.procurement.VendorPaymentReqForm;
 import com.coway.trust.biz.api.vo.procurement.VendorPaymentVO;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,15 +32,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("procurementApiService")
 public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implements ProcurementApiService {
-	
+
 	 private static final Logger LOGGER = LoggerFactory.getLogger( ProcurementApiServiceimpl.class );
-	
+
 	@Resource(name = "CommonApiMapper")
     private CommonApiMapper commonApiMapper;
-	
+
 	@Resource(name = "commonApiService")
     private CommonApiService commonApiService;
-	
+
 	@Resource(name = "ProcurementApiMapper")
     private ProcurementApiMapper procurementApiMapper;
 
@@ -54,7 +56,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 			stopWatch.start();
 			params.put("budgetPlanYear", param.getBudgetPlanYear());
 			params.put("budgetPlanMonth", param.getBudgetPlanMonth());
-			
+
 			Gson gson = new GsonBuilder().create();
 			reqParam = gson.toJson(params);
 
@@ -63,18 +65,18 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 			apiUserId = verifyBasicAPIAuth(request);
 
 			if (!apiUserId.equalsIgnoreCase("0")) {
-				
+
 				if (param.getBudgetPlanYear() != 0 && param.getBudgetPlanMonth() != 0) {
 					ObjectMapper objectMapper = new ObjectMapper();
 					List<EgovMap> data = procurementApiMapper.selectCostCtrGLaccBudgetCdInfo(params);
 
 					if (data != null && data.size() > 0) {
-						
+
 						for (EgovMap info : data) {
 							CostCenterInfoVO costCenter= objectMapper.convertValue(info, CostCenterInfoVO.class);
 							costCenterList.add(costCenter);
 	    				}
-						
+
 						resultValue.put("costCenter", costCenterList);
 
 						respParam = gson.toJson(resultValue);
@@ -94,7 +96,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 			} else {
 				params.put("success", false);
 				params.put("statusCode", AppConstants.RESPONSE_CODE_UNAUTHORIZED);
-				params.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED); 
+				params.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			params.put("statusCode", AppConstants.FAIL);
@@ -112,7 +114,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
-	public EgovMap getVendorPaymentRecord(HttpServletRequest request) throws Exception {
+	public EgovMap getVendorPaymentRecord(HttpServletRequest request, VendorPaymentReqForm param) throws Exception {
 		String respTm = null, apiUserId = "0", reqParam = null, respParam = null;
 		EgovMap params = new EgovMap();
 		EgovMap resultValue = new EgovMap();
@@ -121,20 +123,26 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 		try {
 			stopWatch.reset();
 			stopWatch.start();
+			params.put("syncEmro", param.getSyncEmro());
+
+			Gson gson = new GsonBuilder().create();
+			reqParam = gson.toJson(params);
+
+            LOGGER.debug(">>> getVendorPaymentRecord reqParam :" + reqParam);
 
 			apiUserId = verifyBasicAPIAuth(request);
-			Gson gson = new GsonBuilder().create();
 
-			if (!apiUserId.equalsIgnoreCase("0")) {				
-					ObjectMapper objectMapper = new ObjectMapper();
-					List<EgovMap> data = procurementApiMapper.selectVendorPaymentRecord();
+			if (!apiUserId.equalsIgnoreCase("0")) {
+				if (param.getSyncEmro() != null) {
+					ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // ignore syncEmro, crtDateOrd field
+					List<EgovMap> data = procurementApiMapper.selectVendorPaymentRecord(params);
 
 					if (data != null && data.size() > 0) {
 						for (EgovMap info : data) {
 							VendorPaymentVO vendorPayment= objectMapper.convertValue(info, VendorPaymentVO.class);
 							vendorPaymentList.add(vendorPayment);
 	    				}
-						
+
 						resultValue.put("vendor", vendorPaymentList);
 
 						respParam = gson.toJson(resultValue);
@@ -146,11 +154,15 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 						params.put("statusCode", AppConstants.RESPONSE_CODE_NOT_FOUND);
 						params.put("message", "Record not found");
 					}
-				
+				}
+				else{
+					params.put("statusCode", AppConstants.RESPONSE_CODE_INVALID);
+					params.put("message", "syncEmro are required");
+				}
 			} else {
 				params.put("success", false);
 				params.put("statusCode", AppConstants.RESPONSE_CODE_UNAUTHORIZED);
-				params.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED); 
+				params.put("message", AppConstants.RESPONSE_DESC_UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			params.put("statusCode", AppConstants.FAIL);
@@ -166,7 +178,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
 
 		return resultValue;
 	}
-	
+
 	@Override
     public void rtnRespMsg( Map<String, Object> param )
     {
@@ -189,7 +201,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
         params.put( "apiUserId", param.get( "apiUserId" ) );
         commonApiMapper.insertApiAccessLog( params );
     }
-    
+
     @Override
     public void insertApiLog(HttpServletRequest request, EgovMap params, String reqParam, String respTm, String apiUserId) {
     	// Insert log into API0004M
@@ -200,24 +212,24 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
         params.put( "apiUserId", CommonUtils.nvl( apiUserId ) );
         rtnRespMsg( params );
     }
-    
+
 	@Override
 	public String verifyBasicAPIAuth(HttpServletRequest request) {
 		EgovMap authorize = commonApiService.verifyBasicAPIAuth(request);
-		
+
 		if (String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS).equals(authorize.get("code").toString())) {
 			return authorize.get("apiUserId").toString();
 		}
 		return "0";
 	}
-	
+
 	@Override
     public void finalizeResultValue(EgovMap params, EgovMap resultValue) {
-    	
+
     	EgovMap oriResultValue = new EgovMap();
     	oriResultValue.putAll(resultValue);
     	resultValue.clear();
-    	
+
     	if ( params.get( "statusCode" ).toString().equals( "200" )
                 || params.get( "statusCode" ).toString().equals( "201" ) ) {
             resultValue.put( "success", true );
@@ -227,7 +239,7 @@ public class ProcurementApiServiceimpl extends EgovAbstractServiceImpl implement
         }
         resultValue.put( "statusCode", params.get( "statusCode" ) );
         resultValue.put( "message", params.get( "message" ) );
-        
+
         //reorder resultValue
     	resultValue.putAll(oriResultValue);
     }
