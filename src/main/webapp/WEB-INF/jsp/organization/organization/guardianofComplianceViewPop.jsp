@@ -15,7 +15,7 @@ $(document).ready(function(){
 	doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'changePerson', 'S', 'fn_setOptGrpClass');//product 생성
 
 	doGetComboData('/common/selectCodeList.do', { groupCode : 608 , orderValue : 'CODE'}, '${guardianofCompliance.action}', 'cmbactionStatus', 'S');
-	doGetComboData('/common/selectCodeList.do', { groupCode : 607 , orderValue : 'CODE'}, '${guardianofCompliance.eyeReward}', 'cmbeyeward', 'S');
+	doGetComboData('/common/selectCodeList.do', { groupCode : 610 , orderValue : 'CODE'}, '${guardianofCompliance.eyeReward}', 'cmbeyeward', 'S');
 
     var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
     $("#caseCategory option[value='"+ reqstCtgry +"']").attr("selected", true);

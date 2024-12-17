@@ -483,6 +483,6 @@
                  CODE STK_ID
                 ,CODE_NAME C1
                 ,CASE WHEN DISAB = 0 then 'Available Officer' else 'Unavailable Officer' end CODE_NAME
-                FROM SYS0013M WHERE CODE_MASTER_ID = '605'
+                FROM SYS0013M WHERE CODE_MASTER_ID = '609'
      </select>
 </mapper>
