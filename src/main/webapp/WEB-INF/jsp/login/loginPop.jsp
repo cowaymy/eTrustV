@@ -310,7 +310,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
 
     <div id="PDF" style="height: 500px">
         <!-- <script>PDFObject.embed("/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf", "#PDF");</script> -->
-        <embed src="${pdfNm}#toolbar=0" style="overflow: auto; width: 100%; height: 100%;" type="application/pdf">
+        <embed src="${pdfNm}#toolbar=1" style="overflow: auto; width: 100%; height: 100%;" type="application/pdf">
     </div>
 
     <div id="acknowledgement" style="padding-top:1%; padding-left: 1%; padding-right: 1%">
