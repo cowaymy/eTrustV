@@ -645,7 +645,7 @@
 			OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
 			)
 		</if>
-        <if test="userTypeId != null and userTypeId != '' ">
+        <!-- <if test="userTypeId != null and userTypeId != '' ">
              <if test="memLevel == 4">
               AND Filter1.OrderMemID = #{memId}
               </if>
@@ -658,7 +658,7 @@
               <if test="memLevel == 1">
               AND Extent3.ORG_CODE = #{orgCode}
               </if>
-        </if>
+        </if> -->
 		ORDER BY Filter1.OrderNo ASC
 	</select>
 
@@ -768,7 +768,7 @@
             </foreach>
             )
         </if>
-        <if test="userTypeId != null and userTypeId != '' ">
+        <!-- <if test="userTypeId != null and userTypeId != '' ">
             <if test="memLevel == 4">
              AND Extent1.MEM_ID = #{memId}
              </if>
@@ -781,7 +781,7 @@
              <if test="memLevel == 1">
              AND Extent1.ORG_CODE = #{orgCode}
              </if>
-          </if>
+          </if> -->
       ORDER BY Extent1.SALES_ORD_NO
     </select>
 

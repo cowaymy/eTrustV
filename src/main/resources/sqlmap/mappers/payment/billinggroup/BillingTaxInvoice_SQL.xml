@@ -41,7 +41,7 @@
 	                LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
 	            WHERE
 	                Extent1.TAX_INVC_BILL_TYPE = 133
-	                <if test="userBranchId != null and userBranchId != '' ">
+	                <!-- <if test="userBranchId != null and userBranchId != '' ">
 	                AND Extent4.BRNCH_ID = #{userBranchId}
 	                </if>
 	                <if test='userTypeId != null and userTypeId != "" '>
@@ -57,7 +57,7 @@
                       <if test="memLevel == 1">
                         AND Extent4.ORG_CODE = #{orgCode}
                       </if>
-	                </if>
+	                </if> -->
 	                ) Filter1
 	            LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
 	    WHERE
@@ -140,7 +140,7 @@
             <if test="custID != null and custID != '' ">
             AND orm.CUST_ID = #{custID}
             </if>
-            <if test="userBranchId != null and userBranchId != '' ">
+            <!-- <if test="userBranchId != null and userBranchId != '' ">
              AND orm.BRNCH_ID = #{userBranchId}
              </if>
              <if test='userTypeId != null and userTypeId != "" '>
@@ -156,7 +156,7 @@
                    <if test="memLevel == 1">
                    AND orm.ORG_CODE = #{orgCode}
                    </if>
-              </if>
+              </if> -->
         ORDER BY txs.INVC_ITM_ORD_NO DESC
     </select>
 
@@ -182,7 +182,7 @@
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
             INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
             LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
-            <if test='userTypeId != null or userTypeId != "" '>
+           <!--  <if test='userTypeId != null or userTypeId != "" '>
             JOIN ORG1001V Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID
 	            <if test="memCode != null and memCode != '' ">
 	                AND Extent4.MEM_CODE = #{memCode}
@@ -196,7 +196,7 @@
 	              <if test="deptCode != null and deptCode != '' ">
 	              AND Extent4.DEPT_CODE = #{deptCode}
 	              </if>
-            </if>
+            </if> -->
         WHERE
             1=1
              <if test="invoiceNo != null and invoiceNo != '' ">
@@ -224,9 +224,9 @@
             <if test="custID != null and custID != '' ">
             AND Extent3.CUST_ID = #{custID}
             </if>
-            <if test="userBranchId != null and userBranchId != '' ">
+            <!-- <if test="userBranchId != null and userBranchId != '' ">
             AND Extent3.BRNCH_ID = #{userBranchId}
-            </if>
+            </if> -->
             <choose>
             <when test='isHc == "1"'>
                 AND Extent3.BNDL_ID IS NOT NULL
@@ -381,7 +381,7 @@
                 <if test="custID != null and custID != '' ">
                 AND Extent3.CUST_ID = #{custID}
                 </if>
-                <if test="userBranchId != null and userBranchId != '' ">
+                <!-- <if test="userBranchId != null and userBranchId != '' ">
                 AND Extent3.BRNCH_ID = #{userBranchId}
                 </if>
                 <if test='userTypeId != null and userTypeId != "" '>
@@ -397,7 +397,7 @@
                    <if test="memLevel == 1">
                    AND Extent3.ORG_CODE = #{orgCode}
                    </if>
-              </if>
+              </if> -->
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
     </select>
 </mapper>
