@@ -198,7 +198,7 @@
    function  fn_doSaveBasicInfo(){
        var srvTypeChangeCount = parseInt($("#txtSrvTypeChangeCount").val(), 10);
 
-       if(srvTypeChangeCount >= 2) {
+       if(srvTypeChangeCount >= 2 && isChgSrvType == true) {
            Common.alert("* The service type only able to change maximum 2 times.");
            return;
        }
