@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.ccp;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,19 @@ public interface PreCcpRegisterService {
 
 	List<EgovMap> getPreCcpRemark(Map<String, Object> params);
 
+	List<EgovMap> getCustCredibility(Map<String, Object> params);
+
+	List<EgovMap> getExistCustChs(Map<String, Object> params);
+
 	int editRemarkRequest(Map<String, Object> params) throws Exception;
+
+	void editCCPRemark(Map<String, ArrayList<Object>> params, int userId);
+
+	EgovMap getCustCreditInfo(Map<String, Object> params);
+
+	List<EgovMap> getExistUnitHist(Map<String, Object> params);
+
+	List<EgovMap> getNewProdElig(Map<String, Object> params);
 
 	int insertRemarkRequest(Map<String, Object> params) ;
 

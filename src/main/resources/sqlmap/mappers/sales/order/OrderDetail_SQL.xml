@@ -1519,6 +1519,108 @@
                WHERE SOM.SALES_ORD_ID = #{salesOrdId}
                    AND TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
     ) GROUP BY TYPE
+
+    UNION ALL
+
+    SELECT TYPE
+             , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+             , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+             , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+             , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+             , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+             , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+    FROM ( SELECT 'Customer Category' AS TYPE
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS CUR_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS PREV_1_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS PREV_2_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS PREV_3_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS PREV_4_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+                            THEN M.CUST_CAT ELSE '' END AS PREV_5_MONTH
+               FROM SAL0262D M
+               JOIN SAL0001D SOM ON M.CUST_ID = SOM.CUST_ID
+               WHERE SOM.SALES_ORD_ID = #{salesOrdId}
+                   AND TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
+    ) GROUP BY TYPE
+
+    UNION ALL
+
+    SELECT TYPE
+             , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+             , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+             , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+             , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+             , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+             , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+    FROM ( SELECT 'REN Category' AS TYPE
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS CUR_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS PREV_1_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS PREV_2_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS PREV_3_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS PREV_4_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+                            THEN M.REN_CAT ELSE '' END AS PREV_5_MONTH
+               FROM SAL0262D M
+               JOIN SAL0001D SOM ON M.CUST_ID = SOM.CUST_ID
+               WHERE SOM.SALES_ORD_ID = #{salesOrdId}
+                   AND TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
+     ) GROUP BY TYPE
+
+    UNION ALL
+
+    SELECT TYPE
+             , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+             , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+             , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+             , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+             , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+             , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+    FROM ( SELECT 'Score Group' AS TYPE
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                             ELSE '-' END AS CUR_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                            ELSE '-' END AS PREV_1_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                            ELSE '-' END AS PREV_2_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                            ELSE '-' END AS PREV_3_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                            ELSE '-' END AS PREV_4_MONTH
+                        , CASE WHEN TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+                            THEN
+                                CASE WHEN M.SCORE_GRP IS NOT NULL THEN M.SCORE_GRP
+                                ELSE M.CHS_STUS END
+                            ELSE '-' END AS PREV_5_MONTH
+               FROM SAL0262D M
+               JOIN SAL0001D SOM ON M.CUST_ID = SOM.CUST_ID
+               WHERE SOM.SALES_ORD_ID = #{salesOrdId}
+                   AND TO_CHAR(M.CHS_YEAR)||'-'||LPAD(TO_CHAR(M.CHS_MONTH),2,'0') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
+    ) GROUP BY TYPE
   </select>
 
   <select id="selectCurrentBSResultByBSNo" parameterType="Map" resultType="egovMap">

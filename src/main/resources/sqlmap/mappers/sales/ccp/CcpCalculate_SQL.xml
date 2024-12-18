@@ -195,7 +195,7 @@ LatestSal0304D AS (
                       <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
                       LEFT JOIN LatestSal0304D  extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
                       <!-- ## RENTAL  ONLY ## -->
-                      WHERE Extent3.APP_TYPE_ID IN (66,5764)
+                      WHERE Extent3.APP_TYPE_ID IN (66) <!--EXCLUDE AUXILIARY -->
 
                       <if test=" '' != calCcpStatus and null != calCcpStatus ">
                              AND  Extent1.CCP_STUS_ID IN
@@ -862,7 +862,13 @@ SELECT Extent1.CCP_ID   ,
        TO_CHAR(Extent1.FIRST_CALL_DT,'DD/MM/YYYY') AS FIRST_CALL_DT,
        Extent1.CUST_IS_PAYER ,
        Extent1.THE_PAYER ,
-       Extent1.FAIL_VER_RSN
+       Extent1.FAIL_VER_RSN,
+       CASE WHEN GET_HOMECARE_FLAG_YN(Extent12.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
+       Extent1.CCP_UPD_DT CCP_UPD_DT,
+       Extent9.CUST_CAT,
+       Extent1.ATCH_FILE_GRP_ID FILE_ID,
+       Extent14.ATCH_FILE_NAME FILE_NAME
+<!--        CASE WHEN Extent7.CTOS_BANKRUPT = 0 THEN 'NO' ELSE 'YES' END BANKRUPTCY -->
   FROM SAL0102D Extent1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
          LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
@@ -875,6 +881,10 @@ SELECT Extent1.CCP_ID   ,
          AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM Extent1.CCP_UPD_DT)
          AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM Extent1.CCP_UPD_DT)
          LEFT JOIN SAL0313D Extent10   ON Extent6.SALES_ORD_NO = Extent10.ORD_NO
+         LEFT JOIN SAL0002D Extent11 ON Extent11.SALES_ORD_ID = Extent6.SALES_ORD_ID
+         LEFT JOIN SYS0026M Extent12 ON Extent12.STK_ID = Extent11.ITM_STK_ID
+         LEFT JOIN SYS0070M Extent13 ON Extent13.ATCH_FILE_GRP_ID = Extent1.ATCH_FILE_GRP_ID
+         LEFT JOIN SYS0071D Extent14 ON Extent14.ATCH_FILE_ID = Extent13.ATCH_FILE_ID
 <![CDATA[
  WHERE  Extent1.CCP_ID = #{ccpId}
  AND ROWNUM <= 1
@@ -975,7 +985,8 @@ SELECT Extent1.CCP_ID   ,
                    CCP_TEMPLATE = #{cowayTemplate},
 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
-	               FAIL_VER_RSN = #{failVeriReasonValue}
+	               FAIL_VER_RSN = #{failVeriReasonValue},
+	               ATCH_FILE_GRP_ID = #{atchFileGrpId}
             WHERE
                    CCP_ID = #{saveCcpId}
 </update>
@@ -2415,5 +2426,37 @@ WHERE ROWNUM = 1
       WHERE GOV_AG_ITM_SALES_ORD_ID = #{saveOrdId}
       AND GOV_AG_ITM_STUS_ID IN (1)  -- ONLY FOR AGREEMENT THAT ACTIVE
 </update>
+
+<select id="getScoreGrpByAjax" parameterType="Map" resultType="egovMap">
+	SELECT * FROM(
+	    SELECT
+	        SCORE_GRP,
+	        UNIT_ENTITLE,
+	        PROD_ENTITLE
+	    FROM SAL0426D
+	    WHERE SCORE_GRP = (
+	        SELECT * FROM (
+	            SELECT
+	                SCORE_GRP
+	            FROM SAL0425D
+	            WHERE SCORE_PROV = #{scoreProv}
+	            AND #{score} BETWEEN START_SCORE AND END_SCORE
+	            AND HOME_CAT = #{homeCat}
+	            <if test="ccpStus != '' and ccpStus != null">
+		            <if test="ccpStus == 1">
+                        AND STUS = 1
+                    </if>
+                    <if test="ccpStus == 5">
+                        AND #{ccpUpdDt} BETWEEN START_DT AND END_DT
+                    </if>
+		        </if>
+	            ORDER BY SCORE_RANGE_ID DESC
+	        ) WHERE ROWNUM = 1
+	    )
+	       AND CUST_CAT = UPPER(#{custCat})
+	       AND STUS = 1
+	    ORDER BY CRT_DT DESC
+	) WHERE ROWNUM = 1
+</select>
 
 </mapper>

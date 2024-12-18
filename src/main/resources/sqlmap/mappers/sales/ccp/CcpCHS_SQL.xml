@@ -104,6 +104,10 @@ ORDER BY A.CHS_BATCH_ID DESC
         ,CRT_DT
         ,UPD_USER_ID
         ,UPD_DT
+        ,CUST_CAT
+        ,REN_CAT
+        ,SCORE_GRP
+        ,REN_UNIT_ENTITLE
         )
    <!--      VALUES (
             #{chsDtlId}
@@ -119,7 +123,8 @@ ORDER BY A.CHS_BATCH_ID DESC
             ,SYSDATE
      ) -->
 
-SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , chsRsn , crtUserId , crtDt , updUserId , updDt FROM (
+SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , chsRsn , crtUserId , crtDt , updUserId , updDt, custCat, renCat, scoreGrp, renUnitEntitle
+FROM (
         <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
             SELECT
 
@@ -133,6 +138,10 @@ SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , c
             ,SYSDATE crtDt
             ,#{item.updUserId} updUserId
             ,SYSDATE updDt
+            ,#{item.custCat} custCat
+            ,#{item.renCat} renCat
+            ,#{item.scoreGrp} scoreGrp
+            ,#{item.renUnitEntitle} renUnitEntitle
             FROM DUAL
         </foreach>
 )

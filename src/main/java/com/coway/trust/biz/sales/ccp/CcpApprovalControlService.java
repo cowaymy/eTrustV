@@ -19,4 +19,16 @@ public interface CcpApprovalControlService {
   List<EgovMap> selectScoreRangeControlList(Map<String, Object> params) throws Exception;
 
   void saveScoreRangeControl(Map<String, ArrayList<Object>> params, int userId);
+
+  EgovMap getScoreRangeControl(Map<String, Object> params);
+
+  void submitScoreRange(Map<String, Object> params);
+
+  List<EgovMap> selectUnitEntitleControlList(Map<String, Object> params);
+
+  void saveUnitEntitle(Map<String, ArrayList<Object>> params, int userId);
+
+  List<EgovMap> selectProdEntitleControlList(Map<String, Object> params);
+
+  void saveProdEntitle(Map<String, ArrayList<Object>> params, int userId);
 }

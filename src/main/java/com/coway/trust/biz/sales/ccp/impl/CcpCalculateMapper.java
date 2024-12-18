@@ -168,4 +168,6 @@ public interface CcpCalculateMapper {
 	void inactiveCallLog(Map<String, Object>params) throws Exception;
 
 	void inactiveRentalAgreement(Map<String, Object>params) throws Exception;
+
+	EgovMap getScoreGrpByAjax(Map<String, Object> params);
 }

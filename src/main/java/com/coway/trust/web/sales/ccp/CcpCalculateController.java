@@ -1248,5 +1248,39 @@ public class CcpCalculateController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/getScoreGrpByAjax")
+	public ResponseEntity<EgovMap> getScoreGrpByAjax(@RequestParam Map<String, Object> params) {
+		LOGGER.info("###########  CCP SCORE GROUP AJAX Params : " + params.toString());
+    	EgovMap ccpScoreGrpMap = null;
+    	ccpScoreGrpMap = ccpCalculateService.getScoreGrpByAjax(params);
+
+    	return ResponseEntity.ok(ccpScoreGrpMap);
+
+	}
+
+	@RequestMapping(value = "/attachCcpReportFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachCcpReportFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "sales" + File.separator + "ccp", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		LOGGER.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		ccpCalculateService.insertCcpAttachAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
+
+		params.put("attachFiles", list);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
 }
 

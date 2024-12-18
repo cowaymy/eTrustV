@@ -42,63 +42,86 @@
 
   let columnLayout = [
      {
+	    dataField : "custId",
+	    headerText : "Customer ID",
+	    editable : false,
+	    visible: false
+     },
+     {
 	    dataField : "name",
 	    headerText : "Customer Name",
 	    editable : false,
 	    width : "25%"
      },
      {
-        dataField : "custMonth",
-        headerText : "Cust ID Month",
-        editable : false,
-        width : "10%"
+	    dataField : "custType",
+	    headerText : "Customer Type",
+	    editable : false,
+	    width : "25%"
      },
      {
-        dataField : "custId",
-        headerText : "Customer ID",
-        editable : false,
-        width : "10%",
-        visible: false
+	    dataField : "ccpRem",
+	    headerText : "CCP Remark",
+	    editable : false,
+	    width : "25%"
      },
-     {
-        dataField : "chsStatus",
-        headerText : "CHS Status",
-        editable : false,
-        width : "10%"
-     },
-     {
-         dataField : "chsRsn",
-         headerText : "CHS Reason",
-         editable : false,
-         width : "10%"
-     },
-     {
-    	 dataField : "appvReq",
-         headerText : "New Sales Approval Requirements",
-         editable : false,
-         width : "50%",
-         renderer: {
-             type: "TemplateRenderer"
-         },
-         labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-             return value;
-         }
-      },
+//      {
+//         dataField : "custMonth",
+//         headerText : "Cust ID Month",
+//         editable : false,
+//         width : "10%"
+//      },
+//      {
+//         dataField : "custId",
+//         headerText : "Customer ID",
+//         editable : false,
+//         width : "10%",
+//         visible: false
+//      },
+//      {
+//         dataField : "chsStatus",
+//         headerText : "CHS Status",
+//         editable : false,
+//         width : "10%"
+//      },
+//      {
+//          dataField : "chsRsn",
+//          headerText : "CHS Reason",
+//          editable : false,
+//          width : "10%"
+//      },
+//      {
+//     	 dataField : "appvReq",
+//          headerText : "New Sales Approval Requirements",
+//          editable : false,
+//          width : "50%",
+//          renderer: {
+//              type: "TemplateRenderer"
+//          },
+//          labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+//              return value;
+//          }
+//       },
   ];
 
   $(document).ready(function() {
 	    preCcpGrid();
 	    displayOrder(2);
+
+	    AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
+	    	console.log("custId : " + event.item.custId);
+	    	Common.popupDiv("/sales/ccp/preCcpResultInfo.do", {custId: event.item.custId}, null, true, '');
+	    });
   });
 
-  $(function(){
-	     preCcpGrid();
+//   $(function(){
+// 	     preCcpGrid();
 
-         $('#orderDetails').click(function (e){
-            Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: $("#saveCustId").val()}, null, true, '');
-         });
+//          $('#orderDetails').click(function (e){
+//             Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: $("#saveCustId").val()}, null, true, '');
+//          });
 
-  });
+//   });
 
   function displayOrder(type){
 	  if(type==1){
@@ -113,53 +136,54 @@
       $("#grid_wrap_preCcpList .aui-grid").remove()
       myGridID = AUIGrid.create("#grid_wrap_preCcpList", columnLayout, gridPros);
 
-      AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
-    	  if(event.item.chsStatus == "YELLOW"){
-    		  Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: event.item.custId}, null, true, '');
-    	  }
-    });
+//       AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
+//     	  if(event.item.chsStatus == "YELLOW"){
+//     		  Common.popupDiv("/sales/ccp/preCcpOrderSummary.do", {custId: event.item.custId}, null, true, '');
+//     	  }
+//     });
   }
 
   function checkPreCcpResult(){
 	  $("#saveCustId").val("");
 	  if (validateUpdForm()){
 		  Common.ajax("GET", "/sales/ccp/checkPreCcpResult.do", $("#preCcpResultForm").serialize(), function(result) {
-	          preCcpGrid();
+// 	          preCcpGrid();
 	          if(result != null){
 	        	  if(result.chsStatus == "-"){
 	        		  Common.alert("1. Record Not Found For This Existing Customer");
 	        	  }
 	        	  AUIGrid.setGridData(myGridID, result);
-	              AUIGrid.setProp(myGridID, "rowStyleFunction", function() {
-                       if(result.chsStatus == "GREEN"){
-                    	   displayOrder(1);
-                    	   $("#saveCustId").val("");
-                           return "my-green-style";
-                       }
-                       else if(result.chsStatus == "YELLOW"){
-                    	   displayOrder(1);
-                    	   $("#saveCustId").val(result.custId);
-                           return "my-yellow-style";
-                       }
-                       else{
-                    	   displayOrder(2);
-                    	   $("#saveCustId").val("");
-                    	   return "";
-                       }
-	              });
+// 	              AUIGrid.setProp(myGridID, "rowStyleFunction", function() {
+//                        if(result.chsStatus == "GREEN"){
+//                     	   displayOrder(1);
+//                     	   $("#saveCustId").val("");
+//                            return "my-green-style";
+//                        }
+//                        else if(result.chsStatus == "YELLOW"){
+//                     	   displayOrder(1);
+//                     	   $("#saveCustId").val(result.custId);
+//                            return "my-yellow-style";
+//                        }
+//                        else{
+//                     	   displayOrder(2);
+//                     	   $("#saveCustId").val("");
+//                     	   return "";
+//                        }
+// 	              });
 	              AUIGrid.update(myGridID);
 	          }
 	          else{
 	        	  displayOrder(2);
-	              Common.alert("Record Not Found. Please proceed to check Pre-CCP in New Customer module.");
+// 	              Common.alert("Record Not Found. Please proceed to check Pre-CCP in New Customer module.");
+	              Common.alert("<span style='color:red;'>Notice: The record was not found. Please reconfirm the NRIC or Customer ID or click \"New Customer\" to proceed with the Pre-CCP check for new customers.</span>");
 	          }
 	      });
 	  }
   }
 
   function validateUpdForm() {
-	  if (FormUtil.isEmpty($("#customerNric").val())) {
-          Common.alert("Please key in Customer NRIC.");
+	  if (FormUtil.isEmpty($("#customerNric").val()) && FormUtil.isEmpty($("#customerId").val())) {
+          Common.alert("Please key in Customer NRIC or Customer ID.");
           return false;
       }
 //       else{
@@ -203,7 +227,7 @@
 
   <ul class="path"></ul>
   <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p><h2>Pre-CCP</h2>
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p><h2>Pre-CCP Result</h2>
 
 		<ul class="right_btns">
 			    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
@@ -230,7 +254,10 @@
 				        <tbody>
 	                         <tr>
 	                             <th scope="row">NRIC</th>
-	                             <td colspan="3"><input type="text" title="" placeholder="NRIC" class="w100p" id="customerNric" name="customerNric" maxlength=12/></td>
+	                             <td><input type="text" title="" placeholder="NRIC" class="w100p" id="customerNric" name="customerNric" maxlength=12/></td>
+
+	                             <th scope="row">Customer ID</th>
+	                             <td><input type="text" title="" placeholder="customer ID" class="w100p" id="customerId" name="customerId" maxlength=12/></td>
 	                         </tr>
                         </tbody>
 				</table>

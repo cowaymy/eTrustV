@@ -29,6 +29,7 @@ var optionModule = {
         isShowChoose: false
 };
 
+var myFileCaches = {};
 
 $(function() {
     $('#_updSmsMsg').keyup(function (e){
@@ -68,6 +69,17 @@ $(document).ready(function() {
     $("#thePayerValue").val("${ccpInfoMap.thePayer}");
     $("#failVeriReasonValue").val("${ccpInfoMap.failVerRsn}");
 
+    var bankruptcy = '${ccpInfoMap.ctosBankrupt}' == 1 ? "YES" : "NO";
+    $("#bankruptcy").text(bankruptcy);
+
+    if('${ccpInfoMap.fileName}' != null && '${ccpInfoMap.fileName}' != "" ){
+    	 $("#ccpAttachFileField").hide();
+    	 $("#ccpAttachTxtField").show();
+    }else{
+    	$("#ccpAttachFileField").show();
+    	$("#ccpAttachTxtField").hide();
+    }
+
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
      console.log("chsStatus : "+ chsStatus);
@@ -75,12 +87,18 @@ $(document).ready(function() {
      if(chsStatus == "YELLOW") {
         $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
+
+        $('#ctosScoreRow, #experianScoreRow, #scoreGrpRow').addClass("blind");
     }else if (chsStatus == "GREEN") {
         $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+
+        $('#ctosScoreRow, #experianScoreRow, #scoreGrpRow').addClass("blind");
     }else{
         $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+
+        $('#ctosScoreRow, #experianScoreRow, #scoreGrpRow').removeClass("blind");
     }
 
      $("#man1").hide();
@@ -182,6 +200,15 @@ $(document).ready(function() {
             if(currStus != null && currStus != ''){
                 fn_ccpStatusChangeFunc(currStus);
             }
+        }
+    });
+
+    $('#ccpAttachFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[1] != null){
+            delete myFileCaches[1];
+        }else if(file != null){
+            myFileCaches[1] = {file:file};
         }
     });
 
@@ -449,7 +476,35 @@ function calSave(){
     $("#_saveSusUnit").val(susUnit);
     $("#_saveCustUnit").val(custUnit);
 
-    Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
+    var fileName = $("#ccpAttachFile").val().split('\\');
+    var atchFileGrpId = '';
+    var atchFileId = '';
+
+    var formData = new FormData();
+    $.each(myFileCaches, function(n, v) {
+        console.log("n : " + n + " v.file : " + v.file);
+        formData.append(n, v.file);
+    });
+debugger;
+console.log("fileName = " + fileName);
+console.log("grpId = " + $("#atchFileGrpId").val() );
+    if(fileName != null && fileName != "" && $.trim(fileName) != ""){
+      Common.ajaxFile("/sales/ccp/attachCcpReportFileUpload.do", formData, function(result) {
+    	  atchFileGrpId = result.data.fileGroupKey;
+          atchFileId = result.data.atchFileId;
+
+    	  $("#atchFileGrpId").val(atchFileGrpId);
+
+    	  fn_save();
+      });
+
+    }else{
+    	fn_save();
+    }
+}
+
+function fn_save(){
+	Common.ajax("POST", "/sales/ccp/calSave", $("#calSaveForm").serializeJSON() , function(result) {
 
         var msg = "";
 
@@ -489,11 +544,7 @@ function calSave(){
         Common.alert(msg);
         $("#_calSearch").click();
     });
-
 }
-
-
-
 
 function fn_ccpStatusChangeFunc(getVal){
 
@@ -708,27 +759,61 @@ function fn_ccpStatusChangeFunc(getVal){
 
 function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 
-    let score_group_style = "";
-    let score_group_desc = "";
+//     let score_group_style = "";
+//     let score_group_desc = "";
 
-    if((ccpFico >= 701 && ccpFico <= 850) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
-        score_group_style = "green_text";
-        score_group_desc  = "Excellent Score"
-    }else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 4 && ccpExperianr <= 8)){
-        score_group_style = "green_text";
-        score_group_desc = "Good Score"
-    }else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 3)){
-        score_group_style = "black_text";
-        score_group_desc = "Low Score";
-    }else if(ccpFico == 9999 || ccpExperianr == 9999){
-        score_group_style = "red_text";
-        score_group_desc = "No Score Insufficient CCRIS";
+//  if((ccpFico >= 701 && ccpFico <= 850) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
+//  score_group_style = "green_text";
+//  score_group_desc  = "Excellent Score"
+//}else if((ccpFico >= 551 && ccpFico <= 700) || (ccpExperianr >= 4 && ccpExperianr <= 8)){
+//  score_group_style = "green_text";
+//  score_group_desc = "Good Score"
+//}else if((ccpFico >= 300 && ccpFico <= 550) || (ccpExperianr >= 1 && ccpExperianr <= 3)){
+//  score_group_style = "black_text";
+//  score_group_desc = "Low Score";
+//}else if(ccpFico == 9999 || ccpExperianr == 9999){
+//  score_group_style = "red_text";
+//  score_group_desc = "No Score Insufficient CCRIS";
+//}else{
+//  score_group_style = "red_text";
+//  score_group_desc = "No Score";
+//}
+
+//$('#score_group').addClass(score_group_style).text(score_group_desc);
+
+    var scoreProv, score;
+
+    if(ccpFico > 0){
+    	scoreProv = "CTOS";
+    	score = ccpFico;
+
+    }else if(ccpExperianr > 0){
+    	scoreProv = "EXPERIAN";
+    	score= ccpExperianr;
+
     }else{
-        score_group_style = "red_text";
-        score_group_desc = "No Score";
+    	scoreProv = "CTOS";
+        score = ccpFico;
     }
 
-    $('#score_group').addClass(score_group_style).text(score_group_desc);
+    var data = {
+    		scoreProv : scoreProv,
+    		score : score,
+    		homeCat : '${ccpInfoMap.homeCat}',
+    		ccpStus: '${ccpInfoMap.ccpStusId}',
+    		ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
+    		custCat: '${ccpInfoMap.custCat}'
+    };
+
+    console.log("data+ " + JSON.stringify(data));
+
+    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
+    	if(result != null){
+    		$('#score_group').text(result.scoreGrp);
+	        $('#unitEntitle').text(result.unitEntitle);
+	        $('#prodEntile').text(result.prodEntitle);
+	    }
+    });
 }
 
 function  bind_RetrieveData(){
@@ -1083,7 +1168,7 @@ var gridPros = {
     showStateColumn         : true,
     displayTreeOpen           : false,
 //    selectionMode       : "singleRow",  //"multipleCells",
-    headerHeight               : 30,
+    headerHeight               : 50,
     useGroupingPanel         : false,        //그룹핑 패널 사용
     skipReadonlyColumns    : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     wrapSelectionMove      : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -1146,6 +1231,12 @@ function chgTab(tabNm) {
             if(AUIGrid.getRowCount(ccpStusHistGridID) <= 0) {
                 fn_selectCcpStusHistList();
             }
+            break;
+        case 'custScoreCard' :
+         AUIGrid.resize(custScoreCardGridID, 942, 380);
+         if(AUIGrid.getRowCount(custScoreCardGridID) <= 0) {
+        	 fn_selectCustScoreCardList();
+         }
             break;
     };
 }
@@ -1295,6 +1386,7 @@ function chgTab(tabNm) {
     <li><a href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
     <li><a href="#" onClick="javascript:chgTab('ccpStusHist');">CCP Status History</a></li>
     <li><a href="#" onClick="javascript:chgTab('ccpTicket');">CCP Ticket</a></li>
+    <li><a href="#" onClick="javascript:chgTab('custScoreCard');">Customer Score Card</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -1343,12 +1435,16 @@ function chgTab(tabNm) {
 ------------------------------------------------------------------------------->
 <c:set var="logs" value="${orderDetail.ccpTicketLogs}" />
 <%@ include file="/WEB-INF/jsp/sales/ccp/include/ticketLog.jsp" %>
+<!------------------------------------------------------------------------------
+    Customer Score Card
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/ccp/include/custScoreCard.jsp" %>
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.ccpScorePoint" /></h3>
 <ul class="right_btns">
-    <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li>
+<%--     <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li> --%>
 <!--    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li> -->
 <!--    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li> -->
     <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">CTOS Score</a></p></li>
@@ -1545,7 +1641,7 @@ function chgTab(tabNm) {
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.ccpResult" /></h3>
 </aside><!-- title_line end -->
-<form  id="calSaveForm">
+<form  id="calSaveForm" name="calSaveForm">
 <input type="hidden" name="saveCcpId" id="_saveCcpId" value="${ccpId}"/>
 <input type="hidden" name="ccpTotalScorePoint" value="${fieldMap.totUnitPoint}">
 <input type="hidden" id="_saveCustTypeId" name="saveCustTypeId" value="${orderDetail.basicInfo.custTypeId}">
@@ -1595,6 +1691,20 @@ function chgTab(tabNm) {
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">CCP Attachment</th>
+    <td colspan="5">
+        <div class='auto_file3 w100p' id="ccpAttachFileField">
+            <input type='file' title='file add' id='ccpAttachFile' accept='application/pdf''/>
+            <label style="width: 400px;">
+                <input type='text' class='input_text' readonly='readonly' id='ccpAttachFileTxt'  name=''/>
+            </label>
+            <input type="hidden" name="atchFileGrpId" id="atchFileGrpId" value="${ccpInfoMap.fileId}">
+        </div>
+        <div id="ccpAttachTxtField"><span>${ccpInfoMap.fileName}</span></div>
+    </td>
+</tr>
+<tr>
+
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
     <td colspan="5"><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
 
@@ -1610,13 +1720,18 @@ function chgTab(tabNm) {
     <td><span><select class="w100p" name="rejectStatusEdit" id="_rejectStatusEdit"></select></span></td>
     -->
 </tr>
-<tr>
+<tr id="ctosScoreRow" class="blind">
 <!--  "sal.title.text.ficoScore" THIS IS IN THE TABLE SYS0052M-->
 <!--    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th> -->
     <th scope="row">CTOS Score</th>
     <td colspan="5" ><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" onchange="javascript : fn_ccpScoreChangeFunc(this.value,0)" disabled="disabled" maxlength="10"></span></td>
 </tr>
 <tr>
+    <th scope="row">Bankruptcy</th>
+    <td colspan="5" id="bankruptcy"></td>
+    </td>
+</tr>
+<tr id="experianScoreRow" class="blind">
     <th scope="row">Experian Score</th>
     <td colspan="5">
         <span>
@@ -1625,7 +1740,7 @@ function chgTab(tabNm) {
         </span>
     </td>
 </tr>
-<tr>
+<tr id="scoreGrpRow" class="blind">
     <th scope="row">Score Group</th>
     <td colspan="5" id="score_group">
     </td>
@@ -1640,6 +1755,16 @@ function chgTab(tabNm) {
     <th scope="row">CHS Reason</th>
     <td colspan="5" id="chs_rsn">
  <%--     <span>${ccpInfoMap.chsRsn}</span> --%>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Product Entitlement</th>
+        <td colspan="5" id="prodEntitle"></td>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Unit Entitlement</th>
+    <td colspan="5" id="unitEntitle"></td>
     </td>
 </tr>
 <tr>

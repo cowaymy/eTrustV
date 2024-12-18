@@ -125,6 +125,31 @@ public class PreCcpRegisterController {
 		return "sales/ccp/preCcpOrderSummary";
 	}
 
+	@RequestMapping(value = "/preCcpResultInfo.do")
+	public String preCcpResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("custId", params.get("custId"));
+
+		// GET CUSTOMER CREDIBILITY
+		EgovMap custCreditInfo = preCcpRegisterService.getCustCreditInfo(params);
+		model.put("custCredit", custCreditInfo);
+
+		return "sales/ccp/preCcpResultInfo";
+	}
+
+	 @RequestMapping(value = "/getExistUnitHist.do")
+	 public ResponseEntity<List<EgovMap>> getExistUnitHist(@RequestParam Map<String, Object> params){
+		 List<EgovMap> existUnitHistList = preCcpRegisterService.getExistUnitHist(params);
+
+		 return ResponseEntity.ok(existUnitHistList);
+	 }
+
+	 @RequestMapping(value = "/getNewProdElig.do")
+	 public ResponseEntity<List<EgovMap>> getNewProdElig(@RequestParam Map<String, Object> params){
+		 List<EgovMap> newProdEligList = preCcpRegisterService.getNewProdElig(params);
+
+		 return ResponseEntity.ok(newProdEligList);
+	 }
+
     @RequestMapping(value = "/searchOrderSummaryList.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> searchOrderSummaryList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
         List<EgovMap> orderSummaryList = preCcpRegisterService.searchOrderSummaryList(params);
@@ -414,7 +439,7 @@ public class PreCcpRegisterController {
 
    @RequestMapping(value = "/preCcpEditRemark.do")
 	public String preCcpEditRemark(@RequestParam Map<String, Object> params, ModelMap model) {
-	    int result = preCcpRegisterService.insertRemarkRequest(params);
+//	    int result = preCcpRegisterService.insertRemarkRequest(params);
 		return "sales/ccp/preCcpEditRemark";
    }
 
@@ -424,10 +449,16 @@ public class PreCcpRegisterController {
 		return "sales/ccp/preCcpEditRemarkDetails";
    }
 
-   @RequestMapping(value = "/getPreCcpRemark.do", method = RequestMethod.GET)
-   public ResponseEntity<List<EgovMap>> getPreCcpRemark(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
-       List<EgovMap> preCcpRemarkList = preCcpRegisterService.getPreCcpRemark(params);
-       return ResponseEntity.ok(preCcpRemarkList);
+   @RequestMapping(value = "/getCustCredibility.do", method = RequestMethod.GET)
+   public ResponseEntity<List<EgovMap>> getCustCredibility(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+       List<EgovMap> custCredibilityList = preCcpRegisterService.getCustCredibility(params);
+       return ResponseEntity.ok(custCredibilityList);
+   }
+
+   @RequestMapping(value = "/getExistCustChs.do", method = RequestMethod.GET)
+   public ResponseEntity<List<EgovMap>> getExistCustChs(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+	   List<EgovMap> existCustChsList = preCcpRegisterService.getExistCustChs(params);
+	   return ResponseEntity.ok(existCustChsList);
    }
 
    @Transactional
@@ -449,6 +480,19 @@ public class PreCcpRegisterController {
    	    message.setMessage(flag==true ? "Success to update remark" : "Fail to update remark");
 
 	    return ResponseEntity.ok(message);
+   }
+
+   @RequestMapping(value = "/editCCPRemark.do", method = RequestMethod.POST)
+   public ResponseEntity<ReturnMessage> editCCPRemark(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+
+	   int userId = sessionVO.getUserId();
+
+	   preCcpRegisterService.editCCPRemark(params, userId);
+
+	   ReturnMessage message = new ReturnMessage();
+	   message.setCode(AppConstants.SUCCESS);
+
+	   return ResponseEntity.ok(message);
    }
 
 	@RequestMapping(value = "/quotaManagement.do")

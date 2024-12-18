@@ -1500,4 +1500,38 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		ccpCalculateMapper.insertCCPTicketLog(p);
 		ccpCalculateMapper.updateCCPTicket(p);
 	}
+
+	@Override
+	public EgovMap getScoreGrpByAjax(Map<String, Object> params) {
+		return ccpCalculateMapper.getScoreGrpByAjax(params);
+	}
+
+  	@Override
+	public void insertCcpAttachAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileMapper.selectFileGroupKey();
+		AtomicInteger i = new AtomicInteger(0); // get seq key.
+
+		list.forEach(r -> {this.insertFile2(fileGroupKey, r, type, params);});
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
+  	public void insertFile2(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params) {
+        LOGGER.debug("insertFile2 :: Start");
+
+        FileGroupVO fileGroupVO = new FileGroupVO();
+
+        fileMapper.insertFileDetail(flVO);
+
+        fileGroupVO.setAtchFileGrpId(fileGroupKey);
+        fileGroupVO.setAtchFileId(flVO.getAtchFileId());
+        fileGroupVO.setChenalType(flType.getCode());
+        fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
+        fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
+
+        fileMapper.insertFileGroup(fileGroupVO);
+
+        LOGGER.debug("insertFile2 :: End");
+    }
+
 }

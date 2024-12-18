@@ -6,6 +6,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +41,11 @@ import com.coway.trust.biz.common.WhatappsApiService;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.PreCcpRegisterService;
+import com.coway.trust.biz.sales.order.impl.OrderLedgerMapper;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.sales.SalesConstants;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -55,6 +61,9 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Resource(name = "preCcpRegisterMapper")
 	private PreCcpRegisterMapper preCcpRegisterMapper;
+
+	@Resource(name = "orderLedgerMapper")
+	private OrderLedgerMapper orderLedgerMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -113,11 +122,128 @@ public class PreCcpRegisterServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public List<EgovMap> getCustCredibility(Map<String, Object> params) {
+		return preCcpRegisterMapper.getCustCredibility(params);
+	}
+
+	@Override
+	public List<EgovMap> getExistCustChs(Map<String, Object> params) {
+		return preCcpRegisterMapper.getExistCustChs(params);
+	}
+
+	@Override
 	@Transactional
 	public int editRemarkRequest(Map<String, Object> params) throws Exception {
 	    int result= preCcpRegisterMapper.editRemarkRequest(params);
 	    return result;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void editCCPRemark(Map<String, ArrayList<Object>> params, int userId){
+	    List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE);
+	    List<Object> updateExistCustList = params.get("updateExistCust");
+
+	    // TODAY
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 59);
+	    calendar.set(Calendar.MILLISECOND, 999);
+	    Date today = calendar.getTime();
+
+	    //TOMORROW
+	    Calendar calendar1 = Calendar.getInstance();
+	    calendar1.add(Calendar.DATE, 1);
+	    calendar1.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar1.set(Calendar.MINUTE, 0);
+	    calendar1.set(Calendar.SECOND, 0);
+	    calendar1.set(Calendar.MILLISECOND, 0);
+	    Date tomorrow = calendar1.getTime();
+
+	    // FUTURE
+	    Calendar calendar2 = Calendar.getInstance();
+	    calendar2.set(Calendar.YEAR, 9999);
+	    calendar2.set(Calendar.MONTH, 11);
+	    calendar2.set(Calendar.DATE, 31);
+	    calendar2.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar2.set(Calendar.MINUTE, 59);
+	    calendar2.set(Calendar.SECOND, 59);
+	    calendar2.set(Calendar.MILLISECOND, 999);
+	    Date future = calendar2.getTime();
+
+	    if(updateList != null){
+	        updateList.forEach(r -> {
+	          ((Map<String, Object>) r).put("userId", userId);
+
+	          //=========================================
+	    	  // EXISTING CUSTOMER CREDIBILITY
+	    	  //=========================================
+	          ((Map<String, Object>) r).put("oldEndDate", today);
+	          preCcpRegisterMapper.editCCPRemark((Map<String, Object>) r);
+
+	         //=========================================
+	    	 // NEW EDITED CUSTOMER CREDIBILITY
+	    	 //=========================================
+	    	  ((Map<String, Object>) r).put("newStartDate", tomorrow);
+	          ((Map<String, Object>) r).put("newEndDate", future);
+
+	          //INSERT NEW EDITED RECORD
+	          preCcpRegisterMapper.insertCCPRemark((Map<String, Object>) r);
+	        });
+	    }
+
+	    if(updateExistCustList != null){
+	    	updateExistCustList.forEach(r -> {
+	    		((Map<String, Object>) r).put("userId", userId);
+
+    	        //=========================================
+    	    	// EXISTING CHS STUS
+    	    	//=========================================
+    	        // SET END DATE - OLD CHS STUS (today)
+    	        ((Map<String, Object>) r).put("oldEndDate", today);
+    	        preCcpRegisterMapper.editCCPRemark((Map<String, Object>) r);
+
+    	        //=========================================
+    	    	// NEW EDITED CHS STUS
+    	    	//=========================================
+    	    	((Map<String, Object>) r).put("newStartDate", tomorrow);
+    	        ((Map<String, Object>) r).put("newEndDate", future);
+
+    	        //INSERT NEW EDITED RECORD
+    	        preCcpRegisterMapper.insertCCPRemark((Map<String, Object>) r);
+	    	});
+	    }
+	}
+
+	@Override
+	public EgovMap getCustCreditInfo(Map<String, Object> params) {
+		return preCcpRegisterMapper.getCustCreditInfo(params);
+	}
+
+	 @Override
+	 public List<EgovMap> getExistUnitHist(Map<String, Object> params){
+		 List<EgovMap> result = preCcpRegisterMapper.getExistUnitHist(params);
+
+		 if(result != null){
+			 result.forEach(r -> {
+				 	orderLedgerMapper.getOderOutsInfo((Map<String, Object>) r);
+
+				 	List<EgovMap> data = (List<EgovMap>) r.get("p1");
+				 	r.put("ordTotOtstnd", data.get(0).get("ordTotOtstnd"));
+				 	r.put("ordOtstndMth", data.get(0).get("ordOtstndMth"));
+				 	r.put("ordUnbillAmt", data.get(0).get("ordUnbillAmt"));
+				 	r.put("totPnaltyChrg", data.get(0).get("totPnaltyChrg"));
+		    	});
+		 }
+
+		 return result;
+	 }
+
+	 @Override
+	 public List<EgovMap> getNewProdElig(Map<String, Object> params){
+		 return preCcpRegisterMapper.getNewProdElig(params);
+	 }
 
 	@Override
 	@Transactional

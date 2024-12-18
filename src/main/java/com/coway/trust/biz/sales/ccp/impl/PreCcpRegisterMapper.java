@@ -29,7 +29,21 @@ public interface PreCcpRegisterMapper {
 
 	List<EgovMap> getPreCcpRemark(Map<String, Object> params);
 
+	List<EgovMap> getCustCredibility(Map<String, Object> params);
+
+	List<EgovMap> getExistCustChs(Map<String, Object> params);
+
 	int  editRemarkRequest(Map<String, Object> params);
+
+	void  editCCPRemark(Map<String, Object> params);
+
+	void  insertCCPRemark(Map<String, Object> params);
+
+	EgovMap getCustCreditInfo(Map<String, Object> params);
+
+	List<EgovMap> getExistUnitHist(Map<String, Object> params);
+
+	List<EgovMap> getNewProdElig(Map<String, Object> params);
 
 	int  insertRemarkRequest(Map<String, Object> params);
 

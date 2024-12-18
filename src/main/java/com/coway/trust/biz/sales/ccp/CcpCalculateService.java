@@ -93,4 +93,8 @@ public interface CcpCalculateService {
 	List<EgovMap> orgDetails(Map<String, Object> p) throws Exception;
 
 	void updateCCPTicket(Map<String, Object> p) throws Exception;
+
+	EgovMap getScoreGrpByAjax(Map<String, Object> params);
+
+	void insertCcpAttachAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 }

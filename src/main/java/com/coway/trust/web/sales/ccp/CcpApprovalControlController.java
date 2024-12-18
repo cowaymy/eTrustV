@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -94,4 +95,66 @@ public class CcpApprovalControlController {
 	    return ResponseEntity.ok(message);
 	  }
 
+	  @RequestMapping(value = "/ccpEditScoreRangePop.do")
+	  public String ccpEditScoreRangePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		  EgovMap editScoreRange = ccpApprovalControlService.getScoreRangeControl(params);
+
+		  model.addAttribute("editScoreRange", editScoreRange);
+
+		  return "sales/ccp/ccpEditScoreRangePop";
+	  }
+
+	  @RequestMapping(value = "/submitScoreRange.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> submitScoreRange(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+
+	    int userId = sessionVO.getUserId();
+	    params.put("userId", userId);
+
+	    ccpApprovalControlService.submitScoreRange(params);
+
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+
+	    return ResponseEntity.ok(message);
+	  }
+
+	 @RequestMapping(value = "/selectUnitEntitleControlList.do")
+	 public ResponseEntity<List<EgovMap>> selectUnitEntitleControlList(@RequestParam Map<String, Object> params){
+		 List<EgovMap> selectUnitEntitleControlList = ccpApprovalControlService.selectUnitEntitleControlList(params);
+
+		 return ResponseEntity.ok(selectUnitEntitleControlList);
+	  }
+
+	  @RequestMapping(value = "/saveUnitEntitle.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> saveUnitEntitle(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+
+		  int userId = sessionVO.getUserId();
+
+		  ccpApprovalControlService.saveUnitEntitle(params, userId);
+
+		  ReturnMessage message = new ReturnMessage();
+		  message.setCode(AppConstants.SUCCESS);
+
+		  return ResponseEntity.ok(message);
+	  }
+
+	  @RequestMapping(value = "/selectProdEntitleControlList.do")
+	  public ResponseEntity<List<EgovMap>> selectProdEntitleControlList(@RequestParam Map<String, Object> params){
+		  List<EgovMap> selectProdEntitleControlList = ccpApprovalControlService.selectProdEntitleControlList(params);
+
+		  return ResponseEntity.ok(selectProdEntitleControlList);
+	  }
+
+	  @RequestMapping(value = "/saveProdEntitle.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> saveProdEntitle(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+
+		  int userId = sessionVO.getUserId();
+
+		  ccpApprovalControlService.saveProdEntitle(params, userId);
+
+		  ReturnMessage message = new ReturnMessage();
+		  message.setCode(AppConstants.SUCCESS);
+
+		  return ResponseEntity.ok(message);
+	  }
 }

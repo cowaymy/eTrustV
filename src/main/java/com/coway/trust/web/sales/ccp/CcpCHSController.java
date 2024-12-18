@@ -108,6 +108,10 @@ public class CcpCHSController {
           hm.put("chsRsn", vo.getChsRsn().trim());
           hm.put("crtUserId", sessionVO.getUserId());
           hm.put("updUserId", sessionVO.getUserId());
+          hm.put("custCat", vo.getCustCat().trim());
+          hm.put("renCat", vo.getRenCat().trim());
+          hm.put("scoreGrp", vo.getScoreGrp().trim());
+          hm.put("renUnitEntitle", vo.getRenUnitEntitle().trim());
 
           detailList.add(hm);
       }

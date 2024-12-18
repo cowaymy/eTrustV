@@ -52,12 +52,12 @@
 	<aside class="title_line">
 		<p class="fav">
 			<a></a>
-		<h2>New Customer</h2>
+		<h2>Register Pre-CCP</h2>
 		</p>
 		<ul class="right_btns">
 			<li><p class="btn_blue registerCustomer"><a id="registerCustomer">Register</a></p></li>
 			<li><p class="btn_blue sendSms"><a id="sendSms">Send Consent</a></p></li>
-			<li><p class="btn_blue preCcpResult"><a id="preCcpResult">Pre-CCP Result</a></p></li>
+<!-- 			<li><p class="btn_blue preCcpResult"><a id="preCcpResult">Pre-CCP Result</a></p></li> -->
 			<li><p class="btn_blue viewHistory"><a id="viewHistory">View History</a></p></li>
 		</ul>
 	</aside>

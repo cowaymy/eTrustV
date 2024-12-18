@@ -21,4 +21,24 @@ public interface CcpApprovalControlMapper {
 	List<EgovMap> selectScoreRangeControlList(Map<String, Object> params);
 
 	 void updateScoreRangeControl(Map<String, Object> params);
+
+	 EgovMap getScoreRangeControl(Map<String, Object> params);
+
+	 void updateScoreRange(Map<String, Object> params);
+
+	 void insertScoreRange(Map<String, Object> params);
+
+	 List<EgovMap> selectUnitEntitleControlList(Map<String, Object> params);
+
+	 void updateUnitEntitle(Map<String, Object> params);
+
+	 void insertUnitEntitle(Map<String, Object> params);
+
+	 List<EgovMap> selectProdEntitleControlList(Map<String, Object> params);
+
+	 int getActiveProdEntitle(Map<String, Object> params);
+
+	 void updateProdEntitle(Map<String, Object> params);
+
+	 void insertProdEntitle(Map<String, Object> params);
 }

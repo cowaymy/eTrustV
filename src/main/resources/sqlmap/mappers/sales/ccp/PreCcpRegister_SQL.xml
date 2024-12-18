@@ -48,18 +48,29 @@
 
 	<select id="getExistCustomer" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
 		SELECT
-		  A.CUST_ID
-		, NVL(B.CHS_STUS,'-') CHS_STATUS
-		, CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-'
-		           ELSE B.CHS_RSN END CHS_RSN
-		, A.NAME
-		, CASE WHEN B.CHS_STUS = 'GREEN' THEN D.APPV_REQ ELSE C.APPV_REQ END APPV_REQ
-		, TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
+	        A.CUST_ID
+	        , A.NAME
+	        , CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN 'EXISTING' ELSE 'NEW' END CUST_TYPE
+	        , CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN F.CCP_REM ELSE E.CCP_REM END CCP_REM
 		FROM SAL0029D A
 		LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
 		LEFT JOIN SAL0344D C ON B.CHS_STUS = C.CHS_STUS AND B.CHS_RSN = C.CHS_RSN
 		LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS = 'GREEN'
-		WHERE A.NRIC = #{customerNric} AND ROWNUM = 1
+		LEFT JOIN (
+		      SELECT A.CCP_REM, B.CODE_NAME
+              FROM SAL0428D A
+              LEFT JOIN SYS0013M B ON B.CODE = A.CUST_CREDIT AND B.CODE_MASTER_ID = 607
+              WHERE A.STUS = 1
+		) E ON E.CODE_NAME = B.SCORE_GRP <!-- NEW CUSTOMER -->
+		LEFT JOIN SAL0428D F ON F.CHS_STUS = B.CHS_STUS AND F.STUS = 1 <!-- EXISTING CUSTOMER -->
+		WHERE 1=1
+        <if test="customerNric != null and customerNric != '' ">
+		  AND A.NRIC = #{customerNric}
+	    </if>
+		<if test="customerId != null and customerId != '' ">
+		  AND A.CUST_ID = #{customerId}
+		</if>
+		  AND ROWNUM = 1
 	</select>
 
 	<select id="searchOrderSummaryList" parameterType="Map"
@@ -193,6 +204,27 @@
 		ORDER BY A.CHS_STUS, A.CHS_RSN
 	</select>
 
+	<select id="getCustCredibility" parameterType="Map" resultType="egovMap">
+		SELECT
+		  A.REMARK_ID
+		, B.CODE_NAME CUST_CREDIT
+		, A.CUST_CREDIT CUST_CREDIT_CODE
+		, A.CUST_TYPE
+		, A.CCP_REM
+		FROM SAL0428D A
+		LEFT JOIN SYS0013M B ON B.CODE = A.CUST_CREDIT AND B.CODE_MASTER_ID = 607
+		WHERE A.CUST_TYPE = 'NEW' AND A.STUS = 1
+	</select>
+
+	<select id="getExistCustChs" parameterType="Map" resultType="egovMap">
+		SELECT
+		  A.REMARK_ID
+		, A.CHS_STUS
+		, A.CUST_TYPE
+		, A.CCP_REM
+		FROM SAL0428D A
+		WHERE A.CUST_TYPE = 'EXISTING' AND A.STUS = 1
+	</select>
 
 	<update id="editRemarkRequest" parameterType="java.util.Map">
 		UPDATE SAL0344D
@@ -201,6 +233,104 @@
 		, UPD_DT = SYSDATE
 		WHERE REMARK_ID = #{editorId}
 	</update>
+
+	<update id="editCCPRemark" parameterType="java.util.Map">
+        UPDATE SAL0428D
+        SET END_DT = #{oldEndDate}
+        , STUS = 8
+        , UPD_USER_ID = #{userId}
+        , UPD_DT = SYSDATE
+        WHERE REMARK_ID = #{remarkId}
+    </update>
+
+	<insert id="insertCCPRemark" parameterType="java.util.Map">
+        INSERT INTO SAL0428D   (
+	        REMARK_ID,
+	        CUST_CREDIT,
+	        CUST_TYPE,
+	        CHS_STUS,
+	        CCP_REM,
+	        STUS,
+	        START_DT,
+	        END_DT,
+	        CRT_DT,
+	        CRT_USER_ID,
+	        UPD_DT,
+	        UPD_USER_ID
+	     ) VALUES (
+	        SAL0428D_REMARK_ID_SEQ.NEXTVAL,
+	        #{custCreditCode},
+	        #{custType},
+	        #{chsStus},
+	        #{ccpRem},
+	        1,
+	        #{newStartDate},
+	        #{newEndDate},
+	        SYSDATE,
+	        #{userId},
+	        SYSDATE,
+	        #{userId}
+	    )
+    </insert>
+
+    <select id="getCustCreditInfo" parameterType="Map" resultType="egovMap">
+    WITH CUST_CREDIBILITY AS (
+	    SELECT
+	        A.CUST_ID
+	        , A.NAME
+	        , CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN 'EXISTING' ELSE 'NEW' END CUST_TYPE
+	        , B.CHS_STUS CHS_STUS
+	        , NVL(B.CHS_RSN,'-') CHS_RSN
+	        , B.CUST_CAT
+	        , B.SCORE_GRP SCORE_GRP
+	    FROM SAL0029D A
+	    LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
+	    WHERE A.CUST_ID = #{custId}
+	)
+	SELECT
+	    CC.CUST_ID,
+	    CC.NAME,
+	    CC.CUST_TYPE,
+	    CC.CHS_STUS,
+	    CC.CHS_RSN,
+	    CC.SCORE_GRP,
+	    AA.CUST_CAT,
+	    AA.UNIT_ENTITLE,
+	    AA.PROD_ENTITLE,
+	    AA.RENT_FEE_LIMIT
+	FROM SAL0426D AA
+	LEFT JOIN SYS0013M BB ON BB.CODE = AA.SCORE_GRP AND BB.CODE_MASTER_ID = 607 AND AA.STUS = 1
+	RIGHT JOIN CUST_CREDIBILITY CC ON (CC.SCORE_GRP = BB.CODE_NAME OR CC.CHS_STUS = AA.CHS_STUS) AND CC.CUST_CAT = AA.CUST_CAT
+    </select>
+
+    <select id="getExistUnitHist" parameterType="Map" resultType="egovMap">
+        SELECT
+		    A.SALES_ORD_NO
+		    , A.SALES_ORD_ID ORD_ID
+		    , CASE WHEN GET_HOMECARE_FLAG_YN(C.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END PROD_CAT
+		    , D.CODE ORD_STUS
+		    , E.STUS_CODE_ID RENT_STUS
+		    , G.CODE_NAME CARD_TYPE
+		FROM SAL0001D A
+		JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
+		JOIN SYS0038M D ON D.STUS_CODE_ID = A.STUS_CODE_ID
+		LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = A.SALES_ORD_ID
+		LEFT JOIN SAL0074D F ON F.SALES_ORD_ID = A.SALES_ORD_ID
+		LEFT JOIN SYS0013M G ON G.CODE_ID = F.MODE_ID
+		WHERE A.CUST_ID = #{custId}
+    </select>
+
+    <select id="getNewProdElig" parameterType="Map" resultType="egovMap">
+        SELECT
+		    B.CODE_NAME PROD_CAT,
+		    B.CODE_ID,
+		    A.RECOMMEND
+		FROM SAL0427D A
+		LEFT JOIN SYS0013M B ON B.CODE = A.PROD_CAT AND B.CODE_MASTER_ID = 11
+	    WHERE A.SCORE_TYPE = #{custScore} AND A.STUS = 1
+	    ORDER BY B.CODE_ID
+    </select>
 
 	<insert id="insertRemarkRequest" parameterType="java.util.Map">
 		MERGE INTO SAL0344D A
