@@ -73,15 +73,15 @@
                                        AND A.ORG_STUS_CODE_ID = 1
 
                                        <if test="orgCode != null and orgCode != ''">
-                                         AND B.LAST_ORG_CODE = #{orgCode}
+                                         AND A.LAST_ORG_CODE = #{orgCode}
                                        </if>
 
                                        <if test="grpCode != null and grpCode != ''">
-                                         AND B.LAST_GRP_CODE = #{grpCode}
+                                         AND A.LAST_GRP_CODE = #{grpCode}
                                        </if>
 
                                        <if test="deptCode != null and deptCode != ''">
-                                         AND B.LAST_DEPT_CODE = #{deptCode}
+                                         AND A.LAST_DEPT_CODE = #{deptCode}
                                        </if>
 
                    ) EXTENT5 ON EXTENT1.INV_REQ_CRT_USER_ID = EXTENT5.USER_ID
@@ -102,7 +102,7 @@
                  </if>
 
                  <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
-                   AND LOWER(EXTENT4.USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
+                   AND LOWER(EXTENT4.USER_NAME) LIKE '%' || LOWER(#{invReqCrtUserName}) || '%'
                  </if>
       ) FILTER1
       JOIN SAL0001D EXTENT5 ON EXTENT5.SALES_ORD_ID = FILTER1.SO_ID
@@ -132,7 +132,7 @@
         AND FILTER1.INV_REQ_PARTY_ID = #{invReqPartyId}
       </if>
 
-      <!-- <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
+      <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
         AND UPPER(FILTER1.INV_REQ_CRT_USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
       </if>
 
@@ -146,7 +146,7 @@
 
       <if test="deptCode != null and deptCode != ''">
         AND FILTER1.LAST_DEPT_CODE = #{deptCode}
-      </if>  -->
+      </if>
     </select>
 
     <select id="orderInvestInfo" parameterType="Map" resultType="egovMap">
