@@ -14,192 +14,227 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "AfterServiceResultDetailForm", description = "AfterServiceResultDetailForm")
 public class AfterServiceResultDetailForm {
+  @ApiModelProperty(value = "필터 코드")
+  private String filterCode;
 
+  @ApiModelProperty(value = "foc??")
+  private int chargesFoc;
 
-	@ApiModelProperty(value = "필터 코드")
-	private String filterCode;
+  @ApiModelProperty(value = "chgid??")
+  private int exchangeId;
 
-	@ApiModelProperty(value = "foc??")
-	private int chargesFoc;
+  @ApiModelProperty(value = "filter price")
+  private double salesPrice;
 
-	@ApiModelProperty(value = "chgid??")
-	private int exchangeId;
+  @ApiModelProperty(value = "필터 교체 수량")
+  private int filterChangeQty;
 
-	@ApiModelProperty(value = "filter price")
-	private double salesPrice;
+  @ApiModelProperty(value = "filter / sparepart / msc(Miscellaneous) 구분")
+  private int partsType;
 
-	@ApiModelProperty(value = "필터 교체 수량")
-	private int filterChangeQty;
+  @ApiModelProperty(value = "교체 필터 바코드")
+  private String filterBarcdSerialNo;
 
-	@ApiModelProperty(value = "filter / sparepart / msc(Miscellaneous) 구분")
-	private int partsType;
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String filterBarcdNewSerialNo;
 
-	@ApiModelProperty(value = "교체 필터 바코드")
-	private String filterBarcdSerialNo;
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String filterSerialUnmatchReason;
 
-	@ApiModelProperty(value = "기존 필터 바코드")
-	private String retSmoSerialNo;
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String sysFilterBarcdSerialNo;
 
-	private String isSmo;
-	private String isSerialReplace;
-	private String psRemark;
+  @ApiModelProperty(value = "교체 필터 바코드", example = "")
+  private String filterBarcdSerialNoOld;
 
-	private String resultNo; // INS or ASR
-	private int resultSoId;
-	private int insAccPartId;
-	private String remark;
-	private int crtUserId;
+  @ApiModelProperty(value = "기존 필터 바코드")
+  private String retSmoSerialNo;
 
-	public String getResultNo() {
-		return resultNo;
-	}
+  private String isSmo;
 
-	public int getResultSoId() {
-		return resultSoId;
-	}
+  private String isSerialReplace;
 
-	public int getInsAccPartId() {
-		return insAccPartId;
-	}
+  private String psRemark;
 
-	public String getRemark() {
-		return remark;
-	}
+  private String resultNo;
 
-	public int getCrtUserId() {
-		return crtUserId;
-	}
+  private int resultSoId;
 
-	public void setResultNo(String resultNo) {
-		this.resultNo = resultNo;
-	}
+  private int insAccPartId;
 
-	public void setResultSoId(int resultSoId) {
-		this.resultSoId = resultSoId;
-	}
+  private String remark;
 
-	public void setInsAccPartId(int insAccPartId) {
-		this.insAccPartId = insAccPartId;
-	}
+  private int crtUserId;
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+  public String getResultNo() {
+    return resultNo;
+  }
 
-	public void setCrtUserId(int crtUserId) {
-		this.crtUserId = crtUserId;
-	}
+  public int getResultSoId() {
+    return resultSoId;
+  }
 
-	public String getFilterCode() {
-		return filterCode;
-	}
+  public int getInsAccPartId() {
+    return insAccPartId;
+  }
 
-	public void setFilterCode(String filterCode) {
-		this.filterCode = filterCode;
-	}
+  public String getRemark() {
+    return remark;
+  }
 
-	public int getChargesFoc() {
-		return chargesFoc;
-	}
+  public int getCrtUserId() {
+    return crtUserId;
+  }
 
-	public void setChargesFoc(int chargesFoc) {
-		this.chargesFoc = chargesFoc;
-	}
+  public void setResultNo( String resultNo ) {
+    this.resultNo = resultNo;
+  }
 
-	public int getExchangeId() {
-		return exchangeId;
-	}
+  public void setResultSoId( int resultSoId ) {
+    this.resultSoId = resultSoId;
+  }
 
-	public void setExchangeId(int exchangeId) {
-		this.exchangeId = exchangeId;
-	}
+  public void setInsAccPartId( int insAccPartId ) {
+    this.insAccPartId = insAccPartId;
+  }
 
-	public double getSalesPrice() {
-		return salesPrice;
-	}
+  public void setRemark( String remark ) {
+    this.remark = remark;
+  }
 
-	public void setSalesPrice(double salesPrice) {
-		this.salesPrice = salesPrice;
-	}
+  public void setCrtUserId( int crtUserId ) {
+    this.crtUserId = crtUserId;
+  }
 
-	public int getFilterChangeQty() {
-		return filterChangeQty;
-	}
+  public String getFilterCode() {
+    return filterCode;
+  }
 
-	public void setFilterChangeQty(int filterChangeQty) {
-		this.filterChangeQty = filterChangeQty;
-	}
+  public void setFilterCode( String filterCode ) {
+    this.filterCode = filterCode;
+  }
 
-	public int getPartsType() {
-		return partsType;
-	}
+  public int getChargesFoc() {
+    return chargesFoc;
+  }
 
-	public void setPartsType(int partsType) {
-		this.partsType = partsType;
-	}
+  public void setChargesFoc( int chargesFoc ) {
+    this.chargesFoc = chargesFoc;
+  }
 
-	public String getFilterBarcdSerialNo() {
-		return filterBarcdSerialNo;
-	}
+  public int getExchangeId() {
+    return exchangeId;
+  }
 
-	public void setFilterBarcdSerialNo(String filterBarcdSerialNo) {
-		this.filterBarcdSerialNo = filterBarcdSerialNo;
-	}
+  public void setExchangeId( int exchangeId ) {
+    this.exchangeId = exchangeId;
+  }
 
-	public String getRetSmoSerialNo() {
-		return retSmoSerialNo;
-	}
+  public double getSalesPrice() {
+    return salesPrice;
+  }
 
-	public void setRetSmoSerialNo(String retSmoSerialNo) {
-		this.retSmoSerialNo = retSmoSerialNo;
-	}
+  public void setSalesPrice( double salesPrice ) {
+    this.salesPrice = salesPrice;
+  }
 
-	public String getIsSmo() {
-		return isSmo;
-	}
+  public int getFilterChangeQty() {
+    return filterChangeQty;
+  }
 
-	public void setIsSmo(String isSmo) {
-		this.isSmo = isSmo;
-	}
+  public void setFilterChangeQty( int filterChangeQty ) {
+    this.filterChangeQty = filterChangeQty;
+  }
 
-	public String getIsSerialReplace() {
-		return isSerialReplace;
-	}
+  public int getPartsType() {
+    return partsType;
+  }
 
-	public void setIsSerialReplace(String isSerialReplace) {
-		this.isSerialReplace = isSerialReplace;
-	}
+  public void setPartsType( int partsType ) {
+    this.partsType = partsType;
+  }
 
-	public String getPsRemark() {
-		return psRemark;
-	}
+  public String getFilterBarcdSerialNo() {
+    return filterBarcdSerialNo;
+  }
 
-	public void setPsRemark(String psRemark) {
-		this.psRemark = psRemark;
-	}
+  public void setFilterBarcdSerialNo( String filterBarcdSerialNo ) {
+    this.filterBarcdSerialNo = filterBarcdSerialNo;
+  }
 
-	public static List<Map<String, Object>>  createMaps(List<AfterServiceResultDetailForm> afterServiceResultDetailForms) {
+  public String getRetSmoSerialNo() {
+    return retSmoSerialNo;
+  }
 
-		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> map;
+  public void setRetSmoSerialNo( String retSmoSerialNo ) {
+    this.retSmoSerialNo = retSmoSerialNo;
+  }
 
-//		map = BeanConverter.toMap(afterServiceResultForm, "partList");
+  public String getIsSmo() {
+    return isSmo;
+  }
 
-		for(AfterServiceResultDetailForm form : afterServiceResultDetailForms){
-			map = BeanConverter.toMap(form);
-			list.add(map);
-		}
+  public void setIsSmo( String isSmo ) {
+    this.isSmo = isSmo;
+  }
 
-		return list;
-	}
+  public String getIsSerialReplace() {
+    return isSerialReplace;
+  }
 
+  public void setIsSerialReplace( String isSerialReplace ) {
+    this.isSerialReplace = isSerialReplace;
+  }
 
+  public String getPsRemark() {
+    return psRemark;
+  }
 
+  public void setPsRemark( String psRemark ) {
+    this.psRemark = psRemark;
+  }
 
+  public String getFilterBarcdNewSerialNo() {
+    return filterBarcdNewSerialNo;
+  }
 
+  public void setFilterBarcdNewSerialNo( String filterBarcdNewSerialNo ) {
+    this.filterBarcdNewSerialNo = filterBarcdNewSerialNo;
+  }
 
+  public String getFilterSerialUnmatchReason() {
+    return filterSerialUnmatchReason;
+  }
 
+  public void setFilterSerialUnmatchReason( String filterSerialUnmatchReason ) {
+    this.filterSerialUnmatchReason = filterSerialUnmatchReason;
+  }
 
+  public String getSysFilterBarcdSerialNo() {
+    return sysFilterBarcdSerialNo;
+  }
 
+  public void setSysFilterBarcdSerialNo( String sysFilterBarcdSerialNo ) {
+    this.sysFilterBarcdSerialNo = sysFilterBarcdSerialNo;
+  }
 
+  public String getFilterBarcdSerialNoOld() {
+    return filterBarcdSerialNoOld;
+  }
+
+  public void setFilterBarcdSerialNoOld( String filterBarcdSerialNoOld ) {
+    this.filterBarcdSerialNoOld = filterBarcdSerialNoOld;
+  }
+
+  public static List<Map<String, Object>> createMaps( List<AfterServiceResultDetailForm> afterServiceResultDetailForms ) {
+    List<Map<String, Object>> list = new ArrayList<>();
+    Map<String, Object> map;
+    //		map = BeanConverter.toMap(afterServiceResultForm, "partList");
+
+    for ( AfterServiceResultDetailForm form : afterServiceResultDetailForms ) {
+      map = BeanConverter.toMap( form );
+      list.add( map );
+    }
+    return list;
+  }
 }
