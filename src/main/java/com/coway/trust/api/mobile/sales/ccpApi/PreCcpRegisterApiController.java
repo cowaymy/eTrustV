@@ -381,4 +381,14 @@ public class PreCcpRegisterApiController {
 
     return ResponseEntity.ok( message );
   }
+
+  @ApiOperation(value = "getExistUnitHist", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getExistUnitHist", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> getExistUnitHist( @RequestParam Map<String, Object> params ) {
+    List<EgovMap> existUnitHistList = preCcpRegisterService.getExistUnitHist(params);
+    Map<String, Object> message = new HashMap<String, Object>();
+    message.put( "existUnitHistList", existUnitHistList);
+
+    return ResponseEntity.ok( message );
+  }
 }
