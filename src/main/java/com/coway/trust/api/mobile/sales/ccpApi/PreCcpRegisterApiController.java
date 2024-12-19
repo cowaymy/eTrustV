@@ -39,6 +39,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
@@ -352,9 +353,11 @@ public class PreCcpRegisterApiController {
 
   @ApiOperation(value = "getCustId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/getCustId", method = RequestMethod.GET)
-  public ResponseEntity<String> getCustId( @RequestParam Map<String, Object> params ) {
+  public ResponseEntity<Map<String, Object>> getCustId( @RequestParam Map<String, Object> params ) {
     String custID = preCcpRegisterService.getCustId( params );
+    Map<String, Object> message = new HashMap<String, Object>();
+    message.put( "custId", CommonUtils.nvl(custID) );
 
-    return ResponseEntity.ok( custID );
+    return ResponseEntity.ok( message );
   }
 }
