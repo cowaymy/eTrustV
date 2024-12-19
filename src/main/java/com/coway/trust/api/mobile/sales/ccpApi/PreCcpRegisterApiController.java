@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -360,4 +361,15 @@ public class PreCcpRegisterApiController {
 
     return ResponseEntity.ok( message );
   }
+
+  @ApiOperation(value = "preCcpResultInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/preCcpResultInfo", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> preCcpResultInfo( @RequestParam Map<String, Object> params ) {
+    EgovMap custCreditInfo = preCcpRegisterService.getCustCreditInfo(params);
+    Map<String, Object> message = new HashMap<String, Object>();
+    message.put( "custCredit", CommonUtils.nvl(custCreditInfo) );
+
+    return ResponseEntity.ok( message );
+  }
+
 }
