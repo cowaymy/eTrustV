@@ -372,4 +372,13 @@ public class PreCcpRegisterApiController {
     return ResponseEntity.ok( message );
   }
 
+  @ApiOperation(value = "getNewProdElig", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getNewProdElig", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> getNewProdElig( @RequestParam Map<String, Object> params ) {
+    List<EgovMap> newProdEligList = preCcpRegisterService.getNewProdElig(params);
+    Map<String, Object> message = new HashMap<String, Object>();
+    message.put( "newProdEligList", newProdEligList);
+
+    return ResponseEntity.ok( message );
+  }
 }
