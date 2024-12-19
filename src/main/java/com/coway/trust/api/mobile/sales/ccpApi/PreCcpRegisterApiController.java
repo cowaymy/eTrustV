@@ -367,7 +367,7 @@ public class PreCcpRegisterApiController {
   public ResponseEntity<Map<String, Object>> preCcpResultInfo( @RequestParam Map<String, Object> params ) {
     EgovMap custCreditInfo = preCcpRegisterService.getCustCreditInfo(params);
     Map<String, Object> message = new HashMap<String, Object>();
-    message.put( "custCredit", CommonUtils.nvl(custCreditInfo) );
+    message.put( "custCredit", custCreditInfo);
 
     return ResponseEntity.ok( message );
   }
