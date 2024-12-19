@@ -1004,8 +1004,21 @@
   <select id="getCustId" resultType="String">
     SELECT CUST_ID
     FROM SAL0029D
-    WHERE NRIC = #{nric}
-        AND STUS_CODE_ID = 1
+    WHERE 1 = 1
+
+      <choose>
+        <when test="options == '1'">
+          <if test="keywords !=null and keywords !=''">
+            AND NRIC = #{keywords}
+          </if>
+        </when>
+        <otherwise>
+          <if test="keywords !=null and keywords !=''">
+            AND CUST_ID = #{keywords}
+          </if>
+        </otherwise>
+      </choose>
+      AND STUS_CODE_ID = 1
   </select>
 
 
