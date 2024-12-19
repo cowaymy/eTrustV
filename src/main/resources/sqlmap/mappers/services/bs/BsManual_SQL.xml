@@ -5268,6 +5268,7 @@ SELECT DISTINCT A.ORD_ID FROM (
                   #{oldSrvType} AS SRV_TYPE_FROM
          FROM SAL0090D
          WHERE SRV_SO_ID = #{salesOrderId}
+         AND SRV_CONFIG_ID = #{srvConfigId}
      </insert>
 
      <select id="getSrvTypeChgHistoryLogInfo" parameterType="Map" resultType="egovMap">
@@ -5277,7 +5278,7 @@ SELECT DISTINCT A.ORD_ID FROM (
                     B.SRV_REM AS REMARK,
                     C.USER_NAME AS CREATOR
         FROM SAL0090D A
-        LEFT JOIN SAL0090H B ON A.SRV_SO_ID = B.SRV_SO_ID
+        LEFT JOIN SAL0090H B ON A.SRV_SO_ID = B.SRV_SO_ID AND A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
         LEFT JOIN SYS0047M C ON B.SRV_UPD_USER_ID = C.USER_ID
         WHERE B.SRV_SO_ID = #{salesOrdId}
      </select>

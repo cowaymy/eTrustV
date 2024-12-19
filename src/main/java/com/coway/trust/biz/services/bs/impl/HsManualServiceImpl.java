@@ -1036,13 +1036,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       /* Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024 */
       String originalSrvType = hsBasicmap.get("oldSrvType").toString();
       String serviceType = hsBasicmap.get("serviceType").toString();
-   
+
       // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
       // calculate the PV for SS Rebate
       int promoItmPv = Integer.parseInt(hsBasicmap.get("promoItmPv").toString());
       int promoItmPvSs = Integer.parseInt(hsBasicmap.get("promoItmPvSs").toString());
       int pvRebatePerInstallment = promoItmPv - promoItmPvSs;
 
+      hsBasicmap.put("srvConfigId", selectConfigBasicInfoYn.get("srvConfigId"));
       hsBasicmap.put("srvUpdateAt", sessionVO.getUserId());
 
       // Self Service (DIY) Project - Service Type add by Fannie - 14/08/2024
