@@ -805,8 +805,6 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
     		custCat: '${ccpInfoMap.custCat}'
     };
 
-    console.log("data+ " + JSON.stringify(data));
-
     Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
     	if(result != null){
     		$('#score_group').text(result.scoreGrp);
@@ -1744,6 +1742,10 @@ function chgTab(tabNm) {
     <th scope="row">Score Group</th>
     <td colspan="5" id="score_group">
     </td>
+</tr>
+<tr>
+    <th scope="row">Customer Category</th>
+    <td colspan="5">${ccpInfoMap.custCat}</td>
 </tr>
 <tr>
     <th scope="row">CHS Status</th>
