@@ -801,7 +801,7 @@
   <dt>Link</dt>
   <dd>
   <ul class="btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y' or PAGE_AUTH.funcUserDefine26 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
        <li><p class="link_btn"><a href="#" id="btnVaLetter2">Customer VA Letter version 2</a></p></li> <!-- Webster Lee 13072020 : added new Version 2 report format -->
     </c:if>
@@ -834,7 +834,7 @@
       <c:if test="${PAGE_AUTH.funcUserDefine24 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnOrderOverview">Order Overview</a></p></li>
       </c:if>
-      <c:if test="${PAGE_AUTH.funcUserDefine25 == 'Y'}">
+      <c:if test="${PAGE_AUTH.funcUserDefine26 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" id="btnInvoice">Invoice</a></p></li>
       </c:if>
     </ul>

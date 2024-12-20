@@ -645,7 +645,7 @@
 			OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
 			)
 		</if>
-        <!-- <if test="userTypeId != null and userTypeId != '' ">
+		<if test="userTypeId != null and userTypeId != '' ">
              <if test="memLevel == 4">
               AND Filter1.OrderMemID = #{memId}
               </if>
@@ -658,12 +658,258 @@
               <if test="memLevel == 1">
               AND Extent3.ORG_CODE = #{orgCode}
               </if>
-        </if> -->
+        </if>
 		ORDER BY Filter1.OrderNo ASC
 	</select>
 
 	<select id="selectAdvancedRentalInvoiceList" parameterType="Map" resultType="egovMap">
-      SELECT
+	<choose>
+            <when test='userTypeId != null and userTypeId != "" '>
+                SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            JOIN SAL0090D sal90 ON Extent1.SALES_ORD_ID = sal90.SRV_SO_ID
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>
+        <if test="memLevel == 4">
+         AND org1001.MEM_ID = #{memId}
+         </if>
+         <if test="memLevel == 3">
+          AND org1001.DEPT_CODE = #{deptCode}
+         </if>
+         <if test="memLevel == 2">
+          AND org1001.GRP_CODE = #{grpCode}
+         </if>
+         <if test="memLevel == 1">
+          AND org1001.ORG_CODE = #{orgCode}
+          </if>
+          
+          UNION
+          
+             SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = extent1.MEM_ID 
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>
+        <if test="memLevel == 4">
+         AND org1001.MEM_ID = #{memId}
+         </if>
+         <if test="memLevel == 3">
+          AND org1001.DEPT_CODE = #{deptCode}
+         </if>
+         <if test="memLevel == 2">
+          AND org1001.GRP_CODE = #{grpCode}
+         </if>
+         <if test="memLevel == 1">
+          AND org1001.ORG_CODE = #{orgCode}
+          </if>
+          
+      ORDER BY SALES_ORD_NO
+            </when>
+            <otherwise>
+                SELECT
             Extent1.SALES_ORD_ID,
             Extent1.CUST_BILL_ID,
             Extent1.SALES_ORD_NO,
@@ -768,21 +1014,9 @@
             </foreach>
             )
         </if>
-        <!-- <if test="userTypeId != null and userTypeId != '' ">
-            <if test="memLevel == 4">
-             AND Extent1.MEM_ID = #{memId}
-             </if>
-             <if test="memLevel == 3">
-              AND Extent1.DEPT_CODE = #{deptCode}
-             </if>
-             <if test="memLevel == 2">
-              AND Extent1.GRP_CODE = #{grpCode}
-             </if>
-             <if test="memLevel == 1">
-             AND Extent1.ORG_CODE = #{orgCode}
-             </if>
-          </if> -->
       ORDER BY Extent1.SALES_ORD_NO
+           </otherwise>
+        </choose>  
     </select>
 
     <select id="selectProductUsageMonth" parameterType="Map" resultType="egovMap">

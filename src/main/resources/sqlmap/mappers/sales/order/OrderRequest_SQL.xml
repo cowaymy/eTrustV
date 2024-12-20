@@ -1165,7 +1165,88 @@
   </insert>
 
   <select id="selectOrderSimulatorViewByOrderNo" parameterType="Map" resultType="egovMap">
-    SELECT T1.SALES_ORD_ID
+  
+  <choose>
+         <when test='userTypeId != null and userTypeId != "" '>
+           SELECT T1.SALES_ORD_ID
+         , T1.SALES_ORD_NO
+         , DECODE(T1.SALES_DT, NULL, '19000101', TO_CHAR(T1.SALES_DT, 'YYYYMMDD')) AS ORD_DT
+         , TO_CHAR(T1.SALES_DT, 'DD/MM/YYYY') AS ORD_DT2
+         , T1.APP_TYPE_ID
+         , NVL(T1.STUS_CODE_ID, 0) AS STUS_CODE_ID
+         , T1.DEPT_CODE
+         , T1.GRP_CODE
+         , T1.ORG_CODE
+         , T2.ITM_STK_ID
+         , T3.REN_SCH_ID
+         , NVL(T3.STUS_CODE_ID, '') STUS_CODE_ID1
+          , CASE WHEN T4.FRA_ORD_NO = T1.SALES_ORD_NO THEN 3
+                WHEN T4.MAT_ORD_NO > 0 AND T4.FRA_ORD_NO > 0 THEN 2
+                WHEN T4.MAT_ORD_NO > 0 THEN 1
+                ELSE 0 END BNDL_ID
+         , T1.MTH_RENT_AMT
+        FROM SAL0001D T1
+        JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        LEFT JOIN SAL0071D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID AND 66 = T1.APP_TYPE_ID
+        LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
+        LEFT JOIN ORG1001V T5 ON T5.MEM_ID = T1.MEM_ID
+        WHERE T1.SALES_ORD_NO = #{salesOrdNo}
+            AND ROWNUM &lt;= 1 
+        <if test="memLevel == 4">
+         AND T5.MEM_ID = #{memId}
+        </if>
+        <if test="memLevel == 3">
+         AND T5.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memLevel == 2">
+        AND T5.GRP_CODE = #{grpCode}
+        </if>
+        <if test="memLevel == 1">
+        AND T5.ORG_CODE = #{orgCode}
+        </if> 
+        
+        UNION
+        
+        SELECT T1.SALES_ORD_ID
+         , T1.SALES_ORD_NO
+         , DECODE(T1.SALES_DT, NULL, '19000101', TO_CHAR(T1.SALES_DT, 'YYYYMMDD')) AS ORD_DT
+         , TO_CHAR(T1.SALES_DT, 'DD/MM/YYYY') AS ORD_DT2
+         , T1.APP_TYPE_ID
+         , NVL(T1.STUS_CODE_ID, 0) AS STUS_CODE_ID
+         , T1.DEPT_CODE
+         , T1.GRP_CODE
+         , T1.ORG_CODE
+         , T2.ITM_STK_ID
+         , T3.REN_SCH_ID
+         , NVL(T3.STUS_CODE_ID, '') STUS_CODE_ID1
+          , CASE WHEN T4.FRA_ORD_NO = T1.SALES_ORD_NO THEN 3
+                WHEN T4.MAT_ORD_NO > 0 AND T4.FRA_ORD_NO > 0 THEN 2
+                WHEN T4.MAT_ORD_NO > 0 THEN 1
+                ELSE 0 END BNDL_ID
+         , T1.MTH_RENT_AMT
+        FROM SAL0001D T1
+        JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        LEFT JOIN SAL0071D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID AND 66 = T1.APP_TYPE_ID
+        LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
+        JOIN SAL0090D T6 ON T6.SRV_SO_ID = T1.SALES_ORD_ID
+        LEFT JOIN ORG1001V T5 ON T5.MEM_ID = T6.SRV_CODY_ID
+        WHERE T1.SALES_ORD_NO = #{salesOrdNo}
+            AND ROWNUM &lt;= 1 
+        <if test="memLevel == 4">
+         AND T5.MEM_ID = #{memId}
+        </if>
+        <if test="memLevel == 3">
+         AND T5.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memLevel == 2">
+        AND T5.GRP_CODE = #{grpCode}
+        </if>
+        <if test="memLevel == 1">
+        AND T5.ORG_CODE = #{orgCode}
+        </if> 
+         </when>
+       <otherwise>
+            SELECT T1.SALES_ORD_ID
          , T1.SALES_ORD_NO
          , DECODE(T1.SALES_DT, NULL, '19000101', TO_CHAR(T1.SALES_DT, 'YYYYMMDD')) AS ORD_DT
          , TO_CHAR(T1.SALES_DT, 'DD/MM/YYYY') AS ORD_DT2
@@ -1191,6 +1272,10 @@
          AND T1.BRNCH_ID = #{userBranchId}
     </if>
       AND ROWNUM &lt;= 1
+         </otherwise>
+    </choose> 
+    
+    
   </select>
 
   <select id="selectRentalInst" parameterType="Map" resultType="egovMap">

@@ -4,11 +4,26 @@
 <script type="text/javaScript" language="javascript">
 
     var ORD_NO = '${ordNo}';
+    var userTypeId = null;
     var userBranchId = null;
+    var memLevel = null;
+    var memId = null;
+    var deptCode = null;
+    var grpCode = null;
+    var orgCode = null;
+    
     if("${SESSION_INFO.roleId}" == 256) {
     	userBranchId = '${SESSION_INFO.userBranchId}';
     }
     
+    if('${SESSION_INFO.userTypeId}' == 2){
+    	userTypeId = '${SESSION_INFO.userTypeId}';
+        memLevel = '${SESSION_INFO.memberLevel}';
+        memId = '${SESSION_INFO.memId}';
+        deptCode = '${SESSION_INFO.deptCode}';
+        grpCode = '${SESSION_INFO.groupCode}';
+        orgCode = '${SESSION_INFO.orgCode}';
+    }
 
     $(document).ready(function(){
         if(FormUtil.isNotEmpty(ORD_NO)) {
@@ -132,7 +147,8 @@
 
         if(!FormUtil.checkReqValue($('#txtOrderNo'))) {
 
-                Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId}, function(result) {
+                Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId, 
+                	userTypeId: userTypeId, memLevel: memLevel, memId:memId, deptCode:deptCode, grpCode:grpCode, orgCode:orgCode}, function(result) {
                     if(fn_validInfoSimul()) {
 
                         var installdate = result.installdate;
@@ -282,7 +298,8 @@
         var msgT = '';
         var msg = '';
 
-        Common.ajaxSync("GET", "/sales/order/selectValidateInfoSimul.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId}, function(rsltInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectValidateInfoSimul.do", {salesOrdNo : $('#txtOrderNo').val(), userBranchId: userBranchId, 
+        	userTypeId: userTypeId, memLevel: memLevel, memId:memId, deptCode:deptCode, grpCode:grpCode, orgCode:orgCode}, function(rsltInfo) {
             if(rsltInfo != null) {
                 valid = rsltInfo.isInValid;
                 msgT  = rsltInfo.msgT;

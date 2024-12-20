@@ -7,7 +7,6 @@
       WITH ORG AS ( SELECT MEM_ID
                             FROM ORG1001V B
                             WHERE 1=1
-
                             <if test="orgCode != null and orgCode != '' ">
                               AND B.ORG_CODE = #{orgCode}
                             </if>
@@ -136,10 +135,9 @@
                 <if test='userTypeId =="1" or userTypeId == "2" '>
                   JOIN ORG B ON A.SRV_SALES_MEM_ID = B.MEM_ID
                 </if>
-                <!-- <if test="userBranchId != null and userBranchId != '' ">
-                JOIN SAL0001D C ON A.ORD_ID = C.SALES_ORD_ID
-                AND C.BRNCH_ID = #{userBranchId}
-                </if> -->
+                <if test="userBranchId != null and userBranchId != '' ">
+                JOIN SAL0095D C ON C.SRV_MEM_QUOT_ID = A.QUOT_ID
+                </if>
 
                 LEFT OUTER JOIN PAY0024D P ON  P.SRV_MEM_QOTAT_ID = A.QUOT_ID
 
@@ -153,7 +151,9 @@
 			</choose>
 
                 WHERE  1=1
-
+                <if test="userBranchId != null and userBranchId != '' ">
+                AND C.SRV_MEM_BRNCH_ID = #{userBranchId}
+                </if>
                <if test="QUOT_NO != null and QUOT_NO != ''">
                   AND  A.QUOT_NO = UPPER(#{QUOT_NO})
                </if>

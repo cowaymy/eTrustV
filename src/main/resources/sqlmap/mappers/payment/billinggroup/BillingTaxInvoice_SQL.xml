@@ -18,46 +18,117 @@
 	       Filter1.GEN_E_INV <!-- Added for e-Invoice -->
 	    FROM
 	            (
-	            SELECT
-	                Extent1.TAX_INVC_ID TAXINVOICEID1  ,
-	                Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
-	                Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
-	                Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
-	                Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
-	                Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
-	                Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
-	                Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
-	                Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
-	                Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
-	                Extent4.CUST_ID TAX_INVC_CUST_ID,
+	             <choose>
+                    <when test='userTypeId != null and userTypeId != "" '>
+                    SELECT
+                    Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                    Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                    Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                    Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                    Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
+                    Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
+                    Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
+                    Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                    Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
+                    Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
+                    Extent4.CUST_ID TAX_INVC_CUST_ID,
                     Extent4.SALES_DT SALES_DT,
                     CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
                         ELSE 'N'
                     END AS GEN_E_INV
-	            FROM
-	                PAY0029D Extent1
-	                JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
-	                LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
-	                LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
-	            WHERE
-	                Extent1.TAX_INVC_BILL_TYPE = 133
-	                <!-- <if test="userBranchId != null and userBranchId != '' ">
-	                AND Extent4.BRNCH_ID = #{userBranchId}
-	                </if>
-	                <if test='userTypeId != null and userTypeId != "" '>
-	                  <if test="memLevel == 4">
-                        AND Extent4.MEM_ID = #{memId}
-                      </if>
-                      <if test="memLevel == 3">
-                        AND Extent4.DEPT_CODE = #{deptCode}
-                      </if>
-                      <if test="memLevel == 2">
-                        AND Extent4.GRP_CODE = #{grpCode}
-                      </if>
-                      <if test="memLevel == 1">
-                        AND Extent4.ORG_CODE = #{orgCode}
-                      </if>
-	                </if> -->
+                FROM
+                    PAY0029D Extent1
+                    JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+                    LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+                    JOIN SAL0090D sal90 ON Extent4.SALES_ORD_ID = sal90.SRV_SO_ID
+                    LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID
+                WHERE
+                    Extent1.TAX_INVC_BILL_TYPE = 133
+                    
+                    <if test="memLevel == 4">
+                    AND org1001.MEM_ID = #{memId}
+                   </if>
+                   <if test="memLevel == 3">
+                    AND org1001.DEPT_CODE = #{deptCode}
+                   </if>
+                    <if test="memLevel == 2">
+                    AND org1001.GRP_CODE = #{grpCode}
+                   </if>
+                    <if test="memLevel == 1">
+                   AND org1001.ORG_CODE = #{orgCode}
+                   </if>
+                   
+                   UNION
+                   
+                   SELECT
+                    Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                    Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                    Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                    Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                    Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
+                    Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
+                    Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
+                    Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                    Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
+                    Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
+                    Extent4.CUST_ID TAX_INVC_CUST_ID,
+                    Extent4.SALES_DT SALES_DT,
+                    CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                        ELSE 'N'
+                    END AS GEN_E_INV
+                FROM
+                    PAY0029D Extent1
+                    JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+                    LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+                    LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = Extent4.MEM_ID
+                WHERE
+                    Extent1.TAX_INVC_BILL_TYPE = 133
+                    
+                    <if test="memLevel == 4">
+                    AND org1001.MEM_ID = #{memId}
+                   </if>
+                    <if test="memLevel == 3">
+                    AND org1001.DEPT_CODE = #{deptCode}
+                   </if>
+                    <if test="memLevel == 2">
+                    AND org1001.GRP_CODE = #{grpCode}
+                   </if>
+                    <if test="memLevel == 1">
+                   AND org1001.ORG_CODE = #{orgCode}
+                   </if>
+                </when>
+            <otherwise>
+                    SELECT
+                    Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                    Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                    Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                    Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                    Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
+                    Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
+                    Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
+                    Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                    Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
+                    Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
+                    Extent4.CUST_ID TAX_INVC_CUST_ID,
+                    Extent4.SALES_DT SALES_DT,
+                    CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                        ELSE 'N'
+                    END AS GEN_E_INV
+                FROM
+                    PAY0029D Extent1
+                    JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+                    LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+                WHERE
+                    Extent1.TAX_INVC_BILL_TYPE = 133
+                    
+                    <if test="userBranchId != null and userBranchId != '' ">
+                    AND Extent4.BRNCH_ID = #{userBranchId}
+                    </if>
+    </otherwise>
+</choose>  
 	                ) Filter1
 	            LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
 	    WHERE
@@ -91,7 +162,141 @@
 	</select>
 
 	<select id="selectTaxInvoiceOutrightList" parameterType="Map" resultType="egovMap">
-       SELECT
+	
+	   <choose>
+                 <when test='userTypeId != null and userTypeId != "" '>
+                   SELECT
+            txm.TAX_INVC_ID,
+            txm.TAX_INVC_REF_NO,
+            txm.TAX_INVC_REF_DT,
+            txm.TAX_INVC_CUST_NAME,
+            orm.APP_TYPE_ID,
+            cd.CODE_NAME,
+            txs.INVC_ITM_ORD_NO,
+            txs.INVC_ITM_PRODUCT_MODEL,
+            txs.INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'YYYY')) AS year,
+            orm.CUST_ID TAX_INVC_CUST_ID,  <!--Added by Keyi 20211013-->
+            CASE WHEN eiv.QR_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+            END AS GEN_E_INV
+        FROM
+            PAY0033D txm
+            LEFT JOIN PAY0034D txs ON txm.TAX_INVC_ID = txs.TAX_INVC_ID
+            LEFT JOIN SAL0001D orm ON txs.INVC_ITM_ORD_NO = orm.SALES_ORD_NO
+            LEFT JOIN SYS0013M cd ON orm.APP_TYPE_ID = cd.CODE_ID
+            LEFT JOIN EIV0004D eiv ON eiv.INV_REF_NO = txm.TAX_INVC_REF_NO AND eiv.STATUS = 4
+            JOIN SAL0090D sal90 ON orm.SALES_ORD_ID = sal90.SRV_SO_ID
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
+        WHERE
+            1=1
+            <if test="invoiceNo != null and invoiceNo != '' ">
+            AND txm.TAX_INVC_REF_NO = #{invoiceNo}
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+            AND txs.INVC_ITM_ORD_NO = #{orderNo}
+            </if>
+            <if test="appType != null">
+                AND orm.APP_TYPE_ID IN
+                <foreach collection="appType" item="item" open="(" close=")" separator="," >
+                    #{item}
+                </foreach>
+            </if>
+            <if test="custName != null and custName != '' ">
+            AND txm.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
+            </if>
+            <if test="invoicePeriod != null and invoicePeriod != '' ">
+            AND txm.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
+            AND txm.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND orm.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND orm.CUST_ID = #{custID}
+            </if>
+             <if test="memLevel == 4">
+              AND org1001.MEM_ID = #{memId}
+             </if>
+             <if test="memLevel == 3">
+             AND org1001.DEPT_CODE = #{deptCode}
+             </if>
+             <if test="memLevel == 2">
+             AND org1001.GRP_CODE = #{grpCode}
+             </if>
+             <if test="memLevel == 1">
+              AND org1001.ORG_CODE = #{orgCode}
+             </if>
+                   
+            UNION
+             
+            SELECT
+            txm.TAX_INVC_ID,
+            txm.TAX_INVC_REF_NO,
+            txm.TAX_INVC_REF_DT,
+            txm.TAX_INVC_CUST_NAME,
+            orm.APP_TYPE_ID,
+            cd.CODE_NAME,
+            txs.INVC_ITM_ORD_NO,
+            txs.INVC_ITM_PRODUCT_MODEL,
+            txs.INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'YYYY')) AS year,
+            orm.CUST_ID TAX_INVC_CUST_ID,  <!--Added by Keyi 20211013-->
+            CASE WHEN eiv.QR_CODE IS NOT NULL THEN 'Y'
+                    ELSE 'N'
+            END AS GEN_E_INV
+        FROM
+            PAY0033D txm
+            LEFT JOIN PAY0034D txs ON txm.TAX_INVC_ID = txs.TAX_INVC_ID
+            LEFT JOIN SAL0001D orm ON txs.INVC_ITM_ORD_NO = orm.SALES_ORD_NO
+            LEFT JOIN SYS0013M cd ON orm.APP_TYPE_ID = cd.CODE_ID
+            LEFT JOIN EIV0004D eiv ON eiv.INV_REF_NO = txm.TAX_INVC_REF_NO AND eiv.STATUS = 4
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = orm.MEM_ID 
+        WHERE
+            1=1
+            <if test="invoiceNo != null and invoiceNo != '' ">
+            AND txm.TAX_INVC_REF_NO = #{invoiceNo}
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+            AND txs.INVC_ITM_ORD_NO = #{orderNo}
+            </if>
+            <if test="appType != null">
+                AND orm.APP_TYPE_ID IN
+                <foreach collection="appType" item="item" open="(" close=")" separator="," >
+                    #{item}
+                </foreach>
+            </if>
+            <if test="custName != null and custName != '' ">
+            AND txm.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
+            </if>
+            <if test="invoicePeriod != null and invoicePeriod != '' ">
+            AND txm.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
+            AND txm.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND orm.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND orm.CUST_ID = #{custID}
+            </if>
+             <if test="memLevel == 4">
+              AND org1001.MEM_ID = #{memId}
+             </if>
+             <if test="memLevel == 3">
+             AND org1001.DEPT_CODE = #{deptCode}
+             </if>
+             <if test="memLevel == 2">
+             AND org1001.GRP_CODE = #{grpCode}
+             </if>
+             <if test="memLevel == 1">
+              AND org1001.ORG_CODE = #{orgCode}
+             </if> 
+             ORDER BY INVC_ITM_ORD_NO DESC 
+         </when>
+       <otherwise>
+            SELECT
             txm.TAX_INVC_ID,
             txm.TAX_INVC_REF_NO,
             txm.TAX_INVC_REF_DT,
@@ -140,40 +345,29 @@
             <if test="custID != null and custID != '' ">
             AND orm.CUST_ID = #{custID}
             </if>
-            <!-- <if test="userBranchId != null and userBranchId != '' ">
+            <if test="userBranchId != null and userBranchId != '' ">
              AND orm.BRNCH_ID = #{userBranchId}
              </if>
-             <if test='userTypeId != null and userTypeId != "" '>
-                   <if test="memLevel == 4">
-                    AND orm.MEM_ID = #{memId}
-                   </if>
-                   <if test="memLevel == 3">
-                    AND orm.DEPT_CODE = #{deptCode}
-                   </if>
-                   <if test="memLevel == 2">
-                    AND orm.GRP_CODE = #{grpCode}
-                   </if>
-                   <if test="memLevel == 1">
-                   AND orm.ORG_CODE = #{orgCode}
-                   </if>
-              </if> -->
-        ORDER BY txs.INVC_ITM_ORD_NO DESC
+             ORDER BY txs.INVC_ITM_ORD_NO DESC
+         </otherwise>
+    </choose> 
     </select>
 
     <select id="selectTaxInvoiceMembershipList" parameterType="Map" resultType="egovMap">
-        SELECT
-	        Extent1.TAX_INVC_ID AS TAX_INVC_ID,
-	        Extent1.TAX_INVC_REF_NO AS TAX_INVC_REF_NO,
-	        Extent1.TAX_INVC_REF_DT AS TAX_INVC_REF_DT,
-	        Extent1.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO,
-	        Extent1.TAX_INVC_TYPE AS TAX_INVC_TYPE,
-	        Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
-	        Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE,
-	        TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
-	        TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
-	        (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
-	        Extent3.SALES_ORD_NO,
- 	        Extent3.CUST_ID TAX_INVC_CUST_ID,  <!--Added by keyi 20211013-->
+    
+     SELECT
+            Extent1.TAX_INVC_ID AS TAX_INVC_ID,
+            Extent1.TAX_INVC_REF_NO AS TAX_INVC_REF_NO,
+            Extent1.TAX_INVC_REF_DT AS TAX_INVC_REF_DT,
+            Extent1.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO,
+            Extent1.TAX_INVC_TYPE AS TAX_INVC_TYPE,
+            Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
+            Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
+            (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
+            Extent3.SALES_ORD_NO,
+            Extent3.CUST_ID TAX_INVC_CUST_ID,  --Added by keyi 20211013
             CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
                 ELSE 'N'
             END AS GEN_E_INV
@@ -182,21 +376,13 @@
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
             INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
             LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
-           <!--  <if test='userTypeId != null or userTypeId != "" '>
-            JOIN ORG1001V Extent4 ON Extent3.MEM_ID = Extent4.MEM_ID
-	            <if test="memCode != null and memCode != '' ">
-	                AND Extent4.MEM_CODE = #{memCode}
-	            </if>
-	              <if test="orgCode != null and orgCode != '' ">
-	              AND Extent4.ORG_CODE = #{orgCode}
-	              </if>
-	              <if test="grpCode != null and grpCode != '' ">
-	              AND Extent4.GRP_CODE = #{grpCode}
-	              </if>
-	              <if test="deptCode != null and deptCode != '' ">
-	              AND Extent4.DEPT_CODE = #{deptCode}
-	              </if>
-            </if> -->
+            <if test='userTypeId != null and userTypeId != "" '>
+            JOIN SAL1004V sal1004 ON sal1004.ORD_ID = Extent3.SALES_ORD_ID
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal1004.SRV_MEM_SALES_MEM_ID
+            </if>
+            <if test="userBranchId != null and userBranchId != '' ">
+            JOIN SAL1002V sal1002 ON sal1002.ORD_ID = Extent3.SALES_ORD_ID
+            </if>           
         WHERE
             1=1
              <if test="invoiceNo != null and invoiceNo != '' ">
@@ -224,9 +410,86 @@
             <if test="custID != null and custID != '' ">
             AND Extent3.CUST_ID = #{custID}
             </if>
-            <!-- <if test="userBranchId != null and userBranchId != '' ">
-            AND Extent3.BRNCH_ID = #{userBranchId}
-            </if> -->
+            <if test="memId != null and memId != '' ">
+            AND org1001.MEM_ID = #{memId}
+            </if>
+            <if test="orgCode != null and orgCode != '' ">
+            AND org1001.ORG_CODE = #{orgCode}
+            </if>
+            <if test="grpCode != null and grpCode != '' ">
+            AND org1001.GRP_CODE = #{grpCode}
+            </if>
+            <if test="deptCode != null and deptCode != '' ">
+             AND org1001.DEPT_CODE = #{deptCode}
+            </if>
+            <if test="userBranchId != null and userBranchId != '' ">
+            AND sal1002.BRNCH_ID = #{userBranchId}
+            </if> 
+            ORDER BY Extent1.TAX_INVC_SVC_NO DESC  
+      <!--   <choose>
+            <when test='userTypeId != null and userTypeId != "" '>
+            SELECT
+            Extent1.TAX_INVC_ID AS TAX_INVC_ID,
+            Extent1.TAX_INVC_REF_NO AS TAX_INVC_REF_NO,
+            Extent1.TAX_INVC_REF_DT AS TAX_INVC_REF_DT,
+            Extent1.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO,
+            Extent1.TAX_INVC_TYPE AS TAX_INVC_TYPE,
+            Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
+            Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
+            (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
+            Extent3.SALES_ORD_NO,
+            Extent3.CUST_ID TAX_INVC_CUST_ID,  Added by keyi 20211013
+            CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV
+        FROM
+            PAY0031D Extent1
+            INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
+            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
+            LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+            JOIN SAL0090D sal90 ON Extent3.SALES_ORD_ID = sal90.SRV_SO_ID
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
+        WHERE
+            1=1
+             <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_TYPE = #{invoiceType}
+             </if>
+            <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_REF_NO = #{invoiceNo}
+            </if>
+            <if test="serviceNo != null and serviceNo != '' ">
+            AND Extent1.TAX_INVC_SVC_NO = #{serviceNo}
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+            AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="invoicePeriod != null and invoicePeriod != '' ">
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            </if>
+            <if test="custName != null and custName != '' ">
+            AND Extent1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND Extent3.CUST_ID = #{custID}
+            </if>           
+            <if test="memId != null and memId != '' ">
+            AND org1001.MEM_ID = #{memId}
+            </if>
+            <if test="orgCode != null and orgCode != '' ">
+            AND org1001.ORG_CODE = #{orgCode}
+            </if>
+            <if test="grpCode != null and grpCode != '' ">
+            AND org1001.GRP_CODE = #{grpCode}
+            </if>
+            <if test="deptCode != null and deptCode != '' ">
+             AND org1001.DEPT_CODE = #{deptCode}
+            </if>
             <choose>
             <when test='isHc == "1"'>
                 AND Extent3.BNDL_ID IS NOT NULL
@@ -235,8 +498,143 @@
                 AND Extent3.BNDL_ID IS NULL
             </otherwise>
         </choose>
-
-        ORDER BY Extent1.TAX_INVC_SVC_NO DESC
+        
+        UNION
+        
+        SELECT
+            Extent1.TAX_INVC_ID AS TAX_INVC_ID,
+            Extent1.TAX_INVC_REF_NO AS TAX_INVC_REF_NO,
+            Extent1.TAX_INVC_REF_DT AS TAX_INVC_REF_DT,
+            Extent1.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO,
+            Extent1.TAX_INVC_TYPE AS TAX_INVC_TYPE,
+            Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
+            Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
+            (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
+            Extent3.SALES_ORD_NO,
+            Extent3.CUST_ID TAX_INVC_CUST_ID,  Added by keyi 20211013
+            CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV
+        FROM
+            PAY0031D Extent1
+            INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
+            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
+            LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = Extent3.MEM_ID
+        WHERE
+            1=1
+             <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_TYPE = #{invoiceType}
+             </if>
+            <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_REF_NO = #{invoiceNo}
+            </if>
+            <if test="serviceNo != null and serviceNo != '' ">
+            AND Extent1.TAX_INVC_SVC_NO = #{serviceNo}
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+            AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="invoicePeriod != null and invoicePeriod != '' ">
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            </if>
+            <if test="custName != null and custName != '' ">
+            AND Extent1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND Extent3.CUST_ID = #{custID}
+            </if>
+            <if test="memId != null and memId != '' ">
+            AND org1001.MEM_ID = #{memId}
+            </if>
+            <if test="orgCode != null and orgCode != '' ">
+            AND org1001.ORG_CODE = #{orgCode}
+            </if>
+            <if test="grpCode != null and grpCode != '' ">
+            AND org1001.GRP_CODE = #{grpCode}
+            </if>
+            <if test="deptCode != null and deptCode != '' ">
+             AND org1001.DEPT_CODE = #{deptCode}
+            </if>
+            <choose>
+            <when test='isHc == "1"'>
+                AND Extent3.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND Extent3.BNDL_ID IS NULL
+            </otherwise>
+        </choose>
+        ORDER BY TAX_INVC_SVC_NO DESC  
+            </when>
+            <otherwise>
+                   SELECT
+            Extent1.TAX_INVC_ID AS TAX_INVC_ID,
+            Extent1.TAX_INVC_REF_NO AS TAX_INVC_REF_NO,
+            Extent1.TAX_INVC_REF_DT AS TAX_INVC_REF_DT,
+            Extent1.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO,
+            Extent1.TAX_INVC_TYPE AS TAX_INVC_TYPE,
+            Extent1.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME,
+            Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year,
+            (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
+            Extent3.SALES_ORD_NO,
+            Extent3.CUST_ID TAX_INVC_CUST_ID,  Added by keyi 20211013
+            CASE WHEN Extent8.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV
+        FROM
+            PAY0031D Extent1
+            INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
+            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
+            LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+        WHERE
+            1=1
+             <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_TYPE = #{invoiceType}
+             </if>
+            <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_REF_NO = #{invoiceNo}
+            </if>
+            <if test="serviceNo != null and serviceNo != '' ">
+            AND Extent1.TAX_INVC_SVC_NO = #{serviceNo}
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+            AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="invoicePeriod != null and invoicePeriod != '' ">
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
+            AND Extent1.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+            </if>
+            <if test="custName != null and custName != '' ">
+            AND Extent1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND Extent3.CUST_ID = #{custID}
+            </if>
+            <if test="userBranchId != null and userBranchId != '' ">
+            AND Extent3.BRNCH_ID = #{userBranchId}
+            </if>
+            <choose>
+            <when test='isHc == "1"'>
+                AND Extent3.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND Extent3.BNDL_ID IS NULL
+            </otherwise>
+            </choose>
+            ORDER BY Extent1.TAX_INVC_SVC_NO DESC
+           </otherwise>
+        </choose>   -->
     </select>
 
 	<select id="selectTaxInvoiceRenMembershipList" parameterType="Map" resultType="egovMap">
@@ -344,7 +742,117 @@
         </select>
 
         <select id="selectStatementCompanyRental" parameterType="Map" resultType="egovMap">
-            SELECT
+        <choose>
+            <when test='userTypeId != null and userTypeId != "" '>
+           SELECT
+                Extent1.STATE_ID AS STATE_ID,
+                Extent1.STATE_REF_NO AS STATE_REF_NO,
+                Extent1.STATE_CUST_NAME AS STATE_CUST_NAME,
+                Extent2.STATE_ITM_ORD_NO AS STATE_ITM_ORD_NO,
+                Extent2.STATE_ITM_TYPE AS STATE_ITM_TYPE,
+                Extent2.STATE_ITM_REF_NO AS STATE_ITM_REF_NO,
+                Extent1.STATE_MONTH AS MONTH,
+                Extent1.STATE_YEAR AS YEAR,
+                Extent3.CUST_ID AS STATE_CUST_ID   <!-- Added by Keyi 20211013-->
+            FROM
+                PAY0025D Extent1
+                INNER JOIN PAY0026D Extent2 ON Extent2.STATE_ID = Extent1.STATE_ID
+                LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_NO = Extent2.STATE_ITM_ORD_NO
+                JOIN SAL0090D sal90 ON Extent3.SALES_ORD_ID = sal90.SRV_SO_ID
+                LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
+            WHERE
+                1=1
+                <if test="billingNo != null and billingNo != '' ">
+                AND Extent2.STATE_ITM_REF_NO = #{billingNo}
+                </if>
+                <if test="orderNo != null and orderNo != '' ">
+                AND Extent2.STATE_ITM_ORD_NO = #{orderNo}
+                </if>
+                <if test="month != null and month != '' ">
+                    AND  Extent1.STATE_MONTH = #{month}
+                </if>
+                <if test="year != null and year != '' ">
+                    AND  Extent1.STATE_YEAR = #{year}
+                </if>
+                <if test='pdpaMonth != null and pdpaMonth != 0'>
+                AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                </if>
+                <if test="custName != null and custName != '' ">
+                AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'
+                </if>
+                <if test="custID != null and custID != '' ">
+                AND Extent3.CUST_ID = #{custID}
+                </if>
+                <if test="memLevel == 4">
+                 AND org1001.MEM_ID = #{memId}
+                </if>
+                <if test="memLevel == 3">
+                 AND org1001.DEPT_CODE = #{deptCode}
+                 </if>
+                 <if test="memLevel == 2">
+                 AND org1001.GRP_CODE = #{grpCode}
+                 </if>
+                 <if test="memLevel == 1">
+                 AND org1001.ORG_CODE = #{orgCode}
+                 </if>
+                 
+                UNION
+                 
+                SELECT
+                Extent1.STATE_ID AS STATE_ID,
+                Extent1.STATE_REF_NO AS STATE_REF_NO,
+                Extent1.STATE_CUST_NAME AS STATE_CUST_NAME,
+                Extent2.STATE_ITM_ORD_NO AS STATE_ITM_ORD_NO,
+                Extent2.STATE_ITM_TYPE AS STATE_ITM_TYPE,
+                Extent2.STATE_ITM_REF_NO AS STATE_ITM_REF_NO,
+                Extent1.STATE_MONTH AS MONTH,
+                Extent1.STATE_YEAR AS YEAR,
+                Extent3.CUST_ID AS STATE_CUST_ID   <!-- Added by Keyi 20211013-->
+            FROM
+                PAY0025D Extent1
+                INNER JOIN PAY0026D Extent2 ON Extent2.STATE_ID = Extent1.STATE_ID
+                LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_NO = Extent2.STATE_ITM_ORD_NO
+                LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = Extent3.MEM_ID 
+            WHERE
+                1=1
+                <if test="billingNo != null and billingNo != '' ">
+                AND Extent2.STATE_ITM_REF_NO = #{billingNo}
+                </if>
+                <if test="orderNo != null and orderNo != '' ">
+                AND Extent2.STATE_ITM_ORD_NO = #{orderNo}
+                </if>
+                <if test="month != null and month != '' ">
+                    AND  Extent1.STATE_MONTH = #{month}
+                </if>
+                <if test="year != null and year != '' ">
+                    AND  Extent1.STATE_YEAR = #{year}
+                </if>
+                <if test='pdpaMonth != null and pdpaMonth != 0'>
+                AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                </if>
+                <if test="custName != null and custName != '' ">
+                AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'
+                </if>
+                <if test="custID != null and custID != '' ">
+                AND Extent3.CUST_ID = #{custID}
+                </if>
+                <if test="memLevel == 4">
+                 AND org1001.MEM_ID = #{memId}
+                </if>
+                <if test="memLevel == 3">
+                 AND org1001.DEPT_CODE = #{deptCode}
+                 </if>
+                 <if test="memLevel == 2">
+                 AND org1001.GRP_CODE = #{grpCode}
+                 </if>
+                 <if test="memLevel == 1">
+                 AND org1001.ORG_CODE = #{orgCode}
+                 </if>
+                 
+            ORDER BY STATE_ITM_ORD_NO DESC
+            </when>
+            <otherwise>
+                  SELECT
                 Extent1.STATE_ID AS STATE_ID,
                 Extent1.STATE_REF_NO AS STATE_REF_NO,
                 Extent1.STATE_CUST_NAME AS STATE_CUST_NAME,
@@ -373,31 +881,20 @@
                     AND  Extent1.STATE_YEAR = #{year}
                 </if>
                 <if test='pdpaMonth != null and pdpaMonth != 0'>
-	            AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
-	            </if>
+                AND Extent3.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                </if>
                 <if test="custName != null and custName != '' ">
                 AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'
                 </if>
                 <if test="custID != null and custID != '' ">
                 AND Extent3.CUST_ID = #{custID}
                 </if>
-                <!-- <if test="userBranchId != null and userBranchId != '' ">
+                <if test="userBranchId != null and userBranchId != '' ">
                 AND Extent3.BRNCH_ID = #{userBranchId}
                 </if>
-                <if test='userTypeId != null and userTypeId != "" '>
-                   <if test="memLevel == 4">
-                    AND Extent3.MEM_ID = #{memId}
-                   </if>
-                   <if test="memLevel == 3">
-                    AND Extent3.DEPT_CODE = #{deptCode}
-                   </if>
-                   <if test="memLevel == 2">
-                    AND Extent3.GRP_CODE = #{grpCode}
-                   </if>
-                   <if test="memLevel == 1">
-                   AND Extent3.ORG_CODE = #{orgCode}
-                   </if>
-              </if> -->
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
+           </otherwise>
+        </choose>  
+            
     </select>
 </mapper>

@@ -136,19 +136,19 @@ public class BillingTaxInvoiceController {
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceMembershipList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
 				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {		
 		
-//		if(sessionVO.getUserTypeId() == 2) {
-//		    params.put("userTypeId", sessionVO.getUserTypeId());
-//		    if (sessionVO.getMemberLevel() == 4)
-//		    	params.put("memCode", sessionVO.getUserMemCode());
-//		    else if (sessionVO.getMemberLevel() == 3)
-//		    	params.put("deptCode", sessionVO.getDeptCode());
-//		    else if (sessionVO.getMemberLevel() == 2)
-//		    	params.put("grpCode", sessionVO.getGroupCode());
-//		}
-//		
-//		if(sessionVO.getRoleId() == 256) {
-//		    params.put("userBranchId", sessionVO.getUserBranchId());
-//		}
+		if(sessionVO.getUserTypeId() == 2) {
+		    params.put("userTypeId", sessionVO.getUserTypeId());
+		    if (sessionVO.getMemberLevel() == 4)
+		    	params.put("memId", sessionVO.getMemId());
+		    else if (sessionVO.getMemberLevel() == 3)
+		    	params.put("deptCode", sessionVO.getDeptCode());
+		    else if (sessionVO.getMemberLevel() == 2)
+		    	params.put("grpCode", sessionVO.getGroupCode());
+		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    params.put("userBranchId", sessionVO.getUserBranchId());
+		}
         // 조회.
         List<EgovMap> resultList = billingTaxInvoiceService.selectTaxInvoiceMembershipList(params);		
 		//List<EgovMap> resultList = new ArrayList<EgovMap>();

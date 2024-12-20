@@ -38,7 +38,9 @@
                    AND C.DEPT_CODE = #{deptCode}
                    </if>
             </if>
-           
+           <if test="userBranchId != null and userBranchId != '' ">
+            JOIN SAL1002V D ON D.MBRSH_ID = A.MBRSH_ID
+        </if>
         WHERE  1=1
         <choose>
             <when test='isHc == "1"'>
@@ -49,7 +51,7 @@
             </otherwise>
         </choose>
         <if test="userBranchId != null and userBranchId != '' ">
-            AND B.BRNCH_ID = #{userBranchId}
+            AND D.BRNCH_ID = #{userBranchId}
         </if>
         <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
             AND A.MBRSH_STUS_ID IN
