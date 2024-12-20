@@ -3143,10 +3143,62 @@ public class MemberListController {
 			Map<String, Object> d = new HashMap();
 			d.put("memCode", p.get("memCode"));
 			d.put("userId", session.getUserId());
-			int resetMfa = memberListService.resetMfa(d);
-			int resetMfaHistory = memberListService.insertResetMfaHistory(d);
+			d.put("cowayMail", "@COWAY.COM.MY");
+
+			int chkAdminEmail =  loginService.checkResetMFAEmail(d);
+			int resetMfa = 0;
+			int resetMfaHistory = 0;
+
+			if (chkAdminEmail > 0){
+
+				EgovMap resetMem = memberListService.selectMfaDetails(p);
+
+				int userId =  Integer. parseInt((String) resetMem.get("resetUserId").toString());
+		    	Base32 codec =  new  Base32();
+			    //Generate authentication key
+			    SecureRandom secureRandom = new SecureRandom();
+			    String resetEmail = (String) resetMem.get("email");
+			    String memCode = (String) resetMem.get("memCode");
+
+			    byte[] secretKey = new byte[10];
+			  	byte[] bEncodedKey =  codec.encode(secretKey);
+			    String encodedKey =  "";
+
+			    secureRandom.nextBytes(secretKey);
+			    bEncodedKey =  codec.encode(secretKey);
+				encodedKey =  new  String (bEncodedKey);
+
+			    //Generate barcode address
+			    String  QrUrl =  getQRBarcodeURL( memCode, resetEmail, encodedKey);
+			    boolean isEmailSent = false;
+
+				Map<String, Object> r = new HashMap();
+		    	r.put("userId", userId);
+		    	r.put("mfaKey", encodedKey);
+		    	r.put("mfaFlag", 3);
+		    	r.put("qrLink", QrUrl);
+		    	r.put("email", session.getUserEmail());
+		    	r.put("memCode", memCode);
+
+				d.put("oldMfaFlag", resetMem.get("oldMfaFlag"));
+				d.put("oldMfaKey", resetMem.get("oldMfaKey"));
+				d.put("newMfaKey", encodedKey);
+
+		    	isEmailSent = loginService.sendResetMFAEmail(r);
+
+		    	if (isEmailSent) {
+					resetMfa = memberListService.resetMfa(d);
+					resetMfaHistory = memberListService.insertResetMfaHistory(d);
+		    	}
+
+			}
+			else {
+				resetMfa = 0;
+				resetMfaHistory = 0;
+			}
+
 			message.setCode(resetMfa > 0 ? AppConstants.SUCCESS : AppConstants.FAIL);
-			message.setMessage(resetMfa > 0 ? "Success to reset." : "Fail to reset.");
+			message.setMessage(resetMfa > 0 ? "Success to reset. Kindly check your email to provide the new QR for this staff" : "Fail to reset. Kindly check your email is in Coway email format or you may contact system administrator");
 		} catch (Exception e) {
 			Map<String, Object> errorParam = new HashMap<>();
 			errorParam.put("pgmPath", "/organization");

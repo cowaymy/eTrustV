@@ -75,13 +75,13 @@ public interface LoginService {
 
   public int checkSecurityAnswer( Map<String, Object> params );
 
-  public void updateCheckMfaFlag( int userId );
+  public void updateCheckMfaFlag( Map<String, Object> params );
 
-//  public int checkResetMFAEmail( Map<String, Object> params );
-//
-//  public void updateResetMFA( Map<String, Object> params );
-//
-//  boolean sendResetMFAEmail(Map<String, Object> params);
+  public int checkResetMFAEmail( Map<String, Object> params );
+
+  public void updateResetMFA( Map<String, Object> params );
+
+  boolean sendResetMFAEmail(Map<String, Object> params);
 
   public EgovMap getConsentDtls2( Map<String, Object> params );
 

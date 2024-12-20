@@ -84,6 +84,7 @@
                       ,NVL(ORGV.GRP_CODE,'') groupCode
                       ,NVL(ORGV.ORG_CODE,'') orgCode
              , NVL(USR.CHECK_MFA, 0) AS checkMfaFlag
+             , USR.MFA_KEY AS mfaKey
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
            LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
            LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
@@ -718,7 +719,15 @@
         select count(1) from sys0047M where user_name = #{username} and USER_SEC_QUES_ANS = #{secAns}
     </select>
 
-    <update id="updateCheckMfaFlag" parameterType="Map">
-        update sys0047m set CHECK_MFA = 1 where USER_ID = #{userId}
+     <update id="updateCheckMfaFlag" parameterType="Map">
+        update sys0047m set CHECK_MFA = #{mfaFlag}, MFA_KEY = #{mfaKey} where USER_ID = #{userId}
+    </update>
+
+     <select id="checkResetMFAEmail" parameterType="Map" resultType="int">
+        select count(1) from sys0047M where user_id = #{userId} and UPPER(user_email) like '%' || #{cowayMail} || '%'
+    </select>
+
+     <update id="updateResetMFA" parameterType="Map">
+        update sys0047m set CHECK_MFA = 3, MFA_KEY = #{mfaKey} where USER_ID = #{userId}
     </update>
 </mapper>
