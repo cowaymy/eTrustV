@@ -48,6 +48,7 @@ public class ServiceApiASServiceImpl
   @Resource(name = "serviceApiASDetailService")
   private ServiceApiASDetailService serviceApiASDetailService;
 
+  @SuppressWarnings("unchecked")
   @Override
   public ResponseEntity<AfterServiceResultDto> asResult( List<AfterServiceResultForm> afterServiceForms )
     throws Exception {
@@ -115,7 +116,7 @@ public class ServiceApiASServiceImpl
       }
     }
     logger.debug( "==================================[MB]AFTER SERVICE RESULT - END - ====================================" );
-    return ResponseEntity.ok( AfterServiceResultDto.create( transactionId ) );
+    return ResponseEntity.ok( AfterServiceResultDto.create( rtnResultMap ) );
   }
 
   @Override
