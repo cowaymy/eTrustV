@@ -67,7 +67,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
   private static final String WAREHOUSE_TO_LOC_ID = "107609";
   private static final String ERROR_MESSAGE_STOCK = "Insufficient stock available in warehouse (CJ KL_A). Please try again later when the stock is replenished.";
   private static final String ERROR_MESSAGE_SERIAL_USE = "This serial had been used.";
-  private static final int CUST_LOST_PARCEL = 3595;
+  private static final int CUST_LOST_PARCEL = 3593;
 
   @Override
   public List<EgovMap> selectSelfServiceJsonList(Map<String, Object> params) throws Exception {
@@ -468,7 +468,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
 
     selfServiceManagementMapper.SP_LOGISTIC_RETURN_SS(setmap);
     String errCode = (String) setmap.get("pErrcode");
-    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_RETURN_SSERROR CODE : " + errCode);
+    LOGGER.debug(">>>>>>>>>>>SP_LOGISTIC_RETURN_SS ERROR CODE : " + errCode);
 
     // pErrcode : 000 = Success, others = Fail
     if (!"000".equals(errCode)) {
