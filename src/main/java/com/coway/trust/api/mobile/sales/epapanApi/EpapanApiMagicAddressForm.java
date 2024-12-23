@@ -106,6 +106,8 @@ public class EpapanApiMagicAddressForm {
 		params.put("remove", vo.getRemove());
 		params.put("salesOrdNo", vo.getSalesOrdNo());
 		params.put("salesOrdId", vo.getSalesOrdId());
+		params.put("oldOrderNo", vo.getOldOrderNo());
+		params.put("extradeId", vo.getExtradeId());
 
 		return params;
 	}
@@ -598,6 +600,19 @@ public class EpapanApiMagicAddressForm {
 	public void setSalesOrdId(String salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
+	public String getOldOrderNo() {
+		return oldOrderNo;
+	}
+	public void setOldOrderNo(String oldOrderNo) {
+		this.oldOrderNo = oldOrderNo;
+	}
+	public String getExtradeId() {
+		return extradeId;
+	}
+	public void setExtradeId(String extradeId) {
+		this.extradeId = extradeId;
+	}
+
 
 	public String state;
     public String city;
@@ -677,5 +692,7 @@ public class EpapanApiMagicAddressForm {
 	public String remove;
 	public String salesOrdNo;
 	public String salesOrdId;
+	public String oldOrderNo;
+	public String extradeId;
 
 }

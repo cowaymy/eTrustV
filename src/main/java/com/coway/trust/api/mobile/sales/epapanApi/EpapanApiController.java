@@ -944,4 +944,12 @@ public class EpapanApiController {
 	    return ResponseEntity.ok(RESULT);
 	  }
 
+	  @ApiOperation(value = "checkExtradeWithPromoOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/checkExtradeWithPromoOrder", method = RequestMethod.GET)
+	  public ResponseEntity<ReturnMessage> checkExtradeWithPromoOrder(@RequestParam Map<String, Object> params) {
+
+		    ReturnMessage result = orderRegisterService.checkExtradeWithPromoOrder(params);
+		    return ResponseEntity.ok(result);
+	  }
+
 }
