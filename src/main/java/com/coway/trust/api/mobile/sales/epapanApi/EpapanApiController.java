@@ -932,4 +932,16 @@ public class EpapanApiController {
 	    return ResponseEntity.ok(RESULT);
 	  }
 
+	  @ApiOperation(value = "checkOldOrderId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/checkOldOrderId", method = RequestMethod.GET)
+	  public ResponseEntity<EgovMap> selectOldOrderId(@ModelAttribute EpapanApiMagicAddressForm param) throws Exception {
+	    EgovMap RESULT;
+	    if (EpapanApiMagicAddressForm.createMap(param).get("exTrade").equals("2")) {
+	      RESULT = orderRegisterService.checkOldOrderIdICare(EpapanApiMagicAddressForm.createMap(param));
+	    } else {
+	      RESULT = orderRegisterService.checkOldOrderId(EpapanApiMagicAddressForm.createMap(param));
+	    }
+	    return ResponseEntity.ok(RESULT);
+	  }
+
 }
