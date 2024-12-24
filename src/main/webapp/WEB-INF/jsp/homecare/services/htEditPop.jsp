@@ -561,7 +561,7 @@ var myDetailGridData = null;
 	  	/*
 	  	* Currently only load filter for Air Cond orders, other will be ignore
 	  	*/
-      if(productCategory == "ACI" || productCategory == "ACO"){
+      if(productCategory == "ACI" || productCategory == "ACO" || productCategory == "MC"){
 			$('#filter_grid_display').show();
 	      Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
 	         console.log("성공 selectFilterTransaction.");

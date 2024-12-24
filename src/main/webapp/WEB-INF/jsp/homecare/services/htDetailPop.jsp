@@ -337,7 +337,7 @@ unmatchRsnObj["${obj.code}"] = "${obj.codeName}";
 	  	/*
 	  	* Currently only load filter for Air Cond orders, other will be ignore
 	  	*/
-		if(productCategory == "ACI" || productCategory == "ACO"){
+		if(productCategory == "ACI" || productCategory == "ACO" || productCategory == "MC"){
 			$('#filter_grid_display').show();
 		    Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
 			      console.log("성공.");
