@@ -208,9 +208,9 @@ public class ServiceApiASDetailServiceImpl
           }
           catch ( Exception e ) {
             totLbAmt = 0.00;
-            errMap.put( "no", serviceNo );
-            errMap.put( "exception", e );
-            MSvcLogApiService.saveErrorToDatabase(errMap);
+            // errMap.put( "no", serviceNo );
+            // errMap.put( "exception", e );
+            // MSvcLogApiService.saveErrorToDatabase(errMap);
             // SET RETURN VALUE SET AS FALSE DUE TO ERROR
             rtnResultMap.put( "status", false );
           }
@@ -273,7 +273,7 @@ public class ServiceApiASDetailServiceImpl
           params.put( "RESULT_MOBILE_NO", !"".equals(CommonUtils.nvl(insApiresult.get( "resultIcMobileNo" ))) ? CommonUtils.nvl(insApiresult.get( "resultIcMobileNo" )) : "");
           params.put( "RESULT_REP_EMAIL_NO", !"".equals(CommonUtils.nvl(insApiresult.get( "resultReportEmailNo" ))) ? CommonUtils.nvl(insApiresult.get( "resultReportEmailNo" )) : "");
           params.put( "RESULT_ACEPT_NAME", !"".equals(CommonUtils.nvl(insApiresult.get( "resultAcceptanceName" ))) ? CommonUtils.nvl(insApiresult.get( "resultAcceptanceName" )) : "");
-          params.put( "SGN_DT", CommonUtils.nvl(insApiresult.get( "signData" )) );
+          params.put( "SGN_DT", insApiresult.get( "signData" ) );
           params.put( "SERIAL_REQUIRE_CHK_YN", CommonUtils.nvl( insApiresult.get( "serialRequireChkYn" ) ) );
 
           // INSTALLATION ACCESSORIES START -
@@ -327,9 +327,9 @@ public class ServiceApiASDetailServiceImpl
                   String procMsg = "Failed to Barcode Save";
                   String errorMsg = "[API] " + params.get( "pErrmsg" );
 
-                  errMap.put( "no", serviceNo );
-                  errMap.put( "exception", errorMsg );
-                  MSvcLogApiService.saveErrorToDatabase(errMap);
+                  // errMap.put( "no", serviceNo );
+                  // errMap.put( "exception", errorMsg );
+                  // MSvcLogApiService.saveErrorToDatabase(errMap);
                   // SET RETURN VALUE SET AS FALSE DUE TO ERROR
                   rtnResultMap.put( "status", false );
 
@@ -370,9 +370,9 @@ public class ServiceApiASDetailServiceImpl
             String procMsg = "Failed to Save";
             String errorMsg = "[API] " + e.toString();
 
-            errMap.put( "no", serviceNo );
-            errMap.put( "exception", errorMsg );
-            MSvcLogApiService.saveErrorToDatabase(errMap);
+            // errMap.put( "no", serviceNo );
+            // errMap.put( "exception", errorMsg );
+            // MSvcLogApiService.saveErrorToDatabase(errMap);
             // SET RETURN VALUE SET AS FALSE DUE TO ERROR
             rtnResultMap.put( "status", false );
 
@@ -402,9 +402,9 @@ public class ServiceApiASDetailServiceImpl
     } catch (Exception e) {
       logger.error( e.getMessage() );
 
-      errMap.put( "no", serviceNo );
-      errMap.put( "exception", e );
-      MSvcLogApiService.saveErrorToDatabase(errMap);
+      //errMap.put( "no", serviceNo );
+      //errMap.put( "exception", e );
+      //MSvcLogApiService.saveErrorToDatabase(errMap);
 
       // SET RETURN VALUE SET AS FALSE DUE TO ERROR
       rtnResultMap.put( "status", false );
