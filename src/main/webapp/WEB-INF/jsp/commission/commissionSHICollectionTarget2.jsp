@@ -108,13 +108,13 @@
                       var h = d.getDate();
                       var i = d.getHours();
 
-                      if(h == 1){
+                      /* if(h == 1){
                           if(8 < i && i < 15){
                               Common.alert("This page cannot be search on 1st day of every month from 9am - 3pm");
                               return;
                           }
 
-                      }
+                      } */
 
                       if (valid) {
                         Common.alert("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
