@@ -157,10 +157,10 @@ public class ServiceApiASDetailServiceImpl
             map.put( "filterQty", !"".equals(CommonUtils.nvl(paramsDetail.get( x ).get( "filterChangeQty" ))) ? CommonUtils.intNvl(paramsDetail.get( x ).get( "filterChangeQty" )) : 0);
             map.put( "filterPrice", !"".equals(CommonUtils.nvl(paramsDetail.get( x ).get( "salesPrice" ) )) ? CommonUtils.intNvl(paramsDetail.get( x ).get( "salesPrice" ) ) : 0);
             map.put( "filterType", !"1".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "chargesFoc" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "chargesFoc" ) ) : "FOC");
-            map.put( "srvFilterLastSerial", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdSerialNo" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdSerialNo" ) ) : "");
-            map.put( "oldSerialNo", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdOldSerialNo" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdOldSerialNo" ) ) : "");
+            map.put( "srvFilterLastSerial", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdNewSerialNo" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdNewSerialNo" ) ) : "");
+            map.put( "srvOldFilterSerial", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdOldSerialNo" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdOldSerialNo" ) ) : "");
             map.put( "serialNo", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdNewSerialNo" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterBarcdNewSerialNo" ) ) : "");
-            map.put( "filterSerialUnmatchReason", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterSerialUnmatchReason" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterSerialUnmatchReason" ) ) : "");
+            map.put( "unmatchedRsn", !"".equals(CommonUtils.nvl( paramsDetail.get( x ).get( "filterSerialUnmatchReason" ))) ? CommonUtils.nvl( paramsDetail.get( x ).get( "filterSerialUnmatchReason" ) ) : "");
 
             int qty = CommonUtils.intNvl( paramsDetail.get( x ).get( "filterChangeQty" ) );
             double filterPrice = Double.parseDouble( CommonUtils.nvl( paramsDetail.get( x ).get( "salesPrice" ) ) );
@@ -363,6 +363,7 @@ public class ServiceApiASDetailServiceImpl
             if ( RegistrationConstants.IS_INSERT_AS_LOG ) {
               MSvcLogApiService.updateSuccessASStatus( transactionId );
             }
+            rtnResultMap.put( "status", true );
           } catch ( Exception e ) {
             String procTransactionId = transactionId;
             String procName = "AfterService";
