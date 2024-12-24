@@ -62,6 +62,7 @@
       doGetCombo('/services/inhouse/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
       doGetCombo('/services/inhouse/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
       doGetCombo('/services/inhouse/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
+      doGetComboData('/common/selectCodeList.do', {groupCode :'611'}, ''  ,'ddlUnmatchedRsn', 'S' , '');//unmatched reason
       // doGetCombo('/services/inhouse/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
       // doGetCombo('/services/inhouse/getASMember.do', '', '','ddlCTCode', 'S' , '');
       // doGetCombo('/services/inhouse/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
@@ -451,8 +452,20 @@
       dataField : "srvFilterLastSerial",
       headerText : "<spring:message code='service.title.SerialNo'/>",
       editable : false,
-      width : 200,
-      editable : true
+      width : 200
+    }, {
+        dataField : "srvOldFilterSerial",
+        headerText : "Old Serial No",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "unmatchedRsn",
+        visible : false
+    }, {
+        dataField : "unmatchedReasonText",
+        headerText : "Unmatched Reason",
+        editable : false,
+        width : 200
     }, {
       dataField : "undefined",
       headerText : " ",
@@ -652,13 +665,20 @@
       if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
           Common.alert("For serial check items, only quantity 1 can be entered.");
           $("#ddlFilterQty").val("1");
+          $("#ddlFilterQty").change()
           return false;
       }
 
-      if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
-          var arg = "<spring:message code='service.title.SerialNo'/>";
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
-          return false;
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' ) {
+          if(FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())){
+              var arg = "<spring:message code='service.title.SerialNo'/>";
+              Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+              return false;
+          }
+          if(FormUtil.isEmpty($("#ddSrvOldFilterSerial").val()) && FormUtil.isEmpty($("#ddlUnmatchedRsn").val())){
+              Common.alert("* Please choose the unmatched reason for Filter with no old serial number.");
+              return false;
+          }
       }
 
       return true;
@@ -734,6 +754,11 @@
     fitem.filterID = $("#ddlFilterCode").val();
     //fitem.filterCODE =$("#ddlFilterCode").va();
     fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
+    fitem.srvOldFilterSerial = $("#ddSrvOldFilterSerial").val();
+    fitem.unmatchedRsn = $("#ddlUnmatchedRsn").val();
+    if($("#ddlUnmatchedRsn option:selected").val() > 0){
+          fitem.unmatchedReasonText = $("#ddlUnmatchedRsn option:selected").text();
+    }
 
     // CHECK PRICE
     var chargePrice = 0;
@@ -772,6 +797,8 @@
     $("#ddlFilterPayType").val("");
     $("#ddlFilterExchangeCode").val("");
     $("#ddSrvFilterLastSerial").val("");
+    $("#ddSrvOldFilterSerial").val("");
+    $("#ddlUnmatchedRsn").val("");
     $("#txtFilterRemark").val("");
   }
 
@@ -980,12 +1007,15 @@
     $("#ddlFilterExchangeCode").val("");
     $("#ddSrvFilterLastSerial").val("");
     $("#txtFilterRemark").val("");
+    $("#ddSrvOldFilterSerial").val("");
+    $("#ddlUnmatchedRsn").val("");
 
     $("#fcm1").hide();
     $("#fcm2").hide();
     $("#fcm3").hide();
     $("#fcm4").hide();
     $("#fcm5").hide();
+    $("#fcm7").hide();
 
     var allRowItems = AUIGrid.getGridData(myFltGrd10);
     if (allRowItems.length > 0) {
@@ -1070,6 +1100,8 @@
     $("#ddlFilterPayType").attr("disabled", false);
     $("#ddlFilterExchangeCode").attr("disabled", false);
     $("#ddSrvFilterLastSerial").attr("disabled", false);
+    $("#ddSrvOldFilterSerial").attr("disabled", false);
+    $("#ddlUnmatchedRsn").attr("disabled", false);
     $("#txtFilterRemark").attr("disabled", false);
     fn_clearPanelField_ASChargesFees();
 
@@ -1487,6 +1519,8 @@
     $("#ddlFilterExchangeCode").attr("disabled", true);
     $("#ddSrvFilterLastSerial").attr("disabled", true);
     $("#txtFilterRemark").attr("disabled", true);
+    $("#ddSrvOldFilterSerial").attr("disabled", true);
+    $("#ddlUnmatchedRsn").attr("disabled", true);
     fn_clearPanelField_ASChargesFees();
 
     $("#btnSaveDiv").attr("style", "display:none");
@@ -1980,6 +2014,8 @@
       $("#ddlFilterPayType").val("");
       $("#ddlFilterExchangeCode").val("");
       $("#ddSrvFilterLastSerial").val("");
+      $("#ddSrvOldFilterSerial").val("");
+      $("#ddlUnmatchedRsn").val("");
 
     } else {
       $("#fcm3").hide();
@@ -1990,6 +2026,8 @@
       $("#ddlFilterPayType").val("");
       $("#ddlFilterExchangeCode").val("");
       $("#ddSrvFilterLastSerial").val("");
+      $("#ddSrvOldFilterSerial").val("");
+      $("#ddlUnmatchedRsn").val("");
     }
   }
 
@@ -2217,11 +2255,113 @@ function fn_serialSearchPop(){
 
 function fnSerialSearchResult(data) {
     data.forEach(function(dataRow) {
+    	if(dataRow.stkId != $("#ddlFilterCode").val()){
+            Common.alert("Serial No filter type is not same as chosen filter code. ");
+            return false;
+        }
         $("#ddSrvFilterLastSerial").val(dataRow.serialNo);
         //console.log("serialNo : " + dataRow.serialNo);
     });
 }
 
+function fn_filterCodeValidity(){
+    var filterCodeVal = $("#ddlFilterCode option:selected").val();
+    if (FormUtil.isEmpty(filterCodeVal)) {
+          var text = "<spring:message code='service.grid.FilterCode'/>";
+          var rtnMsg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+          Common.alert(rtnMsg);
+          return false;
+      }else{
+          return true;
+      }
+  }
+
+$(function(){
+    $('#ddlFilterCode').change(function(event) {
+        var ct = $("#ddlCTCodeText").val();
+        var sk = $("#ddlFilterCode").val();
+        var filterCodeVal = $("#ddlFilterCode option:selected").val();
+
+        //to get serial check Y/N
+        if (!FormUtil.isEmpty(filterCodeVal)) {
+               var availQty = isstckOk(ct, sk);
+        }
+    });
+
+    $('#ddlFilterQty').change(function(event) {
+        if (!fn_filterCodeValidity()) {
+            $("#ddlFilterQty").val("");
+            return false;
+        }
+
+        if($('#ddlFilterQty').val() > 1){
+            $("#ddSrvFilterLastSerial").val("");
+            $("#ddSrvOldFilterSerial").val("");
+            $("#ddlUnmatchedRsn").val("");
+
+            $("#ddSrvFilterLastSerial").attr("disabled", true);
+            $("#ddSrvOldFilterSerial").attr("disabled", true);
+            $("#ddlUnmatchedRsn").attr("disabled", true);
+            $("#serialSearch").attr("style", "display: none");
+
+            Common.alert("Serial number is not support for choosing quantity more than 1 currently.");
+            return false;
+        }else{
+            $("#ddSrvFilterLastSerial").attr("disabled", false);
+            $("#ddSrvOldFilterSerial").attr("disabled", false);
+            $("#ddlUnmatchedRsn").attr("disabled", false);
+            $("#serialSearch").attr("style", "");
+        }
+    });
+
+    $('#ddSrvFilterLastSerial').change(function(event) {
+        if (!fn_filterCodeValidity()) {
+            $("#ddSrvFilterLastSerial").val("");
+            return false;
+        }
+
+        if($('#ddSrvFilterLastSerial').val() != ""){
+            console.log("ddSrvFilterLastSerial :: " + $('#ddSrvFilterLastSerial').val());
+            var  codyLoc = [];
+            codyLoc.push($("#pLocationCode").val());
+            var codyFilterStatus = ['I'];
+            var filterCodeText = $("#ddlFilterCode option:selected").text();
+            filterCodeText = filterCodeText.substr(0, filterCodeText.indexOf(" "))
+            Common.ajax("POST", "/logistics/SerialMgmt/serialSearchDataList.do", {searchSerialNo:$('#ddSrvFilterLastSerial').val(),locCode:codyLoc,searchItemCodeOrName:filterCodeText,searchStatus:codyFilterStatus}, function (result) {
+                  if(result.data.length == 0){
+                      Common.alert('* This Serial Not belongs to this cody.');
+                      $("#ddSrvFilterLastSerial").val("");
+                  }
+              });
+        }
+    });
+
+    $('#ddSrvOldFilterSerial').change(function(event) {
+        if (!fn_filterCodeValidity()) {
+            $("#ddSrvOldFilterSerial").val("");
+            return false;
+        }
+
+        if($('#ddSrvOldFilterSerial').val() != ""){
+            var ordId = $("#ORD_ID").val();
+            var stkId = $("#ddlFilterCode option:selected").val();
+            Common.ajax("GET", "/services/as/selectFilterSerialConfig.do", {ordId:ordId,stkId:stkId}, function(result) {
+                if(result == null  || result.length == 0 || (result.oldSerialNo != $('#ddSrvOldFilterSerial').val()) ){
+                    Common.alert('* Old Serial Number is not same as previous.');
+                    $("#ddSrvOldFilterSerial").val("");
+                    return false;
+                }
+            });
+        }
+    });
+    $('#ddlUnmatchedRsn').change(function(event) {
+        if (!fn_filterCodeValidity()) {
+            $("#ddlUnmatchedRsn").val("");
+            return false;
+        }
+
+    });
+});
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -2719,6 +2859,12 @@ function fnSerialSearchResult(data) {
             <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
             <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
           </td>
+         </tr>
+         <tr>
+             <th scope="row">Old Serial No<span id="fcm7" name="fcm7" class="must" style="display: none" >*</span></th>
+             <td><input type="text" id='ddSrvOldFilterSerial' name='ddSrvOldFilterSerial' /></td>
+             <th scope="row">Unmatched Reason<span id="fcm7" name="fcm7" class="must" style="display: none" >*</span></th>
+             <td><select id='ddlUnmatchedRsn' name='ddlUnmatchedRsn' ></select></td>
          </tr>
          <tr>
           <th scope="row"><spring:message code='service.title.Remark' /></th>

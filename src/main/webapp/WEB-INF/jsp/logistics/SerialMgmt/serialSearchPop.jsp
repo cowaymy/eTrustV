@@ -82,7 +82,8 @@ function fnSerialSearchResult(data) {
             {dataField:"stusCode", headerText:"Status", width:70, height:30, labelFunction:function(rowIndex, columnIndex, value, headerText, item) {
                 return getCodeList("CODE", "", "446", item.stusCode);
             }},
-            {dataField:"lastDelvryGrDt", headerText:"GR Date", width:100, height:30, dataType:"date", dateInputFormat:"yyyymmdd", formatString:"dd/mm/yyyy"}
+            {dataField:"lastDelvryGrDt", headerText:"GR Date", width:100, height:30, dataType:"date", dateInputFormat:"yyyymmdd", formatString:"dd/mm/yyyy"},
+            {dataField : "stkId",visible : false}
         ];
 
         var mainGridOptions = {

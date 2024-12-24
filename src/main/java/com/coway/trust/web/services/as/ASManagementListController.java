@@ -1625,4 +1625,14 @@ public class ASManagementListController {
     return ResponseEntity.ok(selectDefectEntry);
   }
 
+  @RequestMapping(value = "/selectFilterSerialConfig.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> selectFilterSerialConfig(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+    logger.debug("== params " + params.toString());
+
+    EgovMap filterConfig = ASManagementListService.selectFilterSerialConfig(params);
+
+    return ResponseEntity.ok(filterConfig);
+  }
+
 }

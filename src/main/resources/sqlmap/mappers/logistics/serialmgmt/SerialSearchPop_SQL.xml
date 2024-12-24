@@ -9,6 +9,7 @@
                  , C.CODE_NAME AS STK_TYPE_NM
                  , A.STUS_CODE
                  , A.LAST_DELVRY_GR_DT
+                 , B.STK_ID
           FROM LOG0100M A
           LEFT OUTER JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
           LEFT OUTER JOIN SYS0013M C ON B.STK_TYPE_ID = C.CODE_ID

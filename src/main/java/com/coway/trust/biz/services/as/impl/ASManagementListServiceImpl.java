@@ -23,6 +23,7 @@ import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.logistics.serialmgmt.impl.SerialMgmtNewMapper;
 import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
@@ -85,6 +86,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   @Resource(name = "installationResultListMapper")
   private InstallationResultListMapper installationResultListMapper;
 
+  @Resource(name = "serialMgmtNewMapper")
+  private SerialMgmtNewMapper serialMgmtNewMapper;
 
 
   @Override
@@ -403,20 +406,22 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
         LOGGER.debug(" ============= REMOVE FILTER DURING EDIT ASR =============");
 
-        for(int i = 0; i < removeListing.size(); i++){
-        	LOGGER.debug(" ============= :: " + i);
-        	if(removeListing.get(i) != null){
-        		Map<String, Object> deleteMap = (Map<String, Object>) removeListing.get(i);
-        		if (CommonUtils.nvl(deleteMap.get("stkCode")).toString().equals("113794")) { //FOR PRE-FILTER
-        			mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
+        if(removeListing != null){
+        	for(int i = 0; i < removeListing.size(); i++){
+        		LOGGER.debug(" ============= :: " + i);
+        		if(removeListing.get(i) != null){
+        			Map<String, Object> deleteMap = (Map<String, Object>) removeListing.get(i);
+        			if (CommonUtils.nvl(deleteMap.get("stkCode")).toString().equals("113794")) { //FOR PRE-FILTER
+        				mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
 
-        			EgovMap param1 = new EgovMap();
-        			param1.put("itmcode", "3118441");
-            		EgovMap entry2 = ASManagementListMapper.selectStkCatType(param1);
-            		mp.put("fID", entry2.get("stkid"));
-            		mp.put("userId", params.get("updator"));
-            		mp.put("status", "8"); //remove filter = update filter status in SAL0087D to inactive
-            		updateStatus_SAL0087D(mp);
+        				EgovMap param1 = new EgovMap();
+        				param1.put("itmcode", "3118441");
+        				EgovMap entry2 = ASManagementListMapper.selectStkCatType(param1);
+        				mp.put("fID", entry2.get("stkid"));
+        				mp.put("userId", params.get("updator"));
+        				mp.put("status", "8"); //remove filter = update filter status in SAL0087D to inactive
+        				updateStatus_SAL0087D(mp);
+        			}
         		}
         	}
         }
@@ -970,6 +975,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
         iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
         iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        iMap.put("OLD_FILTER_BARCD_SERIAL_NO", updateMap.get("srvOldFilterSerial"));
+        iMap.put("FILTER_UNMATCH_RSN", updateMap.get("unmatchedRsn"));
         iMap.put("EXCHG_ID", updateMap.get("filterExCode"));
 
         // KR-JIN
@@ -1026,8 +1033,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         iMap.put("ASR_NO", obj.get("AS_RESULT_ID"));
         iMap.put("ASR_CT", obj.get("AS_CT_ID"));
         iMap.put("ASR_SETL_DT", obj.get("AS_SETL_DT"));
-        // iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
-        // iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+         iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+         iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+         iMap.put("OLD_FILTER_BARCD_SERIAL_NO", updateMap.get("srvOldFilterSerial"));
 
         LOGGER.debug("== INSERT LOG0103M PARAMS {}", iMap);
         rtnValue = ASManagementListMapper.insertLOG0103M(iMap);
@@ -1088,9 +1096,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         map.put("poStus", "");
         LOGGER.debug("                  insertSVC0005D {} ", map);
 
+        String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
+                ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+
         Map<String, Object> map87mp = new HashMap();
         map87mp.put("SRV_FILTER_PRV_CHG_DT", svc0004dmap.get("AS_SETL_DT"));
-        map87mp.put("SRV_FILTER_STK_ID", updateMap.get("filterID"));
+        map87mp.put("SRV_FILTER_STK_ID", strFilterID.trim());
         map87mp.put("SRV_FILTER_LAST_SERIAL", updateMap.get("srvFilterLastSerial"));
         map87mp.put("SRV_SO_ID", svc0004dmap.get("AS_SO_ID"));
         map87mp.put("updator", svc0004dmap.get("updator"));
@@ -1950,7 +1961,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     // INSERT USED FILTER
     this.insertLOG0103M(addItemList, svc0004dmap.get("AS_NO").toString(), svc0004dmap,
         String.valueOf(params.get("updator")));
-    this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), svc0004dmap);
+    this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), svc0004dmap);//update SAL0087D
+    //UPDATE LOG0100M
+    this.updateLOG0100M(addItemList,svc0004dmap.get("AS_NO").toString(),svc0004dmap,String.valueOf(params.get("updator")));
 
     svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID"));
     svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")));
@@ -3847,6 +3860,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     int reverse_SVC0005D_cnt = ASManagementListMapper.reverse_CURR_SVC0005D(svc0004dmap); // INSERT REVERSE SVC0005D
     // INSERT REVERSE USED FILTER
     int reverse_LOG0103M_cnt = ASManagementListMapper.reverse_CURR_LOG0103M(svc0004dmap); // INSERT REVERSE SVC0005D
+    ASManagementListMapper.updateSAL0087DFilter_rev(svc0004dmap); // INSERT REVERSE SAL0087D
 
     // REVERSE LOGISTIC CALL
     Map<String, Object> logPram = null;
@@ -4451,4 +4465,52 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
   }
 	// CELESTE [20240828] - New Product External Filter Registration Enhancement [E]
 
+  @Override
+  public EgovMap selectFilterSerialConfig(Map<String, Object> params) throws Exception {
+
+    return ASManagementListMapper.selectFilterSerialConfig(params);
+  }
+
+  public int updateLOG0100M(List<EgovMap> addItemList, String AS_NO, Map obj, String UPDATOR) {
+	    LOGGER.debug("== UPDATE LOG0100M - START");
+	    int rtnValue = -1;
+	    if (addItemList.size() > 0) {
+	      for (int i = 0; i < addItemList.size(); i++) {
+
+	    	  Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+		      Map<String, Object> iMap = new HashMap();
+
+		      String filterBarcdNewSerialNo= updateMap.get("srvFilterLastSerial") !=null?updateMap.get("srvFilterLastSerial").toString():"";
+
+	    	  if (!"".equals(filterBarcdNewSerialNo)) {
+            	  Map<String, Object> filter = new HashMap<String, Object>();
+            	  filter.put("serialNo", filterBarcdNewSerialNo);
+            	  filter.put("salesOrdId", obj.get("AS_SO_ID"));
+            	  filter.put("serviceNo", obj.get("AS_RESULT_NO"));
+            	  int LocationID_Rev = 0;
+                  if (Integer.parseInt(obj.get("AS_CT_ID").toString()) != 0) {
+                	  filter.put("locId", obj.get("AS_CT_ID"));
+                	  LocationID_Rev = ASManagementListMapper.getMobileWarehouseByMemID(filter);
+                  }
+
+                  filter.put("lastLocId", LocationID_Rev);
+                  int filterCnt = ASManagementListMapper.selectFilterSerial(filter);
+            	  if (filterCnt == 0) {
+          	        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());
+          	      }
+
+            	  ASManagementListMapper.updateAsFilterSerial(filter);
+            	  filter.put("boxno", filterBarcdNewSerialNo);
+            	  try {
+            		  serialMgmtNewMapper.copySerialMasterHistory(filter);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+              }
+	      }
+	    }
+	    LOGGER.debug("== UPDATE LOG0100M - END");
+	    return rtnValue;
+	  }
 }

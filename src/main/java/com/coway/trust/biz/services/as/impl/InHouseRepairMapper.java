@@ -332,4 +332,14 @@ public interface InHouseRepairMapper {
   int insertLOG0103M(Map<String, Object> params);
 
   int reverse_CURR_LOG0103M(Map<String, Object> params);
+
+  EgovMap selectFilterSerialConfig(Map<String, Object> params) throws Exception;
+
+  int getMobileWarehouseByMemID(Map<String, Object> params);
+
+  int selectFilterSerial(Map<String, Object> params);
+
+  void updateAsFilterSerial(Map<String, Object> params);
+
+  int updateSAL0087DFilter_rev(Map<String, Object> params);
 }

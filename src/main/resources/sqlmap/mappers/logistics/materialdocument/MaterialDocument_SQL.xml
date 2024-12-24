@@ -241,7 +241,7 @@
 
     <select id="selectMaterialDocSerialList" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.materialdocument.impl.MaterialDocumentMapper.selectMaterialDocSerialList] 20191122 - KR OHK */
-    <if test="trnscTypeCode == 'OD' and invntryMovType != 'OD05'">
+    <if test="trnscTypeCode == 'OD' and invntryMovType != 'OD05' and invntryMovType != 'OD03'">
     SELECT SERIAL_NO
               ,SERIAL_NO AS SERIAL_SCAN
               ,SERIAL_NO AS BOX_NO
@@ -268,6 +268,23 @@
 		                              WHERE B.NO = #{refDocNo} AND A.RESULT_IS_CURR = 1)
 		      AND LAST_REQST_NO is not null and hs_no is not null
 		      and  ITM_CODE = #{matrlNo}
+    </if>
+    <if test="invntryMovType == 'OD03'">
+    SELECT SERIAL_NO
+              ,SERIAL_NO AS SERIAL_SCAN
+              ,SERIAL_NO AS BOX_NO
+              ,ITM_CODE
+              ,LAST_REQST_NO AS REQST_NO
+              ,LAST_REQST_NO_ITM AS REQST_NO_ITM
+              ,LAST_DELVRY_NO AS DELVRY_NO
+              ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
+      FROM LOG0100M
+    WHERE LAST_REQST_NO = (SELECT  A.AS_RESULT_NO
+										FROM SVC0004D A
+										JOIN SVC0001D B ON B.AS_ID = A.AS_ENTRY_ID
+										WHERE B.AS_NO = #{refDocNo} AND A.AS_RESULT_IS_CURR = 1)
+              AND LAST_REQST_NO is not null
+              and  ITM_CODE = #{matrlNo}
     </if>
     <if test="trnscTypeCode != 'OD'">
     SELECT SERIAL_NO

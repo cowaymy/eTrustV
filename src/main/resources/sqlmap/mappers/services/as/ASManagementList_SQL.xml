@@ -1476,6 +1476,9 @@
            filter_Remark ,
            S.SERIAL_NO srv_Filter_Last_Serial
            , S.STK_CODE
+           , S.OLD_FILTER_BARCD_SERIAL_NO srv_Old_Filter_Serial
+           , S.FILTER_SRL_UNMATCH_RSN unmatched_Rsn
+           , s.RESN_DESC unmatched_Reason_text
            FROM ( SELECT E1.ASR_ITM_ID ,
                          E1.ASR_ITM_PART_QTY ,
                          E1.ASR_ITM_PART_PRC ,
@@ -1497,8 +1500,12 @@
                              ELSE 0
                       END C4
                       , E2.STK_CODE
+                      , E1.OLD_FILTER_BARCD_SERIAL_NO
+                      , E1.FILTER_SRL_UNMATCH_RSN
+                      , E4.RESN_DESC
                       FROM SVC0005D E1 JOIN SYS0026M E2 ON E1.ASR_ITM_PART_ID = E2.STK_ID
                       LEFT JOIN SYS0032M E3 ON E1.ASR_ITM_EXCHG_ID = E3.RESN_ID
+                      LEFT JOIN SYS0032M E4 ON E1.FILTER_SRL_UNMATCH_RSN = E4.RESN_ID
                       WHERE ( 0 <![CDATA[ <> ]]> E1.ASR_ITM_PART_ID )
                         AND ( E1.ASR_ITM_PART_QTY   <![CDATA[ > ]]> 0 )
                         AND ( E1.AS_RESULT_ID = NVL(#{REF_REQST} , (SELECT AS_RESULT_ID
@@ -3290,7 +3297,9 @@
                            FILTER_BARCD_SERIAL_NO,
                            RET_SMO_SERIAL_NO,
                            IS_SMO,
-                           IS_SERIAL_REPLACE
+                           IS_SERIAL_REPLACE,
+                           OLD_FILTER_BARCD_SERIAL_NO,
+                           FILTER_SRL_UNMATCH_RSN
     ) VALUES ( SVC0005D_ASR_ITM_ID_SEQ.nextval,
                #{AS_RESULT_ID},
                #{ASR_ITM_PART_ID},
@@ -3311,7 +3320,9 @@
                #{FILTER_BARCD_SERIAL_NO},
                #{RET_SMO_SERIAL_NO},
                #{IS_SMO},
-               #{IS_SERIAL_REPLACE}
+               #{IS_SERIAL_REPLACE},
+               #{OLD_FILTER_BARCD_SERIAL_NO},
+               #{FILTER_UNMATCH_RSN}
     )
   </insert>
 
@@ -4924,8 +4935,8 @@
                TO_DATE(#{ASR_SETL_DT},'dd/mm/yyyy'),
                #{AS_PART_ID},
                #{AS_PART_QTY},
-               null,
-               null,
+               #{OLD_FILTER_BARCD_SERIAL_NO},
+               #{FILTER_BARCD_SERIAL_NO},
                null,
                null,
                null,
@@ -5228,4 +5239,84 @@
   </select>
 
 <!-- // CELESTE [20240828] - New Product External Filter Registration Enhancement [E] -->
+
+    <select id="selectFilterSerialConfig" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SRV_SO_ID SRV_SO_ID ,
+	        Extent2.SRV_FILTER_STK_ID SRV_FILTER_STK_ID,
+	        Extent2.SRV_FILTER_ID,
+	        Extent1.SRV_CONFIG_ID,
+	        Extent2.IS_RETURN,
+	        Extent2.SRV_FILTER_LAST_SERIAL old_serial_no
+		FROM SAL0090D Extent1
+		JOIN SAL0087D Extent2 ON (Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID) AND ( 1 = Extent2.SRV_FILTER_STUS_ID )
+		WHERE ( 1 = Extent1.SRV_STUS_ID )
+		AND ( 443 <![CDATA[<>]]> Extent2.SRV_FILTER_ID )
+		and Extent1.SRV_SO_ID = #{ordId} and Extent2.SRV_FILTER_STK_ID = #{stkId}
+
+  </select>
+
+  <select id="getMobileWarehouseByMemID" parameterType="Map"
+        resultType="int">
+        select wh_loc_id
+        from SYS0028M a
+               ,ORG0001D b
+        where
+        1 = 1
+        and b.MEM_CODE = a.WH_LOC_CODE
+        and b.MEM_ID = #{locId}
+    </select>
+
+  <select id="selectFilterSerial" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+          FROM LOG0100M
+        WHERE SERIAL_NO = #{serialNo}
+        and LAST_LOC_ID = #{lastLocId}
+    </select>
+
+  <update id="updateAsFilterSerial" parameterType="Map">
+        UPDATE LOG0100M
+        SET
+        STUS_CODE = 'C'
+        , LAST_SALES_ORD_ID = #{salesOrdId}
+        , HS_NO = #{serviceNo}
+        , UPD_USER_ID = '349'
+        , UPD_DT = SYSDATE
+        WHERE SERIAL_NO = #{serialNo}
+        and LAST_LOC_ID = #{lastLocId}
+    </update>
+
+    <update id="updateSAL0087DFilter_rev" parameterType="Map">
+        MERGE INTO SAL0087D TRG USING (SELECT D.AS_NO,
+                    B.SRV_CONFIG_ID,
+                   D.AS_SO_ID,
+                   B.SRV_SO_ID,
+                   F.ASR_ITM_PART_ID,
+                   A.SRV_FILTER_STK_ID,
+                   A.SRV_FILTER_PRV_CHG_DT,
+                   A.SRV_FILTER_LAST_SERIAL,
+                   A.SRV_FILTER_PREV_SERIAL,
+                   A.SRV_FILTER_UPD_DT,
+                   A.SRV_FILTER_UPD_USER_ID
+            FROM SAL0087D A,
+                 SAL0090D B,
+                 SVC0004D C,
+                 SVC0001D D,
+                 SVC0005D F
+            WHERE A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+              AND B.SRV_SO_ID = D.AS_SO_ID
+              AND D.AS_ID = C.AS_ENTRY_ID
+              AND C.AS_RESULT_ID = F.AS_RESULT_ID
+              AND A.SRV_FILTER_STK_ID = F.ASR_ITM_PART_ID
+              AND C.AS_RESULT_ID = #{OLD_AS_RESULT_ID}
+              AND F.FILTER_BARCD_SERIAL_NO IS NOT NULL
+    ) S ON (TRG.SRV_CONFIG_ID = S.SRV_CONFIG_ID AND TRG.SRV_FILTER_STK_ID = S.SRV_FILTER_STK_ID AND TRG.SRV_FILTER_STUS_ID = 1)
+    WHEN MATCHED THEN
+    UPDATE SET TRG.SRV_FILTER_LAST_SERIAL = S.SRV_FILTER_PREV_SERIAL,
+        TRG.SRV_FILTER_PREV_SERIAL = NULL,
+        TRG.SRV_FILTER_PRV_CHG_DT = SYSDATE,
+        TRG.SRV_FILTER_UPD_DT = SYSDATE
+        ,TRG.SRV_FILTER_UPD_USER_ID = 349
+            </update>
+
 </mapper>

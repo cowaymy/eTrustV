@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.logistics.serialmgmt.impl.SerialMgmtNewMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.services.as.InHouseRepairService;
@@ -57,6 +58,9 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "commonService")
   private CommonService commonService;
+
+  @Resource(name = "serialMgmtNewMapper")
+  private SerialMgmtNewMapper serialMgmtNewMapper;
 
   @Override
   public List<EgovMap> selInhouseList(Map<String, Object> params) {
@@ -928,6 +932,8 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 
         iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
         iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        iMap.put("OLD_FILTER_BARCD_SERIAL_NO", updateMap.get("srvOldFilterSerial"));
+        iMap.put("FILTER_UNMATCH_RSN", updateMap.get("unmatchedRsn"));
         iMap.put("EXCHG_ID", updateMap.get("filterExCode"));
 
         LOGGER.debug("== INSERT SVC0110D PARAMS {}", iMap);
@@ -964,8 +970,9 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
         iMap.put("ASR_NO", obj.get("AS_RESULT_ID"));
         iMap.put("ASR_CT", obj.get("AS_CT_ID"));
         iMap.put("ASR_SETL_DT", obj.get("AS_SETL_DT"));
-        //iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
-        //iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        iMap.put("SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        iMap.put("FILTER_BARCD_SERIAL_NO", updateMap.get("srvFilterLastSerial"));
+        iMap.put("OLD_FILTER_BARCD_SERIAL_NO", updateMap.get("srvOldFilterSerial"));
 
         LOGGER.debug("== INSERT LOG0103M PARAMS {}", iMap);
         rtnValue = inHouseRepairMapper.insertLOG0103M(iMap);
@@ -1026,9 +1033,12 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
         map.put("poStus", "");
         LOGGER.debug("                  insertSVC0110D {} ", map);
 
+        String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
+                ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+                
         Map<String, Object> map87mp = new HashMap();
         map87mp.put("SRV_FILTER_PRV_CHG_DT", SVC0109Dmap.get("AS_SETL_DT"));
-        map87mp.put("SRV_FILTER_STK_ID", updateMap.get("filterID"));
+        map87mp.put("SRV_FILTER_STK_ID", strFilterID.trim());
         map87mp.put("SRV_FILTER_LAST_SERIAL", updateMap.get("srvFilterLastSerial"));
         map87mp.put("SRV_SO_ID", SVC0109Dmap.get("AS_SO_ID"));
         map87mp.put("updator", SVC0109Dmap.get("updator"));
@@ -1895,7 +1905,9 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     this.insertSVC0110D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")));
     // INSERT USED FILTER
     this.insertLOG0103M(addItemList, SVC0109Dmap.get("AS_NO").toString(), SVC0109Dmap, String.valueOf(params.get("updator")));
-    this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), SVC0109Dmap);
+    this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), SVC0109Dmap);//update SAL0087D
+  //UPDATE LOG0100M
+    this.updateLOG0100M(addItemList,SVC0109Dmap.get("AS_NO").toString(),SVC0109Dmap,String.valueOf(params.get("updator")));
 
     SVC0109Dmap.put("AS_ID", SVC0109Dmap.get("AS_ENTRY_ID"));
     SVC0109Dmap.put("USER_ID", String.valueOf(SVC0109Dmap.get("updator")));
@@ -3535,6 +3547,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     int reverse_SVC0110D_cnt = inHouseRepairMapper.reverse_CURR_SVC0110D(SVC0109Dmap); // INSERT REVERSE SVC0110D
     // INSERT REVERSE USED FILTER
     int reverse_LOG0103M_cnt = inHouseRepairMapper.reverse_CURR_LOG0103M(SVC0109Dmap); // INSERT REVERSE SVC0005D
+    inHouseRepairMapper.updateSAL0087DFilter_rev(SVC0109Dmap); // INSERT REVERSE SAL0087D
 
     // REVERSE LOGISTIC CALL
     Map<String, Object> logPram = null;
@@ -4030,4 +4043,53 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 	// KR-OHK Barcode Save Start
     return returnemp;
   }
+
+  @Override
+  public EgovMap selectFilterSerialConfig(Map<String, Object> params) throws Exception {
+
+    return inHouseRepairMapper.selectFilterSerialConfig(params);
+  }
+
+  public int updateLOG0100M(List<EgovMap> addItemList, String AS_NO, Map obj, String UPDATOR) {
+	    LOGGER.debug("== UPDATE LOG0100M - START");
+	    int rtnValue = -1;
+	    if (addItemList.size() > 0) {
+	      for (int i = 0; i < addItemList.size(); i++) {
+
+	    	  Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
+		      Map<String, Object> iMap = new HashMap();
+
+		      String filterBarcdNewSerialNo= updateMap.get("srvFilterLastSerial") !=null?updateMap.get("srvFilterLastSerial").toString():"";
+
+	    	  if (!"".equals(filterBarcdNewSerialNo)) {
+          	  Map<String, Object> filter = new HashMap<String, Object>();
+          	  filter.put("serialNo", filterBarcdNewSerialNo);
+          	  filter.put("salesOrdId", obj.get("AS_SO_ID"));
+          	  filter.put("serviceNo", obj.get("AS_RESULT_NO"));
+          	  int LocationID_Rev = 0;
+                if (Integer.parseInt(obj.get("AS_CT_ID").toString()) != 0) {
+              	  filter.put("locId", obj.get("AS_CT_ID"));
+              	  LocationID_Rev = inHouseRepairMapper.getMobileWarehouseByMemID(filter);
+                }
+
+                filter.put("lastLocId", LocationID_Rev);
+                int filterCnt = inHouseRepairMapper.selectFilterSerial(filter);
+          	  if (filterCnt == 0) {
+        	        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + "HS Result Error : Cody did not have this serial on hand "+ filter.get("serialNo").toString());
+        	      }
+
+          	  inHouseRepairMapper.updateAsFilterSerial(filter);
+          	  filter.put("boxno", filterBarcdNewSerialNo);
+          	  try {
+          		  serialMgmtNewMapper.copySerialMasterHistory(filter);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+	      }
+	    }
+	    LOGGER.debug("== UPDATE LOG0100M - END");
+	    return rtnValue;
+	  }
 }

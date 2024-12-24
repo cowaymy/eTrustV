@@ -205,4 +205,6 @@ public interface InHouseRepairService {
 
   //KR-OHK serial check add
   EgovMap asResult_updateSerial(Map<String, Object> params);
+
+  EgovMap selectFilterSerialConfig(Map<String, Object> params) throws Exception;
 }
