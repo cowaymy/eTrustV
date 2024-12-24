@@ -28,6 +28,11 @@
         $("#download").click(function() {
             GridCommon.exportTo("ord_grid", 'xlsx', "Order Serial No. History List");
         });
+        
+        var roleId = '${SESSION_INFO.roleId}';
+        if(roleId == 256 || "${SESSION_INFO.userTypeId}" == "2"){
+            $("#ordNo").attr("readonly", true);
+        }
     });
 
     /* salesOrdId
@@ -79,10 +84,6 @@
 
  function fn_search(){
 
-	 var roleId = '${SESSION_INFO.roleId}';
-     if(roleId == 256){
-         $("#dataForm #userBranchId").val('${SESSION_INFO.userBranchId}');
-     }
 //	 console.log("++++ ::" + FormUtil.isEmpty($("#serialNo").val()) + ", " + FormUtil.isEmpty($("#refDocNo").val()) + ", " + FormUtil.isEmpty($("#ordNo").val()) );
 	 if( !FormUtil.isEmpty($("#serialNo").val()) || !FormUtil.isEmpty($("#refDocNo").val()) || !FormUtil.isEmpty($("#ordNo").val()) ){
 
