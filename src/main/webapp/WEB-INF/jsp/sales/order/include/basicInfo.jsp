@@ -33,6 +33,11 @@
     <td>${orderDetail.basicInfo.ordStusName}</td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.text.store" /></th>
+    <td colspan="5"><span>${orderDetail.basicInfo.cwStoreName} </span>
+    </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.evoucher" /></th>
     <td>${orderDetail.basicInfo.voucher}</td>
     <th scope="row"><spring:message code="sal.text.evoucher.hs"/></th>

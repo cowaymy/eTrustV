@@ -247,6 +247,7 @@
              , T1.TNB_ACC_NO
              , T1.MAIN_REBATE_ORD_ID
              , T1.MAIN_REBATE_ORD_NO
+             , T1.CW_STORE_ID
           FROM SAL0213M T1
           JOIN SYS0026M T2 ON T2.STK_ID = T1.ITM_STK_ID
           LEFT JOIN (
@@ -354,6 +355,7 @@
 		     , TNB_ACC_NO
 		     , MAIN_REBATE_ORD_ID
 		     , MAIN_REBATE_ORD_NO
+             , CW_STORE_ID
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -432,6 +434,7 @@
              , #{tnbAccNo}
              , #{rebateOrderId}
              , #{rebateOrderNo}
+             , #{cwStoreId}
 		     )
     </insert>
 
@@ -504,6 +507,7 @@
              , MAIN_PWP_ORD_ID = #{pwpOrderId}
              , MAIN_PWP_ORD_NO = #{pwpOrderNo}
              , TNB_ACC_NO = #{tnbAccNo}
+             , CW_STORE_ID = #{cwStoreId}
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 

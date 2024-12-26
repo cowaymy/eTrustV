@@ -2619,4 +2619,11 @@
     FROM API0001M
     WHERE API_USER_ID = #{keyId}
   </select>
+
+  <select id="selectStoreList" parameterType="Map" resultType="egovMap">
+        SELECT CW_STORE_ID as CODE, CW_STORE_NAME as CODE_NAME
+        FROM SAL0429M
+        WHERE CW_STORE_STUS_ID = 1
+        ORDER BY CW_STORE_ID
+  </select>
 </mapper>

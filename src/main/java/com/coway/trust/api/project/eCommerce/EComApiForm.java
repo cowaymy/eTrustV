@@ -83,6 +83,8 @@ public class EComApiForm {
     params.put("ref1", ecomForm.getRef1());
     params.put("ref2", ecomForm.getRef2());
 
+    params.put("cwStoreId", ecomForm.getCwStoreId());
+
     return params;
   }
 
@@ -144,6 +146,8 @@ public class EComApiForm {
   private String prodCat;
   private String ref1;
   private String ref2;
+
+  private Integer cwStoreId;
 
   public String getKey() {
     return key;
@@ -546,6 +550,14 @@ public String getRef2() {
 
 public void setRef2(String ref2) {
 	this.ref2 = ref2;
+}
+
+public Integer getCwStoreId() {
+	return cwStoreId;
+}
+
+public void setCwStoreId(Integer cwStoreId) {
+	this.cwStoreId = cwStoreId;
 }
 
 }

@@ -489,4 +489,6 @@ public interface CommonService
     EgovMap createDhlShpt( Map<String, Object> params ) throws IOException, JSONException, ParseException;
 
     String getApisKey ( String uID ) throws NoSuchAlgorithmException;
+
+    List<EgovMap> selectStoreList( Map<String, Object> params );
 }

@@ -1384,6 +1384,7 @@
                   , EX_TRADE_PR
                   , VOUCHER_CODE
                   ,TNB_ACC_NO
+                  ,CW_STORE_ID
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1450,6 +1451,7 @@
              , #{isExtradePR}
              , #{voucherCode}
              , #{tnbAccNo}
+             , #{cwStoreId}
      )
   </insert>
 
