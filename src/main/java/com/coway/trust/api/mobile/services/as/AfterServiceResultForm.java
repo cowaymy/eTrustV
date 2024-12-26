@@ -513,6 +513,7 @@ public class AfterServiceResultForm {
         map.put( "filterBarcdSerialNo", dtl.getFilterBarcdSerialNo() );
         map.put( "retSmoSerialNo", dtl.getRetSmoSerialNo() );
         map.put( "filterBarcdNewSerialNo", dtl.getFilterBarcdNewSerialNo());
+        map.put( "filterBarcdOldSerialNo", dtl.getFilterBarcdOldSerialNo());
         map.put( "filterSerialUnmatchReason", dtl.getFilterSerialUnmatchReason());
         map.put( "sysFilterBarcdSerialNo", dtl.getSysFilterBarcdSerialNo());
       }
