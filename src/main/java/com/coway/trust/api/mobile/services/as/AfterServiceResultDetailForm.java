@@ -45,7 +45,7 @@ public class AfterServiceResultDetailForm {
   private String sysFilterBarcdSerialNo;
 
   @ApiModelProperty(value = "교체 필터 바코드", example = "")
-  private String filterBarcdSerialNoOld;
+  private String filterBarcdOldSerialNo;
 
   @ApiModelProperty(value = "기존 필터 바코드")
   private String retSmoSerialNo;
@@ -218,12 +218,12 @@ public class AfterServiceResultDetailForm {
     this.sysFilterBarcdSerialNo = sysFilterBarcdSerialNo;
   }
 
-  public String getFilterBarcdSerialNoOld() {
-    return filterBarcdSerialNoOld;
+  public String getFilterBarcdOldSerialNo() {
+    return filterBarcdOldSerialNo;
   }
 
-  public void setFilterBarcdSerialNoOld( String filterBarcdSerialNoOld ) {
-    this.filterBarcdSerialNoOld = filterBarcdSerialNoOld;
+  public void setFilterBarcdOldSerialNo( String filterBarcdOldSerialNo ) {
+    this.filterBarcdOldSerialNo = filterBarcdOldSerialNo;
   }
 
   public static List<Map<String, Object>> createMaps( List<AfterServiceResultDetailForm> afterServiceResultDetailForms ) {
