@@ -37,7 +37,9 @@
                               NVL(EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT, 'DD/MM/YYYY')), 0) AS KEY_IN_YEAR,
                               A.SUP_RTN_RFND AS IS_REFUND,
                               NVL(RTNDVYSTUS.NAME,'-') AS RETURN_DELIVERY_STATUS,
-                              NVL(SUBAPPUSR.USER_NAME, '') AS SUB_UPDBY
+                              NVL(SUBAPPUSR.USER_NAME, '') AS SUB_UPDBY,
+                              CASE WHEN A.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               				  NVL(SOM.SALES_ORD_NO,'-') SALES_ORD_NO
     FROM SUP0001M A
     JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
     JOIN ORG1001V EM ON EM.MEM_ID = A.MEM_ID
@@ -58,6 +60,7 @@
     LEFT JOIN SYS0013M REG ON REG.CODE_ID = SUBBR.REGN_ID AND REG.CODE_MASTER_ID = 49
     LEFT JOIN SYS0013M MEMTYP ON MEMTYP.CODE_ID = ORG.MEM_TYPE AND MEMTYP.CODE_MASTER_ID = 1
     LEFT JOIN SYS0047M SUBAPPUSR ON SUBAPPUSR.USER_ID = A.CRT_USR_ID
+    LEFT JOIN SAL0001D SOM ON A.SALES_ORD_ID_GIFT = SOM.SALES_ORD_ID
     WHERE A.DEL_FLG = 'N'
 
     <if test="ordNo != null and ordNo != ''">
@@ -141,6 +144,15 @@
         #{item}
       </foreach>
     </if>
+
+    <if test="supplementType != '' and supplementType != null">
+      AND A.SUP_TYP = #{supplementType}
+    </if>
+
+    <if test="salesOrdNo != '' and salesOrdNo != null ">
+      AND SOM.SALES_ORD_NO = #{salesOrdNo}
+    </if>
+
     ORDER BY A.SUP_REF_NO
   </select>
 

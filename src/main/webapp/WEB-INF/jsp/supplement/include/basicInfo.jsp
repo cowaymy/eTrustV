@@ -179,6 +179,14 @@
         </td>
       </tr>
       <tr>
+        <th scope="row"><spring:message code="supplement.title.supplementType"/></th>
+        <td><span>${orderInfo.supTyp}</span></td>
+        <th scope="row"><spring:message code="supplement.title.freeGiftOrdNo"/></th>
+        <td><span>${orderInfo.salesOrdNo}</span></td>
+        <th></th>
+        <td></td>
+      </tr>
+      <tr>
         <th scope="row"><spring:message code="sal.text.createDate" /></th>
         <td>${orderInfo.supRefDate}</td>
         <th scope="row"><spring:message

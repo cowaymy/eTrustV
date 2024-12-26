@@ -36,6 +36,9 @@
   var userName = '${SESSION_INFO.userName}';
   var modValue = '${modValue}';
   var subBrnch = '${supplement.supSubmBrnch}';
+  var supType = '${supplement.supTyp}';
+  var salesOrdNoView = '${supplement.salesOrdNo}';
+  var salesOrdIdView = '${supplement.salesOrdId}';
 
   var sofFileId = 0;
   var nricFileId = 0;
@@ -58,6 +61,15 @@
       createPurchaseGridID();
       fn_loadSupplementSubmission();
       fn_loadSupplementSubmissionItem(supSubmId);
+      $('#salesOrderNoView').val(salesOrdNoView);
+      $('#salesOrderIdView').val(salesOrdIdView);
+      $('[name="supplementTypeView"]').prop("disabled", true);
+      if (supType == 0){
+    	$('#salesOrdNoView').hide();
+      }else{
+    	$('#salesOrdNoView').show();
+      }
+
 
       doGetComboData('/status/selectStatusCategoryCdList.do', { selCategoryId : 34, parmDisab : 0 }, '', 'subApprovalStatus', 'S', '');
       if (modValue == "approval") {
@@ -334,9 +346,11 @@
           $('#isSuppl').val(memInfo.isSuppl);
 
           if (memInfo.isSuppl == 'N' || memInfo.isSuppl == null) {
+        	if (supType == 0){
             Common.alert('<spring:message code="supplement.alert.memCodeNotEligible" />' + ' - ' + memCode + '</b>');
             $('#salesmanCd').val('');
             $('#salesmanNm').val('');
+        	}
           }
           /* else {
             Common.ajax( "GET", "/supplement/selectMemBrnchByMemberCode.do", { memCode : memInfo.memCode },
@@ -764,6 +778,19 @@
                   </td>
                 </tr>
               </table></td>
+          </tr>
+          <tr>
+          <th scope="row"><spring:message code="supplement.title.supplementType"/></th>
+            <td colspan="3">
+            	<input id="supplementTypeSales" name="supplementTypeView" type="radio" value="0" <c:if test="${supplement.supTyp eq '0'}">checked</c:if> /><span><spring:message code="supplement.title.sales"/></span>
+        		<input id="supplementTypeFreeGift" name="supplementTypeView" type="radio" value="1" <c:if test="${supplement.supTyp eq '1'}">checked</c:if> /><span><spring:message code="supplement.title.freeGift"/></span>
+            </td>
+          </tr>
+          <tr id="salesOrdNoView">
+          <th scope="row"><spring:message code="supplement.title.freeGiftOrdNo"/></th>
+            <td colspan="3">
+            	<input id="salesOrderNoView" name="salesOrderNoView" type="text" title="" placeholder="" class="readonly" readonly />
+            	<input id="salesOrderIdView" name="salesOrderIdView" type="hidden"/>
           </tr>
           <tr id="submissionStatusView">
             <th scope="row"><spring:message code="supplement.text.approvalStatus" /></th>

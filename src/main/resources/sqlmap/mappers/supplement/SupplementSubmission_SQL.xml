@@ -25,7 +25,9 @@
                A.UPD_USR_ID ,
                G.USER_NAME UPD_USR ,
                TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') UPD_DT ,
-               I.SUP_REF_NO
+               I.SUP_REF_NO,
+               CASE WHEN A.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               NVL(J.SALES_ORD_NO,'-') SALES_ORD_NO
     FROM SUP0003M A
     LEFT JOIN SYS0038M B ON A.SUP_SUBM_STUS = B.STUS_CODE_ID
     LEFT JOIN SYS0005M C ON A.MEM_BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
@@ -35,6 +37,7 @@
     LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
     LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
     LEFT JOIN SUP0001M I ON A.SUP_SUBM_SOF = I.SUP_SUBM_SOF AND A.SUP_REF_ID = I.SUP_REF_ID AND I.DEL_FLG = 'N'
+    LEFT JOIN SAL0001D J ON A.SALES_ORD_ID_GIFT = J.SALES_ORD_ID
     WHERE 1=1
         AND A.DEL_FLG = 'N'
 
@@ -86,6 +89,14 @@
 
     <if test="deptCode != '' ">
       AND H.DEPT_CODE = #{deptCode}
+    </if>
+
+    <if test="supplementType != '' and supplementType != null">
+      AND A.SUP_TYP = #{supplementType}
+    </if>
+
+    <if test="salesOrdNo != '' and salesOrdNo != null ">
+      AND J.SALES_ORD_NO = #{salesOrdNo}
     </if>
 
     ORDER BY A.SUP_SUBM_ID DESC
@@ -180,9 +191,19 @@
                        ELSE 999 END
                QTY,
                Project1.MOV_QTY,
+
+               <if test="supType == 1 ">
+               0 AMT,
+               0 SUB_CHANGES,
+               0 TAXES,
+               </if>
+
+               <if test="supType == 0 ">
                NVL(Project1.AMT , 0) AMT,
                (AMT * 100) / 100 SUB_CHANGES,
                AMT - ((AMT * 100) / 100) TAXES,
+               </if>
+
                Project1.SERIAL_CHK
     FROM ( SELECT NVL(Extent2.LOC_ID, 0) LOC_ID,
                           Extent1.STK_ID,
@@ -455,7 +476,9 @@
                                          CRT_USR_ID ,
                                          CRT_DT ,
                                          UPD_USR_ID ,
-                                         UPD_DT
+                                         UPD_DT ,
+                                         SUP_TYP ,
+                                         SALES_ORD_ID_GIFT
      ) VALUES ( #{seqM} ,
                      SYSDATE ,
                      1 ,
@@ -478,7 +501,9 @@
                      #{crtUsrId} ,
                      SYSDATE ,
                      #{crtUsrId} ,
-                     SYSDATE
+                     SYSDATE ,
+                     #{supplementType} ,
+                     #{salesOrderId}
      )
    </insert>
 
@@ -542,7 +567,7 @@
                A.SUP_REF_ID ,
                A.CUST_ID ,
                I.NAME CUST_NAME ,
-               I.NRIC ,
+               D.NRIC ,
                I.EMAIL ,
                I.TEL_M1 TEL_NO ,
                A.CUST_CNTC_ID ,
@@ -557,7 +582,10 @@
                TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT ,
                A.UPD_USR_ID ,
                G.USER_NAME UPD_USR ,
-               TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') UPD_DT
+               TO_CHAR(A.UPD_DT, 'DD-MM-YYYY') UPD_DT ,
+               A.SUP_TYP ,
+               A.SALES_ORD_ID_GIFT SALES_ORD_ID ,
+               NVL(J.SALES_ORD_NO , '-') SALES_ORD_NO
     FROM SUP0003M A
     LEFT JOIN SYS0038M B ON A.SUP_SUBM_STUS = B.STUS_CODE_ID
     LEFT JOIN SYS0005M C ON A.MEM_BRNCH_ID = C.BRNCH_ID AND C.STUS_ID = 1
@@ -567,6 +595,7 @@
     LEFT JOIN SYS0047M G ON A.UPD_USR_ID = G.USER_ID
     LEFT JOIN ORG1001V H ON A.MEM_ID = H.MEM_ID
     LEFT JOIN SAL0027D I ON A.CUST_CNTC_ID = I.CUST_CNTC_ID
+    LEFT JOIN SAL0001D J ON A.SALES_ORD_ID_GIFT = J.SALES_ORD_ID
     WHERE 1=1
         AND A.DEL_FLG = 'N'
         AND A.SUP_SUBM_ID = #{supSubmId}
@@ -637,7 +666,9 @@
                                          CRT_USR_ID ,
                                          CRT_DT ,
                                          UPD_USR_ID ,
-                                         UPD_DT
+                                         UPD_DT ,
+                                         SUP_TYP ,
+                                         SALES_ORD_ID_GIFT
     ) VALUES ( #{supRefId}
                   , #{supRefNo}
                   , #{supSubmSof}
@@ -659,6 +690,8 @@
                   , SYSDATE
                   , #{updUsrId}
                   , SYSDATE
+                  , #{supTyp}
+                  , #{salesOrdId}
      )
   </insert>
 
@@ -745,5 +778,49 @@
     WHERE WH_LOC_CODE = #{params}
         AND WH_LOC_STUS_ID = 1
   </select>
+
+  <select id="selectSupSubOrderNoList" parameterType="Map" resultType="egovMap">
+    SELECT T1.SALES_ORD_NO
+         , T4.CODE_NAME AS APP_TYPE
+         , T3.STK_CODE
+         , T3.STK_DESC
+         , T1.PROMO_ID
+         , T1.SALES_ORD_ID
+         , (
+             SELECT SYS3.IND
+             FROM SYS0026M SYS1,
+                  SYS0013M SYS2,
+                  SYS0094M SYS3
+             WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID
+                   AND SYS2.CODE_MASTER_ID = 11
+                   AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID
+           ) BUS_TYPE
+    FROM SAL0001D T1
+    JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+    JOIN SYS0026M T3 ON T3.STK_ID = T2.ITM_STK_ID
+    JOIN SYS0013M T4 ON T4.CODE_ID = T1.APP_TYPE_ID
+    LEFT JOIN SAL0095D T5 ON T5.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SALES_ORD_ID,'1')
+    LEFT JOIN SUP0003M T6 ON T1.SALES_ORD_ID = T6.SALES_ORD_ID_GIFT
+    LEFT JOIN SAL0029D T7 ON T1.CUST_ID = T7.CUST_ID
+    WHERE T1.STUS_CODE_ID = 4
+    AND T6.SUP_SUBM_ID IS NULL
+    AND T1.APP_TYPE_ID IN (66,67,68,1412)
+    <if test='dpOrderDateFr != null and dpOrderDateFr != "" and dpOrderDateTo != null and dpOrderDateTo != ""'>
+      AND T1.CRT_DT BETWEEN TO_DATE(#{dpOrderDateFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpOrderDateTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test='txtOrderNoFr != null and txtOrderNoFr != "" and txtOrderNoTo != null and txtOrderNoTo != ""'>
+      AND <![CDATA[REGEXP_REPLACE(T1.SALES_ORD_NO, '[^0-9]', '')]]> BETWEEN TO_CHAR(#{txtOrderNoFr})  AND TO_CHAR(#{txtOrderNoTo})
+    </if>
+
+    <if test=" null != txtCustName and '' != txtCustName">
+      AND T7.NAME = #{txtCustName}
+    </if>
+
+    <if test=" null != cmbKeyBranch and '' != cmbKeyBranch">
+      AND T1.BRNCH_ID = #{cmbKeyBranch}
+    </if>
+
+    </select>
 
 </mapper>

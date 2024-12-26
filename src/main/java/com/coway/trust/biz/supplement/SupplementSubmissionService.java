@@ -36,4 +36,6 @@ public interface SupplementSubmissionService {
   Map<String, Object> updateSubmissionApprovalStatus( Map<String, Object> params ) throws Exception;
 
   Map<String, Object> SP_LOGISTIC_REQUEST_SUPP( Map<String, Object> param );
+
+  List<EgovMap> selectSupSubOrderNoList(Map<String, Object> params);
 }

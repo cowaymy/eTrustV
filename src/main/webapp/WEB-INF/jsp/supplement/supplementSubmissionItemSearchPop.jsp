@@ -9,7 +9,6 @@
 
 </style>
 <script type="text/javascript">
-
 var basketGridID;
 var ItmOption = { type: "M",
                            isCheckAll: false
@@ -241,6 +240,7 @@ $(document).ready(function() {
   <section class="pop_body">
     <form id="_itemSrcForm">
       <input type="hidden" id="_locId" name="locId" value="${whBrnchId}"/>
+      <input type="hidden" id="supType" name="supType" value="${supType}"/>
       <table class="type1 mt10"><!-- table start -->
       <caption>table</caption>
       <colgroup>

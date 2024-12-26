@@ -128,6 +128,7 @@ public class SupplementSubmissionController {
   @RequestMapping(value = "/supplementSubmissionItemSearchPop.do")
   public String supplementSubmissionItemSearchPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
     /* model.addAttribute("whBrnchId", params.get("whLocId")); */
+    model.put( "supType", params.get( "supType" ) );
     return "supplement/supplementSubmissionItemSearchPop";
   }
 
@@ -291,5 +292,16 @@ public class SupplementSubmissionController {
       message.setMessage( msg );
     }
     return ResponseEntity.ok( message );
+  }
+
+  @RequestMapping(value = "/supplementSubmissionOrderSearchPop.do")
+  public String supplementSubmissionOrderSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "supplement/supplementSubmissionOrderSearchPop";
+  }
+
+  @RequestMapping(value = "/getSupSubOrderInfo.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectSupSubOrderNoList(@RequestParam Map<String, Object> params) {
+    List<EgovMap> result = supplementSubmissionService.selectSupSubOrderNoList(params);
+    return ResponseEntity.ok(result);
   }
 }

@@ -77,4 +77,6 @@ public interface SupplementSubmissionMapper {
   int getWhLocId(String params);
 
   String getCdcCodebyWhLocCode(String params);
+
+  List<EgovMap> selectSupSubOrderNoList(Map<String, Object> params);
 }

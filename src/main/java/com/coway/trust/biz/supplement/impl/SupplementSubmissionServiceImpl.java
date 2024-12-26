@@ -193,7 +193,9 @@ public class SupplementSubmissionServiceImpl
         insertSupplementMaster( supplementMasterVO, supplementSubm, params );
         insertSupplementDetails( supplementItem, supplementMasterVO.getSupRefId(), params );
         stockBookingSMO( supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params );
+        if(supplementSubm.get("supTyp").equals(SalesConstants.SUP_TYPE_SALES)){
         sendEGHLRequest( supplementSubm, supplementMasterVO.getSupRefNo(), supplementMasterVO.getSupRefId(), params );
+        }
         supplementSubmissionMapper.updateSupplementSubmissionStatus( params );
         rtnMap.put( "logError", "000" );
         rtnMap.put( "message", supplementMasterVO.getSupRefNo() );
@@ -213,11 +215,12 @@ public class SupplementSubmissionServiceImpl
   private void insertSupplementMaster( SupplementMasterVO supplementMasterVO, EgovMap supplementSubm, Map<String, Object> params ) {
     int supRefId = supplementSubmissionMapper.getSeqSUP0001M();
     String supRefNo = orderRegisterMapper.selectDocNo( 199 );
+    int supTyp = CommonUtils.intNvl( supplementSubm.get( "supTyp" ) ) ;
     supplementMasterVO.setSupRefId( supRefId );
     supplementMasterVO.setSupRefNo( supRefNo );
     supplementMasterVO.setSupSubmSof( String.valueOf( supplementSubm.get( "sofNo" ) ) );
     supplementMasterVO.setSupRefStus( SalesConstants.STATUS_ACTIVE );
-    supplementMasterVO.setSupRefStg( SalesConstants.STATUS_ACTIVE );
+    supplementMasterVO.setSupRefStg( supTyp == SalesConstants.SUP_TYPE_SALES ? SalesConstants.STATUS_ACTIVE : SalesConstants.SUB_STATE_STATUS_PENDING  );
     supplementMasterVO.setCustId( CommonUtils.intNvl( supplementSubm.get( "custId" ) ) );
     supplementMasterVO.setCustCntcId( CommonUtils.intNvl( supplementSubm.get( "custCntcId" ) ) );
     supplementMasterVO.setCustDelAddrId( CommonUtils.intNvl( supplementSubm.get( "custDelAddrId" ) ) );
@@ -231,6 +234,8 @@ public class SupplementSubmissionServiceImpl
     supplementMasterVO.setDelFlg( SalesConstants.SUB_APPOVAL_DEL_FLG_N );
     supplementMasterVO.setCrtUsrId( CommonUtils.intNvl( params.get( "crtUsrId" ) ) );
     supplementMasterVO.setUpdUsrId( CommonUtils.intNvl( params.get( "updUsrId" ) ) );
+    supplementMasterVO.setSupTyp( CommonUtils.intNvl( supplementSubm.get( "supTyp" ) ) );
+    supplementMasterVO.setSalesOrdId( CommonUtils.intNvl( supplementSubm.get( "salesOrdId" ) ) );
     supplementSubmissionMapper.insertSupplementM( supplementMasterVO );
   }
 
@@ -308,5 +313,10 @@ public class SupplementSubmissionServiceImpl
       supplementSubmissionMapper.updateStockTransferMReq( params );
       supplementSubmissionMapper.updateStockTransferDReq( params );
     }
+  }
+
+  @Override
+  public List<EgovMap> selectSupSubOrderNoList(Map<String, Object> params) {
+    return supplementSubmissionMapper.selectSupSubOrderNoList(params);
   }
 }

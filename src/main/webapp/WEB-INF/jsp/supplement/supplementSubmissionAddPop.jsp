@@ -24,7 +24,7 @@
 
   $(document).ready(function() {
     createPurchaseGridID();
-
+	$("#lblOrdNo").hide();
 
     doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '' , 'salesmanBrnch', 'S', ''); //Branch Code
 
@@ -65,6 +65,8 @@
 
       $('#btnConfirm').addClass("blind");
       $('#btnClear').addClass("blind");
+      $('#btnOrdNoSearch').addClass("blind");
+      $('[name="supplementType"]').prop("disabled", true);
 
       fn_loadCustomer(null, $('#nric').val());
     });
@@ -180,7 +182,7 @@
         function() {
           Common.popupDiv(
               "/supplement/supplementSubmissionItemSearchPop.do",
-              null, null, true);
+              {supType: $(':radio[name="supplementType"]:checked').val()}, null, true);
         });
 
     $("#_delBtn").click(function() {
@@ -318,6 +320,10 @@
       fn_SaveSupplementSubmission();
     });
 
+    $('#btnOrdNoSearch').click(function() {
+        Common.popupDiv("/supplement/supplementSubmissionOrderSearchPop.do", '', null, true);
+  });
+
   });
 
   function fn_validConfirm() {
@@ -352,6 +358,13 @@
     } else if ($('#sofNo').val().substring(0, 3) != "FSO") {
       isValid = false;
       msg += "* Please key in <b>FSO</b> at eSOF No";
+    }
+
+    if($(':radio[name="supplementType"]:checked').val() == 1){
+    	if(FormUtil.checkReqValue($('#salesOrderNo'))){
+    		isValid = false;
+    	    msg += "* Please select Free Gift Order No.<br>";
+    	}
     }
 
     if (!isValid)
@@ -960,6 +973,8 @@
       remark : $('#remark').val().replace(/[\r\n]+/g, ' ').replace(/'/g, '"') ,
       totAmt : totAmt,
       atchFileGrpId : atchFileGrpId,
+      supplementType : $(':radio[name="supplementType"]:checked').val(),
+      salesOrderId : $('#salesOrderId').val(),
       supplementItmList : prchParam
     };
 
@@ -1015,6 +1030,17 @@
   }
 
   function fn_resetSales() {
+  }
+
+  function fn_checkSupplementType(value){
+	  if(value == "0"){
+		  $('#lblOrdNo').hide();
+		  $('#btnOrdNoSearch').addClass("blind");
+		  $('#salesOrderNo').val('');
+	  }else{
+		  $('#lblOrdNo').show();
+		  $('#btnOrdNoSearch').removeClass("blind");
+	  }
   }
 </script>
 
@@ -1082,6 +1108,20 @@
                   <td><span id="span_SOFNO"></span></td>
                 </tr>
               </table></td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code="supplement.title.supplementType"/></th>
+            <td colspan="3">
+            	<input id="supplementTypeSales" name="supplementType" type="radio" value="0" checked onchange="javascript:fn_checkSupplementType(this.value)"/><span><spring:message code="supplement.title.sales"/></span>
+        		<input id="supplementTypeFreeGift" name="supplementType" type="radio" value="1" onchange="javascript:fn_checkSupplementType(this.value)"/><span><spring:message code="supplement.title.freeGift"/></span>
+            </td>
+          </tr>
+          <tr id="lblOrdNo">
+          	<th scope="row"><spring:message code="supplement.title.freeGiftOrdNo"/></th>
+            <td colspan="3">
+            	<input id="salesOrderNo" name="salesOrderNo" type="text" title="" placeholder="" class="readonly" readonly />
+            	<input id="salesOrderId" name="salesOrderId" type="hidden"/>
+            	  <a id="btnOrdNoSearch" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
           </tr>
           <tr>
             <th scope="row" colspan="4"><span class="must"><spring:message code='sales.msg.ordlist.icvalid' /></span></th>

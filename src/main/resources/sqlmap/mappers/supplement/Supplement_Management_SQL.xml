@@ -25,7 +25,9 @@
                Extent5.USER_NAME AS REF_CREATE_BY,
                TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') AS REF_CREATE_DATE ,
                Extent6.USER_NAME AS REF_UPDATE_BY,
-               TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') AS REF_UPDATE_DATE
+               TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') AS REF_UPDATE_DATE ,
+               CASE WHEN Extent1.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               NVL(Extent12.SALES_ORD_NO,'-') SALES_ORD_NO
     FROM SUP0001M Extent1
     LEFT JOIN SYS0005M Extent2 ON Extent2.BRNCH_ID = Extent1.MEM_BRNCH_ID
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
@@ -39,6 +41,7 @@
                                             AND Extent9.CODE_MASTER_ID = '585'
     LEFT JOIN ORG1001V Extent10 ON Extent1.MEM_ID = Extent10.MEM_ID
     LEFT JOIN SAL0027D Extent11 ON Extent1.CUST_ID = Extent11.CUST_ID AND Extent1.CUST_CNTC_ID = Extent11.CUST_CNTC_ID
+    LEFT JOIN SAL0001D Extent12 ON Extent1.SALES_ORD_ID_GIFT = Extent12.SALES_ORD_ID
     WHERE 1=1
     AND Extent1.DEL_FLG = 'N'
 
@@ -136,6 +139,14 @@
 
     <if test=" null != isRefund and '' != isRefund">
       AND Extent1.SUP_RTN_RFND = #{isRefund}
+    </if>
+
+    <if test="supplementType != '' and supplementType != null">
+      AND Extent1.SUP_TYP = #{supplementType}
+    </if>
+
+    <if test="salesOrdNo != '' and salesOrdNo != null ">
+      AND Extent12.SALES_ORD_NO = #{salesOrdNo}
     </if>
   </select>
 
@@ -556,7 +567,9 @@
                Extent19.CITY AS BILL_CITY ,
                Extent1.FL_ATT_ID AS ATCH_FILE_GRP_ID,
                Extent1.SUP_RTN_RFND AS IS_REFUND,
-               Extent1.SUP_REF_RMK AS RMK
+               Extent1.SUP_REF_RMK AS RMK,
+               CASE WHEN Extent1.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               NVL(Extent20.SALES_ORD_NO,'-') SALES_ORD_NO
     FROM SUP0001M Extent1
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
     LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
@@ -575,6 +588,7 @@
     LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
     LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
     LEFT JOIN SYS0064M Extent19 ON Extent19.AREA_ID = Extent18.AREA_ID
+    LEFT JOIN SAL0001D Extent20 ON Extent1.SALES_ORD_ID_GIFT = Extent20.SALES_ORD_ID
     WHERE 1=1
         AND Extent1.DEL_FLG = 'N'
         AND Extent1.SUP_REF_ID = #{supRefId}

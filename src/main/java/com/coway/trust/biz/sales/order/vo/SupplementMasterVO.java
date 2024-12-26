@@ -66,6 +66,10 @@ public class SupplementMasterVO implements Serializable{
 
   private Date updDt;
 
+  private int supTyp;
+
+  private int salesOrdId;
+
   public int getSupRefId() {
     return supRefId;
   }
@@ -288,6 +292,22 @@ public class SupplementMasterVO implements Serializable{
 
   public void setUpdDt(Date updDt) {
     this.updDt = updDt;
+  }
+
+  public int getSupTyp() {
+    return supTyp;
+  }
+
+  public void setSupTyp(int supTyp) {
+    this.supTyp = supTyp;
+  }
+
+  public int getSalesOrdId() {
+    return salesOrdId;
+  }
+
+  public void setSalesOrdId(int salesOrdId) {
+    this.salesOrdId = salesOrdId;
   }
 
 

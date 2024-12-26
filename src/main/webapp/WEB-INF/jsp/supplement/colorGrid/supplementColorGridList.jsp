@@ -5,13 +5,20 @@
   var myGridID;
   var excelListGridID;
   var itemDtlListGridID;
+  var supplementType = [ {
+		"codeId" : "0",
+		"codeName" : "Sales"
+	}, {
+		"codeId" : "1",
+		"codeName" : "Free Gift"
+	}];
 
   $(document).ready(
       function() {
         createAUIGrid();
         createExcelAUIGrid();
         createItemDtlAUIGrid();
-
+        doDefCombo(supplementType, '', 'supplementType', 'S', '');
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
           var detailParam = {
             ordId : event.item.ordId
@@ -161,6 +168,20 @@
         {
           dataField : "appType",
           headerText : "<spring:message code='supplement.title.text.appType' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "supTyp",
+          headerText : "<spring:message code='supplement.title.supplementType' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesOrdNo",
+          headerText : "<spring:message code='supplement.title.freeGiftOrdNo' />",
           width : 150,
           editable : false,
           style : 'left_style'
@@ -362,6 +383,20 @@
         {
           dataField : "appType",
           headerText : "<spring:message code='supplement.title.text.appType' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "supTyp",
+          headerText : "<spring:message code='supplement.title.supplementType' />",
+          width : 150,
+          editable : false,
+          style : 'left_style'
+        },
+        {
+          dataField : "salesOrdNo",
+          headerText : "<spring:message code='supplement.title.freeGiftOrdNo' />",
           width : 150,
           editable : false,
           style : 'left_style'
@@ -907,7 +942,24 @@
             </td>
           </tr>
           <tr>
-            <th scope="row" colspan="6"><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /> </span></th>
+          <th scope="row">
+              <spring:message code="supplement.title.supplementType"/>
+            </th>
+            <td>
+              <select class="w100p" id="supplementType" name="supplementType">
+			  <option value=""><spring:message code="sal.combo.text.chooseOne" /></option></select>
+            </td>
+            <th scope="row">
+             <spring:message code="supplement.title.freeGiftOrdNo"/>
+            </th>
+            <td>
+             <input id="salesOrdNo" name="salesOrdNo" type="text" title="" placeholder="Sales Order No" class="w100p" />
+            </td>
+            <th></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row" colspan="6"><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span></th>
           </tr>
         </tbody>
       </table>

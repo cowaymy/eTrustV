@@ -587,4 +587,11 @@ public class SalesConstants {
 
   //public static final String SUPPLEMENT_WH_LOC_ID = "70574"; // HEAD QUATERS WAREHOUSE LOCATION ID
 
+  public static final int SUB_STATE_STATUS_PENDING = 3;
+
+  public static final int SUP_TYPE_FREE_GIFT = 1;
+
+  public static final int SUP_TYPE_SALES = 0;
+
+
 }

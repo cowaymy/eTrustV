@@ -9,6 +9,15 @@
   var MEM_TYPE = '${SESSION_INFO.userTypeId}';
   var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
 
+  var supplementType = [ {
+		"codeId" : "0",
+		"codeName" : "Sales"
+	}, {
+		"codeId" : "1",
+		"codeName" : "Free Gift"
+	}];
+
+
   $(document).ready(
     function() {
       createAUIGrid();
@@ -17,6 +26,7 @@
 
       doGetComboSepa('/common/selectBranchCodeList.do', '10', ' - ', '', 'submissionBrnchId', 'M', 'fn_multiComboBranch'); //Branch Code
       doGetComboDataStatus('/status/selectStatusCategoryCdList.do', { selCategoryId : supplementCategoryId, parmDisab : 0 }, '', 'submissionStatusId', 'M', 'fn_multiCombo'); // Status
+      doDefCombo(supplementType, '', 'cmbSupplementType', 'S', '');
 
       if (MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
         if ("${SESSION_INFO.memberLevel}" == "1") {
@@ -103,6 +113,11 @@
                                                       width : '8%',
                                                       editable : false
                                                     }, {
+                                                      dataField : "supTyp",
+                                                      headerText : '<spring:message code="supplement.title.supplementType" />',
+                                                      width : '8%',
+                                                      editable : false
+                                                    }, {
                                                       dataField : "supSubmDt",
                                                       headerText : '<spring:message code="supplement.text.submissionDate" />',
                                                       width : '8%',
@@ -116,6 +131,11 @@
                                                       dataField : "supSubmBrnch",
                                                       headerText : '<spring:message code="supplement.text.submissionBranch" />',
                                                       width : '15%',
+                                                      editable : false
+                                                    }, {
+                                                      dataField : "salesOrdNo",
+                                                      headerText : '<spring:message code="supplement.title.freeGiftOrdNo" />',
+                                                      width : '8%',
                                                       editable : false
                                                     }, {
                                                       dataField : "memCode",
@@ -155,7 +175,7 @@
     var gridPros = {
       usePaging : true,
       pageRowCount : 10,
-      fixedColumnCount : 4,
+      fixedColumnCount : 5,
       showStateColumn : true,
       displayTreeOpen : false,
       headerHeight : 30,
@@ -263,6 +283,11 @@
                                              width : 200,
                                              editable : false
                                            }, {
+                                             dataField : "supTyp",
+                                             headerText : '<spring:message code="supplement.title.supplementType" />',
+                                             width : 200,
+                                             editable : false
+                                           }, {
                                              dataField : "supSubmBrnch",
                                              headerText : '<spring:message code="supplement.text.submissionBranch" />',
                                              width : 200,
@@ -275,6 +300,11 @@
                                            }, {
                                              dataField : "supRefNo",
                                              headerText : '<spring:message code="supplement.text.supplementReferenceNo" />',
+                                             width : 200,
+                                             editable : false
+                                           }, {
+                                             dataField : "salesOrdNo",
+                                             headerText : '<spring:message code="supplement.title.freeGiftOrdNo" />',
                                              width : 200,
                                              editable : false
                                            }, {
@@ -780,13 +810,18 @@
               <input id="supplementReferenceNo" name="supplementReferenceNo" type="text" title="" placeholder="Supplement Order No" class="w100p" />
             </td>
             <th scope="row">
-              <%-- <spring:message code="sal.text.product"/> --%>
+              <spring:message code="supplement.title.supplementType"/>
             </th>
             <td>
-              <!-- <select id="submissionProductList" name="submissionProductList" class="multy_select w100p" multiple="multiple"></select> -->
+              <select class="w100p" id="cmbSupplementType" name="supplementType">
+			  <option value=""><spring:message code="sal.combo.text.chooseOne" /></option></select>
             </td>
-            <th></th>
-            <td></td>
+            <th scope="row">
+             <spring:message code="supplement.title.freeGiftOrdNo"/>
+            </th>
+            <td>
+             <input id="salesOrdNo" name="salesOrdNo" type="text" title="" placeholder="Sales Order No" class="w100p" />
+            </td>
           </tr>
         </tbody>
       </table>

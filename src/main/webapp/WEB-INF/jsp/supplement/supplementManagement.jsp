@@ -13,6 +13,14 @@
     async : false
   };
 
+  var supplementType = [ {
+		"codeId" : "0",
+		"codeName" : "Sales"
+	}, {
+		"codeId" : "1",
+		"codeName" : "Free Gift"
+	}];
+
   $(document).ready(
      function() {
        createAUIGrid();
@@ -21,6 +29,7 @@
        gridHide();
 
         doGetComboSepa('/common/selectBranchCodeList.do', '10', ' - ', '', '_brnchId', 'M', 'fn_multiComboBranch');
+        doDefCombo(supplementType, '', 'supplementType', 'S', '');
 
         if (MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
           if ("${SESSION_INFO.memberLevel}" == "1") {
@@ -495,6 +504,11 @@
       width : '15%',
       editable : false
     }, {
+      dataField : "supTyp",
+      headerText : '<spring:message code="supplement.title.supplementType" />',
+      width : '15%',
+      editable : false
+    }, {
         dataField : "supRefStgId",
         width : '15%',
         visible : false,
@@ -533,6 +547,11 @@
     }, {
       dataField : "SupConsgNo",
       headerText :  '<spring:message code="supplement.text.supplementConsignmentNo" />',
+      width : '15%',
+      editable : false
+    }, {
+      dataField : "salesOrdNo",
+      headerText :  '<spring:message code="supplement.title.freeGiftOrdNo" />',
       width : '15%',
       editable : false
     }, {
@@ -609,6 +628,11 @@
       width : 100,
       editable : false
     }, {
+      dataField : "supTyp",
+      headerText : '<spring:message code="supplement.title.supplementType" />',
+      width : 100,
+      editable : false
+    }, {
       dataField : "supRefDate",
       headerText : "Reference Date",
       width : 100,
@@ -627,6 +651,11 @@
     {
       dataField : "SupConsgNo",
       headerText : "Consignment No",
+      width : 100,
+      editable : false
+    }, {
+      dataField : "salesOrdNo",
+      headerText : '<spring:message code="supplement.title.freeGiftOrdNo" />',
       width : 100,
       editable : false
     }, {
@@ -903,10 +932,19 @@
             <td>
               <input type="text" title="" placeholder="Customer Email" class="w100p" id="_custEmail" name="custEmail" />
             </td>
-            <th></th>
-            <td></td>
-            <th/></th>
-            <td></td>
+            <th scope="row">
+              <spring:message code="supplement.title.supplementType"/>
+            </th>
+            <td>
+              <select class="w100p" id="supplementType" name="supplementType">
+			  <option value=""><spring:message code="sal.combo.text.chooseOne" /></option></select>
+            </td>
+            <th scope="row">
+             <spring:message code="supplement.title.freeGiftOrdNo"/>
+            </th>
+            <td>
+             <input id="salesOrdNo" name="salesOrdNo" type="text" title="" placeholder="Sales Order No" class="w100p" />
+            </td>
           </tr>
         </tbody>
       </table>
