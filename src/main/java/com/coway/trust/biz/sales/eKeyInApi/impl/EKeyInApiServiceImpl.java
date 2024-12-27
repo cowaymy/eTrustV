@@ -2661,4 +2661,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     rtn.setCodeList(codeList);
     return rtn;
   }
+
+  @Override
+  public List<EgovMap> selectCwStoreIDInfo() throws Exception {
+    return eKeyInApiMapper.selectCwStoreIDInfo();
+  }
+
 }

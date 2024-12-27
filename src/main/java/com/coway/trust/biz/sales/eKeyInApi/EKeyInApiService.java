@@ -102,9 +102,11 @@ public interface EKeyInApiService {
 
   EgovMap checkTNA(String param) throws Exception;
 
-EKeyInApiDto isVoucherValidToApply(EKeyInApiForm param) throws Exception;
+  EKeyInApiDto isVoucherValidToApply(EKeyInApiForm param) throws Exception;
 
-List<EgovMap> selectVoucherPlatformCodeList() throws Exception;
+  List<EgovMap> selectVoucherPlatformCodeList() throws Exception;
 
-EKeyInApiDto getVoucherUsagePromotionId(EKeyInApiForm param) throws Exception;
+   EKeyInApiDto getVoucherUsagePromotionId(EKeyInApiForm param) throws Exception;
+
+   List<EgovMap> selectCwStoreIDInfo() throws Exception;
 }

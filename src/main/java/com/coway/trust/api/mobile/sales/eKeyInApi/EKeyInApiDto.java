@@ -66,6 +66,8 @@ public class EKeyInApiDto {
 
   private EKeyInApiDto selectAnotherAddressMain;
 
+  private List<EKeyInApiDto> cwStoreIDList;
+
   private int custId;
 
   private String custName;
@@ -484,6 +486,10 @@ public class EKeyInApiDto {
 
   private String elecAccNo;
 
+  private int cwStoreId;
+
+  private String cwStoreName;
+
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
   }
@@ -618,6 +624,14 @@ public class EKeyInApiDto {
 
   public void setSelectAnotherAddressMain( EKeyInApiDto selectAnotherAddressMain ) {
     this.selectAnotherAddressMain = selectAnotherAddressMain;
+  }
+
+  public List<EKeyInApiDto> getCwStoreIDList() {
+	    return cwStoreIDList;
+  }
+
+  public void setCwStoreIDList( List<EKeyInApiDto> cwStoreIDList ) {
+    this.cwStoreIDList = cwStoreIDList;
   }
 
   public int getCustId() {
@@ -2290,6 +2304,22 @@ public class EKeyInApiDto {
 
   public void setElecAccNo( String elecAccNo ) {
     this.elecAccNo = elecAccNo;
+  }
+
+  public int getCwStoreId() {
+	return cwStoreId;
+  }
+
+  public void setCwStoreId( int cwStoreId ) {
+    this.cwStoreId = cwStoreId;
+  }
+
+  public String getCwStoreName() {
+    return cwStoreName;
+  }
+
+  public void setCwStoreName( String cwStoreName ) {
+    this.cwStoreName = cwStoreName;
   }
 
 }

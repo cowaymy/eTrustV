@@ -468,4 +468,19 @@ public class EKeyInApiController {
   public ResponseEntity<EKeyInApiDto> getVoucherUsagePromotionId(@ModelAttribute EKeyInApiForm param) throws Exception {
     return ResponseEntity.ok(eKeyInApiService.getVoucherUsagePromotionId(param));
   }
+
+  @ApiOperation(value = "selectCwStoreIDInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectCwStoreIDInfo", method = RequestMethod.GET)
+  public ResponseEntity<List<EKeyInApiDto>> selectCwStoreIDInfo() throws Exception {
+    List<EgovMap> selectCwStoreIDInfo = eKeyInApiService.selectCwStoreIDInfo();
+    LOGGER.debug("[EKeyInApiController] selectCwStoreIDInfo :: {}", selectCwStoreIDInfo);
+
+    if (LOGGER.isDebugEnabled()) {
+      for (int i = 0; i < selectCwStoreIDInfo.size(); i++) {
+        LOGGER.debug("[EKeyInApiController] selectCwStoreIDInfo - i :: {}", selectCwStoreIDInfo.get(i));
+      }
+    }
+
+    return ResponseEntity.ok(selectCwStoreIDInfo.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
+  }
 }

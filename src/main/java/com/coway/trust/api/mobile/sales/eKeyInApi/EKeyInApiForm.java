@@ -64,6 +64,7 @@ public class EKeyInApiForm {
 		params.put("voucherPromotion", vo.getVoucherPromotion());
 		params.put("customerStatusCode", vo.getCustomerStatusCode());
 		params.put("srvType", vo.getSrvType());
+		params.put("cwStoreId", vo.getCwStoreId());
 		return params;
 	}
 
@@ -101,6 +102,7 @@ public class EKeyInApiForm {
 	private int voucherPromotion;
 	private String customerStatusCode;
 	private String srvType;
+	private int cwStoreId;
 
 	public int getStusCodeId() {
 		return stusCodeId;
@@ -372,6 +374,14 @@ public class EKeyInApiForm {
 
   public void setSrvType(String srvType) {
 	this.srvType = srvType;
+  }
+
+  public int getCwStoreId() {
+		return cwStoreId;
+   }
+
+  public void setCwStoreId(int cwStoreId) {
+	this.cwStoreId = cwStoreId;
   }
 
 }

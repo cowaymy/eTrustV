@@ -158,4 +158,6 @@ public interface EKeyInApiMapper {
   int isVoucherValidToApplyIneKeyIn(Map<String, Object> param);
 
   List<EgovMap> getVoucherUsagePromotionId(Map<String, Object> param);
+
+  List<EgovMap> selectCwStoreIDInfo();
 }
