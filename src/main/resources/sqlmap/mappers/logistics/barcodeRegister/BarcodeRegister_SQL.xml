@@ -2,27 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper">
 
-	<select id="selectBarcodeRegisterList" parameterType="Map" resultType="EgovMap">
-		SELECT  /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.selectBarcodeRegisterList] KR_HAN */
-					A.SCAN_NO       SCAN_NO
-					,A.SERIAL_NO    SERIAL_NO
-					, A.ITM_CODE    ITM_CODE
-		FROM    LOG0099D A
-				<where>
-					AND (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
-					<if test="delvryNo !=null and delvryNo !='' ">
-					AND A.DELVRY_NO = #{delvryNo}
-					</if>
-					<if test="reqstNo !=null and reqstNo !='' ">
-					AND A.REQST_NO = #{reqstNo}
-					</if>
-					<if test="itmCode !=null and itmCode !='' ">
-					AND A.ITM_CODE = #{itmCode}
-					</if>
-					<if test="ioType !=null and ioType !='' ">
-					AND A.IO_TYPE = #{ioType}
-					</if>
-				</where>
+  <select id="selectBarcodeRegisterList" parameterType="Map" resultType="EgovMap">
+    SELECT  A.SCAN_NO AS SCAN_NO
+              , A.SERIAL_NO AS SERIAL_NO
+              , A.ITM_CODE AS ITM_CODE
+              , B.STK_DESC AS ITM_DESC
+    FROM LOG0099D A  JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
+
+    <where>
+      AND (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
+      <if test="delvryNo !=null and delvryNo !='' ">
+        AND A.DELVRY_NO = #{delvryNo}
+      </if>
+      <if test="reqstNo !=null and reqstNo !='' ">
+        AND A.REQST_NO = #{reqstNo}
+      </if>
+      <if test="itmCode !=null and itmCode !='' ">
+        AND A.ITM_CODE = #{itmCode}
+      </if>
+      <if test="ioType !=null and ioType !='' ">
+        AND A.IO_TYPE = #{ioType}
+      </if>
+    </where>
 	</select>
 
      <resultMap id="SAVEAPIBARCODESCANDATA" type="egovMap" />
