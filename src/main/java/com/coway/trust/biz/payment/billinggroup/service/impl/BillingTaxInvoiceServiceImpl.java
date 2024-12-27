@@ -28,6 +28,10 @@ public class BillingTaxInvoiceServiceImpl extends EgovAbstractServiceImpl implem
 		return billingTaxInvoiceMapper.selectTaxInvoiceRentalList(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectTaxInvoiceRentalListCody(Map<String, Object> params) {
+		return billingTaxInvoiceMapper.selectTaxInvoiceRentalListCody(params);
+	}
 	/**
 	 * Billing Group - Tax Invoice Outright 그리드 조회
 	 * @param params
@@ -36,6 +40,11 @@ public class BillingTaxInvoiceServiceImpl extends EgovAbstractServiceImpl implem
 	@Override
 	public List<EgovMap> selectTaxInvoiceOutrightList(Map<String, Object> params) {
 		return billingTaxInvoiceMapper.selectTaxInvoiceOutrightList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectTaxInvoiceOutrightListCody(Map<String, Object> params) {
+		return billingTaxInvoiceMapper.selectTaxInvoiceOutrightListCody(params);
 	}
 	
 	/**
@@ -78,7 +87,10 @@ public class BillingTaxInvoiceServiceImpl extends EgovAbstractServiceImpl implem
 		return billingTaxInvoiceMapper.selectStatementCompanyRental(params);
 	}
 	
-	
+	@Override
+	public List<EgovMap> selectStatementCompanyRentalCody(Map<String, Object> params) {
+		return billingTaxInvoiceMapper.selectStatementCompanyRentalCody(params);
+	}
 	
 	
 }

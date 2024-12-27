@@ -14,6 +14,7 @@ var appTypeData = [{"codeId": "67","codeName": "Outright"},{"codeId": "68","code
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
+	$("#table1").hide();
     //메인 페이지
     doDefCombo(appTypeData, '' ,'appType', 'M', 'f_multiCombo');        //Claim Type 생성
 
@@ -49,6 +50,60 @@ $(document).ready(function(){
     	    AUIGrid.bind(myGridID, "cellClick", function( event ){
     	        selectedGridValue = event.rowIndex;
     	    });
+    	    
+    	    var roleId = '${SESSION_INFO.roleId}';
+            var userTypeId = '${SESSION_INFO.userTypeId}';
+            if(roleId == 256){
+                $("#searchForm #userBranchId").val('${SESSION_INFO.userBranchId}');
+            }
+              
+            if(userTypeId == 2){
+                $("#table1").show();
+                $("#searchForm #userTypeId").val(userTypeId);
+                
+                if ("${SESSION_INFO.memberLevel}" =="1") {
+                    $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+                    $("#searchForm #orgCode").attr("class", "w100p readonly");
+                    $("#searchForm #orgCode").attr("readonly", "readonly");
+                  } else if ("${SESSION_INFO.memberLevel}" =="2") {
+                    $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+                    $("#searchForm #orgCode").attr("class", "w100p readonly");
+                    $("#searchForm #orgCode").attr("readonly", "readonly");
+
+                    $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+                    $("#searchForm #grpCode").attr("class", "w100p readonly");
+                    $("#searchForm #grpCode").attr("readonly", "readonly");
+                  } else if ("${SESSION_INFO.memberLevel}" =="3") {
+                    $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+                    $("#searchForm #orgCode").attr("class", "w100p readonly");
+                    $("#searchForm #orgCode").attr("readonly", "readonly");
+
+                    $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+                    $("#searchForm #grpCode").attr("class", "w100p readonly");
+                    $("#searchForm #grpCode").attr("readonly", "readonly");
+
+                    $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
+                    $("#searchForm #deptCode").attr("class", "w100p readonly");
+                    $("#searchForm #deptCode").attr("readonly", "readonly");
+
+                  } else if ("${SESSION_INFO.memberLevel}" =="4") {
+                    $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+                    $("#searchForm #orgCode").attr("class", "w100p readonly");
+                    $("#searchForm #orgCode").attr("readonly", "readonly");
+
+                    $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+                    $("#searchForm #grpCode").attr("class", "w100p readonly");
+                    $("#searchForm #grpCode").attr("readonly", "readonly");
+
+                    $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
+                    $("#searchForm #deptCode").attr("class", "w100p readonly");
+                    $("#searchForm #deptCode").attr("readonly", "readonly");
+
+                    $("#memCode").val('${SESSION_INFO.userMemCode}');
+                    $("#memCode").attr("class", "w100p readonly");
+                    $("#memCode").attr("readonly", "readonly");
+                  }
+              }
 
 });
 
@@ -68,20 +123,6 @@ function f_multiCombo() {
 
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {	
-	var roleId = '${SESSION_INFO.roleId}';
-	var userTypeId = '${SESSION_INFO.userTypeId}';
-    if(roleId == 256){
-        $("#searchForm #userBranchId").val('${SESSION_INFO.userBranchId}');
-    }
-    
-    if(userTypeId == 2){
-        $("#searchForm #userTypeId").val(userTypeId);
-        $("#searchForm #memLevel").val('${SESSION_INFO.memberLevel}');
-        $("#searchForm #memId").val('${SESSION_INFO.memId}');
-        $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
-        $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
-        $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
-    }
 
     if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#invoiceNo")) &&  FormUtil.checkReqValue($("#custID"))){
         //Common.alert("<spring:message code='pay.alert.invoiceNoOROrderNo'/>");
@@ -204,11 +245,6 @@ function fn_clear(){
 			<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 			<input id="userBranchId" name="userBranchId" type="hidden" value="" />
             <input id="userTypeId" name="userTypeId" type="hidden" value="" />
-            <input id="memLevel" name="memLevel" type="hidden" value="" />
-            <input id="memId" name="memId" type="hidden" value="" />
-            <input id="deptCode" name="deptCode" type="hidden" value="" />
-            <input id="grpCode" name="grpCode" type="hidden" value="" />
-            <input id="orgCode" name="orgCode" type="hidden" value="" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -251,6 +287,36 @@ function fn_clear(){
                 </tbody>
             </table>
             <!-- table end -->
+            <table class="type1" id="table1">
+                    <!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><spring:message code="sal.text.orgCode" /></th>
+                            <td><input type="text" title="" id="orgCode" name="orgCode"
+                                class="w100p"/></td>
+                            <th scope="row"><spring:message code="sal.text.grpCode" /></th>
+                            <td><input type="text" title="" id="grpCode" name="grpCode"
+                                class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.detpCode" /></th>
+                            <td><input type="text" title="" id="deptCode"
+                                name="deptCode" class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.memberCode" /></th>
+                            <td><input type="text" title="" id="memCode" name="memCode"
+                                class="w100p" /></td>
+                        </tr>
+                    </tbody>
+                </table>
         </form>
     </section>
     <!-- search_table end -->

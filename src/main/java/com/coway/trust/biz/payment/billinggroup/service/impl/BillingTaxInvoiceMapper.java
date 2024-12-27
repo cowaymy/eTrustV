@@ -17,12 +17,16 @@ public interface BillingTaxInvoiceMapper {
 	 */
 	List<EgovMap> selectTaxInvoiceRentalList(Map<String, Object> params);
 	
+	List<EgovMap> selectTaxInvoiceRentalListCody(Map<String, Object> params);
+	
 	/**
 	 * Billing Group - Tax Invoice Outright 그리드 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectTaxInvoiceOutrightList(Map<String, Object> params);
+	
+	List<EgovMap> selectTaxInvoiceOutrightListCody(Map<String, Object> params);
 	
 	/**
 	 * Billing Group - Tax Invoice Membership 그리드 조회
@@ -52,5 +56,5 @@ public interface BillingTaxInvoiceMapper {
 	 */
 	List<EgovMap> selectStatementCompanyRental(Map<String, Object> params);
 	
-	
+	List<EgovMap> selectStatementCompanyRentalCody(Map<String, Object> params);
 }

@@ -29,7 +29,7 @@ var columnLayout=[
 ];
 
 $(document).ready(function(){
-
+	    $("#table1").hide();
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
 //         doGetCombo('/common/selectCodeList.do', '10' , ''   , 'appType' , 'M', 'f_multiCombo');//Application Type 생성
@@ -60,7 +60,53 @@ $(document).ready(function(){
        $("#orderStatus").multipleSelect("disable");
 
    });//AS-IS에서 1일 때만 체크해서 넘김, -> TO-BE에서 DB조회시 1과 일치하는 것만 검색해오게 함
+   
+   if('${SESSION_INFO.userTypeId}' == 2){
+       $("#table1").show();
+       
+       if ("${SESSION_INFO.memberLevel}" =="1") {
+           $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+           $("#searchForm #orgCode").attr("class", "w100p readonly");
+           $("#searchForm #orgCode").attr("readonly", "readonly");
+         } else if ("${SESSION_INFO.memberLevel}" =="2") {
+           $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+           $("#searchForm #orgCode").attr("class", "w100p readonly");
+           $("#searchForm #orgCode").attr("readonly", "readonly");
 
+           $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+           $("#searchForm #grpCode").attr("class", "w100p readonly");
+           $("#searchForm #grpCode").attr("readonly", "readonly");
+         } else if ("${SESSION_INFO.memberLevel}" =="3") {
+           $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+           $("#searchForm #orgCode").attr("class", "w100p readonly");
+           $("#searchForm #orgCode").attr("readonly", "readonly");
+
+           $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+           $("#searchForm #grpCode").attr("class", "w100p readonly");
+           $("#searchForm #grpCode").attr("readonly", "readonly");
+
+           $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
+           $("#searchForm #deptCode").attr("class", "w100p readonly");
+           $("#searchForm #deptCode").attr("readonly", "readonly");
+
+         } else if ("${SESSION_INFO.memberLevel}" =="4") {
+           $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
+           $("#searchForm #orgCode").attr("class", "w100p readonly");
+           $("#searchForm #orgCode").attr("readonly", "readonly");
+
+           $("#searchForm #grpCode").val('${SESSION_INFO.groupCode}');
+           $("#searchForm #grpCode").attr("class", "w100p readonly");
+           $("#searchForm #grpCode").attr("readonly", "readonly");
+
+           $("#searchForm #deptCode").val('${SESSION_INFO.deptCode}');
+           $("#searchForm #deptCode").attr("class", "w100p readonly");
+           $("#searchForm #deptCode").attr("readonly", "readonly");
+
+           $("#memCode").val('${SESSION_INFO.userMemCode}');
+           $("#memCode").attr("class", "w100p readonly");
+           $("#memCode").attr("readonly", "readonly");
+         }
+     }
 
 });
 
@@ -336,6 +382,36 @@ function fn_generateStatement(){
 
                     </tbody>
               </table>
+              <table class="type1" id="table1">
+                    <!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><spring:message code="sal.text.orgCode" /></th>
+                            <td><input type="text" title="" id="orgCode" name="orgCode"
+                                class="w100p"/></td>
+                            <th scope="row"><spring:message code="sal.text.grpCode" /></th>
+                            <td><input type="text" title="" id="grpCode" name="grpCode"
+                                class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.detpCode" /></th>
+                            <td><input type="text" title="" id="deptCode"
+                                name="deptCode" class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.memberCode" /></th>
+                            <td><input type="text" title="" id="memCode" name="memCode"
+                                class="w100p" /></td>
+                        </tr>
+                    </tbody>
+                </table>
         </form>
         </section>
          <!-- search_result start -->

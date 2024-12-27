@@ -58,16 +58,23 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/selectTaxInvoiceRentalList.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceRentalList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestBody Map<String, Object> params, ModelMap model) {
+				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		LOGGER.debug("params : {} ", params);
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
 		
 		if(params.get("invoicePeriod") != null && !"".equals(String.valueOf(params.get("invoicePeriod")))){
 			params.put("month",Integer.parseInt((String.valueOf(params.get("invoicePeriod"))).substring(0, 2)));
 			params.put("year",Integer.parseInt((String.valueOf(params.get("invoicePeriod"))).substring(3, 7)));
 		}
+		
+		if (sessionVO.getUserTypeId() == 2 || sessionVO.getRoleId() == 256) {
+			resultList = billingTaxInvoiceService.selectTaxInvoiceRentalListCody(params);		
+		}
+		else {
+			resultList = billingTaxInvoiceService.selectTaxInvoiceRentalList(params);		
+		}
         // 조회.
-        List<EgovMap> resultList = billingTaxInvoiceService.selectTaxInvoiceRentalList(params);		
         
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
@@ -98,10 +105,16 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/selectTaxInvoiceOutrightList.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceOutrightList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestBody Map<String, Object> params, ModelMap model) {		
+				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {		
 
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
         // 조회.
-        List<EgovMap> resultList = billingTaxInvoiceService.selectTaxInvoiceOutrightList(params);		
+        if (sessionVO.getUserTypeId() == 2 || sessionVO.getRoleId() == 256) {
+			resultList = billingTaxInvoiceService.selectTaxInvoiceOutrightListCody(params);		
+		}
+		else {
+			resultList = billingTaxInvoiceService.selectTaxInvoiceOutrightList(params);		
+		}
 		//List<EgovMap> resultList = new ArrayList<EgovMap>();
         
         // 조회 결과 리턴.
@@ -134,21 +147,7 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/selectTaxInvoiceMembershipList.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectTaxInvoiceMembershipList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {		
-		
-		if(sessionVO.getUserTypeId() == 2) {
-		    params.put("userTypeId", sessionVO.getUserTypeId());
-		    if (sessionVO.getMemberLevel() == 4)
-		    	params.put("memId", sessionVO.getMemId());
-		    else if (sessionVO.getMemberLevel() == 3)
-		    	params.put("deptCode", sessionVO.getDeptCode());
-		    else if (sessionVO.getMemberLevel() == 2)
-		    	params.put("grpCode", sessionVO.getGroupCode());
-		}
-		
-		if(sessionVO.getRoleId() == 256) {
-		    params.put("userBranchId", sessionVO.getUserBranchId());
-		}
+				, @RequestBody Map<String, Object> params, ModelMap model) {		
         // 조회.
         List<EgovMap> resultList = billingTaxInvoiceService.selectTaxInvoiceMembershipList(params);		
 		//List<EgovMap> resultList = new ArrayList<EgovMap>();
@@ -256,14 +255,21 @@ public class BillingTaxInvoiceController {
 	 */
 	@RequestMapping(value = "/selectStatementCompanyRental.do", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectStatementCompanyRental(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestBody Map<String, Object> params, ModelMap model) {	
+				, @RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
 		
 		if(params.get("statementPeriod") != null && !"".equals(String.valueOf(params.get("statementPeriod")))){
 			params.put("month",Integer.parseInt((String.valueOf(params.get("statementPeriod"))).substring(0, 2)));
 			params.put("year",Integer.parseInt((String.valueOf(params.get("statementPeriod"))).substring(3, 7)));
 		}
+		
+		if (sessionVO.getUserTypeId() == 2 || sessionVO.getRoleId() == 256) {
+			resultList = billingTaxInvoiceService.selectStatementCompanyRentalCody(params);		
+		}
+		else {
+			resultList = billingTaxInvoiceService.selectStatementCompanyRental(params);				
+		}
         // 조회.
-        List<EgovMap> resultList = billingTaxInvoiceService.selectStatementCompanyRental(params);		
 		//List<EgovMap> resultList = new ArrayList<EgovMap>();
         
         // 조회 결과 리턴.

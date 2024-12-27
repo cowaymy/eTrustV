@@ -369,183 +369,183 @@
 	<select id="selectProformaInvoiceList" parameterType="Map"
 		resultType="egovMap">
 		SELECT DISTINCT Filter1.AppTypeCode AppTypeCode ,
-		Filter1.AppTypeName AppTypeName ,
-		Filter1.Creator Creator ,
-		Filter1.CustomerIC CustomerIC ,
-		Filter1.VANo VANo ,
-		Filter1.CustomerName CustomerName ,
-		Filter1.OrderID1 OrderID ,
-		Filter1.OrderNo OrderNo ,
-		Filter1.OrderStatusCode OrderStatusCode ,
-		Filter1.OrderStatusID OrderStatusID ,
-		Filter1.OrderPONo OrderPONo ,
-		Filter1.StockCode StockCode ,
-		Filter1.StockDesc StockDesc ,
-		Filter1.StockID StockID ,
-		Filter1.OrderRefNo OrderRefNo ,
-		Filter1.RentalStatus RentalStatus ,
-		Filter1.OrderMemID OrderMemID ,
-		Filter1.OrderMemCode OrderMemCode ,
-		Filter1.OrderMemTypeID OrderMemTypeID ,
-		Filter1.OrderCustBillID OrderCustBillID ,
-		Filter1.OrderMailTelM OrderMailTelM ,
-		Filter1.OrderMailTelO OrderMailTelO ,
-		Filter1.OrderMailTelR OrderMailTelR ,
-		Filter1.OrderMailTelF OrderMailTelF ,
-		Filter1.OrderInstTelM OrderInstTelM ,
-		Filter1.OrderInstTelO OrderInstTelO ,
-		Filter1.OrderInstTelR OrderInstTelR ,
-		Filter1.OrderInstTelF OrderInstTelF ,
-		Filter1.LastInstallSirimNo LastInstallSirimNo ,
-		Filter1.LastInstallSerialNo LastInstallSerialNo ,
-		1 C1 ,
-		CASE WHEN ( Filter1.AppTypeID IS NOT NULL ) THEN Filter1.AppTypeID ELSE 0
-		END AppTypeId ,
-		CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN Filter1.CustomerID ELSE
-		0 END CustomerId ,
-		CASE WHEN ( Filter1.DSCBranchID IS NOT NULL ) THEN Filter1.DSCBranchID
-		ELSE 0 END DSCBranchId ,
-		CASE WHEN ( Filter1.KeyInBranchID IS NOT NULL ) THEN Filter1.KeyInBranchID
-		ELSE 0 END KeyInBranchID ,
-		CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
-		TO_CHAR(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01
-		00:00:00' END OrderDate ,
-		CASE WHEN ( Extent3.ORG_CODE IS NOT NULL ) THEN Extent3.ORG_CODE ELSE ' '
-		END OrgCode ,
-		CASE WHEN ( Extent3.GRP_CODE IS NOT NULL ) THEN Extent3.GRP_CODE ELSE ' '
-		END GrpCode ,
-		CASE WHEN ( Extent3.DEPT_CODE IS NOT NULL ) THEN Extent3.DEPT_CODE ELSE '
-		' END DeptCode ,
-		Extent6.EMAIL EMAIL,
-		TO_NUMBER(TO_CHAR(Filter1.OrderDate,'MM')) AS month,
-		TO_NUMBER(TO_CHAR(Filter1.OrderDate,'YYYY')) AS year
-		FROM ( SELECT Extent1.APP_TYPE_CODE AppTypeCode ,
-		Extent1.APP_TYPE_ID AppTypeID ,
-		Extent1.APP_TYPE_NAME AppTypeName ,
-		Extent1.CRT_USER_ID Creator ,
-		Extent1.CUST_IC CustomerIC ,
-		Extent1.VA_NO VANo ,
-		Extent1.CUST_ID CustomerID ,
-		Extent1.CUST_NAME CustomerName ,
-		Extent1.DSC_BRNCH_ID DSCBranchID ,
-		Extent1.KEYIN_BRNCH_ID KeyInBranchID ,
-		Extent1.ORD_DT OrderDate ,
-		Extent1.ORD_ID OrderID1 ,
-		Extent1.ORD_NO OrderNo ,
-		Extent1.ORD_STUS_CODE OrderStatusCode ,
-		Extent1.ORD_STUS_ID OrderStatusID ,
-		Extent1.ORD_PO_NO OrderPONo ,
-		Extent1.STOCK_CODE StockCode ,
-		Extent1.STOCK_DESC StockDesc ,
-		Extent1.STOCK_ID StockID ,
-		Extent1.ORD_REF_NO OrderRefNo ,
-		Extent1.RENTAL_STUS RentalStatus ,
-		Extent1.ORD_MEM_ID OrderMemID ,
-		Extent1.ORD_MEM_CODE OrderMemCode ,
-		Extent1.ORD_MEM_TYPE_ID OrderMemTypeID ,
-		Extent1.ORD_CUST_BILL_ID OrderCustBillID ,
-		Extent1.ORD_MAIL_TEL_M OrderMailTelM ,
-		Extent1.ORD_MAIL_TEL_O OrderMailTelO ,
-		Extent1.ORD_MAIL_TEL_R OrderMailTelR ,
-		Extent1.ORD_MAIL_TEL_F OrderMailTelF ,
-		Extent1.ORD_INST_TEL_M OrderInstTelM ,
-		Extent1.ORD_INST_TEL_O OrderInstTelO ,
-		Extent1.ORD_INST_TEL_R OrderInstTelR ,
-		Extent1.ORD_INST_TEL_F OrderInstTelF ,
-		Extent2.LAST_INSTALL_SIRIM_NO LastInstallSirimNo ,
-		Extent2.LAST_INSTALL_SERIAL_NO LastInstallSerialNo
-		FROM (SELECT vOrderView.APP_TYPE_CODE APP_TYPE_CODE ,
-		vOrderView.APP_TYPE_ID APP_TYPE_ID ,
-		vOrderView.APP_TYPE_NAME APP_TYPE_NAME ,
-		vOrderView.CRT_USER_ID CRT_USER_ID ,
-		vOrderView.CUST_IC CUST_IC ,
-		vOrderView.VA_NO VA_NO ,
-		vOrderView.CUST_ID CUST_ID ,
-		vOrderView.CUST_NAME CUST_NAME ,
-		vOrderView.DSC_BRNCH_ID DSC_BRNCH_ID ,
-		vOrderView.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
-		vOrderView.ORD_DT ORD_DT ,
-		vOrderView.ORD_ID ORD_ID ,
-		vOrderView.ORD_NO ORD_NO ,
-		vOrderView.ORD_STUS_CODE ORD_STUS_CODE ,
-		vOrderView.ORD_STUS_ID ORD_STUS_ID ,
-		vOrderView.ORD_PO_NO ORD_PO_NO ,
-		vOrderView.STOCK_CODE STOCK_CODE ,
-		vOrderView.STOCK_DESC STOCK_DESC ,
-		vOrderView.STOCK_ID STOCK_ID ,
-		vOrderView.ORD_REF_NO ORD_REF_NO ,
-		vOrderView.RENTAL_STUS RENTAL_STUS ,
-		vOrderView.ORD_MEM_ID ORD_MEM_ID ,
-		vOrderView.ORD_MEM_CODE ORD_MEM_CODE ,
-		vOrderView.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
-		vOrderView.ORD_CUST_BILL_ID ORD_CUST_BILL_ID ,
-		vOrderView.ORD_MAIL_TEL_M ORD_MAIL_TEL_M ,
-		vOrderView.ORD_MAIL_TEL_O ORD_MAIL_TEL_O ,
-		vOrderView.ORD_MAIL_TEL_R ORD_MAIL_TEL_R ,
-		vOrderView.ORD_MAIL_TEL_F ORD_MAIL_TEL_F ,
-		vOrderView.ORD_INST_TEL_M ORD_INST_TEL_M ,
-		vOrderView.ORD_INST_TEL_O ORD_INST_TEL_O ,
-		vOrderView.ORD_INST_TEL_R ORD_INST_TEL_R ,
-		vOrderView.ORD_INST_TEL_F ORD_INST_TEL_F
-		FROM SAL1015V vOrderView ) Extent1
-		JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID ,
-		/*
-		vOrderInstallationInfo.INST_ADDR1 INST_ADDR1 ,
-		vOrderInstallationInfo.INST_ADDR2 INST_ADDR2 ,
-		vOrderInstallationInfo.INST_ADDR3 INST_ADDR3 ,
-		vOrderInstallationInfo.INST_CNTY INST_CNTY ,
-		*/
-		vOrderInstallationInfo.INST_STATE INST_STATE ,
-		vOrderInstallationInfo.INST_AREA INST_AREA ,
-		/*
-		vOrderInstallationInfo.INST_POST_CODE INST_POST_CODE ,
-		*/
-		vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME ,
-		vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC ,
-		vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL ,
-		vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M ,
-		vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O ,
-		vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R ,
-		vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F ,
-		vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER ,
-		vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO ,
-		vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE ,
-		vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME ,
-		vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT ,
-		vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM ,
-		vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO ,
-		vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO
-		,
-		vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO ,
-		vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
-		vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
-		vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT ,
-		vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM ,
-		vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
-		vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
-		vOrderInstallationInfo.DSC_ID DSC_ID ,
-		vOrderInstallationInfo.DSC_CODE DSC_CODE ,
-		vOrderInstallationInfo.DSC_NAME DSC_NAME ,
-		vOrderInstallationInfo.INSTCT INSTCT ,
-		vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT ,
-		vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM ,
-		vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID ,
-		vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID ,
-		vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT ,
-		vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST ,
-		vOrderInstallationInfo.VRIFY_REM VRIFY_REM
-		FROM SAL1010V vOrderInstallationInfo ) Extent2 ON Extent2.ORD_ID =
-		Extent1.ORD_ID
-		WHERE 1=1
-		<if test="appTypeList != '' and appTypeList != null">
-			AND ( (CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN
-			Extent1.APP_TYPE_ID ELSE 0 END) IN (
-			<foreach collection="appTypeList" index="index" separator=",">
-				'${appTypeList[index]}'
-			</foreach>
-			))
-		</if>
-		AND ( 1 = Extent1.ORD_STUS_ID )
+        Filter1.AppTypeName AppTypeName ,
+        Filter1.Creator Creator ,
+        Filter1.CustomerIC CustomerIC ,
+        Filter1.VANo VANo ,
+        Filter1.CustomerName CustomerName ,
+        Filter1.OrderID1 OrderID ,
+        Filter1.OrderNo OrderNo ,
+        Filter1.OrderStatusCode OrderStatusCode ,
+        Filter1.OrderStatusID OrderStatusID ,
+        Filter1.OrderPONo OrderPONo ,
+        Filter1.StockCode StockCode ,
+        Filter1.StockDesc StockDesc ,
+        Filter1.StockID StockID ,
+        Filter1.OrderRefNo OrderRefNo ,
+        Filter1.RentalStatus RentalStatus ,
+        Filter1.OrderMemID OrderMemID ,
+        Filter1.OrderMemCode OrderMemCode ,
+        Filter1.OrderMemTypeID OrderMemTypeID ,
+        Filter1.OrderCustBillID OrderCustBillID ,
+        Filter1.OrderMailTelM OrderMailTelM ,
+        Filter1.OrderMailTelO OrderMailTelO ,
+        Filter1.OrderMailTelR OrderMailTelR ,
+        Filter1.OrderMailTelF OrderMailTelF ,
+        Filter1.OrderInstTelM OrderInstTelM ,
+        Filter1.OrderInstTelO OrderInstTelO ,
+        Filter1.OrderInstTelR OrderInstTelR ,
+        Filter1.OrderInstTelF OrderInstTelF ,
+        Filter1.LastInstallSirimNo LastInstallSirimNo ,
+        Filter1.LastInstallSerialNo LastInstallSerialNo ,
+        1 C1 ,
+        CASE WHEN ( Filter1.AppTypeID IS NOT NULL ) THEN Filter1.AppTypeID ELSE 0
+        END AppTypeId ,
+        CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN Filter1.CustomerID ELSE
+        0 END CustomerId ,
+        CASE WHEN ( Filter1.DSCBranchID IS NOT NULL ) THEN Filter1.DSCBranchID
+        ELSE 0 END DSCBranchId ,
+        CASE WHEN ( Filter1.KeyInBranchID IS NOT NULL ) THEN Filter1.KeyInBranchID
+        ELSE 0 END KeyInBranchID ,
+        CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+        TO_CHAR(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01
+        00:00:00' END OrderDate ,
+        CASE WHEN ( Extent3.ORG_CODE IS NOT NULL ) THEN Extent3.ORG_CODE ELSE ' '
+        END OrgCode ,
+        CASE WHEN ( Extent3.GRP_CODE IS NOT NULL ) THEN Extent3.GRP_CODE ELSE ' '
+        END GrpCode ,
+        CASE WHEN ( Extent3.DEPT_CODE IS NOT NULL ) THEN Extent3.DEPT_CODE ELSE '
+        ' END DeptCode ,
+        Extent6.EMAIL EMAIL,
+        TO_NUMBER(TO_CHAR(Filter1.OrderDate,'MM')) AS month,
+        TO_NUMBER(TO_CHAR(Filter1.OrderDate,'YYYY')) AS year
+        FROM ( SELECT Extent1.APP_TYPE_CODE AppTypeCode ,
+        Extent1.APP_TYPE_ID AppTypeID ,
+        Extent1.APP_TYPE_NAME AppTypeName ,
+        Extent1.CRT_USER_ID Creator ,
+        Extent1.CUST_IC CustomerIC ,
+        Extent1.VA_NO VANo ,
+        Extent1.CUST_ID CustomerID ,
+        Extent1.CUST_NAME CustomerName ,
+        Extent1.DSC_BRNCH_ID DSCBranchID ,
+        Extent1.KEYIN_BRNCH_ID KeyInBranchID ,
+        Extent1.ORD_DT OrderDate ,
+        Extent1.ORD_ID OrderID1 ,
+        Extent1.ORD_NO OrderNo ,
+        Extent1.ORD_STUS_CODE OrderStatusCode ,
+        Extent1.ORD_STUS_ID OrderStatusID ,
+        Extent1.ORD_PO_NO OrderPONo ,
+        Extent1.STOCK_CODE StockCode ,
+        Extent1.STOCK_DESC StockDesc ,
+        Extent1.STOCK_ID StockID ,
+        Extent1.ORD_REF_NO OrderRefNo ,
+        Extent1.RENTAL_STUS RentalStatus ,
+        Extent1.ORD_MEM_ID OrderMemID ,
+        Extent1.ORD_MEM_CODE OrderMemCode ,
+        Extent1.ORD_MEM_TYPE_ID OrderMemTypeID ,
+        Extent1.ORD_CUST_BILL_ID OrderCustBillID ,
+        Extent1.ORD_MAIL_TEL_M OrderMailTelM ,
+        Extent1.ORD_MAIL_TEL_O OrderMailTelO ,
+        Extent1.ORD_MAIL_TEL_R OrderMailTelR ,
+        Extent1.ORD_MAIL_TEL_F OrderMailTelF ,
+        Extent1.ORD_INST_TEL_M OrderInstTelM ,
+        Extent1.ORD_INST_TEL_O OrderInstTelO ,
+        Extent1.ORD_INST_TEL_R OrderInstTelR ,
+        Extent1.ORD_INST_TEL_F OrderInstTelF ,
+        Extent2.LAST_INSTALL_SIRIM_NO LastInstallSirimNo ,
+        Extent2.LAST_INSTALL_SERIAL_NO LastInstallSerialNo
+        FROM (SELECT vOrderView.APP_TYPE_CODE APP_TYPE_CODE ,
+        vOrderView.APP_TYPE_ID APP_TYPE_ID ,
+        vOrderView.APP_TYPE_NAME APP_TYPE_NAME ,
+        vOrderView.CRT_USER_ID CRT_USER_ID ,
+        vOrderView.CUST_IC CUST_IC ,
+        vOrderView.VA_NO VA_NO ,
+        vOrderView.CUST_ID CUST_ID ,
+        vOrderView.CUST_NAME CUST_NAME ,
+        vOrderView.DSC_BRNCH_ID DSC_BRNCH_ID ,
+        vOrderView.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+        vOrderView.ORD_DT ORD_DT ,
+        vOrderView.ORD_ID ORD_ID ,
+        vOrderView.ORD_NO ORD_NO ,
+        vOrderView.ORD_STUS_CODE ORD_STUS_CODE ,
+        vOrderView.ORD_STUS_ID ORD_STUS_ID ,
+        vOrderView.ORD_PO_NO ORD_PO_NO ,
+        vOrderView.STOCK_CODE STOCK_CODE ,
+        vOrderView.STOCK_DESC STOCK_DESC ,
+        vOrderView.STOCK_ID STOCK_ID ,
+        vOrderView.ORD_REF_NO ORD_REF_NO ,
+        vOrderView.RENTAL_STUS RENTAL_STUS ,
+        vOrderView.ORD_MEM_ID ORD_MEM_ID ,
+        vOrderView.ORD_MEM_CODE ORD_MEM_CODE ,
+        vOrderView.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+        vOrderView.ORD_CUST_BILL_ID ORD_CUST_BILL_ID ,
+        vOrderView.ORD_MAIL_TEL_M ORD_MAIL_TEL_M ,
+        vOrderView.ORD_MAIL_TEL_O ORD_MAIL_TEL_O ,
+        vOrderView.ORD_MAIL_TEL_R ORD_MAIL_TEL_R ,
+        vOrderView.ORD_MAIL_TEL_F ORD_MAIL_TEL_F ,
+        vOrderView.ORD_INST_TEL_M ORD_INST_TEL_M ,
+        vOrderView.ORD_INST_TEL_O ORD_INST_TEL_O ,
+        vOrderView.ORD_INST_TEL_R ORD_INST_TEL_R ,
+        vOrderView.ORD_INST_TEL_F ORD_INST_TEL_F
+        FROM SAL1015V vOrderView ) Extent1
+        JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID ,
+        /*
+        vOrderInstallationInfo.INST_ADDR1 INST_ADDR1 ,
+        vOrderInstallationInfo.INST_ADDR2 INST_ADDR2 ,
+        vOrderInstallationInfo.INST_ADDR3 INST_ADDR3 ,
+        vOrderInstallationInfo.INST_CNTY INST_CNTY ,
+        */
+        vOrderInstallationInfo.INST_STATE INST_STATE ,
+        vOrderInstallationInfo.INST_AREA INST_AREA ,
+        /*
+        vOrderInstallationInfo.INST_POST_CODE INST_POST_CODE ,
+        */
+        vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME ,
+        vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC ,
+        vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL ,
+        vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M ,
+        vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O ,
+        vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R ,
+        vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F ,
+        vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER ,
+        vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO ,
+        vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE ,
+        vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME ,
+        vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT ,
+        vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM ,
+        vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO ,
+        vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO
+        ,
+        vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO ,
+        vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
+        vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
+        vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT ,
+        vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM ,
+        vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
+        vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
+        vOrderInstallationInfo.DSC_ID DSC_ID ,
+        vOrderInstallationInfo.DSC_CODE DSC_CODE ,
+        vOrderInstallationInfo.DSC_NAME DSC_NAME ,
+        vOrderInstallationInfo.INSTCT INSTCT ,
+        vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT ,
+        vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM ,
+        vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID ,
+        vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID ,
+        vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT ,
+        vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST ,
+        vOrderInstallationInfo.VRIFY_REM VRIFY_REM
+        FROM SAL1010V vOrderInstallationInfo ) Extent2 ON Extent2.ORD_ID =
+        Extent1.ORD_ID
+        WHERE 1=1
+        <if test="appTypeList != '' and appTypeList != null">
+            AND ( (CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN
+            Extent1.APP_TYPE_ID ELSE 0 END) IN (
+            <foreach collection="appTypeList" index="index" separator=",">
+                '${appTypeList[index]}'
+            </foreach>
+            ))
+        </if>
+        AND ( 1 = Extent1.ORD_STUS_ID )
         <if test="keyInBranchList != '' and keyInBranchList != null">
          AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
          Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
@@ -555,361 +555,101 @@
           ))
         </if>
 
-		<if test="dscBranchList != '' and dscBranchList != null">
-			AND ( (CASE WHEN ( Extent1.DSC_BRNCH_ID IS NOT NULL ) THEN
-			Extent1.DSC_BRNCH_ID ELSE 0 END) IN (
-			<foreach collection="dscBranchList" index="index" separator=",">
-				'${dscBranchList[index]}'
-			</foreach>
-			) )
-		</if>
-		) Filter1
-		LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID ,
-		vMemberOrg.MEM_CODE MEM_CODE ,
-		vMemberOrg.MEM_LVL MEM_LVL ,
-		vMemberOrg.DEPT_CODE DEPT_CODE ,
-		vMemberOrg.GRP_CODE GRP_CODE ,
-		vMemberOrg.ORG_CODE ORG_CODE ,
-		vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
-		vMemberOrg.MEM_UP_ID MEM_UP_ID ,
-		vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
-		vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
-		vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
-		vMemberOrg.LVL0_UP_ID LVL0_UP_ID
-		FROM ORG1001V vMemberOrg ) Extent3 ON Extent3.MEM_ID = Filter1.OrderMemID
-		LEFT JOIN ( SELECT Extent4.NAME NAME1 ,
-		Extent4.NRIC NRIC1 ,
-		Extent4.EMAIL EMAIL ,
-		Extent5.SALES_ORD_ID SALES_ORD_ID ,
-		Extent5.SALES_ORD_NO SALES_ORD_NO ,
-		Extent5.SALES_DT SALES_DT ,
-		Extent5.APP_TYPE_ID APP_TYPE_ID
-		FROM SAL0029D Extent4
-		JOIN SAL0001D Extent5 ON ( Extent5.CUST_ID = Extent4.CUST_ID )) Extent6 ON
-		Extent6.SALES_ORD_ID = Filter1.OrderID1
-		WHERE 1=1
-		<if test="orderNo != '' ">
-			AND ( Filter1.OrderNo = #{orderNo} )
-		</if>
-		<if test="orderDateFrom != '' ">
-			AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
-			TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
-			TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[>=]]>
-			TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS') )
-		</if>
-		<if test="orderDateTo != '' ">
-			AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
-			TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
-			TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[<=]]>
-			TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS') )
-		</if>
-		<if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
-			TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
-			TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END) >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
-		</if>
-		<if test="custId != '' ">
-			AND ( (CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN
-			Filter1.CustomerID ELSE 0 END) = #{custId} )
-		</if>
-		<if test="custName != '' ">
-			AND ( Filter1.CustomerName LIKE '%' || #{custName} ||' %' ESCAPE '~' )
-		</if>
-		<if test="custIC != '' ">
-			AND ( Filter1.CustomerIC LIKE '%' || #{custIC} || '%' ESCAPE '~' )
-		</if>
-		<if test="productId != '' ">
-			AND ( Filter1.StockID = #{productId} )
-		</if>
-		<if test="memberCode != '' ">
-			AND ( Filter1.OrderMemCode = #{memberCode} )
-		</if>
-		<if test="refNo != '' ">
-			AND ( Filter1.OrderRefNo = #{refNo} )
-		</if>
-		<if test="poNo != '' ">
-			AND ( Filter1.OrderPONo = #{poNo} )
-		</if>
-		<if test="contactNo != '' ">
-			AND ( ( Filter1.OrderMailTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
-			)
-			OR ( Filter1.OrderMailTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
-			OR ( Filter1.OrderMailTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
-			)
-			OR ( Filter1.OrderMailTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
-			OR ( Filter1.OrderInstTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
-			)
-			OR ( Filter1.OrderInstTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
-			OR ( Filter1.OrderInstTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
-			)
-			OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
-			)
-		</if>
-		<if test="userTypeId != null and userTypeId != '' ">
-             <if test="memLevel == 4">
-              AND Filter1.OrderMemID = #{memId}
-              </if>
-              <if test="memLevel == 3">
-               AND Extent3.DEPT_CODE = #{deptCode}
-              </if>
-              <if test="memLevel == 2">
-               AND Extent3.GRP_CODE = #{grpCode}
-              </if>
-              <if test="memLevel == 1">
-              AND Extent3.ORG_CODE = #{orgCode}
-              </if>
+        <if test="dscBranchList != '' and dscBranchList != null">
+            AND ( (CASE WHEN ( Extent1.DSC_BRNCH_ID IS NOT NULL ) THEN
+            Extent1.DSC_BRNCH_ID ELSE 0 END) IN (
+            <foreach collection="dscBranchList" index="index" separator=",">
+                '${dscBranchList[index]}'
+            </foreach>
+            ) )
         </if>
-		ORDER BY Filter1.OrderNo ASC
+        ) Filter1
+        LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID ,
+        vMemberOrg.MEM_CODE MEM_CODE ,
+        vMemberOrg.MEM_LVL MEM_LVL ,
+        vMemberOrg.DEPT_CODE DEPT_CODE ,
+        vMemberOrg.GRP_CODE GRP_CODE ,
+        vMemberOrg.ORG_CODE ORG_CODE ,
+        vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+        vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+        vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+        vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+        vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+        vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+        FROM ORG1001V vMemberOrg ) Extent3 ON Extent3.MEM_ID = Filter1.OrderMemID
+        LEFT JOIN ( SELECT Extent4.NAME NAME1 ,
+        Extent4.NRIC NRIC1 ,
+        Extent4.EMAIL EMAIL ,
+        Extent5.SALES_ORD_ID SALES_ORD_ID ,
+        Extent5.SALES_ORD_NO SALES_ORD_NO ,
+        Extent5.SALES_DT SALES_DT ,
+        Extent5.APP_TYPE_ID APP_TYPE_ID
+        FROM SAL0029D Extent4
+        JOIN SAL0001D Extent5 ON ( Extent5.CUST_ID = Extent4.CUST_ID )) Extent6 ON
+        Extent6.SALES_ORD_ID = Filter1.OrderID1
+        WHERE 1=1
+        <if test="orderNo != '' ">
+            AND ( Filter1.OrderNo = #{orderNo} )
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[>=]]>
+            TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS') )
+        </if>
+        <if test="orderDateTo != '' ">
+            AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[<=]]>
+            TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS') )
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END) >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="custId != '' ">
+            AND ( (CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN
+            Filter1.CustomerID ELSE 0 END) = #{custId} )
+        </if>
+        <if test="custName != '' ">
+            AND ( Filter1.CustomerName LIKE '%' || #{custName} ||' %' ESCAPE '~' )
+        </if>
+        <if test="custIC != '' ">
+            AND ( Filter1.CustomerIC LIKE '%' || #{custIC} || '%' ESCAPE '~' )
+        </if>
+        <if test="productId != '' ">
+            AND ( Filter1.StockID = #{productId} )
+        </if>
+        <if test="memberCode != '' ">
+            AND ( Filter1.OrderMemCode = #{memberCode} )
+        </if>
+        <if test="refNo != '' ">
+            AND ( Filter1.OrderRefNo = #{refNo} )
+        </if>
+        <if test="poNo != '' ">
+            AND ( Filter1.OrderPONo = #{poNo} )
+        </if>
+        <if test="contactNo != '' ">
+            AND ( ( Filter1.OrderMailTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderMailTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderMailTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderMailTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderInstTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderInstTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderInstTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            )
+        </if>
+        ORDER BY Filter1.OrderNo ASC
 	</select>
 
 	<select id="selectAdvancedRentalInvoiceList" parameterType="Map" resultType="egovMap">
-	<choose>
-            <when test='userTypeId != null and userTypeId != "" '>
-                SELECT
-            Extent1.SALES_ORD_ID,
-            Extent1.CUST_BILL_ID,
-            Extent1.SALES_ORD_NO,
-             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
-            Extent8.STK_DESC,
-            Extent1.CUST_ID,
-            Extent4.NAME CUST_NM,
-    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
-            ELSE Extent4.NRIC
-            END NRIC,  -->
-            Extent4.NRIC NRIC,
-            Extent1.APP_TYPE_ID,
-            Extent2.CODE_NAME APP_TYPE_NM,
-            Extent1.PV_YEAR,
-            Extent1.PV_MONTH,
-            Extent1.STUS_CODE_ID STUS_CODE_ID,
-            Extent3.STUS_CODE_ID STUS_CODE_NM,
-            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
-                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
-                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
-            Extent1.TOT_AMT,
-            0 AS BALANCE,
-            '' AS LAST_PAYMENT,
-            Extent1.MEM_ID MEM_ID,
-            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
-            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
-            0 AS BTN_CHECK
-        FROM
-            SAL0001D Extent1
-            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
-            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
-            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
-       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
-            JOIN (
-                        SELECT CODE_NAME,
-                                   CODE_ID
-                         FROM SYS0013M
-                         WHERE CODE_ID = 66
-                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
-            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
-            JOIN (SELECT NAME,
-                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
-                                      ELSE NRIC
-                                      END NRIC,
-                                      CUST_ID
-                        FROM SAL0029D
-                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
-            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
-            LEFT JOIN (
-                            SELECT
-                                RENT_SO_ID,
-                                COUNT(1) AS RPF_CNT,
-                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
-                            FROM
-                                PAY0022D
-                            WHERE
-                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
-                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
-            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
-            JOIN SAL0090D sal90 ON Extent1.SALES_ORD_ID = sal90.SRV_SO_ID
-            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
-        WHERE 1=1
-           AND Extent1.APP_TYPE_ID = 66
-        <if test="orderNo != '' ">
-            AND Extent1.SALES_ORD_NO = #{orderNo}
-        </if>
-        <if test="orderDateFrom != '' ">
-            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        <if test="orderDateTo != '' ">
-            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
-        </if>
-        <if test="keyInBranchList != '' and keyInBranchList != null">
-          AND Extent1.BRNCH_ID IN (
-          <foreach collection="keyInBranchList" index="index" separator=",">
-            '${keyInBranchList[index]}'
-          </foreach>
-            )
-        </if>
-        <if test="custId != '' ">
-            AND Extent1.CUST_ID = #{custId}
-        </if>
-        <if test="custName != '' ">
-            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
-        </if>
-        <if test="custIC != '' ">
-            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
-        </if>
-        <if test="productId != '' ">
-            AND Extent6.ITM_STK_ID = #{productId}
-             </if>
-        <if test="memberCode != '' ">
-            AND Extent7.MEM_CODE = #{memberCode}
-        </if>
-         <if test="rentStatus != '' and rentStatus != null">
-            AND Extent3.STUS_CODE_ID  IN (
-            <foreach collection="rentStatus" index="index"
-                separator=",">
-                '${rentStatus[index]}'
-            </foreach>
-            )
-        </if>
-        <if test="memLevel == 4">
-         AND org1001.MEM_ID = #{memId}
-         </if>
-         <if test="memLevel == 3">
-          AND org1001.DEPT_CODE = #{deptCode}
-         </if>
-         <if test="memLevel == 2">
-          AND org1001.GRP_CODE = #{grpCode}
-         </if>
-         <if test="memLevel == 1">
-          AND org1001.ORG_CODE = #{orgCode}
-          </if>
-          
-          UNION
-          
-             SELECT
-            Extent1.SALES_ORD_ID,
-            Extent1.CUST_BILL_ID,
-            Extent1.SALES_ORD_NO,
-             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
-            Extent8.STK_DESC,
-            Extent1.CUST_ID,
-            Extent4.NAME CUST_NM,
-    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
-            ELSE Extent4.NRIC
-            END NRIC,  -->
-            Extent4.NRIC NRIC,
-            Extent1.APP_TYPE_ID,
-            Extent2.CODE_NAME APP_TYPE_NM,
-            Extent1.PV_YEAR,
-            Extent1.PV_MONTH,
-            Extent1.STUS_CODE_ID STUS_CODE_ID,
-            Extent3.STUS_CODE_ID STUS_CODE_NM,
-            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
-                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
-                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
-            Extent1.TOT_AMT,
-            0 AS BALANCE,
-            '' AS LAST_PAYMENT,
-            Extent1.MEM_ID MEM_ID,
-            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
-            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
-            0 AS BTN_CHECK
-        FROM
-            SAL0001D Extent1
-            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
-            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
-            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
-       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
-            JOIN (
-                        SELECT CODE_NAME,
-                                   CODE_ID
-                         FROM SYS0013M
-                         WHERE CODE_ID = 66
-                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
-            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
-            JOIN (SELECT NAME,
-                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
-                                      ELSE NRIC
-                                      END NRIC,
-                                      CUST_ID
-                        FROM SAL0029D
-                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
-            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
-            LEFT JOIN (
-                            SELECT
-                                RENT_SO_ID,
-                                COUNT(1) AS RPF_CNT,
-                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
-                            FROM
-                                PAY0022D
-                            WHERE
-                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
-                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
-            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
-            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = extent1.MEM_ID 
-        WHERE 1=1
-           AND Extent1.APP_TYPE_ID = 66
-        <if test="orderNo != '' ">
-            AND Extent1.SALES_ORD_NO = #{orderNo}
-        </if>
-        <if test="orderDateFrom != '' ">
-            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        <if test="orderDateTo != '' ">
-            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        <if test='pdpaMonth != null and pdpaMonth != 0'>
-            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
-        </if>
-        <if test="keyInBranchList != '' and keyInBranchList != null">
-          AND Extent1.BRNCH_ID IN (
-          <foreach collection="keyInBranchList" index="index" separator=",">
-            '${keyInBranchList[index]}'
-          </foreach>
-            )
-        </if>
-        <if test="custId != '' ">
-            AND Extent1.CUST_ID = #{custId}
-        </if>
-        <if test="custName != '' ">
-            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
-        </if>
-        <if test="custIC != '' ">
-            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
-        </if>
-        <if test="productId != '' ">
-            AND Extent6.ITM_STK_ID = #{productId}
-             </if>
-        <if test="memberCode != '' ">
-            AND Extent7.MEM_CODE = #{memberCode}
-        </if>
-         <if test="rentStatus != '' and rentStatus != null">
-            AND Extent3.STUS_CODE_ID  IN (
-            <foreach collection="rentStatus" index="index"
-                separator=",">
-                '${rentStatus[index]}'
-            </foreach>
-            )
-        </if>
-        <if test="memLevel == 4">
-         AND org1001.MEM_ID = #{memId}
-         </if>
-         <if test="memLevel == 3">
-          AND org1001.DEPT_CODE = #{deptCode}
-         </if>
-         <if test="memLevel == 2">
-          AND org1001.GRP_CODE = #{grpCode}
-         </if>
-         <if test="memLevel == 1">
-          AND org1001.ORG_CODE = #{orgCode}
-          </if>
-          
-      ORDER BY SALES_ORD_NO
-            </when>
-            <otherwise>
-                SELECT
+	SELECT
             Extent1.SALES_ORD_ID,
             Extent1.CUST_BILL_ID,
             Extent1.SALES_ORD_NO,
@@ -1015,8 +755,6 @@
             )
         </if>
       ORDER BY Extent1.SALES_ORD_NO
-           </otherwise>
-        </choose>  
     </select>
 
     <select id="selectProductUsageMonth" parameterType="Map" resultType="egovMap">
@@ -1279,6 +1017,658 @@ SELECT DISTINCT V1.ORD_ID
         </if>
 
         ORDER BY A.STATE_CUST_ID
+    </select>
+    <select id="selectProformaInvoiceListCody" parameterType="Map"
+        resultType="egovMap">
+        SELECT DISTINCT Filter1.AppTypeCode AppTypeCode ,
+        Filter1.AppTypeName AppTypeName ,
+        Filter1.Creator Creator ,
+        Filter1.CustomerIC CustomerIC ,
+        Filter1.VANo VANo ,
+        Filter1.CustomerName CustomerName ,
+        Filter1.OrderID1 OrderID ,
+        Filter1.OrderNo OrderNo ,
+        Filter1.OrderStatusCode OrderStatusCode ,
+        Filter1.OrderStatusID OrderStatusID ,
+        Filter1.OrderPONo OrderPONo ,
+        Filter1.StockCode StockCode ,
+        Filter1.StockDesc StockDesc ,
+        Filter1.StockID StockID ,
+        Filter1.OrderRefNo OrderRefNo ,
+        Filter1.RentalStatus RentalStatus ,
+        Filter1.OrderMemID OrderMemID ,
+        Filter1.OrderMemCode OrderMemCode ,
+        Filter1.OrderMemTypeID OrderMemTypeID ,
+        Filter1.OrderCustBillID OrderCustBillID ,
+        Filter1.OrderMailTelM OrderMailTelM ,
+        Filter1.OrderMailTelO OrderMailTelO ,
+        Filter1.OrderMailTelR OrderMailTelR ,
+        Filter1.OrderMailTelF OrderMailTelF ,
+        Filter1.OrderInstTelM OrderInstTelM ,
+        Filter1.OrderInstTelO OrderInstTelO ,
+        Filter1.OrderInstTelR OrderInstTelR ,
+        Filter1.OrderInstTelF OrderInstTelF ,
+        Filter1.LastInstallSirimNo LastInstallSirimNo ,
+        Filter1.LastInstallSerialNo LastInstallSerialNo ,
+        1 C1 ,
+        CASE WHEN ( Filter1.AppTypeID IS NOT NULL ) THEN Filter1.AppTypeID ELSE 0
+        END AppTypeId ,
+        CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN Filter1.CustomerID ELSE
+        0 END CustomerId ,
+        CASE WHEN ( Filter1.DSCBranchID IS NOT NULL ) THEN Filter1.DSCBranchID
+        ELSE 0 END DSCBranchId ,
+        CASE WHEN ( Filter1.KeyInBranchID IS NOT NULL ) THEN Filter1.KeyInBranchID
+        ELSE 0 END KeyInBranchID ,
+        CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+        TO_CHAR(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01
+        00:00:00' END OrderDate ,
+        CASE WHEN ( Extent3.ORG_CODE IS NOT NULL ) THEN Extent3.ORG_CODE ELSE ' '
+        END OrgCode ,
+        CASE WHEN ( Extent3.GRP_CODE IS NOT NULL ) THEN Extent3.GRP_CODE ELSE ' '
+        END GrpCode ,
+        CASE WHEN ( Extent3.DEPT_CODE IS NOT NULL ) THEN Extent3.DEPT_CODE ELSE '
+        ' END DeptCode ,
+        Extent6.EMAIL EMAIL,
+        TO_NUMBER(TO_CHAR(Filter1.OrderDate,'MM')) AS month,
+        TO_NUMBER(TO_CHAR(Filter1.OrderDate,'YYYY')) AS year
+        FROM ( SELECT Extent1.APP_TYPE_CODE AppTypeCode ,
+        Extent1.APP_TYPE_ID AppTypeID ,
+        Extent1.APP_TYPE_NAME AppTypeName ,
+        Extent1.CRT_USER_ID Creator ,
+        Extent1.CUST_IC CustomerIC ,
+        Extent1.VA_NO VANo ,
+        Extent1.CUST_ID CustomerID ,
+        Extent1.CUST_NAME CustomerName ,
+        Extent1.DSC_BRNCH_ID DSCBranchID ,
+        Extent1.KEYIN_BRNCH_ID KeyInBranchID ,
+        Extent1.ORD_DT OrderDate ,
+        Extent1.ORD_ID OrderID1 ,
+        Extent1.ORD_NO OrderNo ,
+        Extent1.ORD_STUS_CODE OrderStatusCode ,
+        Extent1.ORD_STUS_ID OrderStatusID ,
+        Extent1.ORD_PO_NO OrderPONo ,
+        Extent1.STOCK_CODE StockCode ,
+        Extent1.STOCK_DESC StockDesc ,
+        Extent1.STOCK_ID StockID ,
+        Extent1.ORD_REF_NO OrderRefNo ,
+        Extent1.RENTAL_STUS RentalStatus ,
+        Extent1.ORD_MEM_ID OrderMemID ,
+        Extent1.ORD_MEM_CODE OrderMemCode ,
+        Extent1.ORD_MEM_TYPE_ID OrderMemTypeID ,
+        Extent1.ORD_CUST_BILL_ID OrderCustBillID ,
+        Extent1.ORD_MAIL_TEL_M OrderMailTelM ,
+        Extent1.ORD_MAIL_TEL_O OrderMailTelO ,
+        Extent1.ORD_MAIL_TEL_R OrderMailTelR ,
+        Extent1.ORD_MAIL_TEL_F OrderMailTelF ,
+        Extent1.ORD_INST_TEL_M OrderInstTelM ,
+        Extent1.ORD_INST_TEL_O OrderInstTelO ,
+        Extent1.ORD_INST_TEL_R OrderInstTelR ,
+        Extent1.ORD_INST_TEL_F OrderInstTelF ,
+        Extent2.LAST_INSTALL_SIRIM_NO LastInstallSirimNo ,
+        Extent2.LAST_INSTALL_SERIAL_NO LastInstallSerialNo
+        FROM (SELECT vOrderView.APP_TYPE_CODE APP_TYPE_CODE ,
+        vOrderView.APP_TYPE_ID APP_TYPE_ID ,
+        vOrderView.APP_TYPE_NAME APP_TYPE_NAME ,
+        vOrderView.CRT_USER_ID CRT_USER_ID ,
+        vOrderView.CUST_IC CUST_IC ,
+        vOrderView.VA_NO VA_NO ,
+        vOrderView.CUST_ID CUST_ID ,
+        vOrderView.CUST_NAME CUST_NAME ,
+        vOrderView.DSC_BRNCH_ID DSC_BRNCH_ID ,
+        vOrderView.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+        vOrderView.ORD_DT ORD_DT ,
+        vOrderView.ORD_ID ORD_ID ,
+        vOrderView.ORD_NO ORD_NO ,
+        vOrderView.ORD_STUS_CODE ORD_STUS_CODE ,
+        vOrderView.ORD_STUS_ID ORD_STUS_ID ,
+        vOrderView.ORD_PO_NO ORD_PO_NO ,
+        vOrderView.STOCK_CODE STOCK_CODE ,
+        vOrderView.STOCK_DESC STOCK_DESC ,
+        vOrderView.STOCK_ID STOCK_ID ,
+        vOrderView.ORD_REF_NO ORD_REF_NO ,
+        vOrderView.RENTAL_STUS RENTAL_STUS ,
+        vOrderView.ORD_MEM_ID ORD_MEM_ID ,
+        vOrderView.ORD_MEM_CODE ORD_MEM_CODE ,
+        vOrderView.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+        vOrderView.ORD_CUST_BILL_ID ORD_CUST_BILL_ID ,
+        vOrderView.ORD_MAIL_TEL_M ORD_MAIL_TEL_M ,
+        vOrderView.ORD_MAIL_TEL_O ORD_MAIL_TEL_O ,
+        vOrderView.ORD_MAIL_TEL_R ORD_MAIL_TEL_R ,
+        vOrderView.ORD_MAIL_TEL_F ORD_MAIL_TEL_F ,
+        vOrderView.ORD_INST_TEL_M ORD_INST_TEL_M ,
+        vOrderView.ORD_INST_TEL_O ORD_INST_TEL_O ,
+        vOrderView.ORD_INST_TEL_R ORD_INST_TEL_R ,
+        vOrderView.ORD_INST_TEL_F ORD_INST_TEL_F
+        FROM SAL1015V vOrderView ) Extent1
+        JOIN ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID ,
+        /*
+        vOrderInstallationInfo.INST_ADDR1 INST_ADDR1 ,
+        vOrderInstallationInfo.INST_ADDR2 INST_ADDR2 ,
+        vOrderInstallationInfo.INST_ADDR3 INST_ADDR3 ,
+        vOrderInstallationInfo.INST_CNTY INST_CNTY ,
+        */
+        vOrderInstallationInfo.INST_STATE INST_STATE ,
+        vOrderInstallationInfo.INST_AREA INST_AREA ,
+        /*
+        vOrderInstallationInfo.INST_POST_CODE INST_POST_CODE ,
+        */
+        vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME ,
+        vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC ,
+        vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL ,
+        vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M ,
+        vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O ,
+        vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R ,
+        vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F ,
+        vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER ,
+        vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO ,
+        vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE ,
+        vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME ,
+        vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT ,
+        vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM ,
+        vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO ,
+        vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO
+        ,
+        vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO ,
+        vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
+        vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
+        vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT ,
+        vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM ,
+        vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
+        vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
+        vOrderInstallationInfo.DSC_ID DSC_ID ,
+        vOrderInstallationInfo.DSC_CODE DSC_CODE ,
+        vOrderInstallationInfo.DSC_NAME DSC_NAME ,
+        vOrderInstallationInfo.INSTCT INSTCT ,
+        vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT ,
+        vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM ,
+        vOrderInstallationInfo.INSTALL_ADDR_ID INSTALL_ADDR_ID ,
+        vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID ,
+        vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT ,
+        vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST ,
+        vOrderInstallationInfo.VRIFY_REM VRIFY_REM
+        FROM SAL1010V vOrderInstallationInfo ) Extent2 ON Extent2.ORD_ID =
+        Extent1.ORD_ID
+        WHERE 1=1
+        <if test="appTypeList != '' and appTypeList != null">
+            AND ( (CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL ) THEN
+            Extent1.APP_TYPE_ID ELSE 0 END) IN (
+            <foreach collection="appTypeList" index="index" separator=",">
+                '${appTypeList[index]}'
+            </foreach>
+            ))
+        </if>
+        AND ( 1 = Extent1.ORD_STUS_ID )
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+         AND ( (CASE WHEN ( Extent1.KEYIN_BRNCH_ID IS NOT NULL ) THEN
+         Extent1.KEYIN_BRNCH_ID ELSE 0 END) IN (
+            <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+            </foreach>
+          ))
+        </if>
+
+        <if test="dscBranchList != '' and dscBranchList != null">
+            AND ( (CASE WHEN ( Extent1.DSC_BRNCH_ID IS NOT NULL ) THEN
+            Extent1.DSC_BRNCH_ID ELSE 0 END) IN (
+            <foreach collection="dscBranchList" index="index" separator=",">
+                '${dscBranchList[index]}'
+            </foreach>
+            ) )
+        </if>
+        ) Filter1
+        LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID ,
+        vMemberOrg.MEM_CODE MEM_CODE ,
+        vMemberOrg.MEM_LVL MEM_LVL ,
+        vMemberOrg.DEPT_CODE DEPT_CODE ,
+        vMemberOrg.GRP_CODE GRP_CODE ,
+        vMemberOrg.ORG_CODE ORG_CODE ,
+        vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+        vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+        vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+        vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+        vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+        vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+        FROM ORG1001V vMemberOrg ) Extent3 ON Extent3.MEM_ID = Filter1.OrderMemID
+        LEFT JOIN ( SELECT Extent4.NAME NAME1 ,
+        Extent4.NRIC NRIC1 ,
+        Extent4.EMAIL EMAIL ,
+        Extent5.SALES_ORD_ID SALES_ORD_ID ,
+        Extent5.SALES_ORD_NO SALES_ORD_NO ,
+        Extent5.SALES_DT SALES_DT ,
+        Extent5.APP_TYPE_ID APP_TYPE_ID
+        FROM SAL0029D Extent4
+        JOIN SAL0001D Extent5 ON ( Extent5.CUST_ID = Extent4.CUST_ID )) Extent6 ON
+        Extent6.SALES_ORD_ID = Filter1.OrderID1
+        WHERE 1=1
+        <if test="orderNo != '' ">
+            AND ( Filter1.OrderNo = #{orderNo} )
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[>=]]>
+            TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS') )
+        </if>
+        <if test="orderDateTo != '' ">
+            AND ( (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END)  <![CDATA[<=]]>
+            TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS') )
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND (CASE WHEN ( Filter1.OrderDate IS NOT NULL ) THEN
+            TO_DATE(Filter1.OrderDate, 'YYYY-MM-DD HH24:MI:SS') ELSE
+            TO_DATE('1900-01-01 00:00:00','YYYY-MM-DD HH24:MI:SS') END) >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="custId != '' ">
+            AND ( (CASE WHEN ( Filter1.CustomerID IS NOT NULL ) THEN
+            Filter1.CustomerID ELSE 0 END) = #{custId} )
+        </if>
+        <if test="custName != '' ">
+            AND ( Filter1.CustomerName LIKE '%' || #{custName} ||' %' ESCAPE '~' )
+        </if>
+        <if test="custIC != '' ">
+            AND ( Filter1.CustomerIC LIKE '%' || #{custIC} || '%' ESCAPE '~' )
+        </if>
+        <if test="productId != '' ">
+            AND ( Filter1.StockID = #{productId} )
+        </if>
+        <if test="memberCode != '' ">
+            AND ( Filter1.OrderMemCode = #{memberCode} )
+        </if>
+        <if test="refNo != '' ">
+            AND ( Filter1.OrderRefNo = #{refNo} )
+        </if>
+        <if test="poNo != '' ">
+            AND ( Filter1.OrderPONo = #{poNo} )
+        </if>
+        <if test="contactNo != '' ">
+            AND ( ( Filter1.OrderMailTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderMailTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderMailTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderMailTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderInstTelF LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderInstTelM LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            OR ( Filter1.OrderInstTelO LIKE '%' || #{contactNo} || '%' ESCAPE '~'
+            )
+            OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
+            )
+        </if>
+        <if test="userTypeId != null and userTypeId != '' ">
+              <if test="memCode != null and memCode != '' ">
+              AND Filter1.OrderMemCode = #{memCode}
+              </if>
+              <if test="orgCode != null and orgCode != '' ">
+              AND Extent3.ORG_CODE = #{orgCode}
+              </if>
+              <if test="grpCode != null and grpCode != '' ">
+              AND Extent3.GRP_CODE = #{grpCode}
+              </if>
+              <if test="deptCode != null and deptCode != '' ">
+              AND Extent3.DEPT_CODE = #{deptCode}
+              </if>
+        </if>
+        ORDER BY Filter1.OrderNo ASC
+    </select>
+    
+    <select id="selectAdvancedRentalInvoiceListCody" parameterType="Map" resultType="egovMap">
+    <choose>
+            <when test='userTypeId != null and userTypeId != "" '>
+                SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            JOIN SAL0090D sal90 ON Extent1.SALES_ORD_ID = sal90.SRV_SO_ID
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = sal90.SRV_CODY_ID 
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>
+        <if test="memCode != null and memCode != '' ">
+         AND org1001.MEM_CODE = #{memCode}
+        </if>
+        <if test="orgCode != null and orgCode != '' ">
+         AND org1001.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+         AND org1001.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+         AND org1001.DEPT_CODE = #{deptCode}
+         </if>        
+          
+          UNION
+          
+            SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            LEFT JOIN ORG1001V org1001 ON org1001.MEM_ID = extent1.MEM_ID 
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>    
+          <if test="memCode != null and memCode != '' ">
+           AND org1001.MEM_CODE = #{memCode}
+          </if>
+          <if test="orgCode != null and orgCode != '' ">
+           AND org1001.ORG_CODE = #{orgCode}
+          </if>
+          <if test="grpCode != null and grpCode != '' ">
+            AND org1001.GRP_CODE = #{grpCode}
+          </if>
+          <if test="deptCode != null and deptCode != '' ">
+            AND org1001.DEPT_CODE = #{deptCode}
+           </if>
+          
+      ORDER BY SALES_ORD_NO
+            </when>
+            <otherwise>
+                SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+             CASE WHEN ( Extent1.SALES_DT IS NOT NULL ) THEN TO_CHAR(Extent1.SALES_DT, 'YYYY-MM-DD HH24:MI:SS') ELSE '1900-01-01 00:00:00' END OrderDate,
+            Extent8.STK_DESC,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+    <!--  CASE WHEN LENGTH(Extent4.NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Extent4.NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Extent4.NRIC, 9,12)
+            ELSE Extent4.NRIC
+            END NRIC,  -->
+            Extent4.NRIC NRIC,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SAL0002D Extent9 ON Extent1.SALES_ORD_ID = Extent9.SALES_ORD_ID
+            JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0026M Extent8 ON Extent8.STK_ID = Extent9.ITM_STK_ID
+       <!--JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID-->
+            JOIN (
+                        SELECT CODE_NAME,
+                                   CODE_ID
+                         FROM SYS0013M
+                         WHERE CODE_ID = 66
+                    )  Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            <!--JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID-->
+            JOIN (SELECT NAME,
+                                      CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
+                                      ELSE NRIC
+                                      END NRIC,
+                                      CUST_ID
+                        FROM SAL0029D
+                        WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
+            ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+        WHERE 1=1
+           AND Extent1.APP_TYPE_ID = 66
+        <if test="orderNo != '' ">
+            AND Extent1.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="orderDateFrom != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[>=]]> TO_DATE(#{orderDateFrom}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="orderDateTo != '' ">
+            AND  Extent1.SALES_DT   <![CDATA[<=]]> TO_DATE(#{orderDateTo}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND Extent1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <if test="keyInBranchList != '' and keyInBranchList != null">
+          AND Extent1.BRNCH_ID IN (
+          <foreach collection="keyInBranchList" index="index" separator=",">
+            '${keyInBranchList[index]}'
+          </foreach>
+            )
+        </if>
+        <if test="custId != '' ">
+            AND Extent1.CUST_ID = #{custId}
+        </if>
+        <if test="custName != '' ">
+            AND UPPER(Extent4.NAME) LIKE UPPER('%' || #{custName}|| '%' )
+        </if>
+        <if test="custIC != '' ">
+            AND Extent4.NRIC LIKE '%' || #{custIC} || '%' ESCAPE '~'
+        </if>
+        <if test="productId != '' ">
+            AND Extent6.ITM_STK_ID = #{productId}
+             </if>
+        <if test="memberCode != '' ">
+            AND Extent7.MEM_CODE = #{memberCode}
+        </if>
+         <if test="rentStatus != '' and rentStatus != null">
+            AND Extent3.STUS_CODE_ID  IN (
+            <foreach collection="rentStatus" index="index"
+                separator=",">
+                '${rentStatus[index]}'
+            </foreach>
+            )
+        </if>
+      ORDER BY Extent1.SALES_ORD_NO
+           </otherwise>
+        </choose>  
     </select>
 
 </mapper>

@@ -52,11 +52,23 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectProformaInvoiceList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectProformaInvoiceListCody(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectProformaInvoiceListCody(params);
+	}
 
 	@Override
 	public List<EgovMap> selectAdvancedRentalInvoiceList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectAdvancedRentalInvoiceList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectAdvancedRentalInvoiceListCody(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectAdvancedRentalInvoiceListCody(params);
 	}
 
 	@Override

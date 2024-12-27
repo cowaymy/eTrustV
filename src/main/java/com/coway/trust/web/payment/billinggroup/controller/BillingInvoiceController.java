@@ -285,10 +285,10 @@ public class BillingInvoiceController {
 		
 		if(sessionVO.getUserTypeId() == 2) {
 		    map.put("userTypeId", sessionVO.getUserTypeId());
-		    map.put("memLevel", sessionVO.getMemberLevel());
-		    map.put("deptCode", sessionVO.getDeptCode());
-		    map.put("grpCode", sessionVO.getGroupCode());
-		    map.put("orgCode", sessionVO.getOrgCode());
+		    map.put("memCode", searchVO.getMemCode().trim());
+		    map.put("deptCode", searchVO.getDeptCode().trim());
+		    map.put("grpCode", searchVO.getGrpCode().trim());
+		    map.put("orgCode", searchVO.getOrgCode().trim());
 		}
 
 		String orderDtFr = "";
@@ -306,9 +306,13 @@ public class BillingInvoiceController {
 		map.put("orderDateTo", orderDtTo);
 		if(params.get("pdpaMonth") != null)
 			map.put("pdpaMonth", params.get("pdpaMonth"));
-
-		list = invoiceService.selectProformaInvoiceList(map);
-
+		
+		if (sessionVO.getUserTypeId() == 2 || sessionVO.getRoleId() == 256) {
+			list = invoiceService.selectProformaInvoiceListCody(map);	
+		}
+		else {
+			list = invoiceService.selectProformaInvoiceList(map);	
+		}
 		return ResponseEntity.ok(list);
 	}
 
@@ -346,11 +350,10 @@ public class BillingInvoiceController {
 		
 		if(sessionVO.getUserTypeId() == 2) {
 		    map.put("userTypeId", sessionVO.getUserTypeId());
-		    map.put("memId", sessionVO.getMemId());
-		    map.put("memLevel", sessionVO.getMemberLevel());
-		    map.put("deptCode", sessionVO.getDeptCode());
-		    map.put("grpCode", sessionVO.getGroupCode());
-		    map.put("orgCode", sessionVO.getOrgCode());
+		    map.put("memCode", searchVO.getMemCode().trim());
+		    map.put("deptCode", searchVO.getDeptCode().trim());
+		    map.put("grpCode", searchVO.getGrpCode().trim());
+		    map.put("orgCode", searchVO.getOrgCode().trim());
 		}
 
 		String orderDtFr = "";
@@ -369,8 +372,13 @@ public class BillingInvoiceController {
 		if(params.get("pdpaMonth") != null)
 			map.put("pdpaMonth", params.get("pdpaMonth"));
 		
-		list = invoiceService.selectAdvancedRentalInvoiceList(map);
-
+		if (sessionVO.getUserTypeId() == 2 || sessionVO.getRoleId() == 256) {
+			list = invoiceService.selectAdvancedRentalInvoiceListCody(map);
+		}
+		else {
+			list = invoiceService.selectAdvancedRentalInvoiceList(map);	
+		}
+		
 		return ResponseEntity.ok(list);
 	}
 

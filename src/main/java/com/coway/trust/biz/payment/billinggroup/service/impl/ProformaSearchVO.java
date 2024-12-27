@@ -19,6 +19,11 @@ public class ProformaSearchVO {
 	private String refNo;
 	private String poNo;
 	private String contactNo;
+	private String memCode;
+	private String orgCode;
+	private String grpCode;
+	private String deptCode;
+	
 	public String getOrderNo() {
 		return orderNo;
 	}
@@ -124,6 +129,30 @@ public class ProformaSearchVO {
 				+ ", custName=" + custName + ", custIc=" + custIc + ", product=" + product + ", memberCode=" + memberCode
 				+ ", rentalStatus=" + Arrays.toString(rentalStatus) + ", refNo=" + refNo + ", poNo=" + poNo
 				+ ", contactNo=" + contactNo + "]";
+	}
+	public String getMemCode() {
+		return memCode;
+	}
+	public void setMemCode(String memCode) {
+		this.memCode = memCode;
+	}
+	public String getOrgCode() {
+		return orgCode;
+	}
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	public String getGrpCode() {
+		return grpCode;
+	}
+	public void setGrpCode(String grpCode) {
+		this.grpCode = grpCode;
+	}
+	public String getDeptCode() {
+		return deptCode;
+	}
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
 	}
 	
 	

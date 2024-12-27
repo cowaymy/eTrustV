@@ -47,6 +47,8 @@ public interface BillingInvoiceService {
 	 * @return
 	 */
 	List<EgovMap> selectProformaInvoiceList(Map<String, Object> params);
+	
+	List<EgovMap> selectProformaInvoiceListCody(Map<String, Object> params);
 
  	/**
 	 * Advanced Rental Invoice List 조회
@@ -54,6 +56,8 @@ public interface BillingInvoiceService {
 	 * @return
 	 */
 	List<EgovMap> selectAdvancedRentalInvoiceList(Map<String, Object> params);
+	
+	List<EgovMap> selectAdvancedRentalInvoiceListCody(Map<String, Object> params);
 
 	List<EgovMap> selectProductUsageMonth(Map<String, Object> params);
 
