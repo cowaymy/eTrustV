@@ -1837,8 +1837,8 @@ UNION ALL
     <select id="selectCwStoreIDInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCwStoreIDInfo] */
-      SELECT CW_STORE_ID AS CW_STORE_ID
-               , CW_STORE_CODE || '-' || UPPER(CW_STORE_NAME) AS CW_STORE_NAME
+      SELECT CW_STORE_ID AS CODE_ID
+               , CW_STORE_CODE || '-' || UPPER(CW_STORE_NAME) AS CODE_NAME
       FROM SAL0429M
       ORDER BY CW_STORE_ID ASC
     ]]>
