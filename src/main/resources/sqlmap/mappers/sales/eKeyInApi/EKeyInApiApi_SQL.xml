@@ -209,6 +209,8 @@ SELECT A.CUST_ID AS CUST_ID
                ,  A.ATCH_FILE_GRP_ID AS ATCH_FILE_GRP_ID
      --Voucher Code--------------------------------------------------------------------
                , A.VOUCHER_CODE
+     --Coway Store ID------------------------------------------------------------------
+               , Y.CW_STORE_ID AS CW_STORE_ID
       FROM SAL0213M A
       INNER JOIN SAL0029D B ON  A.CUST_ID = B.CUST_ID
       LEFT OUTER JOIN SAL0027D C ON  A.CUST_CNTC_ID = C.CUST_CNTC_ID
@@ -240,6 +242,7 @@ SELECT A.CUST_ID AS CUST_ID
       LEFT JOIN MSC0056M V ON V.ID = U.ID
       LEFT JOIN SYS0013M W ON W.CODE_MASTER_ID = '566' AND W.CODE_ID = B.IS_EXST_CUST
       LEFT JOIN SYS0005M X ON S.AC_BRNCH_CODE= X.CODE AND X.STUS_ID = '1'
+      LEFT JOIN SAL0429M Y ON Y.CW_STORE_ID = A.CW_STORE_ID
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
@@ -1838,7 +1841,7 @@ UNION ALL
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCwStoreIDInfo] */
       SELECT CW_STORE_ID AS CODE_ID
-               , CW_STORE_CODE || '-' || UPPER(CW_STORE_NAME) AS CODE_NAME
+               , CW_STORE_CODE || ' - ' || UPPER(CW_STORE_NAME) AS CODE_NAME
       FROM SAL0429M
       ORDER BY CW_STORE_ID ASC
     ]]>
