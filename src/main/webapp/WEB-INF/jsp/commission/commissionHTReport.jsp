@@ -126,34 +126,6 @@
                     return;
                 }
 
-                /* if(memLvl == '3')
-                {
-                	reportFileName = "/commission/HTMCommission_PDF.rpt"; //reportFileName
-                    reportDownFileName = "HTMCommission_" + today; //report name
-                    reportViewType = "PDF"; //viewType
-                }
-                else
-               	{
-                	if(year >= 2022 && month >=01 || year > 2022)
-                    {
-                        reportFileName = "/commission/HTCommission_PDF_202201.rpt"; //reportFileName
-                        reportDownFileName = "HTCommission_" + today; //report name
-                        reportViewType = "PDF"; //viewType
-                    }
-                    else if(year >= 2021 && month >=12 || year > 2021)
-                    {
-                        reportFileName = "/commission/HTCommission_PDF_2022.rpt"; //reportFileName
-                        reportDownFileName = "HTCommission_" + today; //report name
-                        reportViewType = "PDF"; //viewType
-                    }
-                    else
-                    {
-                        reportFileName = "/commission/HTCommission_PDF.rpt"; //reportFileName
-                        reportDownFileName = "HTCommission_" + today; //report name
-                        reportViewType = "PDF"; //viewType
-                    }
-               	} */
-
                 if(memLvl == '2')
                 {
                 	if (taskID >= 140){ // start from comm month = 09/2024. Added by Ming Shan, 09/09/2024
@@ -240,7 +212,151 @@
                 $("#reportForm #Month").val(month);
                 $("#reportForm #Year").val(year);
                 $("#reportForm #TaskID").val(taskID);
-            } else if (type == "2") {
+            }
+            else if (type == "6") {
+
+                reportFileName = "/commission/HTNonIncntRawData_Excel.rpt"; //reportFileName
+                reportDownFileName = "HTNonIncnt" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                //$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+
+                //$("#reportForm #Memcode").val(salesPersonCd);
+                $("#reportForm #Month").val(month);
+                $("#reportForm #Year").val(year);
+                $("#reportForm #TaskID").val(taskID);
+            }
+            else if (type == '10'){
+
+                debugger;
+                if (mLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (mLvl == 4) {
+                    if(year >= 2024 && month >=09|| year > 2024){
+                        reportFileName = "/commission/HT_Sales_Rental_Commission_202410.rpt";
+                    }
+                    else{
+                        reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
+                    }
+
+                    reportDownFileName = "HT Sales Rental Commission_" + today;
+                    reportViewType = "EXCEL";
+
+                    $($reportForm).append('<input type="hidden" id="EMPLEV" name="EMPLEV" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #EMPLEV").val(mLvl);
+                    $("#reportForm #TaskID").val(taskID);
+
+                } else if (mLvl == 3) {
+                     reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
+                     reportDownFileName = "HTM Sales Rental Commission_" + today;
+                     reportViewType = "EXCEL";
+
+                     $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
+                     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                     $("#reportForm #EMPLEV1").val(mLvl);
+                     $("#reportForm #TaskID").val(taskID);
+
+                } else if (mLvl == 2) {
+                    reportFileName = "/commission/SHTM_Sales_Rental_Commission.rpt";
+                    reportDownFileName = "SHTM Sales Rental Commission_" + today;
+                    reportViewType = "EXCEL";
+
+                    $($reportForm).append('<input type="hidden" id="EMPLEV2" name="EMPLEV2" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+
+                    $("#reportForm #EMPLEV2").val(mLvl);
+                    $("#reportForm #TaskID").val(taskID);
+               }
+            }
+            else if (type == '12'){
+
+                if (memberLvl == '') {
+                    Common.alert("Please select a member level before generating the report.");
+                    return;
+                }
+                if (memberLvl == 3) {
+                    reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
+                    reportDownFileName = "HTM Sales Rental Commission Overriding_" + today; //report name
+                    reportViewType = "EXCEL"; //viewType
+
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+
+                    $("#reportForm #HTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+
+
+                } else if (memberLvl == 2) {
+                    reportFileName = "/commission/SHTM_Promoted_Overriding_Commission.rpt"; //reportFileName
+                    reportDownFileName = "SHTM Sales Rental Commission Overriding_" + today; //report name
+                    reportViewType = "EXCEL"; //viewType
+
+                    //set parameters
+                    $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
+                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                    $("#reportForm #SHTM").val("7");
+                    $("#reportForm #TaskID").val(taskID);
+                }
+            }
+            else if (type == '13'){CommCalCodyRawData_Excel
+            	reportFileName = "/commission/HT_Comm_Raw_All.rpt"; //reportFileName
+                reportDownFileName = "HTCommissionRawAll_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #TaskID").val(taskID);
+            }
+            else if (type == '14'){
+            	reportFileName = "/commission/HT_Comm_Cal_Raw_Data.rpt"; //reportFileName
+                reportDownFileName = "HTCommissionCalRawData_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #HTM").val("7");
+                $("#reportForm #TaskID").val(taskID);
+            }
+            else if (type == '15'){
+            	reportFileName = "/commission/HTM_Comm_Raw_All.rpt"; //reportFileName
+                reportDownFileName = "HTMCommissionRawAll_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #TaskID").val(taskID);
+            }
+            else if (type == '16'){
+            	reportFileName = "/commission/HTM_Comm_Cal_Raw_Data.rpt"; //reportFileName
+                reportDownFileName = "HTMCommissionCalRawData_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #TaskID").val(taskID);
+            }
+
+
+            /*
+            // Celeste 20241224: Report clean up [S]
+            else if (type == "2") {
 
             	if (taskID >= 142){
             		reportFileName = "/commission/HTCommissionRawData_M_Excel_202412.rpt"; //reportFileName
@@ -276,7 +392,63 @@
                 $("#reportForm #HTM").val("7");
                 $("#reportForm #TaskID").val(taskID);
 
-            } else if (type == '8') {
+            }
+
+            else if (type == "4") {
+
+                reportFileName = "/commission/CommCalHTRawData_Excel.rpt"; //reportFileName
+                reportDownFileName = "CommCalHTRawData_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+            $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+            $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+
+            $("#reportForm #Month").val(month);
+            $("#reportForm #Year").val(year);
+            $("#reportForm #TaskID").val(taskID);
+
+            } else if (type == "5") {
+
+                reportFileName = "/commission/ComCalHTMRawData_Excel.rpt"; //reportFileName
+                reportDownFileName = "ComCalHTMRawData_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
+                $("#reportForm #TaskID").val(taskID);
+
+           }
+
+            else if (type == "7") {
+                if(year >= 2024 && month >=11|| year > 2024){
+                    reportFileName = "/commission/HTCommissionRawData_R_Excel_202412.rpt"; //reportFileName
+                }
+                else if(year >= 2024 && month >=09|| year > 2024)
+                {
+                    reportFileName = "/commission/HTCommissionRawData_R_Excel_202409.rpt"; //reportFileName
+                }
+                else {
+                    reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
+                }
+
+                reportDownFileName = "HTCommissionRawData_Rate_Excel_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="HT" name="HT" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+               // $($reportForm).append('<input type="hidden" id="Month" name="Month"  value ="" />');
+             //   $($reportForm).append('<input type="hidden" id="Year" name="Year"  value ="" />');
+
+                $("#reportForm #HT").val("7");
+                $("#reportForm #TaskID").val(taskID);
+                //$("#reportForm #Month").val(month);
+                //$("#reportForm #Year").val(year);
+            }
+            else if (type == '8') {
 
                 if (memberLvl == '') {
                     Common.alert("Please select a member level before generating the report.");
@@ -288,7 +460,6 @@
                 	}else{
                 		reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
                 	}
-                    //reportFileName = "/commission/HTMCommissionRawMark_Excel.rpt"; //reportFileName
                     reportDownFileName = "HTMCommissionRawMark_" + today; //report name **PREVIOUSLY MANAGER
                     reportViewType = "EXCEL"; //viewType
 
@@ -368,173 +539,9 @@
                     $("#reportForm #SHTM").val("7");
                     $("#reportForm #TaskID").val(taskID);
                 }
-
             }
-
-
-            else if (type == '10'){
-
-            	debugger;
-                if (mLvl == '') {
-                    Common.alert("Please select a member level before generating the report.");
-                    return;
-                }
-                if (mLvl == 4) {
-                	if(year >= 2024 && month >=09|| year > 2024){
-                		reportFileName = "/commission/HT_Sales_Rental_Commission_202410.rpt";
-                	}
-                	else{
-                		reportFileName = "/commission/HT_Sales_Rental_Commission.rpt";
-                	}
-
-                    reportDownFileName = "HT Sales Rental Commission_" + today;
-                    reportViewType = "EXCEL";
-
-                    $($reportForm).append('<input type="hidden" id="EMPLEV" name="EMPLEV" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-                    $("#reportForm #EMPLEV").val(mLvl);
-                    $("#reportForm #TaskID").val(taskID);
-
-                } else if (mLvl == 3) {
-                	 reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
-                     reportDownFileName = "HTM Sales Rental Commission_" + today;
-                     reportViewType = "EXCEL";
-
-                     $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
-                     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-                     $("#reportForm #EMPLEV1").val(mLvl);
-                     $("#reportForm #TaskID").val(taskID);
-//                     reportFileName = "/commission/HTM_Sales_Rental_Commission.rpt";
-//                     reportDownFileName = "HTM Sales Rental Commission" + today;
-//                     reportViewType = "EXCEL";
-
-//                     $($reportForm).append('<input type="hidden" id="EMPLEV1" name="EMPLEV1" value="" /> ');
-//                     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-//                     $("#reportForm #EMPLEV1").val(mLvl);
-//                     $("#reportForm #TaskID").val(taskID);
-
-                } else if (mLvl == 2) {
-                    reportFileName = "/commission/SHTM_Sales_Rental_Commission.rpt";
-                    reportDownFileName = "SHTM Sales Rental Commission_" + today;
-                    reportViewType = "EXCEL";
-
-                    $($reportForm).append('<input type="hidden" id="EMPLEV2" name="EMPLEV2" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
-
-                    $("#reportForm #EMPLEV2").val(mLvl);
-                    $("#reportForm #TaskID").val(taskID);
-               }
-            }
-            else if (type == '12'){
-
-                if (memberLvl == '') {
-                    Common.alert("Please select a member level before generating the report.");
-                    return;
-                }
-                if (memberLvl == 3) {
-                    reportFileName = "/commission/HTM_Sales_Rental_Commission_Overriding.rpt"; //reportFileName
-                    reportDownFileName = "HTM Sales Rental Commission Overriding_" + today; //report name
-                    reportViewType = "EXCEL"; //viewType
-
-                    //set parameters
-                    $($reportForm).append('<input type="hidden" id="HTM" name="HTM" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
-
-                    $("#reportForm #HTM").val("7");
-                    $("#reportForm #TaskID").val(taskID);
-
-
-                } else if (memberLvl == 2) {
-                    reportFileName = "/commission/SHTM_Promoted_Overriding_Commission.rpt"; //reportFileName
-                    reportDownFileName = "SHTM Sales Rental Commission Overriding_" + today; //report name
-                    reportViewType = "EXCEL"; //viewType
-
-                    //set parameters
-                    $($reportForm).append('<input type="hidden" id="SHTM" name="SHTM" value="" /> ');
-                    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-                    $("#reportForm #SHTM").val("7");
-                    $("#reportForm #TaskID").val(taskID);
-                }
-            }
-
-
-
-
-            else if (type == "4") {
-
-                reportFileName = "/commission/CommCalHTRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "CommCalHTRawData_" + today; //report name
-                reportViewType = "EXCEL"; //viewType
-
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
-            $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
-            $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
-
-            $("#reportForm #Month").val(month);
-            $("#reportForm #Year").val(year);
-            $("#reportForm #TaskID").val(taskID);
-
-            } else if (type == "5") {
-
-                reportFileName = "/commission/ComCalHTMRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "ComCalHTMRawData_" + today; //report name
-                reportViewType = "EXCEL"; //viewType
-
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-
-                $("#reportForm #TaskID").val(taskID);
-
-           } else if (type == "6") {
-
-               reportFileName = "/commission/HTNonIncntRawData_Excel.rpt"; //reportFileName
-               reportDownFileName = "HTNonIncnt" + today; //report name
-               reportViewType = "EXCEL"; //viewType
-
-               //set parameters
-               //$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
-               $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
-               $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
-               $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
-
-               //$("#reportForm #Memcode").val(salesPersonCd);
-               $("#reportForm #Month").val(month);
-               $("#reportForm #Year").val(year);
-               $("#reportForm #TaskID").val(taskID);
-           }
-           else if (type == "7") {
-        	   if(year >= 2024 && month >=11|| year > 2024){
-        		   reportFileName = "/commission/HTCommissionRawData_R_Excel_202412.rpt"; //reportFileName
-        	   }
-        	   else if(year >= 2024 && month >=09|| year > 2024)
-               {
-        		   reportFileName = "/commission/HTCommissionRawData_R_Excel_202409.rpt"; //reportFileName
-               }
-               else {
-            	   reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
-               }
-
-               reportDownFileName = "HTCommissionRawData_Rate_Excel_" + today; //report name
-               reportViewType = "EXCEL"; //viewType
-
-               //set parameters
-               $($reportForm).append('<input type="hidden" id="HT" name="HT" value="" /> ');
-               $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-              // $($reportForm).append('<input type="hidden" id="Month" name="Month"  value ="" />');
-            //   $($reportForm).append('<input type="hidden" id="Year" name="Year"  value ="" />');
-
-               $("#reportForm #HT").val("7");
-               $("#reportForm #TaskID").val(taskID);
-               //$("#reportForm #Month").val(month);
-               //$("#reportForm #Year").val(year);
-
-
-           }
+            */
+            // Celeste 20241224: Report clean up [E]
 
             //report info
 
@@ -611,7 +618,8 @@
                                 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
                                     <option value="1">Homecare Technician Commission</option>
                                 </c:if>
-                                <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                                <!-- Celeste 20241224: Report clean up [S]-->
+                                <%-- <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                                     <option value="2">Homecare Technician Commission Raw (Mark)</option>
                                     <option value="7">Homecare Technician Commission Raw (Rate)</option>
                                     <option value="3">Homecare Technician Manager Commission</option>
@@ -622,8 +630,16 @@
                                     <option value="6">Homecare Technician Non-Monetary Incentive</option>
                                     <option value="10">HT / HTM / SHTM Sales Rental Commission</option>
                                     <option value="12">HTM / SHTM Sales Rental Commission Overriding</option>
-
-
+                                </c:if> --%>
+                                <!-- Celeste 20241224: Report clean up [E]-->
+                                <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                                    <option value="13">HT Comm Raw (All)</option>
+                                    <option value="14">HT Comm Calculation</option>
+                                    <option value="15">Manager Comm Raw (All)</option>
+                                    <option value="16">Manager Comm Calculation</option>
+                                    <option value="6">Homecare Technician Non-Monetary Incentive</option>
+                                    <option value="10">HT / HTM / SHTM Sales Rental Commission</option>
+                                    <option value="12">HTM / SHTM Sales Rental Commission Overriding</option>
                                 </c:if>
                         </select></td>
                     </tr>
