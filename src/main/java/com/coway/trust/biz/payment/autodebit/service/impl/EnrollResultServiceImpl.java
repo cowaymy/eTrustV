@@ -287,4 +287,10 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		return list;
 	}*/
+
+    @Override
+    public List<EgovMap> selectAutoDebitDeptUserId(Map<String, Object> params) {
+
+        return enrollResultMapper.selectAutoDebitDeptUserId(params);
+    }
 }
