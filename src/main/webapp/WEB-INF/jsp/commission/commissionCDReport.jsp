@@ -193,7 +193,10 @@ console.log(year);
                 $("#reportForm #Year").val(year);
                 $("#reportForm #TaskID").val(taskID);
             } else if (type == "2") {
-            	if(year >= 2024 && month >=09|| year > 2024)
+            	if(year >= 2024 && month >=12  || year > 2024){
+            		reportFileName = "/commission/CMCommissionRawData_Excel_202501.rpt";
+            	}
+            	else if(year >= 2024 && month >=09|| year > 2024)
                 {
                     reportFileName = "/commission/CMCommissionRawData_Excel_202409.rpt";
                 }
@@ -292,7 +295,7 @@ console.log(year);
             	else {
             		reportFileName = "/commission/CodyCommissionRawData_Excel.rpt"; //reportFileName
             	}
-            
+
                 reportDownFileName = "CodyCommissionRawData_Excel_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
