@@ -44,4 +44,6 @@ public interface EnrollResultService
 	 * Jan 24, 2024
 	 */
 	EgovMap selectBankCode(String bankCode);
+
+	List<EgovMap> selectAutoDebitDeptUserId(Map<String, Object> params);
 }

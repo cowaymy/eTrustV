@@ -270,5 +270,16 @@
         SELECT * FROM SYS0004M WHERE STUS_CODE_ID = 1 AND CODE = #{bankCode}
     </select>
 
+    <select id="selectAutoDebitDeptUserId"  parameterType="Map" resultType="egovMap">
+      SELECT
+        USER_ID CODE_ID,
+        USER_NAME CODE_NAME
+      FROM SYS0047M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.HR_CODE
+        JOIN SVC0063C C ON C.MAIN_DEPT_CODE = B.MAIN_DEPT AND C.SUB_DEPT_CODE = B.SUB_DEPT
+       WHERE
+            C.COST_CENTR = #{groupCode}
+       ORDER BY 1 DESC
+    </select>
 
 </mapper>

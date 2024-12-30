@@ -99,6 +99,7 @@ $(document).ready(function(){
         }
     });
 
+    doGetCombo('/payment/selectAutoDebitDeptUserId', 'C1002', '', 'userIdAutoDebitCode', 'S', '');
 
 });
 
@@ -276,13 +277,24 @@ hideNewPopup = function() {
 }
 
 showDDNewPopup = function() {
-	console.log("test dd show");
 	$("#new_dd_wrap").show();
 }
 
 hideDDNewPopup = function() {
-    $("#new_dd_wrap").hide();
-    $("#myDdForm").each(function(){
+    $("#new_dda_wrap").hide();
+    $("#myDdaForm").each(function(){
+        this.reset();
+    });
+}
+
+showDDANewPopup  = function() {
+    $("#new_dda_wrap").show();
+}
+
+
+hideDDANewPopup = function() {
+    $("#new_dda_wrap").hide();
+    $("#myDdaForm").each(function(){
         this.reset();
     });
 }
@@ -362,6 +374,34 @@ function resetUpdatedItems() {
 function fn_clear(){
     $("#resultForm")[0].reset();
 }
+
+function fn_doPrint(){
+
+    if($("#userIdAutoDebitCode").val() =="" || $("#userIdAutoDebitCode").val() == null){
+           Common.alert("<spring:message code="sal.alert.noQuotationSelected" /> ");
+           return ;
+    }
+
+    if($("#submitDt").val() =="" || $("#submitDt").val() == null){
+        Common.alert("<spring:message code="sal.alert.noQuotationSelected" /> ");
+        return ;
+    }
+
+    $("#V_USERID").val($("#userIdAutoDebitCode").val());
+    $("#V_DATE").val($("#submitDt").val());
+    $("#viewType").val("CSV");
+    $("#reportFileName").val("/e-accounting/DDACsv.rpt");
+    $("#reportDownFileName").val("SE000218622024121201");
+
+
+    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+        isProcedure : true
+    };
+
+    Common.report("rptForm", option);
+    }
+
 </script>
 
 <!-- content start -->
@@ -450,6 +490,8 @@ function fn_clear(){
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()"><spring:message code='pay.btn.link.newEnrollmentResult'/></a></p></li>
                         <!-- Added for E-mandate paperless, Hui Ding 11/09/2023 -->
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:showDDNewPopup()"><spring:message code='pay.btn.link.newDDEnrollmentResult'/></a></p></li>
+                         <!-- Added for DDA, Keat Ye 26/12/2024 -->
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showDDANewPopup()"><spring:message code='pay.btn.link.newDDAFile'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
@@ -622,6 +664,70 @@ function fn_clear(){
 
         <!-- grid_wrap start -->
             <article id="grid_wrap_dd_new" class="grid_wrap" style="display:none;"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- pop_body end -->
+</div>
+
+<div id="new_dda_wrap" class="popup_wrap" style="display:none;">
+    <header class="pop_header">
+        <h1>NEW CORPORATE DDA FILE</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideDDANewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+
+    <!-- pop_body start -->
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <form name="myDdaForm" id="myDdaForm">
+                <!-- table start -->
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:175px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">User ID</th>
+                            <td>
+                                <select id="userIdAutoDebitCode" name="userIdAutoDebitCode" class="w100p"></select>
+                            </td>
+                            <th scope="row">Submit Date</th>
+                            <td>
+                             <div class="date_set w100p">
+                              <!-- date_set start -->
+                              <p>
+                               <input type="text" title="Create start Date" value=""
+                                placeholder="DD/MM/YYYY" class="j_date w100p" id="submitDt"
+                                name="submitDt" />
+                              </p>
+                             </div>
+                             <!-- date_set end -->
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+                <ul class="center_btns">
+                    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_doPrint()"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
+                </ul>
+            </form>
+
+            <form id="rptForm">
+              <input type="hidden" id="reportFileName" name="reportFileName" />
+              <input type="hidden" id="viewType" name="viewType" value="CSV" />
+              <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+              <input type="hidden" id="V_USERID" name="V_USERID" />
+              <input type="hidden" id="V_DATE" name="V_DATE" />
+          </form>
+        </section>
+
+        <!-- grid_wrap start -->
+            <article id="grid_wrap_dda_new" class="grid_wrap" style="display:none;"></article>
         <!-- grid_wrap end -->
     </section>
     <!-- pop_body end -->

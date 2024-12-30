@@ -98,4 +98,6 @@ public interface EnrollResultMapper {
 	 */
 	EgovMap selectActiveBankCode(String bankCode);
 
+	List<EgovMap> selectAutoDebitDeptUserId(Map<String, Object> params);
+
 }

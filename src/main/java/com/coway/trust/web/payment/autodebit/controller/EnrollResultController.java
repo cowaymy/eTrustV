@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -383,7 +384,7 @@ public class EnrollResultController {
 		try {
     		if(csvList.size() > 0){
        		for(DdCsvFormatVO csv : csvList){
-       			
+
        			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
        			Calendar c = Calendar.getInstance();
        			c.setTime(df.parse(csv.getStartDate()));
@@ -484,6 +485,15 @@ public class EnrollResultController {
 		}
 		return list;
 	}
+
+	   @RequestMapping(value = "/selectAutoDebitDeptUserId", method = RequestMethod.GET)
+       public ResponseEntity<List<EgovMap>> selectAutoDebitDeptUserId( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		   LOGGER.debug("selectAutoDebitDeptUserId - params : " + params);
+           List<EgovMap>selectAutoDebitDeptUserIdList = enrollResultService.selectAutoDebitDeptUserId(params);
+
+           return ResponseEntity.ok(selectAutoDebitDeptUserIdList);
+       }
 }
 
 
