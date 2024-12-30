@@ -521,6 +521,10 @@ public class PreOrderController {
 	     if (noRcd == 1 && cnt <= 0) {
 	       message.setMessage("OK");
 	       message.setCode("1");
+	       if(params.containsKey("updRcdTms") && params.get("updRcdTms").toString().equals("true")){
+	           params.put("updUserId", sessionVO.getUserId());
+	    	   preOrderService.updRcdTms(params);
+	       }
 	     } else {
 	       message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
 	       message.setCode("99");

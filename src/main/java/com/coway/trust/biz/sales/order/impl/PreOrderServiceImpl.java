@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
@@ -239,6 +241,12 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	public int selRcdTms(Map<String, Object> params) {
 	    return preOrderMapper.selRcdTms(params);
 	  }
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void updRcdTms(Map<String, Object> params) {
+		preOrderMapper.updRcdTms(params);
+	}
 
 	public int selPreOrdId(Map<String, Object> params) {
      return preOrderMapper.selPreOrdId(params);

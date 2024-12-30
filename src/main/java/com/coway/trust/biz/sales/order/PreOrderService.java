@@ -40,6 +40,8 @@ public interface PreOrderService {
 
 	int selRcdTms(Map<String, Object> params);
 
+	void updRcdTms(Map<String, Object> params);
+
 	int selPreOrdId(Map<String, Object> params);
 
 	EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params);
@@ -49,5 +51,4 @@ public interface PreOrderService {
 	EgovMap checkExtradeSchedule() ;
 
 	int chkExtradeScheduleEpapan();
-
 }

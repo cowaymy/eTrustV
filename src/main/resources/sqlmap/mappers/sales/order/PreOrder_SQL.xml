@@ -629,6 +629,14 @@
        AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = #{rcdTms}
     </select>
 
+    <update id="updRcdTms" parameterType="Map">
+        UPDATE SAL0213M
+        SET
+            UPD_USER_ID          = #{updUserId}
+            , UPD_DT                = SYSDATE
+        WHERE PRE_ORD_ID     = #{preOrdId}
+    </update>
+
     <select id="selPreOrdId" parameterType="Map" resultType="int">
       SELECT COUNT(*) COUNT
         FROM SAL0001D

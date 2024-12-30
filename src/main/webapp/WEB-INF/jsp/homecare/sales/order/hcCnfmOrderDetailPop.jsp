@@ -45,7 +45,7 @@
 	      if(fn_checkProductQuota()) return false;
 
 	      if(convToOrdYn == 'Y'){
-	          Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
+	          Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms, updRcdTms: true}, function(result) {
 	              if(result.code == "99"){
 	                  Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
 	                  return;
