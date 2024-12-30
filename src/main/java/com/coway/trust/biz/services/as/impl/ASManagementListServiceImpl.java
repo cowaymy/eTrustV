@@ -1962,8 +1962,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     this.insertLOG0103M(addItemList, svc0004dmap.get("AS_NO").toString(), svc0004dmap,
         String.valueOf(params.get("updator")));
     this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), svc0004dmap);//update SAL0087D
-    //UPDATE LOG0100M
-    this.updateLOG0100M(addItemList,svc0004dmap.get("AS_NO").toString(),svc0004dmap,String.valueOf(params.get("updator")));
 
     svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID"));
     svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")));

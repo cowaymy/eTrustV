@@ -1035,7 +1035,7 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
 
         String strFilterID = String.valueOf(updateMap.get("filterId")) != "null"
                 ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
-                
+
         Map<String, Object> map87mp = new HashMap();
         map87mp.put("SRV_FILTER_PRV_CHG_DT", SVC0109Dmap.get("AS_SETL_DT"));
         map87mp.put("SRV_FILTER_STK_ID", strFilterID.trim());
@@ -1906,8 +1906,6 @@ public class InHouseRepairServiceImpl extends EgovAbstractServiceImpl implements
     // INSERT USED FILTER
     this.insertLOG0103M(addItemList, SVC0109Dmap.get("AS_NO").toString(), SVC0109Dmap, String.valueOf(params.get("updator")));
     this.insert_stkCardLOG0014D(addItemList, AS_RESULT_ID, String.valueOf(params.get("updator")), SVC0109Dmap);//update SAL0087D
-  //UPDATE LOG0100M
-    this.updateLOG0100M(addItemList,SVC0109Dmap.get("AS_NO").toString(),SVC0109Dmap,String.valueOf(params.get("updator")));
 
     SVC0109Dmap.put("AS_ID", SVC0109Dmap.get("AS_ENTRY_ID"));
     SVC0109Dmap.put("USER_ID", String.valueOf(SVC0109Dmap.get("updator")));
