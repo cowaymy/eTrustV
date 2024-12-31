@@ -488,8 +488,6 @@ public class EKeyInApiDto {
 
   private int cwStoreId;
 
-  private String cwStoreName;
-
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
   }
@@ -2312,14 +2310,6 @@ public class EKeyInApiDto {
 
   public void setCwStoreId( int cwStoreId ) {
     this.cwStoreId = cwStoreId;
-  }
-
-  public String getCwStoreName() {
-    return cwStoreName;
-  }
-
-  public void setCwStoreName( String cwStoreName ) {
-    this.cwStoreName = cwStoreName;
   }
 
 }

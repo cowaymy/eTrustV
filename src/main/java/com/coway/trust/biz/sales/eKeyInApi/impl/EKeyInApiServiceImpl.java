@@ -131,7 +131,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, " Pre Order ID value does not exist.");
     }
     EKeyInApiDto selecteKeyInDetail = EKeyInApiDto.create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
-
+    //GET COWAY STORE ID from selected key in detail
+    selecteKeyInDetail.setCwStoreId(selecteKeyInDetail.getCwStoreId());
     selecteKeyInDetail.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
     List<EgovMap> selectBankList = selectBankList();
     List<EKeyInApiDto> bankList = selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
@@ -1540,6 +1541,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setCrtUserId(loginVO.getUserId());
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
+      param.getBasic().setCwStoreId(param.getCwStoreId());
 
       // INSERT SAL0213M
       this.insertEkeyInSal0213M(param.getBasic());
@@ -1859,6 +1861,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     //sal0213M.put("totPvSs", param.getTotPvSs());
     sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
     sal0213M.put("elecAccNo", CommonUtils.nvl(param.getElecAccNo()));
+    sal0213M.put("cwStoreId", CommonUtils.nvl(param.getCwStoreId()));
 
     logger.debug("====================================================");
     logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
@@ -1903,6 +1906,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.getBasic().setCrtUserId(loginVO.getUserId());
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
+      param.getBasic().setCwStoreId(param.getCwStoreId());
 
 /*      if (CommonUtils.isEmpty(param.getBasic().getTotPvSs())) { // CHECK Tot Pv Ss NO VALUE
           throw new ApplicationException(AppConstants.FAIL, "Tot Pv Ss does not exist.");
@@ -2229,6 +2233,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       logger.debug("getTotPvSs : " + CommonUtils.nvl(param.getTotPvSs()));
       logger.debug("getTotPvGst : " + param.getTotPvGst());
       logger.debug("getElecAccNo : " + CommonUtils.nvl(param.getElecAccNo()));
+      logger.debug("getCwStoreId : " + CommonUtils.nvl(param.getCwStoreId()));
       logger.debug("####################################################");
       logger.debug("####################################################");
       logger.debug("####################################################");
@@ -2314,6 +2319,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
    // sal0213M.put("totPvSs", param.getTotPvSs());
     sal0213M.put("totPvSs", param.getTotPvSs() != null ? param.getTotPvSs() : 0);
     sal0213M.put("elecAccNo", CommonUtils.nvl(param.getElecAccNo()));
+    sal0213M.put("cwStoreId", CommonUtils.nvl(param.getCwStoreId()));
 
     // UPDATE SAL0213M
     int saveCnt = eKeyInApiMapper.updateSAL0213M(sal0213M);
