@@ -200,7 +200,7 @@ function btnGeneratePDF_Click(){
 	    }else if($("#cmbDeptCode :selected").val() == 0){
 	    	deptCode = "All";
 	    }
-	     
+
 	    if("${SESSION_INFO.roleId}" == 256) {
             whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+"";
         }
@@ -432,6 +432,7 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
         <option value="2"><spring:message code="sal.title.text.cody" /></option>
         <option value="4"><spring:message code="sal.text.staff" /></option>
         <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
+        <option value="7"><spring:message code="sal.text.homecareTechnician" /></option>
     </select>
     </td>
     <th scope="row"><spring:message code="sal.text.orgCode" /></th>
