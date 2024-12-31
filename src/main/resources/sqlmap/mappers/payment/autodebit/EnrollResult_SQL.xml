@@ -282,4 +282,25 @@
        ORDER BY 1 DESC
     </select>
 
+    <select id="selectDdaCsvDailySeqCount" parameterType="Map" resultType="EgovMap">
+        SELECT LPAD(DOC_NO, 2, '0') AS DOC_NO
+      FROM SYS0022C
+     WHERE  DOC_NO_ID = '204' AND ROWNUM <![CDATA[<= ]]> 1
+
+
+    </select>
+
+    <update id="updateDdaCsvDailySeqCount" parameterType="Map">
+       UPDATE SYS0022C
+                               SET DOC_NO = #{nextDocNo}
+                             WHERE   DOC_NO_ID = '204'
+    </update>
+
+    <resultMap id="ddaCsvData" type="egovMap" ></resultMap>
+    <select id="SP_CR_DDA_CSV" parameterType="Map"  statementType="CALLABLE">
+     {
+       call SP_CR_DDA_CSV ( #{V_USERID},#{V_DATE} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=ddaCsvData})
+     }
+    </select>
+
 </mapper>

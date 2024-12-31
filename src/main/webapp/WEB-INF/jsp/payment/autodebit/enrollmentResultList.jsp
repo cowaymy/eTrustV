@@ -2,6 +2,7 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
+var csvGridID;
 var myGridID;
 var viewGridID;
 var newGridID;
@@ -10,6 +11,8 @@ var selectedGridValue;
 var newDdGridID;
 
 $(document).ready(function(){
+
+	createAUIGrid();
 
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	//viewGridID = GridCommon.createAUIGrid("grid_wrap_view", viewColumn,null,gridPros);
@@ -102,6 +105,86 @@ $(document).ready(function(){
     doGetCombo('/payment/selectAutoDebitDeptUserId', 'C1002', '', 'userIdAutoDebitCode', 'S', '');
 
 });
+
+function createAUIGrid() {
+
+    var columnLayout = [ {
+          dataField : "appType",
+      },{
+          dataField : "payerNm",
+      },{
+          dataField : "payerId",
+      },{
+          dataField : "payerAccno",
+      },{
+          dataField : "payerPhoneno",
+      },{
+          dataField : "payerBankid",
+      },{
+          dataField : "payerEmail",
+      },{
+          dataField : "payerPurpose",
+      },{
+          dataField : "maxAmt",
+      },{
+          dataField : "maxFreq",
+      },{
+          dataField : "freqMod",
+      },{
+          dataField : "effectiveDt",
+      },{
+          dataField : "applyDt",
+      },{
+          dataField : "billerId",
+      },{
+          dataField : "payerRef",
+      },{
+          dataField : "payerIdType",
+      }
+      ];
+
+    var excelGridPros = {
+
+
+    	      // 페이징 사용
+    	      usePaging : true,
+
+    	      // 한 화면에 출력되는 행 개수 20(기본값:20)
+    	      pageRowCount : 20,
+
+    	      editable : true,
+
+    	      fixedColumnCount : 1,
+
+    	      showStateColumn : false,
+
+    	      displayTreeOpen : true,
+
+    	      selectionMode : "multipleCells",
+
+    	      headerHeight : 30,
+
+    	      // 그룹핑 패널 사용
+    	      useGroupingPanel : false,
+
+    	      // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+    	      skipReadonlyColumns : true,
+
+    	      // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+    	      wrapSelectionMove : true,
+
+    	      // 줄번호 칼럼 렌더러 출력
+    	      showRowNumColumn : true,
+
+    	      showRowCheckColumn : true,
+
+    	      groupingMessage : "Here groupping",
+
+    	      showHeader: false
+    };
+
+    csvGridID = AUIGrid.create("#grid_wrap_hide", columnLayout, excelGridPros);
+  }
 
 //HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
 //서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
@@ -387,20 +470,40 @@ function fn_doPrint(){
         return ;
     }
 
-    $("#V_USERID").val($("#userIdAutoDebitCode").val());
-    $("#V_DATE").val($("#submitDt").val());
-    $("#viewType").val("CSV");
-    $("#reportFileName").val("/e-accounting/DDACsv.rpt");
-    $("#reportDownFileName").val("SE000218622024121201");
+     $("#V_USERID").val($("#userIdAutoDebitCode").val());
+     $("#V_DATE").val($("#submitDt").val());
 
+     var date = new Date();
 
-    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-    var option = {
-        isProcedure : true
-    };
+     // Get the year, month, and day
+     var year = date.getFullYear(); // Get the full year (e.g., 2024)
+     var month = date.getMonth() + 1; // Get the month (0-indexed, so add 1)
+     var day = date.getDate(); // Get the day of the month
 
-    Common.report("rptForm", option);
-    }
+     // Format the month and day to ensure they are always two digits (e.g., 01, 02, ..., 09)
+     if (month < 10) {
+         month = '0' + month; // Add leading zero to month if it's less than 10
+     }
+     if (day < 10) {
+         day = '0' + day; // Add leading zero to day if it's less than 10
+     }
+
+     // Combine year, month, and day into a string formatted as YYYYMMDD
+     var todayDate = year + '' + month + '' + day;
+
+     Common.ajax("GET", "/payment/selectDdaCsv", $("#rptForm").serialize(),
+    	      function(result) {
+    	        AUIGrid.setGridData(csvGridID, result);
+
+    	        Common.ajax("GET", "/payment/selectDdaCsvDailySeqCount", $("#rptForm").serialize(),
+    	                function(result) {
+    	                var count = result[0].docNo;
+    	                var fileNm = "SE00021862" + todayDate + count;
+    	                GridCommon.exportTo("grid_wrap_hide", "csv", fileNm);
+    	       });
+     });
+
+     }
 
 </script>
 
@@ -723,12 +826,18 @@ function fn_doPrint(){
               <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
               <input type="hidden" id="V_USERID" name="V_USERID" />
               <input type="hidden" id="V_DATE" name="V_DATE" />
-          </form>
+          </form
         </section>
 
-        <!-- grid_wrap start -->
-            <article id="grid_wrap_dda_new" class="grid_wrap" style="display:none;"></article>
-        <!-- grid_wrap end -->
+         <section class="search_result">
+          <!-- search_result start -->
+             <article class="grid_wrap_hide">
+             <!-- grid_wrap start -->
+             <div id="grid_wrap_hide"
+              style="width: 100%; height: 480px; margin: 0 auto; display: none;"></div>
+            </article>
+          <!-- grid_wrap end -->
+         </section>
     </section>
     <!-- pop_body end -->
 </div>

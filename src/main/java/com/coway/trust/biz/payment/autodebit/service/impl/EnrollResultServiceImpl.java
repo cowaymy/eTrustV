@@ -293,4 +293,30 @@ public class EnrollResultServiceImpl extends EgovAbstractServiceImpl implements 
 
         return enrollResultMapper.selectAutoDebitDeptUserId(params);
     }
+
+    @Override
+    public List<EgovMap> selectDdaCsv(Map<String, Object> params) {
+
+        enrollResultMapper.SP_CR_DDA_CSV(params);
+
+        return (List<EgovMap>) params.get("p1");
+    }
+
+    @Override
+    public List<EgovMap> selectDdaCsvDailySeqCount(Map<String, Object> params) {
+
+    	List<EgovMap> list = enrollResultMapper.selectDdaCsvDailySeqCount(params);
+
+		String docNo = String.valueOf(list.get(0).get("docNo"));
+
+		int NextNo = Integer.parseInt(docNo) + 1;
+		String nextDocNo = String.valueOf(NextNo);
+		String preDocNo = String.valueOf(docNo);
+
+		params.put("nextDocNo", nextDocNo);
+		enrollResultMapper.updateDdaCsvDailySeqCount(params);
+
+		params.put("preDocNo", preDocNo);
+        return list;
+    }
 }

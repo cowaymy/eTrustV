@@ -494,6 +494,24 @@ public class EnrollResultController {
 
            return ResponseEntity.ok(selectAutoDebitDeptUserIdList);
        }
+
+	   @RequestMapping(value = "/selectDdaCsv", method = RequestMethod.GET)
+       public ResponseEntity<List<EgovMap>> selectDdaCsv( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		   LOGGER.debug("selectDdaCsv - params : " + params);
+           List<EgovMap>selectDdaCsv = enrollResultService.selectDdaCsv(params);
+
+           return ResponseEntity.ok(selectDdaCsv);
+       }
+
+	   @RequestMapping(value = "/selectDdaCsvDailySeqCount", method = RequestMethod.GET)
+       public ResponseEntity<List<EgovMap>> selectDdaCsvDailySeqCount( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		   LOGGER.debug("selectDdaCsvDailySeqCount - params : " + params);
+           List<EgovMap>selectDdaCsvDailySeqCount = enrollResultService.selectDdaCsvDailySeqCount(params);
+
+           return ResponseEntity.ok(selectDdaCsvDailySeqCount);
+       }
 }
 
 

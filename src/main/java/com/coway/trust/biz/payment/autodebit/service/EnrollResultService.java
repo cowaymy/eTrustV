@@ -46,4 +46,6 @@ public interface EnrollResultService
 	EgovMap selectBankCode(String bankCode);
 
 	List<EgovMap> selectAutoDebitDeptUserId(Map<String, Object> params);
+	List<EgovMap> selectDdaCsv(Map<String, Object> params);
+	List<EgovMap> selectDdaCsvDailySeqCount(Map<String, Object> params);
 }

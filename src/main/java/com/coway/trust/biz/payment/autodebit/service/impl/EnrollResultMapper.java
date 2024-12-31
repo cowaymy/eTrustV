@@ -100,4 +100,10 @@ public interface EnrollResultMapper {
 
 	List<EgovMap> selectAutoDebitDeptUserId(Map<String, Object> params);
 
+    List<EgovMap> SP_CR_DDA_CSV(Map<String, Object> params);
+
+    List<EgovMap> selectDdaCsvDailySeqCount(Map<String, Object> params);
+
+    void updateDdaCsvDailySeqCount(Map<String, Object> params);
+
 }
