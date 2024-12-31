@@ -4,7 +4,13 @@
 <script type="text/javascript">
 $(document).ready(function() {
     //brnch
-    CommonCombo.make('_cmbBranch', '/sales/ccp/getBranchCodeList', '' , '', '' ,fn_multy);
+    if("${SESSION_INFO.roleId}" == "256" ) {
+    	CommonCombo.make('_cmbBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}', '' ,fn_multy);
+        $('#_cmbBranch').prop("disabled", true);
+    }
+    else {
+    	CommonCombo.make('_cmbBranch', '/sales/ccp/getBranchCodeList', '' , '', '' ,fn_multy);
+    } 
 
      //Member Search Popup
     $('#memBtn').click(function() {

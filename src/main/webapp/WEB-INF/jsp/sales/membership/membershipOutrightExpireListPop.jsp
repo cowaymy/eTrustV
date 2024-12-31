@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-
+	$("#form #table1").hide();
 	if("${SESSION_INFO.userTypeId}" == "1" ){
         $("#cmbCodyStatus").prop("disabled", true);
 	}
@@ -31,6 +31,54 @@ $(document).ready(function() {
     	year += 1;
     }
     $("#mypExpireMonthTo").val((month.getMonth()+1)+"/"+year); //now+AddMonths(6)
+    
+    var userTypeId = '${SESSION_INFO.userTypeId}';
+    
+    if(userTypeId == 2){
+        $("#form #table1").show();      
+        if ("${SESSION_INFO.memberLevel}" =="1") {
+            $("#form #orgCode").val('${SESSION_INFO.orgCode}');
+            $("#form #orgCode").attr("class", "w100p readonly");
+            $("#form #orgCode").attr("readonly", "readonly");
+          } else if ("${SESSION_INFO.memberLevel}" =="2") {
+            $("#form #orgCode").val('${SESSION_INFO.orgCode}');
+            $("#form #orgCode").attr("class", "w100p readonly");
+            $("#form #orgCode").attr("readonly", "readonly");
+
+            $("#form #grpCode").val('${SESSION_INFO.groupCode}');
+            $("#form #grpCode").attr("class", "w100p readonly");
+            $("#form #grpCode").attr("readonly", "readonly");
+          } else if ("${SESSION_INFO.memberLevel}" =="3") {
+            $("#form #orgCode").val('${SESSION_INFO.orgCode}');
+            $("#form #orgCode").attr("class", "w100p readonly");
+            $("#form #orgCode").attr("readonly", "readonly");
+
+            $("#form #grpCode").val('${SESSION_INFO.groupCode}');
+            $("#form #grpCode").attr("class", "w100p readonly");
+            $("#form #grpCode").attr("readonly", "readonly");
+
+            $("#form #deptCode").val('${SESSION_INFO.deptCode}');
+            $("#form #deptCode").attr("class", "w100p readonly");
+            $("#form #deptCode").attr("readonly", "readonly");
+
+          } else if ("${SESSION_INFO.memberLevel}" =="4") {
+            $("#form #orgCode").val('${SESSION_INFO.orgCode}');
+            $("#form #orgCode").attr("class", "w100p readonly");
+            $("#form #orgCode").attr("readonly", "readonly");
+
+            $("#form #grpCode").val('${SESSION_INFO.groupCode}');
+            $("#form #grpCode").attr("class", "w100p readonly");
+            $("#form #grpCode").attr("readonly", "readonly");
+
+            $("#form #deptCode").val('${SESSION_INFO.deptCode}');
+            $("#form #deptCode").attr("class", "w100p readonly");
+            $("#form #deptCode").attr("readonly", "readonly");
+
+            $("#form #memCode").val('${SESSION_INFO.userMemCode}');
+            $("#form #memCode").attr("class", "w100p readonly");
+            $("#form #memCode").attr("readonly", "readonly");
+          }
+      }
 
 });
 
@@ -165,14 +213,13 @@ function btnGeneratePDF_Click(){
 	    }else{
 	        whereSQL += " AND som.BNDL_ID IS NULL ";
 	    }
-
+	    
 	 // ADDED BY TPY - 25/07/2019 [SCR]
 	  var memType = "${SESSION_INFO.userTypeId}";
-	  var memLevel = "${SESSION_INFO.memberLevel}";
-	  var orgCode =  $('#orgCode').val();
-      var grpCode =  $('#grpCode').val();
-      var deptCode =  $('#deptCode').val();
-      var memCode = $('#memCode').val();
+	  var orgCode =  $('#form #orgCode').val();
+      var grpCode =  $('#form #grpCode').val();
+      var deptCode =  $('#form #deptCode').val();
+      var memCode = $('#form #memCode').val();
 
 	  if(memType == 2 || memType == 3){ // CHECK MEMBER TYPE
 
@@ -194,14 +241,13 @@ function btnGeneratePDF_Click(){
     	  whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
       }
 
-       if(memLevel == 4){
-    	  whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
-      }else{
+       if(memCode == null || memCode == ""){
     	  whereSQL += " ";
+      }else{
+    	  whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
       }
 
 	  }
-
 
 	    $("#V_WHERESQL").val(whereSQL);
 		$("#V_APPTYPE").val(appType);
@@ -468,7 +514,32 @@ function btnGenerateExcel_Click(){
 </tr>
 </tbody>
 </table><!-- table end -->
-
+<table class="type1" id="table1">
+                    <!-- table start -->
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                        <col style="width: 140px" />
+                        <col style="width: *" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><spring:message code="sal.text.orgCode" /></th>
+                            <td><input type="text" title="" id="orgCode" name="orgCode" class="w100p"/></td>
+                            <th scope="row"><spring:message code="sal.text.grpCode" /></th>
+                            <td><input type="text" title="" id="grpCode" name="grpCode" class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.detpCode" /></th>
+                            <td><input type="text" title="" id="deptCode" name="deptCode" class="w100p" /></td>
+                            <th scope="row"><spring:message code="sal.text.memberCode" /></th>
+                            <td><input type="text" title="" id="memCode" name="memCode" class="w100p" /></td>
+                        </tr>
+                    </tbody>
+</table>
 
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>

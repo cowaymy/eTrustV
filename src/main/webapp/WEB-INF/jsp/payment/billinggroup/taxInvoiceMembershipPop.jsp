@@ -14,7 +14,7 @@ var invoiceTypeData = [{"codeId": "119","codeName": "Service Membership Invoice"
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	$("#table1").hide();
+	$("#searchForm #table1").hide();
     //메인 페이지
     doDefCombo(invoiceTypeData, '' ,'invoiceType', 'S', '');
     $("#invoiceType option:eq(1)").prop("selected", true);
@@ -54,9 +54,9 @@ $(document).ready(function(){
         if(roleId == 256){
             $("#searchForm #userBranchId").val('${SESSION_INFO.userBranchId}');
         }
-          
+    
         if(userTypeId == 2){
-            $("#table1").show();
+            $("#searchForm #table1").show();
             $("#searchForm #userTypeId").val(userTypeId);
             
             if ("${SESSION_INFO.memberLevel}" =="1") {

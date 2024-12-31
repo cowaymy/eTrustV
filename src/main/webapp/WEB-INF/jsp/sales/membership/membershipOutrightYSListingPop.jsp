@@ -6,8 +6,13 @@
 $(document).ready(function() {
 	
 	$("#reportInvoiceForm").empty();
-	
-    CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:'M', isCheckAll:false});
+	if("${SESSION_INFO.roleId}" == "256" ) {
+		CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}', {type:'M', isCheckAll:false});
+        $('#cmbBranch').prop("disabled", true);
+    }
+    else {
+    	CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:'M', isCheckAll:false});
+    }
 
     /* 멀티셀렉트 플러그인 start */
     $('.multy_select').change(function() {
