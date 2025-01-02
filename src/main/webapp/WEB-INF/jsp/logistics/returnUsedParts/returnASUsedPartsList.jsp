@@ -202,18 +202,27 @@
         editable : false
       },
       {
-        dataField : "serialNumber",
-        headerText : "<spring:message code='log.head.serialnumber(system)'/>",
+        dataField : "serial",
+        headerText : "Serial Number (Prev.)",
         width : 120,
         height : 30,
         editable : true
       },
+      {
+          dataField : "serialNumber",
+          headerText : "Serial Number (New.)",
+          width : 120,
+          height : 30,
+          editable : true
+       },
       {
         dataField : "qty",
         headerText : "<spring:message code='log.head.qty'/>",
         width : 120,
         height : 30
       },
+		{dataField: "unmatchId",headerText :"Unmatch Reason Id"     ,width:120    ,height:30, editable:false, visible:false},
+      {dataField: "unmatchReason",headerText :"Unmatch Reason"     ,width:120    ,height:30, editable:false},
       {
          dataField : "asAging",
          headerText : "<spring:message code='service.grid.asAging'/>",
@@ -295,7 +304,10 @@
         width : 120,
         height : 30,
         editable : false
-      }, {
+      },
+      {dataField: "pendScanName",headerText :"Serial Check Status"     ,width:120    ,height:30, editable:false},
+      {dataField: "pendScan",headerText :"Serial Check Status"     ,width:120    ,height:30, editable:false, visible:false },
+      {
         dataField : "customer",
         headerText : "<spring:message code='log.head.customer'/>",
         width : 120,
@@ -338,7 +350,6 @@
           height : 30,
           editable : false
         }
-
       ];
 
   var subgridpros = {
@@ -456,6 +467,145 @@
         }
       }
     );
+
+	$('#pending').click(function() {
+        var chkfalg;
+        var allChecked = false;
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+           if(checkedItems.length <= 0) {
+               Common.alert('No data selected.');
+               return false;
+           }else{
+        	   if(checkedItems.length > 0){
+                   for (var i = 0 ; i < checkedItems.length ; i++){
+                	   /* console.log("checkedItems[i].unmatchId" + checkedItems[i].unmatchId);
+                	   if(checkedItems[i].unmatchId != undefined){
+                           Common.alert('Please uncheck service order which contains unmatch reason.');
+                           return false;
+                       } */
+                	   if(checkedItems[i].pendScan == "Y"){
+                           Common.alert('Please uncheck service order which already Pending Scan.');
+                           return false;
+                       }
+                	   if (checkedItems[i].returnComplete =="Y"){
+                		   Common.alert('Kindly Uncheck items which already processed.');
+                           return false;
+                       }
+                   }
+        	   }
+
+
+        	   Common.confirm("Do you want to save? </br> Note that : </br> Order WITH serial number will update to status pending </br> and WITHOUT will be update to status complete",function(){
+                   //Common.alert("confirm to update");
+        		   var data = {};
+			        var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+			        data.checked = checkdata;
+
+			        Common.ajax("POST", "/logistics/returnasusedparts/returnPartsUpdatePend.do", data, function(result) {
+			            if (result.data == 0) {
+			                Common.alert(result.message);
+			                $("#search").click();
+			            }
+			            else {
+			                Common.alert('Already processed.');
+			            }
+
+			        })
+               });
+      }
+   });
+
+	$('#scan').click(function() {
+		if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
+            Common.alert('Please select one Location');
+            return false;
+	    }
+		else if($("#searchLoc").val().length>1){
+			console.log($("#searchLoc").val().length);
+            Common.alert('Please select one Location only');
+            return false;
+		}
+
+		fn_scanSerialPop();
+	   });
+
+function fn_scanSerialPop(){
+    var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+
+    Common.ajax("GET", "/logistics/returnasusedparts/getCodyInfo.do", {memCode:$("#searchLoc").val()[0]}, function(result) {
+
+        if (result != null && result.code == "00") {
+        	if(result.data != null && result.data != undefined){
+         	   var param = {
+       	            "branch" : $("#searchBranch").val(),
+       	            "branchName" : $("#searchBranch :selected").text(),
+       	            "codyId" : result.data.memId,
+       	            "codyMem" : result.data.memCode
+       	        };
+       	        Common.popupDiv("/logistics/returnasusedparts/scanASSerialPop.do", param, null, true, '_divScanASSerialPop');
+        	}
+        	else{
+                Common.alert('Cody not found');
+                return false;
+        	}
+        }
+    });
+}
+
+$('#failed').click(function() {
+    var chkfalg;
+    var allChecked = false
+    var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+       if(checkedItems.length <= 0) {
+           Common.alert('No data selected.');
+           return false;
+       }else{
+           var access_auth2 = "${PAGE_AUTH.funcUserDefine2}";
+            console.log("access_auth2 " + access_auth2);
+            for (var i = 0 ; i < checkedItems.length ; i++){
+            	if(checkedItems[i].unmatchId == undefined || checkedItems[i].unmatchId == ""){
+            		Common.alert('Only record(s) with Unmatched Reason able to failed.');
+                    return false;
+            	}
+            	if(checkedItems[i].pendScan != "Y"){
+                    Common.alert('Record(s) not in poending scan status.');
+                    return false;
+                }
+            	if (checkedItems[i].returnComplete =="Y"){
+                    Common.alert('Kindly Uncheck items which already processed.');
+                    return false;
+                }
+            }
+
+            if(access_auth2 != "Y"){ //branch admin
+            	for (var i = 0 ; i < checkedItems.length ; i++){
+                    if(checkedItems[i].unmatchId !=  "6815"){ //branch admin only can failed unmatch reason "used filter without scan label"
+                    	Common.alert('Unmatched Filer not allow to update return. </br> Kindly seek management approval.');
+                        return false;
+                    }
+                }
+            }
+
+            Common.confirm("Unmatched Filter due to without label. </br> Do you confirm the unused filter returned is correct?",function(){
+                var data = {};
+                 var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+                 data.checked = checkdata;
+
+                 Common.ajax("POST", "/logistics/returnasusedparts/returnPartsUpdateFailed.do", data, function(result) {
+                     if (result.data == 0) {
+                         Common.alert(result.message);
+                         $("#search").click();
+                     }
+                     else {
+                         Common.alert('Already processed.');
+                         $("#search").click();
+                     }
+
+                 })
+            });
+       }
+
+  });
 
     $("#download").click(
       function() {
@@ -721,9 +871,10 @@
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue">
-      <a id="complete"><span class="complete"></span><spring:message code='sal.text.complete'/></a>
-     </p></li>
+      <li><p class="btn_blue"><a id="pending"><span class="pending"></span>Return</a></p></li>
+      <li><p class="btn_blue"><a id="scan"><span class="scan"></span>Serial Check</a></p></li>
+      <li><p class="btn_blue"><a id="failed"><span class="failed"></span>Failed</a></p></li>
+      <li><p class="btn_blue"><a id="complete"><span class="complete"></span><spring:message code='sal.text.complete'/></a></p></li>
    </c:if>
   </ul>
  </aside>

@@ -81,7 +81,11 @@ SELECT
     z.as_aging,
     z.as_type,
     nvl(o.defect_desc, '-') error_details,
-    nvl(p.defect_desc, '-') errordesc
+    nvl(p.defect_desc, '-') errordesc,
+    z.PEND_SCAN_NAME,
+    z.PEND_SCAN,
+	        z.UNMATCH_ID,
+	        z.UNMATCH_REASON
 FROM (
     <if test="asTyp != 'ihr'">
         SELECT
@@ -130,7 +134,11 @@ FROM (
             END                                 AS as_aging,
             t1.as_malfunc_id,
             t1.as_malfunc_resn_id,
-            t1.as_type
+            t1.as_type,
+            t1.PEND_SCAN_NAME,
+            t1.PEND_SCAN,
+	        t1.UNMATCH_ID,
+	        t1.UNMATCH_REASON
         FROM
                  (
                 SELECT
@@ -196,7 +204,11 @@ FROM (
                     decode(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
                     b.as_malfunc_id,
                     b.as_malfunc_resn_id,
-                    q.code_desc                                               as_type
+                    q.code_desc                                               as_type,
+                    S38.NAME PEND_SCAN_NAME,
+                	CASE WHEN a.PEND_SCAN = '44' THEN 'Y' ELSE '' END  PEND_SCAN,
+	                S13.CODE_ID UNMATCH_ID,
+	                S13.CODE_NAME UNMATCH_REASON
                 FROM
                          log0103m a
                     JOIN svc0001d b ON b.as_no = a.svc_ord_id
@@ -217,6 +229,10 @@ FROM (
                     JOIN sys0026m m ON m.stk_id = l.itm_stk_id
                     JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
                     JOIN sys0013m q ON q.code_id = b.as_type_id
+    				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
+    				LEFT JOIN SVC0005D S05 ON S05.AS_RESULT_ID = a.result_id
+    				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S05.FILTER_SRL_UNMATCH_RSN)
+    				AND S13.CODE_MASTER_ID = '611'
                 WHERE
                         1 = 1
                     AND a.result_id IN (
@@ -357,7 +373,11 @@ FROM (
             END                                 AS as_aging,
             t2.as_malfunc_id,
             t2.as_malfunc_resn_id,
-            t2.as_type
+            t2.as_type,
+            t2.PEND_SCAN_NAME,
+            t2.PEND_SCAN,
+            t2.UNMATCH_ID,
+            t2.UNMATCH_REASON
         FROM
                  (
                 SELECT
@@ -423,7 +443,11 @@ FROM (
                     decode(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
                     b.as_malfunc_id,
                     b.as_malfunc_resn_id,
-                    q.code_desc                                               as_type
+                    q.code_desc                                               as_type,
+                    S38.NAME PEND_SCAN_NAME,
+                	CASE WHEN a.PEND_SCAN = '44' THEN 'Y' ELSE '' END  PEND_SCAN,
+	                S13.CODE_ID UNMATCH_ID,
+	                S13.CODE_NAME UNMATCH_REASON
                 FROM
                          log0103m a
                     JOIN svc0108d b ON b.as_no = a.svc_ord_id
@@ -444,6 +468,10 @@ FROM (
                     JOIN sys0026m m ON m.stk_id = l.itm_stk_id
                     JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
                     JOIN sys0013m q ON q.code_id = b.as_type_id
+    				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
+    				LEFT JOIN SVC0110D S0110 ON S0110.AS_RESULT_ID = a.result_id
+    				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S0110.FILTER_SRL_UNMATCH_RSN)
+    				AND S13.CODE_MASTER_ID = '611'
                 WHERE
                         1 = 1
                     AND a.result_id IN (
@@ -757,4 +785,173 @@ FROM (
      ORDER BY CODE
   </select>
 
+  <select id="getCodyInfo" parameterType="Map" resultType="egovMap">
+		SELECT MEM_ID,MEM_CODE FROM ORG0001D WHERE MEM_CODE = #{memCode} AND ROWNUM = 1
+  </select>
+
+	<select id="selectScanSerialList" parameterType="Map" resultType="egovMap">
+SELECT STK_ID, STK_CODE, STK_DESC, RETURN_QTY, SUM(SCAN_QTY) AS SCAN_QTY  FROM (
+    select A.STK_ID, A.STK_CODE, A.STK_DESC, A.RETURN_QTY
+        ,(
+            select count(1)
+            from LOG0103M
+            WHERE MEM_ID = #{codyMem} AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            and scan_no = #{scanNo}
+            and STK_ID = A.STK_ID
+            ) SCAN_QTY
+        from (
+            SELECT
+                S26.STK_ID
+                ,S26.STK_CODE
+                ,S26.STK_DESC
+                ,COUNT(1) RETURN_QTY
+            FROM LOG0103M L103
+            JOIN SYS0026M S26 ON L103.STK_ID=S26.STK_ID
+            JOIN SVC0004D S04 ON S04.AS_RESULT_ID=L103.RESULT_ID and S04.AS_RESULT_IS_CURR = 1
+            JOIN SVC0005D S05 ON S05.AS_RESULT_ID = S04.AS_RESULT_ID AND S05.ASR_ITM_PART_ID = L103.STK_ID
+            WHERE MEM_ID = #{codyMem}
+            AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            AND NVL(S05.FILTER_SRL_UNMATCH_RSN,0) = 0
+            GROUP BY S26.STK_ID,S26.STK_CODE,S26.STK_DESC
+        )a
+
+        UNION ALL
+
+     select A.STK_ID, A.STK_CODE, A.STK_DESC, A.RETURN_QTY
+        ,(
+            select count(1)
+            from LOG0103M
+            WHERE MEM_ID = #{codyMem} AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            and scan_no = #{scanNo}
+            and STK_ID = A.STK_ID
+            ) SCAN_QTY
+        from (
+            SELECT
+                S26.STK_ID
+                ,S26.STK_CODE
+                ,S26.STK_DESC
+                ,COUNT(1) RETURN_QTY
+            FROM LOG0103M L103
+            JOIN SYS0026M S26 ON L103.STK_ID=S26.STK_ID
+            JOIN SVC0109D S109 ON S109.AS_RESULT_ID=L103.RESULT_ID and S109.AS_RESULT_IS_CURR = 1
+            JOIN SVC0110D S110 ON S110.AS_RESULT_ID = S109.AS_RESULT_ID AND S110.ASR_ITM_PART_ID = L103.STK_ID
+            WHERE MEM_ID = #{codyMem}
+            AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            AND NVL(S110.FILTER_SRL_UNMATCH_RSN,0) = 0
+            GROUP BY S26.STK_ID,S26.STK_CODE,S26.STK_DESC
+        )a
+        ) GROUP BY STK_ID, STK_CODE, STK_DESC, RETURN_QTY
+  </select>
+
+  <update id="saveScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            CMPLT_YN ='Y',
+            CMPLT_DT=SYSDATE,
+            pend_scan = #{pendScan},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ in (SELECT seq FROM LOG0103M
+        WHERE scan_no = #{scanNo}
+        )
+    </update>
+
+	<update id="deleteTempScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            scan_no = null,
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ in (SELECT seq FROM LOG0103M
+        WHERE scan_no = #{scanNo}
+        )
+    </update>
+
+   <select id="getScanNoSequence" parameterType="Map" resultType="String">
+        SELECT 'S' || TO_CHAR(SYSDATE,'YYMMDD') || LPAD(LOG0103M_SCAN_NO_SEQ.NEXTVAL, 10, 0) FROM DUAL
+  </select>
+
+   <select id="checkScanSerial" parameterType="Map" resultType="egovMap">
+	SELECT SEQ,STK_ID,STK_CODE,STK_DESC FROM (
+    <![CDATA[
+        SELECT /*+INDEX (A LOG0103M_IDX2) */
+           A.SEQ
+           ,A.STK_ID
+           ,B.STK_CODE
+           ,B.STK_DESC
+        FROM LOG0103M A
+        LEFT JOIN SYS0026M B ON B.STK_ID = A.STK_ID
+        JOIN SVC0004D S04 ON S04.AS_RESULT_ID=A.RESULT_ID  and S04.AS_RESULT_IS_CURR = 1
+        JOIN SVC0005D S05 ON S05.AS_RESULT_ID = S04.AS_RESULT_ID AND S05.ASR_ITM_PART_ID = A.STK_ID
+        WHERE
+        A.PEND_SCAN = '44'
+        AND NVL(S05.FILTER_SRL_UNMATCH_RSN,0) = 0
+        AND A.OLD_SERIAL = #{barcode}
+        and MEM_ID = #{codyId}
+        ]]>
+
+        <if test="servicesdt !=null and servicesdt !=''">
+            AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+            AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+
+       <![CDATA[
+       UNION ALL
+        SELECT /*+INDEX (A LOG0103M_IDX2) */
+           A.SEQ
+           ,A.STK_ID
+           ,B.STK_CODE
+           ,B.STK_DESC
+        FROM LOG0103M A
+        LEFT JOIN SYS0026M B ON B.STK_ID = A.STK_ID
+        JOIN SVC0109D S109 ON S109.AS_RESULT_ID= A.RESULT_ID  and S109.AS_RESULT_IS_CURR = 1
+        JOIN SVC0110D S110 ON S110.AS_RESULT_ID = S109.AS_RESULT_ID AND S110.ASR_ITM_PART_ID = A.STK_ID
+        WHERE
+        A.PEND_SCAN = '44'
+        AND NVL(S110.FILTER_SRL_UNMATCH_RSN,0) = 0
+        AND A.OLD_SERIAL = #{barcode}
+        and MEM_ID = #{codyId}
+        ]]>
+
+        <if test="servicesdt !=null and servicesdt !=''">
+            AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+            AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+        ) GROUP BY  SEQ,STK_ID,STK_CODE,STK_DESC
+
+  </select>
+
+    <update id="upTempScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            scan_no = #{scanNo},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ = #{seq}
+
+    </update>
+
+	<update id="upToPendReturnParts" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            PEND_SCAN = #{pendSts},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{userId}
+        WHERE SEQ =#{seq}
+    </update>
+
+  <update id="upToFailedReturnParts" parameterType="Map">
+       UPDATE LOG0103M
+       SET
+           CMPLT_YN ='Y',
+           CMPLT_DT=SYSDATE,
+           PEND_SCAN = #{pendSts},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID=#{userId}
+       WHERE SEQ =#{seq}
+   </update>
 </mapper>

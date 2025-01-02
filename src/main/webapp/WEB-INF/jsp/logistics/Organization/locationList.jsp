@@ -756,6 +756,24 @@ $(document).ready(function(){
         		 $("#"+take+"slplant").attr("disabled" , false);
         	 }
          }
+
+    	 /*default set serial check for CT,CODY,LT for new records*/
+    	 if(id == "ilocationtype") {
+    		var whLocCode =$("#"+id).val();
+
+    		if(whLocCode == "03" || whLocCode == "04" || whLocCode == "09"){
+				$("input[name=iserialRequireChkYn][value=Y]").prop("checked", true);
+				$("#ipdchk").prop('checked', true);
+				$("#iftchk").prop('checked', true);
+				$("#iptchk").prop('checked', true);
+    		}
+    		else{
+				$("input[name=iserialRequireChkYn][value=N]").prop("checked", true);
+				$("#ipdchk").prop('checked', false);
+				$("#iftchk").prop('checked', false);
+				$("#iptchk").prop('checked', false);
+    		}
+    	 }
      }
 
 //      function fn_deleteAjax(rowid) {

@@ -1,5 +1,6 @@
 package com.coway.trust.web.logistics.returnusedparts;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -288,4 +289,139 @@ public class ReturnASUsedPartsController {
     return ResponseEntity.ok(location);
   }
 
+  @RequestMapping(value = "/getCodyInfo.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> getCodyInfo(@RequestParam Map<String, Object> params) {
+
+	  EgovMap detail = returnASUsedPartsService.getCodyInfo(params);
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    message.setData(detail);
+
+    return ResponseEntity.ok(message);
+  }
+
+	@RequestMapping(value = "/scanASSerialPop.do")
+    public String scanASSerialPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    	model.addAttribute("url", params);
+    	List<EgovMap> list = returnASUsedPartsService.selectScanSerialInPop(params);
+
+    	model.addAttribute("data", list);
+        return "logistics/returnUsedParts/scanASSerialPop";
+    }
+
+	@RequestMapping(value = "/saveReturnUsedSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveReturnUsedSerial(@RequestBody Map<String, Object>  params, SessionVO sessionVO) throws Exception {
+
+		returnASUsedPartsService.saveReturnUsedSerial(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/selectScanSerialInList.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> selectScanSerialInList(@RequestBody Map<String, Object> params, Model model) throws Exception {
+    	ReturnMessage result = new ReturnMessage();
+
+        List<EgovMap> list = returnASUsedPartsService.selectScanSerialInPop(params);
+
+        result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+		result.setTotal(list.size());
+
+		return ResponseEntity.ok(result);
+    }
+
+	@RequestMapping(value = "/deleteSerial.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteSerial(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		returnASUsedPartsService.deleteSerial(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/serialASScanCommonPop.do")
+	public String serialASScanCommonPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("url", params);
+		Map<String, Object> sParam = new HashMap<String, Object>();
+		sParam.put("groupCode", "42");
+		//model.addAttribute("uomList", commonService.selectCodeList(sParam));
+		return "logistics/returnUsedParts/serialASScanCommonPop";
+	}
+
+	@RequestMapping(value = "/saveReturnBarcode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveReturnBarcode(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception {
+
+		List<Object> list = returnASUsedPartsService.saveReturnBarcode(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		result.setDataList(list);
+
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/returnPartsUpdatePend.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> returnPartsUpdatePend(@RequestBody Map<String, Object> params, Model model) {
+
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		 logger.debug("loginId@@@@@: {}", loginId);
+
+		 Map<String, Object> returnResult = returnASUsedPartsService.returnPartsUpdatePend(params,loginId);
+
+//		 List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//		 Map<String, Object> insMap = new HashMap<>();
+//		 int dupCnt =0;
+//			for (int i = 0; i < checkList.size(); i++) {
+//				logger.debug("checkList    값 : {}", checkList.get(i));
+//			}
+//
+//			if (checkList.size() > 0) {
+//				for (int i = 0; i < checkList.size(); i++) {
+//					 insMap = (Map<String, Object>) checkList.get(i);
+//				}
+//				 dupCnt = returnUsedPartsService.returnPartsdupchek(insMap);
+//			}
+//
+//			logger.debug("dupCnt %$%$%$%$%$%$ ??????: {}", dupCnt);
+//
+//		 if(dupCnt == 0){
+//			 returnUsedPartsService.returnPartsUpdate(params,loginId);
+//		 }
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(returnResult.get("dupCnt").toString());
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/returnPartsUpdateFailed.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> returnPartsUpdateFailed(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		 logger.debug("loginId@@@@@: {}", loginId);
+
+		 Map<String, Object> returnResult = returnASUsedPartsService.returnPartsUpdateFailed(params,loginId);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(returnResult.get("dupCnt").toString());
+
+		return ResponseEntity.ok(message);
+	}
 }

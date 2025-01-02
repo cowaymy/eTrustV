@@ -1,7 +1,10 @@
 	package com.coway.trust.biz.logistics.returnusedparts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -48,5 +51,19 @@ public interface ReturnASUsedPartsService {
   List<EgovMap> getRptType();
 
   List<EgovMap> getRtnStat();
+
+  Map<String, Object> returnPartsUpdatePend(Map<String, Object> params, int loginId);
+
+  Map<String, Object> returnPartsUpdateFailed(Map<String, Object> params, int loginId);
+
+List<EgovMap> selectScanSerialInPop(Map<String, Object> params);
+
+void saveReturnUsedSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+void deleteSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+List<Object> saveReturnBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception;
+
+EgovMap getCodyInfo(Map<String, Object> params);
 
 }

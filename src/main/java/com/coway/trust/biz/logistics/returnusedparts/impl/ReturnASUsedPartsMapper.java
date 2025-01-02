@@ -51,4 +51,21 @@ public interface ReturnASUsedPartsMapper {
 
   List<EgovMap> getRtnStat();
 
+  EgovMap getCodyInfo(Map<String, Object> params);
+
+  void upToPendReturnParts(Map<String, Object> params);
+
+  void upToFailedReturnParts(Map<String, Object> params);
+
+  List<EgovMap> selectScanSerialList(Map<String, Object> params);
+
+	void saveScanSerial(Map<String, Object> params);
+
+	void deleteTempScanSerial(Map<String, Object> params);
+
+	String getScanNoSequence(Map<String, Object> params);
+
+	List<EgovMap> checkScanSerial(Map<String, Object> params);
+
+	void upTempScanSerial(Map<String, Object> params);
 }
