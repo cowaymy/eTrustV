@@ -122,39 +122,74 @@ function btnGenerate_Click(){
         }
 
 	     // ADDED BY TPY - 25/07/2019 [SCR]
-	      var memType = "${SESSION_INFO.userTypeId}";
-	      var orgCode =  $('#form #orgCode').val();
-	      var grpCode =  $('#form #grpCode').val();
-	      var deptCode =  $('#form #deptCode').val();
-	      var memCode = $('#form #memCode').val();
+	     
+		var memType = "${SESSION_INFO.userTypeId}";
+        var memLevel = "${SESSION_INFO.memberLevel}";
+        var orgCode =  $('#orgCode').val();
+        var grpCode =  $('#grpCode').val();
+        var deptCode =  $('#deptCode').val();
+        var memCode = $('#memCode').val();
 
-	      if(memType == 2 || memType == 3){ // CHECK MEMBER TYPE
+        if(memType == 3){ // CHECK MEMBER TYPE
 
-	      if(orgCode == null || orgCode == ""){
-	          whereSQL += " ";
-	      }else{
-	          whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
-	      }
+        if(orgCode == null || orgCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
+        }
 
-	      if(grpCode == null || grpCode == ""){
-	          whereSQL += " ";
-	      }else{
-	          whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
-	      }
+        if(grpCode == null || grpCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
+        }
 
-	      if(deptCode == null || deptCode == ""){
-	          whereSQL += " ";
-	      }else{
-	          whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
-	      }
+        if(deptCode == null || deptCode == ""){
+            whereSQL += " ";
+        }else{
+            whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
+        }
 
-	       if(memCode == null || memCode == ""){
-	    	  whereSQL += " ";
-	      }else{
-	    	  whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
-	      }
+         if(memLevel == 4){
+            whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
+        }else{
+            whereSQL += " ";
+        }
 
-	      }
+        }
+        
+	    var orgCode =  $('#form #orgCode').val();
+	    var grpCode =  $('#form #grpCode').val();
+	    var deptCode =  $('#form #deptCode').val();
+	    var memCode = $('#form #memCode').val();
+
+	    if(memType == 2){ // CHECK MEMBER TYPE
+
+	    if(orgCode == null || orgCode == ""){
+	        whereSQL += " ";
+	    }else{
+	        whereSQL += " AND v.ORG_CODE = '" + orgCode + "' ";
+	    }
+
+	    if(grpCode == null || grpCode == ""){
+	        whereSQL += " ";
+	    }else{
+	        whereSQL += " AND v.GRP_CODE = '" + grpCode + "' ";
+	    }
+
+	    if(deptCode == null || deptCode == ""){
+	        whereSQL += " ";
+	    }else{
+	        whereSQL += " AND v.DEPT_CODE = '" + deptCode + "' ";
+	    }
+
+	    if(memCode == null || memCode == ""){
+	    	whereSQL += " ";
+	    }else{
+	    	whereSQL += " AND v.MEM_CODE = '" + memCode + "' ";
+	    }
+
+	    }
 
 		if($("#isHc").val() != null && $("#isHc").val() != ''){
 		    whereSQL += " AND som.BNDL_ID IS NOT NULL ";
@@ -163,7 +198,8 @@ function btnGenerate_Click(){
 		}
 
         $("#V_WHERESQL").val(whereSQL);
-
+        $("#V_MEMTYPE").val(memType);
+        
         var date = new Date().getDate();
         if(date.toString().length == 1){
             date = "0" + date;
@@ -276,6 +312,7 @@ function btnGenerate_Click(){
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="V_MEMTYPE" name="V_MEMTYPE" value="" />
 <input id="isHc" name="isHc" type="hidden" value='${isHc}'/>
 
 </form>
