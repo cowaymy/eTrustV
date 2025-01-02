@@ -1292,7 +1292,7 @@
                              L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE,
                              S26.STK_TYPE_ID PART_TYPE,
                              NVL(S16.AMT, 0) AS SALES_PRICE,
-                             L44.COMPNT_QTY AS QUANTITY
+                             TO_CHAR(NVL(L44.COMPNT_QTY, 0)) AS QUANTITY
     FROM LOG0043M L43,
              LOG0044D L44,
              SYS0026M S26,
@@ -1324,7 +1324,7 @@
                              'INST_PART' AS DIVISION_CODE,
                              S26.STK_TYPE_ID PART_TYPE,
                              NVL(S16.AMT, 0) AS SALES_PRICE,
-                             L44.COMPNT_QTY AS QUANTITY
+                             TO_CHAR(NVL(L44.COMPNT_QTY, 0)) AS QUANTITY
     FROM LOG0043M L43,
              LOG0044D L44,
              SYS0026M S26,
