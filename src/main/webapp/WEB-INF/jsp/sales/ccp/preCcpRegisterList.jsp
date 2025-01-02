@@ -63,7 +63,15 @@
 	    dataField : "ccpRem",
 	    headerText : "CCP Remark",
 	    editable : false,
-	    width : "25%"
+	    width : "25%",
+	    style : "aui-grid-left-column",
+	    renderer : {
+                   type : "TemplateRenderer",
+        },
+        labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+            let v = value.replace(/\n/g, '<br/>');
+            return v;
+        }
      },
 //      {
 //         dataField : "custMonth",

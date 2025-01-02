@@ -511,6 +511,9 @@
                 {
                     dataField : "custCat",
                     headerText : "Customer <br>Category",
+                    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                        return value.toUpperCase();
+                    },
                     editRenderer : {
 	                    type : "InputEditRenderer",
 	                    // 에디팅 유효성 검사
@@ -616,11 +619,11 @@
 
 	function setProdEntitleColumnLayout() {
         return [
-                {
+        /*         {
                     dataField : "prodEntitleId",
                     headerText : "Product Entitle Id",
                     visible: false
-                },
+                }, */
                 {
                     dataField : "prodCatCode",
                     headerText : "Product Category",
@@ -742,7 +745,7 @@
                 },
                 {
                     dataField : "insufccris",
-                    headerText : "No Score Insufficient CCRIS",
+                    headerText : "No Score Insufficient <br> CCRIS",
                     width : '15%',
                     editRenderer : {
                         type : "DropDownListRenderer",
