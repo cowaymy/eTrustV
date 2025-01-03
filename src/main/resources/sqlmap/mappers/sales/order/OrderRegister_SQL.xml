@@ -2702,13 +2702,28 @@
 	                        WHERE
 	                            A.RENT_INST_TYPE_ID = 159
 	                   AND B.CUST_ID = #{custId}
-	                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) > 0
+	                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> -4
 	                )
 	              </when>
 	              <otherwise>
 	                AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
 	                                                                WHERE AA.CODE = BB.CODE
 	                                                                AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+	                       AND T1.SALES_ORD_ID IN (
+                            SELECT A.SALES_ORD_ID
+                            FROM SAL0070D A
+                            JOIN
+                            (
+                               SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
+                            ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
+                            JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
+                            JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+                            JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
+                            WHERE
+                                A.RENT_INST_TYPE_ID = 159
+                       AND B.CUST_ID = #{custId}
+                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> -4
+                       )
 	              </otherwise>
 	           </choose>
            ) A
@@ -3509,7 +3524,7 @@ WHERE
                    A.RENT_INST_TYPE_ID = 159
                    AND A.SALES_ORD_ID = #{value}
 <!--                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6 -->
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) > 0
+                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> -4
   </select>
   <select id="automatedCcpProcess" parameterType="Map" statementType="CALLABLE">
         {
