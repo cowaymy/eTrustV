@@ -874,7 +874,7 @@ $('#failed').click(function() {
       <li><p class="btn_blue"><a id="pending"><span class="pending"></span>Return</a></p></li>
       <li><p class="btn_blue"><a id="scan"><span class="scan"></span>Serial Check</a></p></li>
       <li><p class="btn_blue"><a id="failed"><span class="failed"></span>Failed</a></p></li>
-      <li><p class="btn_blue"><a id="complete"><span class="complete"></span><spring:message code='sal.text.complete'/></a></p></li>
+<%--       <li><p class="btn_blue"><a id="complete"><span class="complete"></span><spring:message code='sal.text.complete'/></a></p></li> --%>
    </c:if>
   </ul>
  </aside>
