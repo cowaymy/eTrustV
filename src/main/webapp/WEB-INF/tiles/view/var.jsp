@@ -8,6 +8,7 @@
 <script>
 	var javascriptLoglevel = "debug";
 	var _SESSION_EXPIRE_MESSAGE ="<spring:message code='sys.msg.session.expired'/>";
+	var _CSRF_INVALID_MESSAGE ="<spring:message code='sys.msg.csrf.invalid'/>";
     var DEFAULT_DELIMITER = "|!|";
     var DEFAULT_RESOURCE_FILE = "${pageContext.request.contextPath}" + "/resources/WebShare";
 	var DEFAULT_HELP_FILE = "${pageContext.request.contextPath}" + "/help";
@@ -55,6 +56,6 @@
 	gridMsg["sys.info.grid.contextTexts.clear.filter"] = "<spring:message code='sys.info.grid.contextTexts.clear.filter'  javaScriptEscape='true'/>";
 	gridMsg["sys.info.grid.contextTexts.fixed.col"] = "<spring:message code='sys.info.grid.contextTexts.fixed.col'  javaScriptEscape='true'/>";
 	gridMsg["sys.info.grid.contextTexts.clear.fixed.col"] = "<spring:message code='sys.info.grid.contextTexts.clear.fixed.col'  javaScriptEscape='true'/>";
-	
+
 	gridMsg["sys.warn.grid.pdf"] = "<spring:message code='sys.warn.grid.pdf'  javaScriptEscape='true'/>";
 </script>

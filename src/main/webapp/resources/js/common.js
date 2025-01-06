@@ -47,8 +47,13 @@ var Common = {
             url: getContextPath() + _url,
             contentType: "application/json;charset=UTF-8",
             beforeSend: function (request) {
-                if (_header) {
-                    _header(request);
+            	if (_header) {
+        			if(_header.csrfName && _header.csrfToken){
+        				request.setRequestHeader(_header.csrfName, _header.csrfToken);
+        			}
+        			else{
+        				_header(request);
+                    }
                 }
 
                 // loading start....
@@ -74,43 +79,48 @@ var Common = {
             },
             error: function (jqXHR, textStatus, errorThrown) {
 
-                //ResponseEntity.ok(null) 인 경우 처리.
-                if(jqXHR.status == "200"){
-                    if (_callback) {
-                        _callback(null, textStatus, jqXHR);
-                    }
-                    return true;
+                if(jqXHR.status == 403){
+                    Common.alert(_CSRF_INVALID_MESSAGE);
                 }
-
-                try {
-                    console.log("status : " + jqXHR.status);
-                    console.log("code : " + jqXHR.responseJSON.code);
-                    console.log("message : " + jqXHR.responseJSON.message);
-                    console.log("detailMessage : "
-                        + jqXHR.responseJSON.detailMessage);
-                } catch (e) {
-                    console.log(e);
-                }
-
-                if (_errcallback) {
-                    _errcallback(jqXHR, textStatus, errorThrown);
-                } else {
-
-                    if(jqXHR.status == "401"){
-                        Common.alert(_SESSION_EXPIRE_MESSAGE);
-
-                        // go login page - 20190924 KR-MIN : for go login page
-                        window.top.location.href = '/login/login.do';
-
-                        return false;
+                else{
+                    //ResponseEntity.ok(null) 인 경우 처리.
+                    if(jqXHR.status == "200"){
+                        if (_callback) {
+                            _callback(null, textStatus, jqXHR);
+                        }
+                        return true;
                     }
 
-                    if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
-                        Common.setMsg("Fail : " + jqXHR.responseJSON.message);
-                        Common.alert("Fail : " + jqXHR.responseJSON.message);
-                    }else{
-                        Common.setMsg("Fail.(common.js : ajax error)");
-                        Common.alert("Fail.(common.js : ajax error)");
+                    try {
+                        console.log("status : " + jqXHR.status);
+                        console.log("code : " + jqXHR.responseJSON.code);
+                        console.log("message : " + jqXHR.responseJSON.message);
+                        console.log("detailMessage : "
+                            + jqXHR.responseJSON.detailMessage);
+                    } catch (e) {
+                        console.log(e);
+                    }
+
+                    if (_errcallback) {
+                        _errcallback(jqXHR, textStatus, errorThrown);
+                    } else {
+
+                        if(jqXHR.status == "401"){
+                            Common.alert(_SESSION_EXPIRE_MESSAGE);
+
+                            // go login page - 20190924 KR-MIN : for go login page
+                            window.top.location.href = '/login/login.do';
+
+                            return false;
+                        }
+
+                        if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+                            Common.setMsg("Fail : " + jqXHR.responseJSON.message);
+                            Common.alert("Fail : " + jqXHR.responseJSON.message);
+                        }else{
+                            Common.setMsg("Fail.(common.js : ajax error)");
+                            Common.alert("Fail.(common.js : ajax error)");
+                        }
                     }
                 }
             }

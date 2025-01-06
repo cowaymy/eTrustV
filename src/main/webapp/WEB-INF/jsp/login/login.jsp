@@ -574,7 +574,7 @@
                     console.log("message : " + jqXHR.responseJSON.message);
                     console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
                 }
-            });
+            }, null, {csrfName: '${_csrf.headerName}', csrfToken: '${_csrf.token}'});
     }
 
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
