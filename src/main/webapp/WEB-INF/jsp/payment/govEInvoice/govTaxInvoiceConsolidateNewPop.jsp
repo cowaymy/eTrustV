@@ -50,19 +50,24 @@ function validRequiredField(){
             	message += 'Only Past Month is allowed';
           	}
       	}
-      	else{
-      		if(thisMonth == 1){
-      			if(parseInt(selectedMonth) == 12 && parseInt(selectedYear) == (thisYear-1)){
-      			}
-      			else{
-              		valid = false;
-                	message += 'No past or future year is allowed';
-      			}
-      		}else{
-          		valid = false;
-            	message += 'No past or future year is allowed';
-      		}
+      	else if (thisYear < parseInt(selectedYear)){
+      		valid = false;
+        	message += 'Future year is not allowed';
       	}
+      	//Disable for past year work
+//       	else{
+//       		if(thisMonth == 1){
+//       			if(parseInt(selectedMonth) == 12 && parseInt(selectedYear) == (thisYear-1)){
+//       			}
+//       			else{
+//               		valid = false;
+//                 	message += 'No past or future year is allowed';
+//       			}
+//       		}else{
+//           		valid = false;
+//             	message += 'No past or future year is allowed';
+//       		}
+//       	}
 
 //       	if(todayDate >=2 && todayDate <=7){
 //       		//allow to create consolidate tax invoice
@@ -89,7 +94,6 @@ function btnGenerate_Click(){
 	      data.form = formList;
 	    else
 	      data.form = [];
-
 
 	    Common.ajax("POST","/payment/einv/generateNewTaxInvConsolidateClaim.do",data,function(result) {
               var message = "";
