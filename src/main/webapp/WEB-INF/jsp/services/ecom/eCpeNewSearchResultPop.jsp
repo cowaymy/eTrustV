@@ -104,19 +104,20 @@ window.addEventListener('resize', function(event){
 
         fn_initAddress();
 
-        CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , "${orderDetail.installationInfo.instState}", optionState, fn_selectState("${orderDetail.installationInfo.instState}"));
+        CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , "", optionState, fn_selectState("${orderDetail.installationInfo.instState}"));
+        //CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , "${orderDetail.installationInfo.instState}", optionState, fn_selectState("${orderDetail.installationInfo.instState}"));
 
-        let cityJson2 = {state : "${orderDetail.installationInfo.instState}"}
-        CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson2, "${orderDetail.installationInfo.instCity}", optionCity, fn_selectCity("${orderDetail.installationInfo.instCity}"));
+        //let cityJson2 = {state : "${orderDetail.installationInfo.instState}"}
+        //CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson2, "${orderDetail.installationInfo.instCity}", optionCity, fn_selectCity("${orderDetail.installationInfo.instCity}"));
 
-        let postCodeJson2 = {state : "${orderDetail.installationInfo.instState}" , city : "${orderDetail.installationInfo.instinstCity}"}; //Condition
-        CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson2, "${orderDetail.installationInfo.instPostcode}" , optionPostCode, fn_selectDefaultPostCode("${orderDetail.installationInfo.instPostcode}"));
+        //let postCodeJson2 = {state : "${orderDetail.installationInfo.instState}" , city : "${orderDetail.installationInfo.instinstCity}"}; //Condition
+        //CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson2, "${orderDetail.installationInfo.instPostcode}" , optionPostCode, fn_selectDefaultPostCode("${orderDetail.installationInfo.instPostcode}"));
 
-        let areaJson2 = {state : "${orderDetail.installationInfo.instState}", city : "${orderDetail.installationInfo.instinstCity}" , postcode : "${orderDetail.installationInfo.instPostcode}"}; //Condition
-        CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson2, "${orderDetail.installationInfo.instArea}" , optionArea);
-        $('#searchSt').val("${orderDetail.installationInfo.instArea}");
+        //let areaJson2 = {state : "${orderDetail.installationInfo.instState}", city : "${orderDetail.installationInfo.instinstCity}" , postcode : "${orderDetail.installationInfo.instPostcode}"}; //Condition
+        //CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson2, "${orderDetail.installationInfo.instArea}" , optionArea);
+        //$('#searchSt').val("${orderDetail.installationInfo.instArea}");
 
-        fn_getDefaultAreaId()
+        //fn_getDefaultAreaId()
     });//Doc Ready End
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +199,58 @@ window.addEventListener('resize', function(event){
 
         if(!checkResult){
             return false;
+        }else{
+        	   // Check if all fields are empty before showing the error
+            if (("" == $("#addrDtl").val() || null == $("#addrDtl").val()) &&
+                ("" == $("#streetDtl").val() || null == $("#streetDtl").val()) &&
+                ("" == $("#mState").val() || null == $("#mState").val()) &&
+                ("" == $("#mCity").val() || null == $("#mCity").val()) &&
+                ("" == $("#searchSt").val() || null == $("#searchSt").val()) &&
+                ("" == $("#mPostCd").val() || null == $("#mPostCd").val()) &&
+                ("" == $("#mArea").val() || null == $("#mArea").val())) {
+                // All fields are empty, so do nothing and assign default values
+                $("#addrDtl").val("${orderDetail.installationInfo.instAddrDtl}").hide();
+                $("#streetDtl").val("${orderDetail.installationInfo.instStreet}").hide();
+                $("#mCountry").val("${orderDetail.installationInfo.instCountry}").hide();
+
+                CommonCombo.make('mState', "/enquiry/selectMagicAddressComboList.do", '' , "${orderDetail.installationInfo.instState}", optionState, fn_selectState("${orderDetail.installationInfo.instState}"));
+                $('#mState').hide();
+
+                let cityJson2 = {state : "${orderDetail.installationInfo.instState}"}
+                CommonCombo.make('mCity', "/enquiry/selectMagicAddressComboList.do", cityJson2, "${orderDetail.installationInfo.instCity}", optionCity, fn_selectCity("${orderDetail.installationInfo.instCity}"));
+                $('#mCity').hide();
+
+                let postCodeJson2 = {state : "${orderDetail.installationInfo.instState}" , city : "${orderDetail.installationInfo.instinstCity}"}; //Condition
+                CommonCombo.make('mPostCd', "/enquiry/selectMagicAddressComboList.do", postCodeJson2, "${orderDetail.installationInfo.instPostcode}" , optionPostCode, fn_selectDefaultPostCode("${orderDetail.installationInfo.instPostcode}"));
+                $('#mPostCd').hide();
+
+                let areaJson2 = {state : "${orderDetail.installationInfo.instState}", city : "${orderDetail.installationInfo.instinstCity}" , postcode : "${orderDetail.installationInfo.instPostcode}"}; //Condition
+                CommonCombo.make('mArea', "/enquiry/selectMagicAddressComboList.do", areaJson2, "${orderDetail.installationInfo.instArea}" , optionArea);
+                $('#mArea').hide();
+                $('#searchSt').val("${orderDetail.installationInfo.instArea}").hide();
+                fn_getDefaultAreaId()
+            }
+
+            if("" == $("#cntcTelm").val().trim()){
+            	 $("#cntcTelm").val("${orderDetail.installationInfo.instCntTelM}").hide();
+            }
+
+            if("" == $("#cntcTelo").val().trim()){
+                $("#cntcTelo").val("${orderDetail.installationInfo.instCntTelO}").hide();
+           }
+
+            if("" == $("#cntcTelr").val().trim()){
+                $("#cntcTelr").val("${orderDetail.installationInfo.instCntTelR}").hide();
+           }
+
+            if("" == $("#cntcTelf").val().trim()){
+                $("#cntcTelf").val("${orderDetail.installationInfo.instCntTelF}").hide();
+           }
+
+            if("" == $("#cntcEmail").val().trim()){
+                $("#cntcEmail").val("${orderDetail.installationInfo.instCntEmail}").hide();
+           }
+
         }
 
         var formData = Common.getFormData("form_newReqst");
@@ -246,11 +299,33 @@ window.addEventListener('resize', function(event){
         }
 
         /* addr1 addr2 null check */
-        if( ( "" == $("#addrDtl").val() || null == $("#addrDtl").val())){
-            Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
-            return;
+        // First, check if any field is empty or null, but exclude the case where all fields are empty
+        if ( ("" == $("#addrDtl").val() || null == $("#addrDtl").val()) ||
+             ("" == $("#streetDtl").val() || null == $("#streetDtl").val()) ||
+             ("" == $("#mState").val() || null == $("#mState").val()) ||
+             ("" == $("#mCity").val() || null == $("#mCity").val()) ||
+             ("" == $("#searchSt").val() || null == $("#searchSt").val()) ||
+             ("" == $("#mPostCd").val() || null == $("#mPostCd").val()) ||
+             ("" == $("#mArea").val() || null == $("#mArea").val())) {
+
+            // Check if all fields are empty before showing the error
+            if (("" == $("#addrDtl").val() || null == $("#addrDtl").val()) &&
+                ("" == $("#streetDtl").val() || null == $("#streetDtl").val()) &&
+                ("" == $("#mState").val() || null == $("#mState").val()) &&
+                ("" == $("#mCity").val() || null == $("#mCity").val()) &&
+                ("" == $("#searchSt").val() || null == $("#searchSt").val()) &&
+                ("" == $("#mPostCd").val() || null == $("#mPostCd").val()) &&
+                ("" == $("#mArea").val() || null == $("#mArea").val())) {
+                // All fields are empty, so do nothing and assign default values
+                // Assign after this function
+            } else {
+                // At least one field is empty or null, so show the error
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
+                return;
+            }
         }
 
+        /*
         if($("#mState").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
             return;
@@ -259,22 +334,18 @@ window.addEventListener('resize', function(event){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
             return ;
         }
-
         if($("#searchSt").val() ==''){
             Common.alert("Please key in Area search(3). Area search(3) cannot be null.");
             return ;
         }
-
         if($("#mArea").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinArea" />');
             return ;
        }
-
         if($("#mTown").val() == ''){
              Common.alert('<spring:message code="sal.alert.msg.plzKeyinTown" />');
              return ;
         }
-
         if($("#mStreet").val() == ''){
              Common.alert('<spring:message code="sal.alert.msg.plzKeyinStreet" />');
              return ;
@@ -288,10 +359,11 @@ window.addEventListener('resize', function(event){
             Common.alert('Area not found. <br/> Please check with System Administrator.');
             return ;
         }
+        */
 
         //Tel
-        if(("" != $("#cntcTelm").val().trim() || null != $("#cntcTelm").val().trim()) && ("" != $("#cntcTelr").val().trim() || null != $("#cntcTelr").val().trim())
-                && ("" != $("#cntcTelo").val().trim() || null != $("#cntcTelo").val().trim()) && ("" != $("#cntcTelf").val().trim() || null != $("#cntcTelf").val().trim())){
+        if(("" != $("#cntcTelm").val().trim() || null != $("#cntcTelm").val().trim()) || ("" != $("#cntcTelr").val().trim() || null != $("#cntcTelr").val().trim())
+                || ("" != $("#cntcTelo").val().trim() || null != $("#cntcTelo").val().trim()) || ("" != $("#cntcTelf").val().trim() || null != $("#cntcTelf").val().trim())){
 
 
             // telm(Mobile)
@@ -332,16 +404,16 @@ window.addEventListener('resize', function(event){
                 }
 
             }
-            // telf(Fax)
-//             if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
-//                 if(FormUtil.checkNum($("#cntcTelf"))){
-//                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
-//                     return;
-//                 }else if($("#cntcTelf").val().length < 9 || $("#cntcTelf").val().length > 12){
-//                     Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
-//                     return;
-//                 }
-//             }
+            //telf(Fax)
+            if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
+                if(FormUtil.checkNum($("#cntcTelf"))){
+                    Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
+                    return;
+                }else if($("#cntcTelf").val().length < 9 || $("#cntcTelf").val().length > 12){
+                    Common.alert('<spring:message code="sal.alert.msg.incorrectMobileNumberLength" />');
+                    return;
+                }
+            }
         }
 
         return checkResult;
@@ -478,7 +550,7 @@ window.addEventListener('resize', function(event){
                                   postCodeValue : "${orderDetail.installationInfo.instPostcode}",
                                   areaValue : "${orderDetail.installationInfo.instArea}"
                                 };
-            Common.ajax("GET", "/enquiry/getAreaId.do", jsonObj, function(result) {
+            Common.ajaxSync("GET", "/enquiry/getAreaId.do", jsonObj, function(result) {
                  $("#areaId").val(result.areaId);
             });
 
@@ -618,6 +690,10 @@ window.addEventListener('resize', function(event){
                             <th scope="row"><spring:message code="sal.text.ordNo" /></th>
                             <td><input type="text" title="" placeholder="" class=""  value="${salesOrderNo}" readonly="readonly"/><p class="btn_sky"><a href="#" id="_reSelect"><spring:message code="sal.btn.reselect" /></a></p></td>
                         </tr>
+                        <tr>
+                            <th scope="row"><spring:message code="sales.cusName" /></th>
+                            <td><input type="text" title="" placeholder="" class=""  value="${orderDetail.basicInfo.custName}" readonly="readonly"/></td>
+                        </tr>
                     </tbody>
                 </table><!-- table end -->
             </form>
@@ -712,13 +788,13 @@ window.addEventListener('resize', function(event){
                     <tr>
                         <th scope="row" ><spring:message code="sal.text.addressDetail" /></th>
                         <td>
-                        <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p" maxlength="100" value="${orderDetail.installationInfo.instAddrDtl}" />
+                        <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="eg. NO 10/UNIT 13-02-05/LOT 33945" class="w100p" maxlength="100" />
                         </td>
                     </tr>
                     <tr>
                         <th scope="row" ><spring:message code="sal.text.street" /></th>
                         <td>
-                        <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" maxlength="100" value="${orderDetail.installationInfo.instStreet}" />
+                        <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="eg. TAMAN/JALAN/KAMPUNG" class="w100p" maxlength="100" />
                         </td>
                     </tr>
                     <tr>
@@ -754,28 +830,28 @@ window.addEventListener('resize', function(event){
                     <tr>
                         <th scope="row"><spring:message code="sal.text.country" /></th>
                         <td>
-                        <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="${orderDetail.installationInfo.instCountry}"/>
+                        <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value= "${orderDetail.installationInfo.instCountry}"/>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.telM" /></th>
-                    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" value="${orderDetail.installationInfo.instCntTelM}" /></td>
+                    <td><input type="text" title="" placeholder="Telephone Number(Mobile)" class="w100p"   id="cntcTelm" name="cntcTelm" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.telO" /></th>
-                    <td><input type="text" title="" placeholder="" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" value="${orderDetail.installationInfo.instCntTelO}" /></td>
+                    <td><input type="text" title="" placeholder="Telephone Number(Office)" class="w100p"  id="cntcTelo" name="cntcTelo" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.telR" /></th>
-                    <td><input type="text" title="" placeholder="" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" value="${orderDetail.installationInfo.instCntTelR}"/></td>
+                    <td><input type="text" title="" placeholder="Telephone Number(Residence)" class="w100p"   id="cntcTelr" name="cntcTelr" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.telF" /></th>
-                    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" value="${orderDetail.installationInfo.instCntTelF}" /></td>
+                    <td><input type="text" title="" placeholder="Telephone Number(Fax)" class="w100p"   id="cntcTelf" name="cntcTelf" maxlength="11" onblur="javascript: fn_validHPCodyContactNumber(this.value,this.id);" /></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.email" /></th>
-                        <td><input type="text" title="" placeholder="" class="w100p"  id="cntcEmail" name="cntcEmail" maxlength="70" value="${orderDetail.installationInfo.instCntEmail}" /></td>
+                        <td><input type="text" title="" placeholder="eg. johnwick@gmail.com" class="w100p"  id="cntcEmail" name="cntcEmail" maxlength="70" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Mailing Address?</th>
