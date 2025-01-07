@@ -87,7 +87,7 @@ var userType = '${SESSION_INFO.userTypeId}';
 	  	voucherAppliedStatus = 1;
     }
 
-    if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+    /*if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
     	$('#pwpNo').removeClass("blind");
 //         $('#btnPwpNoEkeyIn').removeClass("blind");
         $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
@@ -97,6 +97,29 @@ var userType = '${SESSION_INFO.userTypeId}';
     }else{
     	$('#pwpNo').addClass("blind");
         $('#btnPwpNoEkeyIn').addClass("blind");
+        $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
+        $('#relatedNo').removeClass("blind");
+        $('#btnRltdNoEKeyIn').removeClass("blind");
+    }*/
+
+    if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '4'){
+        $('#pwpNo').removeClass("blind");
+
+        $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+        $('#relatedNo').addClass("blind");
+        $('#btnRltdNoEKeyIn').addClass("blind");
+
+    }else if('${preOrderInfo.exTrade}' != null && '${preOrderInfo.exTrade}' != "" && '${preOrderInfo.exTrade}' == '5'){
+    	$('#rebateNo').removeClass("blind");
+
+        $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+        $('#relatedNo').addClass("blind");
+        $('#btnRltdNoEKeyIn').addClass("blind");
+    }else{
+        $('#pwpNo').addClass("blind");
+        $('#rebateNo').addClass("blind");
+        $('#btnPwpNoEkeyIn').addClass("blind");
+        $('#btnRebateNoEkeyIn').addClass("blind");
         $('#isReturnExtradeChkBoxEkeyIn').removeClass("blind");
         $('#relatedNo').removeClass("blind");
         $('#btnRltdNoEKeyIn').removeClass("blind");
@@ -902,6 +925,11 @@ var userType = '${SESSION_INFO.userTypeId}';
       $('#pwpNo').addClass("blind");
       $('#btnPwpNoEkeyIn').addClass("blind");
 
+      $('#rebateNo').val("");
+      $('#txtMainRebateOrderID').val("");
+      $('#rebateNo').addClass("blind");
+      $('#btnRebateNoEkeyIn').addClass("blind");
+
           if($('#exTrade').val()=='1'){
               var todayDD = Number(TODAY_DD.substr(0, 2));
               var todayYY = Number(TODAY_DD.substr(6, 4));
@@ -932,6 +960,19 @@ var userType = '${SESSION_INFO.userTypeId}';
              $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
              $('#relatedNo').addClass("blind");
 
+         }else if ($("#exTrade").val() == '5'){
+             $('#txtOldOrderID').val('');
+             $('#txtBusType').val('');
+             $('#relatedNo').val('');
+             $('#hiddenMonthExpired').val('');
+             $('#hiddenPreBook').val('');
+             $('#btnRltdNoEKeyIn').addClass("blind");
+             $('#isReturnExtradeChkBoxEkeyIn').prop("checked", false);
+
+             $('#rebateNo').removeClass("blind");
+             $('#btnRebateNoEkeyIn').removeClass("blind");
+             $('#isReturnExtradeChkBoxEkeyIn').addClass("blind");
+             $('#relatedNo').addClass("blind");
          }else {
              //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
              $('#relatedNo').val('');
@@ -1241,6 +1282,11 @@ var userType = '${SESSION_INFO.userTypeId}';
             isValid = false;
             msg += "* Please select main PWP order no.<br>";
         }
+    }else if(exTrade == '5') {
+        if(FormUtil.checkReqValue($('#rebateNo'))) {
+            isValid = false;
+            msg += "* Please select main Rebate order no.<br>";
+        }
     }
 
     if ($('#isStore').val() == "") {
@@ -1460,6 +1506,8 @@ var userType = '${SESSION_INFO.userTypeId}';
       tnbAccNo : $("#tnbAccNo").val(),
       chnnl : '${preOrderInfo.chnnl}',
       cwStoreId          : $('#cwStoreId').val(),
+      rebateOrderId          : $('#txtMainRebateOrderID').val(),
+      rebateOrderNo          : $('#rebateNo').val()
     };
 
     var formData = new FormData();
@@ -1796,6 +1844,7 @@ var userType = '${SESSION_INFO.userTypeId}';
     $('#installDur').val('');
     $('#relatedNo').val('');
     $('#pwpNo').val('');
+    $('#rebateNo').val('');
 
     $('#ordProduct1').val('');
     $('#ordPromo1').val('');
@@ -2118,6 +2167,8 @@ var userType = '${SESSION_INFO.userTypeId}';
 
     $('#pwpNo').val('${preOrderInfo.mainPwpOrdNo}');
     $('#txtMainPwpOrderID').val('${preOrderInfo.mainPwpOrdId}');
+    $('#rebateNo').val('${preOrderInfo.mainRebateOrdNo}');
+    $('#txtMainRebateOrderID').val('${preOrderInfo.mainRebateOrdId}');
     if('${preOrderInfo.isExtradePr}' == 1){
         $("#isReturnExtrade").prop("checked", true);
     }
@@ -3383,6 +3434,12 @@ var userType = '${SESSION_INFO.userTypeId}';
                     <p><input id="pwpNo" name="pwpNo" type="text" title="" placeholder="PWP Number" class="w100p readonly blind" readonly /></p>
                     <input id="txtMainPwpOrderID" name="txtMainPwpOrderID" type="hidden" />
                     <!-- For PWP [E]-->
+
+                     <!-- For Rebate [S]-->
+                    <a id="btnRebateNoEkeyIn" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                    <input id="rebateNo" name="rebateNo" type="text" title="" placeholder="Rebate Number" class="w100p readonly blind" readonly />
+                    <input id="txtMainRebateOrderID" name="txtMainRebateOrderID" type="hidden" />
+                    <!-- For Rebate [E]-->
 
                     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
                     <input id="txtBusType"  name="txtBusType" type="hidden" />
