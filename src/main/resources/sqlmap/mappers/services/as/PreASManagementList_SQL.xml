@@ -285,7 +285,7 @@
              , ERR_TYPE_CODE || '_' || ERR_TYPE_NAME CODE_NAME
     FROM SYS1021V
     WHERE STUS_CODE_ID = 1
-        AND ERR_TYPE_CODE NOT IN ('9001200','1002500','1002700','1002600')
+        AND ERR_TYPE_CODE NOT IN ('9001200','1002500','1002700','1002600','9001800')
 
     <if test="prodCat != null and prodCat != '' ">
        AND UPPER(PROD_CAT) = UPPER(#{prodCat})
