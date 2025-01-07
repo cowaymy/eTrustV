@@ -1167,7 +1167,7 @@
   <select id="selectOrderSimulatorViewByOrderNo" parameterType="Map" resultType="egovMap">
   
   <choose>
-         <when test='userTypeId != null and userTypeId != "" '>
+         <when test='userTypeId == 2 '>
            SELECT T1.SALES_ORD_ID
          , T1.SALES_ORD_NO
          , DECODE(T1.SALES_DT, NULL, '19000101', TO_CHAR(T1.SALES_DT, 'YYYYMMDD')) AS ORD_DT
