@@ -50,15 +50,10 @@
     SELECT
           A.CUST_ID
           , A.NAME
+          , B.REN_CAT CUST_TYPE
           , CASE
-                WHEN B.CHS_STUS IS NOT NULL THEN
-                    CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN 'EXISTING' ELSE 'NEW' END
-                ELSE ''
-            END CUST_TYPE
-          , CASE
-                WHEN B.CHS_STUS IS NOT NULL THEN
-                    CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN DBMS_LOB.SUBSTR(F.CCP_REM,4000) ELSE E.CCP_REM END
-                 ELSE ''
+                WHEN B.CHS_STUS IS NOT NULL THEN DBMS_LOB.SUBSTR(F.CCP_REM,4000)
+                 ELSE E.CCP_REM
              END CCP_REM
     FROM SAL0029D A
     LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
@@ -286,11 +281,7 @@
       SELECT
           A.CUST_ID
           , A.NAME
-          , CASE
-                WHEN B.CHS_STUS IS NOT NULL THEN
-                    CASE WHEN B.CHS_STUS IN ('GREEN','YELLOW') THEN 'EXISTING' ELSE 'NEW' END
-                 ELSE ''
-            END CUST_TYPE
+          , B.REN_CAT CUST_TYPE
           , NVL(B.CHS_STUS,'-') CHS_STUS
           , NVL(B.CHS_RSN,'-') CHS_RSN
           , B.CUST_CAT
