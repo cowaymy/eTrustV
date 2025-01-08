@@ -109,11 +109,19 @@
 	              headerText : 'Total Success',
 	              editable : false
              },
-             {
-	              dataField : "totalFail",
-	              headerText : 'Total Fail',
-	              editable : false
-             },
+             {   dataField : "", headerText : 'Other Status',
+                 renderer:{
+                     type: "TemplateRenderer"
+                 },
+                 labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
+                      var template = '<div style="margin-top:5px; margin-bottom:10pc">';
+                      template += '<p> Total Incomplete: ' + item.totalIncomplete + '</p>';
+                      template += '<p> Total Pending: ' + item.totalPending + '</p>';
+                      template += '<p> Total Fail: ' + item.totalFail + '</p>';
+                      template += '</div>';
+                      return template;
+                 }
+           	 },
              {
 	              dataField : "prcssStusDesc",
 	              headerText : 'Status',
