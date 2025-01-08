@@ -4,6 +4,13 @@
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<style type="text/css">
+.aui-grid-template-renderer-wrapper {
+    height:40px !important;
+}
+</style>
+
 <script type="text/javaScript">
 	var selfCareGridID;
 	var option = {
@@ -114,7 +121,7 @@
                      type: "TemplateRenderer"
                  },
                  labelFunction: function( rowIndex, columnIndex, value, headerText, item, dataField){
-                      var template = '<div style="margin-top:5px; margin-bottom:10pc">';
+                      var template = '<div style="margin-top:5px; margin-bottom:10px">';
                       template += '<p> Total Incomplete: ' + item.totalIncomplete + '</p>';
                       template += '<p> Total Pending: ' + item.totalPending + '</p>';
                       template += '<p> Total Fail: ' + item.totalFail + '</p>';
