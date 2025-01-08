@@ -123,21 +123,23 @@ function createAUIGrid() {
       },{
           dataField : "payerEmail",
       },{
-          dataField : "payerPurpose",
+          dataField : "paymentPurpose",
       },{
           dataField : "maxAmt",
       },{
           dataField : "maxFreq",
       },{
-          dataField : "freqMod",
+          dataField : "freqMode",
       },{
           dataField : "effectiveDt",
+      },{
+          dataField : "expiryDt",
       },{
           dataField : "applyDt",
       },{
           dataField : "billerId",
       },{
-          dataField : "payerRef",
+          dataField : "payRef",
       },{
           dataField : "payerIdType",
       }
