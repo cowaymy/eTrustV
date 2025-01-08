@@ -309,7 +309,7 @@
                     $("#reportForm #TaskID").val(taskID);
                 }
             }
-            else if (type == '13'){CommCalCodyRawData_Excel
+            else if (type == '13'){
             	reportFileName = "/commission/HT_Comm_Raw_All.rpt"; //reportFileName
                 reportDownFileName = "HTCommissionRawAll_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
