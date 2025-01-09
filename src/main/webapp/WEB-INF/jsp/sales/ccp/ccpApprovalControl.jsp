@@ -590,6 +590,9 @@
                 {
                     dataField : "rentFeeLimit",
                     headerText : "Rental Fee Limit <br>Per Unit",
+                    labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+                        return value.toUpperCase();
+                    },
                     editRenderer : {
                         type : "InputEditRenderer",
                         // 에디팅 유효성 검사
