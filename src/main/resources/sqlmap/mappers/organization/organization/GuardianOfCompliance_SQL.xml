@@ -471,23 +471,15 @@
                                                     group by a.PAPARAZ_REQST_ID
                                                 )
                     LEFT JOIN (
-                        SELECT
-                            A.CMPLNC_ID,
-                            A.CMPLNC_NO,
-                            A.MEM_ID,
-                            B.CMPLNC_SO_ID,
-                            D.USER_ID PIC_USER_ID,
-                            C.CMPLNC_PERSON_IN_CHRG,
-                            E.NAME
-                        FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
-                        WHERE A.CMPLNC_ID = B.CMPLNC_ID
-                          AND A.CMPLNC_ID = C.CMPLNC_ID
-                          AND C.CMPLNC_PERSON_IN_CHRG = D.USER_ID
-                          AND D.HR_CODE = E.MEM_CODE
+                      SELECT
+                          D.USER_ID PIC_USER_ID,
+                          E.NAME,
+                          E.MEM_ID
+                      FROM SYS0047M D, ORG0001D E
+                      WHERE D.HR_CODE = E.MEM_CODE
                     ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
-                                                AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
-                  LEFT JOIN SAL0001D COMBO ON COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
-                                                          OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID
+                  LEFT JOIN SAL0001D COMBO ON (COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
+                                                          OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID)
                   LEFT JOIN SYS0038M T1   ON T1.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
                   LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
 
