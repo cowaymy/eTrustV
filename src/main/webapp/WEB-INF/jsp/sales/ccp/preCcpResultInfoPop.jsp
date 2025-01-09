@@ -200,7 +200,7 @@ function fn_getPreCcpResultInfo(){
     });
 
     var custScore;
-    if('${custCredit.chsStus}' != null && '${custCredit.chsStus}' != ''){
+    if('${custCredit.chsStus}' != null && '${custCredit.chsStus}' != '' && '${custCredit.chsStus}' != '-'){
     	custScore = '${custCredit.chsStus}';
     }else{
     	custScore = '${custCredit.scoreGrp}';

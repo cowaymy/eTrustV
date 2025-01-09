@@ -125,15 +125,15 @@ public class PreCcpRegisterController {
 		return "sales/ccp/preCcpOrderSummary";
 	}
 
-	@RequestMapping(value = "/preCcpResultInfo.do")
-	public String preCcpResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/preCcpResultInfoPop.do")
+	public String preCcpResultInfoPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.put("custId", params.get("custId"));
 
 		// GET CUSTOMER CREDIBILITY
 		EgovMap custCreditInfo = preCcpRegisterService.getCustCreditInfo(params);
 		model.put("custCredit", custCreditInfo);
 
-		return "sales/ccp/preCcpResultInfo";
+		return "sales/ccp/preCcpResultInfoPop";
 	}
 
 	 @RequestMapping(value = "/getExistUnitHist.do")
