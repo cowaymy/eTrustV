@@ -15,6 +15,8 @@
 
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
+        $("#codyBrnchObj").hide();
+        $("#listCdbBrnchIdCol").hide();
         createAUIGrid();
         if("${SESSION_INFO.userTypeId}" == "2" ){
            if("${SESSION_INFO.memberLevel}" =="3" || "${SESSION_INFO.memberLevel}" =="4"){
@@ -54,8 +56,13 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
         
         if("${SESSION_INFO.roleId}" == "256" ) {
-        	doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', "${SESSION_INFO.userBranchId}", 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-        	$('#listKeyinBrnchId').multipleSelect("disable");
+        	$("#dscBrnchObj").hide();
+            $("#listDscBrnchIdCol").hide();
+        	$("#codyBrnchObj").show();
+            $("#listCdbBrnchIdCol").show();
+        	$("#userBranchId").val("${SESSION_INFO.userBranchId}");
+        	doGetComboSepa('/common/selectBranchCodeList.do',  '4', ' - ', "${SESSION_INFO.userBranchId}", 'listCodyBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+            $('#listCodyBrnchId').multipleSelect("disable");
          }
    
     });
@@ -459,6 +466,12 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
+        $('#listCodyBrnchId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
         //$('#listOrdStusId').multipleSelect("checkAll");
         $('#listRentStus').change(function() {
             //console.log($(this).val());
@@ -640,7 +653,7 @@
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
     <input id="memId" name="memId" type="hidden" value="${memId}"/>
-
+    <input id="userBranchId" name="userBranchId" type="hidden" value=""/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -694,9 +707,13 @@
     <td>
     <select id="listKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <th scope="row"><spring:message code='sales.dscBranch'/></th>
-    <td>
+    <th scope="row" id="dscBrnchObj"><spring:message code='sales.dscBranch'/></th>
+    <td id="listDscBrnchIdCol" >
     <select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select>
+    </td>
+    <th scope="row" id="codyBrnchObj">Cody Branch</th>
+    <td id="listCdbBrnchIdCol">
+    <select id="listCodyBrnchId" name="codyBrnchId" class="multy_select w100p" multiple="multiple"></select>
     </td>
 </tr>
 <tr>

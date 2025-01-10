@@ -37,11 +37,6 @@ $(document).ready(function(){
 //         doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');//Branch생성
         doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');//product 생성
         
-        if("${SESSION_INFO.roleId}" == "256" ) {
-        	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  , '${SESSION_INFO.userBranchId}' , 'keyBranch' , 'M', 'f_multiCombo'); //key-in Branch 생성
-            $('#keyBranch').multipleSelect("disable");
-         }
-
         // Master Grid 셀 클릭시 이벤트
         AUIGrid.bind(myGridID, "cellClick", function( event ){
             selectedGridValue = event.rowIndex;

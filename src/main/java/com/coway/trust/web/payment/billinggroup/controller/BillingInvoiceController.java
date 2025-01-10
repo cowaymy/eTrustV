@@ -290,6 +290,10 @@ public class BillingInvoiceController {
 		    map.put("grpCode", searchVO.getGrpCode().trim());
 		    map.put("orgCode", searchVO.getOrgCode().trim());
 		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    map.put("userBranchId", sessionVO.getUserBranchId());
+		}
 
 		String orderDtFr = "";
 		String orderDtTo = "";
@@ -354,6 +358,10 @@ public class BillingInvoiceController {
 		    map.put("deptCode", searchVO.getDeptCode().trim());
 		    map.put("grpCode", searchVO.getGrpCode().trim());
 		    map.put("orgCode", searchVO.getOrgCode().trim());
+		}
+		
+		if(sessionVO.getRoleId() == 256) {
+		    map.put("userBranchId", sessionVO.getUserBranchId());
 		}
 
 		String orderDtFr = "";

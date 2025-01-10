@@ -1239,7 +1239,14 @@ SELECT DISTINCT V1.ORD_ID
         FROM SAL0029D Extent4
         JOIN SAL0001D Extent5 ON ( Extent5.CUST_ID = Extent4.CUST_ID )) Extent6 ON
         Extent6.SALES_ORD_ID = Filter1.OrderID1
+        <if test="userBranchId != null and userBranchId != '' ">
+        LEFT JOIN ORG0001D org001 on org001.MEM_ID =  Filter1.OrderMemID
+        LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = Filter1.OrderID1
+        </if>
         WHERE 1=1
+        <if test="userBranchId != null and userBranchId != '' ">
+         AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
+         </if>
         <if test="orderNo != '' ">
             AND ( Filter1.OrderNo = #{orderNo} )
         </if>
@@ -1622,8 +1629,15 @@ SELECT DISTINCT V1.ORD_ID
                                 RENT_DOC_TYPE_ID = 161 AND RENT_AMT    >=  0
                             GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
             LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+            <if test="userBranchId != null and userBranchId != '' ">
+            LEFT JOIN ORG0001D org001 on org001.MEM_ID =  Extent1.MEM_ID
+            LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = Extent1.SALES_ORD_ID 
+            </if>
         WHERE 1=1
            AND Extent1.APP_TYPE_ID = 66
+        <if test="userBranchId != null and userBranchId != '' ">
+            AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
+        </if>
         <if test="orderNo != '' ">
             AND Extent1.SALES_ORD_NO = #{orderNo}
         </if>

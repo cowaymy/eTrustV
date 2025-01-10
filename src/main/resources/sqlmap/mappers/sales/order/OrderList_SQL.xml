@@ -1656,6 +1656,9 @@
                           </choose>
                         ) A on V1.ORD_ID = A.SALES_ORD_ID
            */
+           <if test='userBranchId != null and userBranchId != "" '>
+           LEFT JOIN ORG0001D org001 on org001.MEM_ID = V1.SALESMAN_MEM_ID
+           </if>
             <if test='memType != null and memType != "" '>
             JOIN(
                 /*
@@ -1734,6 +1737,9 @@
             ON V1.ORD_ID = SVC.SALES_ORD_ID
             </if>
            WHERE 1 = 1
+           <if test='userBranchId != null and userBranchId != "" '>
+            AND (V1.CODY_BRNCH_ID = #{userBranchId} OR org001.BRNCH = #{userBranchId})
+           </if>
            <if test='ordDt == null || ordDt == ""'>
              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
            </if>

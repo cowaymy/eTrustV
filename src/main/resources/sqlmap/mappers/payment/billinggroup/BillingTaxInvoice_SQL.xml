@@ -472,11 +472,14 @@
                     JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
                     LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
                     LEFT JOIN EIV0004D Extent8 ON Extent8.INV_REF_NO = Extent1.TAX_INVC_REF_NO AND Extent8.STATUS = 4
+                    <if test="userBranchId != null and userBranchId != '' ">
+                    LEFT JOIN ORG0001D org001 on org001.MEM_ID =  Extent4.MEM_ID
+                    LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = Extent4.SALES_ORD_ID 
+                    </if>
                 WHERE
                     Extent1.TAX_INVC_BILL_TYPE = 133
-                    
                     <if test="userBranchId != null and userBranchId != '' ">
-                    AND Extent4.BRNCH_ID = #{userBranchId}
+                    AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
                     </if>
                 </otherwise>
             </choose>  
@@ -668,8 +671,15 @@
             LEFT JOIN SAL0001D orm ON txs.INVC_ITM_ORD_NO = orm.SALES_ORD_NO
             LEFT JOIN SYS0013M cd ON orm.APP_TYPE_ID = cd.CODE_ID
             LEFT JOIN EIV0004D eiv ON eiv.INV_REF_NO = txm.TAX_INVC_REF_NO AND eiv.STATUS = 4
+            <if test="userBranchId != null and userBranchId != '' ">
+             LEFT JOIN ORG0001D org001 on org001.MEM_ID =  orm.MEM_ID
+             LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = orm.SALES_ORD_ID 
+            </if>
         WHERE
             1=1
+            <if test="userBranchId != null and userBranchId != '' ">
+             AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
+            </if>
             <if test="invoiceNo != null and invoiceNo != '' ">
             AND txm.TAX_INVC_REF_NO = #{invoiceNo}
             </if>
@@ -695,9 +705,6 @@
             <if test="custID != null and custID != '' ">
             AND orm.CUST_ID = #{custID}
             </if>
-            <if test="userBranchId != null and userBranchId != '' ">
-             AND orm.BRNCH_ID = #{userBranchId}
-             </if>
              ORDER BY txs.INVC_ITM_ORD_NO DESC
          </otherwise>
         </choose> 
@@ -828,8 +835,15 @@
                 PAY0025D Extent1
                 INNER JOIN PAY0026D Extent2 ON Extent2.STATE_ID = Extent1.STATE_ID
                 LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_NO = Extent2.STATE_ITM_ORD_NO
+                <if test="userBranchId != null and userBranchId != '' ">
+                LEFT JOIN ORG0001D org001 on org001.MEM_ID =  Extent3.MEM_ID
+                LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = Extent3.SALES_ORD_ID 
+                </if>
             WHERE
                 1=1
+                <if test="userBranchId != null and userBranchId != '' ">
+                AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
+                </if>
                 <if test="billingNo != null and billingNo != '' ">
                 AND Extent2.STATE_ITM_REF_NO = #{billingNo}
                 </if>
@@ -850,9 +864,6 @@
                 </if>
                 <if test="custID != null and custID != '' ">
                 AND Extent3.CUST_ID = #{custID}
-                </if>
-                <if test="userBranchId != null and userBranchId != '' ">
-                AND Extent3.BRNCH_ID = #{userBranchId}
                 </if>
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
            </otherwise>

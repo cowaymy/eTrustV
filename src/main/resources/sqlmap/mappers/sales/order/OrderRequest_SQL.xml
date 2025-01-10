@@ -1267,9 +1267,13 @@
     JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
     LEFT JOIN SAL0071D T3 ON T3.SALES_ORD_ID = T1.SALES_ORD_ID AND 66 = T1.APP_TYPE_ID
     LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
+    <if test="userBranchId != null and userBranchId != '' ">
+    LEFT JOIN ORG0001D org001 on org001.MEM_ID =  T1.MEM_ID
+    LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = T1.SALES_ORD_ID 
+    </if>
     WHERE T1.SALES_ORD_NO = #{salesOrdNo}
     <if test="userBranchId != null and userBranchId != '' ">
-         AND T1.BRNCH_ID = #{userBranchId}
+      AND (org001.BRNCH = #{userBranchId} OR sal1013.CODY_BRNCH_ID = #{userBranchId})
     </if>
       AND ROWNUM &lt;= 1
          </otherwise>
