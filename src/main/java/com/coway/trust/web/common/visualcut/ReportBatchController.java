@@ -2539,6 +2539,24 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] Monthly_Rental_Collection HC...");
   }
+  
+  @RequestMapping(value = "/Monthly_Rental_Collection_SRV.do")
+  //@Scheduled(cron = "0 15 8 1 * ?")//Monthly (Day 1) (8:15am)
+  public void MonthlyRentalCollectionSRV() {
+    LOGGER.info("[START] Monthly_Rental_Collection...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MonthlyRentalCollection_SRV.rpt");// visualcut
+                                                                           // rpt
+                                                                           // file name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");
+    params.put("V_TYPE", "SALES_GROUP_SRV");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Rental Collection" + File.separator + "Monthly_Ren_Coll_SRV_" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Monthly_Rental_Collection SRV...");
+  }
 
 // Accumulated Operating Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
   @RequestMapping(value = "/RentalOptLeaseDetailsOthRaw_Excel.do")
