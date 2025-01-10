@@ -194,16 +194,6 @@ function ExcelListGrid() {
         headerText : "Request Status",
         editable : false,
         width : 150
-    }, {
-        dataField : "approvalStatus",
-        headerText : "Approval Status",
-        editable : false,
-        width : 150
-    },{
-        dataField : "approvalUserId",
-        headerText : "Approval User Id",
-        visible  : false,
-        editable : false,
     },{
         dataField : "requestcreateat",
         headerText : "Request Date",
@@ -212,9 +202,8 @@ function ExcelListGrid() {
         dataType : "date",
         formatString : "dd/mm/yyyy"
     },{
-        dataField : "approvalUserId",
+        dataField : "approvalName",
         headerText : "Approval by",
-        visible  : false,
         editable : false,
     },{
         dataField : "approvalStatus",
