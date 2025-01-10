@@ -864,8 +864,8 @@ SELECT Extent1.CCP_ID   ,
        Extent1.THE_PAYER ,
        Extent1.FAIL_VER_RSN,
        CASE WHEN GET_HOMECARE_FLAG_YN(Extent12.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
-       Extent1.CCP_UPD_DT CCP_UPD_DT,
-       Extent9.CUST_CAT,
+       TO_CHAR(Extent1.CCP_UPD_DT,'DD/MM/YYYY HH24:MI:SS') CCP_UPD_DT,
+       UPPER(Extent9.CUST_CAT) CUST_CAT,
        Extent1.ATCH_FILE_GRP_ID FILE_ID,
        Extent14.ATCH_FILE_NAME FILE_NAME
 <!--        CASE WHEN Extent7.CTOS_BANKRUPT = 0 THEN 'NO' ELSE 'YES' END BANKRUPTCY -->
@@ -2447,13 +2447,18 @@ WHERE ROWNUM = 1
                         AND STUS = 1
                     </if>
                     <if test="ccpStus == 5">
-                        AND #{ccpUpdDt} BETWEEN START_DT AND END_DT
+                        AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
                     </if>
 		        </if>
 	            ORDER BY SCORE_RANGE_ID DESC
 	        ) WHERE ROWNUM = 1
 	    )
-	       AND CUST_CAT = UPPER(#{custCat})
+	    <if test="custCat != '' and custCat != null">
+	       AND CUST_CAT = #{custCat}
+	    </if>
+	    <if test="custCat == '' or custCat == null">
+	       AND CUST_CAT IS NULL
+	    </if>
 	       AND STUS = 1
 	    ORDER BY CRT_DT DESC
 	) WHERE ROWNUM = 1

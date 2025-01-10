@@ -110,7 +110,8 @@ $(document).ready(function() {
 	            score : score,
 	            homeCat : '${ccpInfoMap.homeCat}',
 	            ccpStus: '${ccpInfoMap.ccpStusId}',
-	            ccpUpdDt : '${ccpInfoMap.ccpUpdDt}'
+	            ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
+	            ccpCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
 	    };
 
 	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {

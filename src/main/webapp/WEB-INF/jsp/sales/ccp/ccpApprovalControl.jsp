@@ -1234,8 +1234,8 @@
 
 	    		      var custType  = data.add[i].custType;
 	    		      var scoreGrp  = data.add[i].scoreGrp;
-	    		      var chsStus  = data.add[i].chsStus;
 	    		      var custCat  = data.add[i].custCat;
+	    		      var chsStus  = data.add[i].chsStus;
 	    		      var unitEntitle  = data.add[i].unitEntitle;
 	    		      var prodEntitle  = data.add[i].prodEntitle;
 	    		      var rentFeeLimit  = data.add[i].rentFeeLimit;
@@ -1249,12 +1249,6 @@
 	    		      if ((scoreGrp == "" || scoreGrp == 0 || typeof(scoreGrp) == "undefined") &&
 	    		    	(chsStus == "" || chsStus == 0 || typeof(chsStus) == "undefined")) {
 	    		          Common.alert("Score Group or CHS Status is required.");
-	    		          return;
-	    		          break;
-	    		      }
-
-	    		      if (custCat == "" || custCat == 0 || typeof(custCat) == "undefined") {
-	    		          Common.alert("Customer Category is required.");
 	    		          return;
 	    		          break;
 	    		      }
@@ -1276,6 +1270,13 @@
 	    		          return;
 	    		          break;
 	    		      }
+
+	    		      if (custCat != "" && custCat != 0 && typeof(custCat) != "undefined") {
+	    		    	  data.add[i].custCat = data.add[i].custCat.toUpperCase();
+	    		      }
+
+	    		      data.add[i].rentFeeLimit = data.add[i].rentFeeLimit.toUpperCase();
+
 	    		}
     		}
 
@@ -1284,8 +1285,8 @@
 
 	    			var custType  = data.update[i].custType;
 	    			var scoreGrp  = data.update[i].scoreGrp;
+	    			var custCat  = data.update[i].custCat;
 	    			var chsStus  = data.update[i].chsStus;
-                    var custCat  = data.update[i].custCat;
                     var unitEntitle  = data.update[i].unitEntitle;
                     var prodEntitle  = data.update[i].prodEntitle;
                     var rentFeeLimit  = data.update[i].rentFeeLimit;
@@ -1299,12 +1300,6 @@
                     if ((scoreGrp == "" || scoreGrp == 0 || typeof(scoreGrp) == "undefined") &&
                       (chsStus == "" || chsStus == 0 || typeof(chsStus) == "undefined")) {
                         Common.alert("Score Group or CHS Status is required.");
-                        return;
-                        break;
-                    }
-
-                    if (custCat == "" || custCat == 0 || typeof(custCat) == "undefined") {
-                        Common.alert("Customer Category is required.");
                         return;
                         break;
                     }
@@ -1326,10 +1321,15 @@
                         return;
                         break;
                     }
+
+                    if (custCat != "" && custCat != 0 && typeof(custCat) != "undefined") {
+                    	data.update[i].custCat = data.update[i].custCat.toUpperCase();
+                    }
+
+                    data.update[i].rentFeeLimit = data.update[i].rentFeeLimit.toUpperCase();
 	    		}
     		}
     	}else if (gridId == prodEntitleGridId){
-    		debugger;
     	    data.update = null;
 
     	    if(updateList.length > 0){
@@ -1357,7 +1357,7 @@
     	    			   if(prodCatCode != null && scoreType2 != null && recommend != null){
 	    	    			   editArray.push({
 	    	    				   prodCatCode : prodCatCode,
-	    	    				   scoreType: scoreType2,
+	    	    				   scoreType: scoreType2.toUpperCase(),
 	    	    				   recommend: recommend
 	    	    			   });
     	    			   }

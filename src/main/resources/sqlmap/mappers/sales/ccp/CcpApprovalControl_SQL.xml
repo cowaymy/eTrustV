@@ -274,10 +274,10 @@
         #{custType},
         #{scoreGrp},
         #{chsStus},
-        UPPER(#{custCat}),
+        #{custCat},
         #{unitEntitle},
         #{prodEntitle},
-        UPPER(#{rentFeeLimit}),
+        #{rentFeeLimit},
         1,
         #{newStartDate},
         #{newEndDate},
@@ -333,7 +333,7 @@
     FROM SAL0427D
     WHERE STUS = 1 AND
             PROD_CAT = #{prodCatCode} AND
-            SCORE_TYPE = UPPER(#{scoreType}) AND
+            SCORE_TYPE = #{scoreType} AND
             RECOMMEND = #{recommend}
 </select>
 
@@ -345,7 +345,7 @@
         UPD_USER_ID = #{userId},
         UPD_DT = SYSDATE
     WHERE PROD_CAT = #{prodCatCode} AND
-            SCORE_TYPE = UPPER(#{scoreType}) AND
+            SCORE_TYPE = #{scoreType} AND
             STUS = 1
 </update>
 
@@ -364,7 +364,7 @@
         UPD_USER_ID
      ) VALUES (
         SAL0427D_PROD_ENTITLE_ID_SEQ.NEXTVAL,
-        UPPER(#{scoreType}),
+        #{scoreType},
         #{prodCatCode},
         #{recommend},
         #{newStartDate},

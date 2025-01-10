@@ -802,14 +802,14 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
     		homeCat : '${ccpInfoMap.homeCat}',
     		ccpStus: '${ccpInfoMap.ccpStusId}',
     		ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
-    		custCat: '${ccpInfoMap.custCat}'
+    		custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
     };
 
     Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
     	if(result != null){
     		$('#score_group').text(result.scoreGrp);
 	        $('#unitEntitle').text(result.unitEntitle);
-	        $('#prodEntile').text(result.prodEntitle);
+	        $('#prodEntitle').text(result.prodEntitle);
 	    }
     });
 }
