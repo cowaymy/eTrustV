@@ -115,11 +115,14 @@ $(document).ready(function() {
 	    };
 
 	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
-	        debugger;
 	        if(result != null){
 		    	$('#score_group').text(result.scoreGrp);
 		        $('#unitEntitle').text(result.unitEntitle);
 		        $('#prodEntile').text(result.prodEntitle);
+	        }else{
+	        	$('#score_group').text("");
+	            $('#unitEntitle').text("");
+	            $('#prodEntile').text("");
 	        }
 	    });
 

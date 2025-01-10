@@ -485,9 +485,7 @@ function calSave(){
         console.log("n : " + n + " v.file : " + v.file);
         formData.append(n, v.file);
     });
-debugger;
-console.log("fileName = " + fileName);
-console.log("grpId = " + $("#atchFileGrpId").val() );
+
     if(fileName != null && fileName != "" && $.trim(fileName) != ""){
       Common.ajaxFile("/sales/ccp/attachCcpReportFileUpload.do", formData, function(result) {
     	  atchFileGrpId = result.data.fileGroupKey;
@@ -810,6 +808,10 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
     		$('#score_group').text(result.scoreGrp);
 	        $('#unitEntitle').text(result.unitEntitle);
 	        $('#prodEntitle').text(result.prodEntitle);
+	    }else{
+	    	$('#score_group').text("");
+            $('#unitEntitle').text("");
+            $('#prodEntitle').text("");
 	    }
     });
 }
