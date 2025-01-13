@@ -46,6 +46,7 @@ function fn_report() {
     var stkId = $("#listProductId").val();
     var stkDesc = $("#listProductId option:selected").text();
     var rentStus = $("#listRentStus").val();
+    var prodCatDesc = $("#listProductCat option:selected").text();
 
     if(stkId == null || stkId == ""){
     	stkId=0;
@@ -55,52 +56,52 @@ function fn_report() {
     if (reportType == 'RAW') {
 
       $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
-      $("#dataForm #reportDownFileName").val("PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+      $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
       $("#dataForm #V_RENTSTUS").val(rentStus);
       $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (reportType == 'AGING') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Aging.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_Aging_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Aging_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
         $("#dataForm #V_RENTSTUS").val(rentStus);
         $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (rentStus == 'SUS' && reportType == 'SUS_COUNT') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_Count.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_SUS_Count_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'SUS' && reportType == 'LAST_SUS') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_SUS.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Last_SUS_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'SUS' && reportType == 'SUS_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_SUS_SumYM.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_SUS_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_SUS_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'RET_TER' && reportType == 'LAST_TER') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_TER.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_Last_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Last_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'RET_TER' && reportType == 'TER_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_TER_SumYM.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
 
     } else if (rentStus == 'RET_TER' && reportType == 'LAST_RET_TER') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_Last_RET_TER.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_Last_RET_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Last_RET_TER_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
         $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (rentStus == 'RET_TER' && reportType == 'RET_TER_SUM_YM') {
 
         $("#dataForm #reportFileName").val("/sales/PLTV_RET_TER_SumYM.rpt");
-        $("#dataForm #reportDownFileName").val("PLTV_RET_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
+        $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_RET_TER_SumYM_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
         $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     }
