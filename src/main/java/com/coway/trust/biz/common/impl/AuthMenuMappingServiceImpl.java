@@ -82,6 +82,9 @@ public class AuthMenuMappingServiceImpl implements AuthMenuMappingService {
 			loginId = sessionVO.getUserId();
 		}
 
+		params.put("authCode", params.get("newAuthCode").toString());
+		authMenuMappingMapper.updateAllAuthMenuMapping(params);
+
 		for (int i = 0 ; i < gridList.size() ; i ++){
 			Map<String, Object> map = (Map<String, Object>) gridList.get(i);
 			map.put("userId", loginId);

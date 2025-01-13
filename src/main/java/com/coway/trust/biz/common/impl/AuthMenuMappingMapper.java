@@ -13,6 +13,8 @@ public interface AuthMenuMappingMapper {
 	List<EgovMap> selectAuthMenuMappingList(Map<String, Object> params);		
 	
 	void updateAuthMenuMapping(Map<String, Object> params);		
-		
+
+	void updateAllAuthMenuMapping(Map<String, Object> params);
+	
 	List<EgovMap> selectMultAuthMenuMappingList(Map<String, Object> params);		
 }

@@ -209,6 +209,9 @@
 	  ORDER BY z.rn, z.pgm_trn_code
 </select>
 
+<update id="updateAllAuthMenuMapping" parameterType="Map">
+    UPDATE SYS0056M SET func_yn = 'N' WHERE AUTH_CODE = #{authCode}
+</update>
 
 <update id="updateAuthMenuMapping" parameterType="Map">
 
@@ -380,9 +383,9 @@
                                             SELECT i.menu_code
                                                      , i.pgm_trn_code
                                                   FROM SYS0056M i
-                                                 WHERE
+
 <if test='authCode != null and authCode != ""'>
-             i.auth_code in
+             WHERE i.auth_code in
             <foreach item="item" collection="authCode" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
@@ -430,6 +433,7 @@
               AND (UPPER(z.menu_code) LIKE  UPPER(#{menuCode}) || '%' OR
                      UPPER(z.menu_name) LIKE '%' || UPPER(#{menuCode}) || '%')
          </if>
+         and y.func_yn = 'Y'
       ORDER BY z.rn, z.pgm_trn_code
 </select>
 

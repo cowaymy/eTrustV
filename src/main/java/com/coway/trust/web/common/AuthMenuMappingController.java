@@ -98,7 +98,10 @@ public class AuthMenuMappingController {
 			params.put("authCode", authList);
 		}
 
-
+		if(params.get("authCode") == null){
+			String[] noAuthList = {"0"};
+			params.put("authCode", noAuthList);
+		}
 		return ResponseEntity.ok(authMenuMappingsService.selectMultAuthMenuMappingList(params, sessionVO));
 	}
 
