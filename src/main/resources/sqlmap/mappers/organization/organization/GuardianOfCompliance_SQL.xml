@@ -444,8 +444,8 @@
                         Extent9.RESPNS_UPDATED ,
                         Extent9.RESPNS_MSG,
                         Extent1.REQST_NO CASE_NO,
-                        Extent11.NAME PIC_NAME,
-                        Extent11.PIC_USER_ID,
+                        Extent11.USER_FULL_NAME PIC_NAME,
+                        Extent11.USER_ID PIC_USER_ID,
                         COMBO.SALES_ORD_NO COMBO_ORD_NO,
                         Extent12.RESN_DESC RESN_DESC_SUB,
                         T1.NAME AS  APPROVAL_STATUS,
@@ -470,20 +470,13 @@
                                                     where a.PAPARAZ_REQST_ID = b.REQST_ID
                                                     group by a.PAPARAZ_REQST_ID
                                                 )
-                    LEFT JOIN (
-                      SELECT
-                          D.USER_ID PIC_USER_ID,
-                          E.NAME,
-                          E.MEM_ID
-                      FROM SYS0047M D, ORG0001D E
-                      WHERE D.HR_CODE = E.MEM_CODE
-                    ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
-                  LEFT JOIN SAL0001D COMBO ON (COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
-                                                          OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID)
-                  LEFT JOIN SYS0038M T1   ON T1.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
-                  LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+                     LEFT JOIN SYS0047M Extent11 ON Extent1.REQST_UPD_USER_ID = Extent11.USER_ID
+                                       LEFT JOIN SAL0001D COMBO ON (COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
+                                                                               OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID)
+                                       LEFT JOIN SYS0038M T1   ON T1.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+                                       LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
 
-                    WHERE 1=1
+                                         WHERE 1=1
             ]]>
                     <if test="caseCategoryList != null and caseCategoryList != '' ">
                         AND  Extent1.REQST_CTGRY IN
@@ -524,18 +517,22 @@
                 <if test="caseNo != null and caseNo != '' ">
                     AND  Filter1.CASE_NO = #{caseNo}
                 </if>
+
             ) Project1
             ORDER BY Project1.REQUESTID ASC
         </select>
 
         <insert id="saveGuardian" parameterType="Map">
+         <selectKey keyProperty="reqstId" resultType="Integer" order="BEFORE">
+            SELECT MSC0043M_REQST_ID_SEQ.NEXTVAL FROM DUAL
+         </selectKey>
             INSERT INTO  MSC0043M (
                         REQST_ID, REQST_NO, REQST_CTGRY, REQST_CTGRY_SUB,
                         REQST_ORD_ID, REQST_REF_DT, REQST_MEM_ID, REQST_CNTNT,
                         REQST_ATTACH,  REQST_OR_TYPE_ID, REQST_REM, REQST_STUS_ID, REQST_CRT_DT,
                         REQST_CRT_USER_ID, REQST_UPD_DT, REQST_UPD_USER_ID, REQST_ACTN_ID, REQST_ATCH_FILE_GRP_ID )
             VALUES (
-                         MSC0043M_REQST_ID_SEQ.NEXTVAL,#{guardianNo} ,  #{guardianCaseCategory}, #{guardianSubCaseCategory},
+                        #{reqstId},#{guardianNo} ,  #{guardianCaseCategory}, #{guardianSubCaseCategory},
                         #{orderId}, TO_DATE(#{complaintDate},'dd-mm-yyyy') , #{memberId}, #{complaintRemark},
                         #{hidFileName} , #{memTypeId}, null, '1', SYSDATE,
                         #{reqstCrtUserId}, SYSDATE, #{reqstUpdUserId}, #{ActionId}, #{groupId}
@@ -580,8 +577,8 @@
                        Extent10.USER_NAME USER_NAME1,
 			           Extent1.REQST_ACTN_ID REQST_ACTN_ID,
 			           Extent1.REQST_ATCH_FILE_GRP_ID REQST_ATCH_FILE_GRP_ID,
-			           Extent11.CMPLNC_PERSON_IN_CHRG PERSON_IN_CHRG,
-                       Extent11.MEM_CODE  || ' / '  || Extent11.NAME  AS PERSON_IN_CHRG_NAME,
+			           Extent10.USER_ID PERSON_IN_CHRG,
+                       Extent10.HR_CODE  || ' / '  || Extent10.USER_FULL_NAME  AS PERSON_IN_CHRG_NAME,
                        Extent1.ACTION,
                        Extent1.EYE_REWARD,
                        Extent12.HR_CODE APPROVAL_CODE,
@@ -599,25 +596,8 @@
 			  LEFT JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.REQST_STUS_ID
 			  LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.REQST_CRT_USER_ID
               LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.REQST_UPD_USER_ID
-              LEFT JOIN (
-                        SELECT
-                            A.CMPLNC_ID,
-                            A.CMPLNC_NO,
-                            A.MEM_ID,
-                            B.CMPLNC_SO_ID,
-                            D.USER_ID PIC_USER_ID,
-                            C.CMPLNC_PERSON_IN_CHRG,
-                            E.NAME,
-                            E.MEM_CODE
-                        FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
-                        WHERE A.CMPLNC_ID = B.CMPLNC_ID
-                          AND A.CMPLNC_ID = C.CMPLNC_ID
-                          AND C.CMPLNC_PERSON_IN_CHRG = D.USER_ID
-                          AND D.HR_CODE = E.MEM_CODE
-                    ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
-                                                AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
-                LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
-                LEFT JOIN SYS0038M Extent13 ON Extent13.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+              LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+              LEFT JOIN SYS0038M Extent13 ON Extent13.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
 			 WHERE 1 = 1
 			   AND Extent1.REQST_ID  = #{reqstId} AND ROWNUM = 1
 		</select>
