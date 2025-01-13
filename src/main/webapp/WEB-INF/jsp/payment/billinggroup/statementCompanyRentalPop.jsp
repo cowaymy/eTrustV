@@ -47,7 +47,7 @@ $(document).ready(function(){
     if(userTypeId == 2){
         $("#table1").show();
         $("#searchForm #userTypeId").val(userTypeId);
-        
+        $("#searchForm #memLvl").val('${SESSION_INFO.memberLevel}');
         if ("${SESSION_INFO.memberLevel}" =="1") {
             $("#searchForm #orgCode").val('${SESSION_INFO.orgCode}');
             $("#searchForm #orgCode").attr("class", "w100p readonly");
@@ -164,6 +164,7 @@ function fn_clear(){
 			<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 			<input id="userBranchId" name="userBranchId" type="hidden" value="" />
             <input id="userTypeId" name="userTypeId" type="hidden" value="" />
+            <input id="memLvl" name="memLvl" type="hidden" value="" />
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

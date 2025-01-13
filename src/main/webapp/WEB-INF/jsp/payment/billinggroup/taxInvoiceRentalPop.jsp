@@ -130,6 +130,7 @@
 					        
 					      if(userTypeId == 2){
 					    	  $("#table1").show();
+					    	  $("#searchForm #memLvl").val('${SESSION_INFO.memberLevel}');
 					          $("#searchForm #userTypeId").val(userTypeId);
 					          
 					          if ("${SESSION_INFO.memberLevel}" =="1") {
@@ -339,6 +340,7 @@
 				<input id="pdpaMonth" name="pdpaMonth" type="hidden" value='${pdpaMonth}'/>
 				<input id="userBranchId" name="userBranchId" type="hidden" value="" />
 				<input id="userTypeId" name="userTypeId" type="hidden" value="" />
+				<input id="memLvl" name="memLvl" type="hidden" value="" />
 				<table class="type1">
 					<!-- table start -->
 					<caption>table</caption>

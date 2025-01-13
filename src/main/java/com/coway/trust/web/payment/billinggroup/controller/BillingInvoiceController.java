@@ -285,6 +285,7 @@ public class BillingInvoiceController {
 		
 		if(sessionVO.getUserTypeId() == 2) {
 		    map.put("userTypeId", sessionVO.getUserTypeId());
+		    map.put("memLvl", sessionVO.getMemberLevel());
 		    map.put("memCode", searchVO.getMemCode().trim());
 		    map.put("deptCode", searchVO.getDeptCode().trim());
 		    map.put("grpCode", searchVO.getGrpCode().trim());
@@ -354,6 +355,7 @@ public class BillingInvoiceController {
 		
 		if(sessionVO.getUserTypeId() == 2) {
 		    map.put("userTypeId", sessionVO.getUserTypeId());
+		    map.put("memLvl", sessionVO.getMemberLevel());
 		    map.put("memCode", searchVO.getMemCode().trim());
 		    map.put("deptCode", searchVO.getDeptCode().trim());
 		    map.put("grpCode", searchVO.getGrpCode().trim());

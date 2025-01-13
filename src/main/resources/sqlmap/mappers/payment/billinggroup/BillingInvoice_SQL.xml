@@ -1232,6 +1232,7 @@ SELECT DISTINCT V1.ORD_ID
         LEFT JOIN ( SELECT Extent4.NAME NAME1 ,
         Extent4.NRIC NRIC1 ,
         Extent4.EMAIL EMAIL ,
+        Extent4.TYPE_ID TYPE_ID,
         Extent5.SALES_ORD_ID SALES_ORD_ID ,
         Extent5.SALES_ORD_NO SALES_ORD_NO ,
         Extent5.SALES_DT SALES_DT ,
@@ -1304,20 +1305,37 @@ SELECT DISTINCT V1.ORD_ID
             OR ( Filter1.OrderInstTelR LIKE '%' || #{contactNo} || '%' ESCAPE '~' )
             )
         </if>
-        <if test="userTypeId != null and userTypeId != '' ">
-              <if test="memCode != null and memCode != '' ">
-              AND Filter1.OrderMemCode = #{memCode}
-              </if>
-              <if test="orgCode != null and orgCode != '' ">
-              AND Extent3.ORG_CODE = #{orgCode}
-              </if>
-              <if test="grpCode != null and grpCode != '' ">
-              AND Extent3.GRP_CODE = #{grpCode}
-              </if>
-              <if test="deptCode != null and deptCode != '' ">
-              AND Extent3.DEPT_CODE = #{deptCode}
-              </if>
-        </if>
+        <choose>
+            <when test='memLvl == "2" or memLvl == "1"'>
+                <if test="orgCode != null and orgCode != '' ">
+                  AND (Extent3.ORG_CODE = #{orgCode}
+                </if>
+                <if test="grpCode != null and grpCode != '' ">
+                  AND Extent3.GRP_CODE = #{grpCode}
+                </if>
+                <if test="deptCode != null and deptCode != '' ">
+                  AND Extent3.DEPT_CODE = #{deptCode}
+                </if>
+                <if test="memCode != null and memCode != '' ">
+                  AND Filter1.OrderMemCode = #{memCode}
+                </if>
+                  OR Extent6.TYPE_ID = 965)
+                </when>
+                <otherwise>
+                <if test="memCode != null and memCode != '' ">
+                  AND Filter1.OrderMemCode = #{memCode}
+                </if>
+                <if test="orgCode != null and orgCode != '' ">
+                  AND Extent3.ORG_CODE = #{orgCode}
+                </if>
+                <if test="grpCode != null and grpCode != '' ">
+                  AND Extent3.GRP_CODE = #{grpCode}
+                </if>
+                <if test="deptCode != null and deptCode != '' ">
+                  AND Extent3.DEPT_CODE = #{deptCode}
+                </if>
+             </otherwise>
+        </choose>
         ORDER BY Filter1.OrderNo ASC
     </select>
     
@@ -1492,7 +1510,8 @@ SELECT DISTINCT V1.ORD_ID
                                       CASE WHEN LENGTH(NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(NRIC, 0, 8),'[A-Za-z0-9]','x') || SUBSTR(NRIC, 9, 12)
                                       ELSE NRIC
                                       END NRIC,
-                                      CUST_ID
+                                      CUST_ID,
+                                      TYPE_ID
                         FROM SAL0029D
                         WHERE LOWER(NAME) LIKE LOWER ('%' || 'MAHKAMAH' || '%')
             ) Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
@@ -1552,18 +1571,37 @@ SELECT DISTINCT V1.ORD_ID
             </foreach>
             )
         </if>    
-          <if test="memCode != null and memCode != '' ">
-           AND org1001.MEM_CODE = #{memCode}
-          </if>
-          <if test="orgCode != null and orgCode != '' ">
-           AND org1001.ORG_CODE = #{orgCode}
-          </if>
-          <if test="grpCode != null and grpCode != '' ">
-            AND org1001.GRP_CODE = #{grpCode}
-          </if>
-          <if test="deptCode != null and deptCode != '' ">
-            AND org1001.DEPT_CODE = #{deptCode}
-           </if>
+        <choose>
+             <when test='memLvl == "2" or memLvl == "1"'>
+                   <if test="orgCode != null and orgCode != '' ">
+                     AND (org1001.ORG_CODE = #{orgCode}
+                   </if>
+                   <if test="grpCode != null and grpCode != '' ">
+                     AND org1001.GRP_CODE = #{grpCode}
+                   </if>
+                   <if test="deptCode != null and deptCode != '' ">
+                     AND org1001.DEPT_CODE = #{deptCode}
+                   </if>
+                   <if test="memCode != null and memCode != '' ">
+                     AND org1001.MEM_CODE = #{memCode}
+                   </if>
+                     OR Extent4.TYPE_ID = 965)
+                   </when>
+                   <otherwise>
+                     <if test="memCode != null and memCode != '' ">
+                       AND org1001.MEM_CODE = #{memCode}
+                     </if>
+                     <if test="orgCode != null and orgCode != '' ">
+                       AND org1001.ORG_CODE = #{orgCode}
+                     </if>
+                     <if test="grpCode != null and grpCode != '' ">
+                       AND org1001.GRP_CODE = #{grpCode}
+                     </if>
+                     <if test="deptCode != null and deptCode != '' ">
+                       AND org1001.DEPT_CODE = #{deptCode}
+                     </if>
+                 </otherwise>
+           </choose>         
           
       ORDER BY SALES_ORD_NO
             </when>
