@@ -201,8 +201,8 @@ function btnGeneratePDF_Click(){
 	    	deptCode = "All";
 	    }
 
-	    if("${SESSION_INFO.roleId}" == 256) {
-            whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+"";
+	    if("${SESSION_INFO.roleId}" == "256" ) {
+            whereSQL += "AND (mem.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
         }
 
 	    var custTypeList = "";
@@ -340,6 +340,10 @@ function btnGenerateExcel_Click(){
             deptCode = memDeptCode;
 
         }
+        
+        if("${SESSION_INFO.roleId}" == "256" ) {
+        	whereSQL += "AND (mem.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
+        }
 
         var custTypeList = "";
         if($('#cmbCustType :selected').length > 0){
@@ -388,11 +392,15 @@ function btnGenerateExcel_Click(){
 	}
 }
 
-
-
 $("#dpInstallDateFrom").val(instDtMM+"/"+new Date().getFullYear());
 $("#dpInstallDateTo").val(instDtMM+"/"+new Date().getFullYear());
 CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType :selected").val()} , '');
+$("#_codyBrnchRow").hide();
+if("${SESSION_INFO.roleId}" == "256" ) {
+    $("#_codyBrnchRow").show();
+    CommonCombo.make('_codyBrnchId', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+    $('#_codyBrnchId').prop("disabled", true);
+}
 
 </script>
 
@@ -484,6 +492,12 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
         <option value="964" selected><spring:message code="sal.combo.text.individual" /></option>
     </select>
     </td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr id="_codyBrnchRow">
+    <th scope="row">Cody Branch</th>
+    <td><select id="_codyBrnchId" name="_codyBrnchId" class="w100p"></select></td>
     <th scope="row"></th>
     <td></td>
 </tr>

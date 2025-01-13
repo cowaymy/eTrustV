@@ -11,6 +11,13 @@ nowMonth = FormUtil.lpad(nowMonth, 2, "0");
 
 $("#mypSalesMonth").val(nowMonth+"/"+new Date().getFullYear());
 
+$("#_codyBrnchRow").hide();
+if("${SESSION_INFO.roleId}" == "256" ) {
+    $("#_codyBrnchRow").show();
+    CommonCombo.make('_codyBrnchId', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+    $('#_codyBrnchId').prop("disabled", true);
+}
+
 function btnGenerate_Click(){
 	
 	if(!($("#mypSalesMonth").val() == null || $("#mypSalesMonth").val().length == 0)){
@@ -37,10 +44,11 @@ function fn_report(){
         date = "0" + date;
     }
     whereSQL += " AND TO_DATE(TO_CHAR(som.PV_YEAR) || '/' || LPAD(TO_CHAR(som.PV_MONTH),2,'0') || '/' || '01','YYYY/MM/DD') BETWEEN ADD_MONTHS(TO_DATE(TO_CHAR(" + salesYear+ ") || '/' || LPAD(TO_CHAR(" + salesMonth+ "),2,'0') || '/' || '01','YYYY/MM/DD'), -1) AND TO_DATE(TO_CHAR(" + salesYear + ") || '/' || LPAD(TO_CHAR(" + salesMonth+ "),2,'0') || '/' || '01','YYYY/MM/DD') ";
-    if("${SESSION_INFO.roleId}" == 256) {
-        whereSQL += " AND som.BRNCH_ID = "+"${SESSION_INFO.userBranchId}"+" ";
-    }
     
+    if("${SESSION_INFO.roleId}" == "256" ) {
+    	whereSQL += "AND (org001.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
+    }
+
 	$("#form #reportDownFileName").val("ASOSalesReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	$("#form #reportFileName").val("/sales/ASONetSalesReport.rpt");
 	$("#form #viewType").val("PDF");
@@ -85,6 +93,10 @@ function fn_report(){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.salesMonth" /></th>
     <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="mypSalesMonth"/></td>
+</tr>
+<tr id="_codyBrnchRow">
+    <th scope="row">Cody Branch</th>
+    <td><select id="_codyBrnchId" name="_codyBrnchId" class="w100p"></select></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -153,6 +153,10 @@ function fn_report(viewType){
 	if($("#cmbUser :selected").index() > 0){
 		whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
 	}
+	
+	if("${SESSION_INFO.roleId}" == "256" ) {
+		whereSQL += "AND (org001.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
+    }
 
 	if($("#cmbSorting :selected").index() > -1){
 		sortBy = $("#cmbSorting :selected").text();
@@ -217,13 +221,14 @@ function fn_report(viewType){
 
 }
 
+$("#_codyBrnchRow").hide();
 if("${SESSION_INFO.roleId}" == "256" ) {
-    CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
-    $('#cmbKeyBranch').prop("disabled", true);
+    $("#_codyBrnchRow").show();
+    CommonCombo.make('_codyBrnchId', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+    $('#_codyBrnchId').prop("disabled", true);
 }
-else {
-    CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
-} 
+
+CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbSubmitBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </script>
@@ -315,6 +320,12 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byIssuedBank" /></option>
     </select>
     </td>
+</tr>
+<tr id="_codyBrnchRow">
+    <th scope="row">Cody Branch</th>
+    <td><select id="_codyBrnchId" name="_codyBrnchId" class="w100p"></select></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->

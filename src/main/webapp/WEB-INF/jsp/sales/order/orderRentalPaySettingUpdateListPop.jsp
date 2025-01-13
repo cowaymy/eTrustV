@@ -177,6 +177,10 @@ function fn_report(){
     if($("#cmbKeyBranch :selected").index() > 0){
             whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
     }
+    
+    if("${SESSION_INFO.roleId}" == "256" ) {
+    	whereSQL += "AND (org001.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
+    }
    
 	var date = new Date().getDate();
     if(date.toString().length == 1){
@@ -215,16 +219,16 @@ function cmbAppType_OnItemChecked(){
 	});
 
 }
-
+$("#_codyBrnchRow").hide();
  
  if("${SESSION_INFO.roleId}" == "256" ) {
-	 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
-     $('#cmbKeyBranch').prop("disabled", true);
+	 $("#_codyBrnchRow").show();
+     CommonCombo.make('_codyBrnchId', '/sales/ccp/getBranchCodeList', '' , '${SESSION_INFO.userBranchId}');
+     $('#_codyBrnchId').prop("disabled", true);
  }
- else {
-	 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
- } 
- CommonCombo.make('cmbBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
+CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+CommonCombo.make('cmbBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -332,6 +336,12 @@ function cmbAppType_OnItemChecked(){
         <option value="TER"><spring:message code="sal.combo.text.terminated" /></option>
     </select>
     </td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr id="_codyBrnchRow">
+    <th scope="row">Cody Branch</th>
+    <td><select id="_codyBrnchId" name="_codyBrnchId" class="w100p"></select></td>
     <th scope="row"></th>
     <td></td>
 </tr>
