@@ -305,6 +305,7 @@
   LEFT JOIN SYS0013M BB ON BB.CODE = AA.SCORE_GRP AND BB.CODE_MASTER_ID = 607 AND AA.STUS = 1
   RIGHT JOIN CUST_CREDIBILITY CC ON (CC.SCORE_GRP = BB.CODE_NAME OR CC.CHS_STUS = AA.CHS_STUS) AND
                                                         (CC.CUST_CAT = AA.CUST_CAT OR (AA.CUST_CAT IS NULL AND CC.CUST_CAT IS NULL))
+   WHERE AA.STUS = 1
     </select>
 
     <select id="getExistUnitHist" parameterType="Map" resultType="egovMap">

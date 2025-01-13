@@ -104,8 +104,8 @@
 
     // 리스트 조회.
     function fn_selectCustScoreCardList() {
-        Common.ajax("GET", "/sales/customer/customerScoreCardList", {custId : '${orderDetail.basicInfo.custId}', custIc : '${orderDetail.basicInfo.custNric}'}, function(result) {
-            AUIGrid.setGridData(custScoreCardGridID, result);
+        Common.ajax("GET", "/sales/customer/customerScoreCardList", {custId : '${orderDetail.basicInfo.custId}', custIc : '${orderDetail.basicInfo.custNric}', memType: '${memType}'}, function(result) {
+        	AUIGrid.setGridData(custScoreCardGridID, result);
         });
     }
 </script>

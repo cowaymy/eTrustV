@@ -242,6 +242,7 @@ public class CcpCalculateController {
     	model.addAttribute("ccpInfoMap", ccpInfoMap);
     	model.addAttribute("salesMan", salesMan);
     	model.addAttribute("ccpEresubmitMap", ccpEresubmitMap);
+    	model.addAttribute("memType", sessionVO.getUserTypeId());
 
 		//return
 		if(resultVal > 1){
@@ -342,6 +343,7 @@ public class CcpCalculateController {
     	model.addAttribute("ccpInfoMap", ccpInfoMap);
     	model.addAttribute("salesMan", salesMan);
     	model.addAttribute("ccpEresubmitMap", ccpEresubmitMap);
+    	model.addAttribute("memType", sessionVO.getUserTypeId());
 
 		//return
     	return "sales/ccp/ccpCalCCpViewPop";
