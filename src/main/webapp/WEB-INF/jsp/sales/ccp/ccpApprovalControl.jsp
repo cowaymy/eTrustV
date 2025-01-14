@@ -606,9 +606,9 @@
                                     isValid = false;
                                     rtnMsg = "Invaild character.";
                                 }
-                                if(newValue.length > 20) {
+                                if(newValue.length > 100) {
                                     isValid = false;
-                                    rtnMsg = "The maximum of characters is 20.";
+                                    rtnMsg = "The maximum of characters is 100.";
                                 }
                             }
 
