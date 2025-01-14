@@ -99,7 +99,44 @@
 	         }
 	      ];
 
-	    custScoreCardGridID = GridCommon.createAUIGrid("grid_custScoreCard_wrap", columnLayout, "", gridPros);
+        // 그리드 속성 설정
+        var gridPros2 = {
+
+            // 페이징 사용
+            usePaging : true,
+
+            // 한 화면에 출력되는 행 개수 20(기본값:20)
+            pageRowCount : 20,
+
+            editable : true,
+
+            fixedColumnCount : 1,
+
+            showStateColumn : false,
+
+            displayTreeOpen : true,
+
+            //     selectionMode : "multipleCells",
+
+            headerHeight : 60,
+            rowHeight:50,
+
+            // 그룹핑 패널 사용
+            useGroupingPanel : false,
+
+            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            skipReadonlyColumns : true,
+
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
+
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn : true,
+
+            wordWrap :  true
+        };
+
+        custScoreCardGridID = AUIGrid.create("#grid_custScoreCard_wrap", columnLayout, gridPros2);
 	}
 
     // 리스트 조회.
