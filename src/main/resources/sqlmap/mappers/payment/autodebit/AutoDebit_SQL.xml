@@ -3,214 +3,216 @@
 <mapper namespace="com.coway.trust.biz.payment.autodebit.service.impl.AutoDebitMapper">
 
   <select id="orderNumberSearchMobile" parameterType="Map" resultType="egovMap">
-		SELECT s0001d.SALES_ORD_ID,s0001d.SALES_ORD_NO, s0001d.CUST_ID,s0029d.NAME AS CUST_NAME,
-		s0029d.NRIC AS CUST_NRIC, s0013m.CODE_NAME AS STATUS_DESC,s0013m1.CODE_NAME AS USER_TYPE,
-		NVL(p0053s.ACC_DEBT_SUB_TOT_OTSTND,0) AS TOTAL_OUTSTANDING, TO_CHAR(s0001d.CRT_DT,'DD/MM/YYYY') AS CREATED_DATE,
-		(
-            CASE
-                WHEN s0001d.APP_TYPE_ID = 66 THEN NVL(s0001d.MTH_RENT_AMT,0) - NVL(GRB.REBATE_AMT_PER_INSTLMT,0)
-                ELSE 0
-            END
-        ) MONTHLY_RENTAL_AMOUNT,
-		s0029d.EMAIL as CUST_EMAIL, s0027d.TEL_M1 AS CUST_MOBILE
-		FROM SAL0001D s0001d
-		LEFT JOIN SAL0029D s0029d
-		ON s0001d.CUST_ID = s0029d.CUST_ID
-		LEFT JOIN SYS0013M s0013m
-		ON s0013m.CODE_ID = s0001d.APP_TYPE_ID
-		LEFT JOIN SYS0013M s0013m1
-		ON s0013m1.CODE_ID = s0029d.TYPE_ID
-		LEFT JOIN PAY0053S p0053s
-		ON p0053s.ACC_DEBT_ORD_ID = s0001d.SALES_ORD_ID
-		LEFT JOIN SAL0027D s0027d
-		ON s0001d.CUST_CNT_ID = s0027d.CUST_CNTC_ID
-		LEFT JOIN PAY0286D GRB
-		ON GRB.ORD_ID = s0001d.SALES_ORD_ID AND GRB.STUS_ID = 1
-		WHERE s0001d.APP_TYPE_ID = 66
-		AND s0001d.STUS_CODE_ID = 4
-		<if test='memType != null and memType != ""'>
-			<if test='memType == "2"'>
-				AND s0001d.BNDL_ID IS NULL
-			</if>
-			<if test='memType == "7"'>
-				AND s0001d.BNDL_ID IS NOT NULL
-			</if>
-		</if>
-		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
+    SELECT S0001D.SALES_ORD_ID,
+               S0001D.SALES_ORD_NO,
+               S0001D.CUST_ID,
+               S0029D.NAME AS CUST_NAME,
+               S0029D.NRIC AS CUST_NRIC,
+               S0013M.CODE_NAME AS STATUS_DESC,
+               S0013M1.CODE_NAME AS USER_TYPE,
+               NVL(P0053S.ACC_DEBT_SUB_TOT_OTSTND,0) AS TOTAL_OUTSTANDING, TO_CHAR(S0001D.CRT_DT,'DD/MM/YYYY') AS CREATED_DATE,
+               ( CASE WHEN S0001D.APP_TYPE_ID = 66
+                   THEN NVL(S0001D.MTH_RENT_AMT,0) - NVL(GRB.REBATE_AMT_PER_INSTLMT,0)
+                   ELSE 0 END) MONTHLY_RENTAL_AMOUNT,
+               S0029D.EMAIL AS CUST_EMAIL, S0027D.TEL_M1 AS CUST_MOBILE
+    FROM SAL0001D S0001D
+    LEFT JOIN SAL0029D S0029D ON S0001D.CUST_ID = S0029D.CUST_ID
+    LEFT JOIN SYS0013M S0013M ON S0013M.CODE_ID = S0001D.APP_TYPE_ID
+    LEFT JOIN SYS0013M S0013M1 ON S0013M1.CODE_ID = S0029D.TYPE_ID
+    LEFT JOIN PAY0053S P0053S ON P0053S.ACC_DEBT_ORD_ID = S0001D.SALES_ORD_ID
+    LEFT JOIN SAL0027D S0027D ON S0001D.CUST_CNT_ID = S0027D.CUST_CNTC_ID
+    LEFT JOIN PAY0286D GRB ON GRB.ORD_ID = S0001D.SALES_ORD_ID AND GRB.STUS_ID = 1
+    WHERE S0001D.APP_TYPE_ID = 66
+        AND S0001D.STUS_CODE_ID = 4
+
+    <if test='memType != null and memType != ""'>
+      <if test='memType == "2"'>
+        AND s0001d.BNDL_ID IS NULL
+      </if>
+      <if test='memType == "7"'>
+        AND s0001d.BNDL_ID IS NOT NULL
+      </if>
+    </if>
+
+    AND s0001d.SALES_ORD_NO = #{salesOrdNo}
   </select>
 
   <select id="getUserOrganization" parameterType="Map" resultType="egovMap">
-  	SELECT o0001d.MEM_TYPE FROM ORG0001D o0001d
-  	LEFT JOIN SYS0047M s0047m
-  	ON s0047m.HR_CODE = o0001d.MEM_CODE
-  	WHERE s0047m.USER_NAME = #{userName}
+    SELECT O0001D.MEM_TYPE FROM ORG0001D O0001D
+    LEFT JOIN SYS0047M S0047M
+    ON S0047M.HR_CODE = O0001D.MEM_CODE
+    WHERE S0047M.USER_NAME = #{userName}
   </select>
 
   <select id="orderNumberSearchMobileCheckActivePadNo" parameterType="Map" resultType="EgovMap">
-  		SELECT * FROM (
-			SELECT PAD_NO FROM PAY0333M WHERE SALES_ORD_NO = #{salesOrdNo} AND STUS_CODE_ID = 1 ORDER BY PAD_ID DESC
-		) WHERE ROWNUM = 1
+    SELECT * FROM ( SELECT PAD_NO
+                             FROM PAY0333M
+                             WHERE SALES_ORD_NO = #{salesOrdNo}
+                                 AND STUS_CODE_ID = 1
+                             ORDER BY PAD_ID DESC
+    ) WHERE ROWNUM = 1
   </select>
 
   <select id="autoDebitHistoryMobileList" parameterType="Map" resultType="egovMap">
-		SELECT p0333m.PAD_ID,p0333m.PAD_NO,p0333m.SALES_ORD_NO,TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS CREATED_DATE,
-		TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY') AS UPDATED_DATE,
-		CASE WHEN p0333m.FAIL_REASON_CODE IS NULL THEN ''
-        ELSE ('[' ||(s0047m2.USER_NAME) || '] ' || TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH12:MI:SS AM') || '>' || s0032m.CODE || '-' || s0032m.RESN_DESC || '>>' || p0333m.REMARKS) END AS REMARKS,
-		s0038M.NAME AS STATUS_DESC,s0029d.NAME AS CUST_NAME
-		FROM PAY0333M p0333m
-		INNER JOIN SYS0038M s0038m
-		ON s0038m.STUS_CODE_ID = p0333m.STUS_CODE_ID
-		INNER JOIN SAL0029D s0029d
-		ON s0029d.CUST_ID = p0333m.CUST_ID
-		LEFT JOIN SYS0047M s0047m
-		ON s0047m.USER_ID = p0333m.CRT_BY
-		LEFT JOIN SYS0032M s0032m
-		ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
-		LEFT JOIN SYS0047M s0047m2
-		ON s0047m2.USER_ID = p0333m.UPT_BY
-		WHERE 1=1
-		<if test='dateFrom != null and dateTo != null'>
-			<if test='dateFrom != "" and dateTo != ""'>
-				<![CDATA[
-					AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(p0333m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{dateTo},'DD/MM/YYYY')
-				]]>
-			</if>
-		</if>
-		<if test='salesOrderNo != null and salesOrderNo != ""'>
-		AND p0333m.SALES_ORD_NO = #{salesOrdNo}
-		</if>
-		<if test='statusCode != null and statusCode != ""'>
-		AND p0333m.STUS_CODE_ID = #{statusCode}
-		</if>
-		AND s0047m.USER_NAME = #{userName}
-		ORDER BY p0333m.CRT_DT DESC
+    SELECT p0333m.PAD_ID,
+               p0333m.PAD_NO,
+               p0333m.SALES_ORD_NO,
+               TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS CREATED_DATE,
+               TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY') AS UPDATED_DATE,
+               CASE WHEN p0333m.FAIL_REASON_CODE IS NULL THEN ''
+                 ELSE ('[' ||(s0047m2.USER_NAME) || '] ' || TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH12:MI:SS AM') || '>' || s0032m.CODE || '-' || s0032m.RESN_DESC || '>>' || p0333m.REMARKS) END AS REMARKS,
+               s0038M.NAME AS STATUS_DESC,s0029d.NAME AS CUST_NAME
+    FROM PAY0333M p0333m
+    INNER JOIN SYS0038M s0038m ON s0038m.STUS_CODE_ID = p0333m.STUS_CODE_ID
+    INNER JOIN SAL0029D s0029d ON s0029d.CUST_ID = p0333m.CUST_ID
+    LEFT JOIN SYS0047M s0047m ON s0047m.USER_ID = p0333m.CRT_BY
+    LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
+    LEFT JOIN SYS0047M s0047m2 ON s0047m2.USER_ID = p0333m.UPT_BY
+    WHERE 1=1
+    <if test='dateFrom != null and dateTo != null'>
+      <if test='dateFrom != "" and dateTo != ""'>
+        <![CDATA[
+          AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(p0333m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{dateTo},'DD/MM/YYYY')
+        ]]>
+      </if>
+    </if>
+
+    <if test='salesOrdNo != null and salesOrdNo != ""'>
+      AND p0333m.SALES_ORD_NO = #{salesOrdNo}
+    </if>
+
+    <if test='statusCode != null and statusCode != ""'>
+      AND p0333m.STUS_CODE_ID = #{statusCode}
+    </if>
+
+    AND s0047m.USER_NAME = #{userName}
+    ORDER BY p0333m.CRT_DT DESC
   </select>
 
   <select  id="selectAutoDebitEnrollmentList" parameterType="Map" resultType="egovMap">
     SELECT
-	     CASE WHEN z.ORD_OTSTND_MTH <![CDATA[ < ]]> 0 THEN 0 ELSE z.ORD_OTSTND_MTH END ORD_OTSTND_MTH,
-	     z.*
+       CASE WHEN z.ORD_OTSTND_MTH <![CDATA[ < ]]> 0 THEN 0 ELSE z.ORD_OTSTND_MTH END ORD_OTSTND_MTH,
+       z.*
      FROM
     (
-	    SELECT p0333m.PAD_ID,
-	               p0333m.PAD_NO,
-	               TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY HH24:MI:SS AM') AS KEY_IN_DATE,
-	               TO_CHAR(p0333m.CRT_DT,'HH24:MI:SS AM') AS KEY_IN_TIMESTAMP,
-	               s0038m.NAME AS STATUS_DESC,
-	               p0333m.SALES_ORD_NO, s0029d.NAME AS CUST_NAME,
-	               s0032m.CODE || '-' || s0032m.RESN_DESC AS RESN_DESC,
-	               p0333m.REMARKS,
-	               s0047m1.USER_NAME AS CREATOR,
-	               s0005m.CODE ||' '|| s0005m.NAME AS USER_BRANCH,
-	               TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH24:MI:SS AM') ||','|| (s0047m2.USER_NAME) AS LAST_UPDATED_DATE,
-	               p0333m.CUST_CRC_ID,
-	               TO_CHAR(s0028d.CUST_CRC_CRT_DT,'DD/MM/YYYY') AS CRC_APPLY_DATE,
-	               NVL(FLOOR((SELECT NVL(SUM(p0022d.RENT_AMT) , 0)  FROM PAY0022D p0022d WHERE  p0022d.RENT_SO_ID = s0001d.SALES_ORD_ID group by p0022d.RENT_SO_ID) /
-	               (CASE WHEN p0286d.REBATE_AMT_PER_INSTLMT IS NOT NULL THEN (s0001D.MTH_RENT_AMT - p0286d.REBATE_AMT_PER_INSTLMT) ELSE  s0001D.MTH_RENT_AMT END)),0) ORD_OTSTND_MTH,
-	               p0333m.CUST_EMAIL AS CUST_EMAIL,
-	               p0333m.CUST_PHONE AS CUST_MOBILE
-	    FROM PAY0333M p0333m
-	    LEFT JOIN SAL0029D s0029d ON p0333m.CUST_ID = s0029d.CUST_ID
-	    LEFT JOIN SYS0038M s0038m ON p0333m.STUS_CODE_ID = s0038m.STUS_CODE_ID
-	    LEFT JOIN SYS0047M s0047m1 ON p0333m.CRT_BY = s0047m1.USER_ID
-	    LEFT JOIN SYS0047M s0047m2 ON p0333m.UPT_BY = s0047m2.USER_ID
-	    LEFT JOIN SYS0005M s0005m ON p0333m.USER_BRANCH = s0005m.BRNCH_ID
-	    LEFT JOIN ORG0001D o0001d ON s0047m1.USER_NAME = o0001d.MEM_CODE
-	    LEFT JOIN ORG1001V o1001v ON o1001v.MEM_ID = o0001d.MEM_ID
-	    LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
-	    LEFT JOIN SAL0028D s0028d ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
-	    LEFT JOIN SAL0001D s0001d ON s0001D.SALES_ORD_NO = p0333m.SALES_ORD_NO
-	    LEFT JOIN PAY0286D p0286d on p0286d.ORD_ID = s0001d.SALES_ORD_ID AND p0286d.STUS_ID = 1 AND p0286d.CNTRCT_ID = 0
-	    WHERE 1=1
-	    <if test='padNo != null and padNo != ""'>
-	      AND p0333m.PAD_NO = TRIM(#{padNo})
-	    </if>
+      SELECT p0333m.PAD_ID,
+                 p0333m.PAD_NO,
+                 TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY HH24:MI:SS AM') AS KEY_IN_DATE,
+                 TO_CHAR(p0333m.CRT_DT,'HH24:MI:SS AM') AS KEY_IN_TIMESTAMP,
+                 s0038m.NAME AS STATUS_DESC,
+                 p0333m.SALES_ORD_NO, s0029d.NAME AS CUST_NAME,
+                 s0032m.CODE || '-' || s0032m.RESN_DESC AS RESN_DESC,
+                 p0333m.REMARKS,
+                 s0047m1.USER_NAME AS CREATOR,
+                 s0005m.CODE ||' '|| s0005m.NAME AS USER_BRANCH,
+                 TO_CHAR(p0333m.UPT_DT,'DD/MM/YYYY HH24:MI:SS AM') ||','|| (s0047m2.USER_NAME) AS LAST_UPDATED_DATE,
+                 p0333m.CUST_CRC_ID,
+                 TO_CHAR(s0028d.CUST_CRC_CRT_DT,'DD/MM/YYYY') AS CRC_APPLY_DATE,
+                 NVL(FLOOR((SELECT NVL(SUM(p0022d.RENT_AMT) , 0)  FROM PAY0022D p0022d WHERE  p0022d.RENT_SO_ID = s0001d.SALES_ORD_ID group by p0022d.RENT_SO_ID) /
+                 (CASE WHEN p0286d.REBATE_AMT_PER_INSTLMT IS NOT NULL THEN (s0001D.MTH_RENT_AMT - p0286d.REBATE_AMT_PER_INSTLMT) ELSE  s0001D.MTH_RENT_AMT END)),0) ORD_OTSTND_MTH,
+                 p0333m.CUST_EMAIL AS CUST_EMAIL,
+                 p0333m.CUST_PHONE AS CUST_MOBILE
+      FROM PAY0333M p0333m
+      LEFT JOIN SAL0029D s0029d ON p0333m.CUST_ID = s0029d.CUST_ID
+      LEFT JOIN SYS0038M s0038m ON p0333m.STUS_CODE_ID = s0038m.STUS_CODE_ID
+      LEFT JOIN SYS0047M s0047m1 ON p0333m.CRT_BY = s0047m1.USER_ID
+      LEFT JOIN SYS0047M s0047m2 ON p0333m.UPT_BY = s0047m2.USER_ID
+      LEFT JOIN SYS0005M s0005m ON p0333m.USER_BRANCH = s0005m.BRNCH_ID
+      LEFT JOIN ORG0001D o0001d ON s0047m1.USER_NAME = o0001d.MEM_CODE
+      LEFT JOIN ORG1001V o1001v ON o1001v.MEM_ID = o0001d.MEM_ID
+      LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0333m.FAIL_REASON_CODE
+      LEFT JOIN SAL0028D s0028d ON s0028d.CUST_CRC_ID = p0333m.CUST_CRC_ID
+      LEFT JOIN SAL0001D s0001d ON s0001D.SALES_ORD_NO = p0333m.SALES_ORD_NO
+      LEFT JOIN PAY0286D p0286d on p0286d.ORD_ID = s0001d.SALES_ORD_ID AND p0286d.STUS_ID = 1 AND p0286d.CNTRCT_ID = 0
+      WHERE 1=1
+      <if test='padNo != null and padNo != ""'>
+        AND p0333m.PAD_NO = TRIM(#{padNo})
+      </if>
 
-	    <if test='orderNo != null and orderNo != ""'>
-	      AND p0333m.SALES_ORD_NO = TRIM(#{orderNo})
-	    </if>
+      <if test='orderNo != null and orderNo != ""'>
+        AND p0333m.SALES_ORD_NO = TRIM(#{orderNo})
+      </if>
 
-	    <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != ""'>
-	      <if test='requestTimeFrom == null or requestTimeFrom == "" or requestTimeTo == null or requestTimeTo == ""'>
-	        AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{requestDateTo},'DD/MM/YYYY')
-	      </if>
-	    </if>
+      <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != ""'>
+        <if test='requestTimeFrom == null or requestTimeFrom == "" or requestTimeTo == null or requestTimeTo == ""'>
+          AND TO_DATE(TO_CHAR(p0333m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{requestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{requestDateTo},'DD/MM/YYYY')
+        </if>
+      </if>
 
-	    <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != "" and requestTimeFrom != null and requestTimeFrom != "" and requestTimeTo != null and requestTimeTo != ""'>
-	      AND p0333m.CRT_DT BETWEEN TO_DATE(#{requestDateFrom} || #{requestTimeFrom}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{requestDateTo} || #{requestTimeTo}, 'dd/mm/yyyy hh24:mi')
-	    </if>
+      <if test='requestDateFrom != null and requestDateFrom != "" and requestDateTo != null and requestDateTo != "" and requestTimeFrom != null and requestTimeFrom != "" and requestTimeTo != null and requestTimeTo != ""'>
+        AND p0333m.CRT_DT BETWEEN TO_DATE(#{requestDateFrom} || #{requestTimeFrom}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{requestDateTo} || #{requestTimeTo}, 'dd/mm/yyyy hh24:mi')
+      </if>
 
-	    <if test='crcRequestDateFrom != null and crcRequestDateFrom != "" and crcRequestDateTo != null and crcRequestDateTo != ""'>
-	      AND TO_DATE(TO_CHAR(s0028d.CUST_CRC_CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{crcRequestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{crcRequestDateTo},'DD/MM/YYYY')
-	    </if>
+      <if test='crcRequestDateFrom != null and crcRequestDateFrom != "" and crcRequestDateTo != null and crcRequestDateTo != ""'>
+        AND TO_DATE(TO_CHAR(s0028d.CUST_CRC_CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{crcRequestDateFrom},'DD/MM/YYYY') AND TO_DATE(#{crcRequestDateTo},'DD/MM/YYYY')
+      </if>
 
-	    <if test='custName != null and custName != ""'>
-	      AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
-	    </if>
+      <if test='custName != null and custName != ""'>
+        AND s0029d.NAME LIKE '%'||UPPER(#{custName})||'%'
+      </if>
 
-	    <if test='nricCompanyNo != null and nricCompanyNo != ""'>
-	      AND s0029d.NRIC = TRIM(#{nricCompanyNo})
-	    </if>
+      <if test='nricCompanyNo != null and nricCompanyNo != ""'>
+        AND s0029d.NRIC = TRIM(#{nricCompanyNo})
+      </if>
 
-	    <if test='orgCode != null and orgCode != ""'>
-	      AND o1001v.ORG_CODE = TRIM(#{orgCode})
-	    </if>
+      <if test='orgCode != null and orgCode != ""'>
+        AND o1001v.ORG_CODE = TRIM(#{orgCode})
+      </if>
 
-	    <if test='grpCode != null and grpCode != ""'>
-	      AND o1001v.GRP_CODE = TRIM(#{grpCode})
-	    </if>
+      <if test='grpCode != null and grpCode != ""'>
+        AND o1001v.GRP_CODE = TRIM(#{grpCode})
+      </if>
 
-	    <if test='deptCode != null and deptCode != ""'>
-	      AND o1001v.DEPT_CODE = TRIM(#{deptCode})
-	    </if>
+      <if test='deptCode != null and deptCode != ""'>
+        AND o1001v.DEPT_CODE = TRIM(#{deptCode})
+      </if>
 
-	    <if test="statusIdList != null and statusIdList != ''">
-	      AND p0333m.STUS_CODE_ID in
-	        <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
-	          #{item}
-	        </foreach>
-	    </if>
+      <if test="statusIdList != null and statusIdList != ''">
+        AND p0333m.STUS_CODE_ID in
+          <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+      </if>
 
-	    <if test="custTypeIdList != null and custTypeIdList != ''">
-	      AND s0029d.TYPE_ID in
-	      <foreach item="item" collection="custTypeIdList" index="index" open="(" separator="," close=")">
-	        #{item}
-	      </foreach>
-	    </if>
+      <if test="custTypeIdList != null and custTypeIdList != ''">
+        AND s0029d.TYPE_ID in
+        <foreach item="item" collection="custTypeIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
 
-	    <if test="branchIdList != null and branchIdList != ''">
-	      AND s0005m.BRNCH_ID in
-	      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
-	        #{item}
-	      </foreach>
-	    </if>
+      <if test="branchIdList != null and branchIdList != ''">
+        AND s0005m.BRNCH_ID in
+        <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
 
-	    <if test="regionIdList != null and regionIdList != ''">
-	      AND s0005m.REGN_ID in
-	      <foreach item="item" collection="regionIdList" index="index" open="(" separator="," close=")">
-	        #{item}
-	      </foreach>
-	    </if>
+      <if test="regionIdList != null and regionIdList != ''">
+        AND s0005m.REGN_ID in
+        <foreach item="item" collection="regionIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
 
-	    <if test="cardTypeIdList != null and cardTypeIdList != ''">
-	        AND s0028d.CARD_TYPE_ID in
-	      <foreach item="item" collection="cardTypeIdList" index="index" open="(" separator="," close=")">
-	        #{item}
-	      </foreach>
-	    </if>
+      <if test="cardTypeIdList != null and cardTypeIdList != ''">
+          AND s0028d.CARD_TYPE_ID in
+        <foreach item="item" collection="cardTypeIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
 
-	    <if test='memId != null and memId != ""'>
-	      AND o0001d.MEM_ID = TRIM(#{memId})
-	    </if>
+      <if test='memId != null and memId != ""'>
+        AND o0001d.MEM_ID = TRIM(#{memId})
+      </if>
 
-	    <if test='memCode != null and memCode != ""'>
-	      AND o0001d.MEM_CODE = TRIM(#{memCode})
-	    </if>
+      <if test='memCode != null and memCode != ""'>
+        AND o0001d.MEM_CODE = TRIM(#{memCode})
+      </if>
 
-	    <if test='memTyp != null and memTyp != ""'>
-	      AND s0047m1.USER_NAME LIKE '%'||UPPER(#{memTyp})||'%'
-	    </if>
+      <if test='memTyp != null and memTyp != ""'>
+        AND s0047m1.USER_NAME LIKE '%'||UPPER(#{memTyp})||'%'
+      </if>
     ) z
     WHERE 1=1
     <if test='outstandingMth != null and outstandingMth != "" and outstandingMth != "999"'>
@@ -219,64 +221,64 @@
     ORDER BY z.KEY_IN_DATE DESC
   </select>
 
-	<select id="selectAutoDebitDetailInfo" parameterType="Map" resultType="egovMap">
-		SELECT p0333m.PAD_ID, p0333m.PAD_NO, p0333m.SALES_ORD_NO, custtype.CODE_NAME AS CUST_TYPE, s0029d.NAME, s0029d.NRIC, TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
-		TO_CHAR(s0001d.SALES_DT,'DD/MM/YYYY') AS SALES_DT, s0026m.STK_DESC,
-		(
+  <select id="selectAutoDebitDetailInfo" parameterType="Map" resultType="egovMap">
+    SELECT p0333m.PAD_ID, p0333m.PAD_NO, p0333m.SALES_ORD_NO, custtype.CODE_NAME AS CUST_TYPE, s0029d.NAME, s0029d.NRIC, TO_CHAR(p0333m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+    TO_CHAR(s0001d.SALES_DT,'DD/MM/YYYY') AS SALES_DT, s0026m.STK_DESC,
+    (
             CASE
                 WHEN s0001d.APP_TYPE_ID = 66 THEN NVL(s0001d.MTH_RENT_AMT,0) - NVL(GRB.REBATE_AMT_PER_INSTLMT,0)
                 ELSE 0
             END
         ) MTH_RENT_AMT,
-		rentalstatus.CODE_NAME AS RENTAL_STATUS,
-		p0333m.FAIL_REASON_CODE, p0333m.REMARKS, p0333m.STUS_CODE_ID, p0333m.IS_THIRD_PARTY_PAYMENT, s0001d.SALES_ORD_ID,
-		p0333m.ATCH_FILE_GROUP_ID, p0333m.THIRD_PARTY_CUST_ID, p0333m.CUST_CRC_ID
-		FROM PAY0333M p0333m
-		LEFT JOIN SAL0029D s0029d
-		ON s0029d.CUST_ID = p0333m.CUST_ID
-		LEFT JOIN SYS0013M custtype
-		ON custtype.CODE_ID = s0029d.TYPE_ID
-		LEFT JOIN SAL0001D s0001d
-		ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
-		LEFT JOIN SYS0013M rentalstatus
-		ON rentalstatus.CODE_ID = s0001d.APP_TYPE_ID
-		LEFT JOIN SAL0002D s0002d
-		ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
-		LEFT JOIN SYS0026M s0026m
-		ON s0026m.STK_ID = s0002d.ITM_STK_ID
-		LEFT JOIN PAY0286D GRB
-		ON GRB.ORD_ID = s0001d.SALES_ORD_ID AND GRB.STUS_ID = 1
-		WHERE 1=1
-		AND p0333m.PAD_ID = #{padId}
-	</select>
+    rentalstatus.CODE_NAME AS RENTAL_STATUS,
+    p0333m.FAIL_REASON_CODE, p0333m.REMARKS, p0333m.STUS_CODE_ID, p0333m.IS_THIRD_PARTY_PAYMENT, s0001d.SALES_ORD_ID,
+    p0333m.ATCH_FILE_GROUP_ID, p0333m.THIRD_PARTY_CUST_ID, p0333m.CUST_CRC_ID
+    FROM PAY0333M p0333m
+    LEFT JOIN SAL0029D s0029d
+    ON s0029d.CUST_ID = p0333m.CUST_ID
+    LEFT JOIN SYS0013M custtype
+    ON custtype.CODE_ID = s0029d.TYPE_ID
+    LEFT JOIN SAL0001D s0001d
+    ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+    LEFT JOIN SYS0013M rentalstatus
+    ON rentalstatus.CODE_ID = s0001d.APP_TYPE_ID
+    LEFT JOIN SAL0002D s0002d
+    ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
+    LEFT JOIN SYS0026M s0026m
+    ON s0026m.STK_ID = s0002d.ITM_STK_ID
+    LEFT JOIN PAY0286D GRB
+    ON GRB.ORD_ID = s0001d.SALES_ORD_ID AND GRB.STUS_ID = 1
+    WHERE 1=1
+    AND p0333m.PAD_ID = #{padId}
+  </select>
 
-	<select id="selectCustomerCreditCardInfo" parameterType="Map" resultType="egovMap">
-		SELECT s0028d.CUST_ORI_CRC_NO, s0013m1.CODE_NAME AS CARD_PROVIDER, s0028d.CUST_CRC_OWNER, s0028d.CUST_CRC_EXPR, s0004m.CODE || '-' || s0004m.NAME AS ISSUE_BANK,s0013m2.CODE_NAME AS CARD_TYPE
-		FROM SAL0028D s0028d
-		INNER JOIN SYS0013M s0013m1
-		ON s0028d.CUST_CRC_TYPE_ID = s0013m1.CODE_ID
-		INNER JOIN SYS0013M s0013m2
-		ON s0028d.CARD_TYPE_ID = s0013m2.CODE_ID
-		INNER JOIN SYS0004M s0004m
-		ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
-		WHERE 1=1
-		AND s0028d.CUST_CRC_ID = #{custCrcId}
-	</select>
+  <select id="selectCustomerCreditCardInfo" parameterType="Map" resultType="egovMap">
+    SELECT s0028d.CUST_ORI_CRC_NO, s0013m1.CODE_NAME AS CARD_PROVIDER, s0028d.CUST_CRC_OWNER, s0028d.CUST_CRC_EXPR, s0004m.CODE || '-' || s0004m.NAME AS ISSUE_BANK,s0013m2.CODE_NAME AS CARD_TYPE
+    FROM SAL0028D s0028d
+    INNER JOIN SYS0013M s0013m1
+    ON s0028d.CUST_CRC_TYPE_ID = s0013m1.CODE_ID
+    INNER JOIN SYS0013M s0013m2
+    ON s0028d.CARD_TYPE_ID = s0013m2.CODE_ID
+    INNER JOIN SYS0004M s0004m
+    ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
+    WHERE 1=1
+    AND s0028d.CUST_CRC_ID = #{custCrcId}
+  </select>
 
-	<select id="selectAttachmentInfo" parameterType="Map" resultType="map">
-		SELECT s0071d.ATCH_FILE_ID AS CI_ATCH_FILE_ID, s0071d.ATCH_FILE_NAME AS CI_ATCH_FILE_NAME,
-		s0071d.FILE_SUB_PATH AS CI_FILE_SUB_PATH, s0071d.PHYSICL_FILE_NAME AS CI_PHYSICL_FILE_NAME,
-		s0071d.FILE_EXTSN AS CI_FILE_EXTSN, s0071d.FILE_SIZE AS CI_FILE_SIZE, s0071d.FILE_KEY_SEQ
-		FROM PAY0333M p0333m
-		LEFT JOIN SYS0070M s0070m
-		ON s0070m.ATCH_FILE_GRP_ID =  p0333m.ATCH_FILE_GROUP_ID
-		LEFT JOIN SYS0071D s0071d
-		ON s0071d.ATCH_FILE_ID = s0070m.ATCH_FILE_ID
-		WHERE 1=1
-		AND p0333m.PAD_ID = #{padId}
-	</select>
+  <select id="selectAttachmentInfo" parameterType="Map" resultType="map">
+    SELECT s0071d.ATCH_FILE_ID AS CI_ATCH_FILE_ID, s0071d.ATCH_FILE_NAME AS CI_ATCH_FILE_NAME,
+    s0071d.FILE_SUB_PATH AS CI_FILE_SUB_PATH, s0071d.PHYSICL_FILE_NAME AS CI_PHYSICL_FILE_NAME,
+    s0071d.FILE_EXTSN AS CI_FILE_EXTSN, s0071d.FILE_SIZE AS CI_FILE_SIZE, s0071d.FILE_KEY_SEQ
+    FROM PAY0333M p0333m
+    LEFT JOIN SYS0070M s0070m
+    ON s0070m.ATCH_FILE_GRP_ID =  p0333m.ATCH_FILE_GROUP_ID
+    LEFT JOIN SYS0071D s0071d
+    ON s0071d.ATCH_FILE_ID = s0070m.ATCH_FILE_ID
+    WHERE 1=1
+    AND p0333m.PAD_ID = #{padId}
+  </select>
 
-	<select id="selectRejectReasonCode" parameterType="Map" resultType="egovMap">
+  <select id="selectRejectReasonCode" parameterType="Map" resultType="egovMap">
         SELECT A.RESN_ID CODE, A.CODE || '-' || A.RESN_DESC AS CODE_NAME
         FROM SYS0032M A
         WHERE 1=1
@@ -285,10 +287,10 @@
         ORDER BY A.CODE ASC
     </select>
 
-	  <select id="selectNextFileGroupId" resultType="int">
-	    SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL
-	    FROM DUAL
-	  </select>
+    <select id="selectNextFileGroupId" resultType="int">
+      SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL
+      FROM DUAL
+    </select>
 
     <select id="selectNextFileId" resultType="int">
         SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
@@ -298,129 +300,129 @@
         SELECT PAY0333M_PAD_ID_SEQ.NEXTVAL padId FROM DUAL
     </select>
 
-	<insert id="insertFileGroup" parameterType="Map">
-	  INSERT INTO SYS0070M (ATCH_FILE_GRP_ID
-	                                   , ATCH_FILE_ID
-	                                   , CHENAL_TYPE
-	                                   , CRT_USER_ID
-	                                   , CRT_DT
-	                                   , UPD_USER_ID
-	                                   , UPD_DT
-	  ) VALUES ( #{atchFileGrpId}
-	                , #{atchFileId}
-	                , #{chenalType}
-	                , #{crtUserId}
-	                , SYSDATE
-	                , #{updUserId}
-	                , SYSDATE
-	  )
-	</insert>
+  <insert id="insertFileGroup" parameterType="Map">
+    INSERT INTO SYS0070M (ATCH_FILE_GRP_ID
+                                     , ATCH_FILE_ID
+                                     , CHENAL_TYPE
+                                     , CRT_USER_ID
+                                     , CRT_DT
+                                     , UPD_USER_ID
+                                     , UPD_DT
+    ) VALUES ( #{atchFileGrpId}
+                  , #{atchFileId}
+                  , #{chenalType}
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , SYSDATE
+    )
+  </insert>
 
-	<insert id="insertFileDetail" parameterType="Map">
-		INSERT INTO SYS0071D (
-		ATCH_FILE_ID
-		, ATCH_FILE_NAME
-		, FILE_SUB_PATH
-		, PHYSICL_FILE_NAME
-		, FILE_EXTSN
-		, FILE_SIZE
-		, FILE_PASSWORD
-		, FILE_UNQ_KEY
-		, FILE_KEY_SEQ
-		)VALUES (
-		#{atchFileId}
-		,#{atchFileName}
-		,#{fileSubPath}
-		,#{physiclFileName}
-		,#{fileExtsn}
-		,#{fileSize}
-		,#{filePassword}
-		,#{fileUnqKey}
-		,#{fileKeySeq}
-		)
-	</insert>
+  <insert id="insertFileDetail" parameterType="Map">
+    INSERT INTO SYS0071D (
+    ATCH_FILE_ID
+    , ATCH_FILE_NAME
+    , FILE_SUB_PATH
+    , PHYSICL_FILE_NAME
+    , FILE_EXTSN
+    , FILE_SIZE
+    , FILE_PASSWORD
+    , FILE_UNQ_KEY
+    , FILE_KEY_SEQ
+    )VALUES (
+    #{atchFileId}
+    ,#{atchFileName}
+    ,#{fileSubPath}
+    ,#{physiclFileName}
+    ,#{fileExtsn}
+    ,#{fileSize}
+    ,#{filePassword}
+    ,#{fileUnqKey}
+    ,#{fileKeySeq}
+    )
+  </insert>
 
-	<update id="updateAction" parameterType="Map">
-	      UPDATE PAY0333M
-	      SET STUS_CODE_ID = #{statusCodeId},
-	      REMARKS = #{remarks},
-	      FAIL_REASON_CODE = #{rejectReasonCode},
-	      UPT_BY = #{userId},
-	      UPT_DT = SYSDATE,
-	      THIRD_PARTY_CUST_ID = #{thirdPartyCustId}
-	      WHERE PAD_ID = #{padId}
+  <update id="updateAction" parameterType="Map">
+        UPDATE PAY0333M
+        SET STUS_CODE_ID = #{statusCodeId},
+        REMARKS = #{remarks},
+        FAIL_REASON_CODE = #{rejectReasonCode},
+        UPT_BY = #{userId},
+        UPT_DT = SYSDATE,
+        THIRD_PARTY_CUST_ID = #{thirdPartyCustId}
+        WHERE PAD_ID = #{padId}
     </update>
 
     <select id="selectCreatorInfo" parameterType="String" resultType="egovMap">
-       	SELECT s0047m.USER_ID, s0005m.BRNCH_ID AS USER_BRANCH
-       	FROM SYS0047M s0047m
-       	LEFT JOIN ORG0001D o0001d
-       	ON o0001d.MEM_CODE = s0047m.USER_NAME
-       	LEFT JOIN SYS0005M s0005m
-       	ON s0005m.BRNCH_ID = o0001d.BRNCH
-       	WHERE USER_NAME = #{memCode}
+         SELECT s0047m.USER_ID, s0005m.BRNCH_ID AS USER_BRANCH
+         FROM SYS0047M s0047m
+         LEFT JOIN ORG0001D o0001d
+         ON o0001d.MEM_CODE = s0047m.USER_NAME
+         LEFT JOIN SYS0005M s0005m
+         ON s0005m.BRNCH_ID = o0001d.BRNCH
+         WHERE USER_NAME = #{memCode}
     </select>
 
     <insert id="insertAutoDebitMobileSubmmisionData" parameterType="Map">
-		INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
-		CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
-		ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID,CUST_PHONE, CUST_NEW_PHONE, CUST_EMAIL, CUST_NEW_EMAIL)
-		VALUES
-		(#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
-		#{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
-		TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId},#{sms1}, #{sms2},#{email1}, #{email2})
-	</insert>
+    INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
+    CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
+    ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID,CUST_PHONE, CUST_NEW_PHONE, CUST_EMAIL, CUST_NEW_EMAIL)
+    VALUES
+    (#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
+    #{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
+    TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId},#{sms1}, #{sms2},#{email1}, #{email2})
+  </insert>
 
-	<select id="getSmsTemplate" parameterType="Map" resultType="String">
-		SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smsAutoDebit'),'{1}', #{monthlyRentalAmount}), '{2}', #{tinyUrl}), '{3}', #{bankIssuer}),'{4}', #{cardEnding})
-		FROM DUAL
-	</select>
+  <select id="getSmsTemplate" parameterType="Map" resultType="String">
+    SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smsAutoDebit'),'{1}', #{monthlyRentalAmount}), '{2}', #{tinyUrl}), '{3}', #{bankIssuer}),'{4}', #{cardEnding})
+    FROM DUAL
+  </select>
 
-	<select id="selectCustCardBankInformation" parameterType="Map" resultType="egovMap">
-       	SELECT s0028d.CUST_ORI_CRC_NO, s0004m.CODE AS BANK_ISSUER
-       	FROM SAL0028D s0028d
-       	INNER JOIN SYS0004M s0004m
-       	ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
-       	WHERE s0028d.CUST_CRC_ID = #{newCustCreditCardId}
+  <select id="selectCustCardBankInformation" parameterType="Map" resultType="egovMap">
+         SELECT s0028d.CUST_ORI_CRC_NO, s0004m.CODE AS BANK_ISSUER
+         FROM SAL0028D s0028d
+         INNER JOIN SYS0004M s0004m
+         ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
+         WHERE s0028d.CUST_CRC_ID = #{newCustCreditCardId}
     </select>
 
-	<select id="getEmailDescription" parameterType="Map" resultType="egovMap">
-		SELECT s0004m.CODE AS BANK_SHORT_NAME,SUBSTR(s0028d.CUST_ORI_CRC_NO,13,4) AS CARD_LAST_4_DIGIT, p0333m.SALES_ORD_NO,
-		(
+  <select id="getEmailDescription" parameterType="Map" resultType="egovMap">
+    SELECT s0004m.CODE AS BANK_SHORT_NAME,SUBSTR(s0028d.CUST_ORI_CRC_NO,13,4) AS CARD_LAST_4_DIGIT, p0333m.SALES_ORD_NO,
+    (
             CASE
                 WHEN s0001d.APP_TYPE_ID = 66 THEN NVL(s0001d.MTH_RENT_AMT,0) - NVL(GRB.REBATE_AMT_PER_INSTLMT,0)
                 ELSE 0
             END
         ) MONTHLY_RENTAL_AMOUNT
-		FROM PAY0333M p0333m
-		LEFT JOIN SAL0001D s0001d
-		ON p0333m.SALES_ORD_NO = s0001d.SALES_ORD_NO
-		LEFT JOIN SAL0028D s0028d
-		ON p0333m.CUST_CRC_ID = s0028d.CUST_CRC_ID
-		LEFT JOIN SYS0004M s0004m
-		ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
-		LEFT JOIN PAY0286D GRB
-		ON GRB.ORD_ID = s0001d.SALES_ORD_ID AND GRB.STUS_ID = 1
-		WHERE p0333m.PAD_ID = #{padId}
-	</select>
+    FROM PAY0333M p0333m
+    LEFT JOIN SAL0001D s0001d
+    ON p0333m.SALES_ORD_NO = s0001d.SALES_ORD_NO
+    LEFT JOIN SAL0028D s0028d
+    ON p0333m.CUST_CRC_ID = s0028d.CUST_CRC_ID
+    LEFT JOIN SYS0004M s0004m
+    ON s0004m.BANK_ID = s0028d.CUST_CRC_BANK_ID
+    LEFT JOIN PAY0286D GRB
+    ON GRB.ORD_ID = s0001d.SALES_ORD_ID AND GRB.STUS_ID = 1
+    WHERE p0333m.PAD_ID = #{padId}
+  </select>
 
-	<select id="getPadDetail" parameterType="Map" resultType="egovMap">
-		SELECT * FROM PAY0333M WHERE PAD_ID = #{padId}
-	</select>
+  <select id="getPadDetail" parameterType="Map" resultType="egovMap">
+    SELECT * FROM PAY0333M WHERE PAD_ID = #{padId}
+  </select>
 
-	<select id="getCreditDebitCardDetail" parameterType="Map" resultType="egovMap">
-		SELECT * FROM SAL0028D WHERE CUST_CRC_ID = #{custCrcId}
-	</select>
+  <select id="getCreditDebitCardDetail" parameterType="Map" resultType="egovMap">
+    SELECT * FROM SAL0028D WHERE CUST_CRC_ID = #{custCrcId}
+  </select>
 
-	<select id="getCurrentPaymentChannelDetail" parameterType="Map" resultType="egovMap">
-		SELECT s0074d.* FROM SAL0074D s0074d
-		INNER JOIN SAL0001D s0001d
-		ON s0001d.SALES_ORD_ID = s0074d.SALES_ORD_ID
-		WHERE s0001d.SALES_ORD_NO = #{salesOrdNo}
-		AND SVC_CNTRCT_ID = 0
-	</select>
+  <select id="getCurrentPaymentChannelDetail" parameterType="Map" resultType="egovMap">
+    SELECT s0074d.* FROM SAL0074D s0074d
+    INNER JOIN SAL0001D s0001d
+    ON s0001d.SALES_ORD_ID = s0074d.SALES_ORD_ID
+    WHERE s0001d.SALES_ORD_NO = #{salesOrdNo}
+    AND SVC_CNTRCT_ID = 0
+  </select>
 
-	<update id="updatePaymentChannel" parameterType="Map">
+  <update id="updatePaymentChannel" parameterType="Map">
         UPDATE SAL0074D
            SET MODE_ID         = #{modeId}
              , CUST_CRC_ID     = #{custCrcId}
@@ -446,23 +448,23 @@
     </select>
 
     <select id="getProductDescription" parameterType="Map" resultType="egovMap">
-    	SELECT
-		s0026m.STK_DESC
-		FROM PAY0333M p0333m
-		LEFT JOIN SAL0001D s0001d
-		ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
-		LEFT JOIN SAL0002D s0002d
-		ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
-		LEFT JOIN SYS0026M s0026m
-		ON s0026m.STK_ID = s0002d.ITM_STK_ID
-		WHERE p0333m.PAD_ID = #{padId}
-		AND ROWNUM = 1
+      SELECT
+    s0026m.STK_DESC
+    FROM PAY0333M p0333m
+    LEFT JOIN SAL0001D s0001d
+    ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+    LEFT JOIN SAL0002D s0002d
+    ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
+    LEFT JOIN SYS0026M s0026m
+    ON s0026m.STK_ID = s0002d.ITM_STK_ID
+    WHERE p0333m.PAD_ID = #{padId}
+    AND ROWNUM = 1
     </select>
 
         <select id="getAutoDebitSignImg" parameterType="Map" resultType="Map">
-    	SELECT utl_raw.cast_to_varchar2(utl_encode.base64_encode(dbms_lob.substr(SIGN_IMG))) AS SIGN_IMG
-    	FROM PAY0333M p0333m
-		WHERE p0333m.PAD_ID = #{padId}
+      SELECT utl_raw.cast_to_varchar2(utl_encode.base64_encode(dbms_lob.substr(SIGN_IMG))) AS SIGN_IMG
+      FROM PAY0333M p0333m
+    WHERE p0333m.PAD_ID = #{padId}
     </select>
 
     <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
