@@ -1,6 +1,7 @@
 package com.coway.trust.web.sales.order;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -619,7 +620,12 @@ public class OrderRegisterController {
 
   @RequestMapping(value = "/selectPrevOrderNoList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectPrevOrderNoList(@RequestParam Map<String, Object> params) {
-    List<EgovMap> result = orderRegisterService.selectPrevOrderNoList(params);
+	  List<EgovMap> result = new ArrayList<>();
+	  if(params.get("isHomecare") != null && params.get("isHomecare").equals('0')){
+		  result = orderRegisterService.selectPrevOrderNoList(params);
+	  }else{
+		  result = orderRegisterService.selectHcPrevOrderNoList(params);
+	  }
     return ResponseEntity.ok(result);
   }
 

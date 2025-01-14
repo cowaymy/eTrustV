@@ -106,4 +106,6 @@ public interface OrderRegisterService {
   EgovMap checkOldOrderServiceExpiryMonth(Map<String, Object> params);
 
   ReturnMessage checkExtradeWithPromoOrder(Map<String, Object> params);
+
+  List<EgovMap> selectHcPrevOrderNoList(Map<String, Object> params);
 }

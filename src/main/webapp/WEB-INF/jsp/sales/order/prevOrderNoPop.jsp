@@ -39,13 +39,24 @@
 
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
-               if($('#isHomecare').val() != '2'){ //no product return
+               if($('#isHomecare').val() != '2'){ // (HA)no product return
             	   if(RESULT.extrOptFlag == '1'){
                        $('#isReturnExtrade').attr("disabled",false);
                    }else{
                        $('#isReturnExtrade').attr("disabled",true);
                        $('#isReturnExtrade').prop("checked", true);
                    }
+               }else{ //HC
+            	   if(RESULT.hcExtrOptFlag == '1'){//HC to HC, >61th can choose w/wo return
+            		   $('#isReturnExtrade').attr("disabled",false);
+                       $('#isReturnExtrade').prop("checked", true);
+            	   }else if(RESULT.extrOptFlag == '1'){//HA to HC. >61th always wo return
+            		   $('#isReturnExtrade').attr("disabled",true);
+                       $('#isReturnExtrade').prop("checked", false);
+            	   }else{//HC to HC, 57-60th with return
+            		   $('#isReturnExtrade').prop("checked", true);
+            		   $('#isReturnExtrade').attr("disabled",true);
+            	   }
                }
 
                 if(RESULT.rootState == 'ROOT_1') {

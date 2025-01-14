@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.impl.EcommApiMapper;
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.homecare.sales.order.impl.HcPreBookingOrderMapper;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
@@ -106,6 +107,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "hsManualMapper")
   private HsManualMapper hsManualMapper;
+
+  @Resource(name = "hcOrderListService")
+	private HcOrderListService hcOrderListService;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -327,7 +331,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public EgovMap checkOldOrderId(Map<String, Object> params) {
 
     int getOldOrderID = 0;
-    int custId = 0, promoId = 0 ,extradeWoutPRCnt =0;
+    int custId = 0, promoId = 0 ,extradeWoutPRCnt =0 ,hcExtradeWoutPRCnt =0;
     String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
     String monthExpired = "";
     String preBook = "";
@@ -476,9 +480,20 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                       isInValid = "InValid";
                     }
 
+                    // select another order
+                    params.put("ordNo", params.get("salesOrdNo"));
+            		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
+            		if(hcOrderInfo != null && hcOrderInfo.get("anoOrdId") != null && hcOrderInfo.get("anoOrdAppType") != null){
+            			if(hcOrderInfo.get("anoOrdAppType").toString().equals("66")){
+            				msg = msg + " -Please be aware that 1 of bundle order may not comply with the ex-trade obligation period and payment. Kindly check the order for confirmation.";
+                            isInValid = "InValid";
+            			}
+            		}
+
                     //special - extrade whether need product return
                     //old order which fall under rental type, 60-66 months after starter package and AP type.
                     extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
+                    hcExtradeWoutPRCnt = orderRegisterMapper.chkCanHcExtradeWoutPR(getOldOrderID);
 
                     ROOT_STATE = "ROOT_4";
 
@@ -555,6 +570,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     RESULT.put("OLD_ORDER_ID", getOldOrderID);
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
     RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
+    RESULT.put("HC_EXTR_OPT_FLAG", hcExtradeWoutPRCnt);
     RESULT.put("MONTH_EXPIRED", monthExpired);
     RESULT.put("PRE_BOOK", preBook);
 
@@ -2753,16 +2769,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
 	}
 
-	if(params.get("isHomeCare") != null && params.get("isHomeCare").equals('Y')){
-		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
-			//svm expired within one month, just able to do extrade, else block.
-
-			result.setCode("99");
-			result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
-			return result;
-		}
-	}
-	else{
+//	if(params.get("isHomeCare") != null && params.get("isHomeCare").equals('Y')){
+//		if(!"Y".equals(getExpDate.get("extradeAllowFlg").toString())) {
+//			//svm expired within one month, just able to do extrade, else block.
+//
+//			result.setCode("99");
+//			result.setMessage("Not able to extrade as SVM is not expired within 1 month. Please choose another order");
+//			return result;
+//		}
+//	}
+//	else{
 
     	if((params.get("appTypeId").equals("66") || params.get("appTypeId").equals("67") || params.get("appTypeId").equals("68"))
     			&& params.get("extradeId").equals("1")){ //RENTAL || OUTRIGHT || INSTALMENT APPTYPE WITH EXTRADE ONLY
@@ -2819,7 +2835,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			return result;
     		}
     	}
-	}
+//	}
 		return result;
   }
 
@@ -2873,6 +2889,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     }
   }
 
+  @Override
+  public List<EgovMap> selectHcPrevOrderNoList(Map<String, Object> params) {
+    // TODO ProductCodeList 호출시 error남
+    return orderRegisterMapper.selectHcPrevOrderNoList(params);
+  }
 //  @Override
 //  public List<EgovMap> selectPwpOrderNoList(Map<String, Object> params) {
 //    // TODO ProductCodeList 호출시 error남

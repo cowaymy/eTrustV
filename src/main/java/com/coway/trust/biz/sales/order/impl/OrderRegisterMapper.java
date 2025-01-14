@@ -264,4 +264,7 @@ public interface OrderRegisterMapper {
 
   int getExistingActOrdCount(Map<String, Object> params);
 
+  List<EgovMap> selectHcPrevOrderNoList(Map<String, Object> params);
+
+  int chkCanHcExtradeWoutPR(int ordId);
 }
