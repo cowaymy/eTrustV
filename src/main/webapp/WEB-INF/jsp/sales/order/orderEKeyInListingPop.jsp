@@ -21,25 +21,19 @@ $('.multy_select').change(function() {
 });
 
 $(document).ready(function(){ 
-	$("#_codyBrnchRow").hide();
 	if("${SESSION_INFO.roleId}" == "256" ) {
-        $("#_codyBrnchRow").show();
-        doGetComboSepa('/common/selectBranchCodeList.do',  '4', ' - ', '${SESSION_INFO.userBranchId}', '_codyBrnchId', 'M', 'fn_multiCombo');
-        $('#_codyBrnchId').multipleSelect("disable");
-	}
-	doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
-    $('#_brnchId').multipleSelect("checkAll");
+        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '${SESSION_INFO.userBranchId}', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        $('#_brnchId').multipleSelect("disable");
+    }
+    else {
+        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
+        $('#_brnchId').multipleSelect("checkAll");
+    } 
 });
 
 function fn_multiCombo(){
 
     $('#_brnchId').change(function() {
-        //console.log($(this).val());
-    }).multipleSelect({
-        selectAll: true, // 전체선택
-        width: '100%'
-    });
-    $('#_codyBrnchId').change(function() {
         //console.log($(this).val());
     }).multipleSelect({
         selectAll: true, // 전체선택
@@ -161,10 +155,6 @@ function fn_report(viewType){
         whereSQL += " AND M.MEM_TYPE = '"+$("#cmbMemType :selected").val()+"'";
     }
 
-    if("${SESSION_INFO.roleId}" == "256" ) {
-    	whereSQL += "AND (M.BRNCH = '" + "${SESSION_INFO.userBranchId}"  +"'" +  " OR sal1013.CODY_BRNCH_ID = '" + "${SESSION_INFO.userBranchId}" +"'" + ") ";
-    }
-
     orderBySQL = " ORDER BY som.SALES_ORD_NO";
 
 
@@ -241,10 +231,6 @@ function fn_report(viewType){
 <tr>
     <th scope="row">Submit Branch</th>
     <td><select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select></td>
-</tr>
-<tr id="_codyBrnchRow">
-    <th scope="row">Cody Branch</th>
-    <td><select id="_codyBrnchId" name="_codyBrnchId" class="multy_select w100p" multiple="multiple"></select></td>
 </tr>
 <tr>
     <th scope="row">Submit Date</th>
