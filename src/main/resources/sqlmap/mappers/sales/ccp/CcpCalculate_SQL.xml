@@ -51,7 +51,7 @@ WITH S291D AS
 ( SELECT remarks, ORDER_NO FROM
                         (SELECT REMARKS, ORDER_NO, RANK() OVER(PARTITION BY ORDER_NO ORDER BY UPLOAD_BATCH_ID DESC) RN FROM SAL0291D)
   WHERE RN = 1
-),
+<!-- ),
 LatestSal0304D AS (
     SELECT *
     FROM (
@@ -64,7 +64,7 @@ LatestSal0304D AS (
             ROW_NUMBER() OVER (PARTITION BY sales_ord_id ORDER BY UPD_DT DESC) AS rn
         FROM sal0304d
     ) T
-    WHERE T.rn = 1
+    WHERE T.rn = 1 -->
 )
             SELECT Filter1.CCP_ID   ,
                    Filter1.CCP_SCHEME_TYPE_ID   ,
@@ -193,7 +193,7 @@ LatestSal0304D AS (
                       <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
                       LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
                       <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
-                      LEFT JOIN LatestSal0304D  extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
+                      LEFT JOIN SAL0304D extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
                       <!-- ## RENTAL  ONLY ## -->
                       WHERE Extent3.APP_TYPE_ID IN (66) <!--EXCLUDE AUXILIARY -->
 
