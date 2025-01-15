@@ -2301,7 +2301,7 @@
     $('#installDur').val('');
     $('#ordProudct').val('');
     $('#ordPromo').val('');
-    //$('#relatedNo').val('');
+    $('#relatedNo').val('');
     //$('#hiddenMonthExpired').val('');
     //$('#hiddenPreBook').val('');
     //$('#isReturnExtrade').prop("checked", true);
