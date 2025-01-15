@@ -257,13 +257,13 @@ var branchDs = [];
         },
         {
           dataField : "memCode",
-          headerText : "<spring:message code='home.lbl.dtCode'/>",
+          headerText : "Technician Code",
           editable : false,
           width : 100
         },
         {
             dataField : "partnerCode",
-            headerText : "Partner Code",
+            headerText : "Pairing Code",
             editable : false,
             width : 100
           },
