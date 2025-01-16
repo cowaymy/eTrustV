@@ -500,7 +500,7 @@ function fn_doPrint(){
     	        Common.ajax("GET", "/payment/selectDdaCsvDailySeqCount", $("#rptForm").serialize(),
     	                function(result) {
     	                var count = result[0].docNo;
-    	                var fileNm = "SE00021862" + todayDate + count;
+    	                var fileNm = "SE00070203" + todayDate + count;
     	                GridCommon.exportTo("grid_wrap_hide", "csv", fileNm);
     	       });
      });
