@@ -726,56 +726,57 @@
   </select>
 
   <select id="getHsBasic" parameterType="Map" resultType="egovMap">
-    SELECT DISTINCT Project2.No No ,
-                   Project2.HS_DATE HS_DATE ,
-                   Project2.STUS_CODE_ID STUS_CODE_ID ,
-                   Project2.Code Code ,
-                   Project2.SALES_ORD_NO SALES_ORD_NO ,
-                   Project2.ASSIGN_CODY C5 ,
-                   Project2.ACTION_CODY as ACTN_MEM_ID,
-                   Project2.MEM_ID ,
-                   Project2.Name Name ,
-                   Project2.cust_id,
-                   Project2.cody_status_nm,
-                   Project2.BRNCH_ID as BRNCH_ID,
-                   Project2.SCHDUL_ID SCHDUL_ID  ,
-                   Project2.SALES_ORD_ID,
-                   Project2.branch_cd,
-                   Project2.CODY_MANGR_USER_ID,
-                   Project2.MEM_CODE,
-                   Project2.sal_mem_id
-    FROM (SELECT HS.NO AS NO,
-                 HS.STUS_CODE_ID as STUS_CODE_ID,
-                 HS.MONTH || '/' || HS.YEAR as HS_DATE ,
-                 HS.MONTH,
-                 HS.YEAR,
-                 ST.CODE,
-                 HR.NO AS Result,
-                 SO.SALES_ORD_NO,
-                 AP.CODE AS AppType,
-                 CU.NAME,
-                 CD.MEM_CODE AS ASSIGN_CODY,
-                 CD.MEM_ID,
-                 AC.MEM_CODE AS ACTION_CODY,
-                 MG.STATE,
-                 MG.AREA,
-                 cu.CUST_ID as cust_id,
-                 (SELECT code
-                  FROM SYS0038M
-                  WHERE 1=1
-                    AND stus_code_id = cu.STUS_CODE_ID ) as cody_status_nm,
-                 SO.BRNCH_ID as BRNCH_ID,
-                 HS.SCHDUL_ID SCHDUL_ID ,
-                  SO.SALES_ORD_ID,
-                 BR.CODE as branch_cd,
-                 MG.CODY_MANGR_USER_ID ,
-                 (SELECT MEM_CODE
-                  FROM ORG0001D
-                  WHERE mem_id = SO.MEM_ID) as MEM_CODE,
-                 SO.MEM_ID as sal_mem_id
+    SELECT DISTINCT PROJECT2.NO NO ,
+                             PROJECT2.HS_DATE HS_DATE ,
+                             PROJECT2.STUS_CODE_ID STUS_CODE_ID ,
+                             PROJECT2.CODE CODE ,
+                             PROJECT2.SALES_ORD_NO SALES_ORD_NO ,
+                             PROJECT2.ASSIGN_CODY C5 ,
+                             PROJECT2.ACTION_CODY AS ACTN_MEM_ID,
+                             PROJECT2.MEM_ID ,
+                             PROJECT2.NAME NAME ,
+                             PROJECT2.CUST_ID,
+                             PROJECT2.CODY_STATUS_NM,
+                             PROJECT2.BRNCH_ID AS BRNCH_ID,
+                             PROJECT2.SCHDUL_ID SCHDUL_ID  ,
+                             PROJECT2.SALES_ORD_ID,
+                             PROJECT2.BRANCH_CD,
+                             PROJECT2.CODY_MANGR_USER_ID,
+                             PROJECT2.MEM_CODE,
+                             PROJECT2.SAL_MEM_ID
+    FROM ( SELECT HS.NO AS NO,
+                          HS.STUS_CODE_ID AS STUS_CODE_ID,
+                          HS.MONTH || '/' || HS.YEAR AS HS_DATE ,
+                          ST.CODE,
+                          SO.SALES_ORD_NO,
+                          CU.NAME,
+                          CD.MEM_CODE AS ASSIGN_CODY,
+                          CD.MEM_ID,
+                          AC.MEM_CODE AS ACTION_CODY,
+                          CU.CUST_ID AS CUST_ID,
+                          ( SELECT CODE
+                            FROM SYS0038M
+                            WHERE 1=1
+                                AND STUS_CODE_ID = CU.STUS_CODE_ID ) AS CODY_STATUS_NM,
+                          SO.BRNCH_ID AS BRNCH_ID,
+                          HS.SCHDUL_ID SCHDUL_ID ,
+                          SO.SALES_ORD_ID,
+                          BR.CODE AS BRANCH_CD,
+                          MG.CODY_MANGR_USER_ID ,
+                          ( SELECT MEM_CODE
+                            FROM ORG0001D
+                            WHERE MEM_ID = SO.MEM_ID) AS MEM_CODE,
+                          SO.MEM_ID AS SAL_MEM_ID
+                          --, MG.STATE,
+                          --MG.AREA,
+                          --AP.CODE AS APPTYPE,
+                          --HR.NO AS RESULT,
+                          --HS.MONTH,
+                          --HS.YEAR
           FROM SVC0008D HS
           INNER JOIN SAL0001D SO ON SO.SALES_ORD_ID = HS.SALES_ORD_ID
-          INNER JOIN SAL0023D AD ON AD.CUST_ADD_ID = SO.CUST_ADD_ID
+          INNER JOIN SAL0045D INSADD ON INSADD.SALES_ORD_ID = SO.SALES_ORD_ID
+          INNER JOIN SAL0023D AD ON AD.CUST_ADD_ID = INSADD.ADD_ID
           INNER JOIN SYS0064M MG ON MG.AREA_ID = AD.AREA_ID
           LEFT JOIN SVC0006D HR ON HR.SCHDUL_ID = HS.SCHDUL_ID
           INNER JOIN SYS0038M ST ON ST.STUS_CODE_ID = HS.STUS_CODE_ID
@@ -786,8 +787,8 @@
           LEFT JOIN SYS0005M BR ON BR.CODE = MG.CODY_BRNCH_CODE
           WHERE 1=1
             AND SO.SALES_ORD_NO = #{salesOrderNo}
-            AND HS.no = #{serviceNo}
-    ) Project2
+            AND HS.NO = #{serviceNo}
+    ) PROJECT2
   </select>
 
   <select id="getAsBasic" parameterType="Map" resultType="egovMap">
