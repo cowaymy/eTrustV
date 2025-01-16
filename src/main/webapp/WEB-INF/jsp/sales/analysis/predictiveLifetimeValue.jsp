@@ -58,7 +58,6 @@ function fn_report() {
       $("#dataForm #reportFileName").val("/sales/PLTV_Raw.rpt");
       $("#dataForm #reportDownFileName").val(prodCatDesc + "_PLTV_Raw_" + "${maxAccYm}" + "_" + rentStus + "_" + stkDesc);
       $("#dataForm #V_RENTSTUS").val(rentStus);
-      $("#dataForm #V_WHERESQL2").val(fn_whereSQL2());
 
     } else if (reportType == 'AGING') {
 
@@ -138,10 +137,10 @@ function fn_whereSQL() {
     if( !FormUtil.isEmpty(listMattressType) ){
         whereSQL += " AND A.HC_PACK = '" + listMattressType + "'";
     }
-
-    if( !FormUtil.isEmpty(listProductCat) ){
-        whereSQL += " AND A.ACC_DEBT_OPNG_STOCK_CAT_ID = '" + listProductCat + "'";
-    }
+//TEMP disable
+//     if( !FormUtil.isEmpty(listProductCat) ){
+//         whereSQL += " AND A.ACC_DEBT_OPNG_STOCK_CAT_ID = '" + listProductCat + "'";
+//     }
 
 	return whereSQL;
 }
@@ -152,9 +151,10 @@ function fn_whereSQL2() {
 
 	let whereSQL2 = '';
 
-    if( !FormUtil.isEmpty(listProductCat) ){
-    	whereSQL2 += " AND ACC_DEBT_OPNG_STOCK_CAT_ID = '" + listProductCat + "'";
-    }
+//TEMP disable
+//     IF( !FORMUTIL.ISEMPTY(LISTPRODUCTCAT) ){
+//     	WHERESQL2 += " AND ACC_DEBT_OPNG_STOCK_CAT_ID = '" + LISTPRODUCTCAT + "'";
+//     }
 
 	return whereSQL2;
 }
