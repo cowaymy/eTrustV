@@ -1763,7 +1763,7 @@
 
       function fn_clearSales() {
           $('#installDur').val('');
-          //$('#relatedNo').val('');
+          $('#relatedNo').val('');
           $('#isReturnExtrade').attr("disabled",true);
 
           $('#ordProduct1').val('');
