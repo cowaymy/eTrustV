@@ -2550,7 +2550,6 @@ public class ReportBatchController {
                                                                            // file name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put("V_TEMP", "TEMP");
-    params.put("V_TYPE", "SALES_GROUP_SRV");
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "Monthly_Ren_Coll_SRV_" + CommonUtils.getNowDate() + ".pdf");
 
