@@ -2428,40 +2428,60 @@ WHERE ROWNUM = 1
 </update>
 
 <select id="getScoreGrpByAjax" parameterType="Map" resultType="egovMap">
-	SELECT * FROM(
-	    SELECT
-	        SCORE_GRP,
-	        UNIT_ENTITLE,
-	        PROD_ENTITLE
-	    FROM SAL0426D
-	    WHERE SCORE_GRP = (
-	        SELECT * FROM (
-	            SELECT
-	                SCORE_GRP
-	            FROM SAL0425D
-	            WHERE SCORE_PROV = #{scoreProv}
-	            AND #{score} BETWEEN START_SCORE AND END_SCORE
-	            AND HOME_CAT = #{homeCat}
-	            <if test="ccpStus != '' and ccpStus != null">
+        SELECT
+            C.CODE_NAME SCORE_GRP,
+            A.SCORE_GRP SCORE_GRP_CODE
+        FROM (
+		    SELECT SCORE_GRP FROM (
+		        SELECT
+		            SCORE_GRP
+		        FROM SAL0425D
+		        WHERE SCORE_PROV =  #{scoreProv}
+		        AND #{score} BETWEEN START_SCORE AND END_SCORE
+		        AND HOME_CAT = #{homeCat}
+		        <if test="ccpStus != '' and ccpStus != null">
 		            <if test="ccpStus == 1">
-                        AND STUS = 1
-                    </if>
-                    <if test="ccpStus == 5">
-                        AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
-                    </if>
+		                AND STUS = 1
+		            </if>
+		            <if test="ccpStus == 5">
+		                AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
+		            </if>
 		        </if>
-	            ORDER BY SCORE_RANGE_ID DESC
-	        ) WHERE ROWNUM = 1
-	    )
-	    <if test="custCat != '' and custCat != null">
-	       AND CUST_CAT = #{custCat}
-	    </if>
-	    <if test="custCat == '' or custCat == null">
-	       AND CUST_CAT IS NULL
-	    </if>
-	       AND STUS = 1
-	    ORDER BY CRT_DT DESC
-	) WHERE ROWNUM = 1
+		        ORDER BY SCORE_RANGE_ID DESC
+		    ) WHERE ROWNUM = 1
+        ) A
+		LEFT JOIN SYS0013M C ON C.CODE = A.SCORE_GRP AND C.CODE_MASTER_ID = 607
+</select>
+
+<select id="getUnitAndProdEntitle" parameterType="Map" resultType="egovMap">
+     SELECT * FROM (
+        SELECT
+                UNIT_ENTITLE,
+                PROD_ENTITLE
+        FROM SAL0426D
+        WHERE 1=1
+        <if test="custCat != '' and custCat != null">
+           AND CUST_CAT = #{custCat}
+        </if>
+        <if test="custCat == '' or custCat == null">
+           AND CUST_CAT IS NULL
+        </if>
+        <if test="ccpStus != '' and ccpStus != null">
+              <if test="ccpStus == 1">
+                  AND STUS = 1
+              </if>
+              <if test="ccpStus == 5">
+                  AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
+              </if>
+        </if>
+        <if test="scoreGrp != '' and scoreGrp != null">
+              AND SCORE_GRP = #{scoreGrp}
+         </if>
+         <if test="chsStus != '' and chsStus != null">
+              AND CHS_STUS = #{chsStus}
+         </if>
+        ORDER BY UNIT_ENTITLE_ID DESC
+    ) WHERE ROWNUM = 1
 </select>
 
 </mapper>

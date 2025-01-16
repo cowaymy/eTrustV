@@ -170,4 +170,6 @@ public interface CcpCalculateMapper {
 	void inactiveRentalAgreement(Map<String, Object>params) throws Exception;
 
 	EgovMap getScoreGrpByAjax(Map<String, Object> params);
+
+	EgovMap getUnitAndProdEntitle(Map<String, Object> params);
 }

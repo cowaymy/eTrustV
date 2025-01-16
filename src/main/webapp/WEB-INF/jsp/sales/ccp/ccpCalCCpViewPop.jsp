@@ -47,8 +47,6 @@ $(document).ready(function() {
 
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
-     /* console.log("chsStatus : "+ chsStatus);
-     console.log("chsRsn : "+ chsRsn); */
 
      if(chsStatus == "YELLOW") {
         $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
@@ -92,11 +90,7 @@ $(document).ready(function() {
 
 	    var scoreProv, score;
 
-	    if(ccpFico > 0){
-	        scoreProv = "CTOS";
-	        score = ccpFico;
-
-	    }else if(ccpExperianr > 0){
+	    if(ccpExperianr > 0){
 	        scoreProv = "EXPERIAN";
 	        score= ccpExperianr;
 
@@ -105,26 +99,36 @@ $(document).ready(function() {
 	        score = ccpFico;
 	    }
 
-	    var data = {
-	            scoreProv : scoreProv,
-	            score : score,
-	            homeCat : '${ccpInfoMap.homeCat}',
-	            ccpStus: '${ccpInfoMap.ccpStusId}',
-	            ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
-	            ccpCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
-	    };
+	    if(ccpExperianr >= 0 && ccpFico != "" ){
+	        var data = {
+	                scoreProv : scoreProv,
+	                score : score,
+	                chsStus : '${ccpInfoMap.chsStus}',
+	                homeCat : '${ccpInfoMap.homeCat}',
+	                ccpStus: '${ccpInfoMap.ccpStusId}',
+	                ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
+	                custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
+	        };
 
-	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
-	        if(result != null){
-		    	$('#score_group').text(result.scoreGrp);
-		        $('#unitEntitle').text(result.unitEntitle);
-		        $('#prodEntile').text(result.prodEntitle);
-	        }else{
-	        	$('#score_group').text("");
-	            $('#unitEntitle').text("");
-	            $('#prodEntile').text("");
-	        }
-	    });
+	        Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
+
+	            if(result != null && Object.values(result).length > 0){
+	                $('#score_group').text(result.scoreGrp);
+	                $('#unitEntitle').text(result.unitEntitle);
+	                $('#prodEntitle').text(result.prodEntitle);
+
+	            }else{
+	                $('#score_group').text("");
+	                $('#unitEntitle').text("");
+	                $('#prodEntitle').text("");
+	            }
+	        });
+
+	    }else{
+	        $('#score_group').text("");
+	        $('#unitEntitle').text("");
+	        $('#prodEntitle').text("");
+	    }
 
     //Init
     var mst = getMstId();
