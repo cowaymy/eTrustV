@@ -491,7 +491,7 @@ public class HcOrderRegisterController {
 		String anoOrderNo = "";
 		if(isHc){
 			rMap = hcOrderListService.selectHcOrderInfo(cParam);
-			bundleId = rMap.get("bndlNo").toString();
+			bundleId = rMap.get("bndlNo") == null ? "" : rMap.get("bndlNo").toString();
 			anoOrderNo = rMap.get("anoOrdNo") == null ? "" : rMap.get("anoOrdNo").toString();
 		}
 
