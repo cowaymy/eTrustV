@@ -173,6 +173,7 @@ public class VendorServiceImpl implements VendorService {
 		params.put("vendorName", params.get("vendorName").toString().trim().toUpperCase());
 		params.put("vendorPhoneNo", params.get("vendorPhoneNo").toString().trim().toUpperCase());
 		params.put("vendorEmail", params.get("vendorEmail").toString().trim());
+		params.put("vendorType", params.get("vendorType").toString().trim());
 		vendorMapper.insertVendorInfo(params);
 
 	}
@@ -338,4 +339,17 @@ public class VendorServiceImpl implements VendorService {
 		// TODO Auto-generated method stub
 		return vendorMapper.existingVendorValidation(params);
 	}
+
+	@Override
+	public List<EgovMap> selectVendorType(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return vendorMapper.selectVendorType();
+	}
+
+	@Override
+	public List<EgovMap> getAppvExcelInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.getAppvExcelInfo(params);
+	}
+
 }

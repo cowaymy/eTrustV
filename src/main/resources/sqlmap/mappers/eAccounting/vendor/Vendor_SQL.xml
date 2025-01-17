@@ -104,6 +104,13 @@
 	                AND UPPER(B.VENDOR_REQ_NO) <= UPPER(#{vendorReqNoTo})
 	             ]]>
 	        </if>
+	        <if test="vendorTypeCmb != null and vendorTypeCmb != ''">
+                    AND B.VENDOR_TYPE IN
+			      <foreach item="item" collection="vendorTypeCmb" index="index"
+			        open="(" separator="," close=")">
+			        #{item}
+			      </foreach>
+            </if>
 
 		) X1
 		LEFT JOIN FCM0004M X2
@@ -337,6 +344,7 @@
 		       ,CRT_DATE
 		       ,UPD_USER_ID
 		       ,UPD_DATE
+		       ,VENDOR_TYPE
 		    )
 		    VALUES
 		    (
@@ -376,6 +384,7 @@
 		       ,SYSDATE
 		       ,#{userId}
 		       ,SYSDATE
+		       ,#{vendorType}
 		    )
 	</insert>
 
@@ -577,9 +586,10 @@
                    ,T1.REM
                    ,T1.UPD_DATE
                    ,T2.USER_NAME AS USER_NAME
+                   ,T3.CODE_DESC AS VENDOR_TYPE
 		FROM FCM0029D T1
-		LEFT JOIN SYS0047M T2
-		ON T1.CRT_USER_ID = T2.USER_ID
+		LEFT JOIN SYS0047M T2 ON T1.CRT_USER_ID = T2.USER_ID
+		LEFT JOIN SYS0013M T3 ON T3.CODE = T1.VENDOR_TYPE AND T3.CODE_MASTER_ID = 612
 		WHERE T1.VENDOR_REQ_NO = #{reqNo}
 </select>
 
@@ -790,7 +800,8 @@
             CRT_DATE,
             UPD_USER_ID,
             UPD_DATE,
-            PREV_CLM_NO
+            PREV_CLM_NO,
+            VENDOR_TYPE
         )
         SELECT
             #{newClmNo} VENDOR_REQ_NO,
@@ -827,7 +838,8 @@
             SYSDATE,
             #{userId},
             SYSDATE,
-            VENDOR_REQ_NO
+            VENDOR_REQ_NO,
+            VENDOR_TYPE
         FROM FCM0029D
         WHERE VENDOR_REQ_NO = #{clmNo}
     </insert>
@@ -868,7 +880,8 @@
             CRT_DATE,
             UPD_USER_ID,
             UPD_DATE,
-            PREV_CLM_NO
+            PREV_CLM_NO,
+            VENDOR_TYPE
         )
         SELECT
             #{newClmNo} VENDOR_REQ_NO,
@@ -905,7 +918,8 @@
             SYSDATE,
             UPD_USER_ID,
             SYSDATE,
-            VENDOR_REQ_NO
+            VENDOR_REQ_NO,
+            VENDOR_TYPE
         FROM FCM0029D
         WHERE VENDOR_REQ_NO = #{clmNo}
     </insert>
@@ -914,4 +928,128 @@
         SELECT * FROM FCM0031D WHERE VENDOR_REG_NO_NRIC = #{regCompNo}
     </select>
 
+    <select id="selectVendorType" resultType="egovMap">
+
+        SELECT CODE CODE_ID, CODE_DESC CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 612
+
+    </select>
+
+    <select id="getAppvExcelInfo" resultType="egovMap">
+        SELECT RES.* FROM (
+            SELECT
+            X1.*,
+            CASE WHEN X2.APPV_PRCSS_STUS = 'R' THEN 'Request'
+                 WHEN X2.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                 WHEN X2.APPV_PRCSS_STUS = 'P' THEN 'Pending'
+                 WHEN X2.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                 WHEN X2.APPV_PRCSS_STUS = 'T' THEN 'DRAFT'
+                 WHEN X1.FLG = 'R' THEN 'DRAFT'
+                 WHEN X1.FLG = 'M' THEN ''
+            END APPV_PRCSS_STUS,
+            NVL(X2.APPV_PRCSS_STUS, 'T') AS APPV_PRCSS_STUS_CODE,
+            TO_CHAR(X2.REQST_DT, 'DD/MM/YYYY') REQUEST_DT,
+            TO_CHAR(X2.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
+            CASE WHEN X2.REQST_USER_ID IS NOT NULL THEN X2.REQST_USER_ID || ' - ' || X3.USER_FULL_NAME
+                 ELSE ''
+            END REQUESTOR
+        FROM (
+            SELECT
+                NVL(B.VENDOR_REQ_NO, '') REQ_NO,
+                TO_CHAR(B.CRT_DATE, 'DD/MM/YYYY') KEY_IN_DT,
+                NVL(A.VENDOR_GRP, B.VENDOR_GRP) VENDOR_GRP,
+                B.VENDOR_TYPE VENDOR_TYPE,
+                B.COST_CENTER,
+                B.COST_CENTER_NAME,
+                NVL(A.VENDOR_ACC_ID, B.VENDOR_ACC_ID) VENDOR_ACC_ID,
+
+                CASE WHEN B.VENDOR_REQ_NO IS NULL THEN NVL(A.VENDOR_NAME, B.VENDOR_NAME)
+                        ELSE NVL(B.VENDOR_NAME, A.VENDOR_NAME)
+                END VENDOR_NAME,
+                NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC) VENDOR_REG_NO_NRIC,
+                B.PAY_ADV_EMAIL1 EMAIL,
+                B.PAY_ADV_EMAIL2 EMAIL2,
+                CASE WHEN B.VENDOR_REQ_NO IS NULL THEN 'M'
+                     ELSE 'R'
+                END FLG,
+                NVL(B.APPV_PRCSS_NO, '') APPV_PRCSS_NO
+            FROM FCM0031D A
+            FULL JOIN (
+                SELECT B1.*
+                FROM FCM0029D B1
+                JOIN (
+                    SELECT MAX(VENDOR_REQ_NO) REQ_NO
+                    FROM FCM0029D
+                    GROUP BY VENDOR_REQ_NO
+                ) B2
+                ON B1.VENDOR_REQ_NO = B2.REQ_NO
+            ) B
+                ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC AND A.VENDOR_ACC_ID = B.VENDOR_ACC_ID
+            WHERE 1=1
+            /* Vendor related where clause */
+
+            <if test="memAccId != null and memAccId != ''"> AND (NVL(A.VENDOR_ACC_ID, B.VENDOR_ACC_ID)) = #{memAccId}</if>
+            <if test="regNo != null and regNo != ''"> AND (NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC)) = #{regNo}</if>
+            <if test="costCenter != null and costCenter != ''"> AND (NVL(B.COST_CENTER, '')) =  #{costCenter}</if>
+
+            <if test="startDt != null and startDt != ''">
+                <![CDATA[
+                    AND B.CRT_DATE >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+                ]]>
+            </if>
+            <if test="endDt != null and endDt != ''">
+                <![CDATA[
+                    AND B.CRT_DATE < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+                ]]>
+            </if>
+            <if test="vendorReqNoFrom != null and vendorReqNoFrom != ''">
+                 <![CDATA[
+                    AND UPPER(B.VENDOR_REQ_NO) >= UPPER(#{vendorReqNoFrom})
+                 ]]>
+            </if>
+            <if test="vendorReqNoTo != null and vendorReqNoTo != ''">
+                 <![CDATA[
+                    AND UPPER(B.VENDOR_REQ_NO) <= UPPER(#{vendorReqNoTo})
+                 ]]>
+            </if>
+            <if test="vendorTypeCmb != null and vendorTypeCmb != ''">
+                    AND B.VENDOR_TYPE IN
+                  <foreach item="item" collection="vendorTypeCmb" index="index"
+                    open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+            </if>
+
+        ) X1
+        LEFT JOIN FCM0004M X2
+            ON X1.APPV_PRCSS_NO = X2.APPV_PRCSS_NO
+        LEFT JOIN SYS0047M X3
+            ON X2.REQST_USER_ID = X3.USER_NAME
+        WHERE 1 = 1
+        /* Approval related where clause */
+            <if test="appStartDt != null and appStartDt != ''">
+                <![CDATA[
+                    AND X2.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+                ]]>
+            </if>
+            <if test="appEndDt != null and appEndDt != ''">
+                <![CDATA[
+                    AND X2.APPV_PRCSS_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+                ]]>
+            </if>
+    ) RES
+    <if test="(appvPrcssStus != null and appvPrcssStus != '' and countAppvPrcssStus == 5)">
+                WHERE RES.APPV_PRCSS_STUS_CODE IN
+                    <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                                 #{item}
+                    </foreach>
+    </if>
+    <if test="(appvPrcssStus != null and appvPrcssStus != '' and countAppvPrcssStus &lt; 5)">
+                WHERE RES.APPV_PRCSS_STUS_CODE IN
+                    <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                                 #{item}
+                    </foreach>
+                AND RES.FLG = 'R'
+    </if>
+
+    </select>
 </mapper>

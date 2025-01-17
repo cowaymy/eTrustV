@@ -88,4 +88,8 @@ public interface VendorMapper {
 	// Edit Rejected functions - 20210624 - End
 
 	EgovMap existingVendorValidation(Map<String, Object> params);
+
+	List<EgovMap> selectVendorType();
+
+	List<EgovMap> getAppvExcelInfo(Map<String, Object> params);
 }

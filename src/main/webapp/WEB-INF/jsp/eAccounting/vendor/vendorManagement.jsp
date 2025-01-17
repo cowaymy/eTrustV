@@ -77,8 +77,21 @@ var vendorManagementGridPros = {
 };
 
 var vendorManagementGridID;
+var vendorExcelGridID;
 var gridDataLength = 0;
 var bulkRptInt;
+
+doGetCombo('/eAccounting/vendor/selectVendorType.do', '612', '','vendorTypeCmb', 'M', 'f_multiCombo');
+
+function f_multiCombo(){
+    $(function() {
+        $('#vendorTypeCmb').change(function() {
+
+        }).multipleSelect({
+            selectAll: true
+        });
+    });
+}
 
 $(document).ready(function () {
 	vendorManagementGridID = AUIGrid.create("#vendorManagement _grid_wrap", vendorManagementColumnLayout, vendorManagementGridPros);
@@ -88,6 +101,7 @@ $(document).ready(function () {
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
 	$("#new_vendor_btn").click(fn_newVendorPop);
 	$("#edit_vendor_btn").click(fn_preEdit);
+	$("#excelGridDown_btn").click(fn_getVendorAppvExcelInfo);
 
 
 	var userId = "${SESSION_INFO.userId}";
@@ -438,6 +452,11 @@ function fn_checkEmpty() {
     }
 	*/
 
+    if(FormUtil.isEmpty($("#vendorType").val())) {
+        Common.alert('Please choose a Vendor Type');
+        checkResult = false;
+        return checkResult;
+    }
     if(FormUtil.isEmpty($("#vendorGroup").val())) {
         Common.alert('Please choose a Vendor Group');
         checkResult = false;
@@ -579,6 +598,110 @@ function fn_editRejected() {
     }
 }
 
+function fn_getVendorAppvExcelInfo() {
+/*     var list = AUIGrid.getColumnValues(vendorManagementGridID, "reqNo", true);
+    var selectedStatus=[];
+     $('#appvPrcssStus :selected').each(function(){
+         selectedStatus.push($(this).val());
+      });
+     if(list.length == 0){
+         Common.alert("Please search for record first before download");
+         return false;
+     } */
+
+     Common.ajax("GET", "/eAccounting/vendor/getAppvExcelInfo.do?_cacheId=" + Math.random(), $("#form_vendor").serialize(), function(result) {
+        console.log(result);
+
+        //그리드 생성
+        fn_makeVendorGrid();
+
+        AUIGrid.setGridData(vendorExcelGridID, result);
+
+        if(result.length > 0) {
+            /* var clmNo = result.data[0].appvReqKeyNo;
+            var reqstDt = result.data[0].reqstDt;
+            reqstDt = reqstDt.replace(/\//gi, ""); */
+
+        	var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if(dd < 10) {
+                dd = "0" + dd;
+            }
+            if(mm < 10){
+                mm = "0" + mm
+            }
+
+            today = yyyy+mm+dd;
+
+            GridCommon.exportTo("excel_vendor_grid_wrap", 'xlsx', "VendorManagement" + "_" + today);
+        } else {
+            Common.alert('There is no data to download.');
+        }
+    });
+}
+
+function fn_makeVendorGrid(){
+
+    var vendorExcelPop = [
+    {
+	    dataField : "reqNo",
+	    headerText : 'Vendor Request No'
+	}, {
+	    dataField : "keyInDt",
+	    headerText : 'Key In Date'
+	}, {
+	    dataField : "vendorGrp",
+	    headerText : 'Vendor Group'
+	}, {
+	    dataField : "vendorType",
+	    headerText : 'Vendor Type'
+	}, {
+	    dataField : "costCenter",
+	    headerText : 'Cost Center'
+	}, {
+	    dataField : "requestor",
+	    headerText : 'Create User ID'
+	}, {
+	    dataField : "vendorAccId",
+	    headerText : 'Supplier Code'
+	}, {
+	    dataField : "vendorName",
+	    headerText : 'Name'
+	}, {
+	    dataField : "vendorRegNoNric",
+	    headerText : 'Company Register No/IC'
+	}, {
+	    dataField : "email",
+	    headerText : 'Email Address (Payment Advice)'
+	}, {
+	    dataField : "email2",
+	    headerText : 'Email Address 2 (Payment Advice)'
+	}, {
+	    dataField : "appvPrcssStus",
+	    headerText : 'Status'
+	}, {
+	    dataField : "appvPrcssDt",
+	    headerText : 'Approval Date',
+	    dataType : "date"
+	    //formatString : "dd/mm/yyyy",
+	}
+        ];
+
+     var vendorExcelOptions = {
+            enableCellMerge : true,
+            showStateColumn:false,
+            fixedColumnCount    : 4,
+            showRowNumColumn    : false,
+            //headerHeight : 100,
+            usePaging : false
+      };
+
+     vendorExcelGridID = GridCommon.createAUIGrid("#excel_vendor_grid_wrap", vendorExcelPop, "", vendorExcelOptions);
+}
+
 </script>
 
 <style>
@@ -687,6 +810,10 @@ function fn_editRejected() {
             <p><input style="text-transform: uppercase" type="text" title="" id="vendorReqNoTo" name="vendorReqNoTo" class="cRange"  /></p>
         </div><!-- date_set end -->
         </td>
+    <th scope="row">Vendor Type</th>
+        <td>
+        <select id="vendorTypeCmb" name="vendorTypeCmb" class="multy_select" multiple="multiple">
+        </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -711,7 +838,17 @@ function fn_editRejected() {
 
 <section class="search_result"><!-- search_result start -->
 
+<ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+        <li><p class="btn_grid"><a href="#" id="excelGridDown_btn">Excel Filter</a></p></li>
+    </c:if>
+</ul>
+
+
 <article class="grid_wrap" id="vendorManagement _grid_wrap"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap" id="excel_vendor_grid_wrap" style="display: none;"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

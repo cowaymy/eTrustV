@@ -60,6 +60,7 @@ var obj = {
         ,vendorName : "${data.vendorName}"
         ,vendorPhoneNo : "${data.vendorPhoneNo}"
         ,vendorEmail : "${data.vendorEmail}"
+        ,vendorType : "${data.vendorType}"
 };
 
 </c:forEach>
@@ -911,6 +912,10 @@ $.fn.clearForm = function() {
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
+    <th scope="row">Vendor Type<span class="must">*</span></th>
+    <td colspan=3><input type="text" title="" id="vendorType" name="vendorType" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorType}"/></td><!--  value="${claimNo}"-->
+</tr>
+<tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>
 	    <td>
 	       <select class="w100p" id=vendorGroup name="vendorGroup">
@@ -922,7 +927,7 @@ $.fn.clearForm = function() {
 	    </td>
     <th scope="row">Key in date</th>
     <td>
-    <input type="text" title="" id="keyDate" name="keyDate" placeholder="DD/MM/YYYY" class="readonly w100p" readonly="readonly"/>
+    <input type="text" title="" id="keyDate" name="keyDate" placeholder="DD/MM/YYYY" value="${vendorInfo.updDate}" class="readonly w100p" readonly="readonly"/>
     </td>
 </tr>
 <tr>

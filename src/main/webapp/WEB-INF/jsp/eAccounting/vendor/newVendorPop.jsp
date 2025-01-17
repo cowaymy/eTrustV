@@ -54,6 +54,7 @@ $("#keyDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
 
 $("#keyDate").attr("readOnly", true);
 
+doGetCombo('/eAccounting/vendor/selectVendorType.do', '612', '','vendorType', 'S');
 
 $(document).ready(function () {
     //newGridID = AUIGrid.create("#newVendor_grid_wrap", myColumnLayout, myGridPros);
@@ -330,27 +331,41 @@ function fn_checkRegex()
 	 var checkRegexResult = true;
 	 var regExpSpecChar = /^(?!-)(?!\/)\S{1}[a-zA-Z0-9 ~`!#$%\^&*+=[\]\\(\)\';,{}.|\\":<>\?]*(?!-)(?!\/)\S{1}$/;
 	 var regExpNum = /^[0-9]*$/;
-	    if( regExpSpecChar.test($("#regCompName").val()) == false ){
+     var regNric= new RegExp("(([0-9]{2}(?!0229))|([02468][048]|[13579][26])(?=0229))(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|(?<!02)30|(?<!02|4|6|9|11)31)[0-9]{2}[0-9]{4}$");
+
+     if( $("#vendorType").val() == '1'){
+    	 if($("#vendorGroup").val() == 'VM11'){
+    		 if(regNric.test($("#regCompNo").val()) == false){
+    			 Common.alert("* Please make sure NRIC/Company No. format is correct. ");
+                 checkRegexResult = false;;
+                 return checkRegexResult;
+    		 }else if($("#regCompNo").val().length != 12){
+                 Common.alert('Only allow 12 characters for NRIC/Company No.');
+                 return false;
+             }
+    	 }
+     }
+     else if( regExpSpecChar.test($("#regCompName").val()) == false ){
 	         Common.alert("* Special character or space as the first and last character are not allow for Registered Company/Individual Name. ");
 	         checkRegexResult = false;;
 	         return checkRegexResult;
-	    }
-	    else if( regExpSpecChar.test($("#bankAccHolder").val()) == false ){
+     }
+     else if( regExpSpecChar.test($("#bankAccHolder").val()) == false ){
             Common.alert("* Special character or space as the first and last character are not allow for Bank Account Holder. ");
             checkRegexResult = false;;
             return checkRegexResult;
-       }
-	    else if( regExpNum.test($("#bankAccNo").val()) == false ){
+     }
+     else if( regExpNum.test($("#bankAccNo").val()) == false ){
             Common.alert("* Only number is allow for Bank Account Number. ");
             checkRegexResult = false;;
             return checkRegexResult;
-       }
-	    else if( regExpNum.test($("#postalCode").val()) == false ){
+     }
+     else if( regExpNum.test($("#postalCode").val()) == false ){
             Common.alert("* Only number is allow for Postal Code. ");
             checkRegexResult = false;;
             return checkRegexResult;
-       }
-	 return checkRegexResult;
+     }
+     return checkRegexResult;
 }
 
 $.fn.clearForm = function() {
@@ -420,6 +435,12 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 
+<tr>
+    <th>Vendor Type<span class="must">*</span></th>
+    <td>
+        <select id="vendorType" name="vendorType" class="w100p">
+    </td>
+</tr>
 <tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>
 	    <td>

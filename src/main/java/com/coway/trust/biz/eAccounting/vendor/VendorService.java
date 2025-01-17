@@ -58,4 +58,8 @@ public interface VendorService {
 	void editApproved(Map<String, Object> params);
 
 	EgovMap existingVendorValidation(Map<String, Object> params);
+
+	List<EgovMap> selectVendorType(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> getAppvExcelInfo(Map<String, Object> params);
 }

@@ -182,6 +182,9 @@ public class VendorManagementController {
         LOGGER.debug("countAppvPrcssStus =====================================>>  " + countAppvPrcssStus);
         params.put("countAppvPrcssStus", countAppvPrcssStus);
 
+        String[] vendorTypeCmb = request.getParameterValues("vendorTypeCmb");
+        params.put("vendorTypeCmb", vendorTypeCmb);
+
         List<EgovMap> list = vendorService.selectVendorList(params);
 
         LOGGER.debug("params =====================================>>  " + list.toString());
@@ -742,4 +745,41 @@ public class VendorManagementController {
     	LOGGER.debug("existingVendor =====================================>> " + existingVendor);
         return ResponseEntity.ok(existingVendor);
     }
+
+    @RequestMapping(value = "/selectVendorType.do")
+    public ResponseEntity<List<EgovMap>> selectVendorType(@RequestParam Map<String, Object> params) throws Exception {
+
+      List<EgovMap> vendorTypeList = null;
+
+      vendorTypeList = vendorService.selectVendorType(params);
+
+      return ResponseEntity.ok(vendorTypeList);
+
+    }
+
+    @RequestMapping(value = "/getAppvExcelInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getAppvExcelInfo(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		LOGGER.debug("params =====================================>>  " + params);
+
+		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+        int countAppvPrcssStus = appvPrcssStus.length;
+
+        params.put("appvPrcssStus", appvPrcssStus);
+        LOGGER.debug("countAppvPrcssStus =====================================>>  " + countAppvPrcssStus);
+        params.put("countAppvPrcssStus", countAppvPrcssStus);
+
+        String[] vendorTypeCmb = request.getParameterValues("vendorTypeCmb");
+        params.put("vendorTypeCmb", vendorTypeCmb);
+
+		List<EgovMap> list = vendorService.getAppvExcelInfo(params);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(list);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(list);
+	}
 }

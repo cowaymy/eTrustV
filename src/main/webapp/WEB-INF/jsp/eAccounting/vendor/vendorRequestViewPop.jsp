@@ -344,6 +344,10 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
+    <th scope="row">Vendor Type</th>
+    <td colspan=3><input type="text" title="" id="newVendorType" name="vendorType" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorType}"/></td>
+</tr>
+<tr>
     <th scope="row">Vendor Group</th>
         <td>
            <select class="w100p" id=vendorGroup name="vendorGroup">
