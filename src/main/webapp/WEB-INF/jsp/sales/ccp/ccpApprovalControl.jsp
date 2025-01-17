@@ -1253,13 +1253,13 @@
 	    		          break;
 	    		      }
 
-	    		      if (unitEntitle == "" || unitEntitle == 0 || typeof(unitEntitle) == "undefined") {
+	    		      if (unitEntitle == "" || typeof(unitEntitle) == "undefined") {
 	    		          Common.alert("Unit Entitlement is required.");
 	    		          return;
 	    		          break;
 	    		      }
 
-	    		      if (prodEntitle == "" || prodEntitle == 0 || typeof(prodEntitle) == "undefined"){
+	    		      if (prodEntitle == "" || typeof(prodEntitle) == "undefined"){
 	    		          Common.alert("Product Entitlement is required.");
 	    		          return;
 	    		          break;
@@ -1304,13 +1304,13 @@
                         break;
                     }
 
-                    if (unitEntitle == "" || unitEntitle == 0 || typeof(unitEntitle) == "undefined") {
+                    if (unitEntitle == "" || typeof(unitEntitle) == "undefined") {
                         Common.alert("Unit Entitlement is required.");
                         return;
                         break;
                     }
 
-                    if (prodEntitle == "" || prodEntitle == 0 || typeof(prodEntitle) == "undefined"){
+                    if (prodEntitle == "" || typeof(prodEntitle) == "undefined"){
                         Common.alert("Product Entitlement is required.");
                         return;
                         break;

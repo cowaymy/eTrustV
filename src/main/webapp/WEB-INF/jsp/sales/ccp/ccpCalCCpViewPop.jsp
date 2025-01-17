@@ -9,6 +9,9 @@ var optionModule = {
         isShowChoose: false
 };
 
+var ccpAttachId = 0;
+var ccpAttachName = "";
+
 $(document).ready(function() {
 	$("#cancel_Pop").hide();
     var approvalStus =  '${approvalStus}';
@@ -67,7 +70,8 @@ $(document).ready(function() {
 
     let ccpFico = '${ccpInfoMap.ccpFico}';
     let ccpExperianr = '${ccpInfoMap.ccpExperianr}';
-//     let score_group_style = "";
+
+    let score_group_style = "";
 //     let score_group_desc = "";
 
 //      if((ccpFico >= 701 && ccpFico <= 850) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
@@ -88,47 +92,68 @@ $(document).ready(function() {
 
 //     $('#score_group').addClass(score_group_style).text(score_group_desc);
 
-	    var scoreProv, score;
+// 	    var scoreProv, score;
 
-	    if(ccpExperianr > 0){
-	        scoreProv = "EXPERIAN";
-	        score= ccpExperianr;
+// 	    if(ccpExperianr > 0){
+// 	        scoreProv = "EXPERIAN";
+// 	        score= ccpExperianr;
 
-	    }else{
-	        scoreProv = "CTOS";
-	        score = ccpFico;
-	    }
+// 	    }else{
+// 	        scoreProv = "CTOS";
+// 	        score = ccpFico;
+// 	    }
 
-	    if(ccpExperianr >= 0 && ccpFico != "" ){
-	        var data = {
-	                scoreProv : scoreProv,
-	                score : score,
-	                chsStus : '${ccpInfoMap.chsStus}',
-	                homeCat : '${ccpInfoMap.homeCat}',
-	                ccpStus: '${ccpInfoMap.ccpStusId}',
-	                ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
-	                custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
-	        };
+// 	    if(ccpExperianr >= 0 && ccpFico != "" ){
+// 	        var data = {
+// 	                scoreProv : scoreProv,
+// 	                score : score,
+// 	                chsStus : '${ccpInfoMap.chsStus}',
+// 	                homeCat : '${ccpInfoMap.homeCat}',
+// 	                ccpStus: '${ccpInfoMap.ccpStusId}',
+// 	                ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
+// 	                custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
+// 	        };
 
-	        Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
+// 	        Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
 
-	            if(result != null && Object.values(result).length > 0){
-	                $('#score_group').text(result.scoreGrp);
-	                $('#unitEntitle').text(result.unitEntitle);
-	                $('#prodEntitle').text(result.prodEntitle);
+// 	            if(result != null && Object.values(result).length > 0){
+// 	                $('#score_group').text(result.scoreGrp);
+// 	                $('#unitEntitle').text(result.unitEntitle);
+// 	                $('#prodEntitle').text(result.prodEntitle);
 
-	            }else{
-	                $('#score_group').text("");
-	                $('#unitEntitle').text("");
-	                $('#prodEntitle').text("");
-	            }
-	        });
+// 	            }else{
+// 	                $('#score_group').text("");
+// 	                $('#unitEntitle').text("");
+// 	                $('#prodEntitle').text("");
+// 	            }
+// 	        });
 
-	    }else{
-	        $('#score_group').text("");
-	        $('#unitEntitle').text("");
-	        $('#prodEntitle').text("");
-	    }
+// 	    }else{
+// 	        $('#score_group').text("");
+// 	        $('#unitEntitle').text("");
+// 	        $('#prodEntitle').text("");
+// 	    }
+
+    // SCORE GROUP COLOR SETTING
+    switch("${ccpInfoMap.scoreGrp}"){
+        case 'EXCELLENT SCORE' :
+            score_group_style = "green_text";
+            break;
+        case 'GOOD SCORE' :
+            score_group_style = "green_text";
+            break;
+        case 'LOW SCORE' :
+            score_group_style = "red_text";
+            break;
+        case 'NO SCORE INSUFFICIENT CCRIS' :
+            score_group_style = "black_text";
+            break;
+        case 'NO SCORE' :
+            score_group_style = "black_text";
+            break;
+    }
+
+    $('#score_group').addClass(score_group_style);
 
     //Init
     var mst = getMstId();
@@ -188,6 +213,35 @@ $(document).ready(function() {
 
     if('${ccpEresubmitMap.atchFileGrpId}' != 0){
         fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
+    }
+
+    if('${ccpInfoMap.fileGrpId}' != 0){
+    	 Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId : '${ccpInfoMap.fileGrpId}'} , function(result) {
+    	       if(result) {
+    	            if(result.length > 0) {
+    	                $("#attachTd").html("");
+    	                for ( var i = 0 ; i < result.length ; i++ ) {
+   	                        ccpAttachId = result[i].atchFileId;
+   	                        ccpAttachName = result[i].atchFileName;
+   	                        $(".input_text[id='ccpAttachFileTxt']").val(ccpAttachName);
+    	                }
+
+    	                // 파일 다운
+    	                $(".input_text").dblclick(function() {
+    	                    var oriFileName = $(this).val();
+    	                    var fileGrpId;
+    	                    var fileId;
+    	                    for(var i = 0; i < result.length; i++) {
+    	                        if(result[i].atchFileName == oriFileName) {
+    	                            fileGrpId = result[i].atchFileGrpId;
+    	                            fileId = result[i].atchFileId;
+    	                        }
+    	                    }
+    	                    if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+    	                });
+    	            }
+    	        }
+    	   });
     }
 });//Doc Ready Func End
 
@@ -999,6 +1053,19 @@ function chgTab(tabNm) {
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">CCP Attachment</th>
+    <td colspan="5">
+        <div class='auto_file3 w100p' id="ccpAttachFileField">
+<!--             <input type='file' title='file add' id='ccpAttachFile' accept='application/pdf''/> -->
+            <label style="width: 400px;">
+                <input type='text' class='input_text' readonly='readonly' id='ccpAttachFileTxt'  name=''/>
+            </label>
+            <input type="hidden" name="atchFileGrpId" id="atchFileGrpId" value="${ccpInfoMap.fileId}">
+        </div>
+    </td>
+</tr>
+<tr>
+<tr>
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
     <td colspan="5"><span><select class="w100p" name="statusEdit" id="_statusEdit"></select></span></td>
     <!--
@@ -1016,7 +1083,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">Bankruptcy</th>
-    <td colspan="5" id="bankruptcy"></td>
+    <td colspan="5" id="bankruptcy"><span>${ccpInfoMap.bankrupt}</span></td>
     </td>
 </tr>
 <tr id="experianScoreRow" class="blind">
@@ -1032,8 +1099,7 @@ function chgTab(tabNm) {
 </tr>
 <tr id="scoreGrpRow" class="blind">
     <th scope="row">Score Group</th>
-    <td colspan="5" id="score_group">
-    </td>
+    <td colspan="5" id="score_group"><span>${ccpInfoMap.scoreGrp}</span></td>
 </tr>
 <tr>
     <th scope="row">CHS Status</th>
@@ -1049,12 +1115,12 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">Product Entitlement</th>
-        <td colspan="5" id="prodEntitle"></td>
+        <td colspan="5" id="prodEntitle"><span>${ccpInfoMap.prodEntitle}</span></td>
     </td>
 </tr>
 <tr>
     <th scope="row">Unit Entitlement</th>
-    <td colspan="5" id="unitEntitle"></td>
+    <td colspan="5" id="unitEntitle"><span>${ccpInfoMap.unitEntitle}</span></td>
     </td>
 </tr>
 <tr>

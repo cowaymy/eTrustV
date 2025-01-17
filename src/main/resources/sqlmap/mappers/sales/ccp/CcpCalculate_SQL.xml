@@ -866,8 +866,14 @@ SELECT Extent1.CCP_ID   ,
        CASE WHEN GET_HOMECARE_FLAG_YN(Extent12.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
        TO_CHAR(Extent1.CCP_UPD_DT,'DD/MM/YYYY HH24:MI:SS') CCP_UPD_DT,
        UPPER(Extent9.CUST_CAT) CUST_CAT,
-       Extent1.ATCH_FILE_GRP_ID FILE_ID,
-       Extent14.ATCH_FILE_NAME FILE_NAME
+       Extent1.ATCH_FILE_GRP_ID FILE_GRP_ID,
+       Extent14.ATCH_FILE_NAME FILE_NAME,
+       Extent15.CODE_NAME SCORE_GRP,
+       Extent1.SCORE_GRP,
+       Extent1.UNIT_ENTITLE,
+       Extent1.PROD_ENTITLE,
+       Extent1.BANKRUPT,
+       Extent1.CUST_CAT
 <!--        CASE WHEN Extent7.CTOS_BANKRUPT = 0 THEN 'NO' ELSE 'YES' END BANKRUPTCY -->
   FROM SAL0102D Extent1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
@@ -885,6 +891,7 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SYS0026M Extent12 ON Extent12.STK_ID = Extent11.ITM_STK_ID
          LEFT JOIN SYS0070M Extent13 ON Extent13.ATCH_FILE_GRP_ID = Extent1.ATCH_FILE_GRP_ID
          LEFT JOIN SYS0071D Extent14 ON Extent14.ATCH_FILE_ID = Extent13.ATCH_FILE_ID
+         LEFT JOIN SYS0013M Extent15 ON Extent15.CODE = Extent1.SCORE_GRP AND CODE_MASTER_ID = 607
 <![CDATA[
  WHERE  Extent1.CCP_ID = #{ccpId}
  AND ROWNUM <= 1
@@ -986,7 +993,12 @@ SELECT Extent1.CCP_ID   ,
 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
 	               FAIL_VER_RSN = #{failVeriReasonValue},
-	               ATCH_FILE_GRP_ID = #{atchFileGrpId}
+	               ATCH_FILE_GRP_ID = #{atchFileGrpId},
+	               SCORE_GRP = #{hiddenScoreGrp},
+	               UNIT_ENTITLE = #{hiddenUnitEntitle},
+	               PROD_ENTITLE = #{hiddenProdEntitle},
+	               CUST_CAT = #{hiddenCustCat},
+	               BANKRUPT = #{hiddenBankrupt}
             WHERE
                    CCP_ID = #{saveCcpId}
 </update>
@@ -2439,14 +2451,14 @@ WHERE ROWNUM = 1
 		        WHERE SCORE_PROV =  #{scoreProv}
 		        AND #{score} BETWEEN START_SCORE AND END_SCORE
 		        AND HOME_CAT = #{homeCat}
-		        <if test="ccpStus != '' and ccpStus != null">
-		            <if test="ccpStus == 1">
+<!-- 		        <if test="ccpStus != '' and ccpStus != null"> -->
+<!-- 		            <if test="ccpStus == 1"> -->
 		                AND STUS = 1
-		            </if>
-		            <if test="ccpStus == 5">
-		                AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
-		            </if>
-		        </if>
+<!-- 		            </if> -->
+<!-- 		            <if test="ccpStus == 5"> -->
+<!-- 		                AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS') -->
+<!-- 		            </if> -->
+<!-- 		        </if> -->
 		        ORDER BY SCORE_RANGE_ID DESC
 		    ) WHERE ROWNUM = 1
         ) A
@@ -2466,14 +2478,14 @@ WHERE ROWNUM = 1
         <if test="custCat == '' or custCat == null">
            AND CUST_CAT IS NULL
         </if>
-        <if test="ccpStus != '' and ccpStus != null">
-              <if test="ccpStus == 1">
+<!--         <if test="ccpStus != '' and ccpStus != null"> -->
+<!--               <if test="ccpStus == 1"> -->
                   AND STUS = 1
-              </if>
-              <if test="ccpStus == 5">
-                  AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS')
-              </if>
-        </if>
+<!--               </if> -->
+<!--               <if test="ccpStus == 5"> -->
+<!--                   AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS') -->
+<!--               </if> -->
+<!--         </if> -->
         <if test="scoreGrp != '' and scoreGrp != null">
               AND SCORE_GRP = #{scoreGrp}
          </if>

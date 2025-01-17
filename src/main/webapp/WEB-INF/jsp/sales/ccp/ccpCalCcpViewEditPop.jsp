@@ -71,14 +71,15 @@ $(document).ready(function() {
 
     var bankruptcy = '${ccpInfoMap.ctosBankrupt}' == 1 ? "YES" : "NO";
     $("#bankruptcy").text(bankruptcy);
+    $("#_hiddenBankrupt").val('${ccpInfoMap.ctosBankrupt}');
 
-    if('${ccpInfoMap.fileName}' != null && '${ccpInfoMap.fileName}' != "" ){
-    	 $("#ccpAttachFileField").hide();
-    	 $("#ccpAttachTxtField").show();
-    }else{
-    	$("#ccpAttachFileField").show();
-    	$("#ccpAttachTxtField").hide();
-    }
+//     if('${ccpInfoMap.fileName}' != null && '${ccpInfoMap.fileName}' != "" ){
+//     	 $("#ccpAttachFileField").hide();
+//     	 $("#ccpAttachTxtField").show();
+//     }else{
+//     	$("#ccpAttachFileField").show();
+//     	$("#ccpAttachTxtField").hide();
+//     }
 
     var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
@@ -128,6 +129,36 @@ $(document).ready(function() {
          }
      }
 
+     if('${ccpInfoMap.fileGrpId}' != 0){
+    	 $("#ccpAttachFile").hide();
+
+    	 Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId : '${ccpInfoMap.fileGrpId}'} , function(result) {
+            if(result) {
+                 if(result.length > 0) {
+                     $("#attachTd").html("");
+                     for ( var i = 0 ; i < result.length ; i++ ) {
+                         ccpAttachId = result[i].atchFileId;
+                         ccpAttachName = result[i].atchFileName;
+                         $(".input_text[id='ccpAttachFileTxt']").val(ccpAttachName);
+                     }
+
+                     // 파일 다운
+                     $(".input_text").dblclick(function() {
+                         var oriFileName = $(this).val();
+                         var fileGrpId;
+                         var fileId;
+                         for(var i = 0; i < result.length; i++) {
+                             if(result[i].atchFileName == oriFileName) {
+                                 fileGrpId = result[i].atchFileGrpId;
+                                 fileId = result[i].atchFileId;
+                             }
+                         }
+                         if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                     });
+                 }
+             }
+        });
+     }
 
     //Init
     var mst = getMstId();
@@ -756,7 +787,7 @@ function fn_ccpStatusChangeFunc(getVal){
 
 function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 
-//     let score_group_style = "";
+    let score_group_style = "";
 //     let score_group_desc = "";
 
 //  if((ccpFico >= 701 && ccpFico <= 850) || (ccpExperianr >= 9 && ccpExperianr <= 10)){
@@ -795,22 +826,49 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 	    		score : score,
 	    		chsStus : '${ccpInfoMap.chsStus}',
 	    		homeCat : '${ccpInfoMap.homeCat}',
-	    		ccpStus: '${ccpInfoMap.ccpStusId}',
-	    		ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
+// 	    		ccpStus: '${ccpInfoMap.ccpStusId}',
+// 	    		ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
 	    		custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
 	    };
 
 	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
-	
+
 	    	if(result != null && Object.values(result).length > 0){
 	    		$('#score_group').text(result.scoreGrp);
 		        $('#unitEntitle').text(result.unitEntitle);
 		        $('#prodEntitle').text(result.prodEntitle);
+	    		$('#_hiddenScoreGrp').val(result.scoreGrpCode);
+		        $('#_hiddenUnitEntitle').val(result.unitEntitle);
+		        $('#_hiddenProdEntitle').val(result.prodEntitle);
 
+		        // SCORE GROUP COLOR SETTING
+		        switch(result.scoreGrp){
+			        case 'EXCELLENT SCORE' :
+			        	score_group_style = "green_text";
+		                break;
+		            case 'GOOD SCORE' :
+		            	score_group_style = "green_text";
+		                break;
+		            case 'LOW SCORE' :
+		            	score_group_style = "red_text";
+		                break;
+		            case 'NO SCORE INSUFFICIENT CCRIS' :
+		            	score_group_style = "black_text";
+		                break;
+		            case 'NO SCORE' :
+		            	score_group_style = "black_text";
+		                break;
+		        }
+
+		        $('#score_group').addClass(score_group_style);
 		    }else{
 		    	$('#score_group').text("");
 	            $('#unitEntitle').text("");
 	            $('#prodEntitle').text("");
+	            $('#_hiddenScoreGrp').val("");
+                $('#_hiddenUnitEntitle').val("");
+                $('#_hiddenProdEntitle').val("");
+                $('#score_group').removeClass();
 		    }
 	    });
 
@@ -818,6 +876,10 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
     	$('#score_group').text("");
         $('#unitEntitle').text("");
         $('#prodEntitle').text("");
+        $('#_hiddenScoreGrp').val("");
+        $('#_hiddenUnitEntitle').val("");
+        $('#_hiddenProdEntitle').val("");
+        $('#score_group').removeClass();
     }
 }
 
@@ -1682,6 +1744,14 @@ function chgTab(tabNm) {
 <input type="hidden" name="hiddenUpdSmsMsg" id="_hiddenUpdSmsMsg">
 <input type="hidden" name="hiddenSalesMobile" id="_hiddenSalesMobile">
 
+<!-- ccp info -->
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId"  value="${ccpInfoMap.fileGrpId}">
+<input type="hidden" id="_hiddenScoreGrp" name="hiddenScoreGrp" >
+<input type="hidden" id="_hiddenUnitEntitle" name="hiddenUnitEntitle">
+<input type="hidden" id="_hiddenProdEntitle" name="hiddenProdEntitle">
+<input type="hidden" id="_hiddenBankrupt" name="hiddenBankrupt" value="${ccpInfoMap.ctosBankrupt}">
+<input type="hidden" id="_hiddenCustCat" name="hiddenCustCat" value="${ccpInfoMap.custCat}">
+
 <!-- firstCallDate update  -->
 <input type="hidden"  id="firstCallDateUpd" name="firstCallDateUpd" placeholder="DD/MM/YYYY"  class="j_date" >
 <table class="type1"><!-- table start -->
@@ -1703,9 +1773,8 @@ function chgTab(tabNm) {
             <label style="width: 400px;">
                 <input type='text' class='input_text' readonly='readonly' id='ccpAttachFileTxt'  name=''/>
             </label>
-            <input type="hidden" name="atchFileGrpId" id="atchFileGrpId" value="${ccpInfoMap.fileId}">
         </div>
-        <div id="ccpAttachTxtField"><span>${ccpInfoMap.fileName}</span></div>
+<%--         <div id="ccpAttachTxtField"><span>${ccpInfoMap.fileName}</span></div> --%>
     </td>
 </tr>
 <tr>
