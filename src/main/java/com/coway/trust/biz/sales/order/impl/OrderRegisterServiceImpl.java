@@ -541,6 +541,22 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                         	isInValid = "InValid";
                         }
 
+                        if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer
+                                .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                                || SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer
+                                    .parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+                                    ){
+                        	// select another order
+                            params.put("ordNo", params.get("salesOrdNo"));
+                    		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
+                    		if(hcOrderInfo != null && hcOrderInfo.get("anoOrdId") != null && hcOrderInfo.get("anoOrdAppType") != null){
+                    			if(hcOrderInfo.get("anoOrdAppType").toString().equals("66")){
+                    				msg = msg + " -Please be aware that 1 of bundle order may not comply with the ex-trade obligation period and payment. Kindly check the order for confirmation.";
+                                    isInValid = "InValid";
+                    			}
+                    		}
+                        }
+
                         ROOT_STATE = "ROOT_6";
 
                         txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
