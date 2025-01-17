@@ -57,6 +57,8 @@ function btnGenerate_Click(){
 
 	 var whereSql = '';
 	 var runNo = 0;
+	 var runNo2 = 0;
+	 var stus = "";
 
 	 if($("#dscBranchPop").val() != null && $("#dscBranchPop").val() != ''){
          whereSql += " AND T12.BRNCH_ID IN (";
@@ -73,19 +75,22 @@ function btnGenerate_Click(){
          runNo = 0;
      }
 
-	   if($("#statusList").val() != null && $("#statusList").val() != ''){
-         whereSql += " AND T1.ECPE_STUS_ID IN (";
-         $('#statusList :selected').each(function(i, mul){
-             if(runNo > 0){
-                 whereSql += ",'"+$(mul).val()+"'";
-             }else{
-                 whereSql += "'"+$(mul).val()+"'";
+     if ($("#statusList1 :selected").length > 0) {
+         $("#statusList1 :selected").each(function(i, mul) {
+           if ($(mul).val() != "0") {
+             if (runNo2 > 0) {
+            	 stus += ", " + $(mul).val() + " ";
+             } else {
+            	 stus += " " + $(mul).val() + " ";
              }
-             runNo += 1;
+             runNo2 += 1;
+           }
          });
-         whereSql += ") ";
+       }
 
-         runNo = 0;
+     if ($("#statusList1 :selected").val() != ''
+         && $("#statusList1 :selected").val() != null) {
+       whereSql += " AND T1.ECPE_STUS_ID IN (" + stus + ") ";
      }
 
      if($("#_inputReqTypeSelect").val() != null && $("#_inputReqTypeSelect").val() != ''){
@@ -187,14 +192,11 @@ function btnGenerate_Click(){
        <td><select id="dscBranchPop" name="dscBranchPop" class="multy_select w100p" multiple="multiple">
        </select></td>
     <th scope="row"><spring:message code="sys.status" /></th>
-	           <td><select class="multy_select w100p" multiple="multiple"
-         id="statusList" name="statusList">
-
+	  <td><select class="multy_select w100p" multiple="multiple" id="statusList1" name="statusList1">
           <c:forEach var="list" items="${cpeStat}" varStatus="status">
             <option value="${list.code}" selected>${list.codeName}</option>
           </c:forEach>
-
-        </select></td>
+       </select></td>
 </tr>
 </tbody>
 </table><!-- table end -->
