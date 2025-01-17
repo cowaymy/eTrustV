@@ -492,7 +492,7 @@ public class HcOrderRegisterController {
 		if(isHc){
 			rMap = hcOrderListService.selectHcOrderInfo(cParam);
 			bundleId = rMap.get("bndlNo").toString();
-			anoOrderNo = rMap.get("anoOrdNo").toString();
+			anoOrderNo = rMap.get("anoOrdNo") == null ? "" : rMap.get("anoOrdNo").toString();
 		}
 
 		model.put("bundleId", bundleId);
