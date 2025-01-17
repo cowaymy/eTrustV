@@ -2818,7 +2818,7 @@
                             WHERE
                                 A.RENT_INST_TYPE_ID = 159
                        AND B.CUST_ID = #{custId}
-                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -5
+                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -4
                     )
                     )
                   </when>
