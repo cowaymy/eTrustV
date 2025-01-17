@@ -2107,7 +2107,7 @@
         $('#aTabOI').click();
       } else {
         isExist = true;
-        fn_doSavePreOrder();
+        //fn_doSavePreOrder();
       }
       return isExist;
     });
