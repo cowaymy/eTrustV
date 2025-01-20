@@ -5993,7 +5993,7 @@
          AND C.SALES_ORD_NO = (SELECT FRA_ORD_NO
                                               FROM HMC0011D
                                              WHERE MAT_ORD_NO = #{matOrdNo}
-                                                 AND FRA_ORD_NO IS NOT NULL )
+                                                 AND FRA_ORD_NO IS NOT NULL ) AND A.STUS_CODE_ID = 1
     ]]>
   </select>
 
