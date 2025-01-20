@@ -28,6 +28,8 @@
 
     doGetComboSepa('/common/selectBranchCodeList.do',  '10', ' - ', '' , 'salesmanBrnch', 'S', ''); //Branch Code
 
+    $('[name="supplementType"]').prop("disabled", true);
+
     $("#nric").keyup(function() {
       $(this).val($.trim($(this).val().toUpperCase()));
     });
