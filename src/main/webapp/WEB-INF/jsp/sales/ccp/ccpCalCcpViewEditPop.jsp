@@ -820,7 +820,7 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
         score = ccpFico;
     }
 
-    if(ccpExperianr >= 0 && ccpFico != "" ){
+    if(ccpExperianr >= 0 && (ccpFico != "" || ccpFico == "0")){
 	    var data = {
 	    		scoreProv : scoreProv,
 	    		score : score,
