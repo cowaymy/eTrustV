@@ -63,4 +63,16 @@ public interface PromotionService {
 
 	List<EgovMap> selectExcelPromoList(Map<String, Object> params);
 
+	List<EgovMap> selectProductCompntConfigList(Map<String, Object> params);
+
+	List<EgovMap> selectProductCompntConfigItmList( Map<String, Object> params ) throws Exception;
+
+	List<EgovMap> selectProductCompnt( Map<String, Object> params );
+
+	List<EgovMap> selectProductCompntPromotionList(Map<String, Object> params) throws Exception;
+
+	Map<String, Object> registerProductCompntConfig( Map<String, Object> params ) throws Exception;
+
+	Map<String, Object> updateProductCompntConfig( Map<String, Object> params ) throws Exception;
+
 }

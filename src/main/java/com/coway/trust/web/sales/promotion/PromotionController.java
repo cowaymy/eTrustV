@@ -3,7 +3,10 @@
  */
 package com.coway.trust.web.sales.promotion;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +33,7 @@ import com.coway.trust.biz.sales.promotion.vo.PromotionVO;
 import com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -50,6 +53,9 @@ public class PromotionController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+  private SessionHandler sessionHandler;
 
 	@RequestMapping(value = "/promotionList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -467,6 +473,133 @@ public class PromotionController {
 		return ResponseEntity.ok(resultList);
 	}
 
+  @RequestMapping(value = "/initProductCompntConfigList.do")
+  public String initProductCompntConfigList(@RequestParam Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) {
+    Calendar calendar = Calendar.getInstance();
 
+    // Set the date to the 1st day of the current month
+    calendar.set(Calendar.DAY_OF_MONTH, 1);
+    Date firstDayOfMonth = calendar.getTime();
+
+    // Format the dates using your default date format
+    String bfDay = new SimpleDateFormat(SalesConstants.DEFAULT_DATE_FORMAT1).format(firstDayOfMonth);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
+    return "sales/promotion/productCompntConfigList";
+  }
+
+  @RequestMapping(value = "/selectProductCompntConfigList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectProductCompntConfigList(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) {
+    List<EgovMap> resultList = promotionService.selectProductCompntConfigList(params);
+    return ResponseEntity.ok(resultList);
+  }
+
+  @RequestMapping(value = "/selectProductCompntConfigItmList")
+  public ResponseEntity<List<EgovMap>> selectProductCompntConfigItmList(@RequestParam Map<String, Object> params)
+      throws Exception {
+    List<EgovMap> detailList = null;
+    detailList = promotionService.selectProductCompntConfigItmList(params);
+    return ResponseEntity.ok(detailList);
+  }
+
+  @RequestMapping(value = "/selectProductCompntPromotionList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectProductCompntPromotionList(@RequestParam Map<String, Object> params) throws Exception {
+    logger.debug("=======================================================================================");
+    logger.debug("============== selectProductCompntPromotionList params{} ", params);
+    logger.debug("=======================================================================================");
+    List<EgovMap> codeList = promotionService.selectProductCompntPromotionList(params);
+    return ResponseEntity.ok(codeList);
+  }
+
+  @RequestMapping(value = "/selectProductCompnt.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectProductCompnt(@RequestParam Map<String, Object> params) {
+    List<EgovMap> productCompntList = promotionService.selectProductCompnt(params);
+    return ResponseEntity.ok(productCompntList);
+  }
+
+  @RequestMapping(value = "/productCompntConfigAddPop.do")
+  public String productCompntConfigAddPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
+    return "sales/promotion/productCompntConfigAddPop";
+  }
+
+  @RequestMapping(value = "/productCompntConfigModifyPop.do")
+  public String productCompntConfigModifyPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
+    EgovMap promoInfo = promotionService.selectPromotionDetail(params);
+    model.addAttribute("promoInfo", promoInfo);
+    return "sales/promotion/productCompntConfigModifyPop";
+  }
+
+  @RequestMapping(value = "/registerProductCompntConfig.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> registerProductCompntConfig( @RequestBody Map<String, Object> params )
+    throws Exception {
+    logger.debug("=======================================================================================");
+    logger.debug("============== registerProductCompntConfig params{} ", params);
+    logger.debug("=======================================================================================");
+    ReturnMessage message = new ReturnMessage();
+    String msg = "";
+    try {
+      // Retrieve the current session user info
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+      params.put( "crtUsrId", sessionVO.getUserId() );
+      // Call the service method
+      Map<String, Object> returnMap = promotionService.registerProductCompntConfig( params );
+      // Check the response and set the message accordingly
+      if ( "000".equals( returnMap.get( "logError" ) ) ) {
+        msg += "Product Component Configuration successfully saved.<br />";
+        msg += returnMap.get( "message" ) + "<br />";
+        message.setCode( AppConstants.SUCCESS );
+      } else {
+        msg += "Product Component Configuration failed to save.<br />";
+        msg += returnMap.get( "message" ) + "<br />";
+        message.setCode( AppConstants.FAIL );
+      }
+      message.setMessage( msg );
+    }
+    catch ( Exception e ) {
+      logger.error( "Error during Product Component Configuration registration", e );
+      msg += "An unexpected error occurred.<br />";
+      message.setCode( AppConstants.FAIL );
+      message.setMessage( msg );
+    }
+    return ResponseEntity.ok( message );
+  }
+
+  @RequestMapping(value = "/updateProductCompntConfig.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateProductCompntConfig( @RequestBody Map<String, Object> params )
+    throws Exception {
+    logger.debug("=======================================================================================");
+    logger.debug("============== updateProductCompntConfig params{} ", params);
+    logger.debug("=======================================================================================");
+    ReturnMessage message = new ReturnMessage();
+    String msg = "";
+    try {
+      // Retrieve the current session user info
+      SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+      params.put( "crtUsrId", sessionVO.getUserId() );
+      // Call the service method
+      Map<String, Object> returnMap = promotionService.updateProductCompntConfig( params );
+      // Check the response and set the message accordingly
+      if ( "000".equals( returnMap.get( "logError" ) ) ) {
+        msg += "Product Component Configuration successfully updated.<br />";
+        msg += returnMap.get( "message" ) + "<br />";
+        message.setCode( AppConstants.SUCCESS );
+      } else {
+        msg += "Product Component Configuration failed to save.<br />";
+        msg += returnMap.get( "message" ) + "<br />";
+        message.setCode( AppConstants.FAIL );
+      }
+      message.setMessage( msg );
+    }
+    catch ( Exception e ) {
+      logger.error( "Error during Product Component Configuration update", e );
+      msg += "An unexpected error occurred.<br />";
+      message.setCode( AppConstants.FAIL );
+      message.setMessage( msg );
+    }
+    return ResponseEntity.ok( message );
+  }
 
 }

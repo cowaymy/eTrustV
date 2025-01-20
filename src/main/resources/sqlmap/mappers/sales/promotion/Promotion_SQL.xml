@@ -1787,4 +1787,186 @@ LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_
         T.UPD_USER_ID = S.UPD_USER_ID,
         T.UPD_DT = S.UPD_DT
     </insert>
+
+    <select id="selectProductCompntConfigList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT T1.PROMO_ID
+           , T1.PROMO_CODE
+           , T1.PROMO_DESC
+           , T1.PROMO_TYPE_ID
+           , T3.CODE_NAME AS PROMO_TYPE_NAME
+           , T1.PROMO_APP_TYPE_ID APP_TYPE_ID
+           , T2.CODE_NAME AS APP_TYPE
+           , T1.PROMO_SRV_MEM_PAC_ID
+           , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+           , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+           , T1.PROMO_STUS_ID
+           , T4.NAME STATUS
+           , TO_CHAR(T1.UPD_DT, 'DD/MM/YYYY') UPD_DT
+           , T1.UPD_USER_ID
+           , TO_CHAR(T1.CRT_DT, 'DD/MM/YYYY') CRT_DT
+           , T1.CRT_USER_ID
+		   , T8.STK_CODE || ' - ' || STK_DESC STK_DESC
+		   , T8.STK_ID
+		   , T11.USER_NAME UPD_USER_NAME
+		   , T12.USER_NAME CRT_USER_NAME
+    FROM SAL0017D T1
+       LEFT OUTER JOIN SYS0013M T2 ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID AND T2.CODE_MASTER_ID = '320'
+       LEFT OUTER JOIN SYS0013M T3 ON T1.PROMO_TYPE_ID = T3.CODE_ID AND T3.CODE_MASTER_ID = '76'
+       LEFT OUTER JOIN SYS0038M T4 ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+       LEFT JOIN SAL0358M T5 ON T5.PROMO_ID = T1.PROMO_ID and T5.PROMO_REQST_ID = (SELECT MAX(PROMO_REQST_ID) FROM SAL0358M where PROMO_ID = T1.PROMO_ID)
+       LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T5.APPV_STUS
+       LEFT JOIN SAL0018D T7 ON T1.PROMO_ID = T7.PROMO_ID AND T7.PROMO_ITM_STUS_ID = 1
+       LEFT JOIN SYS0026M T8 ON T7.PROMO_ITM_STK_ID = T8.STK_ID
+       JOIN SAL0237M T9 ON T1.PROMO_ID = T9.PROMO_ID AND T8.STK_ID = T9.ITM_STK_ID AND T9.DISAB = 0
+       AND T9.APP_TYPE_ID = (CASE WHEN T1.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T1.PROMO_APP_TYPE_ID = 7553 THEN 144
+                             ELSE 0 END)
+       LEFT JOIN SAL0223M T10 ON T9.ITM_CPNT_ID = T10.ITM_CPNT_ID AND T10.DISAB = 0 AND T7.PROMO_ITM_STK_ID = T10.ITM_STK_ID
+       LEFT JOIN SYS0047M T11 ON T1.UPD_USER_ID = T11.USER_ID
+       LEFT JOIN SYS0047M T12 ON T1.CRT_USER_ID = T12.USER_ID
+
+    WHERE T7.PROMO_ITM_STK_ID = #{product}
+
+    <if test='productCompnt != null and productCompnt !=""'>
+          AND T10.ITM_CPNT_ID = #{productCompnt}
+    </if>
+
+    <if test='promoId != null and promoId !=""'>
+          AND T1.PROMO_ID = #{promoId}
+    </if>
+
+    <if test='effectStartDt != null and effectStartDt != "" and effectEndDt != null and effectEndDt != ""'>
+    <![CDATA[   AND T1.PROMO_DT_FROM <= TO_DATE(#{effectStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                AND T1.PROMO_DT_END >= TO_DATE(#{effectEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') ]]>
+    </if>
+
+    <if test='appType != null and appType != ""'>
+          AND T1.PROMO_APP_TYPE_ID = #{appType}
+    </if>
+    ORDER BY T1.PROMO_CODE
+    </select>
+
+    <select id="selectProductCompntConfigItmList" parameterType="Map" resultType="egovMap">
+    SELECT   T5.ITM_CPNT_ID COMPNT_ID
+		   , T5.ITM_CPNT_NAME PRD_COMPNT
+		   , TO_CHAR(T4.EFF_DT, 'DD/MM/YYYY') AS EFFECT_DT
+		   , TO_CHAR(T4.EXP_DT, 'DD/MM/YYYY') AS EXPIRE_DT
+    FROM SAL0017D T1
+       LEFT JOIN SAL0018D T2 ON T1.PROMO_ID = T2.PROMO_ID AND T2.PROMO_ITM_STUS_ID = 1
+       LEFT JOIN SYS0026M T3 ON T2.PROMO_ITM_STK_ID = T3.STK_ID
+       JOIN SAL0237M T4 ON T1.PROMO_ID = T4.PROMO_ID AND T3.STK_ID = T4.ITM_STK_ID AND T4.DISAB = 0
+       AND T4.APP_TYPE_ID = (CASE WHEN T1.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T1.PROMO_APP_TYPE_ID = 7553 THEN 144
+                             ELSE 0 END)
+       LEFT JOIN SAL0223M T5 ON T4.ITM_CPNT_ID = T5.ITM_CPNT_ID AND T5.DISAB = 0 AND T2.PROMO_ITM_STK_ID = T5.ITM_STK_ID
+    WHERE T1.PROMO_ID = #{promoId}
+    <if test='appTypeId != null and appTypeId != ""'>
+          AND T1.PROMO_APP_TYPE_ID = #{appTypeId}
+    </if>
+    <if test='stkId != null and stkId != ""'>
+          AND T2.PROMO_ITM_STK_ID = #{stkId}
+    </if>
+    </select>
+
+    <select id="selectProductCompnt" parameterType="Map" resultType="egovMap">
+    SELECT ITM_CPNT_ID AS CODE,
+           UPPER(A.ITM_CPNT_NAME) AS CODE_NAME
+    FROM SAL0223M A
+    JOIN SYS0026M B ON A.ITM_STK_ID = B.STK_ID
+    WHERE
+    DISAB = '0' AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    ORDER BY A.ITM_STK_ID, A.ITM_CPNT_ID
+    </select>
+
+	<select id="selectProductCompntPromotionList" parameterType="Map" resultType="egovMap">
+        SELECT T.PROMO_ID CODE
+             , T.PROMO_DESC CODE_NAME
+          FROM
+             ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
+                    , T2.PROMO_DT_FROM
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
+                  AND T2.PROMO_STUS_ID = 1
+                  AND T2.PROMO_APP_TYPE_ID = #{appType}
+                  <if test='effectStartDt != null and effectStartDt != "" and effectEndDt != null and effectEndDt != ""'>
+                  <![CDATA[   AND T2.PROMO_DT_FROM <= TO_DATE(#{effectStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                              AND T2.PROMO_DT_END >= TO_DATE(#{effectEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') ]]>
+                  </if>
+                  <if test='effectStartDt == null or effectStartDt == "" or effectEndDt == null or effectEndDt == ""'>
+                  <![CDATA[    AND T2.PROMO_DT_FROM <= TO_DATE(SYSDATE || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                             AND T2.PROMO_DT_END >= TO_DATE(SYSDATE || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') ]]>
+                  </if>
+         LEFT JOIN SAL0237M T3 ON T1.PROMO_ID = T3.PROMO_ID AND T1.PROMO_ITM_STK_ID = T3.ITM_STK_ID AND T3.DISAB = 0
+                                  AND T3.APP_TYPE_ID = (CASE WHEN T2.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T2.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T2.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T2.PROMO_APP_TYPE_ID = 7553 THEN 144
+                                  ELSE 0 END)
+        WHERE T1.PROMO_ITM_STK_ID = #{stkId}
+                  AND T1.PROMO_ITM_STUS_ID = 1
+                      <if test="config !=null and config == 0">
+                           AND T3.PROMO_ID IS NULL
+                      </if>
+                      <if test="config !=null and config == 1">
+                           AND T3.PROMO_ID IS NOT NULL
+                      </if>
+                      <if test="promoId !=null and promoId != ''">
+                           AND T2.PROMO_ID = #{promoId}
+                      </if>
+                  ) T
+         ORDER BY T.PROMO_DT_FROM DESC
+   </select>
+
+   <insert id="insertProductCompntConfig" parameterType="Map">
+   INSERT INTO SAL0237M ( APP_TYPE_ID ,
+                                        ITM_STK_ID ,
+                                        PROMO_ID ,
+                                        ITM_CPNT_ID ,
+                                        DISAB ,
+                                        EFF_DT ,
+                                        EXP_DT ,
+                                        CRT_DT ,
+                                        CRT_USER_ID
+     ) VALUES ( #{appTypeId} ,
+                     #{itmStkId} ,
+                     #{promoId} ,
+                     #{compntId} ,
+                     0 ,
+                     #{effectDt} ,
+                     #{expireDt} ,
+                     SYSDATE ,
+                     #{crtUsrId} )
+   </insert>
+
+   <update id="updateProductCompntConfig" parameterType="Map">
+    UPDATE SAL0237M SET CRT_DT = SYSDATE
+   					   , CRT_USER_ID = #{crtUsrId}
+   					   , DISAB = #{disab}
+   					   <if test='effectDt != null and effectDt != "" and effectDt != null and effectDt != "" and disab == 0'>
+   					   , EFF_DT = TO_DATE(#{effectDt},'DD/MM/YYYY')
+   					   , EXP_DT = TO_DATE(#{expireDt},'DD/MM/YYYY')
+   					   </if>
+    WHERE
+   		APP_TYPE_ID = #{appTypeId}
+		AND ITM_STK_ID = #{itmStkId}
+		AND PROMO_ID = #{promoId}
+		AND ITM_CPNT_ID = #{compntId}
+   </update>
+
+   <select id="selectCntComponentExists"  parameterType="Map" resultType="int">
+	SELECT
+		COUNT(*) CNT
+	FROM SAL0237M Extent1
+	WHERE
+		APP_TYPE_ID = #{appTypeId}
+		AND ITM_STK_ID = #{itmStkId}
+		AND PROMO_ID = #{promoId}
+		AND ITM_CPNT_ID = #{compntId}
+	</select>
+
 </mapper>

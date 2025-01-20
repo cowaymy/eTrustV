@@ -84,4 +84,18 @@ public interface PromotionMapper {
 	void insertSalesPromoAddtValue(EgovMap params);
 	void insertSalesPromoRequestAddtValue(EgovMap params);
 
+	List<EgovMap> selectProductCompntConfigList(Map<String, Object> params);
+
+	List<EgovMap> selectProductCompntConfigItmList(Map<String, Object> params);
+
+	List<EgovMap> selectProductCompntPromotionList (Map<String, Object> params);
+
+	List<EgovMap> selectProductCompnt( Map<String, Object> params );
+
+	void insertProductCompntConfig( Map<String, Object> params );
+
+	void updateProductCompntConfig( Map<String, Object> params );
+
+	int selectCntComponentExists(Map<String, Object> params);
+
 }

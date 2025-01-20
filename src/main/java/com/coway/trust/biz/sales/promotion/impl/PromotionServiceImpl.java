@@ -708,4 +708,130 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			}
 		}
 	}
+
+	@Override
+  public List<EgovMap> selectProductCompntConfigList(Map<String, Object> params) {
+    return promotionMapper.selectProductCompntConfigList(params);
+  }
+
+	@Override
+  public List<EgovMap> selectProductCompntConfigItmList( Map<String, Object> params )
+    throws Exception {
+    return promotionMapper.selectProductCompntConfigItmList( params );
+  }
+
+	@Override
+  public List<EgovMap> selectProductCompntPromotionList(Map<String, Object> params) throws Exception {
+    return promotionMapper.selectProductCompntPromotionList(params);
+  }
+
+	@Override
+  public List<EgovMap> selectProductCompnt( Map<String, Object> params ) {
+    return promotionMapper.selectProductCompnt( params );
+  }
+
+  @Override
+  public Map<String, Object> registerProductCompntConfig(Map<String, Object> params) throws Exception {
+    List<Object> productCompntItemGrid = (List<Object>) params.get("prodCompntList");
+    Map<String, Object> rtnMap = new HashMap<>();
+    try {
+      for (int idx = 0; idx < productCompntItemGrid.size(); idx++) {
+        Map<String, Object> itemMap = (Map<String, Object>) productCompntItemGrid.get(idx);
+        itemMap.put("appTypeId", CommonUtils.changePromoAppTypeId(CommonUtils.intNvl(params.get("appType"))));
+        itemMap.put("itmStkId", params.get("stkId"));
+        itemMap.put("promoId", params.get("promoId"));
+        itemMap.put("crtUsrId", params.get("crtUsrId"));
+        promotionMapper.insertProductCompntConfig(itemMap);
+      }
+      // Set the success response
+      rtnMap.put("logError", "000");
+      rtnMap.put("message", "");
+    } catch (Exception e) {
+      System.err.println("Error during Product Component Configuration registration: " + e.getMessage());
+      e.printStackTrace();
+      // Set the error response
+      rtnMap.put("logError", "999");
+      rtnMap.put("message", e.getMessage());
+    }
+    return rtnMap;
+  }
+
+  @Override
+  public Map<String, Object> updateProductCompntConfig(Map<String, Object> params) throws Exception {
+    Map<String, Object> rtnMap = new HashMap<>();
+    String logError = "000"; // Default success code
+    String message = "";
+
+    try {
+      // Extract lists from params
+      List<Map<String, Object>> addList = (List<Map<String, Object>>) ((Map<String, Object>) params
+          .get("prodCompntList")).get("add");
+      List<Map<String, Object>> updateList = (List<Map<String, Object>>) ((Map<String, Object>) params
+          .get("prodCompntList")).get("update");
+      List<Map<String, Object>> removeList = (List<Map<String, Object>>) ((Map<String, Object>) params
+          .get("prodCompntList")).get("remove");
+
+      // Handle 'add' operations
+      if (addList != null && !addList.isEmpty()) {
+        for (Map<String, Object> item : addList) {
+          // Check if the item exists in SAL0237M
+          prepareCommonParams(item, params);
+          boolean exists = checkIfComponentExists(item);
+          if (exists) {
+            item.put("disab", 0);
+            promotionMapper.updateProductCompntConfig(item);
+          } else {
+            promotionMapper.insertProductCompntConfig(item);
+          }
+        }
+        message += "Add operation completed successfully.<br />";
+      }
+
+      // Handle 'update' operations
+      if (updateList != null && !updateList.isEmpty()) {
+        for (Map<String, Object> item : updateList) {
+          prepareCommonParams(item, params);
+          item.put("disab", 0);
+          promotionMapper.updateProductCompntConfig(item);
+        }
+        message += "Update operation completed successfully.<br />";
+      }
+
+      // Handle 'remove' operations
+      if (removeList != null && !removeList.isEmpty()) {
+        for (Map<String, Object> item : removeList) {
+          prepareCommonParams(item, params);
+          item.put("disab", 1);
+          promotionMapper.updateProductCompntConfig(item);
+        }
+        message += "Remove operation completed successfully.<br />";
+      }
+
+    } catch (Exception e) {
+      logError = "999"; // Error code
+      message = "Error occurred while processing Product Component Configuration.<br />" + e.getMessage();
+      throw e; // Optionally rethrow the exception if needed
+    }
+
+    rtnMap.put("logError", logError);
+    rtnMap.put("message", message);
+    return rtnMap;
+  }
+
+  private Map<String, Object> prepareCommonParams(Map<String, Object> item, Map<String, Object> params) {
+    item.put("appTypeId", CommonUtils.changePromoAppTypeId(CommonUtils.intNvl(params.get("appType"))));
+    item.put("itmStkId", CommonUtils.intNvl(params.get("stkId")));
+    item.put("promoId", CommonUtils.intNvl(params.get("promoId")));
+    item.put("crtUsrId", params.get("crtUsrId"));
+    return item;
+  }
+
+  private boolean checkIfComponentExists(Map<String, Object> item) {
+    int exists = promotionMapper.selectCntComponentExists(item);
+    if (exists != 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
