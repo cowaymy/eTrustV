@@ -832,6 +832,7 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 	    };
 
 	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
+	    	$('#score_group').removeClass();
 
 	    	if(result != null && Object.values(result).length > 0){
 	    		$('#score_group').text(result.scoreGrp);
