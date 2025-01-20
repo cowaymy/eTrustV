@@ -2508,6 +2508,7 @@
                 and B.WATER_SRC_TYPE = D.CODE_ID (+)
                 and D.CODE_MASTER_ID = '501'
                 and C.SALES_ORD_NO = #{salesOrderNo}
+                and B.STUS_CODE_ID = 4
 
   </select>
 
