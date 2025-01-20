@@ -231,6 +231,7 @@ FROM (
                     JOIN sys0013m q ON q.code_id = b.as_type_id
     				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
     				LEFT JOIN SVC0005D S05 ON S05.AS_RESULT_ID = a.result_id
+    														AND S05.ASR_ITM_PART_ID = A.STK_ID
     				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S05.FILTER_SRL_UNMATCH_RSN)
     				AND S13.CODE_MASTER_ID = '611'
                 WHERE
