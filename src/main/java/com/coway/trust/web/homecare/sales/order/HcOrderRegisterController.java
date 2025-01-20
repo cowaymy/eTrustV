@@ -309,9 +309,14 @@ public class HcOrderRegisterController {
     			Map<String, Object> hcParam = new HashMap();
     			hcParam.put("ordNo", orderVO.getSalesOrderMVO1().getBindingNo());
     			rMap = hcOrderListService.selectHcOrderInfo(hcParam);
-    			cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
-    			cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
-    			cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+    			if(rMap != null){
+    				cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
+    				cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
+    				cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+    			}else{
+    				rMap = orderRegisterService.selectOldOrderId(cParam);
+        			cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+    			}
     		}else{
     			rMap = orderRegisterService.selectOldOrderId(cParam);
     			cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
