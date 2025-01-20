@@ -522,6 +522,8 @@ public class PromotionController {
 
   @RequestMapping(value = "/productCompntConfigAddPop.do")
   public String productCompntConfigAddPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
+    model.put("bfDay", params.get("effectStartDt") );
+    model.put("toDay", params.get("effectEndDt") );
     return "sales/promotion/productCompntConfigAddPop";
   }
 
@@ -529,6 +531,8 @@ public class PromotionController {
   public String productCompntConfigModifyPop( @RequestParam Map<String, Object> params, ModelMap model ) throws Exception {
     EgovMap promoInfo = promotionService.selectPromotionDetail(params);
     model.addAttribute("promoInfo", promoInfo);
+    model.put("bfDay", params.get("effectStartDt") );
+    model.put("toDay", params.get("effectEndDt") );
     return "sales/promotion/productCompntConfigModifyPop";
   }
 

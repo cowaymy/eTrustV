@@ -274,8 +274,8 @@ function fn_closeProdCompntConfigPop() {
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
-  <input type="hidden" id="prodCompntEffectStartDt" value="">
-  <input type="hidden" id="prodCompntEffectEndDt" value="">
+  <input type="hidden" id="prodCompntEffectStartDt" value="${bfDay}">
+  <input type="hidden" id="prodCompntEffectEndDt" value="${toDay}">
   <header class="pop_header">
      <h1 id="productCompntConfigHeader"><spring:message code="sales.promo.text.productCompntConfigNew" /></h1>
     <ul class="right_opt">

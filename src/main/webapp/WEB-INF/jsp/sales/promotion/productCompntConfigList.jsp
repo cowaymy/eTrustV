@@ -247,14 +247,14 @@ var excelListGridID;
 
 	  $("#newProdCompntConfig").click(
 		   function() {
-		          Common.popupDiv("/sales/promotion/productCompntConfigAddPop.do", '', null, true, '_insDiv');
+		          Common.popupDiv("/sales/promotion/productCompntConfigAddPop.do", { effectStartDt : $('#effectStartDt').val() , effectEndDt : $('#effectEndDt').val() }, null, true, '_insDiv');
 		});
 
 	  $("#editProdCompntConfig").click(
 			   function() {
 				   rowIdx = AUIGrid.getSelectedIndex(productCompntConfigGridID)[0];
 			        if (rowIdx > -1) {
-			          Common.popupDiv("/sales/promotion/productCompntConfigModifyPop.do", { promoId : AUIGrid.getCellValue(productCompntConfigGridID, rowIdx, "promoId") }, null, true, '_insDiv');
+			          Common.popupDiv("/sales/promotion/productCompntConfigModifyPop.do", { promoId : AUIGrid.getCellValue(productCompntConfigGridID, rowIdx, "promoId") , effectStartDt : $('#effectStartDt').val() , effectEndDt : $('#effectEndDt').val() }, null, true, '_insDiv');
 			        }else {
 			            Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
 			            return false;
