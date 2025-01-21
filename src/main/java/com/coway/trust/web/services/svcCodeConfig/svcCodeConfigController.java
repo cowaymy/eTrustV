@@ -54,7 +54,7 @@ public class svcCodeConfigController {
 	public String svcCodeConfigList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		logger.debug("[svcCodeConfigController - svcCodeConfigList] params : {}", params);
 
-		List<EgovMap> codeStatus = commonService.selectStatusCategoryCodeList(params);
+		List<EgovMap> codeStatus = svcCodeConfigService.selectStatusCategoryCodeList();
 		List<EgovMap> prodCatList = promotionService.selectProductCategoryList();
 		logger.debug("[svcCodeConfigController - svcCodeConfigList] codeStatus : {}", codeStatus);
 		logger.debug("[svcCodeConfigController - svcCodeConfigList] prodCatList : {}", prodCatList);

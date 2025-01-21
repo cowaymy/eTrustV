@@ -131,7 +131,7 @@ function getProdCat(callBack)
 
 function getStatus(callBack)
 {
-      Common.ajaxSync("GET", "/common/selectStatusCategoryCodeList.do" , "&selCategoryId=32" , function(result){
+      Common.ajaxSync("GET", "/services/svcCodeConfig/selectStatusCategoryCodeList.do" , "" , function(result){
     	  statusList.push({id:"" ,value:""});
           for (var i = 0; i < result.length; i++){
                 var list = new Object();
