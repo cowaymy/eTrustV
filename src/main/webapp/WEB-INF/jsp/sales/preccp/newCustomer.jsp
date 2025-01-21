@@ -254,7 +254,7 @@
 
          document.querySelector(".registerCustomer a").style.backgroundColor = !div1Open ? "#9ea9b4" : "rgb(37, 82, 124)";
          document.querySelector(".sendSms a").style.backgroundColor = !div2Open ? "#9ea9b4" : "rgb(37, 82, 124)";
-         document.querySelector(".preCcpResult a").style.backgroundColor = !div3Open ? "#9ea9b4" : "rgb(37, 82, 124)";
+//          document.querySelector(".preCcpResult a").style.backgroundColor = !div3Open ? "#9ea9b4" : "rgb(37, 82, 124)";
          document.querySelector(".viewHistory a").style.backgroundColor = !div4Open ? "#9ea9b4" : "rgb(37, 82, 124)";
      }
 
@@ -665,15 +665,15 @@
 		       }
      });
 
-     $("#preCcpResult").click(()=>{
-         div1Open = false;
-         div2Open = false;
-         div3Open = true;
-         div4Open = false;
-         refreshDisplay();
-         AUIGrid.resize(preCcpResultGrid, 1300, 500);
-         setOrganizationInfo();
-    });
+//      $("#preCcpResult").click(()=>{
+//          div1Open = false;
+//          div2Open = false;
+//          div3Open = true;
+//          div4Open = false;
+//          refreshDisplay();
+//          AUIGrid.resize(preCcpResultGrid, 1300, 500);
+//          setOrganizationInfo();
+//     });
 
      const validationPreccpResult = () => {
     	 if(FormUtil.isEmpty($("#start").val())){
