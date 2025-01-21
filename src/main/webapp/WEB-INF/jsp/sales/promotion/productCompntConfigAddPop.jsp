@@ -311,7 +311,7 @@ function fn_closeProdCompntConfigPop() {
 <tr>
     <th scope="row"><spring:message code='sal.text.product'/><span class="must">*</span></th>
     <td colspan="3">
-    <select id="prodCompntConfigProduct" name="prodCompntConfigProduct" class="w100p"></select>
+    <select id="prodCompntConfigProduct" name="prodCompntConfigProduct" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>

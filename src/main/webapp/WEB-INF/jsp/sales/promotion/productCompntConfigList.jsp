@@ -272,8 +272,10 @@ var excelListGridID;
   });
 
   function fn_getProductCompntConfigList() {
+	    $("#product").prop("disabled", false);
 	    Common.ajax("GET", "/sales/promotion/selectProductCompntConfigList.do",
 	        $("#searchForm").serialize(), function(result) {
+	    	$("#product").prop("disabled", true);
 	          AUIGrid.setGridData(productCompntConfigGridID, result);
 	          AUIGrid.setGridData(excelListGridID, result);
 	          AUIGrid.clearGridData(productCompntConfigItemGridID);
@@ -362,7 +364,7 @@ var excelListGridID;
             </td>
             <th scope="row"><spring:message code="sal.text.product" /></th>
             <td>
-              <select id="product" name="product" class="w100p"></select>
+              <select id="product" name="product" class="w100p" disabled></select>
             </td>
             <th scope="row"><spring:message code="sales.promo.text.productCompnt" /></th>
             <td>
