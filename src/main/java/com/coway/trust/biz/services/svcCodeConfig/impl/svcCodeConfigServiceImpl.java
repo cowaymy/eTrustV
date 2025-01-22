@@ -44,18 +44,15 @@ public class svcCodeConfigServiceImpl
 
   @Override
   public void saveNewCode( Map<String, Object> params, SessionVO sessionVO ) {
-    logger.debug( "[svcCodeConfigServiceImpl - saveNewCode] PARAMS ::{}" + params );
     EgovMap defectId;
     defectId = svcCodeConfigMapper.getDefectId();
     params.put( "defectId", defectId.get( "defectId" ).toString() );
     params.put( "defectGrp", defectId.get( "defectId" ).toString() );
-    logger.debug( "[svcCodeConfigServiceImpl - saveNewCode] PARAMS 2 ::{}" + params );
     svcCodeConfigMapper.addDefectCodes( params );
   }
 
   @Override
   public void updateSvcCode( Map<String, Object> params, SessionVO sessionVO ) {
-    logger.debug( "[svcCodeConfigServiceImpl - updateSvcCode] params :: {}" + params );
     svcCodeConfigMapper.updateDefectCodes( params );
   }
 }
