@@ -8,20 +8,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("svcCodeConfigMapper")
 public interface svcCodeConfigMapper {
+  void addDefectCodes( Map<String, Object> params );
 
-	void addDefectCodes(Map<String, Object> params);
+  List<EgovMap> selectSvcCodeConfigList( Map<String, Object> params );
 
-	List<EgovMap> selectSvcCodeConfigList(Map<String, Object> params);
+  EgovMap selectCodeConfigList( Map<String, Object> params );
 
-	EgovMap selectCodeConfigList(Map<String, Object> params);
+  void updateDefectCodes( Map<String, Object> params );
 
-	void updateDefectCodes(Map<String, Object> params);
+  EgovMap getDefectId();
 
-	EgovMap getDefectId();
+  List<EgovMap> selectProductCategoryList();
 
-	//Product Category
-	List<EgovMap> selectProductCategoryList();
-
-	 // Status Category Code
-    List<EgovMap> selectStatusCategoryCodeList();
+  List<EgovMap> selectStatusCategoryCodeList();
 }
