@@ -574,37 +574,22 @@ FROM (
   </select>
 
   <update id="upReturnParts" parameterType="Map">
-        MERGE INTO LOG0103M A
-        USING (
-        SELECT DISTINCT serialNumber, qty, noPartsReturn, text, materialCode, userId, seq, STK_ID from (
-			  <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
-			      SELECT
-				      #{item.serialNumber} serialNumber,
-				      #{item.qty} qty,
-				      #{item.noPartsReturn} noPartsReturn,
-				      #{item.text} text,
-				      #{item.materialCode} materialCode,
-				      #{userId} userId,
-				      #{item.seq} seq,
-				      B.STK_ID
-			      FROM DUAL A
-			      JOIN SYS0026M B ON 1=1
-			      WHERE   B.STK_CODE = #{item.materialCode}
-			    </foreach>
-	    ) A
-	  ) SRC ON (SRC.SEQ = A.SEQ)
-	 WHEN MATCHED THEN UPDATE SET
-	                    OLD_SERIAL = SRC.serialNumber,
-                        QTY = SRC.qty,
-                        RESN_CODE = SRC.noPartsReturn,
-                        COMMENTS = SRC.text,
-                        STK_ID = SRC.STK_ID,
-                        CMPLT_YN = 'Y',
-                        CMPLT_DT = SYSDATE,
-                        UPD_DT = SYSDATE,
-                        UPD_USER_ID = SRC.userId,
-                        CRT_DT = SYSDATE,
-                        CRT_USER_ID = SRC.userId
+		UPDATE LOG0103M
+		SET
+<!-- 		NEW_SERIAL=#{serial}, -->
+		OLD_SERIAL=#{serialNumber},
+		QTY =#{qty},
+		RESN_CODE=#{noPartsReturn},
+		COMMENTS=#{text},
+		STK_ID=(select STK_ID from sys0026m where STK_CODE=#{materialCode}),
+<!-- 		STK_ID_NEW=(select STK_ID from sys0026m where STK_CODE=#{materialCodeActual}), -->
+		CMPLT_YN ='Y',
+		CMPLT_DT=SYSDATE,
+		UPD_DT = SYSDATE,
+        UPD_USER_ID=#{userId},
+        CRT_DT = SYSDATE,
+        CRT_USER_ID=#{userId}
+		WHERE SEQ =#{seq}
   </update>
 
   <delete id="returnPartsCanCle" parameterType="Map">
