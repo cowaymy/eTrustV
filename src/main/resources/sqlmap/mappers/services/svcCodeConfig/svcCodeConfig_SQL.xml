@@ -2,162 +2,170 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.svcCodeConfig.impl.svcCodeConfigMapper">
 
-<select id="getDefectId" parameterType="String" resultType="egovMap">
-   SELECT SYS0100M_DEFECT_ID_SEQ_START_7001.NEXTVAL AS DEFECT_ID FROM DUAL
-</select>
+  <select id="getDefectId" parameterType="String" resultType="egovMap">
+    SELECT SYS0100M_DEFECT_ID_SEQ_START_7001.NEXTVAL AS DEFECT_ID
+    FROM DUAL
+  </select>
 
-<insert id="addDefectCodes" parameterType="Map">
-    INSERT INTO SYS0100M
-    VALUES (
-        <choose>
-        <when test='productCtgry != null and productCtgry != ""'>
-         (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
-        </when>
-        <otherwise>
-        '*',
-        </otherwise>
-        </choose>
-        #{dftType},
-        #{defectGrp},
-        #{defectId},
-        UPPER(#{dftPrtCde}),
-        UPPER(#{dftPrtDesc}),
-        UPPER(#{dftPrtRemark}),
-        '1',
-        TO_DATE(#{effectiveDt},'DD/MM/YYYY'),
-        TO_DATE(#{expireDt},'DD/MM/YYYY'),
-        #{creator},
-        SYSDATE,
-        #{updator},
-        SYSDATE,
-        '',
-        '',
-        '',
-        '',
-        0
+  <insert id="addDefectCodes" parameterType="Map">
+    INSERT INTO SYS0100M VALUES (  #{productCtgry},
+                                                   #{dftType},
+                                                   #{defectGrp},
+                                                   #{defectId},
+                                                   UPPER(#{dftPrtCde}),
+                                                   UPPER(#{dftPrtDesc}),
+                                                   UPPER(#{dftPrtRemark}),
+                                                   '1',
+                                                   TO_DATE(#{effectiveDt},'DD/MM/YYYY'),
+                                                   TO_DATE(#{expireDt},'DD/MM/YYYY'),
+                                                   #{creator},
+                                                   SYSDATE,
+                                                   #{updator},
+                                                   SYSDATE,
+                                                   '',
+                                                   '',
+                                                   '',
+                                                   '',
+                                                   0
     )
-</insert>
+  </insert>
 
-<select id="selectSvcCodeConfigList" parameterType="Map" resultType="egovMap">
+  <select id="selectSvcCodeConfigList" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT A.DEFECT_ID AS DEFECT_ID,
-                A.PROD_CAT,
-                A.DEFECT_TYP,
-                A.DEFECT_GRP AS DEFECT_GRP,
-                A.DEFECT_CODE AS DEFECT_CODE,
-                A.DEFECT_DESC DEFECT_DESC,
-                NVL(A.DEFECT_RMK, '-') DEFECT_REMARK,
-                A.DEFECT_STATUS AS STUS_ID,
-                CASE WHEN A.DEFECT_STATUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
-                A.EFF_DT,
-                A.EXP_DT,
-                C.USER_NAME CRT_USER,
-                A.CRT_DT,
-                D.USER_NAME AS UPD_USER,
-                A.UPD_DT
+                             NVL(E.CODE_DESC, '*') AS PROD_CAT,
+                             A.DEFECT_TYP AS,
+                             A.DEFECT_GRP AS DEFECT_GRP,
+                             A.DEFECT_CODE AS DEFECT_CODE,
+                             A.DEFECT_DESC AS DEFECT_DESC,
+                             NVL(A.DEFECT_RMK, '-') AS DEFECT_REMARK,
+                             A.DEFECT_STATUS AS STUS_ID,
+                             G.NAME AS STATUS,
+                             A.EFF_DT AS EFF_DT,
+                             A.EXP_DT AS EXP_DT,
+                             C.USER_NAME AS CRT_USER,
+                             A.CRT_DT AS CRT_DT,
+                             D.USER_NAME AS UPD_USER,
+                             A.UPD_DT AS UPD_DT
     FROM SYS0100M A
     LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
     LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
     LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
     LEFT JOIN SYS0026M F ON F.STK_CTGRY_ID = E.CODE_ID
-    WHERE 1=1
+    LEFT JOIN SYS0038M G ON G.STUS_CODE_ID = A.DEFECT_STATUS
+    WHERE 1=1 AND A.DEFECT_TYP = 'DP'
+
     <if test='arrProdCat != null and arrProdCat != ""'>
-        AND F.STK_CTGRY_ID IN
+        AND A.PROD_CAT IN
         <foreach item="item" collection="arrProdCat" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </if>
+
     <if test='defCode != null and defCode != ""'>
         AND A.DEFECT_CODE = #{defCode}
     </if>
+
     <if test='arrCodeStus != null and arrCodeStus != ""'>
         AND A.DEFECT_STATUS IN
        <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
     </if>
-    <if test="startEffectiveDt  != null  and startEffectiveDt !=''  ">
+
+    <if test="startEffectiveDt != null and startEffectiveDt !=''">
         <![CDATA[
-            AND A.EFF_DT  >=  TO_DATE(#{startEffectiveDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+            AND A.EFF_DT >= TO_DATE(#{startEffectiveDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
         ]]>
     </if>
-    <if test="endEffectiveDt != null   and endEffectiveDt != '' ">
+
+    <if test="endEffectiveDt != null and endEffectiveDt != ''">
       <![CDATA[
-           AND A.EXP_DT  >=  TO_DATE(#{endEffectiveDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+           AND A.EXP_DT <= TO_DATE(#{endEffectiveDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
       ]]>
     </if>
-</select>
 
-<select id="selectProductCategoryList" resultType="egovMap">
-      SELECT CODE_ID AS CODE_ID,
-                 CODE AS CODE,
-                 UPPER(CODE_NAME) AS CODE_NAME
-      FROM SYS0013M
-      WHERE CODE_MASTER_ID = '11'
-      AND CODE_ID IN (
-                                  SELECT DISTINCT STK_CTGRY_ID
-                                  FROM SYS0026M
-                                  WHERE STK_TYPE_ID = 61
-      )
-      ORDER BY CODE
-</select>
+    ORDER BY PROD_CAT,
+                   DEFECT_GRP,
+                   DEFECT_ID
+  </select>
 
-<select id="selectStatusCategoryCodeList" resultType="egovMap">
+  <select id="selectProductCategoryList" resultType="egovMap">
+    SELECT '*' AS CODE_ID
+            , '*' AS CODE
+            , '*' AS CODE_NAME
+    FROM DUAL
+
+    UNION
+
+    SELECT CODE AS CODE_ID,
+               CODE AS CODE,
+               CODE_NAME AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '11'
+        AND CODE_ID IN ( SELECT DISTINCT STK_CTGRY_ID
+                                   FROM SYS0026M
+                                   WHERE STK_TYPE_ID = 61)
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectStatusCategoryCodeList" resultType="egovMap">
      SELECT STUS_CODE_ID AS CODE_ID,
-                UPPER(NAME) AS CODE_NAME
+                NAME AS CODE_NAME
      FROM SYS0038M
      WHERE STUS_CODE_ID IN (1, 8)
      ORDER BY CODE
-</select>
+  </select>
 
-<select id="selectCodeConfigList" parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT A.DEFECT_ID AS DEFECT_ID,
-                F.STK_CTGRY_ID,
-                A.PROD_CAT,
-                A.DEFECT_TYP,
-                A.DEFECT_GRP AS DEFECT_GRP,
-                A.DEFECT_CODE AS DEFECT_CODE,
-                A.DEFECT_DESC DEFECT_DESC,
-                NVL(A.DEFECT_RMK, '-') DEFECT_REMARK,
-                A.DEFECT_STATUS AS STUS_ID,
-                CASE WHEN A.DEFECT_STATUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
-                NVL(TO_CHAR(A.EFF_DT ,'DD/MM/YYYY'), '') AS EFF_DT,
-                NVL(TO_CHAR(A.EXP_DT ,'DD/MM/YYYY'),'') AS EXP_DT,
-                C.USER_NAME CRT_USER,
-                A.CRT_DT,
-                D.USER_NAME AS UPD_USER,
-                A.UPD_DT
+  <select id="selectCodeConfigList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT A.DEFECT_ID AS DEFECT_ID,
+                             F.STK_CTGRY_ID,
+                             A.PROD_CAT,
+                             A.DEFECT_TYP,
+                             A.DEFECT_GRP AS DEFECT_GRP,
+                             A.DEFECT_CODE AS DEFECT_CODE,
+                             A.DEFECT_DESC DEFECT_DESC,
+                             NVL(A.DEFECT_RMK, '-') DEFECT_REMARK,
+                             A.DEFECT_STATUS AS STUS_ID,
+                             CASE WHEN A.DEFECT_STATUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+                             NVL(TO_CHAR(A.EFF_DT ,'DD/MM/YYYY'), '') AS EFF_DT,
+                             NVL(TO_CHAR(A.EXP_DT ,'DD/MM/YYYY'),'') AS EXP_DT,
+                             C.USER_NAME CRT_USER,
+                             A.CRT_DT,
+                             D.USER_NAME AS UPD_USER,
+                             A.UPD_DT
     FROM SYS0100M A
     LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
     LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
     LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
     LEFT JOIN SYS0026M F ON F.STK_CTGRY_ID = E.CODE_ID
-    WHERE 1=1
+    WHERE 1=1 AND A.DEFECT_TYP = 'DP'
+
     <if test='prodCat != null and prodCat != ""'>
         AND A.PROD_CAT = #{prodCat}
     </if>
+
     <if test='defectId != null and defectId != ""'>
          AND A.DEFECT_ID = #{defectId}
     </if>
+
     <if test='defCode != null and defCode != ""'>
         AND A.DEFECT_CODE = #{defCode}
     </if>
-</select>
+  </select>
 
-<update id="updateDefectCodes" parameterType="Map">
-    UPDATE SYS0100M
-    SET
-        PROD_CAT = NVL((SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),'*'),
-        DEFECT_CODE = #{dftPrtCde},
-        DEFECT_DESC = #{dftPrtDesc},
-        DEFECT_RMK = #{dftPrtRemark},
-        DEFECT_STATUS = #{stus},
-        EFF_DT = TO_DATE(#{effectiveDt},'DD/MM/YYYY'),
-        EXP_DT = TO_DATE(#{expireDt},'DD/MM/YYYY'),
-        UPD_DT = SYSDATE,
-        UPD_USR = #{updator}
+  <update id="updateDefectCodes" parameterType="Map">
+    UPDATE SYS0100M SET PROD_CAT = #{productCtgry},
+                                     DEFECT_CODE = #{dftPrtCde},
+                                     DEFECT_DESC = #{dftPrtDesc},
+                                     DEFECT_RMK = #{dftPrtRemark},
+                                     DEFECT_STATUS = #{stus},
+                                     EFF_DT = TO_DATE(#{effectiveDt},'DD/MM/YYYY'),
+                                     EXP_DT = TO_DATE(#{expireDt},'DD/MM/YYYY'),
+                                     UPD_DT = SYSDATE,
+                                     UPD_USR = #{updator}
     WHERE DEFECT_ID = #{hidDefectId}
-    AND DEFECT_TYP = #{dftType}
-    AND PROD_CAT = NVL((SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),'*')
-</update>
+        AND DEFECT_TYP = #{dftType}
+        AND PROD_CAT =  #{productCtgry}
+  </update>
 
 </mapper>
