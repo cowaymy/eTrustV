@@ -218,8 +218,8 @@ public class ReturnASUsedPartsController {
     return ResponseEntity.ok(message);
   }
 
-  @RequestMapping(value = "/HSUsedFilterListingPop.do")
-  public String HSUsedFilterListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+  @RequestMapping(value = "/ASUsedFilterListingPop.do")
+  public String ASUsedFilterListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
     List<EgovMap> rptTypList = returnASUsedPartsService.getRptType();
     List<EgovMap> rtnStat = returnASUsedPartsService.getRtnStat();

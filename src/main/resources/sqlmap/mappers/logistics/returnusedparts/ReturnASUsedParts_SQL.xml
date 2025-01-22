@@ -178,7 +178,22 @@ FROM (
                     a.crt_user_id,
                     a.upd_dt,
                     a.upd_user_id,
-                    e.serial_chk,
+                    CASE WHEN E.STK_TYPE_ID = 61 THEN
+                    CASE WHEN E.SERIAL_CHK = 'Y'
+                               AND S28.SERIAL_PD_CHK = 'Y'
+                               AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                            ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 62 THEN
+                      CASE WHEN E.SERIAL_CHK = 'Y'
+                                 AND S28.SERIAL_FT_CHK = 'Y'
+                                 AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 63 THEN
+                        CASE WHEN E.SERIAL_CHK = 'Y'
+                                   AND S28.SERIAL_PT_CHK = 'Y'
+                                   AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    ELSE 'N' END SERIAL_CHK,
                     e.stk_type_id,
                     a.stk_id_new,
                     f.brnch,
@@ -233,6 +248,7 @@ FROM (
     				LEFT JOIN SVC0005D S05 ON S05.AS_RESULT_ID = a.result_id
     														AND S05.ASR_ITM_PART_ID = A.STK_ID
     				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S05.FILTER_SRL_UNMATCH_RSN)
+					LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = f.MEM_CODE
     				AND S13.CODE_MASTER_ID = '611'
                 WHERE
                         1 = 1
@@ -418,7 +434,22 @@ FROM (
                     a.crt_user_id,
                     a.upd_dt,
                     a.upd_user_id,
-                    e.serial_chk,
+                    CASE WHEN E.STK_TYPE_ID = 61 THEN
+                    CASE WHEN E.SERIAL_CHK = 'Y'
+                               AND S28.SERIAL_PD_CHK = 'Y'
+                               AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                            ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 62 THEN
+                      CASE WHEN E.SERIAL_CHK = 'Y'
+                                 AND S28.SERIAL_FT_CHK = 'Y'
+                                 AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 63 THEN
+                        CASE WHEN E.SERIAL_CHK = 'Y'
+                                   AND S28.SERIAL_PT_CHK = 'Y'
+                                   AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    ELSE 'N' END SERIAL_CHK,
                     e.stk_type_id,
                     a.stk_id_new,
                     f.brnch,
@@ -472,6 +503,7 @@ FROM (
     				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
     				LEFT JOIN SVC0110D S0110 ON S0110.AS_RESULT_ID = a.result_id
     				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S0110.FILTER_SRL_UNMATCH_RSN)
+                    LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = f.MEM_CODE
     				AND S13.CODE_MASTER_ID = '611'
                 WHERE
                         1 = 1

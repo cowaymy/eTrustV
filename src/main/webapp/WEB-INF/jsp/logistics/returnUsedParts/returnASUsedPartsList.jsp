@@ -619,7 +619,7 @@ $('#failed').click(function() {
 
     $('#btnHSUsedFilterListing').click(
       function() {
-        Common.popupDiv("/logistics/returnasusedparts/HSUsedFilterListingPop.do", null, null, true);
+        Common.popupDiv("/logistics/returnasusedparts/ASUsedFilterListingPop.do", null, null, true);
     });
 
     $('#searchProdCat').change(
