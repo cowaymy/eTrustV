@@ -476,12 +476,12 @@
              </foreach>
            </if>
 
-           <!-- <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
              AND T.KEYIN_BRNCH_ID IN
              <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                #{item}
              </foreach>
-           </if> -->
+           </if>
            <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
              AND T.DSC_BRNCH_ID IN
              <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
@@ -1674,7 +1674,7 @@
                 FROM SAL0001D S
                 JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
                 LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
-                 
+
                 WHERE 1=1
                 <if test='ordId != null and ordId != ""'>
                 AND S.SALES_ORD_ID = #{ordId}
@@ -1700,14 +1700,14 @@
                 <if test="memlvl == 1">
                 AND V.ORG_CODE = #{orgCode}
                 </if>
-                
+
                 UNION
-                
+
                 SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
                 FROM SAL0001D S
                 LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
                 WHERE 1=1
-                
+
                 <if test='ordId != null and ordId != ""'>
                 AND S.SALES_ORD_ID = #{ordId}
                 </if>
@@ -1732,7 +1732,7 @@
                 <if test="memlvl == 1">
                 AND V.ORG_CODE = #{orgCode}
                 </if>
-                
+
             ) SVC
             ON V1.ORD_ID = SVC.SALES_ORD_ID
             </if>
@@ -1797,7 +1797,7 @@
              <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                #{item}
              </foreach>
-           </if>  
+           </if>
            <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
              AND T.DSC_BRNCH_ID IN
              <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
