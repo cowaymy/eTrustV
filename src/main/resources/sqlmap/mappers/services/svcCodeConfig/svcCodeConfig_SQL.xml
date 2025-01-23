@@ -33,6 +33,7 @@
   <select id="selectSvcCodeConfigList" parameterType="Map" resultType="egovMap">
     SELECT DISTINCT A.DEFECT_ID AS DEFECT_ID,
                              NVL(E.CODE_DESC, '*') AS PROD_CAT,
+                             NVL(E.CODE, '*') AS PROD_CAT_CDE,
                              A.DEFECT_TYP AS,
                              A.DEFECT_GRP AS DEFECT_GRP,
                              A.DEFECT_CODE AS DEFECT_CODE,
