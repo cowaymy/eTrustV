@@ -734,7 +734,7 @@
        <if test="memType != '' ">
            AND A.MEM_TYPE = #{memType}
        </if>
-        <if test="cmbSrvType != '' ">
+        <if test="cmbSrvType != '' and cmbSrvType != null">
            AND A.SRV_TYPE = #{cmbSrvType}
        </if>
        ORDER BY A.S_ID
@@ -1967,7 +1967,7 @@
 		       AND H.SRV_EXPR_DT <![CDATA[ < ]]>  SYSDATE
 		       </if>
        </if>
-       <if test="cmbSrvType != ''">
+       <if test="cmbSrvType != '' and cmbSrvType != null ">
            AND A.SRV_TYPE = #{cmbSrvType}
        </if>
     </select>
