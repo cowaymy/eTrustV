@@ -146,7 +146,6 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
@@ -164,13 +163,19 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
     // INSERT LOG HISTORY (SVC0043T)(REQUIRES_NEW) (resultSeq KEY CREATE)
     if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
       try {
+        logger.debug(
+          "==================================1 ====================================");
         MSvcLogApiService.saveInsFailServiceLogs(params);
       } catch (Exception e) {
+        logger.debug(
+          "==================================2 ====================================");
         e.printStackTrace();
       }
     }
 
     try {
+      logger.debug(
+                   "==================================3 ====================================");
       serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
       throw new ApplicationException(AppConstants.FAIL, "Fail");
