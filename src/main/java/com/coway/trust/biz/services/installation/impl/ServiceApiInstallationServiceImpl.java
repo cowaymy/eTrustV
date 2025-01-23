@@ -150,42 +150,33 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
-    Map<String, Object> errMap = new HashMap<String,Object>();
-    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
-    EgovMap rtnResultMap = new EgovMap();
-    serviceNo = String.valueOf(params.get("serviceNo"));
-    rtnResultMap.put( "result", serviceNo );
 
-    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
+
+    serviceNo = String.valueOf(params.get("serviceNo"));
+
+    logger.debug(
+        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
     logger.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
-    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    logger.debug(
+        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
 
     // INSERT LOG HISTORY (SVC0043T)(REQUIRES_NEW) (resultSeq KEY CREATE)
     if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
       try {
         MSvcLogApiService.saveInsFailServiceLogs(params);
       } catch (Exception e) {
-        logger.error( e.getMessage() );
-        errMap.put( "no", serviceNo );
-        errMap.put( "exception", e );
-        MSvcLogApiService.saveErrorToDatabase(errMap);
-        rtnResultMap.put( "status", false );
         e.printStackTrace();
-        //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
     try {
-      rtnResultMap = serviceApiInstallationDetailService.installFailJobRequestProc(params);
+      serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
-      logger.error( e.getMessage() );
-      errMap.put( "no", serviceNo );
-      errMap.put( "exception", e );
-      MSvcLogApiService.saveErrorToDatabase(errMap);
-      rtnResultMap.put( "status", false );
-      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+      throw new ApplicationException(AppConstants.FAIL, "Fail");
     }
-    return ResponseEntity.ok(InstallFailJobRequestDto.create(rtnResultMap));
+
+    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
   }
 
   @Override
