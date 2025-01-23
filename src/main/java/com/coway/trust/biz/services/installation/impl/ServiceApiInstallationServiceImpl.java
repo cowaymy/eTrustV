@@ -170,8 +170,8 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
         errMap.put( "exception", e );
         MSvcLogApiService.saveErrorToDatabase(errMap);
         rtnResultMap.put( "status", false );
-        // e.printStackTrace();
-        throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+        e.printStackTrace();
+        //throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
