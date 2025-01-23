@@ -234,11 +234,11 @@ var excelListGridID;
 	  }
 
   $(function() {
-	  $('#appType').change(function() {
+	  /* $('#appType').change(function() {
 		  if(!FormUtil.isEmpty($('#appType').val())){
 		  doGetComboData('/sales/promotion/selectProductCompntPromotionList.do', {appType: $('#appType').val() , stkId : $('#product').val() , effectStartDt : $('#effectStartDt').val() , effectEndDt : $('#effectEndDt').val() , config : 1 }, '' , 'promoId', 'S' , '');
 		  }
-	  });
+	  }); */
 
 	  $('#_btnSearch').click(function() {
 	      if (fn_validSearchList())
@@ -373,10 +373,18 @@ var excelListGridID;
             </td>
           </tr>
           <tr>
-          <th scope="row"><spring:message code="sal.title.text.promo" /></th>
+         <%--  <th scope="row"><spring:message code="sal.title.text.promo" /></th>
             <td>
               <select id="promoId" name="promoId" class="w100p"></select>
+            </td> --%>
+            <th scope="row"><spring:message code="sal.text.promotionCode" /></th>
+            <td>
+              <input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" />
             </td>
+            <th scope="row"><spring:message code='sales.promo.promoNm'/></th>
+    		<td>
+    		  <input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" />
+    		</td>
             <th scope="row"><spring:message code="sales.EffectDate" /><span class="must">*</span></th>
             <td>
               <div class="date_set w100p">
@@ -389,10 +397,7 @@ var excelListGridID;
                 </p>
               </div>
             </td>
-            <th></th>
-            <td></td>
           </tr>
-
         </tbody>
       </table>
 

@@ -1837,6 +1837,14 @@ LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_
           AND T1.PROMO_ID = #{promoId}
     </if>
 
+    <if test='promoCode != null and promoCode !=""'>
+          AND UPPER(T1.PROMO_CODE) LIKE '%'||UPPER(#{promoCode})||'%'
+    </if>
+
+    <if test='promoDesc != null and promoDesc !=""'>
+         AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+    </if>
+
     <if test='effectStartDt != null and effectStartDt != "" and effectEndDt != null and effectEndDt != ""'>
     <![CDATA[   AND T1.PROMO_DT_FROM <= TO_DATE(#{effectStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
                 AND T1.PROMO_DT_END >= TO_DATE(#{effectEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') ]]>
