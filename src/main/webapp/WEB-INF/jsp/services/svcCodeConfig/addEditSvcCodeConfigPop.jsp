@@ -15,7 +15,7 @@
   var statusId = '${codeMgmtMap.stusId}';
 
   $(document).ready(function(){
-    doGetCombo('/services/svcCodeConfig/selectProductCategoryList.do', '', '${codeMgmtMap.prodCat}', 'productCtgryNew', 'S',);
+    doGetCombo('/services/svcCodeConfig/selectProductCategoryList.do', '', '${codeMgmtMap.prodCat}', 'productCtgryNew', 'S','');
     doGetCombo('/services/svcCodeConfig/selectStatusCategoryCodeList.do','',statusId,'dftPrtStatus','S','');
 
     fn_viewType("${viewType}");
@@ -32,11 +32,11 @@
       $("#status").hide();
       $('#btn_save').show();
     } else if (type == 2 || type == 3) { // Edit or View
-      $("#productCtgryNew option[value='"+ prdCtgry + "']").attr("selected", true);
+      //$("#productCtgryNew option[value='"+ prdCtgry + "']").attr("selected", true);
       $("#dftPrtCde").val('${codeMgmtMap.defectCode}');
       $("#dftPrtDesc").val('${codeMgmtMap.defectDesc}');
       $("#dftPrtRemark").val('${codeMgmtMap.defectRemark}');
-      $("#dftPrtStatus option[value="+statusId +"]").attr("selected", true);
+      //$("#dftPrtStatus option[value="+statusId +"]").attr("selected", true);
       $("#effectiveDt").val('${codeMgmtMap.effDt}');
       $("#expireDt").val('${codeMgmtMap.expDt}');
       $("#hidDefectId").val('${codeMgmtMap.defectId}');
