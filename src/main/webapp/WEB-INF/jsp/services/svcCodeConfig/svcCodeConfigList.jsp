@@ -70,6 +70,11 @@
                                              headerText : "Product Category",
                                              width : "10%"
                                           }, {
+                                            dataField : "prodCatCde",
+                                            headerText : "Product Code",
+                                            width : "5%",
+                                            visible: false
+                                          }, {
                                             dataField : "defectGrp",
                                             headerText : "DefectGrp",
                                             width : "5%",
@@ -218,7 +223,7 @@
     }
 
     var defectId = selectedItems[0].item.defectId;
-    var prodCat = selectedItems[0].item.prodCat == '-' && selectedItems[0].item.prodCat == '*' ? null : selectedItems[0].item.prodCat;
+    var prodCat = selectedItems[0].item.prodCatCde;
     var stusId = selectedItems[0].item.stusId;
     var defCode = selectedItems[0].item.defectCode;
     var defDesc = selectedItems[0].item.defectDesc;
