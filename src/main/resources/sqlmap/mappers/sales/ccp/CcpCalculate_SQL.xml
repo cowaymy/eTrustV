@@ -2451,14 +2451,7 @@ WHERE ROWNUM = 1
 		        WHERE SCORE_PROV =  #{scoreProv}
 		        AND #{score} BETWEEN START_SCORE AND END_SCORE
 		        AND HOME_CAT = #{homeCat}
-<!-- 		        <if test="ccpStus != '' and ccpStus != null"> -->
-<!-- 		            <if test="ccpStus == 1"> -->
-		                AND STUS = 1
-<!-- 		            </if> -->
-<!-- 		            <if test="ccpStus == 5"> -->
-<!-- 		                AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS') -->
-<!-- 		            </if> -->
-<!-- 		        </if> -->
+		        AND STUS = 1
 		        ORDER BY SCORE_RANGE_ID DESC
 		    ) WHERE ROWNUM = 1
         ) A

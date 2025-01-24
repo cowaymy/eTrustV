@@ -118,7 +118,7 @@
 
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) {
 	    	console.log("custId : " + event.item.custId);
-	    	Common.popupDiv("/sales/ccp/preCcpResultInfoPop.do", {custId: event.item.custId}, null, true, '');
+	    	Common.popupDiv("/sales/ccp/preCcpResultInfoPop.do", {custId: event.item.custId, nric: event.item.nric }, null, true, '');
 	    });
   });
 
