@@ -255,6 +255,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
     		guar.put("guardianStatusId",Integer.parseInt(params.get("cmbreqStatus").toString()));
     		guar.put("guardianRemark",params.get("complianceContent").toString());
     		guar.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+    		guar.put("guardianSubCaseCategory",params.get("caseCategory2") != null && params.get("caseCategory2") !=""  ? Integer.parseInt(params.get("caseCategory2").toString()) : 0 );
     		guar.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		//guar.put("guardianCreateBy", sessionVo.getUserId());
     		guar.put("guardianCreateBy", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
@@ -280,6 +281,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
             guar_sub.put("guardianStatusId",Integer.parseInt(params.get("cmbreqStatus").toString()));
             guar_sub.put("guardianRemark",params.get("complianceContent").toString());
             guar_sub.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+            guar_sub.put("guardianSubCaseCategory",params.get("caseCategory2") != null && params.get("caseCategory2") !=""  ? Integer.parseInt(params.get("caseCategory2").toString()) : 0 );
             guar_sub.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
     		guar_sub.put("guardianCreateBy", sessionVo.getUserId());
     		guar_sub.put("guardianUpdatedBy", sessionVo.getUserId());

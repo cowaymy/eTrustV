@@ -288,7 +288,7 @@ function fn_guardianViewPopClose() {
 }
 
 $('#btnGuarViewClose').click(function() {
-    location.reload();
+   // location.reload();
 });
 
 function fn_closePopAndReload() {
