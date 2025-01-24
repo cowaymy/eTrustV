@@ -906,14 +906,39 @@ $.fn.clearForm = function() {
     <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
+<style>
+    .readonly-dropdown {
+        pointer-events: none;  /* Disables interaction with the dropdown */
+        background-color: #f0f0f0; /* Optional: changes background to indicate it's readonly */
+        cursor: not-allowed; /* Change cursor to show that it's not editable */
+    }
+</style>
 <tbody>
+<tr id="syncEmroSec">
+    <th scope="row">Sync to eMRO
+        <c:choose>
+        <c:when test="${vendorInfo.syncEmro eq '1'}">
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false" checked/>
+        </c:when>
+        <c:otherwise>
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false"/>
+        </c:otherwise>
+        </c:choose></th>
+    </th>
+    <td colspan="3" id="viewSyncToEmro">${updateUserName}</td>
+</tr>
 <tr>
     <th scope="row">Claim No / Vendor Code<span class="must">*</span></th>
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
     <th scope="row">Vendor Type<span class="must">*</span></th>
-    <td colspan=3><input type="text" title="" id="vendorType" name="vendorType" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorType}"/></td><!--  value="${claimNo}"-->
+    <%-- <td colspan=3><input type="text" title="" id="vendorType" name="vendorType" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorType}"/></td><!--  value="${claimNo}"-->--%>
+    <td>
+        <select class="readonly w100p readonly-dropdown " id=vendorType name="vendorType" pointer-events: none>
+	        <option value="0"<c:if test="${vendorInfo.vendorType eq '0'}">selected="selected"</c:if>>Corporate</option>
+	        <option value="1"<c:if test="${vendorInfo.vendorType eq '1'}">selected="selected"</c:if>>Individual</option>
+    </td>
 </tr>
 <tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>

@@ -35,6 +35,7 @@ import com.coway.trust.biz.eAccounting.vendor.VendorMapper;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.eAccounting.staffBusinessActivity.impl.staffBusinessActivityMapper;
 import com.coway.trust.biz.eAccounting.vendorAdvance.impl.VendorAdvanceMapper;
+import com.coway.trust.biz.eAccounting.vendorMgmtEmro.VendorMgmtEmroMapper;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -62,6 +63,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 	@Resource(name = "VendorAdvanceMapper")
 	private VendorAdvanceMapper VendorAdvanceMapper;
+
+	@Resource(name = "vendorMgmtEmroMapper")
+	private VendorMgmtEmroMapper vendorMgmtEmroMapper;
 
 	@Autowired
 	private AdaptorService adaptorService;
@@ -459,6 +463,27 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                     }
 				} else if("V1".equals(clmType)) {
 				    LOGGER.debug("insertVendorInterface :: ", invoAppvInfo);
+
+
+
+				    //Send email to procurement upon approval
+				    if(invoAppvInfo.containsKey("vendorAccId")){
+
+				    	EgovMap email = vendorMgmtEmroMapper.getProcurementEmail();
+
+						Map<String, Object> emailDetail = new HashMap<String,Object>();
+						emailDetail.put("clmNo",invoAppvInfo.get("clmNo").toString());
+						emailDetail.put("reqstUserId",invoAppvInfo.get("reqstUserId").toString());
+						emailDetail.put("reqstDt",invoAppvInfo.get("reqstDt").toString());
+						EgovMap userDetail = webInvoiceMapper.selectUserDetail(emailDetail);
+						emailDetail.put("appvPrcssStus", "A");
+						emailDetail.put("email",email.get("email").toString());
+						emailDetail.put("vendorAccId", invoAppvInfo.get("vendorAccId"));
+						emailDetail.put("updator", invoAppvInfo.get("requestor"));
+						emailDetailList.add(emailDetail);
+
+						vendorMgmtEmroMapper.insertVendorDiff(invoAppvInfo);
+				    }
 				    vendorMapper.insertVendorInterface(invoAppvInfo);
 				}
 				else if("R3".equals(clmType) || "A2".equals(clmType))
@@ -1151,6 +1176,29 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                         content += "Claim No " + params.get(i).get("clmNo").toString() + " Submitted on date " + dateFormat.format(requestDate) + " has been rejected. Kindly resubmit (edit rejected) your document. <br/><br/>";
                     }
                 }
+            }
+            else if(clmType != null && clmType.equals("V1")){
+            	Map<String, Object> info = (Map<String, Object>) params.get(i);
+            	info.put("clmNo", params.get(i).get("clmNo"));
+            	EgovMap emailDiffContent = vendorMgmtEmroMapper.getEmailDiffContent(info);
+
+            	emailSubject = "Notification of Supplier Information Update -  [" + params.get(i).get("vendorAccId").toString() + "]";
+            	content += "Dear Sir/Madam,<br/>";
+
+            	content += "Vendor Account: " + params.get(i).get("vendorAccId").toString() + " has been updated by " + params.get(i).get("updator").toString() + ".<br/><br/>";
+            	content += "Vendor Name (Old): " + emailDiffContent.get("fromVendorName") + "<br/>";
+            	content += "Vendor Name (New): " + emailDiffContent.get("toVendorName") + "<br/><br/>";
+            	content += "Bank (Old): " + emailDiffContent.get("fromBank") + "<br/>";
+            	content += "Bank (New): " + emailDiffContent.get("toBank") + "<br/><br/>";
+            	content += "Bank Account No (Old): " + emailDiffContent.get("fromBankAccNo")+ "<br/>";
+            	content += "Bank Account No (New): " + emailDiffContent.get("toBankAccNo") + "<br/><br/>";
+            	content += "Vendor Contact Name (Old): " + (emailDiffContent.get("fromContactName") == null ? "" : emailDiffContent.get("fromContactName").toString())+ "<br/>";
+            	content += "Vendor Contact Name (New): " + (emailDiffContent.get("toContactName") == null ? "" : emailDiffContent.get("toContactName").toString()) + "<br/><br/>";
+            	content += "Vendor Contact Phone No (Old): " + (emailDiffContent.get("fromContactPhoneNo") == null ? "" : emailDiffContent.get("fromContactPhoneNo").toString()) + "<br/>";
+            	content += "Vendor Contact Phone No (New): " + (emailDiffContent.get("toContactPhoneNo") == null ? "" : emailDiffContent.get("toContactPhoneNo").toString()) + "<br/><br/>";
+            	content += "Vendor Contact Email Address (Old): " + (emailDiffContent.get("fromContactEmail") == null ? "" : emailDiffContent.get("fromContactEmail").toString()) + "<br/>";
+            	content += "Vendor Contact Email Address (New): " + (emailDiffContent.get("toContactEmail") == null ? "" : emailDiffContent.get("toContactEmail").toString()) + "<br/><br/>";
+
             }
             else{
             	emailSubject = "Reminder/Notification for e-claim document";

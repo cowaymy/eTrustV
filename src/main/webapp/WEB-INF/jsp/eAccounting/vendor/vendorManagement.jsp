@@ -387,7 +387,7 @@ function fn_MvendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, 
             ,costCenter : costCenter
             ,vendorAccId : vendorAccId
     };
-    Common.popupDiv("/eAccounting/vendor/MvendorRqstViewPop.do", data, null, true, "vendorRequestViewPopMaster");
+    Common.popupDiv("/eAccounting/vendor/MvendorRqstViewPop.do", data, null, true, "vendorRequestViewMasterPop");
 }
 
 function fn_selectVendorList() {

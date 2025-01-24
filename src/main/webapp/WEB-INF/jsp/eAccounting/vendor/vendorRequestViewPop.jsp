@@ -323,6 +323,19 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <th scope="row">Final Approver</th>
     <td colspan="3" id="viewFinAppr"></td>
 </tr>
+<tr id="syncEmroSec">
+    <th scope="row">Sync to eMRO
+        <c:choose>
+        <c:when test="${vendorInfo.syncEmro eq '1'}">
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false" checked/>
+        </c:when>
+        <c:otherwise>
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false"/>
+        </c:otherwise>
+        </c:choose></th>
+    </th>
+    <td colspan="3" id="viewSyncToEmro">${updateUserName}</td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

@@ -609,8 +609,14 @@ public class VendorManagementController {
         model.addAttribute("countryList", countryList);
 
         model.addAttribute("vendorInfo", vendorInfo);
+
+        if(vendorInfo.containsKey("emroUpdName")){
+        	String syncToEmroUsername = "By " + vendorInfo.get("emroUpdName").toString() + " [" +vendorInfo.get("emroUpdDate") + "]";
+            model.addAttribute("updateUserName", syncToEmroUsername);
+        }
+
         LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
-        return "eAccounting/vendor/vendorRequestViewPopMaster";
+        return "eAccounting/vendor/vendorRequestViewMasterPop";
     }
 
     @RequestMapping(value = "/vendorRqstViewPop.do")
@@ -667,6 +673,10 @@ public class VendorManagementController {
         model.addAttribute("bankList", bankList);
         model.addAttribute("countryList", countryList);
         model.addAttribute("viewType", params.get("viewType").toString());
+        if(vendorInfo.containsKey("emroUpdName")){
+        	String syncToEmroUsername = "By " + vendorInfo.get("emroUpdName").toString() + " [" +vendorInfo.get("emroUpdDate") + "]";
+            model.addAttribute("updateUserName", syncToEmroUsername);
+        }
 
         if(params.containsKey("appvPrcssNo")) {
             model.addAttribute("appvPrcssNo", params.get("appvPrcssNo"));

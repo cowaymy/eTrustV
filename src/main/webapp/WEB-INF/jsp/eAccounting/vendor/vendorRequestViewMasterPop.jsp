@@ -12,7 +12,7 @@
 }
 </style>
 <script type="text/javascript">
-console.log("vendorRequestViewPopMaster");
+console.log("vendorRequestViewMasterPop");
 var myGridID;
 //var myGridData = $.parseJSON('${appvInfoAndItems}');
 var vendorInfo = "${vendorInfo}";
@@ -113,6 +113,18 @@ $(document).ready(function () {
     <col style="width:*" />
 </colgroup>
 <tbody>
+<tr>
+    <th scope="row">Sync to eMRO
+    <c:choose>
+        <c:when test="${vendorInfo.syncEmro eq '1'}">
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false" checked/>
+        </c:when>
+        <c:otherwise>
+            <input id="syncEmro" name="syncEmro" type="checkbox" onClick="return false"/>
+        </c:otherwise>
+        </c:choose></th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="syncEmro" name="syncEmro" value="${updateUserName}"/></td>
+</tr>
 <tr>
     <th scope="row">Vendor Account ID</th>
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorAccId}"/></td><!--  value="${claimNo}"-->
