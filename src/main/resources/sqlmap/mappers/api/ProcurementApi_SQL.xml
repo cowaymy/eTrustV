@@ -51,6 +51,7 @@
 	LEFT JOIN FCM0004M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
 	LEFT JOIN SYS0013M C ON C.CODE = B.APPV_PRCSS_STUS AND C.CODE_MASTER_ID = 508
 	WHERE 1 = 1
+    AND B.APPV_PRCSS_STUS = 'A'
     <if test="syncEmro != null and syncEmro != 0">
        AND A.SYNC_EMRO = #{syncEmro}
     </if>
@@ -94,6 +95,7 @@
 	LEFT JOIN FCM0004M B ON AA.APPV_PRCSS_NO = B.APPV_PRCSS_NO
 	LEFT JOIN SYS0013M C ON C.CODE = B.APPV_PRCSS_STUS AND C.CODE_MASTER_ID = 508
 	WHERE 1 = 1
+    AND B.APPV_PRCSS_STUS = 'A'
 	<if test="syncEmro != null and syncEmro != 0">
        AND A.SYNC_EMRO = #{syncEmro}
     </if>
