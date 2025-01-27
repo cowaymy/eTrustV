@@ -92,7 +92,8 @@ public class EMandateEnrollmentServiceImpl extends EgovAbstractServiceImpl imple
 
 		  //configure client public IP address
 		  //String clientIp = CommonUtils.getClientIp(request);
-		  String clientIp = params.get("clientIp") != null ? params.get("clientIp").toString() : null;
+		  //String clientIp = params.get("clientIp") != null ? params.get("clientIp").toString() : null;
+		  String clientIp = !CommonUtils.nvl(params.get("clientIp")).equals("") ? params.get("clientIp").toString() : "10.0.0.1" ;
 
 		  if (clientIp == null){
 			  throw new Exception("[E002] Fail to obtain IP Address. Please contact Administrator");
