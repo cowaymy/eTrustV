@@ -907,7 +907,7 @@ public class ASManagementListController {
 
     logger.debug("newResultUpdate == " + rtnValue.toString());
 
-    boolean rst = ASManagementListService.insertOptFlt(params);
+    //boolean rst = ASManagementListService.insertOptFlt(params); // turn off and move into serviceImpl to serve Mobile
 
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
@@ -1138,7 +1138,7 @@ public class ASManagementListController {
           }
 
           // ONGHC ADD FOR OPTIONAL FILTER
-          boolean rst = ASManagementListService.insertOptFlt(params);
+//          boolean rst = ASManagementListService.insertOptFlt(params); // turn off and move into serviceImpl to serve Mobile
         }
 
         message.setCode(AppConstants.SUCCESS);

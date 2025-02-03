@@ -2123,6 +2123,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     	svc0004dmap.put("TEL_M", String.valueOf(svc0004dmap.get("resultIcMobileNo")));
     }
 
+    this.insertOptFlt(params); //add into serviceImpl to serve Mobile
 
     /*LOGGER.debug("================TEMP YONG FOR DEV/LOCAL DEBUG - START ================");
     LOGGER.debug("PARAMS BY YONG:" + svc0004dmap.toString());
@@ -3656,7 +3657,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           }
 
           // ONGHC ADD FOR OPTIONAL FILTER
-          boolean rst = this.insertOptFlt(params);
+          //boolean rst = this.insertOptFlt(params); // turn off and move into serviceImpl to serve Mobile
 
           // KR-OHK Barcode Save Start
           Map<String, Object> setmap = new HashMap();
@@ -4344,7 +4345,7 @@ public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
     EgovMap returnemp = this.asResult_insert(params);
     returnemp.put("NEW_AS_RESULT_NO", NEW_AS_RESULT_NO);
 
-    boolean rst = this.insertOptFlt(params);
+    // boolean rst = this.insertOptFlt(params); -- move into serviceImpl to serve Mobile
 
     // KR-OHK Barcode Save Start
     Map<String, Object> setmapEdit = new HashMap();
