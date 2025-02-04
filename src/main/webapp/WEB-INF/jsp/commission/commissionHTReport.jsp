@@ -174,7 +174,12 @@
                 }
                 else
                 {
-                	if (taskID >= 141){ // start from comm month = 10/2024. Added by Celeste, 07/10/2024 - 100% Payout for Extrade
+                	if (taskID >= 144){ // start from comm month = 1/2025. Added by Celeste, 04/02/2025 - HA Net Sales in incentive
+                        reportFileName = "/commission/HTCommission_PDF_202501.rpt"; //reportFileName
+                        reportViewType = "PDF"; //viewType
+                        reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
+                    }
+                	else if (taskID >= 141){ // start from comm month = 10/2024. Added by Celeste, 07/10/2024 - 100% Payout for Extrade
                         reportFileName = "/commission/HTCommission_PDF_202410.rpt"; //reportFileName
                         reportViewType = "PDF"; //viewType
                         reportDownFileName = "HTCommission_" + salesPersonCd + "_" + today;  //report name
