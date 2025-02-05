@@ -1316,8 +1316,8 @@
                      NVL (TO_CHAR (M.TEL_MOBILE), '') AS hm_Tel,
                      TO_CHAR (E.STK_RETN_CC_ID) AS cc_Code,
                      TO_CHAR (E.STK_RETN_RESN_ID) AS result_Code,
-                     TO_CHAR (E.PARTNER_CODE) AS partner_code,
-                     TO_CHAR (S.MEM_CODE) AS partner_code_name,
+                     TO_CHAR (E.PARTNER_CODE) AS partner_Code,
+                     TO_CHAR (S.MEM_CODE) AS partner_Code_Name,
                      TO_CHAR (E.STK_RETN_REM) AS result_Remark,
                      TO_CHAR (E.RETN_CODE_FAIL_REMARK) AS retn_code_fail_remark,
                      NVL (TO_CHAR (E.OWNER_CODE), '') AS owner_Code,
@@ -1459,8 +1459,8 @@
          , TO_CHAR(SEL_FRA_SERIAL_NO) AS sel_Fra_Serial_No
          , LATITUDE AS LATITUDE
          , LONGITUDE AS LONGITUDE
-         , TO_CHAR(PARTNER_CODE) AS partner_code
-         , TO_CHAR(PARTNER_CODE_NAME) AS partner_code_name
+         , TO_CHAR(PARTNER_CODE) AS partner_Code
+         , TO_CHAR(PARTNER_CODE_NAME) AS partner_Code_Name
      <!--   , TO_CHAR(SALES_PROMT) AS sales_Promotion -->
     FROM SVC0104T
     WHERE MEM_CODE =  #{userId}
