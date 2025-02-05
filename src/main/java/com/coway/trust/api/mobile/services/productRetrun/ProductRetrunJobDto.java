@@ -230,10 +230,6 @@ public class ProductRetrunJobDto {
 
   private String salesPromotion;
 
-  private String partnerCode;
-
-  private String partnerCodeName;
-
   public String getSerialChk() {
     return serialChk;
   }
@@ -862,22 +858,6 @@ public class ProductRetrunJobDto {
 
   public void setInstructionIns(String instructionIns) {
     this.instructionIns = instructionIns;
-  }
-
-  public String getPartnerCode() {
-    return partnerCode;
-  }
-
-  public void setPartnerCode( String partnerCode ) {
-    this.partnerCode = partnerCode;
-  }
-
-  public String getPartnerCodeName() {
-    return partnerCodeName;
-  }
-
-  public void setPartnerCodeName( String partnerCodeName ) {
-    this.partnerCodeName = partnerCodeName;
   }
 
   public static ProductRetrunJobDto create(EgovMap egvoMap) {
