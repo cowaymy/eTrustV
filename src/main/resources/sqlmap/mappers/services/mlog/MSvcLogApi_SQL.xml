@@ -1316,6 +1316,8 @@
                      NVL (TO_CHAR (M.TEL_MOBILE), '') AS hm_Tel,
                      TO_CHAR (E.STK_RETN_CC_ID) AS cc_Code,
                      TO_CHAR (E.STK_RETN_RESN_ID) AS result_Code,
+                     TO_CHAR (E.PARTNER_CODE) AS partner_code,
+                     TO_CHAR (S.MEM_CODE) AS partner_code_name,
                      TO_CHAR (E.STK_RETN_REM) AS result_Remark,
                      TO_CHAR (E.RETN_CODE_FAIL_REMARK) AS retn_code_fail_remark,
                      NVL (TO_CHAR (E.OWNER_CODE), '') AS owner_Code,
@@ -1372,6 +1374,7 @@
               LEFT OUTER JOIN SYS0064M P ON O.AREA_ID = P.AREA_ID AND P.STATUS_ID = 1
               LEFT JOIN SAL0017D Q ON C.PROMO_ID = Q.PROMO_ID
               LEFT JOIN SAL0020D R ON A.REF_ID = R.SO_REQ_ID AND A.SALES_ORD_ID = R.SO_REQ_SO_ID
+              LEFT JOIN ORG0001D S ON E.PARTNER_CODE = S.MEM_ID
               WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                 AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
                 AND B.MEM_CODE = #{userId}
