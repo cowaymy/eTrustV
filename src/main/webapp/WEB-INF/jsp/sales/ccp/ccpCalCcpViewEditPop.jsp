@@ -71,7 +71,7 @@ $(document).ready(function() {
 
     var bankruptcy = '${ccpInfoMap.ctosBankrupt}' == 1 ? "YES" : "NO";
     $("#bankruptcy").text(bankruptcy);
-    $("#_hiddenBankrupt").val('${ccpInfoMap.ctosBankrupt}');
+//     $("#_hiddenBankrupt").val('${ccpInfoMap.ctosBankrupt}');
 
 //     if('${ccpInfoMap.fileName}' != null && '${ccpInfoMap.fileName}' != "" ){
 //     	 $("#ccpAttachFileField").hide();
@@ -826,21 +826,19 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 	    		score : score,
 	    		chsStus : '${ccpInfoMap.chsStus}',
 	    		homeCat : '${ccpInfoMap.homeCat}',
-// 	    		ccpStus: '${ccpInfoMap.ccpStusId}',
-// 	    		ccpUpdDt : '${ccpInfoMap.ccpUpdDt}',
 	    		custCat: ( '${ccpInfoMap.custCat}' == null ) ? "NULL" : '${ccpInfoMap.custCat}'
 	    };
 
 	    Common.ajax("GET", "/sales/ccp/getScoreGrpByAjax", data , function(result) {
 	    	$('#score_group').removeClass();
+	    	$('#score_group').text("");
+	        $('#unitEntitle').text("");
+	        $('#prodEntitle').text("");
 
 	    	if(result != null && Object.values(result).length > 0){
 	    		$('#score_group').text(result.scoreGrp);
 		        $('#unitEntitle').text(result.unitEntitle);
 		        $('#prodEntitle').text(result.prodEntitle);
-	    		$('#_hiddenScoreGrp').val(result.scoreGrpCode);
-		        $('#_hiddenUnitEntitle').val(result.unitEntitle);
-		        $('#_hiddenProdEntitle').val(result.prodEntitle);
 
 		        // SCORE GROUP COLOR SETTING
 		        switch(result.scoreGrp){
@@ -866,9 +864,6 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
 		    	$('#score_group').text("");
 	            $('#unitEntitle').text("");
 	            $('#prodEntitle').text("");
-	            $('#_hiddenScoreGrp').val("");
-                $('#_hiddenUnitEntitle').val("");
-                $('#_hiddenProdEntitle').val("");
                 $('#score_group').removeClass();
 		    }
 	    });
@@ -877,9 +872,6 @@ function fn_ccpScoreChangeFunc(ccpFico, ccpExperianr){
     	$('#score_group').text("");
         $('#unitEntitle').text("");
         $('#prodEntitle').text("");
-        $('#_hiddenScoreGrp').val("");
-        $('#_hiddenUnitEntitle').val("");
-        $('#_hiddenProdEntitle').val("");
         $('#score_group').removeClass();
     }
 }
@@ -1747,11 +1739,6 @@ function chgTab(tabNm) {
 
 <!-- ccp info -->
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId"  value="${ccpInfoMap.fileGrpId}">
-<input type="hidden" id="_hiddenScoreGrp" name="hiddenScoreGrp" >
-<input type="hidden" id="_hiddenUnitEntitle" name="hiddenUnitEntitle">
-<input type="hidden" id="_hiddenProdEntitle" name="hiddenProdEntitle">
-<input type="hidden" id="_hiddenBankrupt" name="hiddenBankrupt" value="${ccpInfoMap.ctosBankrupt}">
-<input type="hidden" id="_hiddenCustCat" name="hiddenCustCat" value="${ccpInfoMap.custCat}">
 
 <!-- firstCallDate update  -->
 <input type="hidden"  id="firstCallDateUpd" name="firstCallDateUpd" placeholder="DD/MM/YYYY"  class="j_date" >
@@ -1837,12 +1824,12 @@ function chgTab(tabNm) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Product Entitlement</th>
+    <th scope="row">Home Category Entitlement</th>
         <td colspan="5" id="prodEntitle"></td>
     </td>
 </tr>
 <tr>
-    <th scope="row">Unit Entitlement</th>
+    <th scope="row">New Unit / Top Up Entitlement</th>
     <td colspan="5" id="unitEntitle"></td>
     </td>
 </tr>

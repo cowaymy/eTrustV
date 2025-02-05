@@ -295,7 +295,7 @@ function fn_getPreCcpResultInfo(){
 						    <td><span>${custCredit.custCat}</span></td>
 						</tr>
 						<tr>
-						    <th scope="row">UNIT ENTITLEMENT</th>
+						    <th scope="row">NEW UNIT / TOP UP ENTITLEMENT</th>
 						    <td><span>${custCredit.unitEntitle}</span></td>
 						</tr>
 						<tr>
@@ -303,7 +303,7 @@ function fn_getPreCcpResultInfo(){
 						    <td><span>${custCredit.scoreGrp}</span></td>
 						</tr>
 						<tr>
-						    <th scope="row">PRODUCT ENTITLEMENT</th>
+						    <th scope="row">HOME CATEGORY ENTITLEMENT</th>
 						    <td><span>${custCredit.prodEntitle}</span></td>
 						</tr>
 						<tr>

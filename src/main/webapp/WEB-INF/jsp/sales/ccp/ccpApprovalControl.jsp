@@ -821,7 +821,7 @@
                     }
                 },
                 {
-                    dataField : "excellent",
+                    dataField : "excl",
                     headerText : "Excellent",
                     width : '15%',
                     editRenderer : {

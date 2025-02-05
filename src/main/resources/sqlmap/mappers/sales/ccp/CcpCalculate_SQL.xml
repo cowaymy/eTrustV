@@ -869,11 +869,11 @@ SELECT Extent1.CCP_ID   ,
        Extent1.ATCH_FILE_GRP_ID FILE_GRP_ID,
        Extent14.ATCH_FILE_NAME FILE_NAME,
        Extent15.CODE_NAME SCORE_GRP,
-       Extent1.SCORE_GRP,
-       Extent1.UNIT_ENTITLE,
-       Extent1.PROD_ENTITLE,
-       Extent1.BANKRUPT,
-       Extent1.CUST_CAT
+       Extent16.SCORE_GRP SCORE_GRP_CODE,
+       Extent16.UNIT_ENTITLE,
+       Extent17.CODE_NAME PROD_ENTITLE,
+       Extent16.BANKRUPT,
+       Extent16.CUST_CAT
 <!--        CASE WHEN Extent7.CTOS_BANKRUPT = 0 THEN 'NO' ELSE 'YES' END BANKRUPTCY -->
   FROM SAL0102D Extent1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
@@ -891,7 +891,9 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SYS0026M Extent12 ON Extent12.STK_ID = Extent11.ITM_STK_ID
          LEFT JOIN SYS0070M Extent13 ON Extent13.ATCH_FILE_GRP_ID = Extent1.ATCH_FILE_GRP_ID
          LEFT JOIN SYS0071D Extent14 ON Extent14.ATCH_FILE_ID = Extent13.ATCH_FILE_ID
-         LEFT JOIN SYS0013M Extent15 ON Extent15.CODE = Extent1.SCORE_GRP AND CODE_MASTER_ID = 607
+         LEFT JOIN SAL0431D Extent16 ON Extent16.CCP_ID = Extent1.CCP_ID
+         LEFT JOIN SYS0013M Extent15 ON Extent15.CODE = Extent16.SCORE_GRP AND CODE_MASTER_ID = 607
+         LEFT JOIN SYS0013M Extent17 ON Extent17.CODE = Extent16.PROD_ENTITLE AND Extent17.CODE_MASTER_ID = 605
 <![CDATA[
  WHERE  Extent1.CCP_ID = #{ccpId}
  AND ROWNUM <= 1
@@ -993,12 +995,7 @@ SELECT Extent1.CCP_ID   ,
 	               CUST_IS_PAYER = #{custIsPayerValue},
 	               THE_PAYER = #{thePayerValue},
 	               FAIL_VER_RSN = #{failVeriReasonValue},
-	               ATCH_FILE_GRP_ID = #{atchFileGrpId},
-	               SCORE_GRP = #{hiddenScoreGrp},
-	               UNIT_ENTITLE = #{hiddenUnitEntitle},
-	               PROD_ENTITLE = #{hiddenProdEntitle},
-	               CUST_CAT = #{hiddenCustCat},
-	               BANKRUPT = #{hiddenBankrupt}
+	               ATCH_FILE_GRP_ID = #{atchFileGrpId}
             WHERE
                    CCP_ID = #{saveCcpId}
 </update>
@@ -2461,9 +2458,11 @@ WHERE ROWNUM = 1
 <select id="getUnitAndProdEntitle" parameterType="Map" resultType="egovMap">
      SELECT * FROM (
         SELECT
-                UNIT_ENTITLE,
-                PROD_ENTITLE
-        FROM SAL0426D
+                A.UNIT_ENTITLE,
+                A.PROD_ENTITLE PROD_ENTITLE_CODE,
+                B.CODE_NAME PROD_ENTITLE
+        FROM SAL0426D A
+        LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
         WHERE 1=1
         <if test="custCat != '' and custCat != null">
            AND CUST_CAT = #{custCat}
@@ -2471,14 +2470,7 @@ WHERE ROWNUM = 1
         <if test="custCat == '' or custCat == null">
            AND CUST_CAT IS NULL
         </if>
-<!--         <if test="ccpStus != '' and ccpStus != null"> -->
-<!--               <if test="ccpStus == 1"> -->
-                  AND STUS = 1
-<!--               </if> -->
-<!--               <if test="ccpStus == 5"> -->
-<!--                   AND #{ccpUpdDt} BETWEEN TO_CHAR(START_DT, 'DD/MM/YYYY HH24:MI:SS') AND TO_CHAR(END_DT, 'DD/MM/YYYY HH24:MI:SS') -->
-<!--               </if> -->
-<!--         </if> -->
+            AND STUS = 1
         <if test="scoreGrp != '' and scoreGrp != null">
               AND SCORE_GRP = #{scoreGrp}
          </if>

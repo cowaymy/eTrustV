@@ -1114,12 +1114,12 @@ function chgTab(tabNm) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Product Entitlement</th>
+    <th scope="row">Home Category Entitlement</th>
         <td colspan="5" id="prodEntitle"><span>${ccpInfoMap.prodEntitle}</span></td>
     </td>
 </tr>
 <tr>
-    <th scope="row">Unit Entitlement</th>
+    <th scope="row">New Unit / Top Up Entitlement</th>
     <td colspan="5" id="unitEntitle"><span>${ccpInfoMap.unitEntitle}</span></td>
     </td>
 </tr>

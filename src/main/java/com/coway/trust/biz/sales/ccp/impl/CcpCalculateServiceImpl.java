@@ -1504,19 +1504,31 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public EgovMap getScoreGrpByAjax(Map<String, Object> params) {
 		EgovMap result = new EgovMap();
+		EgovMap unitAndProdEntitle = new EgovMap();
 
-		EgovMap scoreGrp = ccpCalculateMapper.getScoreGrpByAjax(params);
+		if(params.get("chsStus").toString().isEmpty() || params.get("chsStus").toString().equals("-")){
 
-		if(scoreGrp != null){
-			params.put("scoreGrp", scoreGrp.get("scoreGrpCode").toString());
+			EgovMap scoreGrp = ccpCalculateMapper.getScoreGrpByAjax(params);
 
-			EgovMap unitAndProdEntitle = ccpCalculateMapper.getUnitAndProdEntitle(params);
-			result.putAll(scoreGrp);
+			if(scoreGrp != null){
+				params.put("scoreGrp", scoreGrp.get("scoreGrpCode").toString());
+
+				unitAndProdEntitle = ccpCalculateMapper.getUnitAndProdEntitle(params);
+				result.putAll(scoreGrp);
+
+				if(unitAndProdEntitle != null){
+					result.putAll(unitAndProdEntitle);
+				}
+			}
+		}else{
+
+			unitAndProdEntitle = ccpCalculateMapper.getUnitAndProdEntitle(params);
 
 			if(unitAndProdEntitle != null){
 				result.putAll(unitAndProdEntitle);
 			}
 		}
+
 
 		return result;
 	}
