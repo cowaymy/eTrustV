@@ -345,7 +345,8 @@ function fn_checkRegex()
              }
     	 }
      }
-     else if( regExpSpecChar.test($("#regCompName").val()) == false ){
+
+     if( regExpSpecChar.test($("#regCompName").val()) == false ){
 	         Common.alert("* Special character or space as the first and last character are not allow for Registered Company/Individual Name. ");
 	         checkRegexResult = false;;
 	         return checkRegexResult;
