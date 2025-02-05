@@ -4088,7 +4088,8 @@
                           RESULT_CUST_NAME,
                           RESULT_ICMOBILE_NO,
                           RESULT_RPT_EMAIL_NO,
-                          RESULT_ACEPT_NAME
+                          RESULT_ACEPT_NAME,
+                          PARTNER_CODE
     ) VALUES (LOG0039D_STK_RETN_RESULT_ID.nextval,
              (SELECT STK_RETN_ID FROM LOG0038D WHERE retn_no =#{serviceNo}),
              #{stkRetnStusId},
@@ -4115,7 +4116,8 @@
              #{resultCustName},
              #{resultIcmobileNo},
              #{resultRptEmailNo},
-             #{resultAceptName}
+             #{resultAceptName},
+             #{partnerCode}
     )
   </insert>
 
