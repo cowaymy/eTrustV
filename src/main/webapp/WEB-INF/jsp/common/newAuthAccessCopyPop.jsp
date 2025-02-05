@@ -100,15 +100,16 @@ var reqOptions =
 {
         editable : false,
         usePaging : true, //페이징 사용
-        useGroupingPanel : false, //그룹핑 숨김
+        //useGroupingPanel : false, //그룹핑 숨김
         showRowNumColumn : false, // 순번 칼럼 숨김
-        applyRestPercentWidth  : false,
-        rowIdField : "rowId", // PK행 지정
-        showStateColumn: false
-
+        //applyRestPercentWidth  : false,
+        //rowIdField : "rowId", // PK행 지정
+        //showStateColumn: false,
+        showRowCheckColumn : true,
         /* selectionMode : "multipleRows",
         editBeginMode : "click", // 편집모드 클릭 */
         /* aui 그리드 체크박스 옵션*/
+        softRemoveRowMode : false
 
 
 };
@@ -266,6 +267,11 @@ $(document).ready(function(){
            }
       });  */
 
+      AUIGrid.bind(grdReqAuth, "removeRow", function( event ) {
+    	  console.log("removeRow");
+    	  console.log(AUIGrid.getGridData(grdReqAuth));
+    	  fn_searchDetails();
+      });
 }); //Ready
 
 function fn_doConfirm() {
@@ -351,9 +357,15 @@ $(function(){
     });
 
 	$('#reqdel').click(function() {
-        AUIGrid.removeRow(grdReqAuth, "selectedIndex");
-        AUIGrid.removeSoftRows(grdReqAuth);
-        fn_searchDetails();
+		checkedItems = AUIGrid.getCheckedRowItemsAll(grdReqAuth);
+		if (checkedItems.length > 0) {
+			for (var i = 0; i < checkedItems.length; i++) {
+				AUIGrid.removeRow(grdReqAuth, AUIGrid.getRowIndexesByValue(grdReqAuth, "authCode", checkedItems[i].authCode));
+		        //AUIGrid.removeRow(grdReqAuth, "selectedIndex");
+		        //AUIGrid.removeSoftRows(grdReqAuth);
+			}
+		}
+        //fn_searchDetails();
     });
 
 });
@@ -377,7 +389,7 @@ function fn_searchDetails(){
     		} */
     	}
     }
-    Common.ajax(
+    Common.ajaxSync(
             "POST",
             "/common/selectMultAuthMenuMappingList.do",
             data,
