@@ -1,6 +1,7 @@
 package com.coway.trust.biz.common.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import com.coway.trust.biz.common.FileGroupVO;
 import com.coway.trust.biz.common.FileVO;
@@ -31,4 +32,8 @@ public interface FileMapper {
 	int selectFileGroupCountByFileId(int fileId);
 
 	void updateFileDetail(FileVO fileVO);
+	void updateFileMaster(Map<String, Object> params);
+
+	void updateCodyDocumentQty(Map<String, Object> params);
+	void deleteCodyDocumentQty(Map<String, Object> params);
 }

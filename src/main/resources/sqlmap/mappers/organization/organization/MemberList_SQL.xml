@@ -1795,7 +1795,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 
 
-        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY, MEMINFO.LAST_UPD_USR, TO_CHAR(MEMINFO.LAST_UPD_DT,'yyyy-mm-dd hh24:mi:ss') LAST_UPD_DT
             FROM (
                  SELECT Extent1.CODE_ID CODE_ID ,
                     Extent1.CODE_DESC CODE_NAME,
@@ -1809,9 +1809,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                   AND ( Extent2.TYPE_GRP_ID    = 247 )
                   ORDER BY Extent2.TYPE_DT_SEQ ASC
                 ) DOCLIST , (
-                SELECT B.*
+                SELECT B.*, C.USER_NAME LAST_UPD_USR, B.UPD_DT LAST_UPD_DT
                 FROM ORG0001D A,
                   ORG0010D B
+                LEFT JOIN SYS0047M C ON C.USER_ID = B.UPD_USER_ID
                 WHERE A.MEM_ID    = B.DOC_MEM_ID
                 AND  A.MEM_ID    = #{memberID}) MEMINFO
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
@@ -1821,7 +1822,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
       <if test="memType =='2803'">
       <![CDATA[
 
-        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY, MEMINFO.LAST_UPD_USR, TO_CHAR(MEMINFO.LAST_UPD_DT,'yyyy-mm-dd hh24:mi:ss') LAST_UPD_DT
             FROM (
                  SELECT Extent1.CODE_ID CODE_ID ,
                     Extent1.CODE_DESC CODE_NAME,
@@ -1835,9 +1836,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                   AND ( Extent2.TYPE_GRP_ID    = 247 )
                   ORDER BY Extent2.TYPE_DT_SEQ ASC
                 ) DOCLIST , (
-                SELECT B.*
+                SELECT B.*, C.USER_NAME LAST_UPD_USR, B.UPD_DT LAST_UPD_DT
                 FROM ORG0003D A,
                   ORG0010D B
+                LEFT JOIN SYS0047M C ON C.USER_ID = B.UPD_USER_ID
                 WHERE A.APLCTN_ID    = B.DOC_MEM_ID
                 AND  A.APLCTN_ID    = #{memberID}) MEMINFO
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
@@ -1869,7 +1871,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                            AND ( 1 = Extent2.STUS_ID )
                            AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
           ORDER BY Project1.TYPE_DT_SEQ ASC -->
-          SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+          SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY, MEMINFO.LAST_UPD_USR, TO_CHAR(MEMINFO.LAST_UPD_DT,'yyyy-mm-dd hh24:mi:ss') LAST_UPD_DT
             FROM (
                  SELECT Extent1.CODE_ID CODE_ID ,
                     Extent1.CODE_DESC CODE_NAME,
@@ -1883,9 +1885,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                   AND ( Extent2.TYPE_GRP_ID    = 1417 )
                   ORDER BY Extent2.TYPE_DT_SEQ ASC
                 ) DOCLIST , (
-                SELECT B.*
+                SELECT B.*, C.USER_NAME LAST_UPD_USR, B.UPD_DT LAST_UPD_DT
                 FROM ORG0001D A,
                   ORG0010D B
+                LEFT JOIN SYS0047M C ON C.USER_ID = B.UPD_USER_ID
                 WHERE A.MEM_ID    = B.DOC_MEM_ID
                 AND  A.MEM_ID    = #{memberID}) MEMINFO
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)

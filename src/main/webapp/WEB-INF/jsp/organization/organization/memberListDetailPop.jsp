@@ -20,6 +20,8 @@ var vaccDigCertFileId = 0;
 var fileNameId = 0;
 var codyPaCopyFileId = 0;
 var compConsCodyFileId = 0;
+var codyAgreementFileId = 0;
+var endOfCntNoticeFileId = 0;
 var codyExtCheckFileId = 0;
 var terminationAgreeFileId = 0;
 
@@ -31,6 +33,8 @@ var vaccDigCertFileName = "";
 var fileNameName = "";
 var codyPaCopyFileName = "";
 var compConsCodyFileName = "";
+var codyAgreementFileName = "";
+var endOfCntNoticeFileName = "";
 var codyExtCheckFileName = "";
 var terminationAgreeFileName = "";
 var myFileCaches = {};
@@ -340,12 +344,23 @@ function createAUIGrid1() {
         dataField : "codeName",
         headerText : "Document",
         editable : false,
-        width : 700
+        width : 525
     }, {
         dataField : "docQty",
         headerText : "Qty",
         editable : false,
         width : 150
+    }, {
+        dataField : "updatedAt",
+        headerText : "Update At(By)",
+        editable : false,
+        width : 175,
+        labelFunction: function(rowIndex, columnIndex, value, headerText, item, dataField, cItem) {
+        	if(item.lastUpdUsr){
+        		return "" + item.lastUpdDt + " (" + item.lastUpdUsr + ")";
+        	}
+            return "-";
+        }
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -372,7 +387,9 @@ function createAUIGrid1() {
         wrapSelectionMove : true,
 
         // 줄번호 칼럼 렌더러 출력
-        showRowNumColumn : true
+        showRowNumColumn : true,
+
+        wordWrap : true,
 
     };
 
@@ -905,11 +922,21 @@ $("#HP_img").dblclick(function(){
                            $(".input_text[id='compConsCodyFileTxt']").val(compConsCodyFileName);
                            break;
                        case '9':
+                    	   codyAgreementFileId = result[i].atchFileId;
+                    	   codyAgreementFileName = result[i].atchFileName;
+                           $(".input_text[id='codyAgreementFileTxt']").val(codyAgreementFileName);
+                           break;
+                       case '10':
+                    	   endOfCntNoticeFileId = result[i].atchFileId;
+                    	   endOfCntNoticeFileName = result[i].atchFileName;
+                           $(".input_text[id='endOfCntNoticeFileTxt']").val(endOfCntNoticeFileName);
+                           break;
+                       case '11':
                     	   codyExtCheckFileId = result[i].atchFileId;
                            codyExtCheckFileName = result[i].atchFileName;
                            $(".input_text[id='codyExtCheckFileTxt']").val(codyExtCheckFileName);
                            break;
-                       case '10':
+                       case '12':
                     	   terminationAgreeFileId = result[i].atchFileId;
                     	   terminationAgreeFileName = result[i].atchFileName;
                            $(".input_text[id='terminationAgreeFileTxt']").val(terminationAgreeFileName);
@@ -1792,6 +1819,32 @@ $("#HP_img").dblclick(function(){
             <input type="file" title="file add" id="compConsCodyFile"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id="compConsCodyFileTxt"/>
+                <!-- <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
+                <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody Agreement</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyAgreementFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="codyAgreementFileTxt"/>
+                <!-- <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
+                <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span> -->
+             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">End Of Contract Notice</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="endOfCntNoticeFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id="endOfCntNoticeFileTxt"/>
                 <!-- <span class='label_text' cursor='default'><a href='#'>Upload</a></span>
                 <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span> -->
              </label>

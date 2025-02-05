@@ -984,7 +984,10 @@ function createAUIGrid() {
 
 function fn_memberEditPop(){
     console.log("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-    Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+    var pageAuth = {
+            funcUserDefine21 : '${PAGE_AUTH.funcUserDefine21}'
+    };
+    Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, {pageAuth: JSON.stringify(pageAuth)});
 }
 
 function fn_branchEditPop(){

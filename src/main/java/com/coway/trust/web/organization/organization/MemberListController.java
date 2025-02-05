@@ -81,7 +81,12 @@ import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.util.MapTypeReference;
 import com.coway.trust.util.Precondition;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -971,10 +976,13 @@ public class MemberListController {
 	 * @param request
 	 * @param model
 	 * @return
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/memberListEditPop.do")
-	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws JsonParseException, JsonMappingException, IOException {
 
 		List<EgovMap> branch = memberListService.branch();
 		// logger.debug("branchList : {}", branch);
@@ -1024,6 +1032,13 @@ public class MemberListController {
 		model.addAttribute("memId", params.get("MemberID"));
 		model.addAttribute("branch", branch);
 		model.addAttribute("Religion", Religion);
+
+		if(params.containsKey("pageAuth")) {
+        	ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> pageAuthMap = objectMapper.readValue(params.get("pageAuth").toString(), new MapTypeReference());
+
+    		model.put("pageAuth", pageAuthMap);
+        }
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}

@@ -3022,6 +3022,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
+
+		String memType = (String) params.get("memType");
+		String traineeType = (String) params.get("traineeType");
+		if(!StringUtils.isEmpty(memType)) {
+			if(memType.equalsIgnoreCase("2") || (memType.equalsIgnoreCase("5") && !StringUtils.isEmpty(traineeType) && traineeType.equalsIgnoreCase("2"))){
+				fileService.updateCodyDocumentQty(params);
+			}
+		}
 	}
 
 	@Override

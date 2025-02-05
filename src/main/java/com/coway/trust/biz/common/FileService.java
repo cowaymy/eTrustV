@@ -36,5 +36,7 @@ public interface FileService {
 
 	void changeFileUpdate(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId);
 
-	void updateFile(int preFileId, FileVO fileVO);
+	void updateFile(int preFileId, FileVO fileVO, int userId);
+
+	void updateCodyDocumentQty(Map<String, Object> params);
 }

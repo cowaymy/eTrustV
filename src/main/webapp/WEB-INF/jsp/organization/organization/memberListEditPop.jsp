@@ -29,6 +29,8 @@ var vaccDigCertFileId = 0;
 var fileNameId = 0;
 var codyPaCopyFileId = 0;
 var compConsCodyFileId = 0;
+var codyAgreementFileId = 0;
+var endOfCntNoticeFileId = 0;
 var codyExtCheckFileId = 0;
 var terminationAgreeFileId = 0;
 
@@ -40,6 +42,8 @@ var vaccDigCertFileName = "";
 var fileNameName = "";
 var codyPaCopyFileName = "";
 var compConsCodyFileName = "";
+var codyAgreementFileName = "";
+var endOfCntNoticeFileName = "";
 var codyExtCheckFileName = "";
 //var jsonObj1;
 
@@ -58,6 +62,9 @@ function fn_memberSave(){
         });
 
         var atchFileGrpId = "${memberView.atchFileGrpIdDoc}";
+        formData.append("memType", $("#memType").val());
+        formData.append("traineeType", $("#traineeType").val());
+        formData.append("memId", $("#MemberID").val());
         formData.append("atchFileGrpId", atchFileGrpId);
         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
         console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -1825,6 +1832,16 @@ function fn_loadAtchment(atchFileGrpId) {
                         $(".input_text[id='compConsCodyFileTxt']").val(compConsCodyFileName);
                         break;
                     case '9':
+                        codyAgreementFileId = result[i].atchFileId;
+                        codyAgreementFileName = result[i].atchFileName;
+                        $(".input_text[id='codyAgreementFileTxt']").val(codyAgreementFileName);
+                        break;
+                    case '10':
+                        endOfCntNoticeFileId = result[i].atchFileId;
+                        endOfCntNoticeFileName = result[i].atchFileName;
+                        $(".input_text[id='endOfCntNoticeFileTxt']").val(endOfCntNoticeFileName);
+                        break;
+                    case '11':
                         codyExtCheckFileId = result[i].atchFileId;
                         codyExtCheckFileName = result[i].atchFileName;
                         $(".input_text[id='codyExtCheckFileTxt']").val(codyExtCheckFileName);
@@ -2106,13 +2123,81 @@ $(function(){
         }
 
     });
+    $('#codyAgreementFile').change(function(evt) {
+        var msg = '';
+        var file = evt.target.files[0];
+        if(file == null) {
+            remove.push(codyAgreementFileId);
+        }else if(file.name != codyAgreementFileName){
+            myFileCaches[9] = {file:file};
+            if(codyAgreementFileName != ""){
+                update.push(codyAgreementFileId);
+            }
+        }
+
+        if(file != null) {
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'pdf'){
+                msg += "*Only allow attachment format (PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow attachment with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[9].file['checkFileValid'] = false;
+                delete myFileCaches[9];
+                $('#codyAgreementFile').val("");
+                Common.alert(msg);
+            }
+        }
+
+    });
+    $('#endOfCntNoticeFile').change(function(evt) {
+        var msg = '';
+        var file = evt.target.files[0];
+        if(file == null) {
+            remove.push(endOfCntNoticeFileId);
+        }else if(file.name != endOfCntNoticeFileName){
+            myFileCaches[10] = {file:file};
+            if(endOfCntNoticeFileName != ""){
+                update.push(endOfCntNoticeFileId);
+            }
+        }
+
+        if(file != null) {
+            if(file.name.length > 30){
+                msg += "*File name wording should be not more than 30 alphabet.<br>";
+            }
+
+            var fileType = file.type.split('/');
+            if(fileType[1] != 'pdf'){
+                msg += "*Only allow attachment format (PDF).<br>";
+            }
+
+            if(file.size > 2000000){
+                msg += "*Only allow attachment with less than 2MB.<br>";
+            }
+            if(msg != null && msg != ''){
+                myFileCaches[10].file['checkFileValid'] = false;
+                delete myFileCaches[10];
+                $('#endOfCntNoticeFile').val("");
+                Common.alert(msg);
+            }
+        }
+
+    });
     $('#codyExtCheckFile').change(function(evt) {
         var msg = '';
         var file = evt.target.files[0];
         if(file == null) {
             remove.push(codyExtCheckFileId);
         }else if(file.name != codyExtCheckFileName){
-            myFileCaches[9] = {file:file};
+            myFileCaches[11] = {file:file};
             if(codyExtCheckFileName != ""){
                 update.push(codyExtCheckFileId);
             }
@@ -2147,6 +2232,12 @@ function fn_removeFile(name){
     }else if(name == "CCCI") {
         $("#compConsCodyFile").val("");
         $('#compConsCodyFile').change();
+    }else if(name == "CA") {
+        $("#codyAgreementFile").val("");
+        $('#codyAgreementFile').change();
+    }else if(name == "EOCN") {
+        $("#endOfCntNoticeFile").val("");
+        $('#endOfCntNoticeFile').change();
     }else if(name == "CEC") {
         $("#codyExtCheckFile").val("");
         $('#codyExtCheckFile').change();
@@ -2883,9 +2974,11 @@ function fn_removeFile(name){
                              <input type="file" title="file add" id="codyAppFile" accept="application/pdf"/>
                             <label>
                                 <input type='text' class='input_text'  readonly='readonly' id="codyAppFileTxt"/>
-                                <span class='label_text'><a href='#'>Upload</a></span>
-                                </label>
-                              <span class='label_text'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span>
+                                <c:if test="${memberView.memType != '2' || (memberView.memType== '2' && pageAuth.funcUserDefine21 == 'Y') }">
+                                    <span class='label_text'><a href='#'>Upload</a></span>
+                                    </label>
+                                <span class='label_text'><a href='#' onclick='fn_removeFile("CAF")'>Remove</a></span>
+                              </c:if>
                             </label>
                         </div>
                     </td>
@@ -2897,9 +2990,11 @@ function fn_removeFile(name){
                              <input type="file" title="file add" id="nricCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
                             <label>
                                 <input type='text' class='input_text'  readonly='readonly' id="nricCopyFileTxt"/>
+                                <c:if test="${memberView.memType != '2' || (memberView.memType== '2' && pageAuth.funcUserDefine21 == 'Y') }">
                                 <span class='label_text'><a href='#'>Upload</a></span>
                                 </label>
                               <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span>
+                              </c:if>
                             </label>
                         </div>
                     </td>
@@ -2911,9 +3006,11 @@ function fn_removeFile(name){
                              <input type="file" title="file add" id="driveCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
                             <label>
                                 <input type='text' class='input_text'  readonly='readonly' id="driveCopyFileTxt"/>
+                                <c:if test="${memberView.memType != '2' || (memberView.memType== '2' && pageAuth.funcUserDefine21 == 'Y') }">
                                 <span class='label_text'><a href='#'>Upload</a></span>
                                 </label>
                               <span class='label_text'><a href='#' onclick='fn_removeFile("DLC")'>Remove</a></span>
+                              </c:if>
                             </label>
                         </div>
                     </td>
@@ -2925,9 +3022,11 @@ function fn_removeFile(name){
                              <input type="file" title="file add" id="bankStateCopyFile" accept="image/jpg, image/jpeg, image/png,application/pdf"/>
                             <label>
                                 <input type='text' class='input_text'  readonly='readonly' id="bankStateCopyFileTxt"/>
+                                <c:if test="${memberView.memType != '2' || (memberView.memType== '2' && pageAuth.funcUserDefine21 == 'Y') }">
                                 <span class='label_text'><a href='#'>Upload</a></span>
                                 </label>
                               <span class='label_text'><a href='#' onclick='fn_removeFile("BPSC")'>Remove</a></span>
+                              </c:if>
                             </label>
                         </div>
                     </td>
@@ -2939,9 +3038,11 @@ function fn_removeFile(name){
                              <input type="file" title="file add" id="vaccDigCertFile" accept="application/pdf" />
                             <label>
                                 <input type='text' class='input_text'  readonly='readonly' id="vaccDigCertFileTxt"/>
+                                <c:if test="${memberView.memType != '2' || (memberView.memType== '2' && pageAuth.funcUserDefine21 == 'Y') }">
                                 <span class='label_text'><a href='#'>Upload</a></span>
                                 </label>
                               <span class='label_text'><a href='#' onclick='fn_removeFile("VDC")'>Remove</a></span>
+                              </c:if>
                             </label>
                         </div>
                     </td>
@@ -2988,6 +3089,34 @@ function fn_removeFile(name){
                         </div>
                     </td>
 				</tr>
+				<tr>
+                    <th scope="row">Cody Agreement</th>
+                    <td colspan="3" id="attachTd">
+                        <div class="auto_file2">
+                            <input type="file" title="file add" id="codyAgreementFile" accept="application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="codyAgreementFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("CA")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">End Of Contract Notice</th>
+                    <td colspan="3" id="attachTd">
+                        <div class="auto_file2">
+                            <input type="file" title="file add" id="endOfCntNoticeFile" accept="application/pdf"/>
+                            <label>
+                                <input type='text' class='input_text'  readonly='readonly' id="endOfCntNoticeFileTxt"/>
+                                <span class='label_text'><a href='#'>Upload</a></span>
+                                </label>
+                              <span class='label_text'><a href='#' onclick='fn_removeFile("EOCN")'>Remove</a></span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
 				<tr>
 				    <th scope="row">Cody Exit Checklist</th>
 				    <td colspan="3" id="attachTd">

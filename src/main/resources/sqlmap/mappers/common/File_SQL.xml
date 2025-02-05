@@ -127,4 +127,77 @@
 	        , FILE_PASSWORD = #{filePassword}
         WHERE ATCH_FILE_ID = #{atchFileId}
     </update>
+
+    <update id="updateFileMaster" parameterType="Map">
+        UPDATE SYS0070M
+        SET
+            UPD_USER_ID = #{crtUserId}
+           , UPD_DT = SYSDATE
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </update>
+
+    <update id="updateCodyDocumentQty" parameterType="Map">
+		MERGE INTO ORG0010D ORG10
+		USING (
+		    SELECT A.*, B.CODE_ID, C.TYPE_CODE_ID AS TYPE_CODE_ID
+		    FROM (
+		        SELECT A.MEM_ID, CASE FILE_KEY_SEQ
+		            WHEN '1' THEN 'CD-APP-FORM'
+		            WHEN '2' THEN 'NRIC'
+		            WHEN '3' THEN 'CD-CLASS-D'
+		            WHEN '4' THEN 'BANK'
+		            WHEN '5' THEN 'VACC-DIG-CERT'
+		            WHEN '6' THEN 'PASS-SIZE-PHOTO'
+		            WHEN '7' THEN 'CD-PA'
+		            WHEN '8' THEN 'STO-ENT-CHK-CONS-LET'
+		            WHEN '9' THEN 'CD-CA'
+		            WHEN '10' THEN 'CD-EOCN'
+		            WHEN '11' THEN 'CD-EXT-CHK'
+		        END AS CODE, T1.UPD_USER_ID, T1.UPD_DT
+		        FROM ORG0001D A
+		        JOIN SYS0070M T1 ON T1.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+		        JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+		        WHERE A.MEM_ID = #{memId}
+		    ) A
+		    JOIN SYS0013M B ON B.CODE_MASTER_ID = 16 AND B.CODE = A.CODE
+		    JOIN ORG0013C C ON C.TYPE_ID = B.CODE_ID AND C.TYPE_CODE_ID = 1417
+		) SYS71 ON (SYS71.MEM_ID = ORG10.DOC_MEM_ID AND SYS71.CODE_ID = ORG10.DOC_TYPE_ID)
+		WHEN MATCHED THEN
+		UPDATE
+		    SET
+		       ORG10.UPD_USER_ID = CASE WHEN SYS71.UPD_DT > ORG10.UPD_DT THEN SYS71.UPD_USER_ID ELSE ORG10.UPD_USER_ID END,
+               ORG10.UPD_DT = CASE WHEN SYS71.UPD_DT > ORG10.UPD_DT THEN SYS71.UPD_DT ELSE ORG10.UPD_DT END
+		WHEN NOT MATCHED THEN
+		INSERT (DOC_SUB_ID,DOC_SUB_TYPE_ID,DOC_TYPE_ID,DOC_SO_ID,DOC_MEM_ID,DOC_SUB_DT,DOC_COPY_QTY,STUS_ID,CRT_USER_ID,CRT_DT,UPD_USER_ID,UPD_DT,DOC_SUB_BATCH_ID,DOC_SUB_BRNCH_ID)
+		VALUES (ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL,SYS71.TYPE_CODE_ID,SYS71.CODE_ID,0,SYS71.MEM_ID,SYS71.UPD_DT,1,1,SYS71.UPD_USER_ID,SYS71.UPD_DT,SYS71.UPD_USER_ID,SYS71.UPD_DT,0,NULL)
+    </update>
+
+    <delete id="deleteCodyDocumentQty" parameterType="Map">
+        DELETE FROM ORG0010D
+		WHERE DOC_MEM_ID = #{memId} AND DOC_SUB_TYPE_ID = 1417
+		AND (DOC_MEM_ID, DOC_TYPE_ID) NOT IN (
+		    SELECT A.MEM_ID, B.CODE_ID
+		    FROM (
+		        SELECT A.MEM_ID, CASE FILE_KEY_SEQ
+		            WHEN '1' THEN 'CD-APP-FORM'
+		            WHEN '2' THEN 'NRIC'
+		            WHEN '3' THEN 'CD-CLASS-D'
+		            WHEN '4' THEN 'BANK'
+		            WHEN '5' THEN 'VACC-DIG-CERT'
+		            WHEN '6' THEN 'PASS-SIZE-PHOTO'
+		            WHEN '7' THEN 'CD-PA'
+		            WHEN '8' THEN 'STO-ENT-CHK-CONS-LET'
+		            WHEN '9' THEN 'CD-CA'
+		            WHEN '10' THEN 'CD-EOCN'
+		            WHEN '11' THEN 'CD-EXT-CHK'
+		        END AS CODE, T1.UPD_USER_ID, T1.UPD_DT
+		        FROM ORG0001D A
+		        JOIN SYS0070M T1 ON T1.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+		        JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+		        WHERE A.MEM_ID = #{memId}
+		    ) A
+		    JOIN SYS0013M B ON B.CODE_MASTER_ID = 16 AND B.CODE = A.CODE
+		    JOIN ORG0013C C ON C.TYPE_ID = B.CODE_ID AND C.TYPE_CODE_ID = 1417
+		)
+    </delete>
 </mapper>

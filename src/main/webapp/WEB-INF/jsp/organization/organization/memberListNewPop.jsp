@@ -36,6 +36,9 @@ function fn_memberSave(){
 			        formData.append(n, v.file);
 			    });
 
+		        formData.append("memType", $("#memberType").val());
+		        formData.append("traineeType", $("#traineeType1").val());
+
 			        Common.ajaxFile("/organization/attachFileMemberUpload.do", formData, function(result) {
 			            console.log(result);
 			            atchFileGrpId = result.data.fileGroupKey;
@@ -840,6 +843,13 @@ console.log("ready");
      $("#mobileNo").blur(function() {
         fmtNumber("#mobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
+
+     if( $("#userType").val() == "2" || $("#userType").val() == "7") {
+         $("#traineeType1").val($("#userType").val());
+         $("#traineeType1").trigger("change");
+         $("#traineeType1").trigger("click");
+         fn_changeDetails();
+     }
 });
 
 function setInputFile2(){//인풋파일 세팅하기
@@ -2087,29 +2097,40 @@ $(function(){
         }
 
     });
-    $('#codyExtCheckFile').change(function(evt) {
-    	var msg = '';
+    $('#codyAgreementFile').change(function(evt) {
+
         var file = evt.target.files[0];
         if(file == null && myFileCaches[9] != null){
-            msg += "*Not Allowed to Upload.<br>";
+            delete myFileCaches[9];
         }else if(file != null){
             myFileCaches[9] = {file:file};
-            msg += "*Not Allowed to Upload.<br>";
         }
 
+        var msg = '';
+        if(file.name.length > 30){
+            msg += "*File name wording should be not more than 30 alphabet.<br>";
+        }
+
+        var fileType = file.type.split('/');
+        if(fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (PDF).<br>";
+        }
+
+        if(file.size > 2000000){
+            msg += "*Only allow attachment with less than 2MB.<br>";
+        }
         if(msg != null && msg != ''){
             myFileCaches[9].file['checkFileValid'] = false;
             delete myFileCaches[9];
-            $('#codyExtCheckFile').val("");
+            $('#codyAgreementFile').val("");
             Common.alert(msg);
         }
         else{
             myFileCaches[9].file['checkFileValid'] = true;
         }
     });
+    $('#endOfCntNoticeFile').change(function(evt) {
 
-    $('#terminationAgreeFile').change(function(evt) {
-        var msg = '';
         var file = evt.target.files[0];
         if(file == null && myFileCaches[10] != null){
             delete myFileCaches[10];
@@ -2117,13 +2138,14 @@ $(function(){
             myFileCaches[10] = {file:file};
         }
 
+        var msg = '';
         if(file.name.length > 30){
             msg += "*File name wording should be not more than 30 alphabet.<br>";
         }
 
         var fileType = file.type.split('/');
-        if(fileType[1] != 'jpg' && fileType[1] != 'jpeg' && fileType[1] != 'png' && fileType[1] != 'pdf'){
-            msg += "*Only allow attachment format (JPG, PNG, JPEG,PDF).<br>";
+        if(fileType[1] != 'pdf'){
+            msg += "*Only allow attachment format (PDF).<br>";
         }
 
         if(file.size > 2000000){
@@ -2132,22 +2154,40 @@ $(function(){
         if(msg != null && msg != ''){
             myFileCaches[10].file['checkFileValid'] = false;
             delete myFileCaches[10];
-            $('#nricCopyFile').val("");
+            $('#endOfCntNoticeFile').val("");
             Common.alert(msg);
         }
         else{
             myFileCaches[10].file['checkFileValid'] = true;
         }
-
     });
+    $('#codyExtCheckFile').change(function(evt) {
+    	var msg = '';
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[11] != null){
+            msg += "*Not Allowed to Upload.<br>";
+        }else if(file != null){
+            myFileCaches[11] = {file:file};
+            msg += "*Not Allowed to Upload.<br>";
+        }
 
+        if(msg != null && msg != ''){
+            myFileCaches[11].file['checkFileValid'] = false;
+            delete myFileCaches[11];
+            $('#codyExtCheckFile').val("");
+            Common.alert(msg);
+        }
+        else{
+            myFileCaches[11].file['checkFileValid'] = true;
+        }
+    });
     $('#terminationAgreeFile').change(function(evt) {
         var msg = '';
         var file = evt.target.files[0];
-        if(file == null && myFileCaches[10] != null){
-            delete myFileCaches[10];
+        if(file == null && myFileCaches[12] != null){
+            delete myFileCaches[12];
         }else if(file != null){
-            myFileCaches[10] = {file:file};
+            myFileCaches[12] = {file:file};
         }
 
         if(file.name.length > 30){
@@ -2163,13 +2203,13 @@ $(function(){
             msg += "*Only allow attachment with less than 2MB.<br>";
         }
         if(msg != null && msg != ''){
-            myFileCaches[10].file['checkFileValid'] = false;
-            delete myFileCaches[10];
+            myFileCaches[12].file['checkFileValid'] = false;
+            delete myFileCaches[12];
             $('#nricCopyFile').val("");
             Common.alert(msg);
         }
         else{
-            myFileCaches[10].file['checkFileValid'] = true;
+            myFileCaches[12].file['checkFileValid'] = true;
         }
 
     });
@@ -2200,7 +2240,13 @@ function fn_removeFile(name){
 	}else if(name == "CCCI") {
 	    $("#compConsCodyFile").val("");
 	    $('#compConsCodyFile').change();
-	}else if(name == "CEC") {
+	}else if(name == "CA") {
+        $("#codyAgreementFile").val("");
+        $('#codyAgreementFile').change();
+    }else if(name == "EOCN") {
+        $("#endOfCntNoticeFile").val("");
+        $('#endOfCntNoticeFile').change();
+    }else if(name == "CEC") {
 	    $("#codyExtCheckFile").val("");
 	    $('#codyExtCheckFile').change();
 	}else if(name == "TAF") {
@@ -2243,6 +2289,14 @@ function fn_validFile() {
         isValid = false;
         msg += "* Not allowed to upload Cody Consignment<br>";
     }
+    /* if(FormUtil.isNotEmpty($('#codyAgreementFile').val().trim())) {
+        isValid = false;
+        msg += "* Not allowed to upload Cody Agreement<br>";
+    }
+    if(FormUtil.isNotEmpty($('#endOfCntNoticeFile').val().trim())) {
+        isValid = false;
+        msg += "* Not allowed to upload End Of Contract Notice<br>";
+    } */
     if(FormUtil.isNotEmpty($('#codyExtCheckFile').val().trim())) {
         isValid = false;
         msg += "* Not allowed to upload Cody Exist Checklist<br>";
@@ -2660,7 +2714,7 @@ function fn_validTerminateFile() {
     <td colspan="2">
         <select class= "w100p" id="traineeType1" name="traineeType1" onchange = "fn_changeDetails()">
         <option value="">Choose One</option>
-        <option value= "2">Cody</option>
+        <option value= "2">Cody/Service Technician</option>
         <option value = "3">CT</option>
         <option value = "7">HT</option>
         <option value = "5758">DT</option>
@@ -3102,6 +3156,32 @@ function fn_validTerminateFile() {
                 <span class='label_text' cursor='default'><a href='#' onclick='fn_removeFile("CCCI")'>Remove</a></span>
              </label>
         </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Cody Agreement</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="codyAgreementFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text'  readonly='readonly' id="codyAgreementFileTxt"/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("CA")'>Remove</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">End Of Contract Notice</th>
+    <td colspan="3" id="attachTd">
+        <div class="auto_file2">
+            <input type="file" title="file add" id="endOfCntNoticeFile" accept="application/pdf"/>
+            <label>
+                <input type='text' class='input_text'  readonly='readonly' id="endOfCntNoticeFileTxt"/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("EOCN")'>Remove</a></span>
+            </label>
+        </div>
     </td>
 </tr>
 <tr>

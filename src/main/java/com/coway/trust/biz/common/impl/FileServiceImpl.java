@@ -2,6 +2,7 @@ package com.coway.trust.biz.common.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -156,13 +157,17 @@ public class FileServiceImpl implements FileService {
 	@Override // Added by Chew Kah Kit - 2018/11/27
 	public void changeFileUpdate(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId) {
 		this.removeFileByFileId2(type, preFileId);
-		this.updateFile(preFileId, fileVO);
+		this.updateFile(preFileId, fileVO, userId);
 	}
 
 	@Override
-	public void updateFile(int preFileId, FileVO fileVO) {
+	public void updateFile(int preFileId, FileVO fileVO, int userId) {
 		fileVO.setAtchFileId(preFileId);
 		fileMapper.updateFileDetail(fileVO);
+		Map<String, Object> params = new HashMap<>();
+		params.put("crtUserId", userId);
+		params.put("atchFileId", fileVO.getAtchFileId());
+		fileMapper.updateFileMaster(params);
 	}
 
 	@Override
@@ -182,5 +187,12 @@ public class FileServiceImpl implements FileService {
 			LOGGER.error("deleteFile Fail : {}", e.getMessage());
 			// throw new ApplicationException(e);
 		}
+	}
+
+	@Override
+	public void updateCodyDocumentQty(Map<String, Object> params) {
+		fileMapper.updateCodyDocumentQty(params);
+		fileMapper.deleteCodyDocumentQty(params);
+		return;
 	}
 }
