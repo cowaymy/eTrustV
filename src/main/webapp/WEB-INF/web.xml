@@ -138,6 +138,12 @@
 		<auth-method>BASIC</auth-method>
 	</login-config>
 
+	<session-config>
+        <cookie-config>
+            <secure>true</secure>
+        </cookie-config>
+    </session-config>
+
 	<!--
 	<error-page>
 		<error-code>404</error-code>
