@@ -621,7 +621,7 @@ public class OrderRegisterController {
   @RequestMapping(value = "/selectPrevOrderNoList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectPrevOrderNoList(@RequestParam Map<String, Object> params) {
 	  List<EgovMap> result = new ArrayList<>();
-	  if(params.get("isHomecare") != null && params.get("isHomecare").equals('0')){
+	  if(params.get("isHomecare") != null && params.get("isHomecare").equals("0")){
 		  result = orderRegisterService.selectPrevOrderNoList(params);
 	  }else{
 		  result = orderRegisterService.selectHcPrevOrderNoList(params);
