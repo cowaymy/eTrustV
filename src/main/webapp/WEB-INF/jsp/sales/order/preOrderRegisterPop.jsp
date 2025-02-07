@@ -2096,7 +2096,7 @@
   function fn_checkPreOrderSalesPerson(memId, memCode) {
     var isExist = false;
 
-    Common.ajax("GET", "/sales/order/checkPreBookSalesPerson.do", {
+    Common.ajaxSync("GET", "/sales/order/checkPreBookSalesPerson.do", {
       memId : memId,
       memCode : memCode
     }, function(memInfo) {
