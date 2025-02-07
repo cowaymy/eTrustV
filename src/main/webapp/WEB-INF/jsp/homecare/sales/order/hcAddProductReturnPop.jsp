@@ -114,8 +114,8 @@
 				Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 				return;
 			}
-			if ($("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #custRelationship").val() == '' || $("#addInstallForm #custName").val() == '') {
-				Common.alert("Please insert 'Actual Product Return Date', 'Acctance Name',  'Acctance Relationship' <br/>in complete status");
+			if ($("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #custRelationship").val() == '' || $("#addInstallForm #custName").val() == '' || $("#addInstallForm #partnerCode").val() == 0) {
+				Common.alert("Please insert 'Actual Product Return Date', 'Acctance Name',  'Acctance Relationship', 'Pairing Code' <br/>in complete status");
 	            return;
 	        }
 		 }
@@ -686,7 +686,7 @@
 			    <th scope="row">DT Code</th>
 			    <td><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
 			    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" id="CTID" name="CTID" />
-			    <th scope="row">DT Partner Code<span id='m7' name='m7' class="must" style="display:none">*</span></th>
+			    <th scope="row">Pairing Code<span id='m7' name='m7' class="must">*</span></th>
 		        <td>
                     <select id='partnerCode' name='partnerCode' class="w100p"></select>
 		        </td>

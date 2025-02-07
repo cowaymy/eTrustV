@@ -196,13 +196,13 @@
 	        },
 	        {
 	            dataField : 'assignCt',
-	            headerText : 'AssignDt',
+	            headerText : 'Technician Code',
 	            width : 100,
 	            editable : false
 	        },
 	        {
 	            dataField : "partnerCode",
-	            headerText : "Partner Code",
+	            headerText : "Pairing Code",
 	            editable : false,
 	            width : 100
 	          },
