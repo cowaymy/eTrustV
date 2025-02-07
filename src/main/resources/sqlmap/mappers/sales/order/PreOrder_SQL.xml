@@ -355,7 +355,7 @@
 		     , TNB_ACC_NO
 		     , MAIN_REBATE_ORD_ID
 		     , MAIN_REBATE_ORD_NO
-		     , CW_STORE_ID
+		     <!-- , CW_STORE_ID -->
 		     )
 		VALUES
 		     ( #{preOrdId}
@@ -434,7 +434,7 @@
              , #{tnbAccNo}
              , #{rebateOrderId}
              , #{rebateOrderNo}
-             , #{cwStoreId}
+             <!-- , #{cwStoreId} -->
 		     )
     </insert>
 
