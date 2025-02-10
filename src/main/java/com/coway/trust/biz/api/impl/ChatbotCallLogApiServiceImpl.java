@@ -53,7 +53,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			}
 			else{
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
 				resultValue.setMessage("Unauthorized.");
 				return resultValue;
 			}
@@ -63,7 +63,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			if (isExist == 0) {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Order not found.");
 				return resultValue;
 			}
@@ -77,11 +77,11 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			chatbotCallLogApiMapper.updateCCR0006MStatus(updateParam);
 
 			resultValue.setSuccess(true);
-			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_SUCCESS);
+			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
 		}
 		catch (Exception ex){
 			resultValue.setSuccess(false);
-			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_UNEXPECTED);
 			resultValue.setMessage("Unexpected Error Occurs.");
 		}
 		finally{
@@ -96,6 +96,8 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 		    apiParam.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
 		    apiParam.put("respTm", CommonUtils.nvl(respTm));
 		    apiParam.put("apiUserId", CommonUtils.nvl(apiUserId));
+
+		    this.rtnRespMsg(apiParam);
 		}
 
 		return resultValue;
@@ -119,7 +121,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			}
 			else{
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
 				resultValue.setMessage("Unauthorized.");
 				return resultValue;
 			}
@@ -129,7 +131,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			if (isExist == 0) {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Order not found.");
 				return resultValue;
 			}
@@ -141,7 +143,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			if (orderInfo == null) {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Call Log not found.");
 				return resultValue;
 			}
@@ -165,15 +167,15 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 					resultValue.setCallLogAppointmentDates(appointmentDates);
 					resultValue.setSuccess(true);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_SUCCESS);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
 				} else {
 					resultValue.setSuccess(false);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 					resultValue.setMessage("No appointment available.");
 				}
 			} else {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Order not found.");
 			}
 
@@ -181,7 +183,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 		}
 		catch (Exception ex){
 			resultValue.setSuccess(false);
-			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_UNEXPECTED);
 			resultValue.setMessage("Unexpected Error Occurs.");
 		}
 		finally{
@@ -196,6 +198,8 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 		    apiParam.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
 		    apiParam.put("respTm", CommonUtils.nvl(respTm));
 		    apiParam.put("apiUserId", CommonUtils.nvl(apiUserId));
+
+		    this.rtnRespMsg(apiParam);
 		}
 	    return resultValue;
 	}
@@ -219,7 +223,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			}
 			else{
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
 				resultValue.setMessage("Unauthorized.");
 				return resultValue;
 			}
@@ -229,7 +233,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			if (isExist == 0) {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Order not found.");
 				return resultValue;
 			}
@@ -242,7 +246,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 			if (orderInfo == null) {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Call Log not found.");
 				return resultValue;
 			}
@@ -265,7 +269,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				EgovMap rdcStock = chatbotCallLogApiMapper.selectRdcStock(orderParam);
 				if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
 					resultValue.setSuccess(false);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NO_STOCK);
 					resultValue.setMessage("Not enough stock to proceed.");
 					return resultValue;
 				}
@@ -279,7 +283,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 				if (firstAvailUser == null) {
 					resultValue.setSuccess(false);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 					resultValue.setMessage("No allocation slot available on the date.");
 					return resultValue;
 				}
@@ -422,20 +426,26 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				    orderLogList.put("logCreated", new Date());
 				    chatbotCallLogApiMapper.insertSalesOrderLog(orderLogList);
 				} else {
+					// REMOVE INSTALL ENTRY
+					if (installMaster != null && callEntId > 0) {
+						// PRE INSERT INSTALL ENTRY
+						chatbotCallLogApiMapper.deleteInstallEntry(installMaster);
+					}
+
 					resultValue.setSuccess(false);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_FAILED);
 					resultValue.setMessage("Appointment Confirm Failed.");
 				}
 
 			} else {
 				resultValue.setSuccess(false);
-				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
 				resultValue.setMessage("Order not found.");
 			}
 		}
 		catch (Exception ex){
 			resultValue.setSuccess(false);
-			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INVALID);
+			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_UNEXPECTED);
 			resultValue.setMessage("Unexpected Error Occurs.");
 		}
 		finally{
@@ -450,6 +460,8 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 		    apiParam.put("prgPath", StringUtils.defaultString(request.getRequestURI()));
 		    apiParam.put("respTm", CommonUtils.nvl(respTm));
 		    apiParam.put("apiUserId", CommonUtils.nvl(apiUserId));
+
+		    this.rtnRespMsg(apiParam);
 		}
 
 		return resultValue;

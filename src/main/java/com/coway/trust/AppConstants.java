@@ -193,6 +193,12 @@ public class AppConstants {
 	public static final int RESPONSE_CODE_NOT_FOUND = 404;
 	public static final int RESPONSE_CODE_TIMEOUT = 405;
 
+	public static final int RESPONSE_CODE_INTERNAL_UNEXPECTED = 1;
+	public static final int RESPONSE_CODE_INTERNAL_NOT_FOUND = 2;
+	public static final int RESPONSE_CODE_INTERNAL_NO_STOCK = 3;
+	public static final int RESPONSE_CODE_INTERNAL_FAILED = 4;
+	public static final int RESPONSE_CODE_INTERNAL_SUCCESS = 5;
+
 	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
 	public static final String RESPONSE_DESC_CREATED = "Successful Created";
 	public static final String RESPONSE_DESC_INVALID = "Invalid Parameter(s) supplied";
@@ -223,4 +229,7 @@ public class AppConstants {
 	public static final String LANGUAGE_MS = "ms";
 	public static final String COUNTRY_CODE_MY = "60";
 	public static final String CODE_MY = "6";
+
+	public static final String WA_CALL_LOG_HA_TNC_FILE_NAME = "cowayRentalTnc.pdf";
+	public static final String WA_CALL_LOG_HC_TNC_FILE_NAME = "cowayRentalTnc.pdf";
 }
