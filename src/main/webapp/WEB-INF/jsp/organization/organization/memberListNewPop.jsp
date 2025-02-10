@@ -1523,7 +1523,7 @@ function checkNRIC(){
     isRejoinMem = false;
     $("#isRejoinMem").val(false);
     $("#salOrgRejoin").val('');
-    $("#traineeType1").val('');
+    //$("#traineeType1").val('');
     $("#attachmentTab").hide();
     myFileCaches = {};
     fn_requiredfield();
