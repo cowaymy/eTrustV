@@ -452,7 +452,7 @@
 			        SELECT * FROM (
 			            SELECT *
 			            FROM SAL0402D A
-			            WHERE A.CUST_IC = '001214081112'
+			            WHERE A.CUST_IC = #{nric}
 			            AND TO_CHAR(CCRIS_DT,'YYYY') = TO_CHAR(SYSDATE, 'YYYY') AND TO_CHAR(CCRIS_DT,'MM') = TO_CHAR(SYSDATE, 'MM')
 			            ORDER BY A.CCRIS_ID DESC
 			        )WHERE ROWNUM = 1
