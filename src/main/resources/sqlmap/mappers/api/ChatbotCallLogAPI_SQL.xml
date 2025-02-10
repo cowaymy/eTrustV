@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.ChatbotCallLogApiMapper">
+	<select id="checkIfCallLogEntryAppointmentValid" parameterType="com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentReqForm" resultType="int">
+		SELECT COUNT(1) FROM CBT0007M WHERE
+		CALL_ENTRY_ID = #{requestId}
+		AND SALES_ORD_NO = #{orderNo}
+		<if test='statusCode != null and statusCode != 0'>
+			AND STUS_CODE_ID = #{statusCode}
+		</if>
+	</select>
+
+	<update id="updateCBT0007MStatus" parameterType="Map" >
+		UPDATE CBT0007M
+		SET STUS_CODE_ID = #{stusCodeId}
+		WHERE
+		CALL_ENTRY_ID = #{requestId}
+		AND SALES_ORD_NO = #{ordNo}
+	</update>
+
+	<update id="updateCCR0006MStatus" parameterType="Map" >
+		UPDATE CCR0006M
+		SET WA_STUS_CODE_ID = #{stusCodeId}
+		WHERE
+		CALL_ENTRY_ID = #{requestId}
+	</update>
+
+	<select id="selectCallLogCbtOrderInfo" parameterType="Map" resultType="egovMap">
+		SELECT B.*,C.ITM_STK_ID,A.SALES_ORD_NO,D.STK_CODE
+		FROM CBT0007M A
+		JOIN CCR0006D B
+		ON A.SALES_ORD_ID = B.SALES_ORD_ID AND A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+		JOIN SAL0002D C
+		ON A.SALES_ORD_ID = C.SALES_ORD_ID
+		JOIN SYS0026M D
+		ON C.ITM_STK_ID = D.STK_ID
+		WHERE
+		A.SALES_ORD_NO = #{salesOrdNo}
+		AND A.CALL_ENTRY_ID = #{callEntryId}
+	</select>
+
+	<select id="selectAvailAllocationList" parameterType="Map" resultType="egovMap">
+		SELECT TO_CHAR(TO_DATE(C_DATE,'YYYY-MM-DD'),'DD/MM/YYYY') AS APT_DATE,SUM(AVAIL_INS_CNT) AS CAPACITY FROM (
+		    SELECT
+		        AA.CT, AA.C_DATE, AA.CT_SUB_GRP, AA.BRNCH_ID,
+		        CASE WHEN BB.MEM_ID IS NULL THEN 'N' ELSE 'Y' END AS HOLIDAY,
+		        CASE WHEN CC.MEM_ID IS NULL THEN 'N' ELSE 'Y' END AS VACATION,
+		        CASE WHEN DD.AREA_ID IS NULL THEN 'N' ELSE 'Y' END AS NO_SERVICE,
+		        NVL(EE.INS_SUM_CNT,0) AS TOT_INS_CNT,
+		        NVL(FF.CNT,0) AS USED_INS_CNT,
+		        NVL(EE.INS_SUM_CNT,0) - NVL(FF.CNT,0) AS AVAIL_INS_CNT
+		        FROM (
+		        SELECT MEM_ID CT,INS_DATE C_DATE,CT_SUB_GRP,BRNCH_ID
+		        FROM   (SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+		                  FROM   SVC0054M T, ORG0001D TT
+		                 WHERE       1 = 1
+		                         AND T.MEM_ID = TT.MEM_ID
+		                         /*BY KV*/
+		                         AND TT.STUS = 1
+		                         AND SUBSTR(TT.MEM_CODE, 0, 3) <![CDATA[ <> ]]> 'ACI'
+		                         AND CT_SUB_GRP IN (SELECT  F.CT_SUB_GRP
+		                                              FROM   SAL0001D A,
+		                                                     SAL0045D B,
+		                                                     SAL0023D E,
+		                                                     SYS0064M F
+		                                             WHERE   1 = 1 AND A.SALES_ORD_ID = #{salesOrdId}
+		                                             AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+<!-- 		                SEPERATOR -->
+		                UNION
+<!-- 		                SEPERATOR -->
+		                SELECT   DISTINCT B.MEM_ID,B.MEM_CODE, C.CT_SUB_GRP, C.BRNCH_ID
+		                  FROM   SYS0005M A,
+		                         ORG0001D B,
+		                         ORG0005D C,
+		                         SYS0064M M
+		                 WHERE       A.BRNCH_ID = B.BRNCH
+		                         AND B.MEM_ID = C.MEM_ID
+		                         AND C.MEM_LVL = '2'
+		                         AND B.STUS = '1'
+		                         AND SUBSTR(B.MEM_CODE, 0, 3) <![CDATA[ <> ]]> 'ACI'
+		                         AND A.CODE = (SELECT  F.CT_BRNCH_CODE
+		                                         FROM   SAL0001D A,
+		                                                SAL0045D B,
+		                                                SAL0023D E,
+		                                                SYS0064M F
+		                                        WHERE   1 = 1 AND A.SALES_ORD_ID =  #{salesOrdId}
+		                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+		             ) C,
+		            (SELECT TO_CHAR((SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM   DUAL  CONNECT BY   LEVEL <![CDATA[ <= ]]> 14) TB
+		    ORDER BY INS_DATE, CT_SUB_GRP ASC ) AA
+<!-- 		    HOLIDAY JOIN -->
+		    LEFT JOIN (
+		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
+		        FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D
+		        WHERE A.HOLIDAY = B.HOLIDAY
+		        AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+		        AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+		        AND   B.CT_MEM_ID     = C.MEM_ID
+		        AND   B.BRNCH_CODE   = D.CODE
+		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+<!-- 		    VACATION JOIN -->
+		    LEFT JOIN (
+		        SELECT MEM_ID, TO_CHAR(VACT_STD_DT,'YYYY-MM-DD') AS  VACT_STD_DT, TO_CHAR(VACT_END_DT,'YYYY-MM-DD') VACT_END_DT, VACT_REPL_CT
+		        FROM ORG0007D
+		        WHERE  1=1
+		        AND STUS_ID = 4
+		    ) CC ON CC.MEM_ID = AA.CT AND (TO_DATE(AA.C_DATE,'YYYY-MM-DD') BETWEEN TO_DATE(CC.VACT_STD_DT,'YYYY-MM-DD') AND TO_DATE(CC.VACT_STD_DT,'YYYY-MM-DD'))
+<!-- 		    NO SERVICE DAY -->
+		    LEFT JOIN (
+		        SELECT *
+		        FROM ORG0028M
+		        WHERE
+		        1=1
+		        AND AREA_ID = (
+		            SELECT AREA_ID
+		            FROM SAL1010V
+		            WHERE ORD_ID = #{salesOrdId}
+		            AND ROWNUM <![CDATA[ <= ]]> 1
+		        )
+		        AND TYPE = #{type}
+		    ) DD ON TO_CHAR(DD.NOSCV_DT, 'YYYY-MM-DD') = AA.C_DATE
+			<!-- 		    TOTAL AVAILABLE SERVICE COUNT -->
+		    LEFT JOIN (
+		        SELECT SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0)) INS_SUM_CNT, CT_ID
+		        FROM ORG0015M
+		        GROUP BY CT_ID
+		    ) EE ON EE.CT_ID = AA.CT
+		    LEFT JOIN (
+		        SELECT COUNT(*) AS CNT, TO_CHAR(S46D.INSTALL_DT,'YYYY-MM-DD') AS INSTALL_DT, S46D.CT_ID FROM SAL0046D S46D
+		        WHERE  1=1
+		        AND S46D.STUS_CODE_ID =1
+		        AND S46D.INSTALL_DT >= TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'),'YYYY-MM-DD')
+		        GROUP BY INSTALL_DT,CT_ID
+		    ) FF ON FF.CT_ID = AA.CT AND FF.INSTALL_DT = AA.C_DATE
+		)
+		WHERE HOLIDAY = 'N' AND VACATION='N' AND NO_SERVICE='N'
+		GROUP BY C_DATE
+		ORDER BY C_DATE
+	</select>
+
+		<select id="selectFirstAvailAllocationUser" parameterType="Map" resultType="egovMap">
+		SELECT * FROM (
+		    SELECT
+		        AA.CT, AA.C_DATE, AA.CT_SUB_GRP, AA.BRNCH_ID,
+		        CASE WHEN BB.MEM_ID IS NULL THEN 'N' ELSE 'Y' END AS HOLIDAY,
+		        CASE WHEN CC.MEM_ID IS NULL THEN 'N' ELSE 'Y' END AS VACATION,
+		        CASE WHEN DD.AREA_ID IS NULL THEN 'N' ELSE 'Y' END AS NO_SERVICE,
+		        NVL(EE.INS_SUM_CNT,0) AS TOT_INS_CNT,
+		        NVL(FF.CNT,0) AS USED_INS_CNT,
+		        NVL(EE.INS_SUM_CNT,0) - NVL(FF.CNT,0) AS AVAIL_INS_CNT
+		        FROM (
+		        SELECT MEM_ID CT,INS_DATE C_DATE,CT_SUB_GRP,BRNCH_ID
+		        FROM   (SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+		                  FROM   SVC0054M T, ORG0001D TT
+		                 WHERE       1 = 1
+		                         AND T.MEM_ID = TT.MEM_ID
+		                         /*BY KV*/
+		                         AND TT.STUS = 1
+		                         AND SUBSTR(TT.MEM_CODE, 0, 3) <![CDATA[ <> ]]> 'ACI'
+		                         AND CT_SUB_GRP IN (SELECT  F.CT_SUB_GRP
+		                                              FROM   SAL0001D A,
+		                                                     SAL0045D B,
+		                                                     SAL0023D E,
+		                                                     SYS0064M F
+		                                             WHERE   1 = 1 AND A.SALES_ORD_ID = #{salesOrdId}
+		                                             AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+<!-- 		                SEPERATOR -->
+		                UNION
+<!-- 		                SEPERATOR -->
+		                SELECT   DISTINCT B.MEM_ID,B.MEM_CODE, C.CT_SUB_GRP, C.BRNCH_ID
+		                  FROM   SYS0005M A,
+		                         ORG0001D B,
+		                         ORG0005D C,
+		                         SYS0064M M
+		                 WHERE       A.BRNCH_ID = B.BRNCH
+		                         AND B.MEM_ID = C.MEM_ID
+		                         AND C.MEM_LVL = '2'
+		                         AND B.STUS = '1'
+		                         AND SUBSTR(B.MEM_CODE, 0, 3) <![CDATA[ <> ]]> 'ACI'
+		                         AND A.CODE = (SELECT  F.CT_BRNCH_CODE
+		                                         FROM   SAL0001D A,
+		                                                SAL0045D B,
+		                                                SAL0023D E,
+		                                                SYS0064M F
+		                                        WHERE   1 = 1 AND A.SALES_ORD_ID =  #{salesOrdId}
+		                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+		             ) C,
+		            (SELECT TO_CHAR((SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM   DUAL  CONNECT BY   LEVEL <![CDATA[ <= ]]> 14) TB
+		    ORDER BY INS_DATE, CT_SUB_GRP ASC ) AA
+<!-- 		    HOLIDAY JOIN -->
+		    LEFT JOIN (
+		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
+		        FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D
+		        WHERE A.HOLIDAY = B.HOLIDAY
+		        AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+		        AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+		        AND   B.CT_MEM_ID     = C.MEM_ID
+		        AND   B.BRNCH_CODE   = D.CODE
+		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+<!-- 		    VACATION JOIN -->
+		    LEFT JOIN (
+		        SELECT MEM_ID, TO_CHAR(VACT_STD_DT,'YYYY-MM-DD') AS  VACT_STD_DT, TO_CHAR(VACT_END_DT,'YYYY-MM-DD') VACT_END_DT, VACT_REPL_CT
+		        FROM ORG0007D
+		        WHERE  1=1
+		        AND STUS_ID = 4
+		    ) CC ON CC.MEM_ID = AA.CT AND (TO_DATE(AA.C_DATE,'YYYY-MM-DD') BETWEEN TO_DATE(CC.VACT_STD_DT,'YYYY-MM-DD') AND TO_DATE(CC.VACT_STD_DT,'YYYY-MM-DD'))
+<!-- 		    NO SERVICE DAY -->
+		    LEFT JOIN (
+		        SELECT *
+		        FROM ORG0028M
+		        WHERE
+		        1=1
+		        AND AREA_ID = (
+		            SELECT AREA_ID
+		            FROM SAL1010V
+		            WHERE ORD_ID = #{salesOrdId}
+		            AND ROWNUM <![CDATA[ <= ]]> 1
+		        )
+		        AND TYPE = #{type}
+		    ) DD ON TO_CHAR(DD.NOSCV_DT, 'YYYY-MM-DD') = AA.C_DATE
+			<!-- 		    TOTAL AVAILABLE SERVICE COUNT -->
+		    LEFT JOIN (
+		        SELECT SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0)) INS_SUM_CNT, CT_ID
+		        FROM ORG0015M
+		        GROUP BY CT_ID
+		    ) EE ON EE.CT_ID = AA.CT
+		    LEFT JOIN (
+		        SELECT COUNT(*) AS CNT, TO_CHAR(S46D.INSTALL_DT,'YYYY-MM-DD') AS INSTALL_DT, S46D.CT_ID FROM SAL0046D S46D
+		        WHERE  1=1
+		        AND S46D.STUS_CODE_ID =1
+		        AND S46D.INSTALL_DT >= TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'),'YYYY-MM-DD')
+		        GROUP BY INSTALL_DT,CT_ID
+		    ) FF ON FF.CT_ID = AA.CT AND FF.INSTALL_DT = AA.C_DATE
+		    ) WHERE HOLIDAY = 'N' AND VACATION='N' AND NO_SERVICE='N'
+		    AND TO_DATE(C_DATE,'YYYY/MM/DD') = TO_DATE(#{appointmentDate},'DD/MM/YYYY')
+		    AND ROWNUM = 1
+	</select>
+
+	<select id="selectDocNo" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <update id="updateDocNo" parameterType="Map">
+     <![CDATA[
+        UPDATE SYS0022C
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
+        ]]>
+    </update>
+
+    <select id="installEntryIdSeq" resultType="Integer">
+        SELECT SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertInstallEntry" parameterType="Map">
+    INSERT INTO SAL0046D (INSTALL_ENTRY_ID
+                        , INSTALL_ENTRY_NO
+                        , SALES_ORD_ID
+                        , STUS_CODE_ID
+                        , CT_ID
+                        , INSTALL_DT
+                        , CALL_ENTRY_ID
+                        , INSTALL_STK_ID
+                        , INSTALL_RESULT_ID
+                        , CRT_USER_ID
+                        , CRT_DT
+                        , ALLOW_COMM
+                        , IS_TRADE_IN
+                        , CT_SUB_GRP
+                        , UPD_DT
+                        , UPD_USER_ID
+                        , REV_ID
+                        , APPNT_DT
+                        ,SESION_CODE
+                        ,GRADE
+                        ,SEGMENT_TYPE
+                        , INS_QR
+    ) VALUES (#{installEntryId}
+            , #{installEntryNo}
+            , #{salesOrderId}
+            , #{statusCodeId}
+            , #{CTID}
+            , TO_DATE(#{installDate},'dd-mm-yyyy')
+            , #{callEntryId}
+            , #{itmStkId}
+            , #{installResultId}
+            , #{creator}
+            , SYSDATE
+            , #{allowComm}
+            , #{isTradeIn}
+            , #{CTGroup}
+            , SYSDATE
+            , #{updator}
+            , #{revId}
+            , TO_DATE(#{appDate},'dd-mm-yyyy')
+            ,#{CTSSessionCode}
+            , #{stock}
+            ,#{CTSSessionSegmentType}
+            , #{insQr}
+    )
+  </insert>
+
+	<resultMap id="rtnResultCallLog" type="egovMap" />
+	<select id="SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+	 {
+	       call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnResultCallLog} )
+	 }
+	</select>
+
+	<select id="SP_SVC_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+	{
+	      call SP_SVC_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}  )
+	}
+	</select>
+
+	<delete id="deleteInstallEntry" parameterType="Map">
+	    DELETE FROM SAL0046D
+	    WHERE SALES_ORD_ID = #{salesOrderId}
+	    AND INSTALL_ENTRY_NO = #{installEntryNo}
+	</delete>
+
+	<update id="updateCallEntry" parameterType="Map">
+		UPDATE CCR0006D SET
+							STUS_CODE_ID = #{stusCodeId}
+		                  , RESULT_ID = #{resultId}
+		                  , UPD_DT = SYSDATE
+		                  , UPD_USER_ID = #{updUserId}
+		                  , CALL_DT = TO_DATE(#{callDt},'dd/mm/yyyy')
+		                  , WA_STUS_CODE_ID = #{waStusCodeId}
+		WHERE ( CALL_ENTRY_ID = #{callEntryId} )
+	</update>
+
+	<select id="selectMaxId" parameterType="Map" resultType="String">
+	    <if test="value != null and value == 'resultId' ">
+	      SELECT MAX(RESULT_ID) FROM SAL0047D
+	    </if>
+	    <if test="value != null and value == 'callEntryId' ">
+	      SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D
+	    </if>
+	    <if test="value != null and value == 'callResultId' ">
+	      SELECT MAX(CALL_RESULT_ID) FROM CCR0007D WHERE CALL_ENTRY_ID = #{callEntryId}
+	    </if>
+	</select>
+
+	<insert id="insertCallResult" parameterType="Map">
+    INSERT INTO CCR0007D (CALL_RESULT_ID
+                        , CALL_ENTRY_ID
+                        , CALL_STUS_ID
+                        , CALL_DT
+                        , CALL_ACTN_DT
+                        , CALL_FDBCK_ID
+                        , CALL_CT_ID
+                        , CALL_REM
+                        , CALL_CRT_USER_ID
+                        , CALL_CRT_DT
+                        , CALL_CRT_USER_ID_DEPT
+                        , CALL_HC_ID
+                        , CALL_ROS_AMT
+                        , CALL_SMS
+                        , CALL_SMS_REM
+    ) VALUES (CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL
+            , #{callEntryId}
+            , #{callStatusId}
+            , TO_DATE(#{callCallDate},'dd-mm-yyyy')
+            , TO_DATE(#{callActionDate},'dd-mm-yyyy')
+            , #{callFeedBackId}
+            , #{callCTID}
+            , #{callRemark}
+            , #{callCreateBy}
+            , SYSDATE
+            , #{callCreateByDept}
+            , #{callHCID}
+            , #{callROSAmt}
+            , #{callSMS}
+            , #{callSMSRemark}
+    )
+	</insert>
+
+	<select id="selectOrderEntry" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+        SELECT A.SALES_ORD_ID SALES_ORD_ID
+             , TO_CHAR(A.SALES_DT, 'dd-mm-yyyy') SALES_DT
+             , B.CPNT_ID CPNT_ID
+        FROM SAL0001D A
+        JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+        WHERE A.SALES_ORD_NO = #{orderNo}
+          AND A.STUS_CODE_ID = 1
+          AND ROWNUM <= 1
+     ]]>
+  </select>
+
+   <update id="updateASEntry" parameterType="Map">
+    UPDATE SVC0001D SET AS_CALLLOG_ID = #{callEntryId}
+                      , AS_MEM_ID = #{ctid}
+                      , AS_MEM_GRP = #{ctgroup}
+    WHERE AS_SO_ID = #{salesOrdId}
+      AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt}
+      AND AS_ID = ( SELECT MIN(AS_ID)
+                    FROM SVC0001D
+                    WHERE AS_SO_ID = #{salesOrdId}
+                      AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt})
+  </update>
+
+    <insert id="insertSalesOrderLog" parameterType="Map">
+      <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
+        SELECT SAL0009D_LOG_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0009D
+             ( LOG_ID
+             , SALES_ORD_ID
+             , PRGRS_ID
+             , LOG_DT
+             , REF_ID
+             , IS_LOK
+             , LOG_CRT_USER_ID
+             , LOG_CRT_DT
+             )
+        VALUES
+             ( #{logId}
+             , #{salesOrderId}
+             , #{progressId}
+             , #{logDate}
+             , #{refId}
+             , #{isLock}
+             , #{logCreator}
+             , #{logCreated}
+             )
+    </insert>
+
+  <select id="selectRdcStock" parameterType="Map" resultType="egovMap">
+    WITH CRDC AS (SELECT s28.WH_LOC_CODE
+                       , s28.CDC_CODE
+                       , s28.RDC_CODE
+                       , s28.WH_LOC_GB
+                  FROM SYS0028M s28,SYS0005M s05
+                  WHERE 1=1
+      <!-- and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2 ,s28.wh_loc_brnch_id3)
+      and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D
+      C, SYS0064M D -->
+                    AND s05.BRNCH_ID IN (s28.WH_LOC_BRNCH_ID ,s28.WH_LOC_BRNCH_ID2 ,s28.WH_LOC_BRNCH_ID3 ,s28.WH_LOC_BRNCH_ID4 ,s28.WH_LOC_BRNCH_ID5)
+      <choose>
+        <when test="stock eq 'B'.toString()">
+          AND s28.WH_LOC_STK_GRAD = 'B'
+        </when>
+        <otherwise>
+          AND s28.WH_LOC_STK_GRAD = 'A'
+        </otherwise>
+      </choose>
+      AND s28.WH_LOC_GB IN ('02' ,'05')
+      AND s28.WH_LOC_STUS_ID = '1'
+      AND s05.code IN ( SELECT
+                        <choose>
+                            <when test="branchTypeId != null and branchTypeId !='' and !(productCat eq 'ACI' or productCat eq 'ACO')">
+                                D.DT_BRNCH_CODE
+                            </when>
+                            <otherwise>
+                                D.CT_BRNCH_CODE
+                            </otherwise>
+                        </choose>
+                        FROM SAL0001D A ,
+                             SAL0023D B ,
+                             SAL0045D C ,
+                             SYS0064M D
+                        WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+                          AND B.CUST_ADD_ID = C.ADD_ID
+                          AND A.CUST_ID = B.CUST_ID
+                          AND B.AREA_ID = D.AREA_ID
+                          AND A.SALES_ORD_NO = #{salesOrdNo})
+    ) SELECT QTY - NVL (BOOKQTY, 0) AVAIL_QTY
+             , NVL(L56.MOV_QTY,0) INTRANSIT_QTY
+      FROM LOG0056M L56,
+           SYS0028M S28,
+           ( SELECT LOC_ID
+                    , ITM_CODE
+                    , SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+                    , SUM (NVL (MOV_QTY, 0)) MOV_QTY
+             FROM LOG0075M
+               <![CDATA[ WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
+               AND REQST_NO IN (SELECT REQST_NO
+                                FROM LOG0047M
+                                  <![CDATA[ WHERE NVL (REQST_DEL, 'N') <> 'Y') ]]>
+                                GROUP BY LOC_ID,
+                                         ITM_CODE ) L75,
+    CRDC WHERE 1 = 1
+           AND L56.LOC_ID = L75.LOC_ID(+)
+           AND L56.STK_CODE = L75.ITM_CODE(+)
+           AND S28.WH_LOC_ID = L56.LOC_ID
+           <choose>
+            <when test="stock eq 'B'.toString()">
+          AND s28.WH_LOC_STK_GRAD = 'B'
+            </when>
+            <otherwise>
+          AND s28.WH_LOC_STK_GRAD = 'A'
+            </otherwise>
+        </choose>
+           AND L56.STK_CODE = #{productCode}
+           AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
+           AND s28.WH_LOC_GB = CRDC.WH_LOC_GB
+           AND S28.WH_LOC_GB IN ('02' ,'05')
+  </select>
+
+<!--     <select id="selectCdcAvaiableStock" parameterType="Map" resultType="egovMap"> -->
+<!--     WITH CRDC AS (SELECT s28.WH_LOC_CODE -->
+<!--                        , s28.CDC_CODE -->
+<!--                        , s28.RDC_CODE -->
+<!--                   FROM SYS0028M s28,SYS0005M s05 -->
+<!--                   WHERE 1 = 1 -->
+<!--                     AND s05.BRNCH_ID IN (s28.WH_LOC_BRNCH_ID -->
+<!--                                        , s28.WH_LOC_BRNCH_ID2 -->
+<!--                                        , s28.WH_LOC_BRNCH_ID3 -->
+<!--                                        , s28.WH_LOC_BRNCH_ID4 -->
+<!--                                        , s28.WH_LOC_BRNCH_ID5 -->
+<!--                                        ) -->
+<!--                     AND s28.WH_LOC_STK_GRAD = 'A' -->
+<!--                     AND s28.WH_LOC_GB = '01' -->
+<!--                     AND s05.code in (SELECT D.CT_BRNCH_CODE -->
+<!--                                      FROM SAL0001D A , -->
+<!--                                           SAL0023D B , -->
+<!--                                           SAL0045D C , -->
+<!--                                           SYS0064M D -->
+<!--                                      WHERE A.SALES_ORD_ID = C.SALES_ORD_ID -->
+<!--                                        AND B.CUST_ADD_ID = C.ADD_ID -->
+<!--                                        AND A.CUST_ID = B.CUST_ID -->
+<!--                                        AND B.AREA_ID = D.AREA_ID -->
+<!--                                        AND A.SALES_ORD_NO = #{salesOrdNo}) -->
+<!--     ) SELECT QTY - NVL (BOOKQTY, 0) -->
+<!--              AVAIL_QTY -->
+<!--       FROM LOG0056M L56 , -->
+<!--            SYS0028M S28 , -->
+<!--            ( SELECT LOC_ID -->
+<!--                   , ITM_CODE -->
+<!--                   , SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY -->
+<!--                   , SUM (NVL (MOV_QTY, 0)) MOV_QTY -->
+<!--              FROM LOG0075M -->
+<!--              <![CDATA[ WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]> -->
+<!--                AND REQST_NO IN (SELECT REQST_NO -->
+<!--                                 FROM LOG0047M -->
+<!--                                 <![CDATA[ WHERE NVL (REQST_DEL, 'N') <> 'Y') ]]> -->
+<!--                                 GROUP BY LOC_ID, ITM_CODE) L75, -->
+<!--       CRDC WHERE 1 = 1 -->
+<!--              AND L56.LOC_ID = L75.LOC_ID(+) -->
+<!--              AND L56.STK_CODE = L75.ITM_CODE(+) -->
+<!--              AND S28.WH_LOC_ID = L56.LOC_ID -->
+<!--              AND S28.wh_loc_stk_grad = 'A' -->
+<!--              AND L56.STK_CODE = #{productCode} -->
+<!--              AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE) -->
+<!--              AND S28.WH_LOC_GB = '01' -->
+<!--   </select> -->
+
+  	<select id="checkAccess" parameterType="Map" resultType="egovMap">
+	    SELECT *
+	    FROM API0001M
+        WHERE API_USER_STUS_ID = 1
+            AND API_USER_NAME = #{userName}
+            AND API_KEY = #{key}
+	</select>
+
+<!--   <select id="getFN_GET_SVC_AVAILABLE_INVENTORY" parameterType="Map" resultType="egovMap"> -->
+<!--        <![CDATA[ -->
+<!--                 select FN_GET_SVC_AVAILABLE_INVENTORY(#{CT_CODE}, #{STK_CODE})  AVAIL_QTY from dual -->
+<!--         ]]> -->
+<!--   </select> -->
+</mapper>
