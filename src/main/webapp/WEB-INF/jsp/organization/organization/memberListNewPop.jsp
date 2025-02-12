@@ -23,6 +23,8 @@ var atchFileId = '';
 var issuedBankTxt;
 var checkFileValid = true;
 var isRejoinMem =  $("#isRejoinMem").val();
+var uniformSizeId;
+var innerTypeId;
 
 var myGridID_Doc;
 
@@ -1784,38 +1786,34 @@ function fn_changeDetails(){
 		   }
 		}
 	 }
-    var uniformSizeId;
-    var muslimahScarftId;
-    var innerTypeId;
+    var newUniformSizeId;
+    var newInnerTypeId;
 
     if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
 
     	 if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" ) {
     		 if($("#cmbRace").val() == "10"){
-    		        innerTypeId = 524 ;
-    		        uniformSizeId = 522 ;
+    		        newInnerTypeId = 524 ;
+    		        newUniformSizeId = 522 ;
     		 }
-    		 uniformSizeId = 522 ;
+    		 newUniformSizeId = 522 ;
 
     	 }else{
-    		 uniformSizeId = 523 ;
+    		 newUniformSizeId = 523 ;
     	 }
 
     }
 
-    CommonCombo.make("uniformSize", "/common/selectUniformSizeList.do", {groupCode : uniformSizeId}, "", {
-        id: "codeId",
-        name: "codeName",
-        type:"S"
-    });
-
-    CommonCombo.make("innerType", "/common/selectInnerTypeList.do", {groupCode : innerTypeId}, "", {
-        id: "codeId",
-        name: "codeName",
-        type:"S"
-    });
-
      if($("#memberType").val() == "5" && $("#traineeType1").val() == "2") {
+	    	 if(uniformSizeId != newUniformSizeId){
+	             uniformSizeId = newUniformSizeId;
+	             CommonCombo.make("uniformSize", "/common/selectUniformSizeList.do", {groupCode : uniformSizeId}, "", {
+	                 id: "codeId",
+	                 name: "codeName",
+	                 type:"S"
+	             });
+	         }
+
 	    	$('#uniformSize').show();
 	    	$('#uniformSizeLbl').show();
 	    	$('#emergencyTabHeader').show();
@@ -1828,6 +1826,15 @@ function fn_changeDetails(){
             fn_requiredfield();
 
         if($('input[name=gender]:checked', '#memberAddForm').val() ==  "F" && $("#cmbRace").val() == "10" ) {
+        	if(innerTypeId != newInnerTypeId){
+        		innerTypeId = newInnerTypeId;
+                CommonCombo.make("innerType", "/common/selectInnerTypeList.do", {groupCode : innerTypeId}, "", {
+                    id: "codeId",
+                    name: "codeName",
+                    type:"S"
+                });
+            }
+
 	        $('.chkScarft').show();
 	        $('#muslimahScarftLbl').show();
 	        $('#innerType').show();
