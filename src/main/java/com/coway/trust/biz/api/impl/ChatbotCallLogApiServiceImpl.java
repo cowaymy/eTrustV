@@ -272,6 +272,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					updateParam.put("requestId", params.getRequestId());
 					updateParam.put("ordNo", params.getOrderNo());
 					updateParam.put("stusCodeId", 21);
+					updateParam.put("waRemarks","Whatsapp Appointment lack of stock to proceed.");
 
 					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
 					chatbotCallLogApiMapper.updateCCR0006MStatus(updateParam);
