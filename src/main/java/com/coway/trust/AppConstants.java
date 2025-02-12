@@ -196,8 +196,8 @@ public class AppConstants {
 	public static final int RESPONSE_CODE_INTERNAL_UNEXPECTED = 1;
 	public static final int RESPONSE_CODE_INTERNAL_NOT_FOUND = 2;
 	public static final int RESPONSE_CODE_INTERNAL_NO_STOCK = 3;
-	public static final int RESPONSE_CODE_INTERNAL_FAILED = 4;
-	public static final int RESPONSE_CODE_INTERNAL_SUCCESS = 5;
+	public static final int RESPONSE_CODE_INTERNAL_SUCCESS = 4;
+	public static final int RESPONSE_CODE_INTERNAL_FAILED = 5;
 
 	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
 	public static final String RESPONSE_DESC_CREATED = "Successful Created";

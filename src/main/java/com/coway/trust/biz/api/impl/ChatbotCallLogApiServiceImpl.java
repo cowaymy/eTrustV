@@ -268,6 +268,14 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				orderParam.put("itmStkId", CommonUtils.nvl(orderInfo.get("itmStkId")));
 				EgovMap rdcStock = chatbotCallLogApiMapper.selectRdcStock(orderParam);
 				if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
+					EgovMap updateParam = new EgovMap();
+					updateParam.put("requestId", params.getRequestId());
+					updateParam.put("ordNo", params.getOrderNo());
+					updateParam.put("stusCodeId", 21);
+
+					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
+					chatbotCallLogApiMapper.updateCCR0006MStatus(updateParam);
+
 					resultValue.setSuccess(false);
 					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NO_STOCK);
 					resultValue.setMessage("Not enough stock to proceed.");
