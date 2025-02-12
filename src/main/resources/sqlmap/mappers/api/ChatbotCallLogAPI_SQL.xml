@@ -18,8 +18,8 @@
 		AND SALES_ORD_NO = #{ordNo}
 	</update>
 
-	<update id="updateCCR0006MStatus" parameterType="Map" >
-		UPDATE CCR0006M
+	<update id="updateCCR0006DStatus" parameterType="Map" >
+		UPDATE CCR0006D
 		SET WA_STUS_CODE_ID = #{stusCodeId}
 		<if test='waRemarks != null and waRemarks !=""'>
 			,WA_REMARKS = #{waRemarks}

@@ -14,7 +14,7 @@ public interface ChatbotCallLogApiMapper {
 
 	void updateCBT0007MStatus(EgovMap params);
 
-	void updateCCR0006MStatus(EgovMap params);
+	void updateCCR0006DStatus(EgovMap params);
 
 	List<EgovMap> selectAvailAllocationList(EgovMap params);
 

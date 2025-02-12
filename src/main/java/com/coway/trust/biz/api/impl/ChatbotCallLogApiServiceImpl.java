@@ -72,9 +72,10 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			updateParam.put("requestId", params.getRequestId());
 			updateParam.put("ordNo", params.getOrderNo());
 			updateParam.put("stusCodeId", 134);
+			updateParam.put("waRemarks", "Customer Detail Incorrect Upon Verification");
 
 			chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
-			chatbotCallLogApiMapper.updateCCR0006MStatus(updateParam);
+			chatbotCallLogApiMapper.updateCCR0006DStatus(updateParam);
 
 			resultValue.setSuccess(true);
 			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
@@ -275,7 +276,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					updateParam.put("waRemarks","Whatsapp Appointment lack of stock to proceed.");
 
 					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
-					chatbotCallLogApiMapper.updateCCR0006MStatus(updateParam);
+					chatbotCallLogApiMapper.updateCCR0006DStatus(updateParam);
 
 					resultValue.setSuccess(false);
 					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NO_STOCK);
@@ -434,6 +435,10 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				    orderLogList.put("logCreator", cbtApiUserId);
 				    orderLogList.put("logCreated", new Date());
 				    chatbotCallLogApiMapper.insertSalesOrderLog(orderLogList);
+
+					resultValue.setSuccess(true);
+					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
+					resultValue.setMessage("Appointment Confirmed.");
 				} else {
 					// REMOVE INSTALL ENTRY
 					if (installMaster != null && callEntId > 0) {
