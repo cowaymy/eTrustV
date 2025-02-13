@@ -48,73 +48,68 @@
 
   <select id="getExistCustomer" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
 	SELECT * FROM (
-	    SELECT
-	          A.CUST_ID
-	          , A.NAME
-	          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_STUS != '-' THEN 'EXISTING'
-	                 ELSE 'NEW'
-	            END CUST_TYPE
-	          , CASE
-	                WHEN B.CHS_STUS IS NOT NULL AND B.CHS_STUS != '-' THEN DBMS_LOB.SUBSTR(F.CCP_REM,4000)
-	                 ELSE E.CCP_REM
-	             END CCP_REM
-	           , A.NRIC
-	    FROM SAL0029D A
-<!-- 	    LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM') -->
-	    LEFT JOIN (
-           SELECT * FROM (
-	             SELECT * FROM SAL0262D
-	             WHERE CUST_ID = #{customerId}
-	             ORDER BY CHS_ID DESC
-            )WHERE ROWNUM = 1
-	    )B ON A.CUST_ID = B.CUST_ID
-	    LEFT JOIN (
-	         SELECT * FROM (
-	            SELECT
-	                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
-	                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
-	                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
-	                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
-	                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
-	                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
-	                        ELSE 0
-	                END SCORE,
-	                B.CUST_ID
-	            FROM SAL0102D A
-	            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
-	            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
-	            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
-	            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
-	            WHERE B.APP_TYPE_ID = 66
-	            <if test="customerId != null and customerId != '' ">
-	                 AND B.CUST_ID = #{customerId}
-	            </if>
-	            <if test="customerNric != null and customerNric != '' ">
-	                 AND C.NRIC = #{customerNric}
-	             </if>
-	            ORDER BY A.CCP_ID DESC
-	        )WHERE ROWNUM = 1
-	    ) C ON C.CUST_ID = A.CUST_ID
-	    LEFT JOIN (
-	        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP
-	        FROM SAL0425D A
-	        WHERE A.STUS = 1
-	    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
-	                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
-	    LEFT JOIN (
-	          SELECT DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM, A.CUST_CREDIT
-	              FROM SAL0428D A
-	              WHERE A.STUS = 1
-	    ) E ON E.CUST_CREDIT = D.SCORE_GRP <!-- NEW CUSTOMER -->
-	    LEFT JOIN SAL0428D F ON F.CHS_STUS = B.CHS_STUS AND F.STUS = 1 <!-- EXISTING CUSTOMER -->
-	    WHERE 1=1
-           <if test="customerNric != null and customerNric != '' ">
-	         AND A.NRIC = #{customerNric}
-	    </if>
-	    <if test="customerId != null and customerId != '' ">
-	          AND A.CUST_ID = #{customerId}
-	    </if>
-	      AND ROWNUM = 1
+		SELECT * FROM (
+		    SELECT
+		          A.CUST_ID
+		          , B.NAME
+		          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN 'EXISTING'
+		                 ELSE 'NEW'
+		            END CUST_TYPE
+		          , CASE
+		                WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN DBMS_LOB.SUBSTR(F.CCP_REM,4000)
+		                 ELSE E.CCP_REM
+		             END CCP_REM
+		           , B.NRIC
+	        FROM SAL0262D A
+	        LEFT JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+		    LEFT JOIN (
+		         SELECT * FROM (
+		            SELECT
+		                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
+		                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
+		                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
+		                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
+		                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
+		                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
+		                        ELSE 0
+		                END SCORE,
+		                B.CUST_ID
+		            FROM SAL0102D A
+		            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
+		            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+		            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
+		            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+		            WHERE B.APP_TYPE_ID = 66
+		            <if test="customerId != null and customerId != '' ">
+		                 AND B.CUST_ID = #{customerId}
+		            </if>
+		            <if test="customerNric != null and customerNric != '' ">
+		                 AND C.NRIC = #{customerNric}
+		             </if>
+		            ORDER BY A.CCP_ID DESC
+		        )WHERE ROWNUM = 1
+		    ) C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN (
+		        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP
+		        FROM SAL0425D A
+		        WHERE A.STUS = 1
+		    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
+		                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
+		    LEFT JOIN (
+		          SELECT DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM, A.CUST_CREDIT
+		              FROM SAL0428D A
+		              WHERE A.STUS = 1
+		    ) E ON E.CUST_CREDIT = D.SCORE_GRP <!-- NEW CUSTOMER -->
+		    LEFT JOIN SAL0428D F ON F.CHS_STUS = A.CHS_STUS AND F.STUS = 1 <!-- EXISTING CUSTOMER -->
+		    WHERE 1=1
+	           <if test="customerNric != null and customerNric != '' ">
+		         AND B.NRIC = #{customerNric}
+		    </if>
+		    <if test="customerId != null and customerId != '' ">
+		          AND A.CUST_ID = #{customerId}
+		    </if>
+		    ORDER BY A.CHS_ID DESC
+		  ) WHERE ROWNUM = 1
 
 	    <if test="customerNric != null and customerNric != '' ">
 		    UNION
@@ -353,85 +348,94 @@
 
     <select id="getCustCreditInfo" parameterType="Map" resultType="egovMap">
 		SELECT * FROM (
-		    SELECT
-		          A.CUST_ID
-		          , A.NAME
-		          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_STUS != '-' THEN 'EXISTING'
-		                 ELSE 'NEW'
-		            END CUST_TYPE
-		          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_STUS != '-' THEN B.CHS_STUS
-		                 ELSE '-'
-		            END CHS_STUS
-		          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_RSN != '-' THEN B.CHS_RSN
-		                 ELSE '-'
-		            END CHS_RSN
-		          , B.CUST_CAT
-		          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_RSN != '-' THEN '-'
-                         ELSE D.SCORE_GRP
-                    END SCORE_GRP
-		          , G.UNIT_ENTITLE
-		          , G.PROD_ENTITLE_NAME PROD_ENTITLE
-		          , G.RENT_FEE_LIMIT
-		          , CASE WHEN B.CHS_STUS IS NOT NULL AND B.CHS_RSN != '-' THEN B.CHS_STUS
-                         ELSE D.SCORE_GRP
-                    END MBSCORE_GRP_CDE
-		    FROM SAL0029D A
-<!-- 		    LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM') -->
-		    LEFT JOIN (
-		          SELECT * FROM (
-				    SELECT * FROM SAL0262D
-				    WHERE CUST_ID = #{custId}
-				    ORDER BY CHS_ID DESC
-				)WHERE ROWNUM = 1
-		    )B ON A.CUST_ID = B.CUST_ID
-		    LEFT JOIN (
-		         SELECT * FROM (
-		            SELECT
-		                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
-		                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
-		                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
-		                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
-		                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
-		                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
-		                        ELSE 0
-		                END SCORE,
-		                B.CUST_ID
-		            FROM SAL0102D A
-		            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
-		            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
-		            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
-		            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
-		            WHERE B.APP_TYPE_ID = 66
-		            <if test="custId != null and custId != '' ">
-		                 AND B.CUST_ID = #{custId}
-					</if>
-					<if test="nric != null and nric != '' ">
-		                 AND C.NRIC = #{nric}
-	                 </if>
-		            ORDER BY A.CCP_ID DESC
-		        )WHERE ROWNUM = 1
-		      ) C ON C.CUST_ID = A.CUST_ID
-		    LEFT JOIN (
-		        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP SCORE_GRP_NAME, B.CODE_NAME SCORE_GRP
-		        FROM SAL0425D A
-		        LEFT JOIN SYS0013M B ON B.CODE = A.SCORE_GRP AND B.CODE_MASTER_ID = 607
-		        WHERE A.STUS = 1
-		    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
-		                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
-		    LEFT JOIN (
-		        SELECT A.*, B.CODE_NAME PROD_ENTITLE_NAME FROM SAL0426D A
-		        LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
-		        WHERE A.STUS = 1
-		    )G ON (G.SCORE_GRP = D.SCORE_GRP_NAME OR G.CHS_STUS = B.CHS_STUS) AND
-		        (G.CUST_CAT = B.CUST_CAT OR (B.CUST_CAT IS NULL AND G.CUST_CAT IS NULL))
-		    WHERE 1=1
-		    <if test="nric != null and nric != '' ">
-		          AND A.NRIC = #{nric}
-		    </if>
-		    <if test="custId != null and custId != '' ">
-		          AND A.CUST_ID = #{custId}
-		    </if>
-		    AND ROWNUM = 1
+			SELECT * FROM (
+			    SELECT
+			          A.CUST_ID
+			          , B.NAME
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN 'EXISTING'
+			                 ELSE 'NEW'
+			            END CUST_TYPE
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN A.CHS_STUS
+			                 ELSE '-'
+			            END CHS_STUS
+			          , CASE WHEN A.CHS_RSN IS NOT NULL AND A.CHS_RSN != '-' THEN A.CHS_RSN
+			                 ELSE '-'
+			            END CHS_RSN
+			          , A.CUST_CAT
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN '-'
+	                         ELSE D.SCORE_GRP
+	                    END SCORE_GRP
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.UNIT_ENTITLE
+                             ELSE G.UNIT_ENTITLE
+                        END UNIT_ENTITLE
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.PROD_ENTITLE_NAME
+                             ELSE G.PROD_ENTITLE_NAME
+                        END PROD_ENTITLE
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.RENT_FEE_LIMIT
+                             ELSE G.RENT_FEE_LIMIT
+                        END RENT_FEE_LIMIT
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN A.CHS_STUS
+	                         ELSE D.SCORE_GRP
+	                    END MBSCORE_GRP_CDE
+	            FROM SAL0262D A
+	            LEFT JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+			    LEFT JOIN (
+			         SELECT * FROM (
+			            SELECT
+			                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
+			                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
+			                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
+			                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
+			                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
+			                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
+			                        ELSE 0
+			                END SCORE,
+			                B.CUST_ID
+			            FROM SAL0102D A
+			            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
+			            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+			            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
+			            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+			            WHERE B.APP_TYPE_ID = 66
+			            <if test="custId != null and custId != '' ">
+			                 AND B.CUST_ID = #{custId}
+						</if>
+						<if test="nric != null and nric != '' ">
+			                 AND C.NRIC = #{nric}
+		                 </if>
+			            ORDER BY A.CCP_ID DESC
+			        )WHERE ROWNUM = 1
+			      ) C ON C.CUST_ID = A.CUST_ID
+			    LEFT JOIN (
+			        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP SCORE_GRP_NAME, B.CODE_NAME SCORE_GRP
+			        FROM SAL0425D A
+			        LEFT JOIN SYS0013M B ON B.CODE = A.SCORE_GRP AND B.CODE_MASTER_ID = 607
+			        WHERE A.STUS = 1
+			    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
+			                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
+			     LEFT JOIN (
+		            -- GET UNIT ENTITLEMENT AND PROD ENTITLEMENT FOR NEW CUSTOMER
+		            SELECT A.*, B.CODE_NAME PROD_ENTITLE_NAME FROM SAL0426D A
+                    LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
+                    WHERE A.STUS = 1
+		        )G ON (G.SCORE_GRP = D.SCORE_GRP) AND
+		                (G.CUST_CAT = A.CUST_CAT OR (G.CUST_CAT IS NULL AND A.CUST_CAT IS NULL))
+		        LEFT JOIN (
+		            -- GET UNIT ENTITLEMENT AND PROD ENTITLEMENT FOR EXISTING CUSTOMER
+		            SELECT A.*, B.CODE_NAME PROD_ENTITLE_NAME FROM SAL0426D A
+                    LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
+                    WHERE A.STUS = 1
+		        )H ON (H.CHS_STUS = A.CHS_STUS) AND
+		                (H.CUST_CAT = A.CUST_CAT OR (H.CUST_CAT IS NULL AND A.CUST_CAT IS NULL))
+			    WHERE 1=1
+			    <if test="nric != null and nric != '' ">
+			          AND B.NRIC = #{nric}
+			    </if>
+			    <if test="custId != null and custId != '' ">
+			          AND A.CUST_ID = #{custId}
+			    </if>
+			    ORDER BY A.CHS_ID DESC
+		    ) WHERE ROWNUM = 1
 
 		    <if test="nric != null and nric != '' ">
 			    UNION

@@ -1512,6 +1512,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 			if(scoreGrp != null){
 				params.put("scoreGrp", scoreGrp.get("scoreGrpCode").toString());
+				params.put("chsStus", null);
 
 				unitAndProdEntitle = ccpCalculateMapper.getUnitAndProdEntitle(params);
 				result.putAll(scoreGrp);
