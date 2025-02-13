@@ -300,9 +300,9 @@
             , #{salesOrderId}
             , #{statusCodeId}
             , #{CTID}
-            , TO_DATE(#{installDate},'dd-mm-yyyy')
+            , TO_DATE(#{installDate},'DD/MM/YYYY')
             , #{callEntryId}
-            , #{itmStkId}
+            , #{installStkId}
             , #{installResultId}
             , #{creator}
             , SYSDATE
@@ -312,7 +312,7 @@
             , SYSDATE
             , #{updator}
             , #{revId}
-            , TO_DATE(#{appDate},'dd-mm-yyyy')
+            , TO_DATE(#{appDate},'DD/MM/YYYY')
             ,#{CTSSessionCode}
             , #{stock}
             ,#{CTSSessionSegmentType}
@@ -399,7 +399,7 @@
 	<select id="selectOrderEntry" parameterType="Map" resultType="egovMap">
      <![CDATA[
         SELECT A.SALES_ORD_ID SALES_ORD_ID
-             , TO_CHAR(A.SALES_DT, 'dd-mm-yyyy') SALES_DT
+             , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') SALES_DT
              , B.CPNT_ID CPNT_ID
         FROM SAL0001D A
         JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
@@ -414,11 +414,11 @@
                       , AS_MEM_ID = #{ctid}
                       , AS_MEM_GRP = #{ctgroup}
     WHERE AS_SO_ID = #{salesOrdId}
-      AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt}
+      AND TO_CHAR(AS_REQST_DT, 'DD/MM/YYYY') = #{salesDt}
       AND AS_ID = ( SELECT MIN(AS_ID)
                     FROM SVC0001D
                     WHERE AS_SO_ID = #{salesOrdId}
-                      AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt})
+                      AND TO_CHAR(AS_REQST_DT, 'DD/MM/YYYY') = #{salesDt})
   </update>
 
     <insert id="insertSalesOrderLog" parameterType="Map">
