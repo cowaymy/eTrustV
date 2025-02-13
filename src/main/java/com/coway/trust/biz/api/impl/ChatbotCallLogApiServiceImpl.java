@@ -265,7 +265,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				String stockGrade = "A"; // only new installation so new stock
 
 				//Check Stock Availability before proceed
-				orderParam.put("productCode", CommonUtils.nvl(orderInfo.get("stkCode")));
+ 				orderParam.put("productCode", CommonUtils.nvl(orderInfo.get("stkCode")));
 				orderParam.put("itmStkId", CommonUtils.nvl(orderInfo.get("itmStkId")));
 				EgovMap rdcStock = chatbotCallLogApiMapper.selectRdcStock(orderParam);
 				if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
