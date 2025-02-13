@@ -407,9 +407,17 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					callEntry.put("updDt", new Date());
 					callEntry.put("updUserId", cbtApiUserId);// Set to Chatbot?
 					callEntry.put("oriCallDt", CommonUtils.nvl(orderInfo.get("oriCallDt")));
+					callEntry.put("waRemarks","Whatsapp appointment confirmed.");
 					callEntry.put("waStusCodeId", 4); // Complete WA
 
 					chatbotCallLogApiMapper.updateCallEntry(callEntry);
+
+					EgovMap updateParam = new EgovMap();
+					updateParam.put("requestId", params.getRequestId());
+					updateParam.put("ordNo", params.getOrderNo());
+					updateParam.put("stusCodeId", 4);
+					updateParam.put("waRemarks","Whatsapp appointment confirmed.");
+					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
 
 					if (callEntId > 0) {
 						EgovMap salesEntry = chatbotCallLogApiMapper.selectOrderEntry(CommonUtils.nvl(orderInfo.get("salesOrdNo")));
