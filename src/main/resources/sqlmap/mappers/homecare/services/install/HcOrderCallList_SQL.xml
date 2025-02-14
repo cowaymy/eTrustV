@@ -281,7 +281,7 @@
 		  , Extent1.IS_WAIT_CANCL
 		  , Extent1.CRT_USER_ID_ID
           , Extent1.CRT_USER_ID
-		  , Extent1.CRT_DT
+          , TO_CHAR(TO_DATE( Extent1.CRT_DT || Extent1.CRT_TM ,'DD/MM/YYYY HH24:MI:SS'),'MM/DD/YYYY HH24:MI:SS') CRT_DT
 		  , Extent1.CALL_TYPE_NAME
 		  , Extent1.RCD_TMS
 		  , Extent1.POSTCODE
@@ -299,6 +299,10 @@
 		, Extent1.VRIFY_FLG
 		, Extent1.ord_STUS_CODE_ID
         , Extent1.CALL_LOG_ENTRY_DATE<!-- Added by Wawa  20230619-->
+        , Extent1.WA_STUS_CODE_ID
+        , Extent1.WA_STUS_CODE
+        , Extent1.WA_STUS_DESC
+        , Extent1.WA_REMARKS
 		FROM (
             SELECT
 		      vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
@@ -332,6 +336,7 @@
 		      , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID_ID
 		      , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID
 		      , vCallLogOrderCall.CRT_DT CRT_DT
+              , vCallLogOrderCall.CRT_TM CRT_TM
 		      , vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME
 		      , vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID
 		      , vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE
@@ -349,6 +354,10 @@
 		      , vCallLogOrderCall.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
 		      , vCallLogOrderCall.SO_CUR_STUS_ID ord_STUS_CODE_ID
               , TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date  <!-- Added by Wawa  20230619-->
+				, vCallLogOrderCall.WA_STUS_CODE_ID
+				, vCallLogOrderCall.WA_STUS_CODE
+				, vCallLogOrderCall.WA_STUS_DESC
+				, vCallLogOrderCall.WA_REMARKS
 		FROM CCR1002V vCallLogOrderCall
 		<!-- Added by Wawa  20230619-->
         JOIN CCR0006D callog ON callog.call_entry_id  = (SELECT MIN(CALL_ENTRY_ID) FROM CCR0006D WHERE CCR0006D.SALES_ORD_ID = vcalllogordercall.SALES_ORD_ID GROUP BY CCR0006D.SALES_ORD_ID)

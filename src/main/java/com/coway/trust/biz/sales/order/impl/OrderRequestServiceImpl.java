@@ -1927,6 +1927,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             ccleMap.put("resultId", cancCallResultVO.getCallResultId());
             ccleMap.put("updUserId", cancCallResultVO.getCallCrtUserId());
 
+            if(CommonUtils.nvl(ccleMap.get("waStusCodeId")).equals("44")){
+                ccleMap.put("waStusCodeId", "10");
+            }
+
             orderRequestMapper.updateCallEntry2(ccleMap);
           } else {
             //
@@ -2261,7 +2265,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   }
 
   private EgovMap selectOrderSimulatorViewByOrderNo2(Map<String, Object> params) {
-	
+
     EgovMap view = orderRequestMapper.selectOrderSimulatorViewByOrderNo(params);
 
     int CurrentBillMth = 0;
@@ -2325,7 +2329,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
           noPromo.put("promoItmStkId", view.get("itmStkId"));
 
           EgovMap promoId = orderRequestMapper.selectPromoD(noPromo);
-         // tracePromoID = ((BigDecimal) promoId.get("promoId")).intValue();     
+         // tracePromoID = ((BigDecimal) promoId.get("promoId")).intValue();
           tracePromoID = (promoId != null ? (BigDecimal) promoId.get("promoId") : tracePromoID).intValue();
           // tracePromoID = 577;
         }

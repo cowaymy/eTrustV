@@ -325,6 +325,7 @@
          , T1.UPD_DT
          , T1.UPD_USER_ID
          , T1.ORI_CALL_DT
+         , T1.WA_STUS_CODE_ID
     FROM CCR0006D T1
     WHERE T1.CALL_ENTRY_ID = #{callEntryId}
   </select>
@@ -340,6 +341,9 @@
   <update id="updateCallEntry2" parameterType="Map">
     UPDATE CCR0006D
     SET STUS_CODE_ID = #{stusCodeId}
+	    <if test="waStusCodeId != null and waStusCodeId != '' ">
+	    ,WA_STUS_CODE_ID = #{waStusCodeId}
+	    </if>
       , RESULT_ID = #{resultId}
       , UPD_DT = SYSDATE
       , UPD_USER_ID = #{updUserId}
@@ -1165,7 +1169,7 @@
   </insert>
 
   <select id="selectOrderSimulatorViewByOrderNo" parameterType="Map" resultType="egovMap">
-  
+
   <choose>
          <when test='userTypeId == 2 '>
            SELECT T1.SALES_ORD_ID
@@ -1191,7 +1195,7 @@
         LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
         LEFT JOIN ORG1001V T5 ON T5.MEM_ID = T1.MEM_ID
         WHERE T1.SALES_ORD_NO = #{salesOrdNo}
-            AND ROWNUM &lt;= 1 
+            AND ROWNUM &lt;= 1
         <if test="memLevel == 4">
          AND T5.MEM_ID = #{memId}
         </if>
@@ -1203,10 +1207,10 @@
         </if>
         <if test="memLevel == 1">
         AND T5.ORG_CODE = #{orgCode}
-        </if> 
-        
+        </if>
+
         UNION
-        
+
         SELECT T1.SALES_ORD_ID
          , T1.SALES_ORD_NO
          , DECODE(T1.SALES_DT, NULL, '19000101', TO_CHAR(T1.SALES_DT, 'YYYYMMDD')) AS ORD_DT
@@ -1231,7 +1235,7 @@
         JOIN SAL0090D T6 ON T6.SRV_SO_ID = T1.SALES_ORD_ID
         LEFT JOIN ORG1001V T5 ON T5.MEM_ID = T6.SRV_CODY_ID
         WHERE T1.SALES_ORD_NO = #{salesOrdNo}
-            AND ROWNUM &lt;= 1 
+            AND ROWNUM &lt;= 1
         <if test="memLevel == 4">
          AND T5.MEM_ID = #{memId}
         </if>
@@ -1243,7 +1247,7 @@
         </if>
         <if test="memLevel == 1">
         AND T5.ORG_CODE = #{orgCode}
-        </if> 
+        </if>
          </when>
        <otherwise>
             SELECT T1.SALES_ORD_ID
@@ -1269,7 +1273,7 @@
     LEFT JOIN HMC0011D T4 ON T4.ORD_SEQ_NO = T1.BNDL_ID
     <if test="userBranchId != null and userBranchId != '' ">
     LEFT JOIN ORG0001D org001 on org001.MEM_ID =  T1.MEM_ID
-    LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = T1.SALES_ORD_ID 
+    LEFT JOIN SAL1013V sal1013 on sal1013.ORD_ID = T1.SALES_ORD_ID
     </if>
     WHERE T1.SALES_ORD_NO = #{salesOrdNo}
     <if test="userBranchId != null and userBranchId != '' ">
@@ -1277,9 +1281,9 @@
     </if>
       AND ROWNUM &lt;= 1
          </otherwise>
-    </choose> 
-    
-    
+    </choose>
+
+
   </select>
 
   <select id="selectRentalInst" parameterType="Map" resultType="egovMap">

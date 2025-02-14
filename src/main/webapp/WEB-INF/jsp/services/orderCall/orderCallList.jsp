@@ -19,6 +19,9 @@
   var callEntryId;
   var salesOrdNo;
   var rcdTms;
+  var waStusCodeId;
+  var waStusDesc;
+  var callCrtDt;
 
   // Empty Set
   var emptyData = [];
@@ -87,6 +90,18 @@
                           myGridID, event.rowIndex,
                           "salesOrdNo");
 
+                      waStusCodeId = AUIGrid.getCellValue(
+                          myGridID, event.rowIndex,
+                          "waStusCodeId");
+
+                      waStusDesc = AUIGrid.getCellValue(
+                          myGridID, event.rowIndex,
+                          "waStusDesc");
+
+                      callCrtDt = AUIGrid.getCellValue(
+                              myGridID, event.rowIndex,
+                              "crtDt");
+
                       Common
                           .popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode=" + callStusCode
                               + "&callStusId=" + callStusId
@@ -103,6 +118,9 @@
               callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
               salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
               rcdTms = AUIGrid.getCellValue(myGridID, event.rowIndex, "rcdTms");
+              waStusCodeId = AUIGrid.getCellValue(myGridID, event.rowIndex, "waStusCodeId");
+              waStusDesc = AUIGrid.getCellValue(myGridID, event.rowIndex, "waStusDesc");
+              callCrtDt = AUIGrid.getCellValue(myGridID, event.rowIndex, "crtDt");
               //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
             });
           });
@@ -155,6 +173,17 @@
   }
 
   function fn_openAddCall() {
+	  if(waStusCodeId == 44){
+          var todayDate = new Date();
+          var crtDateExpiry = new Date(callCrtDt);
+          crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
+
+			if(todayDate <= crtDateExpiry) {
+			      Common.alert("Pending Whatsapp Appointment Confirmation.");
+		          return;
+			}
+	  }
+
     if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
       Common.ajax("POST", "/callCenter/selRcdTms.do", {
           callStusCode : callStusCode,
@@ -201,6 +230,24 @@
       headerText : '<spring:message code="service.grid.Status" />',
       editable : false,
       width : 100
+    },{
+       dataField : "waStusDesc",
+       headerText : 'WA Status',
+       editable : false,
+       width : 100
+    },{
+      dataField : "waStusCode",
+      headerText : "",
+      width : 0
+    },{
+      dataField : "waStusCodeId",
+      headerText : "",
+      width : 0
+    },{
+        dataField : "waRemarks",
+        headerText : 'WA Remarks',
+        editable : false,
+        width : 100
     },{
         dataField : "c3",
         headerText : 'Order key in date',
@@ -293,6 +340,10 @@
       dataField : "rcdTms",
       headerText : "",
       width : 0
+    },{
+        dataField : "crtDt",
+        headerText : "",
+        width : 0
     } ];
 
     var gridPros = {

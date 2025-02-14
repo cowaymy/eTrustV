@@ -33,7 +33,9 @@ import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
+import com.coway.trust.biz.services.chatbot.impl.ChatbotMapper;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -49,6 +51,9 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
     @Resource(name = "ccpRentalAgreementMapper")
     private CcpRentalAgreementMapper ccpRentalAgreementMapper;
+
+    @Resource(name = "chatbotMapper")
+    private ChatbotMapper chatbotMapper;
 
 	@Value("${web.resource.upload.file}")
 	private String webPath;
@@ -878,7 +883,46 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 				 LOGGER.info("_________________________________________________________________________________________");
 		 		 LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  End _________________________");
 		 		 LOGGER.info("_________________________________________________________________________________________");
-			 }
+
+
+		          Map<String, Object> custInfoParam = new HashMap();
+	        	  custInfoParam.put("salesOrdId", params.get("saveOrdId"));
+		          EgovMap custWADetails = chatbotMapper.getCustWADetailsByOrd(custInfoParam);
+
+		          if(custWADetails != null){
+		        	  custInfoParam.put("seq", chatbotMapper.getCBT0007M_Seq());
+			          custInfoParam.put("custId", params.get("saveCustId"));
+		        	  custInfoParam.put("callEntryId", callSeq);
+
+		        	  custInfoParam.put("salesOrdNo", CommonUtils.nvl(custWADetails.get("salesOrdNo")));
+		        	  custInfoParam.put("custName", CommonUtils.nvl(custWADetails.get("name")));
+		        	  custInfoParam.put("nric", CommonUtils.nvl(custWADetails.get("nric")));
+		        	  custInfoParam.put("telNo", CommonUtils.nvl(custWADetails.get("telM1")));
+
+		        	  custInfoParam.put("productImage", CommonUtils.nvl(custWADetails.get("stkCode")) + ".jpg");
+		        	  custInfoParam.put("productModel", CommonUtils.nvl(custWADetails.get("stkDesc")));
+		        	  custInfoParam.put("mthRentAmt", CommonUtils.nvl(custWADetails.get("feeAmt")));
+		        	  custInfoParam.put("contractPeriod", CommonUtils.nvl(custWADetails.get("obligationPeriod")));
+		        	  custInfoParam.put("custAddId", CommonUtils.nvl(custWADetails.get("custAddId")));
+		        	  custInfoParam.put("addrDtl", CommonUtils.nvl(custWADetails.get("addrDtl")));
+		        	  custInfoParam.put("tncFlag", 1);
+
+		        	  if(CommonUtils.nvl(custWADetails.get("prodCat")).equals("HA")){
+			        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HA_TNC_FILE_NAME);
+		        	  }
+		        	  else{
+			        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HC_TNC_FILE_NAME);
+		        	  }
+
+		        	  chatbotMapper.insertWAAppointment(custInfoParam);
+
+		        	  custInfoParam.put("waStusCodeId", 44); //Pending for WA Apointment Status
+		        	  chatbotMapper.updateCallLogWAStatus(custInfoParam);
+		          }
+		          else{
+		        	  //NOT SURE? PROCEED OR BLOCK?
+		          }
+			   }
 
              //ccp rental agreement 24/02/2022 hltang
              if(("5").equals(params.get("statusEdit"))

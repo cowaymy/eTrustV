@@ -33,7 +33,7 @@
           , Extent1.IS_WAIT_CANCL IS_WAIT_CANCL
           , Extent1.CRT_USER_ID_ID CRT_USER_ID_ID
           , Extent1.CRT_USER_ID CRT_USER_ID
-          , Extent1.CRT_DT CRT_DT
+          , TO_CHAR(TO_DATE( Extent1.CRT_DT || Extent1.CRT_TM ,'DD/MM/YYYY HH24:MI:SS'),'MM/DD/YYYY HH24:MI:SS') CRT_DT
           , Extent1.CALL_TYPE_NAME CALL_TYPE_NAME
           , Extent1.RCD_TMS RCD_TMS
           , Extent1.POSTCODE POSTCODE
@@ -59,6 +59,10 @@
           , Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK,
           <!-- Added by Wawa  20230619-->
           extent1.call_log_entry_date
+          , extent1.WA_STUS_CODE_ID
+          , extent1.WA_STUS_CODE
+          , extent1.WA_STUS_DESC
+          , extent1.WA_REMARKS
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
                    , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -90,6 +94,7 @@
                    , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID_ID
                    , vCallLogOrderCall.CRT_USER_ID CRT_USER_ID
                    , vCallLogOrderCall.CRT_DT CRT_DT
+                   , vCallLogOrderCall.CRT_TM CRT_TM
                    , vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME
                    , vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID
                    , vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE
@@ -104,6 +109,10 @@
                    , vcalllogordercall.DSC_CODE DSC_CODE
                    , vcalllogordercall.ECOMM_ORD_ID ECOMM_ORD_ID,
                    TO_CHAR(callog.CRT_DT,'DD/MM/YYYY') call_log_entry_date
+                   , vCallLogOrderCall.WA_STUS_CODE_ID
+                   , vCallLogOrderCall.WA_STUS_CODE
+                   , vCallLogOrderCall.WA_STUS_DESC
+                   , vCallLogOrderCall.WA_REMARKS
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
            <if test="branchTypeId != null and branchTypeId != ''">

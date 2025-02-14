@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.chatbot.impl.ChatbotMapper">
+  <select id="getCustWADetailsByOrd" parameterType="Map" resultType="egovMap">
+  		SELECT B.CUST_ID,B.NAME,B.NRIC,B.TEL_M1,A.SALES_ORD_NO,E.STK_CODE, E.STK_DESC,
+        CASE WHEN (A.APP_TYPE_ID = 66) THEN A.MTH_RENT_AMT ELSE A.TOT_AMT END AS FEE_AMT,
+        CASE WHEN (A.APP_TYPE_ID = 66) THEN C.OBLIGT_PRIOD ELSE 0 END AS OBLIGATION_PERIOD,
+        A.CUST_ADD_ID,
+        F.ADDR_DTL || F.STREET ||','|| G.AREA ||','|| G.POSTCODE ||','|| G.CITY ||','|| G.STATE ||','|| G.COUNTRY AS ADDR_DTL,
+        CASE WHEN (A.BNDL_ID IS NULL) THEN 'HA' ELSE 'HC' END AS PROD_CAT
+        FROM SAL0001D A
+        JOIN SAL0027D B ON B.CUST_CNTC_ID = A.CUST_CNT_ID
+        LEFT JOIN SAL0081D C ON A.SRV_PAC_ID = C.SRV_CNTRCT_PAC_ID
+        JOIN SAL0002D D ON A.SALES_ORD_ID = D.SALES_ORD_ID
+        JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+        LEFT JOIN SAL0023D F ON F.CUST_ADD_ID = A.CUST_ADD_ID
+        LEFT JOIN SYS0064M G ON G.AREA_ID = F.AREA_ID
+  		WHERE A.SALES_ORD_ID = #{salesOrdId}
+  </select>
+
+  <select id="getCBT0007M_Seq" resultType="int">
+         SELECT CBT0007M_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertWAAppointment" parameterType="Map">
+  	INSERT INTO CBT0007M (
+	  	ID,
+	  	CALL_ENTRY_ID,
+	  	SALES_ORD_ID,
+	  	SALES_ORD_NO,
+	  	CUST_ID,
+	  	CUST_NAME,
+	  	TEL_NO,
+	  	NRIC,
+	  	PRODUCT_IMAGE,
+	  	PRODUCT_MODEL,
+	  	MTH_RENT_AMT,
+	  	CONTRACT_PERIOD,
+	  	CUST_ADD_ID,
+	  	ADDR_DTL,
+	  	TNC_FLAG,
+	  	TNC_FILE_NAME,
+	  	STUS_CODE_ID,
+	  	CRT_DT
+  	)
+  	VALUES(
+  		#{seq},
+  		#{callEntryId},
+  		#{salesOrdId},
+  		#{salesOrdNo},
+  		#{custId},
+  		#{custName},
+  		#{telNo},
+  		#{nric},
+  		#{productImage},
+  		#{productModel},
+  		#{mthRentAmt},
+  		#{contractPeriod},
+  		#{custAddId},
+  		#{addrDtl},
+  		#{tncFlag},
+  		#{tncFileName},
+  		1,
+  		SYSDATE
+  	)
+  </insert>
+
+  <update id="updateCallLogWAStatus" parameterType="Map">
+  	UPDATE CCR0006D
+  	SET WA_STUS_CODE_ID = #{waStusCodeId}
+  	WHERE CALL_ENTRY_ID = #{callEntryId}
+  </update>
+</mapper>

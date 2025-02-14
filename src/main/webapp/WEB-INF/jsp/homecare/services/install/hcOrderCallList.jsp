@@ -9,6 +9,9 @@
 	var callEntryId;
 	var salesOrdNo;
 	var rcdTms;
+	  var waStusCodeId;
+	  var waStusDesc;
+	  var callCrtDt;
 
 	// Empty Set
 	var emptyData = [];
@@ -122,6 +125,18 @@
 											rcdTms = AUIGrid.getCellValue(
 													myGridID, event.rowIndex,
 													"rcdTms");
+
+											waStusCodeId = AUIGrid.getCellValue(
+											        myGridID, event.rowIndex,
+											        "waStusCodeId");
+
+											waStusDesc = AUIGrid.getCellValue(
+											    myGridID, event.rowIndex,
+											    "waStusDesc");
+
+											callCrtDt = AUIGrid.getCellValue(
+											        myGridID, event.rowIndex,
+											        "crtDt");
 
 											Common
 													.popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode="
@@ -250,6 +265,21 @@
 		salesOrdNo = selectedItems[0].item.salesOrdNo;
 		rcdTms = selectedItems[0].item.rcdTms;
 
+        waStusCodeId = selectedItems[0].item.waStusCodeId;
+        waStusDesc = selectedItems[0].item.waStusDesc;
+        callCrtDt = selectedItems[0].item.crtDt;
+
+  	  if(waStusCodeId == 44){
+          var todayDate = new Date();
+          var crtDateExpiry = new Date(callCrtDt);
+          crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
+
+			if(todayDate <= crtDateExpiry) {
+			      Common.alert("Pending Whatsapp Appointment Confirmation.");
+		          return;
+			}
+	  }
+
 		if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
 			Common
 					.ajax(
@@ -305,7 +335,25 @@
 			headerText : '<spring:message code="service.grid.Status" />',
 			editable : false,
 			width : 90
-		}, {
+		},{
+		       dataField : "waStusDesc",
+		       headerText : 'WA Status',
+		       editable : false,
+		       width : 100
+		    },{
+		      dataField : "waStusCode",
+		      headerText : "",
+		      width : 0
+		    },{
+		      dataField : "waStusCodeId",
+		      headerText : "",
+		      width : 0
+		    },{
+			       dataField : "waRemarks",
+			       headerText : 'WA Remarks',
+			       editable : false,
+			       width : 100
+			    }, {
             dataField : "c3",
             headerText : 'Order key in date',
             dataType: "date",
@@ -410,6 +458,10 @@
 			width : 0
 		}, {
             dataField : "ordStusCodeId",
+            width : 0
+        },{
+            dataField : "crtDt",
+            headerText : "",
             width : 0
         }];
 
