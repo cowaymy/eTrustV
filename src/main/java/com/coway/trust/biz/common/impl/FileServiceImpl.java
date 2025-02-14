@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,8 +192,18 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public void updateCodyDocumentQty(Map<String, Object> params) {
-		fileMapper.updateCodyDocumentQty(params);
-		fileMapper.deleteCodyDocumentQty(params);
+		if(params.containsKey("memId") && params.containsKey("memType") && params.containsKey("traineeType")){
+			String memId = (String) params.get("memId");
+			String memType = (String) params.get("memType");
+			String traineeType = (String) params.get("traineeType");
+
+			if(!StringUtils.isEmpty(memId) && !StringUtils.isEmpty(memType)) {
+				if(memType.equalsIgnoreCase("2") || (memType.equalsIgnoreCase("5") && !StringUtils.isEmpty(traineeType) && traineeType.equalsIgnoreCase("2"))){
+					fileMapper.updateCodyDocumentQty(params);
+					fileMapper.deleteCodyDocumentQty(params);
+				}
+			}
+		}
 		return;
 	}
 }

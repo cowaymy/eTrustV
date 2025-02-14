@@ -2604,7 +2604,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			oneDocSub.put("memType", memberType);
     			oneDocSub.put("memId", String.valueOf(getMemId.get("memId")));
 
-
     			int docQty= Integer.parseInt(String.valueOf( oneDocSub.get("docQty") ) );
 
     			if (  docQty != 0 ){// doc가 0이아니면
@@ -2617,8 +2616,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				memberListMapper.insertDocSub(oneDocSub);
     			}
     		}
-
 	}
+
+		Map<String, Object> codyDocumentParam = new HashMap<>();
+		codyDocumentParam.put("memId", String.valueOf(getMemId.get("memId")));
+		codyDocumentParam.put("memType", memberType);
+		codyDocumentParam.put("traineeType", trainType);
+
+		fileService.updateCodyDocumentQty(codyDocumentParam);
 }
 
 	@Override
@@ -2971,6 +2976,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
 		params.put("fileGroupKey", fileGroupKey);
+
+		fileService.updateCodyDocumentQty(params);
 	}
 
 	@Override
@@ -3023,13 +3030,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}
 		}
 
-		String memType = (String) params.get("memType");
-		String traineeType = (String) params.get("traineeType");
-		if(!StringUtils.isEmpty(memType)) {
-			if(memType.equalsIgnoreCase("2") || (memType.equalsIgnoreCase("5") && !StringUtils.isEmpty(traineeType) && traineeType.equalsIgnoreCase("2"))){
-				fileService.updateCodyDocumentQty(params);
-			}
-		}
+		fileService.updateCodyDocumentQty(params);
 	}
 
 	@Override
