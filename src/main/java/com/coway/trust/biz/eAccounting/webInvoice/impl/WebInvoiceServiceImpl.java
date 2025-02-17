@@ -1177,7 +1177,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
                     }
                 }
             }
-            else if(clmType != null && clmType.equals("V1")){
+            else if(clmType != null && clmType.equals("V1") && params.get(i).get("appvPrcssStus") == "A"){
             	Map<String, Object> info = (Map<String, Object>) params.get(i);
             	info.put("clmNo", params.get(i).get("clmNo"));
             	EgovMap emailDiffContent = vendorMgmtEmroMapper.getEmailDiffContent(info);

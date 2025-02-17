@@ -176,7 +176,8 @@ public class VendorManagementController {
         LOGGER.debug("params =====================================>>  " + params);
 
         String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
-        int countAppvPrcssStus = appvPrcssStus.length;
+//        int countAppvPrcssStus = appvPrcssStus.length;
+        int countAppvPrcssStus = (appvPrcssStus == null || appvPrcssStus.length == 0) ? 0 : appvPrcssStus.length;
 
         params.put("appvPrcssStus", appvPrcssStus);
         LOGGER.debug("countAppvPrcssStus =====================================>>  " + countAppvPrcssStus);

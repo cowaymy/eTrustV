@@ -64,7 +64,8 @@
 		        END VENDOR_NAME,
 		        NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC) VENDOR_REG_NO_NRIC,
 		        NVL(B.APPV_PRCSS_NO, '') APPV_PRCSS_NO,
-		        B.CRT_USER_ID USER_ID
+		        B.CRT_USER_ID USER_ID,
+		        NVL(A.VENDOR_TYPE, B.VENDOR_TYPE) VENDOR_TYPE
 		    FROM FCM0031D A
 		    FULL JOIN (
 		        SELECT B1.*
@@ -104,13 +105,6 @@
 	                AND UPPER(B.VENDOR_REQ_NO) <= UPPER(#{vendorReqNoTo})
 	             ]]>
 	        </if>
-	        <if test="vendorTypeCmb != null and vendorTypeCmb != ''">
-                    AND B.VENDOR_TYPE IN
-			      <foreach item="item" collection="vendorTypeCmb" index="index"
-			        open="(" separator="," close=")">
-			        #{item}
-			      </foreach>
-            </if>
 
 		) X1
 		LEFT JOIN FCM0004M X2
@@ -118,6 +112,13 @@
 		LEFT JOIN SYS0047M X3
 		    ON X2.REQST_USER_ID = X3.USER_NAME
 		WHERE 1 = 1
+		<if test="vendorTypeCmb != null and vendorTypeCmb != ''">
+                    AND VENDOR_TYPE IN
+                  <foreach item="item" collection="vendorTypeCmb" index="index"
+                    open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+            </if>
 		/* Approval related where clause */
 		    <if test="appStartDt != null and appStartDt != ''">
 		        <![CDATA[
