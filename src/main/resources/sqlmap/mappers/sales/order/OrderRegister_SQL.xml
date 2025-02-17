@@ -769,6 +769,7 @@
              , T1.PROMO_ITM_RENT_PRIOD
              , T1.PROMO_ITM_OBLIG_PRIOD
              , T1.SRV_TYPE
+             , T1.PROMO_ITM_PV_SS
           FROM SAL0018D T1
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STK_ID = #{stkId}

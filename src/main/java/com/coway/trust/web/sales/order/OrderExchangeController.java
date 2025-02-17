@@ -209,4 +209,9 @@ public class OrderExchangeController {
 
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/cnfmProductExchangeDetailPop.do")
+  public String cnfmProductExchangeDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "sales/order/cnfmProductExchangeDetailPop";
+  }
 }

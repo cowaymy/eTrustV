@@ -183,7 +183,7 @@
 				              LEFT JOIN SYS0026M Extent14   ON Extent14.STK_ID = Extent1.SO_EXCHG_OLD_STK_ID
 				              LEFT JOIN SAL0017D Extent15   ON Extent15.PROMO_ID = Extent1.SO_EXCHG_OLD_PROMO_ID
 				              LEFT JOIN SAL0029D Extent16   ON Extent16.CUST_ID = Extent1.SO_EXCHG_OLD_CUST_ID
-				              LEFT JOIN SAL0046D Extent18  ON Extent18.SALES_ORD_ID = Extent2.SALES_ORD_ID
+				              LEFT JOIN SAL0046D Extent18  ON Extent18.SALES_ORD_ID = Extent2.SALES_ORD_ID AND Extent1.INSTALL_ENTRY_ID = Extent18.INSTALL_ENTRY_ID
                               LEFT JOIN SAL0047D Extent19 ON Extent18.INSTALL_ENTRY_ID = Extent19.ENTRY_ID
 				             <![CDATA[
 			        WHERE  0 <> Extent1.SO_EXCHG_STUS_ID
@@ -348,7 +348,9 @@
                Extent19.DEFECT_DESC AS PEX_DEFECT_PART_SMALL,
                Extent19.DEFECT_RMK AS PEX_DEFECT_PART_LARGE,
                Extent20.DEFECT_DESC AS PEX_PROB_SYMP_LARGE,
-               Extent21.DEFECT_DESC AS PEX_PROB_SYMP_SMALL
+               Extent21.DEFECT_DESC AS PEX_PROB_SYMP_SMALL,
+               CASE WHEN Extent1.SO_EXCHG_OLD_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_OLD_SRV_TYPE,
+               CASE WHEN Extent1.SO_EXCHG_NW_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_NW_SRV_TYPE
     FROM SAL0004D Extent1
     JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.SO_ID
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent2.CUST_ID

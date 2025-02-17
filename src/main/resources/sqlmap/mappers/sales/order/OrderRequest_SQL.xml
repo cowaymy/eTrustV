@@ -515,6 +515,8 @@
     , SO_EXCHG_NW_CUST_ID
     , SO_EXCHG_FORM_NO
     , ATCH_FILE_GRP_ID
+    , SO_EXCHG_OLD_SRV_TYPE
+    , SO_EXCHG_NW_SRV_TYPE
     )
     VALUES
     ( #{soExchgId}
@@ -556,6 +558,8 @@
     , #{soExchgNwCustId}
     , #{soExchgFormNo}
     , #{soExchgAtchGrpId}
+    , #{soExchgOldSrvType}
+    , #{soExchgNwSrvType}
     )
   </insert>
 
@@ -2582,5 +2586,22 @@
         ,#{fileKeySeq}
         )
     </insert>
+
+  <update id="updateInstallSrvType" parameterType="Map">
+    UPDATE SAL0045D
+    SET UPD_DT = SYSDATE,
+        UPD_USER_ID = #{updUserId},
+        SRV_TYPE = #{srvType}
+    WHERE SALES_ORD_ID = #{salesOrderId}
+  </update>
+
+  <update id="updateHSConfigurationSrvType" parameterType="Map">
+    UPDATE SAL0090D
+    SET SRV_UPD_DT = SYSDATE,
+        SRV_UPD_USER_ID = #{updUserId},
+        SRV_TYPE = #{srvType}
+    WHERE SRV_SO_ID = #{salesOrderId}
+  </update>
+
 
 </mapper>

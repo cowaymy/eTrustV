@@ -50,6 +50,7 @@ import com.coway.trust.biz.sales.order.vo.SalesReqCancelVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.order.vo.StkReturnEntryVO;
+import com.coway.trust.biz.services.bs.impl.HsManualMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -104,6 +105,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Resource(name = "voucherMapper")
   private VoucherMapper voucherMapper;
 
+  @Resource(name = "hsManualMapper")
+  private HsManualMapper hsManualMapper;
+
   @Autowired
   private MessageSourceAccessor messageAccessor;
 
@@ -145,6 +149,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderExchangeVO.setSoExchgOldCallEntryId(0);
       salesOrderExchangeVO.setSoExchgOldDefRentAmt(BigDecimal.ZERO);
       salesOrderExchangeVO.setSoExchgOldCustId(0);
+      salesOrderExchangeVO.setSoExchgOldSrvType((String) params.get("hiddenSrvType")); // OLD SERVICE TYPE
 
       // DATA FOR NEW EXCHANGE PRODUCT
       salesOrderExchangeVO.setSoExchgNwAppTypeId((int) params.get("appTypeId")); // NEW APPLICATION TYPE - SAME AS PREVIOUS
@@ -160,6 +165,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderExchangeVO.setSoExchgNwCallEntryId(0);
       salesOrderExchangeVO.setSoExchgNwDefRentAmt(new BigDecimal((String) params.get("ordRentalFees")));
       salesOrderExchangeVO.setSoExchgNwCustId(0);
+      salesOrderExchangeVO.setSoExchgNwSrvType((String) params.get("reqSrvType")); // NEW SERVICE TYPE
     } else if (SalesConstants.ORDER_REQ_TYPE_CD_AEXC.equals(ordReqType)) {
       salesOrderExchangeVO.setSoExchgTypeId(282);
       salesOrderExchangeVO.setSoExchgStusId(SalesConstants.STATUS_COMPLETED);
@@ -429,19 +435,19 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       int a;
       String ind = "";
       if (CommonUtils.intNvl(params.get("hiddenAppTypeID")) == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-    	  if (params.get("btnBillGroup") != null) {
-    		  ind = (String) params.get("btnBillGroup");
-    	  } else {
-    		  ind = (String) params.get("grpOpt");
-    	  }
+        if (params.get("btnBillGroup") != null) {
+          ind = (String) params.get("btnBillGroup");
+        } else {
+          ind = (String) params.get("grpOpt");
+        }
 
-    	  if ("new".equals(ind)) {
-    		 a = 0;
-    	  } else {
-    		 a = CommonUtils.intNvl(params.get("txtHiddenBillGroupID"));
-    	  }
+        if ("new".equals(ind)) {
+         a = 0;
+        } else {
+         a = CommonUtils.intNvl(params.get("txtHiddenBillGroupID"));
+        }
       } else {
-    	  a = 0;
+        a = 0;
       }
       salesOrderMVO.setCustBillId(a);
 
@@ -1108,9 +1114,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
 
     //Voucher Exchange If Any
-	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
-	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
+  String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+  String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+  this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -1593,9 +1599,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     params.put("appTypeId", appTypeId);
 
     //Voucher Exchange If Any
-  	String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
-  	String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
-  	this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
+    String existingVoucherCode = CommonUtils.nvl(somMap.get("voucherCode"));
+    String currentVoucherCode = CommonUtils.nvl(params.get("voucherCode"));
+    this.voucherExchangeUpdate(existingVoucherCode, currentVoucherCode, somMap.get("salesOrdNo").toString(), sessionVO.getUserId());
 
     // ORDER EXCHANGE
     SalesOrderExchangeVO orderExchangeMasterVO = new SalesOrderExchangeVO();
@@ -1646,6 +1652,50 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       if (callEntryMap2 != null) {
         callEntryId = CommonUtils.intNvl(callEntryMap2.get("callEntryId")); // STORE CALL ENTRY ID IF RECORD EXIST
       }
+
+      params.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("srvType", orderExchangeMasterVO.getSoExchgNwSrvType());
+      // Update - SAL0045D
+      orderRequestMapper.updateInstallSrvType(params);
+
+      // UPDATE OLD REBATE TO INACTIVE
+      EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(params);
+      if (getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0) {
+        Map<String, Object> ssRebate = new HashMap();
+        ssRebate.put("stusId", 8);
+        ssRebate.put("ordId", getSSGstRebateInfo.get("ordId"));
+        ssRebate.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
+        ssRebate.put("updUserId", sessionVO.getUserId());
+        hsManualMapper.updateSSRebateStatus(ssRebate);
+      }
+
+      // UPDATE OLD PV REBATE TO INACTIVE
+      EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(params);
+      if (getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0) {
+        Map<String, Object> pvRebate = new HashMap();
+        pvRebate.put("stusId", 8);
+        pvRebate.put("ordId", getPvSSRebateInfo.get("ordId"));
+        pvRebate.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
+        pvRebate.put("updUserId", sessionVO.getUserId());
+        hsManualMapper.updatePvSSRebateStatus(pvRebate);
+      }
+
+      // INSERT Self Service Rebate IF TYPE = BEFORE INSTALL , APP TYPE = RENTAL , SERVICE TYPE = SS
+      if(orderExchangeMasterVO.getSoCurStusId() == 24 &&
+          orderExchangeMasterVO.getSoExchgNwAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL &&
+          orderExchangeMasterVO.getSoExchgNwSrvType() != null &&
+          orderExchangeMasterVO.getSoExchgNwSrvType().equals("SS")){
+        EgovMap rebate = new EgovMap();
+        rebate.put("srvCntrctPacId", params.get("hiddenSrvPacId"));
+        EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(rebate);
+
+        // Rebate - PAY0286D
+        insertSelfServiceRebate(salesOrderMVO , sessionVO , srvPackageResult);
+        // PV Rebate - PAY0367D
+        insertPvSelfServiceRebate(salesOrderMVO , salesOrderDVO , sessionVO , srvPackageResult);
+      }
+
     } else { // AFTER INSTALL
       EgovMap lastInstallMap = orderRequestMapper.selecLastInstall(params); // GET LAST INSTALL INFO (COMPLETE)
       params.put("opt", "3"); // TYPE ID - 257 (NEW INSTALLATION) & 258 (PRODUCT EXCHANGE) STATUS - 20 (READAY TO INSTALL)
@@ -1667,13 +1717,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     //ADDED BY KEYI 20211201 AFTER PEX TEXT RESULT
     // IF PEX REASON CODE = SOEXC002 SOEXC014 SOEXC015 SOEXC017, INSERT TO PEX TEST RESULT
     if(orderExchangeMasterVO.getSoExchgResnId() == 254 || orderExchangeMasterVO.getSoExchgResnId() == 3344
-    		|| orderExchangeMasterVO.getSoExchgResnId() == 3345 || orderExchangeMasterVO.getSoExchgResnId() == 3347)
+        || orderExchangeMasterVO.getSoExchgResnId() == 3345 || orderExchangeMasterVO.getSoExchgResnId() == 3347)
     {
-    	int PTRStusId = 8; //PEX TEST RESULT STATUS INACTIVE, TURN ACTIVE AFTER INSTALLATION COMPLETE
-    	String PTRNo = orderRegisterMapper.selectDocNo(DocTypeConstants.PTR_NO); //GET PEX_TEST_RESULT_NO
-    	orderExchangeMasterVO.setPTRStusId(PTRStusId);
-    	orderExchangeMasterVO.setPTRNo(PTRNo);
-    	orderRequestMapper.insertPEXTestResult(orderExchangeMasterVO); //INSERT TO SVC0125D
+      int PTRStusId = 8; //PEX TEST RESULT STATUS INACTIVE, TURN ACTIVE AFTER INSTALLATION COMPLETE
+      String PTRNo = orderRegisterMapper.selectDocNo(DocTypeConstants.PTR_NO); //GET PEX_TEST_RESULT_NO
+      orderExchangeMasterVO.setPTRStusId(PTRStusId);
+      orderExchangeMasterVO.setPTRNo(PTRNo);
+      orderRequestMapper.insertPEXTestResult(orderExchangeMasterVO); //INSERT TO SVC0125D
     }
 
     if (orderExchangeMasterVO.getSoCurStusId() == 24) { // BEFORE INSTALLATION
@@ -1822,7 +1872,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Override
   public ReturnMessage requestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
-	EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
+  EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
     EgovMap sodMap = orderRequestMapper.selectSalesOrderD(params);
     ReturnMessage message = new ReturnMessage();
 
@@ -1899,14 +1949,14 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     //Prevent the duplicate insert the sales request cancel to SAL0020D table
     if (countRecord > 0) {
-    	 logger.debug("countRecord>> " + countRecord);
-    	 String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
-    	 String msg = "Order Number : " + salesOrdNo
-    			    +"<br/>This order is under progress [ Call for Cancel ].<br />"
-    		        +"<br/>OCR is not allowed due to cancellation status still [ACTIVE]<br/>";
+       logger.debug("countRecord>> " + countRecord);
+       String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
+       String msg = "Order Number : " + salesOrdNo
+              +"<br/>This order is under progress [ Call for Cancel ].<br />"
+                +"<br/>OCR is not allowed due to cancellation status still [ACTIVE]<br/>";
 
-    	 message.setCode(AppConstants.FAIL);
-    	 message.setMessage(msg);
+       message.setCode(AppConstants.FAIL);
+       message.setMessage(msg);
 
    }else{
         orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
@@ -2344,23 +2394,23 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
 
         if(anoStkId !=null){
-        	 params.put("promoItmAnoStkId", anoStkId);
-        	 opMap_anoStkId = orderRequestMapper.selectAnoStkPromoD(params);
+           params.put("promoItmAnoStkId", anoStkId);
+           opMap_anoStkId = orderRequestMapper.selectAnoStkPromoD(params);
         }
 
 
         logger.debug("opMap_anoStkId:" +opMap_anoStkId);
 
         if (opMap != null &&opMap_anoStkId!=null) {
-        	BigDecimal b1, b2;
-        	 b1 =(BigDecimal) opMap.get("promoItmPrc") ;
+          BigDecimal b1, b2;
+           b1 =(BigDecimal) opMap.get("promoItmPrc") ;
              b2 = (BigDecimal) opMap_anoStkId.get("promoAmt") ;
              int SumPrice = b1.intValue()+b2.intValue();
             OutrightPrice = BigDecimal.valueOf(SumPrice);
         }
         else{
-        	 //OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
-        	 OutrightPrice = opMap != null ? (BigDecimal) opMap.get("promoItmPrc") : OutrightPrice;
+           //OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
+           OutrightPrice = opMap != null ? (BigDecimal) opMap.get("promoItmPrc") : OutrightPrice;
         }
 
 
@@ -2445,7 +2495,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       }
     }
     else {
-    	view = new EgovMap();
+      view = new EgovMap();
     }
     view.put("currentbillmth", CurrentBillMth);
     view.put("lastbillmth", LastBillMth);
@@ -2773,17 +2823,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   }
 
   private void voucherExchangeUpdate(String existingVoucherCode,String currentVoucherCode, String salesOrdNo, int userId){
-		if(existingVoucherCode.isEmpty() == false){
-			if(existingVoucherCode.equals(currentVoucherCode) == false){
-				//UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
-				this.updateVoucherUseStatus(existingVoucherCode, 0, salesOrdNo, userId);
-			}
-		}
+    if(existingVoucherCode.isEmpty() == false){
+      if(existingVoucherCode.equals(currentVoucherCode) == false){
+        //UPDATE EXISTING VOUCHER CODE USE TO 0(NOT USED STATE)
+        this.updateVoucherUseStatus(existingVoucherCode, 0, salesOrdNo, userId);
+      }
+    }
 
-		if(currentVoucherCode.isEmpty() == false){
-			//UPDATE CURRENT VOUCHER USED TO 1(USED STATE)
-			this.updateVoucherUseStatus(currentVoucherCode, 1 , salesOrdNo, userId);
-		}
+    if(currentVoucherCode.isEmpty() == false){
+      //UPDATE CURRENT VOUCHER USED TO 1(USED STATE)
+      this.updateVoucherUseStatus(currentVoucherCode, 1 , salesOrdNo, userId);
+    }
   }
 
     private boolean updateVoucherUseStatus(String voucherCode, int isUsed, String salesOrdNo, int userId){
@@ -2798,4 +2848,59 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     voucherMapper.updateVoucherCodeUseStatus(params);
     return true;
     }
+
+  private void insertSelfServiceRebate(SalesOrderMVO salesOrderMVO, SessionVO sessionVO, EgovMap srvPackageResult) {
+    Map<String, Object> params = new HashMap<String, Object>();
+
+    if (!srvPackageResult.isEmpty()) {
+      params.put("ordId", salesOrderMVO.getSalesOrdId());
+      params.put("rebateType", 0);
+      params.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
+      params.put("rebateStartInstallment", 1); //
+      params.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+      params.put("rem", salesOrderMVO.getMthRentAmt());
+      params.put("crtUserId", sessionVO.getUserId());
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("stusId", 1);
+      params.put("cntrctId", 0);
+
+      orderRegisterMapper.insertSSRebate(params);
+    }
+  }
+
+  private void insertPvSelfServiceRebate(SalesOrderMVO salesOrderMVO, SalesOrderDVO salesOrderDVO, SessionVO sessionVO,
+      EgovMap srvPackageResult) {
+    Map<String, Object> params = new HashMap<String, Object>();
+
+    params.put("promoId", Integer.toString(salesOrderMVO.getPromoId()));
+    params.put("stkId", salesOrderDVO.getItmStkId());
+    params.put("srvPacId", salesOrderMVO.getSrvPacId());
+    params.put("orderAppType", salesOrderMVO.getAppTypeId());
+
+    EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
+
+    if (!priceInfo.isEmpty() && !srvPackageResult.isEmpty()) {
+
+      int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
+      int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
+      int pvRebate = totPv - totPvSs;
+
+      params.put("ordId", salesOrderMVO.getSalesOrdId());
+      params.put("pvRebateType", 0);
+      params.put("pvRebatePerInstallment", pvRebate); //
+      params.put("pvRebateStartInstallment", 1); //
+      params.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+      params.put("rem", salesOrderMVO.getTotPv());
+      params.put("crtUserId", sessionVO.getUserId());
+      params.put("updUserId", sessionVO.getUserId());
+      params.put("stusId", 1);
+      params.put("cntrctId", 0);
+
+      hsManualMapper.insertPvSSRebate(params);
+    }
+  }
+
+  public void updateHSConfigurationSrvType(Map<String, Object> params) {
+    orderRequestMapper.updateHSConfigurationSrvType(params);
+  }
 }

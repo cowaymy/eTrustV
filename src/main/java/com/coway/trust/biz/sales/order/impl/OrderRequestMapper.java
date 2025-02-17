@@ -277,5 +277,7 @@ public interface OrderRequestMapper {
 
   EgovMap selectLastBillFrame(Map<String, Object> params);
 
+  void updateInstallSrvType(Map<String, Object> params);
 
+  void updateHSConfigurationSrvType(Map<String, Object> params);
 }

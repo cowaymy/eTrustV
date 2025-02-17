@@ -237,6 +237,18 @@
             </td>
           </tr>
           <tr>
+            <th scope="row"><spring:message code="sales.srvTypeFrom" /></th>
+            <td colspan="5">
+              <span>${exchangeDetailInfo.soExchgOldSrvType }</span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code="sales.srvTypeTo" /></th>
+            <td colspan="5">
+              <span>${exchangeDetailInfo.soExchgNwSrvType }</span>
+            </td>
+          </tr>
+          <tr>
             <th scope="row"><spring:message code="sal.title.remark" /></th>
             <td colspan="5">
               <span>${exchangeDetailInfo.soExchgRem }</span>
