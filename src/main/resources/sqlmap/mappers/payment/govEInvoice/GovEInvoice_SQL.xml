@@ -178,7 +178,7 @@
 <select id="createTaxInvConsolidateClaim" statementType="CALLABLE"
   parameterType="Map">
   {
-  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  	call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE_ALL(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
   }
 </select>
 
