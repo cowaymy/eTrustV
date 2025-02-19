@@ -656,7 +656,7 @@ function fn_makeVendorGrid(){
 	    dataField : "vendorGrp",
 	    headerText : 'Vendor Group'
 	}, {
-	    dataField : "vendorType",
+	    dataField : "vendorTypeDesc",
 	    headerText : 'Vendor Type'
 	}, {
 	    dataField : "costCenter",
