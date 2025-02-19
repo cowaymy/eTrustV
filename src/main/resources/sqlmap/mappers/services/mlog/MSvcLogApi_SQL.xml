@@ -810,7 +810,8 @@
                , CASE WHEN Extent7.AS_CMMS IS NULL
                    THEN Extent1.AS_ALLOW_COMM
                    ELSE Extent7.AS_CMMS END AS AS_CMMS
-               , Extent7.AS_BRNCH_ID
+               <!-- , Extent7.AS_BRNCH_ID -->
+               , Extent1.AS_BRNCH_ID
                , Extent7.AS_WH_ID
                , Extent7.AS_RESULT_REM
                , Extent7.AS_RESULT_CRT_DT
