@@ -29,6 +29,7 @@
                , B.EMAIL AS MEM_EMAIL
                , UPPER(E.ADDR1 || ' ' || E.ADDR2 || ' ' || E.ADDR3 || ' ' || E.ADDR4) AS BRNCH_ADDR
                , TO_CHAR(B.ATCH_FILE_GRP_ID) AS IMG_GRP_ID
+               , TO_CHAR(B.ADDR_DTL || ',' || B.STREET || ', ' || S64.POSTCODE || ' ' || S64.CITY || ', ' || S64.STATE || ', ' || S64.COUNTRY) AS MEM_ADDRS
       FROM SYS0047M A
       INNER JOIN ORG0001D B ON A.HR_CODE = B.MEM_CODE
       LEFT JOIN ORG0002D B2 ON B.MEM_ID = B2.MEM_ID
@@ -43,6 +44,7 @@
       LEFT JOIN ORG0005D O3 ON O3.MEM_ID = O2.MEM_UP_ID
       LEFT JOIN ORG0005D O4 ON O4.MEM_ID = O3.MEM_UP_ID
       LEFT JOIN ORG0005D O5 ON O5.MEM_ID = O4.MEM_UP_ID
+      LEFT JOIN SYS0064M S64 ON B.AREA_ID = S64.AREA_ID
       WHERE A.USER_NAME = #{userName}
     ]]>
   </select>
