@@ -231,7 +231,7 @@
                 }, {
                     dataField : "c2",
                     //headerText : "CreateAt",
-                    headerText : '<spring:message code="service.grid.CreateAt" />',
+                    headerText : 'UpdateAt',
                     width : 180,
                     dataType : "date",
                     formatString : "dd/mm/yyyy",
@@ -239,7 +239,7 @@
                 }, {
                     dataField : "c3",
                     //headerText : "CreateBy",
-                    headerText : '<spring:message code="service.grid.CreateBy" />',
+                    headerText : 'UpdateBy',
                     width : 180,
                     editable : false
 	                },{
@@ -418,10 +418,23 @@
        } */
 
 
+       function fn_editFilterSerial() {
+
+    	   var selIdx = AUIGrid.getSelectedIndex(myDetailGridIDActive)[0];
+
+           if(selIdx > -1) {
+               var srvFilterId = AUIGrid.getCellValue(myDetailGridIDActive, selIdx, "srvFilterId");
+
+               Common.popupDiv("/services/bs/editFilterSerialPop.do",{srvFilterId : srvFilterId} , null, null , true , '');
+           }
+           else {
+               Common.alert('Please select a filter to edit last or previous serial number.');
+           }
+      }
+
        function fn_getAddFilter() {
            Common.popupDiv("/services/bs/hSAddFilterSetPop.do",{salesOrdId:'${hSOrderView.ordId}'} , null, null , true , '');
       }
-
 
 		$(document).ready(function() {
 		    createAUIGridInactive();
@@ -528,6 +541,9 @@
 <aside class="title_line"><!-- title_line start -->
 <h2><spring:message code='service.title.FilterSetting'/></h2>
 <ul class="right_btns">
+    <c:if test="${userDefine26 == 'Y'}">
+        <li><p class="btn_grid"><a href="javascript:fn_editFilterSerial()"  id="editFilterSerial">Edit Filter Serial No.</a></p></li>
+    </c:if>
     <li><p class="btn_grid"><a href="javascript:fn_getAddFilter()"  id="addFilter"><spring:message code='service.btn.AddFilter'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->

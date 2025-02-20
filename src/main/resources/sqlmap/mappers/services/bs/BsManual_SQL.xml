@@ -5387,4 +5387,21 @@ SELECT DISTINCT A.ORD_ID FROM (
         WHERE SRV_SO_ID = #{salesOrderId}
         AND SRV_STUS_ID = 1
     </update>
+
+    <select id="selectHSEditSerialInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SRV_FILTER_LAST_SERIAL,
+            SRV_FILTER_PREV_SERIAL
+        FROM SAL0087D
+        WHERE SRV_FILTER_ID = #{srvFilterId}
+    </select>
+
+    <update id="saveFilterSerialEdit" parameterType="Map">
+	    UPDATE SAL0087D
+	        SET SRV_FILTER_LAST_SERIAL = #{lastSerial},
+	           SRV_FILTER_PREV_SERIAL = #{prevSerial},
+	           SRV_FILTER_UPD_USER_ID = #{updator},
+	           SRV_FILTER_UPD_DT = SYSDATE
+	    WHERE SRV_FILTER_ID = #{srvFilterId}
+	</update>
 </mapper>

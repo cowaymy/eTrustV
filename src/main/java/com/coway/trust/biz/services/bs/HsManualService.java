@@ -198,4 +198,7 @@ public interface HsManualService {
 
   EgovMap getSrvTypeChgInfo(Map<String, Object> params);
 
+  EgovMap selectHSEditSerialInfo(Map<String, Object> params);
+
+  void saveFilterSerialEdit(Map<String, Object> params);
 }

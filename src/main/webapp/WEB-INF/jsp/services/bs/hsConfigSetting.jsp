@@ -195,7 +195,10 @@
                 Common.alert("<b><spring:message code='service.msg.NoHSData'/><b> ");
                 return ;
             }
-               Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
+
+            var userDefine26 =  '${PAGE_AUTH.funcUserDefine26}';
+
+               Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId+"&userDefine26="+userDefine26, null, null , true , '_FilterSetPop');
         }
 
         function fn_fmcoEvoucher() {

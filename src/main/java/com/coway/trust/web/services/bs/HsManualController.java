@@ -797,6 +797,7 @@ public class HsManualController {
 
     EgovMap hSOrderView = hsManualService.selectHSOrderView(params);
     model.put("hSOrderView", hSOrderView);
+    model.put("userDefine26", params.get("userDefine26"));
 
     return "services/bs/hSFilterSettingPop";
   }
@@ -1480,6 +1481,35 @@ public class HsManualController {
     model.put("srvTypeChghistoryLogInfo", srvTypeChghistoryLogInfo);
 
     return ResponseEntity.ok(srvTypeChghistoryLogInfo);
+  }
+
+  @RequestMapping(value = "/editFilterSerialPop.do")
+  public String editFilterSerialPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+    logger.debug("params : {}", params.toString());
+    model.put("srvFilterId", params.get("srvFilterId"));
+
+    EgovMap hSEditSerialInfo = hsManualService.selectHSEditSerialInfo(params);
+    model.put("hSEditSerialInfo", hSEditSerialInfo);
+
+    return "services/bs/hsSerialEditPop";
+  }
+
+  @RequestMapping(value = "/doSaveFilterSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> saveFilterSerialEdit(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, SessionVO sessionVO) throws ParseException {
+
+    ReturnMessage message = new ReturnMessage();
+    params.put("updator", sessionVO.getUserId());
+
+    logger.debug("params : {}", params);
+
+    hsManualService.saveFilterSerialEdit(params);
+
+    message.setCode(AppConstants.SUCCESS);
+    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+    return ResponseEntity.ok(message);
   }
 
 }

@@ -4037,4 +4037,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
    public EgovMap getSrvTypeChgInfo(Map<String, Object> params) {
      return hsManualMapper.getSrvTypeChgInfo(params);
    }
+
+   @Override
+   public EgovMap selectHSEditSerialInfo(Map<String, Object> params) {
+     return hsManualMapper.selectHSEditSerialInfo(params);
+   }
+
+   @Override
+   public void saveFilterSerialEdit(Map<String, Object> params) {
+     // UPDATE SAL0087D
+     hsManualMapper.saveFilterSerialEdit(params);
+   }
 }
