@@ -248,6 +248,7 @@ public class HiCareServiceImpl implements HiCareService {
  			params.put("reason", params.get("returnReason"));
  			params.put("condition", params.get("returnCondition"));
  			params.put("remarks", params.get("returnRemark"));
+ 			params.put("defectType", params.get("returnDefectType"));
 
  		}else if(movementType.equals("3")){
  			params.put("transType", "H6");

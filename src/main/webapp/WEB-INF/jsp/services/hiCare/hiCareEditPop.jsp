@@ -55,6 +55,19 @@
             $('#_filterTxtBarcode').val($('#_filterTxtBarcode').val().toUpperCase());
             fn_splitUsedBarcode();
         });
+
+        $('#returnCondition').change(function(event){
+            var condition = $("#returnCondition").val();
+            if(condition == 112){ // Defect
+            	 doGetComboOrder('/common/selectCodeList.do', '613', 'CODE_ID', '', 'returnDefectType', 'S', ''); //Defect Type - this part need to be change once COR is done
+                $("#defectTypeField").show();
+
+            }else{
+
+                $("#defectTypeField").hide();
+                $("#returnDefectType").val("");
+            }
+        });
     });
 
     function setText(result){
@@ -253,7 +266,15 @@
                 Common.alert('Please select condition.');
                 checkResult = false;
                 return checkResult;
+            }else if(FormUtil.isEmpty($("#returnDefectType").val()) && $("#returnCondition").val() == '112') {
+                Common.alert('Please select defect type.');
+                checkResult = false;
+                return checkResult;
             }else if(FormUtil.isEmpty($("#returnRemark").val()) && $("#returnReason").val() == '6615') {
+                Common.alert('Please fill in remark.');
+                checkResult = false;
+                return checkResult;
+            }else if(FormUtil.isEmpty($("#returnRemark").val()) && $("#returnDefectType").val() == '7758') {
                 Common.alert('Please fill in remark.');
                 checkResult = false;
                 return checkResult;
@@ -521,6 +542,12 @@
     <th scope="row">Condition<span class="must">*</span></th>
     <td>
         <select id="returnCondition" name="returnCondition" class="w100p">
+    </td>
+</tr>
+<tr id="defectTypeField" style="display:none">
+    <th scope="row">Defect Type<span class="must">*</span></th>
+    <td>
+        <select id="returnDefectType" name="returnDefectType" class="w100p">
     </td>
 </tr>
 <tr>

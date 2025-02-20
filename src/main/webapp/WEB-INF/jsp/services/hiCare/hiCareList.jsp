@@ -337,6 +337,10 @@
 	   $('#btnFilterForecastListing').click(function() {
 	          Common.popupDiv("/services/hiCare/hiCareFilterForecastListPop.do", null, null, true);
 	      });
+
+      $('#btnRawData').click(function() {
+          Common.popupDiv("/services/hiCare/hiCareRawDataPop.do", null, null, true);
+      });
   });
 </script>
 <section id="content">
@@ -456,6 +460,9 @@
                 </p></li>
                  <li><p class="link_btn type2">
                     <a href="#" id="btnFilterForecastListing">Sediment Forecast Filter List</a>
+                </p></li>
+                 <li><p class="link_btn type2">
+                    <a href="#" id="btnRawData">Hi-Care Raw Data</a>
                 </p></li>
             </c:if>
             </ul>

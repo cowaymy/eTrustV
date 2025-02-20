@@ -309,7 +309,8 @@
                 CRT_USER_ID,
                 UPD_DT,
                 UPD_USER_ID,
-                DELVRY_NO
+                DELVRY_NO,
+                DEFECT_TYPE
             )
                 SELECT SERIAL_NO
              , (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM SVC0129H WHERE SERIAL_NO = #{serialNo}) as SEQ
@@ -335,6 +336,7 @@
              , UPD_DT
              , UPD_USER_ID
              , DELVRY_NO
+             , DEFECT_TYPE
             FROM SVC0126M
             WHERE SERIAL_NO = #{serialNo}
     </insert>
@@ -525,6 +527,9 @@
         <if test="delvryNo !=null and delvryNo !=''">
              , DELVRY_NO = #{delvryNo}
         </if>
+        <if test="defectType !=null and defectType !=''">
+             , DEFECT_TYPE = #{defectType}
+        </if>
         WHERE
         serial_no = #{serialNo}
         AND STATUS != '113'
@@ -611,6 +616,7 @@
         ,a.remarks
         ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else H.CODE_DESC end reason_desc_1
         ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else a.remarks end remark1
+        , K.CODE_DESC DEFECT_TYPE_DESC
         from SVC0129H a
         left join SYS0028M b on b.wh_loc_code = a.loc_id
         left join SYS0005M c on c.brnch_id = a.BRANCH_ID
@@ -621,6 +627,7 @@
         left join SYS0013m h on h.code_id = a.reason
         left join SYS0013m i on i.code = a.trnsc_type and i.code_master_id = '491'
         left join sys0026m j on j.stk_code = g.code
+        LEFT JOIN SYS0013M K ON K.CODE_ID = A.DEFECT_TYPE AND K.CODE_MASTER_ID = '613'
         where 1=1
           and a.serial_no = #{serialNo}
           order by a.seq

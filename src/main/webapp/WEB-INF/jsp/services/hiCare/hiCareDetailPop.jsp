@@ -82,6 +82,10 @@
             headerText : "Reason",
             width : "18%"
           }, {
+              dataField : "defectTypeDesc",
+              headerText : "Defect Type",
+              width : "30%"
+            },{
               dataField : "remark1",
               headerText : "Remarks",
               width : "20%"
