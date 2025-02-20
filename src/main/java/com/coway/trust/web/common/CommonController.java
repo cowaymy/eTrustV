@@ -655,10 +655,4 @@ public class CommonController {
     String sKey = commonService.getApisKey( uID );
     return ResponseEntity.ok( sKey );
   }
-
-  @RequestMapping(value = "/selectStoreList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectStoreList( @RequestParam Map<String, Object> params ) {
-    List<EgovMap> resultList = commonService.selectStoreList( params );
-    return ResponseEntity.ok( resultList );
-  }
 }

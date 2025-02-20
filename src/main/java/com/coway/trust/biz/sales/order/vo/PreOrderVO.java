@@ -202,8 +202,6 @@ public class PreOrderVO implements Serializable {
 
     private String tnbAccNo;
 
-    private Integer cwStoreId;
-
 	public Integer getBndlId() {
 		return bndlId;
 	}
@@ -1062,13 +1060,5 @@ public String getTnbAccNo() {
 
 public void setTnbAccNo(String tnbAccNo) {
 	this.tnbAccNo = tnbAccNo;
-}
-
-public Integer getCwStoreId() {
-	return cwStoreId;
-}
-
-public void setCwStoreId(Integer cwStoreId) {
-	this.cwStoreId = cwStoreId;
 }
 }

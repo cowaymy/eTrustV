@@ -280,7 +280,6 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             salesOrderMVO.setSalesGmId(Integer.valueOf(memInfo.get("lvl1UpId").toString()));
             salesOrderMVO.setSalesSmId(Integer.valueOf(memInfo.get("lvl2UpId").toString()));
             salesOrderMVO.setSalesHmId(Integer.valueOf(memInfo.get("lvl3UpId").toString()));
-            salesOrderMVO.setCwStoreId(reqPrm.get("cwStoreId") != null ? Integer.valueOf(reqPrm.get("cwStoreId").toString()) : null);
             orderVO.setSalesOrderMVO(salesOrderMVO);
 
             // SAL0002D

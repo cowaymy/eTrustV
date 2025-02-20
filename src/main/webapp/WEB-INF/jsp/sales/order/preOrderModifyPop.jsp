@@ -67,7 +67,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
         /* doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period */
         doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
-        doGetComboData('/common/selectCodeList.do', { groupCode : 609 , orderValue : 'CODE'}, '0', 'isStore', 'S', 'fn_loadStoreId');
 
         fn_checkPreSrvType(preSrvType);
 
@@ -1407,18 +1406,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
             }
         }
 
-        if ($('#isStore').val() == "") {
-        	isValid = false;
-        	msg += "* Please select whether the sales belong to the store (Yes or No).<br>";
-       	}
-
-        if ($('#isStore').val() != "" && $('#isStore').val() > 0) {
-            if ($('#cwStoreId').val() == "" || $('#cwStoreId').val() == 0) {
-                isValid = false;
-                msg += "* You have specified that the sales belong to the store. Please select a store from the list.<br>";
-            }
-        }
-
         if($('#voucherType').val() == ""){
          isValid = false;
             msg += "* Please select voucher type.<br>";
@@ -1605,7 +1592,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
                 pwpOrderId          : $('#txtMainPwpOrderID').val(),
                 pwpOrderNo          : $('#pwpNo').val(),
                 chnnl               : '${preOrderInfo.chnnl}',
-                cwStoreId          : $('#cwStoreId').val(),
         };
 
         var formData = new FormData();
@@ -2389,28 +2375,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
                 console.log("hiddenBillAddId2 : " + $("#hiddenBillAddId").val());
             }
         });
-    }
-
-    function displayStoreSection(defaultValue) {
-        if ($('#isStore option:selected').val() != null
-            && $('#isStore option:selected').val() != ""
-            && $('#isStore option:selected').val() != "0") {
-          $('#storeSection').show();
-          if($('#cwStoreId > option').length == 0){
-        	  doGetComboData('/common/selectStoreList.do', null, defaultValue, 'cwStoreId', 'S');
-          }
-        } else {
-          $('#storeSection').hide();
-          $('#cwStoreId').val('');
-        }
-    }
-
-    function fn_loadStoreId(){
-        if('${preOrderInfo.cwStoreId}' != null && '${preOrderInfo.cwStoreId}' != 0){
-            $('#isStore').val(1);
-
-            displayStoreSection('${preOrderInfo.cwStoreId}');
-        }
     }
 
     function fn_loadInstallAddr(custAddId){
@@ -3412,17 +3376,6 @@ var totPvSs = "${preOrderInfo.totPvSs}";
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
         </td>
-</tr>
-<tr>
-    <th scope="row">Store<span class="must">*</span></th>
-    <td>
-        <p>
-            <select id="isStore" name="isStore" onchange="displayStoreSection()" class="w100p"></select>
-        </p>
-        <p id="storeSection" style="display: none;">
-            <select id="cwStoreId" name="cwStoreId" class="w100p"></select>
-        </p>
-    </td>
 </tr>
 <tr>
     <th scope="row">Voucher Type<span class="must">*</span></th>

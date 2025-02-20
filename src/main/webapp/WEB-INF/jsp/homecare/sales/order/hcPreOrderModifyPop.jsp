@@ -68,7 +68,6 @@ var userType = '${SESSION_INFO.userTypeId}';
     }, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
     doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID', '', 'corpCustType', 'S', ''); //Common Code
     doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID', '', 'agreementType', 'S', ''); //Common Code
-    doGetComboData('/common/selectCodeList.do', { groupCode : 609 , orderValue : 'CODE'}, '0', 'isStore', 'S', 'fn_loadStoreId');
 
     doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');
 
@@ -1289,18 +1288,6 @@ var userType = '${SESSION_INFO.userTypeId}';
         }
     }
 
-    if ($('#isStore').val() == "") {
-        isValid = false;
-        msg += "* Please select whether the sales belong to the store (Yes or No).<br>";
-    }
-
-    if ($('#isStore').val() != "" && $('#isStore').val() > 0) {
-        if ($('#cwStoreId').val() == "" || $('#cwStoreId').val() == 0) {
-            isValid = false;
-            msg += "* You have specified that the sales belong to the store. Please select a store from the list.<br>";
-        }
-    }
-
     if($('#voucherType').val() == ""){
       	 isValid = false;
            msg += "* Please select voucher type.<br>";
@@ -1505,7 +1492,6 @@ var userType = '${SESSION_INFO.userTypeId}';
       pwpOrderNo          : $('#pwpNo').val(),
       tnbAccNo : $("#tnbAccNo").val(),
       chnnl : '${preOrderInfo.chnnl}',
-      cwStoreId          : $('#cwStoreId').val(),
       rebateOrderId          : $('#txtMainRebateOrderID').val(),
       rebateOrderNo          : $('#rebateNo').val()
     };
@@ -2349,28 +2335,6 @@ var userType = '${SESSION_INFO.userTypeId}';
         $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
       }
     });
-  }
-
-  function displayStoreSection(defaultValue) {
-      if ($('#isStore option:selected').val() != null
-          && $('#isStore option:selected').val() != ""
-          && $('#isStore option:selected').val() != "0") {
-        $('#storeSection').show();
-        if($('#cwStoreId > option').length == 0){
-            doGetComboData('/common/selectStoreList.do', null, defaultValue, 'cwStoreId', 'S');
-        }
-      } else {
-        $('#storeSection').hide();
-        $('#cwStoreId').val('');
-      }
-  }
-
-  function fn_loadStoreId(){
-      if('${preOrderInfo.cwStoreId}' != null && '${preOrderInfo.cwStoreId}' != 0){
-          $('#isStore').val(1);
-
-          displayStoreSection('${preOrderInfo.cwStoreId}');
-      }
   }
 
   function fn_resetSales() {
@@ -3446,17 +3410,6 @@ var userType = '${SESSION_INFO.userTypeId}';
                     <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
                 	<input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
                   </td>
-                </tr>
-                <tr>
-                    <th scope="row">Store<span class="must">*</span></th>
-                    <td>
-                        <p>
-                            <select id="isStore" name="isStore" onchange="displayStoreSection()" class="w100p"></select>
-                        </p>
-                        <p id="storeSection" style="display: none;">
-                            <select id="cwStoreId" name="cwStoreId" class="w100p"></select>
-                        </p>
-                    </td>
                 </tr>
                 <tr>
 		    	<th scope="row">Voucher Type<span class="must">*</span></th>

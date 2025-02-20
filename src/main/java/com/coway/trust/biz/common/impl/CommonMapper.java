@@ -368,5 +368,4 @@ public interface CommonMapper
 
     String getApiKey(int keyId);
 
-    List<EgovMap> selectStoreList( Map<String, Object> params );
 }
