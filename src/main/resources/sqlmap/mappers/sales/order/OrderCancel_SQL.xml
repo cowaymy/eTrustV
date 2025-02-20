@@ -1828,4 +1828,17 @@
 			,TRG.REMARKS = SRC.REMARKS
    </update>
 
+   <update id="updateCancelSAL0432D" parameterType="Map">
+        MERGE INTO SAL0432D TRG
+        USING (
+            SELECT #{salesOrdId} SALES_ORD_ID from dual
+        ) SRC ON (SRC.SALES_ORD_ID = TRG.SALES_ORD_ID)
+        WHEN MATCHED THEN
+        UPDATE SET
+            TRG.STUS_ID = 10
+            ,TRG.UPD_DT = SYSDATE
+            ,TRG.UPD_USER_ID = 349
+            ,TRG.REMARKS = 'Cancelled before installation.'
+   </update>
+
 </mapper>

@@ -267,4 +267,9 @@ public interface OrderRegisterMapper {
   List<EgovMap> selectHcPrevOrderNoList(Map<String, Object> params);
 
   int chkCanHcExtradeWoutPR(int ordId);
+
+  EgovMap selectOldOrderRentInstNo(Map<String, Object> params);
+
+  void insertEarlyExtradeSales(Map<String, Object> params);
+
 }

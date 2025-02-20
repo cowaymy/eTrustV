@@ -335,7 +335,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   public EgovMap checkOldOrderId(Map<String, Object> params) {
 
     int getOldOrderID = 0;
-    int custId = 0, promoId = 0 ,extradeWoutPRCnt =0 ,hcExtradeWoutPRCnt =0;
+    int custId = 0, promoId = 0 ,extradeWoutPRCnt =0 ,hcExtradeWoutPRCnt =0,earlyExtradeFlag=0,productCtgry=0;
     String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
     String monthExpired = "";
     String preBook = "";
@@ -499,6 +499,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     extradeWoutPRCnt = orderRegisterMapper.chkCanExtradeWoutPR(getOldOrderID);
                     hcExtradeWoutPRCnt = orderRegisterMapper.chkCanHcExtradeWoutPR(getOldOrderID);
 
+                    EgovMap map1 = new EgovMap();
+            		map1.put("oldSalesOrdNo",params.get("salesOrdNo").toString());
+                    EgovMap orderRentInst = orderRegisterMapper.selectOldOrderRentInstNo(map1);
+            		if(orderRentInst != null ){
+            			if(orderRentInst.get("stkCtgryId").toString().equals("55")){
+            				earlyExtradeFlag =1;
+            			}
+            			productCtgry = Integer.parseInt(orderRentInst.get("stkCtgryId").toString());
+            		}
+
                     ROOT_STATE = "ROOT_4";
 
                     txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
@@ -591,6 +601,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
     RESULT.put("EXTR_OPT_FLAG", extradeWoutPRCnt);
     RESULT.put("HC_EXTR_OPT_FLAG", hcExtradeWoutPRCnt);
+    RESULT.put("EARLY_EXTRADE_FLAG", earlyExtradeFlag);
+    RESULT.put("PRODUCT_CTGRY", productCtgry);
     RESULT.put("MONTH_EXPIRED", monthExpired);
     RESULT.put("PRE_BOOK", preBook);
 
@@ -2129,6 +2141,32 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 //            }
 //           }
 //    	}
+    }
+
+    String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR().toString();
+    // SAL0408D,SAL0432D - Early extrade without product return
+    if(salesOrderMVO.getExTrade() == 1 && isExtradePR.equals("0") && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX){
+
+    	EgovMap map1 = new EgovMap();
+		map1.put("salesOrdId",salesOrderMVO.getSalesOrdId());
+		map1.put("oldSalesOrdNo",orderVO.getSalesOrderMVO().getBindingNo());
+
+		EgovMap orderRentInst = orderRegisterMapper.selectOldOrderRentInstNo(map1);
+		if(orderRentInst != null){
+			map1.put("oldSalesOrdId",orderRentInst.get("salesOrdId"));
+			map1.put("fromPeriod",orderRentInst.get("minRentInstNo"));
+			map1.put("toPeriod",orderRentInst.get("maxRentInstNo"));
+			map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+			map1.put("percentage",100);
+			BigDecimal CNamt = salesOrderMVO.getMthRentAmt();
+			map1.put("cnAmt",CNamt);
+			map1.put("status",CommonUtils.intNvl("1"));
+			map1.put("userId",sessionVO.getUserId());
+
+			orderRegisterMapper.insertSalesSpecialPromotion(map1);
+			orderRegisterMapper.insertEarlyExtradeSales(map1);
+		}
+
     }
 
     // SAL0421D - PWP Info

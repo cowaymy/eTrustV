@@ -39,23 +39,38 @@
 
                 //$('#txtOldOrderID').val(RESULT.oldOrderId);
                // $('#relatedNo').val($('#rwOldOrder').val());
-               if($('#isHomecare').val() != '2'){ // (HA)no product return
-            	   if(RESULT.extrOptFlag == '1'){
-                       $('#isReturnExtrade').attr("disabled",false);
+
+               if($('#isHomecare').val() != '2'){ // new HA
+            	   if(RESULT.extrOptFlag == '1'){//old HA to new HA
+            		   if(RESULT.earlyExtradeFlag == '1'){//only old AP able to choose w/wo return
+            			   if(RESULT.productCtgry == '55'){
+            				   $('#isReturnExtrade').attr("disabled",false);
+                               $('#isReturnExtrade').prop("checked", true);
+            			   }else{
+	            			   $('#isReturnExtrade').attr("disabled",true);
+	                           $('#isReturnExtrade').prop("checked", true);
+            			   }
+            		   }else{                                          // other old HA except AP, only can with return
+	                       $('#isReturnExtrade').attr("disabled",false);
+	                       $('#isReturnExtrade').prop("checked", true);
+            		   }
+                   }else if(RESULT.hcExtrOptFlag == '1'){//old HC to new HA, always wo return
+                	   $('#isReturnExtrade').attr("disabled",true);
+                       $('#isReturnExtrade').prop("checked", false);
                    }else{
                        $('#isReturnExtrade').attr("disabled",true);
                        $('#isReturnExtrade').prop("checked", true);
                    }
-               }else{ //HC
-            	   if(RESULT.hcExtrOptFlag == '1'){//HC to HC, >61th can choose w/wo return
+               }else{ //new HC
+            	   if(RESULT.hcExtrOptFlag == '1'){//old HC to new HC,  can choose w/wo return
             		   $('#isReturnExtrade').attr("disabled",false);
                        $('#isReturnExtrade').prop("checked", true);
-            	   }else if(RESULT.extrOptFlag == '1'){//HA to HC. >61th always wo return
+            	   }else if(RESULT.extrOptFlag == '1'){//old AP to new HC,  always wo return
             		   $('#isReturnExtrade').attr("disabled",true);
                        $('#isReturnExtrade').prop("checked", false);
-            	   }else{//HC to HC, 57-60th with return
-            		   $('#isReturnExtrade').prop("checked", true);
+            	   }else{
             		   $('#isReturnExtrade').attr("disabled",true);
+            		   $('#isReturnExtrade').prop("checked", true);
             	   }
                }
 

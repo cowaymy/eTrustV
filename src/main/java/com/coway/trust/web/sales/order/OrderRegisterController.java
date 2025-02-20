@@ -172,8 +172,8 @@ public class OrderRegisterController {
 	String anoOrderNo = "";
 	if(isHc){
 		rMap = hcOrderListService.selectHcOrderInfo(cParam);
-		bundleId = rMap.get("bndlNo").toString();
-		anoOrderNo = rMap.get("anoOrdNo").toString();
+		bundleId = rMap.get("bndlNo") == null ? "" : rMap.get("bndlNo").toString();
+		anoOrderNo = rMap.get("anoOrdNo") == null ? "" : rMap.get("anoOrdNo").toString();
 	}
 
 	model.put("bundleId", bundleId);
@@ -479,8 +479,8 @@ public class OrderRegisterController {
       orderRequestService.requestCancelOrder(cParam, sessionVO);
 
 
-      String openExTrade = "N"; //set 'N' as currently not open extrade for homecare
-      if(openExTrade.equals("Y")){
+//      String openExTrade = "N"; //set 'N' as currently not open extrade for homecare
+//      if(openExTrade.equals("Y")){
     	  boolean isHc = String.valueOf(orderVO.getSalesOrderMVO().getBusType()).equals("HOMECARE") ? true : false;
 
           if(isHc){
@@ -490,25 +490,27 @@ public class OrderRegisterController {
             cParam.put("salesOrdId", String.valueOf(rMap.get("srvOrdId")));
             cParam.put("salesAnoOrdId", String.valueOf(rMap.get("anoOrdId")));
             cParam.put("salesOrdCtgryCd", String.valueOf(rMap.get("ordCtgryCd")));
+
+            String salesAnoOrdId = CommonUtils.nvl(cParam.get("salesAnoOrdId"));
+      	  	String salesOrdCtgryCd = CommonUtils.nvl(cParam.get("salesOrdCtgryCd"));
+
+            if(("MAT".equals(salesOrdCtgryCd) || "ACI".equals(salesOrdCtgryCd)) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
+      			// 유효성 체크
+          	  cParam.put("salesOrdId", salesAnoOrdId);
+          	  cParam.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
+      			ReturnMessage rtnVaild = hcOrderRequestService.validOCRStus(cParam);
+
+      			if(CommonUtils.nvl(rtnVaild.getCode()).equals(AppConstants.SUCCESS)) {
+      				// 같이 주문된 주문 취소요청한다.
+      				orderRequestService.requestCancelOrder(cParam, sessionVO);
+      			} else {
+      				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnVaild.getMessage()));
+      			}
+      		}
           }
 
-          String salesAnoOrdId = CommonUtils.nvl(cParam.get("salesAnoOrdId"));
-    	  String salesOrdCtgryCd = CommonUtils.nvl(cParam.get("salesOrdCtgryCd"));
 
-          if(("MAT".equals(salesOrdCtgryCd) || "ACI".equals(salesOrdCtgryCd)) && CommonUtils.isNotEmpty(salesAnoOrdId)) {
-    			// 유효성 체크
-        	  cParam.put("salesOrdId", salesAnoOrdId);
-        	  cParam.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
-    			ReturnMessage rtnVaild = hcOrderRequestService.validOCRStus(cParam);
-
-    			if(CommonUtils.nvl(rtnVaild.getCode()).equals(AppConstants.SUCCESS)) {
-    				// 같이 주문된 주문 취소요청한다.
-    				orderRequestService.requestCancelOrder(cParam, sessionVO);
-    			} else {
-    				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnVaild.getMessage()));
-    			}
-    		}
-      }
+//      }
     }
 
     String msg = "", appTypeName = "";

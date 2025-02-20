@@ -2705,9 +2705,33 @@
 	                )
 	              </when>
 	              <otherwise>
-	                AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+	                AND
+	                (
+	                T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                                     WHERE AA.CODE = BB.CODE
                                                                     AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+	                    or (
+	                    T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+	                                                              WHERE AA.CODE = BB.CODE
+	                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE' and
+	                                                                  (AA.CODE  not in ('FRM','ACO')))
+	                    and T1.SALES_ORD_ID IN (
+	                            SELECT A.SALES_ORD_ID
+	                            FROM SAL0070D A
+	                            JOIN
+	                            (
+	                               SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
+	                            ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
+	                            JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS not NULL
+	                            JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+	                            JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
+	                            WHERE
+	                                A.RENT_INST_TYPE_ID = 159
+	                       AND B.CUST_ID = #{custId}
+	                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -4
+	                    )
+	                    )
+                    )
 	              </otherwise>
 	           </choose>
            ) A
@@ -2766,44 +2790,47 @@
                                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
                   </when>
                   <when test='isHomecare == "2" '>
-                    AND (
-                    (T3.STK_CTGRY_ID = '55'
-                    and T1.SALES_ORD_ID IN (
-                            SELECT A.SALES_ORD_ID
-                            FROM SAL0070D A
-                            JOIN
-                            (
-                               SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
-                            ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
-                            JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
-                            JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
-                            JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID AND D.STK_CTGRY_ID = 55
-                            WHERE
-                                A.RENT_INST_TYPE_ID = 159
-                       AND B.CUST_ID = #{custId}
-                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   0
-                    )
-                    )
+                    AND
+                    (
+	                    (
+		                    T3.STK_CTGRY_ID = '55'
+		                    and T1.SALES_ORD_ID IN (
+	                           SELECT A.SALES_ORD_ID
+	                           FROM SAL0070D A
+	                           JOIN
+	                           (
+	                           SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
+	                           ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
+	                           JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS NULL
+	                           JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+	                           JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID AND D.STK_CTGRY_ID = 55
+	                           WHERE
+                               A.RENT_INST_TYPE_ID = 159
+		                       AND B.CUST_ID = #{custId}
+		                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -4
+		                    )
+	                    )
                     or (
-                    T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                              WHERE AA.CODE = BB.CODE
-                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE' and
-                                                                  (AA.CODE  not in ('FRM','ACO'))))
-                    and T1.SALES_ORD_ID IN (
+	                    T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+	                        WHERE AA.CODE = BB.CODE
+	                        AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE' and
+	                        (AA.CODE  not in ('FRM','ACO')))
+	                    and T1.SALES_ORD_ID IN (
                             SELECT A.SALES_ORD_ID
                             FROM SAL0070D A
                             JOIN
                             (
-                               SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
+                            SELECT SALES_ORD_ID,MAX(RENT_INST_NO) RENT_INST_NO FROM SAL0070D WHERE RENT_INST_TYPE_ID = 159 GROUP BY SALES_ORD_ID
                             ) BB ON BB.SALES_ORD_ID = A.SALES_ORD_ID AND BB.RENT_INST_NO = A.RENT_INST_NO
                             JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND B.STUS_CODE_ID = 4 AND B.BNDL_ID IS not NULL
                             JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
                             JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
                             WHERE
-                                A.RENT_INST_TYPE_ID = 159
-                       AND B.CUST_ID = #{custId}
-                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -4
-                    )
+                            A.RENT_INST_TYPE_ID = 159
+	                       AND B.CUST_ID = #{custId}
+	                       AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT)))   >   -4
+	                       )
+	                    )
                     )
                   </when>
                   <otherwise>
@@ -3625,7 +3652,7 @@ WHERE
                    A.RENT_INST_TYPE_ID = 159
                    AND A.SALES_ORD_ID = #{value}
 <!--                    AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) BETWEEN 1 AND 6 -->
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> 0
+                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> -4
   </select>
 
   <select id="chkCanHcExtradeWoutPR" parameterType="Map" resultType="int">
@@ -3642,7 +3669,7 @@ WHERE
                     WHERE
                    A.RENT_INST_TYPE_ID = 159
                    AND A.SALES_ORD_ID = #{value}
-                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> 0
+                   AND MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(A.RENT_INST_DT))) <![CDATA[ > ]]> -4
   </select>
   <select id="automatedCcpProcess" parameterType="Map" statementType="CALLABLE">
         {
@@ -3666,7 +3693,7 @@ WHERE
 	)
 	VALUES
 	(
-		#{salesOrdId}
+		#{oldSalesOrdId}
 		,#{fromPeriod}
 		,#{toPeriod}
 		,#{promoId}
@@ -3963,4 +3990,39 @@ WHERE
                   , #{executeFlag}
      )
   </insert>
+
+  <select id="selectOldOrderRentInstNo" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.SALES_ORD_ID
+	    ,MIN(RENT_INST_NO) MIN_RENT_INST_NO
+	    ,MAX(RENT_INST_NO) MAX_RENT_INST_NO
+	    ,MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(SYSDATE),FN_GET_FIRST_DAY_MONTH(MAX(A.RENT_INST_DT))) EXPIRED_MONTH
+	    ,T3.STK_CTGRY_ID
+	    FROM SAL0070D A
+	    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+	    JOIN SAL0002D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
+	    LEFT JOIN SYS0026M T3 ON T3.STK_ID = C.ITM_STK_ID
+	    WHERE A.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{oldSalesOrdNo})
+	    AND TO_CHAR(RENT_INST_DT, 'YYYYMM') > TO_CHAR(SYSDATE, 'YYYYMM')
+	    GROUP BY A.SALES_ORD_ID,T3.STK_CTGRY_ID
+  </select>
+
+  <insert id="insertEarlyExtradeSales" parameterType="Map">
+    INSERT INTO SAL0432D
+    (
+        SALES_ORD_ID,
+        OLD_SALES_ORD_ID,
+        STUS_ID,
+        CRT_USER_ID  ,
+        CRT_DT
+    )
+    VALUES
+    (
+        #{salesOrdId}
+        ,#{oldSalesOrdId}
+        ,#{status}
+        ,#{userId}
+        ,SYSDATE
+    )
+    </insert>
 </mapper>

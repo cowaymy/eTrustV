@@ -118,7 +118,9 @@
 	}
 
 	  $(document).ready(function(){
-	        $('#rwOldOrder').val($('#relatedNo').val());
+		  $('#rwOldOrder').val($('#relatedNo').val());
+          $('#rwBndlNo').val("${bundleId}");
+          $('#rwAnoOrderNo').val("${anoOrderNo}");
 	        //console.log("${bundleId}");
 	        //console.log("${anoOrderNo}");
 	        // $('#btnRWok').click();
@@ -148,10 +150,22 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Order No.</th>
-	<td>
-	<input id="rwOldOrder" name="rwOldOrder" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
-	</td>
+    <th scope="row">Bundle Number</th>
+    <td>
+    <input id="rwBndlNo" name="rwBndlNo" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Order No.</th>
+    <td>
+    <input id="rwOldOrder" name="rwOldOrder" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Aux Order No.</th>
+    <td>
+    <input id="rwAnoOrderNo" name="rwAnoOrderNo" type="text" title=""  placeholder="" class="w100p readonly" readonly/>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

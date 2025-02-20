@@ -329,6 +329,11 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
           }
         }
 
+        if (appTypeId == 66) {
+      	  //early extrade 202502 - AP Extrade without Product Return (Early Extrade)
+      	  orderCancelMapper.updateCancelSAL0432D(saveParam);
+        }
+
         logger.info("====================== PROMOTION COMBO CHECKING - END - ==========================");
       }
 
