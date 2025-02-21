@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiModel;
  * 2023. 03. 30    MY-ONGHC         ADD BUSINESS CARD FEATURE
  * 2023. 09. 05    MY-ONGHC         ADD TAG-ID FEATURE
  * 2025. 02. 19    MY-ONGHC         ADD MEMBER HOME ADDRESS
+ * 2025. 02. 21    MY-ONGHC         ADD MEMBER INCOME TAX NO AND MEETING POINT
  * </pre>
  */
 @ApiModel(value = "UserProfileApiDto", description = "UserProfileApiDto")
@@ -48,6 +49,9 @@ public class UserProfileApiDto {
     params.put("imgGrpId", vo.getImgGrpId());
     params.put("imgId", vo.getImgId());
     params.put("memAddrs", vo.getMemAddrs());
+    params.put("memIncTax", vo.getMemIncTax());
+    params.put("memMeetpointCde", vo.getMemMeetpointCde());
+    params.put("memMeetpointDesc", vo.getMemMeetpointDesc());
 
     return params;
   }
@@ -71,6 +75,9 @@ public class UserProfileApiDto {
   private String imgGrpId;
   private String imgId;
   private String memAddrs;
+  private String memIncTax;
+  private String memMeetpointCde;
+  private String memMeetpointDesc;
 
   public String getMemCode() {
     return memCode;
@@ -222,5 +229,29 @@ public class UserProfileApiDto {
 
   public void setMemAddrs( String memAddrs ) {
     this.memAddrs = memAddrs;
+  }
+
+  public String getMemIncTax() {
+    return memIncTax;
+  }
+
+  public void setMemIncTax( String memIncTax ) {
+    this.memIncTax = memIncTax;
+  }
+
+  public String getMemMeetpointCde() {
+    return memMeetpointCde;
+  }
+
+  public void setMemMeetpointCde( String memMeetpointCde ) {
+    this.memMeetpointCde = memMeetpointCde;
+  }
+
+  public String getMemMeetpointDesc() {
+    return memMeetpointDesc;
+  }
+
+  public void setMemMeetpointDesc( String memMeetpointDesc ) {
+    this.memMeetpointDesc = memMeetpointDesc;
   }
 }
