@@ -23,6 +23,10 @@
   var asMalfuncResnId;
   var matchMatDefCode = [];
   var installAccTypeId = 583;
+  var atchFileGrpId = 0;
+  var update = new Array();
+  var remove = new Array();
+  var myFileCaches = {};
 
   var ddlFilterObj = {};
 
@@ -101,7 +105,52 @@
         $("#inHouseRepair_div").attr("style", "display:none");
       }
 
+      // Attachment picture
+      $('#attch1').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[1] != null){
+              delete myFileCaches[1];
+          }else if(file != null){
+            myFileCaches[1] = {file:file, contentsType:"attch1"};
+          }
+          //console.log(myFileCaches);
+        });
+
+        $('#attch2').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[2] != null){
+              delete myFileCaches[2];
+          }else if(file != null){
+            myFileCaches[2] = {file:file, contentsType:"attch2"};
+          }
+          //console.log(myFileCaches);
+        });
+
+        $('#attch3').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[3] != null){
+              delete myFileCaches[3];
+          }else if(file != null){
+            myFileCaches[3] = {file:file, contentsType:"attch3"};
+          }
+          //console.log(myFileCaches);
+        });
+
     });
+
+
+	function fn_removeFile(name){
+		  if(name == "attch1") {
+		     $("#attch1").val("");
+		     $('#attch1').change();
+		  }else if(name == "attch2"){
+		      $("#attch2").val("");
+		      $('#attch2').change();
+		  }else if(name == "attch3"){
+		      $("#attch3").val("");
+		      $('#attch3').change();
+		  }
+	}
 
   function fn_inHouseAutoClose() {
     if ('${IS_AUTO}' == "true") {
@@ -144,7 +193,7 @@
           prodCat : '${orderDetail.basicInfo.ordCtgryCd}'
       };
 
-      console.log("prodCat: " + '${orderDetail.basicInfo.ordCtgryCd}');
+      //console.log("prodCat: " + '${orderDetail.basicInfo.ordCtgryCd}');
 
       Common.ajax("GET", "/homecare/services/as/getAsDefectEntry.do", jsonObj,
               function(result) {
@@ -161,7 +210,7 @@
 
   function fn_asDefectEntryHideSearch(result) {
 
-	  console.log(result);
+	  //console.log(result);
       //DP DEFETC PART
       $("#def_part").val(result[0].defectCode);
       $("#def_part_id").val(result[0].defectId);
@@ -1293,6 +1342,9 @@
     $("#txtFilterRemark").attr("disabled", false);
     fn_clearPanelField_ASChargesFees();
 
+    $("#image1").append('<span class="must">*</span>');
+    $("#image2").append('<span class="must">*</span>');
+    $("#image3").append('<span class="must">*</span>');
 
     //$("#ddlFilterPayType").val("FOC");
 
@@ -1335,6 +1387,10 @@
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
 
     $("#btnSaveDiv").attr("style", "display:inline");
+
+    $("#image1").find("span").remove();
+    $("#image2").find("span").remove();
+    $("#image3").find("span").remove();
   }
 
   function fn_openField_Fail() {
@@ -1367,6 +1423,10 @@
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+    $("#image1").find("span").remove();
+    $("#image2").find("span").remove();
+    $("#image3").find("span").remove();
   }
 
   function fn_clearPageMessage() {
@@ -1450,6 +1510,10 @@
     $("#mInH2").hide();
     $("#mInH3").hide();
 
+    $("#image1").find("span").remove();
+    $("#image2").find("span").remove();
+    $("#image3").find("span").remove();
+
   }
 
   function fn_doSave() {
@@ -1465,7 +1529,31 @@
       }
     }
 
+    var formData = new FormData();
+
+    $.each(myFileCaches, function(n, v) {
+         formData.append(n, v.file);
+         formData.append("atchFileGrpId", atchFileGrpId);
+         formData.append("asNo", $("#AS_NO").val());
+         formData.append("salesOrdId", $("#ORD_ID").val());
+         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    });
+
+    fetch("/services/as/uploadAsImage.do", {
+        method: "POST",
+        body: formData
+    })
+    .then(d=>d.json())
+    .then(r=> {
+            if(r.code =="99"){
+                 Common.alert("AS Image File is failed to submit. Please upload another image.");
+                 return;
+            }
+    atchFileGrpId = r.fileGroupKey;
+    //console.log('atchFileGrpId : '+ atchFileGrpId);
     fn_setSaveFormData();
+    });
   }
 
   $.fn.clearForm = function() {
@@ -1613,7 +1701,8 @@
       "update" : editedRowItems,
       "remove" : removedRowItems,
       "installAccList" : $("#installAcc").val(),
-      "mobileYn" : "N"
+      "mobileYn" : "N",
+      "ATTACHMENT" : atchFileGrpId
     }
 
     // SAVE RESULT
@@ -1820,6 +1909,38 @@
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
+
+        if (document.getElementById("attch1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+            rtnMsg += "* Image1 is compulsory to upload. </br>";
+            rtnValue = false;
+        }else{
+            if(document.getElementById("attch1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                rtnMsg += "* Image1 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
+                rtnValue = false;
+            }
+        }
+
+        if (document.getElementById("attch2").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+            rtnMsg += "* Image2 is compulsory to upload. </br>";
+            rtnValue = false;
+        }else{
+            if(document.getElementById("attch2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                rtnMsg += "* Image2 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
+                rtnValue = false;
+            }
+        }
+
+        if (document.getElementById("attch3").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
+            rtnMsg += "* Image3 is compulsory to upload. </br>";
+            rtnValue = false;
+        }else{
+            if(document.getElementById("attch3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
+                rtnMsg += "* Image3 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
+                rtnValue = false;
+            }
+        }
+
+
       } else if ($("#ddlStatus").val() == 19) { // RECALL
         if (FormUtil.checkReqValue($("#ddlFailReason"))) { // FAIL REASON
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Fail Reason' htmlEscape='false'/> </br>";
@@ -2767,6 +2888,45 @@ function f_multiCombo(){
              <td></td>
              <td></td>
          </tr>
+         <tr>
+            <th id="image1" scope="row"><spring:message code='sys.title.image' /> 1</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch1" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th id="image2" scope="row"><spring:message code='sys.title.image' /> 2</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch2" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th id="image3" scope="row"><spring:message code='sys.title.image' /> 3</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch3" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
         </tbody>
        </table>
       </dd>

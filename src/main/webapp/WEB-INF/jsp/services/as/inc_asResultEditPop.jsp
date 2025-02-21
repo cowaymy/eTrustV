@@ -31,6 +31,11 @@
   var installAccTypeId = 582;
   var installAccValues = JSON.parse("${installAccValues}");
   var isSet = 0;
+  var fileGroupKey = "";
+  var atchFileGrpId = "";
+  var update = new Array();
+  var remove = new Array();
+  var myFileCaches = {};
 
   $(document).ready(function() {
     createCFilterAUIGrid();
@@ -71,6 +76,38 @@
     setTimeout(function() {
       fn_errDescCheck(0)
     }, 1000);
+
+
+    // Attachment picture
+    $('#attch1').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[1] != null){
+            delete myFileCaches[1];
+        }else if(file != null){
+          myFileCaches[1] = {file:file, contentsType:"attch1"};
+        }
+        //console.log(myFileCaches);
+      });
+
+      $('#attch2').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[2] != null){
+            delete myFileCaches[2];
+        }else if(file != null){
+          myFileCaches[2] = {file:file, contentsType:"attch2"};
+        }
+        //console.log(myFileCaches);
+      });
+
+      $('#attch3').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[3] != null){
+            delete myFileCaches[3];
+        }else if(file != null){
+          myFileCaches[3] = {file:file, contentsType:"attch3"};
+        }
+        //console.log(myFileCaches);
+      });
   });
 
   function trim(text) {
@@ -193,16 +230,16 @@
       }
     }*/
     //Added by keyi - restructure AS result 202208
-    console.log("removeRow");
+    //console.log("removeRow");
     debugger;
     var index = matchMatDefCode.indexOf(event.items[0].filterId);
     if (index >= 0) {
-        console.log("index: " + index);
+        //console.log("index: " + index);
     	matchMatDefCode.splice(index,1);
     }
 
     removeList.push(event.items[0]);
-    console.log("removeList" + JSON.stringify(removeList));
+    //console.log("removeList" + JSON.stringify(removeList));
   }
 
   // RE-INSERT BACK VALUE
@@ -375,6 +412,8 @@
 
     errCde = result[0].asMalfuncId; // ERROR CODE
     asMalfuncResnId = result[0].asMalfuncResnId; // ERROR DESCRIPTION
+
+    atchFileGrpId = result[0].atchFileGrpId;
 
     // GET ERROR CODE LISTING
     fn_getErrMstList('${ORD_NO}');
@@ -1465,8 +1504,34 @@
       }
     }
 
+    var formData = new FormData();
+
+    $.each(myFileCaches, function(n, v) {
+         formData.append(n, v.file);
+         formData.append("atchFileGrpId", atchFileGrpId);
+         formData.append("asNo", asDataInfo[0].asNo);
+         formData.append("asId", asDataInfo[0].asId);
+         formData.append("salesOrdId", $("#asData_AS_SO_ID").val());
+         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    });
+
+    fetch("/services/as/uploadAsImage.do", {
+        method: "POST",
+        body: formData
+    })
+    .then(d=>d.json())
+    .then(r=> {
+            if(r.code =="99"){
+                 Common.alert("AS Image File is failed to submit. Please upload another image.");
+                 return;
+            }
+            atchFileGrpId = r.fileGroupKey;
+            //console.log('atchFileGrpId : '+ atchFileGrpId);
+
     //fn_setSaveFormData();
     fn_chkPmtMap() // CHECK PAYMENT MAPPING
+    });
   }
 
   function fn_valDtFmt() {
@@ -1889,7 +1954,8 @@
             "remove" : editedRowItems,
             "installAccList" : $("#installAcc").val(),
             "mobileYn" : "N",
-            "removeList" : removeList
+            "removeList" : removeList,
+            "ATTACHMENT" : atchFileGrpId
           // "all" : allRowItems
           }
         } else {
@@ -1900,10 +1966,12 @@
             "remove" : removedRowItems,
             "installAccList" : $("#installAcc").val(),
             "mobileYn" : "N",
-            "removeList" : removeList
+            "removeList" : removeList,
+            "ATTACHMENT" : atchFileGrpId
           }
         }
-        console.log("SaveForm: " + JSON.stringify(saveForm));
+
+        //console.log("SaveForm: " + JSON.stringify(saveForm));
         // KR-OHK Serial Check add
         var url = "";
         if ($("#hidSerialRequireChkYn").val() == 'Y') {
@@ -2609,7 +2677,7 @@
             }
 
             if($('#ddSrvFilterLastSerial').val() != ""){
-                console.log("ddSrvFilterLastSerial :: " + $('#ddSrvFilterLastSerial').val());
+                //console.log("ddSrvFilterLastSerial :: " + $('#ddSrvFilterLastSerial').val());
                 var  codyLoc = [];
                 codyLoc.push($("#pLocationCode").val());
                 var codyFilterStatus = ['I'];
@@ -2650,6 +2718,19 @@
 
         });
     });
+
+    function fn_removeFile(name){
+        if(name == "attch1") {
+           $("#attch1").val("");
+           $('#attch1').change();
+        }else if(name == "attch2"){
+            $("#attch2").val("");
+            $('#attch2').change();
+        }else if(name == "attch3"){
+            $("#attch3").val("");
+            $('#attch3').change();
+        }
+     }
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
   <input type="hidden" name="pSerialNo" id="pSerialNo" /> <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" /> <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" /> <input type="hidden" name="pRefDocNo" id="pRefDocNo" /> <input type="hidden" name="pItmCode" id="pItmCode" /> <input type="hidden" name="pCallGbn" id="pCallGbn" /> <input type="hidden" name="pMobileYn" id="pMobileYn" />
@@ -2808,6 +2889,45 @@
               <th scope="row"><spring:message code='service.grid.CrtDt' /><span class="must">*</span></th>
               <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat' /></td>
             </tr>
+            <tr>
+            <th scope="row"><spring:message code='sys.title.image' /> 1</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch1" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='sys.title.image' /> 2</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch2" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='sys.title.image' /> 3</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch3" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
           </tbody>
         </table>
         <!-- table end -->

@@ -906,7 +906,7 @@
 		var ddlFilterCodeText = $("#ddlFilterCode option:selected").text();
 		ddlFilterCodeText = ddlFilterCodeText.substr(0, ddlFilterCodeText.indexOf(" "));
 		fitem.filterCode = ddlFilterCodeText;
-		console.log("ddlFilterCodeText: " + ddlFilterCodeText);
+		//console.log("ddlFilterCodeText: " + ddlFilterCodeText);
 
 		// CHECK PRICE
 
@@ -1226,18 +1226,18 @@
 		$("#solut_code_text").val("");
 	}
 
-	function fn_waterSrcType_SelectedIndexChanged(waterSrcType){
+	/* function fn_waterSrcType_SelectedIndexChanged(waterSrcType){
 		   document.querySelectorAll(".imageFile").forEach(res=>{
 			           res.style.display="none";
 		   });
 
-		   if(waterSrcType=="6676"){
+		    if(waterSrcType=="6676"){
 		          document.querySelectorAll(".imageFile").forEach(res=>{
 		                res.style.display="";
 		          });
 		   }
 
-	}
+	} */
 
 	function fn_openField_Complete() {
 		// OPEN MANDATORY
@@ -1257,6 +1257,10 @@
 		$("#m15").show();
 		$("#m16").show();
 		$("#m28").show();
+
+		$("#image1").append('<span class="must">*</span>');
+	    $("#image2").append('<span class="must">*</span>');
+	    $("#image3").append('<span class="must">*</span>');
 
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1293,9 +1297,9 @@
 		$("#asNotMatch").attr("disabled", false);
 		$("#reworkProj").attr("disabled", false);
 
-	    document.querySelectorAll(".imageFile").forEach(res=>{
+	    /* document.querySelectorAll(".imageFile").forEach(res=>{
               res.style.display="none";
-        });
+        }); */
 		fn_clearPanelField_ASChargesFees();
 
 		//$("#ddlFilterQty").val("1");
@@ -1382,9 +1386,9 @@
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
 
-		document.querySelectorAll(".imageFile").forEach(res=>{
+		/* document.querySelectorAll(".imageFile").forEach(res=>{
 		    res.style.display="none";
-		});
+		}); */
 
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
@@ -1397,6 +1401,10 @@
 		$('#txtRemark').removeAttr("disabled").removeClass("readonly");
 
 		$("#btnSaveDiv").attr("style", "display:inline");
+
+	    $("#image1").find("span").remove();
+	    $("#image2").find("span").remove();
+	    $("#image3").find("span").remove();
 
 	}
 
@@ -1432,9 +1440,9 @@
 		$("#ntuCom").val("0");
 		$('#waterSrcType').attr("disabled", "disabled");
 
-	    document.querySelectorAll(".imageFile").forEach(res=>{
+	    /* document.querySelectorAll(".imageFile").forEach(res=>{
 	          res.style.display="none";
-	    });
+	    }); */
 
 		$('#asNotMatch').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
@@ -1450,6 +1458,10 @@
 		$("#btnSaveDiv").attr("style", "display:inline");
 		$('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
 		$('#txtRemark').removeAttr("disabled").removeClass("readonly");
+
+	    $("#image1").find("span").remove();
+	    $("#image2").find("span").remove();
+	    $("#image3").find("span").remove();
 	}
 
 	function fn_clearPageMessage() {
@@ -1480,9 +1492,9 @@
 		$('#txtRemark').attr("disabled", true);
 		$("#iscommission").attr("disabled", true);
 
-        document.querySelectorAll(".imageFile").forEach(res=>{
+        /* document.querySelectorAll(".imageFile").forEach(res=>{
             res.style.display="none";
-        });
+        }); */
 
 		// AS CHARGES FEES
 		fn_clearPanelField_ASChargesFees();
@@ -1533,6 +1545,10 @@
 		$("#mInH1").hide();
 		$("#mInH2").hide();
 		$("#mInH3").hide();
+
+	    $("#image1").find("span").remove();
+	    $("#image2").find("span").remove();
+	    $("#image3").find("span").remove();
 
 	}
 
@@ -1696,7 +1712,8 @@
         const container = new DataTransfer();
         let uploadFlag = false;
 
-        if($('#ddlStatus').val() =="4" && $("#waterSrcType").val() == "6676"){
+        //if($('#ddlStatus').val() =="4" && $("#waterSrcType").val() == "6676"){
+        if($('#ddlStatus').val() =="4"){
 	        document.querySelectorAll(".imageFile input.imageDetails").forEach((e, index)=> {
 	                if(e.parentElement.parentElement.querySelector("input[type=file]").files[0]){
 	                    uploadFlag=true;
@@ -1709,7 +1726,9 @@
                           formData.append(n, v);
                 });
 
-                fetch("/homecare/services/install/uploadInsImage.do", {
+                formData.append("asNo","${AS_NO}");
+
+                fetch("/services/as/uploadAsImage.do", {
                     method: "POST",
                     body: formData
                 })
@@ -1989,37 +2008,37 @@
 				      }
 				}
 
-				if ($("#waterSrcType").val() == "6676"){
+				//if ($("#waterSrcType").val() == "6676"){
 	                if (document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-	                     rtnMsg += "* Image1 is compulsory to uplaod. </br>";
+	                     rtnMsg += "* Image1 is compulsory to upload. </br>";
 	                     rtnValue = false;
 	                 }else{
 	                     if(document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-	                         rtnMsg += "* Image1 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnMsg += "* Image1 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
 	                         rtnValue = false;
 	                     }
 	                 }
 
 	                 if (document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-	                     rtnMsg += "* Image2 is compulsory to uplaod. </br>";
+	                     rtnMsg += "* Image2 is compulsory to upload. </br>";
 	                     rtnValue = false;
 	                 }else{
 	                     if(document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile2").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-	                         rtnMsg += "* Image2 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnMsg += "* Image2 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
 	                         rtnValue = false;
 	                     }
 	                 }
 
 	                 if (document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
-	                     rtnMsg += "* Image3 is compulsory to uplaod. </br>";
+	                     rtnMsg += "* Image3 is compulsory to upload. </br>";
 	                     rtnValue = false;
 	                 }else{
 	                     if(document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/jpeg" && document.getElementById("imageFile3").parentElement.parentElement.querySelector("input[type=file]").files[0].type !="image/png"){
-	                         rtnMsg += "* Image3 is compulsory to uplaod with .jpeg,.png,.jpg format. </br>";
+	                         rtnMsg += "* Image3 is compulsory to upload with .jpeg,.png,.jpg format. </br>";
 	                         rtnValue = false;
 	                     }
 	                 }
-				}
+				//}
 
 				// KR-OHK Serial Check
 				if ($("#hidSerialRequireChkYn").val() == 'Y'
@@ -2812,7 +2831,7 @@
 	// CELESTE [20240828] - New Product External Filter Registration Enhancement [S]
 	  function fn_membershipValidity(){
 		  var membershipValidity = "${membershipValidity.mbrshMths}";
-		  console.log("membershipValidity: " + membershipValidity);
+		  //console.log("membershipValidity: " + membershipValidity);
 		  if(membershipValidity != null && membershipValidity > 0 && membershipValidity <= 24){
 			  Common.alert("Please be aware that membership validity is less than 24 months. Cannot add pre-filter within 2 years. ");
 		  }
@@ -2876,7 +2895,7 @@
             }
 
 			if($('#ddSrvFilterLastSerial').val() != ""){
-                console.log("ddSrvFilterLastSerial :: " + $('#ddSrvFilterLastSerial').val());
+                //console.log("ddSrvFilterLastSerial :: " + $('#ddSrvFilterLastSerial').val());
                 var  codyLoc = [];
                 codyLoc.push($("#pLocationCode").val());
                 var codyFilterStatus = ['I'];
@@ -3250,7 +3269,7 @@
           						</tr>
                                     <tr>
 							            <th scope="row">Water Source Type<span name="m18" id="m18" class="must">*</span></th>
-							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled" onChange="fn_waterSrcType_SelectedIndexChanged(this.value)">
+							            <td><select class="w100p" id="waterSrcType" name="waterSrcType" disabled="disabled">
 									                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
 									                <c:forEach var="list" items="${waterSrcType}" varStatus="status">
 									                   <option value="${list.codeId}">${list.codeName}</option>
@@ -3265,8 +3284,8 @@
                                             </c:forEach>
                                         </select></td>
 							       </tr>
-							       <tr class="imageFile" style="display:none;">
-								        <th scope="row">Image 1<span name="m18" id="m18" class="must">*</span></th>
+							       <tr class="imageFile" style="">
+								        <th id="image1" scope="row"><spring:message code='sys.title.image' /> 1</th>
 								        <td colspan=3>
 								            <div style="display:flex">
 					                            <div id="asImage1" class="auto_file4 asImage" style="width: auto;">
@@ -3280,8 +3299,8 @@
                                             </div>
                                          </td>
 							       </tr>
-                                   <tr class="imageFile" style="display:none;">
-                                        <th scope="row">Image 2<span name="m18" id="m18" class="must">*</span></th>
+                                   <tr class="imageFile" style="">
+                                        <th id="image2" scope="row"><spring:message code='sys.title.image' /> 2</th>
                                         <td colspan=3>
                                             <div style="display:flex">
                                                 <div id="asImage2" class="auto_file4 asImage" style="width: auto;">
@@ -3295,8 +3314,8 @@
                                             </div>
                                          </td>
                                    </tr>
-                                   <tr class="imageFile" style="display:none;">
-                                        <th scope="row">Image 3<span name="m18" id="m18" class="must">*</span></th>
+                                   <tr class="imageFile" style="">
+                                        <th id="image3" scope="row"><spring:message code='sys.title.image' /> 3</th>
                                         <td colspan=3>
                                             <div style="display:flex">
                                                 <div id="asImage3" class="auto_file4 asImage" style="width: auto;">

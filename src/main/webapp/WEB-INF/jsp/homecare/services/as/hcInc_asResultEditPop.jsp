@@ -31,6 +31,11 @@
   var selectedHTAndDTObj = {};
   var installAccTypeId = 583;
   var installAccValues = JSON.parse("${installAccValues}");
+  var fileGroupKey = "";
+  var atchFileGrpId = "";
+  var update = new Array();
+  var remove = new Array();
+  var myFileCaches = {};
 
   $(document).ready(
     function() {
@@ -81,6 +86,37 @@
            $("#ddlDSCCodeText").val(selectedCTbranchCode)
            $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);
          });
+
+      // Attachment picture
+      $('#attch1').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[1] != null){
+              delete myFileCaches[1];
+          }else if(file != null){
+            myFileCaches[1] = {file:file, contentsType:"attch1"};
+          }
+          //console.log(myFileCaches);
+        });
+
+        $('#attch2').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[2] != null){
+              delete myFileCaches[2];
+          }else if(file != null){
+            myFileCaches[2] = {file:file, contentsType:"attch2"};
+          }
+          //console.log(myFileCaches);
+        });
+
+        $('#attch3').change(function(evt) {
+          var file = evt.target.files[0];
+          if(file == null && myFileCaches[3] != null){
+              delete myFileCaches[3];
+          }else if(file != null){
+            myFileCaches[3] = {file:file, contentsType:"attch3"};
+          }
+          //console.log(myFileCaches);
+        });
 
     });
 
@@ -1462,8 +1498,34 @@
       }
     }
 
-    //fn_setSaveFormData();
-    fn_chkPmtMap() // CHECK PAYMENT MAPPING
+    var formData = new FormData();
+
+    $.each(myFileCaches, function(n, v) {
+        formData.append(n, v.file);
+        formData.append("atchFileGrpId", atchFileGrpId);
+        formData.append("asNo", asDataInfo[0].asNo);
+        formData.append("asId", asDataInfo[0].asId);
+        formData.append("salesOrdId", $("#asData_AS_SO_ID").val());
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+   });
+
+   fetch("/services/as/uploadAsImage.do", {
+       method: "POST",
+       body: formData
+   })
+   .then(d=>d.json())
+   .then(r=> {
+           if(r.code =="99"){
+                Common.alert("AS Image File is failed to submit. Please upload another image.");
+                return;
+           }
+           atchFileGrpId = r.fileGroupKey;
+           //console.log('atchFileGrpId : '+ atchFileGrpId);
+
+   //fn_setSaveFormData();
+   fn_chkPmtMap() // CHECK PAYMENT MAPPING
+   });
   }
 
   function fn_valDtFmt() {
@@ -1890,7 +1952,9 @@
             "update" : editedRowItems,
             "remove" : editedRowItems,
             "installAccList" : $("#installAcc").val(),
-            "mobileYn" : "N"
+            "mobileYn" : "N",
+            "ATTACHMENT" : atchFileGrpId
+
           // "all" : allRowItems
           }
         } else {
@@ -1900,7 +1964,8 @@
             "update" : editedRowItems,
             "remove" : removedRowItems,
             "installAccList" : $("#installAcc").val(),
-            "mobileYn" : "N"
+            "mobileYn" : "N",
+            "ATTACHMENT" : atchFileGrpId
           }
         }
 
@@ -2125,7 +2190,7 @@
   }
 
   function fn_doAllaction(obj) {
-	  console.log("DO ALLOCATION");
+	  //console.log("DO ALLOCATION");
 
     var ord_id = $("#ORD_ID").val();
 
@@ -2400,6 +2465,19 @@
 		        doGetComboSepa('/common/selectCodeList.do', 0, '', '','installAcc', 'M' , 'f_multiCombo');
 		    }
 		  }
+
+   function fn_removeFile(name){
+	        if(name == "attch1") {
+	           $("#attch1").val("");
+	           $('#attch1').change();
+	        }else if(name == "attch2"){
+	            $("#attch2").val("");
+	            $('#attch2').change();
+	        }else if(name == "attch3"){
+	            $("#attch3").val("");
+	            $('#attch3').change();
+	        }
+	     }
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
     <input type="hidden" name="pSerialNo" id="pSerialNo"/>
@@ -2595,6 +2673,45 @@
          <input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat'/>
        </td>
       </tr>
+      <tr>
+      <th id="image1" scope="row"><spring:message code='sys.title.image' /> 1</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch1" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch1")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th id="image2" scope="row"><spring:message code='sys.title.image' /> 2</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch2" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch2")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th id="image3" scope="row"><spring:message code='sys.title.image' /> 3</th>
+            <td>
+              <div class="auto_file2">
+                <input type="file" title="" id="attch3" accept="image/*" />
+                <label>
+                  <input type='text' class='input_text' readonly='readonly' />
+                  <span class='label_text'><a href='#'><spring:message code='sys.btn.upload' /></a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("attch3")'><spring:message code='sys.btn.remove' /></a></span>
+              </div>
+            </td>
+          </tr>
      </tbody>
     </table>
     <!-- table end -->

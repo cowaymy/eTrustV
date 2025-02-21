@@ -1,10 +1,14 @@
 package com.coway.trust.web.services.as;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,20 +27,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.biz.services.as.AfterServiceApplication;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -66,6 +79,12 @@ public class ASManagementListController {
 
   @Resource(name = "commonService")
   private CommonService commonService;
+
+  @Autowired
+  private AfterServiceApplication AfterServiceApplication; //attachment
+
+  @Value("${web.resource.upload.file}") // attachment
+  private String uploadDir;
 
   @Autowired
   private AdaptorService adaptorService;
@@ -1633,6 +1652,28 @@ public class ASManagementListController {
     EgovMap filterConfig = ASManagementListService.selectFilterSerialConfig(params);
 
     return ResponseEntity.ok(filterConfig);
+  }
+
+  @RequestMapping(value="/uploadAsImage.do", method=RequestMethod.POST)
+  public ResponseEntity<Map<String, Object>> uploadAsImage(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params , SessionVO sessionVO) throws Exception {
+    LocalDate date = LocalDate.now();
+  String year    = String.valueOf(date.getYear());
+  String month   = String.format("%02d",date.getMonthValue());
+  String subPath =  "/service/mobile/afterService/" + year + "/" + month;
+
+    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath, AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+    List<String> seqs = new ArrayList<>();
+    Set set = request.getFileMap().entrySet();
+      Iterator i = set.iterator();
+      params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+       while(i.hasNext()) {
+           Map.Entry me = (Map.Entry)i.next();
+           String key = (String)me.getKey();
+           seqs.add(key);
+       }
+    AfterServiceApplication.insertAfterServiceAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+    return ResponseEntity.ok(params);
   }
 
 }

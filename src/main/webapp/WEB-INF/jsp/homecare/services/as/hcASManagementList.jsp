@@ -373,7 +373,28 @@ var branchDs = [];
           headerText : "",
           width : 100,
           visible : false
-        }
+        },
+        {
+      	  dataField : "undefined",
+            headerText : "AS Image",
+            width : 100,
+            renderer : {
+                         type : "ButtonRenderer",
+                         labelText : "View",
+                         onclick : function(rowIndex, columnIndex, value, item) {
+                             var AS_NO = AUIGrid.getCellValue(myGridID, rowIndex, "asNo") + "_";
+                             var asStusId = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
+
+                             if (asStusId == "COM") {
+                          	   Common.popupDiv('/sales/order/getInstImg.do', { insNo : AS_NO,  type : 'preInstallation' }, null , true);
+                             }
+                             else{
+                          	   Common.alert("Only Completed AS able to view image.");
+                          	   return;
+                             }
+                         }
+            }
+      }
     ];
 
     var gridPros = {

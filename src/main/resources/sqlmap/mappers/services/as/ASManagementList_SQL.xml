@@ -1664,7 +1664,8 @@
            S.AS_UNMATCH_REASON,
            S.REWORK_PROJ,
            S.CODE_NAME AS REWORK_PROJ_NAME,
-           S.NTU
+           S.NTU,
+           S.ATCH_FILE_GRP_ID
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
                   E.AS_ENTRY_ID ,
@@ -1739,7 +1740,8 @@
                   E.AS_UNMATCH_REASON,
                   E.REWORK_PROJ,
                   E5.CODE_NAME,
-                  E.NTU
+                  E.NTU,
+                  NVL(E.ATCH_FILE_GRP_ID,0) ATCH_FILE_GRP_ID
            FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
            LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
            LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
@@ -5318,5 +5320,29 @@
         TRG.SRV_FILTER_UPD_DT = SYSDATE
         ,TRG.SRV_FILTER_UPD_USER_ID = 349
             </update>
+
+	<select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        )
+    </insert>
 
 </mapper>

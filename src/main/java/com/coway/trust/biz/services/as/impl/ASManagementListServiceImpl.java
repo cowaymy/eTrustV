@@ -1555,6 +1555,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     String m = "";
     Map svc0004dmap = (Map) params.get("asResultM");
     svc0004dmap.put("updator", params.get("updator"));
+    svc0004dmap.put("ATTACHMENT", CommonUtils.intNvl(params.get("ATTACHMENT")));
 
     String zeroRatYn = "Y";
     String eurCertYn = "Y";

@@ -388,4 +388,9 @@ int selectFilterSerial(Map<String, Object> params);
 void updateAsFilterSerial(Map<String, Object> params);
 
 int updateSAL0087DFilter_rev(Map<String, Object> params);
+
+int selectNextFileId();
+
+void insertFileDetail(Map<String, Object> flInfo);
+
 }
