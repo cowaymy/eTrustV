@@ -737,6 +737,14 @@
      <input id="pStatus" name="pStatus" type="hidden" value="" />
      <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
 </form>
+
+  <form id='ssServiceTypeChgLst' method="post" name='ssServiceTypeChgLst' action="#">
+    <input type='hidden' id='reportFileName' name='reportFileName'/>
+    <input type='hidden' id='viewType' name='viewType'/>
+    <input type='hidden' id='reportDownFileName' name='reportDownFileName'/>
+    <input type='hidden' id='V_TEMP' name='V_TEMP'/>
+  </form>
+
 <section id="content">
   <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
