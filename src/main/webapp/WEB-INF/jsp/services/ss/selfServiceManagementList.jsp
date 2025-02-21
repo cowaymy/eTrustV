@@ -702,7 +702,29 @@
 		}
 	}
 
-	function fn_ssFilterForecastList() {
+     function fn_ssServiceChangeListing() {
+
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            if (date.getDate() < 10) {
+                day = "0" + date.getDate();
+            }
+
+            $("#ssServiceTypeChgLst #reportFileName").val('/services/SSServiceTypeChangeListing.rpt');
+            $("#ssServiceTypeChgLst #reportDownFileName").val("ServiceTypeChangeListing_" + month + date.getFullYear());
+            $("#ssServiceTypeChgLst #V_TEMP").val("");
+            $("#ssServiceTypeChgLst #viewType").val("EXCEL");
+            var option = { isProcedure : true, };
+            Common.report("ssServiceTypeChgLst", option);
+
+    }
+
+     /* function fn_ssServiceChangeListing() {
+        Common.popupDiv("/services/ss/report/serviceTypeChangeListingPop.do", null, null, true, '');
+      } */
+
+	 function fn_ssFilterForecastList() {
         Common.popupDiv("/services/ss/report/ssFilterForecastListingPop.do",null, null, true, '');
     }
 </script>
@@ -868,6 +890,15 @@
                    </p>
                 </li>
              </c:if>
+
+             <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
+                <li>
+                    <p class="link_btn type2">
+                        <a href="#" onclick="javascript:fn_ssServiceChangeListing()"><spring:message code='service.btn.ssServiceChangeListing' /></a>
+                    </p>
+                </li>
+             </c:if>
+
             </ul>
             <p class="hide_btn">
               <a href="#">
