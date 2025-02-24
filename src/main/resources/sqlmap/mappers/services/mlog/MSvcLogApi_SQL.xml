@@ -1045,6 +1045,8 @@
                                          , TO_CHAR (SAL0047D.COMP_YN) AS IS_COMPT_PROD
                                          , TO_CHAR (SAL0047D.COMP_BRAND) AS COMPT_BRND
                                          , TO_CHAR (SAL0045D.SRV_TYPE) AS SRV_TYP
+                                         , TO_CHAR (SAL0047D.DT_PAIR_ID) AS PARTNER_CODE
+                                         , TO_CHAR (PAIRPART.MEM_CODE) AS PARTNER_CODE_NAME
       FROM SAL0046D,
                ORG0001D,
                ORG0005D,
@@ -1073,7 +1075,8 @@
                SAL0233M,
                SVC0113D,
                SAL0017D,
-               (SELECT H.ORD_ID , SUM(H.REBATE_AMT_PER_INSTLMT) TOTAL_REBATE  FROM PAY0286D H WHERE H.STUS_ID = 1 GROUP BY H.ORD_ID ) PAY0286D
+               (SELECT H.ORD_ID , SUM(H.REBATE_AMT_PER_INSTLMT) TOTAL_REBATE  FROM PAY0286D H WHERE H.STUS_ID = 1 GROUP BY H.ORD_ID ) PAY0286D,
+               ORG0001D PAIRPART
       WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
           AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
           AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -1101,6 +1104,7 @@
           AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
           AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
           AND SAL0001D.SALES_ORD_ID = PAY0286D.ORD_ID (+)
+          AND SAL0047D.DT_PAIR_ID = PAIRPART.MEM_ID (+)
     ]]>
     ) WHERE rnum = 1
   </select>
@@ -1209,6 +1213,8 @@
              , TO_CHAR(IS_JOM_TUKAR) AS IS_JOM_TUKAR
              , TO_CHAR(COMP_YN) AS IS_COMPT_PROD
              , TO_CHAR(COMP_BRAND) AS COMPT_BRND
+             , TO_CHAR(PARTNER_CODE) AS PARTNER_CODE
+             , TO_CHAR(PARTNER_CODE_NAME) AS PARTNER_CODE_NAME
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
