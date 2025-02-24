@@ -55,17 +55,15 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
   private InstallationResultListService installationResultListService;
 
   @Override
-  public ResponseEntity<InstallationResultDto> installationResult(List<InstallationResultForm> installationResultForms)
-      throws Exception {
+  public ResponseEntity<InstallationResultDto> installationResult(List<InstallationResultForm> installationResultForms) throws Exception {
     String transactionId = "";
     List<Map<String, Object>> insTransLogs = null;
     Map<String, Object> insApiresult = null;
-    int totalCnt = 0;
+    // int totalCnt = 0;
     int successCnt = 0;
     int failCnt = 0;
 
-    logger.debug(
-        "==================================[MB]INSTALLATION RESULT REGISTRATION - START - ====================================");
+    logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - START - ====================================");
     logger.debug("### INSTALLATION FORM : ", installationResultForms);
 
     insTransLogs = new ArrayList<>();
@@ -84,7 +82,7 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       }
     }
 
-    totalCnt = insTransLogs.size();
+    // totalCnt = insTransLogs.size();
 
     logger.debug("### INSTALLATION SIZE : " + insTransLogs.size());
     for (int i = 0; i < insTransLogs.size(); i++) {
@@ -98,9 +96,6 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       try {
         serviceApiInstallationDetailService.installationResultProc(insApiresult);
         successCnt = successCnt + 1;
-        /*Map<String, Object> paramsEmail = insApiresult;
-        serviceApiInstallationDetailService.installationResultProcSendEmail(paramsEmail);*/
-
       } catch (BizException bizException) {
         logger.debug("### INSTALLATION bizException errorcode : " + bizException.getErrorCode());
         logger.debug("### INSTALLATION bizException errormsg : " + bizException.getErrorMsg());
@@ -140,48 +135,49 @@ public class ServiceApiInstallationServiceImpl extends EgovAbstractServiceImpl
       }
     }
 
-    logger.debug(
-        "==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
-
+    logger.debug("==================================[MB]INSTALLATION RESULT REGISTRATION - END - ====================================");
     return ResponseEntity.ok(InstallationResultDto.create(transactionId));
   }
 
   @Override
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     String serviceNo = "";
-
+    Map<String, Object> errMap = new HashMap<String,Object>();
     Map<String, Object> params = InstallFailJobRequestForm.createMaps(installFailJobRequestForm);
-
+    EgovMap rtnResultMap = new EgovMap();
     serviceNo = String.valueOf(params.get("serviceNo"));
+    rtnResultMap.put( "result", serviceNo );
 
-    logger.debug(
-        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
     logger.debug("### INSTALLATION FAIL JOB REQUEST FORM : " + params.toString());
-    logger.debug(
-        "==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
+    logger.debug("==================================[MB]INSTALLATION FAIL JOB REQUEST ====================================");
 
     // INSERT LOG HISTORY (SVC0043T)(REQUIRES_NEW) (resultSeq KEY CREATE)
     if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
       try {
-        logger.debug(
-          "==================================1 ====================================");
         MSvcLogApiService.saveInsFailServiceLogs(params);
       } catch (Exception e) {
-        logger.debug(
-          "==================================2 ====================================");
-        e.printStackTrace();
+        logger.error( e.getMessage() );
+        errMap.put( "no", serviceNo );
+        errMap.put( "exception", e );
+        MSvcLogApiService.saveErrorToDatabase(errMap);
+        rtnResultMap.put( "status", false );
+        //e.printStackTrace();
+        throw new ApplicationException(AppConstants.FAIL, e.getMessage());
       }
     }
 
     try {
-      logger.debug(
-                   "==================================3 ====================================");
-      serviceApiInstallationDetailService.installFailJobRequestProc(params);
+      rtnResultMap = serviceApiInstallationDetailService.installFailJobRequestProc(params);
     } catch (Exception e) {
-      throw new ApplicationException(AppConstants.FAIL, "Fail");
+      logger.error( e.getMessage() );
+      errMap.put( "no", serviceNo );
+      errMap.put( "exception", e );
+      MSvcLogApiService.saveErrorToDatabase(errMap);
+      rtnResultMap.put( "status", false );
+      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
     }
-
-    return ResponseEntity.ok(InstallFailJobRequestDto.create(serviceNo));
+    return ResponseEntity.ok(InstallFailJobRequestDto.create(rtnResultMap));
   }
 
   @Override
