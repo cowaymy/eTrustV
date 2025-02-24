@@ -301,6 +301,10 @@ public class InstallationJobDto {
 
   private String srvTyp;
 
+  private String partnerCode;
+
+  private String partnerCodeName;
+
   public BigDecimal getNtu() {
 	return ntu;
 }
@@ -1201,6 +1205,22 @@ public String getVoltage() {
 
   public void setSrvTyp( String srvTyp ) {
     this.srvTyp = srvTyp;
+  }
+
+  public String getPartnerCode() {
+    return partnerCode;
+  }
+
+  public void setPartnerCode( String partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public String getPartnerCodeName() {
+    return partnerCodeName;
+  }
+
+  public void setPartnerCodeName( String partnerCodeName ) {
+    this.partnerCodeName = partnerCodeName;
   }
 
   public static InstallationJobDto create(EgovMap egvoMap) {
