@@ -366,11 +366,11 @@
     <insert id="insertAutoDebitMobileSubmmisionData" parameterType="Map">
     INSERT INTO PAY0333M (PAD_ID,PAD_NO,CRT_DT,STUS_CODE_ID,SALES_ORD_NO,CUST_ID,
     CRT_BY,USER_BRANCH,IS_THIRD_PARTY_PAYMENT,CUST_CRC_ID,SIGN_IMG,
-    ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID,CUST_PHONE, CUST_NEW_PHONE, CUST_EMAIL, CUST_NEW_EMAIL)
+    ATCH_FILE_GROUP_ID,THIRD_PARTY_CUST_ID,CUST_PHONE, CUST_NEW_PHONE, CUST_EMAIL, CUST_NEW_EMAIL, EMAIL_IND)
     VALUES
     (#{padId}, #{padNo}, SYSDATE, 1, #{salesOrdNo}, TO_NUMBER(#{custId}),#{creatorId},TO_NUMBER(#{userBranch}),
     #{isThirdPartyPaymentCheck},TO_NUMBER(#{newCustCreditCardId}),#{signImg},
-    TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId},#{sms1}, #{sms2},#{email1}, #{email2})
+    TO_NUMBER(#{atchFileGroupId}),#{thirdPartyCustId},#{sms1}, #{sms2},#{email1}, #{email2}, 'N')
   </insert>
 
   <select id="getSmsTemplate" parameterType="Map" resultType="String">
@@ -532,4 +532,34 @@
                UPT_BY = #{updUserId}
         WHERE PAD_ID = #{padId}
     </update>
+
+    <select id="getPendingEmailSendInfo" resultType="egovMap">
+     SELECT p0333m.PAD_ID,
+                p0333m.PAD_NO,
+                s0029d.NAME,
+                RPAD('*', LENGTH(s0029d.NRIC) - 4, '*') || SUBSTR(s0029d.NRIC, -4) as NRIC,
+                p0333m.SALES_ORD_NO,
+                p0333m.CRT_DT,
+                s0026m.STK_DESC,
+                s0028d.CUST_CRC_OWNER,
+                SUBSTR(s0028d.CUST_CRC_EXPR,1,2) || '/20' || SUBSTR(s0028d.CUST_CRC_EXPR,3,2) AS CUST_CRC_EXPR,
+                RPAD('*', LENGTH(s0028d.CUST_ORI_CRC_NO) - 4, '*') || SUBSTR(s0028d.CUST_ORI_CRC_NO, -4) AS CUST_ORI_CRC_NO,
+                SUBSTR(s0028d.CUST_ORI_CRC_NO,-4) AS LAST_CUST_CRC_NO,
+                s0013m1.CODE_NAME AS CARD_TYPE,
+                s0004m.CODE AS BANK_CODE,
+                s0004m.NAME AS BANK_NAME,
+                s0001d.MTH_RENT_AMT AS MTH_PAYMENT_AMT,
+                p0333m.SIGN_IMG,
+                NVL(p0333m.CUST_EMAIL,'') AS EMAIL
+        FROM PAY0333M p0333m
+        LEFT JOIN SAL0029D s0029d ON s0029d.CUST_ID = p0333m.CUST_ID
+        LEFT JOIN SAL0001D s0001d ON s0001d.SALES_ORD_NO = p0333m.SALES_ORD_NO
+        LEFT JOIN SAL0002D s0002d ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
+        LEFT JOIN SYS0026M s0026m ON s0026m.STK_ID = s0002d.ITM_STK_ID
+        LEFT JOIN SAL0028D s0028d ON p0333m.CUST_CRC_ID = s0028d.CUST_CRC_ID
+        LEFT JOIN SYS0013M s0013m1 ON s0028d.CARD_TYPE_ID = s0013m1.CODE_ID
+        LEFT JOIN SYS0004M s0004m ON s0028d.CUST_CRC_BANK_ID = s0004m.BANK_ID
+        WHERE 1=1
+        AND EMAIL_IND = 'N'
+    </select>
 </mapper>

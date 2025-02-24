@@ -46,11 +46,13 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.ChatbotInboundApiService;
 import com.coway.trust.biz.common.ReportBatchService;
 import com.coway.trust.biz.misc.voucher.impl.VoucherMapper;
+import com.coway.trust.biz.payment.autodebit.service.impl.AutoDebitMapper;
 import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
+
 import com.coway.trust.web.common.ReportController;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
@@ -63,6 +65,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be
@@ -100,6 +103,9 @@ public class ReportBatchController {
   @Value("${web.resource.upload.file}")
   private String uploadDirWeb;
 
+  @Value("${autodebit.authorization.destination.path}")
+  private String adAuthDestinationDir;
+
   @Autowired
   private MessageSourceAccessor messageAccessor;
 
@@ -111,6 +117,9 @@ public class ReportBatchController {
 
   @Resource(name = "voucherMapper")
 	private VoucherMapper voucherMapper;
+
+  @Resource(name="autoDebitMapper")
+  private AutoDebitMapper autoDebitMapper;
 
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
@@ -831,10 +840,8 @@ public class ReportBatchController {
     LOGGER.info("[END] accumAccMembership_Simplified...");
   }
 
-
-
   private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
-    this.checkArgument(params);
+	this.checkArgument(params);
 
     SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
     Calendar startTime = Calendar.getInstance();
@@ -842,6 +849,7 @@ public class ReportBatchController {
 
     String reportFile = (String) params.get(REPORT_FILE_NAME);
     String reportName = reportFilePath + reportFile;
+
     ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
     String prodName;
     int maxLength = 0;
@@ -857,7 +865,6 @@ public class ReportBatchController {
       clientDoc.setReportAppServer(ra.getReportAppServer());
       clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
 
-
       String connectString = reportUrl;
       String driverName = reportDriverClass;
       String jndiName = "sp";
@@ -870,7 +877,6 @@ public class ReportBatchController {
       // logon to database
       CRJavaHelper.logonDataSource(clientDoc, userName, password);
 
-
       clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
       prodName = clientDoc.getDatabaseController().getDatabase().getTables().size() > 0 ? clientDoc.getDatabaseController().getDatabase().getTables().get(0).getName() : null;
@@ -881,8 +887,7 @@ public class ReportBatchController {
       Fields fields = clientDoc.getDataDefinition().getParameterFields();
       ReportUtils.setReportParameter(params, paramController, fields);
       {
-        this.viewHandle(request, response, viewType, clientDoc,
-            ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
+        this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(clientDoc.getReportSource()), params);
       }
     } catch (Exception ex) {
       LOGGER.error(CommonUtils.printStackTraceToString(ex));
@@ -2539,7 +2544,7 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] Monthly_Rental_Collection HC...");
   }
-  
+
   @RequestMapping(value = "/Monthly_Rental_Collection_SRV.do")
   //@Scheduled(cron = "0 15 8 1 * ?")//Monthly (Day 1) (8:15am)
   public void MonthlyRentalCollectionSRV() {
@@ -3349,6 +3354,30 @@ this.viewProcedure(null, null, params);
 LOGGER.info("[END] CodyCommissionMonthlyData...");
 }
 
+//[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+@RequestMapping(value = "/batchAutoDebitAuthorization.do")
+//@Scheduled(cron = " 0 0 2 * * *") // EVERYDAY 2AM
+public void batchAutoDebitAuthorization(){
+	LOGGER.info("[START] batchAutoDebitAuthorization...");
+	Map<String, Object> params = new HashMap<>();
+	List<EgovMap> emailListToSend = autoDebitMapper.getPendingEmailSendInfo();
+    boolean isAutoDebitAuthorization = false;
+
+	if(emailListToSend.size() > 0){
+		for(int i =0;i<emailListToSend.size();i++)
+		{
+			params.put(REPORT_FILE_NAME,  "/payment/AutoDebitAuthorization.rpt");
+			params.put(REPORT_VIEW_TYPE, "PDF");
+			params.put("V_WHERESQL", " AND EMAIL_IND = 'N' AND p0333m.PAD_ID ='" +emailListToSend.get(i).get("padId").toString()+"'");
+		    String downFileName = "/" +emailListToSend.get(i).get("padId").toString() +"_" +"AutoDebitAuthorisationForm_"+ CommonUtils.getNowDate() + ".pdf";
+	        params.put(AppConstants.REPORT_DOWN_FILE_NAME,  downFileName);
+	        params.put("isAutoDebitAuthorization", "true");
+	        this.viewProcedure(null, null, params);
+		}
+	}
+	LOGGER.info("[END] batchAutoDebitAuthorization...");
+}
+
 public static int calculateTaskId() {
   // Get current date
   Calendar calendar = Calendar.getInstance();
@@ -3465,12 +3494,18 @@ public static int calculateTaskId() {
 
     String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
 
+    boolean isAutoDebitAuthorization = Boolean.parseBoolean(params.get("isAutoDebitAuthorization").toString());
     switch (viewType) {
       case CSV:
         ReportUtils.viewCSV(response, clientDoc, downFileName);
         break;
       case PDF:
-        ReportUtils.viewPDF(response, clientDoc, downFileName);
+    	  //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+    	  if(isAutoDebitAuthorization == true){
+    		  ReportUtils.viewAutoDebitAuthorizationPDF(response, clientDoc, downFileName, params);
+    	  }else{
+    		  ReportUtils.viewPDF(response, clientDoc, downFileName);
+    	  }
         break;
       case EXCEL:
         ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
@@ -3495,4 +3530,6 @@ public static int calculateTaskId() {
         throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
     }
   }
+
+
 }

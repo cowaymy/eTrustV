@@ -169,6 +169,11 @@ public class ReportUtils {
 				response, true, downFileName), response, clientDoc, downFileName);
 	}
 
+    //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+	public static void viewAutoDebitAuthorizationPDF(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName, Map<String, Object> params) {
+		ReportUtils.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportAutoDebitAuthorizationPDF(clientDoc, response, true, downFileName, params), response, clientDoc, downFileName);
+	}
+
 	public static CrystalReportViewer getCrystalReportViewer(Object reportSource) throws ReportSDKExceptionBase {
 		CrystalReportViewer crystalReportViewer = new CrystalReportViewer();
 

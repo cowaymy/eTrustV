@@ -4,6 +4,7 @@ import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
 
 import java.io.*;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +43,7 @@ import com.crystaldecisions.sdk.occa.report.lib.IStrings;
 import com.crystaldecisions.sdk.occa.report.lib.PropertyBag;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKException;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import com.google.common.io.Files;
 
 /**
  * crystal report helper
@@ -58,10 +60,13 @@ public class CRJavaHelper {
 	public static final String COL_WIDTH = "colWidth";
 
 	private static String uploadDirWeb;
+    private static String autoDebitAuthDestinationDir;
 
 	@Autowired
-	private CRJavaHelper(@Value("${web.resource.upload.file}") String uploadDirWeb) {
+	private CRJavaHelper(@Value("${web.resource.upload.file}") String uploadDirWeb,
+			                       @Value("${autodebit.authorization.destination.path}") String autoDebitAuthDestinationDir ) {
 		this.uploadDirWeb = uploadDirWeb;
+		this.autoDebitAuthDestinationDir = autoDebitAuthDestinationDir;
 	}
 
 	/**
@@ -887,6 +892,7 @@ public class CRJavaHelper {
 						+ File.separator + downFileName);
 				File targetFile2 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Privacy"
 						+ File.separator + downFileName);
+
 				if (!targetFile1.exists()) {
 					LOGGER.debug("make dir1...");
 					targetFile1.mkdirs();
@@ -897,8 +903,7 @@ public class CRJavaHelper {
 				}
 
 				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
-				java.nio.file.Files.copy(targetFile1.toPath(), targetFile2.toPath(),
-						StandardCopyOption.REPLACE_EXISTING);
+				java.nio.file.Files.copy(targetFile1.toPath(), targetFile2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 				IOUtils.closeQuietly(is);
 			}
@@ -1212,5 +1217,89 @@ public class CRJavaHelper {
 	    return exportOptions;
 	  }
 
+	  //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+	  public static void exportAutoDebitAuthorizationPDF(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
+				String downFileName, Map<String, Object> params) throws ReportSDKExceptionBase, IOException {
+			ExportOptions exportOptions = getPDFExportOptions();
 
+			boolean isAutoDebitAuthorization = Boolean.parseBoolean(params.get("isAutoDebitAuthorization").toString());
+			exportAutoDebitAuthorizationPDF(clientDoc, exportOptions, response, attachment, "application/pdf", PDF, downFileName, isAutoDebitAuthorization);
+	  }
+
+	  //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+	  private static void exportAutoDebitAuthorizationPDF(ReportClientDocument clientDoc, ExportOptions exportOptions,
+				HttpServletResponse response, boolean attachment, String mimeType, String extension, String downFileName, boolean isAutoDebitAuthorization)
+			throws ReportSDKExceptionBase, IOException {
+
+			InputStream is = null;
+			try {
+				is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
+
+				byte[] data = new byte[1024];
+
+				if (response != null) {
+					response.setContentType(mimeType);
+				}
+
+				if (response != null && attachment) {
+					String name = "";
+					if (StringUtils.isNotEmpty(downFileName)) {
+						name = downFileName;
+					} else if (StringUtils.isEmpty(name)) {
+						name = clientDoc.getReportSource().getReportTitle();
+						name = name.replaceAll("\"", "");
+					}
+
+					if (StringUtils.isEmpty(name)) {
+						name = "Report-" + extension;
+					}
+
+					response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+					/// callback 호출시 필수.
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
+				}
+
+				if (response != null) {
+					OutputStream os = response.getOutputStream();
+					while (is.read(data) > -1) {
+						os.write(data);
+					}
+				} else {
+					LOGGER.info("[CRJavaHelper - exportAutoDebitAuthorizationPDF] this line is batch call =>downFileName : {}, mimeType : {}", downFileName, mimeType);
+
+					if(isAutoDebitAuthorization){
+						File targetFile1 = new File(autoDebitAuthDestinationDir + File.separator + downFileName);
+
+						if (!targetFile1.exists()) {
+	    					LOGGER.debug("[CRJavaHelper - exportAutoDebitAuthorizationPDF > isAutoDebitAuthorization] make dir1...");
+	    					targetFile1.mkdirs();
+	    				}
+
+	    				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	    				IOUtils.closeQuietly(is);
+					}
+					else{
+	    				File targetFile1 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Public" + File.separator + downFileName);
+	    				File targetFile2 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Privacy" + File.separator + downFileName);
+	    				if (!targetFile1.exists()) {
+	    					LOGGER.debug("[CRJavaHelper - exportAutoDebitAuthorizationPDF] make dir1...");
+	    					targetFile1.mkdirs();
+	    				}
+	    				if (!targetFile2.exists()) {
+	    					LOGGER.debug("[CRJavaHelper - exportAutoDebitAuthorizationPDF] make dir2...");
+	    					targetFile2.mkdirs();
+	    				}
+
+	    				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	    				java.nio.file.Files.copy(targetFile1.toPath(), targetFile2.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+	    				IOUtils.closeQuietly(is);
+					}
+				}
+			} finally {
+				if (is != null) {
+					is.close();
+				}
+			}
+		}
 }
