@@ -2,40 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.homecareServiceApi.impl.HomecareServiceApiMapper">
 
+  <select id="selectPartnerCode" resultType="egovMap">
+    <![CDATA[
+      SELECT ORG.MEM_ID AS DT_ID
+               , UPPER(ORG.MEM_CODE || '-' || TRIM(ORG.NAME)) AS MEM_CODE
+      FROM ORG0001D ORG
+      WHERE ORG.MEM_TYPE IN ('5758','6672','3')
+          AND ORG.STUS = 1
+          AND ORG.MEM_CODE <> #{regId}
+          AND ORG.BRNCH IN ( SELECT BRNCH 
+                                         FROM ORG0001D 
+                                         WHERE MEM_CODE = #{regId})
+    ]]>
+  </select>
 
-
-
-<select id="selectPartnerCode" resultType="egovMap">
-<![CDATA[
-
-    SELECT MEM_ID AS DT_ID
-    , MEM_CODE AS MEM_CODE
-    FROM
-    ORG0001D ORG
-    WHERE ORG.MEM_TYPE IN ('5758','6672')
-    AND ORG.STUS = 1
-    AND ORG.MEM_CODE <> #{regId}
-    AND ORG.BRNCH IN
-    (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{regId})
-
-]]>
-</select>
-
-<select id="selectAsPartnerCode" resultType="egovMap">
-<![CDATA[
-
-    SELECT MEM_ID AS DT_ID
-    , MEM_CODE AS MEM_CODE
-    FROM
-    ORG0001D ORG
-    WHERE ORG.MEM_TYPE IN ('5758','6672')
-    AND ORG.STUS = 1
-    AND ORG.MEM_CODE <> #{regId}
-    AND ORG.BRNCH IN
-    (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{regId})
-
-]]>
-</select>
-
-
+  <select id="selectAsPartnerCode" resultType="egovMap">
+    <![CDATA[
+      SELECT ORG.MEM_ID AS DT_ID
+                , UPPER(ORG.MEM_CODE || '-' || TRIM(ORG.NAME)) AS MEM_CODE
+      FROM ORG0001D ORG
+      WHERE ORG.MEM_TYPE IN ('5758','6672','3')
+          AND ORG.STUS = 1
+          AND ORG.MEM_CODE <> #{regId}
+          AND ORG.BRNCH IN ( SELECT BRNCH 
+                                         FROM ORG0001D 
+                                         WHERE MEM_CODE = #{regId})
+    ]]>
+  </select>
 </mapper>
