@@ -3693,7 +3693,7 @@ WHERE
 	)
 	VALUES
 	(
-		#{oldSalesOrdId}
+		#{salesOrdId}
 		,#{fromPeriod}
 		,#{toPeriod}
 		,#{promoId}

@@ -2153,18 +2153,30 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 		EgovMap orderRentInst = orderRegisterMapper.selectOldOrderRentInstNo(map1);
 		if(orderRentInst != null){
+			EgovMap map2 = new EgovMap();
+			map2.put("salesOrdId",orderRentInst.get("salesOrdId"));
+			map2.put("fromPeriod",orderRentInst.get("minRentInstNo"));
+			map2.put("toPeriod",orderRentInst.get("maxRentInstNo"));
+			map2.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
+			map2.put("percentage",100);
+			BigDecimal CNamt = salesOrderMVO.getMthRentAmt();
+			map2.put("cnAmt",CNamt);
+			map2.put("status",CommonUtils.intNvl("1"));
+			map2.put("userId",sessionVO.getUserId());
+
+			orderRegisterMapper.insertSalesSpecialPromotion(map1);//old order CN
+
 			map1.put("oldSalesOrdId",orderRentInst.get("salesOrdId"));
 			map1.put("fromPeriod",orderRentInst.get("minRentInstNo"));
 			map1.put("toPeriod",orderRentInst.get("maxRentInstNo"));
 			map1.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
 			map1.put("percentage",100);
-			BigDecimal CNamt = salesOrderMVO.getMthRentAmt();
-			map1.put("cnAmt",CNamt);
+			BigDecimal CNamt1 = salesOrderMVO.getMthRentAmt();
+			map1.put("cnAmt",CNamt1);
 			map1.put("status",CommonUtils.intNvl("1"));
 			map1.put("userId",sessionVO.getUserId());
 
-			orderRegisterMapper.insertSalesSpecialPromotion(map1);
-			orderRegisterMapper.insertEarlyExtradeSales(map1);
+			orderRegisterMapper.insertEarlyExtradeSales(map1);//record which order entitle for early extrade old older promotion
 		}
 
     }
