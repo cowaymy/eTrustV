@@ -230,6 +230,6 @@ public class AppConstants {
 	public static final String COUNTRY_CODE_MY = "60";
 	public static final String CODE_MY = "6";
 
-	public static final String WA_CALL_LOG_HA_TNC_FILE_NAME = "SOF_CowayRentalTnc.pdf.pdf";
+	public static final String WA_CALL_LOG_HA_TNC_FILE_NAME = "SOF_CowayRentalTnc.pdf";
 	public static final String WA_CALL_LOG_HC_TNC_FILE_NAME = "MSOF_CowayRentalTnc.pdf";
 }
