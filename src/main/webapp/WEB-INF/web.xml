@@ -29,7 +29,7 @@
 
 	<filter>
         <filter-name>HttpMethodFilter</filter-name>
-        <filter-class>com.coway.trust.util.HttpMethodFilter</filter-class>
+        <filter-class>com.coway.trust.config.filter.HttpMethodFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>HttpMethodFilter</filter-name>
@@ -38,7 +38,7 @@
 
     <filter>
          <filter-name>SecurityHeadersFilter</filter-name>
-         <filter-class>com.coway.trust.util.SecurityHeadersFilter</filter-class>
+         <filter-class>com.coway.trust.config.filter.SecurityHeadersFilter</filter-class>
      </filter>
      <filter-mapping>
          <filter-name>SecurityHeadersFilter</filter-name>
@@ -47,7 +47,7 @@
 
     <filter>
          <filter-name>XSSPreventionFilter</filter-name>
-         <filter-class>com.coway.trust.util.XSSPreventionFilter</filter-class>
+         <filter-class>com.coway.trust.config.filter.XSSPreventionFilter</filter-class>
      </filter>
      <filter-mapping>
          <filter-name>XSSPreventionFilter</filter-name>
@@ -56,7 +56,7 @@
 
     <filter>
          <filter-name>SecureCookieFilter</filter-name>
-         <filter-class>com.coway.trust.util.SecureCookieFilter</filter-class>
+         <filter-class>com.coway.trust.config.filter.SecureCookieFilter</filter-class>
      </filter>
      <filter-mapping>
          <filter-name>SecureCookieFilter</filter-name>
