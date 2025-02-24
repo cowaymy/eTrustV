@@ -899,7 +899,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		        	  custInfoParam.put("nric", CommonUtils.nvl(custWADetails.get("nric")));
 		        	  custInfoParam.put("telNo", CommonUtils.nvl(custWADetails.get("telM1")));
 
-		        	  custInfoParam.put("productImage", "/products/" + CommonUtils.nvl(custWADetails.get("stkCode")) + ".jpg");
+		        	  custInfoParam.put("productImage", "/products/" + CommonUtils.nvl(custWADetails.get("stkCode")) + ".png");
 		        	  custInfoParam.put("productModel", CommonUtils.nvl(custWADetails.get("stkDesc")));
 		        	  custInfoParam.put("mthRentAmt", CommonUtils.nvl(custWADetails.get("feeAmt")));
 		        	  custInfoParam.put("contractPeriod", CommonUtils.nvl(custWADetails.get("obligationPeriod")));
