@@ -517,7 +517,9 @@
             LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
             LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
             LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4
-            WHERE A.CUST_ID = #{custId}
+            WHERE 1=1
+            AND A.STUS_CODE_ID = 4
+            AND A.CUST_ID = #{custId}
             <if test='salesOrdNo != null and salesOrdNo !=""'>
                   AND A.SALES_ORD_NO = #{salesOrdNo}
               </if>

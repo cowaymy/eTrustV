@@ -398,7 +398,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
           msg = "* Education, Free trial and auxiliary are disallowed to register for PWP!";
 
       }else{
-          if(ordInfo.get("stusCodeId").toString().equals("1") || ordInfo.get("stusCodeId").toString().equals("4")){
+          if(ordInfo.get("stusCodeId").toString().equals("4")){
         	  isPass = true;
         	  mainOrdId = ordInfo.get("salesOrdId").toString();
 
@@ -421,7 +421,7 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
           } else{
         	  isPass = false;
-              msg = "* Order status not under ACT and COM is disallowed to register for PWP!";
+              msg = "* Order status not under COM is disallowed to register for PWP!";
           }
       }
     }else{
