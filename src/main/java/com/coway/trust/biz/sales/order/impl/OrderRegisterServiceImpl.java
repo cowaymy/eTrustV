@@ -2143,7 +2143,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 //    	}
     }
 
-    String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR().toString();
+    String isExtradePR = orderVO.getSalesOrderMVO().getIsExtradePR()==null?"":orderVO.getSalesOrderMVO().getIsExtradePR().toString();
     // SAL0408D,SAL0432D - Early extrade without product return
     if(salesOrderMVO.getExTrade() == 1 && isExtradePR.equals("0") && orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX){
 
@@ -2164,7 +2164,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			map2.put("status",CommonUtils.intNvl("1"));
 			map2.put("userId",sessionVO.getUserId());
 
-			orderRegisterMapper.insertSalesSpecialPromotion(map1);//old order CN
+			orderRegisterMapper.insertSalesSpecialPromotion(map2);//old order CN
 
 			map1.put("oldSalesOrdId",orderRentInst.get("salesOrdId"));
 			map1.put("fromPeriod",orderRentInst.get("minRentInstNo"));
