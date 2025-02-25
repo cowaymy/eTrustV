@@ -22,7 +22,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ServiceApiInstallationDetailService {
   ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult) throws Exception;
 
-  ResponseEntity<InstallFailJobRequestDto> installFailJobRequestProc(Map<String, Object> params) throws Exception;
+  EgovMap installFailJobRequestProc(Map<String, Object> params) throws Exception;
 
   ResponseEntity<InstallationResultDto> installationDtResultProc(Map<String, Object> insApiresult) throws Exception;
 
