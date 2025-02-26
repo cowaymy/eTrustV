@@ -234,6 +234,8 @@ public class ProductRetrunJobDto {
 
   private String partnerCodeName;
 
+  private String prodCat;
+
   public String getSerialChk() {
     return serialChk;
   }
@@ -878,6 +880,14 @@ public class ProductRetrunJobDto {
 
   public void setPartnerCodeName( String partnerCodeName ) {
     this.partnerCodeName = partnerCodeName;
+  }
+
+  public String getProdCat() {
+    return prodCat;
+  }
+
+  public void setProdCat( String prodCat ) {
+    this.prodCat = prodCat;
   }
 
   public static ProductRetrunJobDto create(EgovMap egvoMap) {
