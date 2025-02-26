@@ -37,7 +37,7 @@
 
         doDefCombo(stkSizeData, '${promoInfo.stkSize}' ,'stkSize', 'S', '');
         doGetCombo('/common/selectCodeList.do', '581', '${promoInfo.extradeAppType}', 'extradeAppType', 'S'); //Extrade App Type
-        doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, '0', 'promoGroup', 'S'); //Promotion Group
+        doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, '${promoInfo.promoGroup}', 'promoGroup', 'S'); //Promotion Group
 
         fn_chgPageMode('VIEW');
 
@@ -318,7 +318,7 @@
                 billDiscValue: $('#billDiscValue').val(),
                 billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
                 billDiscPeriodTo: $('#billDiscPeriodTo').val(),
-                promoGroup: $('promoGroup').val()
+                promoGroup: $('#promoGroup').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
