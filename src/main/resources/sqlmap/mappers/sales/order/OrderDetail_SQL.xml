@@ -2247,4 +2247,22 @@
 	JOIN SAL0001D C ON C.SALES_ORD_ID = A.SALES_ORD_ID
 	WHERE A.SALES_ORD_ID = #{salesOrderId}
   </select>
+
+  <select id="selectMixAndMatchList" parameterType="Map" resultType="egovMap">
+    WITH MM AS (
+        SELECT DISTINCT(GRP_ID) AS GRP_ID
+        FROM SAL0001D A
+        JOIN SAL0434D B ON B.SALES_ORD_ID = A.SALES_ORD_ID AND A.CUST_ID = B.CUST_ID
+        WHERE A.SALES_ORD_ID =  #{salesOrderId}
+    )
+
+    SELECT M.GRP_ID GRP_ID,
+       SOM.SALES_ORD_ID SALES_ORD_ID,
+       SOM.SALES_ORD_NO SALES_ORD_NO,
+       DES.NAME AS STUS_DESC
+    FROM SAL0434D M
+    JOIN MM ON M.GRP_ID = MM.GRP_ID
+    JOIN SAL0001D SOM ON M.SALES_ORD_ID = SOM.SALES_ORD_ID
+    LEFT JOIN SYS0038M DES ON DES.STUS_CODE_ID = M.STUS_ID
+  </select>
 </mapper>

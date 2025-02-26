@@ -31,6 +31,7 @@
         doGetCombo('/common/selectCodeList.do', '568',  '', 'promoSpecialDisId',       'S'); //Discount on billing
         doGetCombo('/common/selectCodeList.do', '581', '', 'extradeAppType', 'S'); //Extrade App Type
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'billDiscType', 'S'); //Discount on Billing
+        doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, '0', 'promoGroup', 'S'); //Promotion Group
 
         $("#chgRemark").keyup(function(){
             $("#characterCount").text($(this).val().length + " of 100 max characters");
@@ -212,7 +213,8 @@
                 billDiscType: $('#billDiscType').val(),
                 billDiscValue: $('#billDiscValue').val(),
                 billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
-                billDiscPeriodTo: $('#billDiscPeriodTo').val()
+                billDiscPeriodTo: $('#billDiscPeriodTo').val(),
+                promoGroup: $('#promoGroup').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1111,6 +1113,10 @@
     <td>
         <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
         <input id="woHsN" name="woHs" type="radio" value="0" checked/><span>No</span>
+    </td>
+	<th scope="row">Promotion Group</th>
+    <td>
+        <select id="promoGroup" name="promoGroup" class="w100p"></select>
     </td>
 </tr>
 <tr>

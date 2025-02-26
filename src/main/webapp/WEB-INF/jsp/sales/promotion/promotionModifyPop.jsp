@@ -37,6 +37,7 @@
 
         doDefCombo(stkSizeData, '${promoInfo.stkSize}' ,'stkSize', 'S', '');
         doGetCombo('/common/selectCodeList.do', '581', '${promoInfo.extradeAppType}', 'extradeAppType', 'S'); //Extrade App Type
+        doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, '0', 'promoGroup', 'S'); //Promotion Group
 
         fn_chgPageMode('VIEW');
 
@@ -316,7 +317,8 @@
                 billDiscType: $('#billDiscType option:selected').val(),
                 billDiscValue: $('#billDiscValue').val(),
                 billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
-                billDiscPeriodTo: $('#billDiscPeriodTo').val()
+                billDiscPeriodTo: $('#billDiscPeriodTo').val(),
+                promoGroup: $('promoGroup').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1330,6 +1332,10 @@
     <td>
         <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
         <input id="woHsN" name="woHs" type="radio" value="0"/><span>No</span>
+    </td>
+    <th scope="row">Promotion Group</th>
+    <td>
+        <select id="promoGroup" name="promoGroup" class="w100p"></select>
     </td>
 </tr>
 <tr>

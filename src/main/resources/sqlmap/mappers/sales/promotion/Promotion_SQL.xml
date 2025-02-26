@@ -387,7 +387,9 @@
              , BILL_DISC_TYPE
              , BILL_DISC_VALUE
              , BILL_DISC_FR
-             , BILL_DISC_TO)
+             , BILL_DISC_TO
+             , PROMO_GROUP
+             )
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -432,7 +434,9 @@
              , #{billDiscType}
              , #{billDiscValue}
              , #{billDiscPeriodFrom}
-             , #{billDiscPeriodTo})
+             , #{billDiscPeriodTo}
+             , #{promoGroup}
+             )
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -775,6 +779,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , BILL_DISC_VALUE = #{billDiscValue}
              , BILL_DISC_FR = #{billDiscPeriodFrom}
              , BILL_DISC_TO = #{billDiscPeriodTo}
+             , PROMO_GROUP = #{promoGroup}
          WHERE PROMO_ID                = #{promoId}
     </update>
 
@@ -1015,7 +1020,9 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , BILL_DISC_TYPE
              , BILL_DISC_VALUE
              , BILL_DISC_FR
-             , BILL_DISC_TO)
+             , BILL_DISC_TO
+             , PROMO_GROUP
+             )
         VALUES
              ( #{promoReqstId}
              , #{promoId}
@@ -1065,6 +1072,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , #{billDiscValue}
              , #{billDiscPeriodFrom}
              , #{billDiscPeriodTo}
+             , #{promoGroup}
              )
     </insert>
 
@@ -1254,6 +1262,7 @@ pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Dis
              , T1.BILL_DISC_VALUE
              , T1.BILL_DISC_FR
              , T1.BILL_DISC_TO
+             , T1.PROMO_GROUP
           FROM SAL0358M T1
           LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
           LEFT JOIN (SELECT * FROM (select PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0406D a)

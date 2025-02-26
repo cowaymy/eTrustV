@@ -70,4 +70,6 @@ EgovMap selectOrderInstallationInfoByOrderID(Map<String, Object> params);
 
   public List<EgovMap> selectComboRebateList(Map<String, Object> params);
 
+  public List<EgovMap> selectMixAndMatchList(Map<String, Object> params);
+
 }

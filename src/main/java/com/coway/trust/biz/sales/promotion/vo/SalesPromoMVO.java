@@ -113,6 +113,7 @@ public class SalesPromoMVO implements Serializable {
 	private int billDiscValue;
 	private int billDiscPeriodFrom;
 	private int billDiscPeriodTo;
+	private String promoGroup;
 
 	public int getPromoId() {
 		return promoId;
@@ -554,6 +555,14 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setBillDiscPeriodTo(int billDiscPeriodTo) {
 		this.billDiscPeriodTo = billDiscPeriodTo;
+	}
+
+	public String getPromoGroup() {
+		return promoGroup;
+	}
+
+	public void setPromoGroup(String promoGroup) {
+		this.promoGroup = promoGroup;
 	}
 
 }

@@ -683,4 +683,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
   public List<EgovMap> selectComboRebateList(Map<String, Object> params) {
     return orderDetailMapper.selectComboRebateList(params);
   }
+
+  @Override
+  public List<EgovMap> selectMixAndMatchList(Map<String, Object> params) {
+	  return orderDetailMapper.selectMixAndMatchList(params);
+  }
 }

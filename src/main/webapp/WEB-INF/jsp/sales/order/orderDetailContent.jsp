@@ -113,6 +113,12 @@
                 	fn_selectComboRebateList();
                 }
                 break;
+            case 'mixAndMatch' :
+                AUIGrid.resize(discountGridID, 942, 380);
+                if(AUIGrid.getRowCount(discountGridID) <= 0) {
+                	fn_selectMixAndMatchList();
+                }
+                break;
         };
     }
 </script>
@@ -144,6 +150,7 @@
 	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
 	<li><a href="#" onClick="javascript:chgTab('renAgr');">Rental Agreement</a></li>
 	<li><a href="#" onClick="javascript:chgTab('comboRebateInfo');">Rebate 2</a></li>
+	<li><a href="#" onClick="javascript:chgTab('mixAndMatch');">Mix and Match</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -238,5 +245,9 @@
     Rebate 2 - 18th Anniversary
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/comboRebateList.jsp" %>
+<!------------------------------------------------------------------------------
+    Mix and Match (Promo Group)
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/mixAndMatch.jsp" %>
 </section><!-- tap_wrap end -->
 

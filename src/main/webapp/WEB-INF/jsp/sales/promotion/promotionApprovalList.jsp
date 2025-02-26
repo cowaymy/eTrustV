@@ -515,6 +515,7 @@
                       $("#billDiscValue").val(promoInfo.billDiscValue);
                       $("#billDiscPeriodFrom").val(promoInfo.billDiscFr);
                       $("#billDiscPeriodTo").val(promoInfo.billDiscTo);
+                      $("#promoGroup").val(promoInfo.promoGroup);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#custStatusNew').prop("checked", true);
@@ -558,6 +559,7 @@
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'stkSize', 'S', '');
                       doGetComboData('/common/selectCodeList.do',  {groupCode :'323'}, promoInfo.billDiscType, 'billDiscType', 'S'); //Discount on Billing
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, promoInfo.promoGroup, 'promoGroup', 'S'); //Promotion Group
 
                       if(promoInfo.megaDeal == '1') {
                           $('#megaDealY').prop("checked", true);
@@ -650,6 +652,7 @@
                       $("#v_billDiscValue").val(promoInfo.billDiscValue);
                       $("#v_billDiscPeriodFrom").val(promoInfo.billDiscFr);
                       $("#v_billDiscPeriodTo").val(promoInfo.billDiscTo);
+                      $("#v_promoGroup").val(promoInfo.promoGroup);
 
                       if(promoInfo.custStatusNew == '1') {
                           $('#v_custStatusNew').prop("checked", true);
@@ -693,6 +696,7 @@
 
                       doDefCombo(stkSizeData, promoInfo.stkSize ,'v_stkSize', 'S', '');
                       doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, promoInfo.billDiscType, 'v_billDiscType', 'S'); //Discount on Billing
+                      doGetComboData('/common/selectCodeList.do', {groupCode :'616'}, promoInfo.promoGroup, 'v_promoGroup', 'S'); //Promotion Group
 
                       if(promoInfo.megaDeal == '1') {
                           $('#v_megaDealY').prop("checked", true);
@@ -1263,7 +1267,8 @@
                   billDiscType: $('#billDiscType option:selected').val(),
                   billDiscValue: $('#billDiscValue').val(),
                   billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
-                  billDiscPeriodTo: $('#billDiscPeriodTo').val()
+                  billDiscPeriodTo: $('#billDiscPeriodTo').val(),
+                  promoGroup: $('#promoGroup').val()
               },
               salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*               freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -1742,6 +1747,10 @@
         <input id="woHsY" name="woHs" type="radio" value="1" /><span>Yes</span>
         <input id="woHsN" name="woHs" type="radio" value="0"/><span>No</span>
     </td>
+    <th scope="row">Promotion Group</th>
+    <td>
+        <select id="promoGroup" name="promoGroup" class="w100p"></select>
+    </td>
 </tr>
 <tr>
  <th scope="row"><spring:message code="newWebInvoice.remark" /><span style="color:red">*</span></th>
@@ -2041,6 +2050,10 @@
     <td>
         <input id="v_woHsY" name="v_woHs" type="radio" value="1" /><span>Yes</span>
         <input id="v_woHsN" name="v_woHs" type="radio" value="0"/><span>No</span>
+    </td>
+    <th scope="row">Promotion Group</th>
+    <td>
+        <select id="v_promoGroup" name="v_promoGroup" class="w100p"></select>
     </td>
 </tr>
 <tr>

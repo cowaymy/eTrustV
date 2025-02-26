@@ -407,4 +407,18 @@ public class OrderDetailController {
     return ResponseEntity.ok(memInfoList);
   }
 
+  // Mix and Match
+  @RequestMapping(value = "/selectMixAndMatchList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectMixAndMatchList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  logger.debug("!@##############################################################################");
+	  logger.debug("!@###### salesOrderId : " + params.get("salesOrderId"));
+	  logger.debug("!@##############################################################################");
+
+	  List<EgovMap> orderList = orderDetailService.selectMixAndMatchList(params);
+
+	  // 데이터 리턴.
+	  return ResponseEntity.ok(orderList);
+  }
+
 }
