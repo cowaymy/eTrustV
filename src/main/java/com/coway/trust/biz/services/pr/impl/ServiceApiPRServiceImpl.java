@@ -93,6 +93,7 @@ public class ServiceApiPRServiceImpl
       cvMp.put( "transactionId", String.valueOf( paramsTran.get( "transactionId" ) ) );
       cvMp.put( "scanSerial", String.valueOf( paramsTran.get( "scanSerial" ) ) );
       cvMp.put( "serialRequireChkYn", String.valueOf( paramsTran.get( "serialRequireChkYn" ) ) );
+      cvMp.put( "partnerCode", String.valueOf( paramsTran.get( "partnerCode" ) ) );
       logger.debug( "### PRODUCT RETURN INFORMATION : " + cvMp.toString() );
       transactionId = String.valueOf( paramsTran.get( "transactionId" ) );
       try {
