@@ -1925,7 +1925,8 @@
                   <td ID="txtMeasurement"></td>
                 </tr>
                 <tr>
-                  <th scope="row">Mattress Size</th>
+                  <!-- <th scope="row">Mattress Size</th> -->
+                  <th scope="row">Product Size</th>
                   <td id="txtStkSize"></td>
                   <td colspan="4"><label><input type="checkbox" id="cbIsSmo" /><span>Create Return SMO</span></label> <label><input type="checkbox" id="cbIsSerialReplc" /><span>Serial Replace</span></label></td>
                 </tr>
