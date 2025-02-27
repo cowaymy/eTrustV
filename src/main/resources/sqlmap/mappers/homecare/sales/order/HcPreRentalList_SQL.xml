@@ -21,6 +21,7 @@
                  , T.ORD_ID
                  , T.ORD_NO
                  , T.ORD_STUS_CODE
+                 , T.ORD_STUS_ID
                  , T.PO_NO
                  , T.PRODUCT_CODE
                  , T.PRODUCT_NAME
@@ -56,8 +57,8 @@
                  ,TO_CHAR(T.UPD_DT , 'DD/MM/YYYY')AS LAST_UPD_DT
                  ,T.USER_FULL_NAME AS LAST_UPD_USR
                  ,TO_CHAR(T.INSTALL_DT, 'DD/MM/YYYY') AS PREREN_START_DT
-                 ,TO_CHAR(ADD_MONTHS(T.INSTALL_DT, 1), 'DD/MM/YYYY') AS PREREN_END_DT
-                 ,CASE WHEN T.INSTALL_DT IS NOT NULL THEN (TRUNC(SYSDATE) - TRUNC(T.INSTALL_DT)) + 1 || ' days' ELSE '' END AS PREREN_USAGE
+                 ,TO_CHAR(T.INSTALL_DT + 30, 'DD/MM/YYYY') AS PREREN_END_DT
+                 ,CASE WHEN T.INSTALL_DT IS NOT NULL THEN (TRUNC(SYSDATE) - TRUNC(T.INSTALL_DT)) || ' days' ELSE '' END AS PREREN_USAGE
                  ,T.PRODUCT_CODE ||' - '|| T.PRODUCT_NAME AS PRODUCT_NAME_FULL
 
          FROM ( SELECT
