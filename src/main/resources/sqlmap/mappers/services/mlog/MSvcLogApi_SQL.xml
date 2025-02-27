@@ -1345,7 +1345,7 @@
                      NVL (TO_CHAR (I.NEXT_CALL_DT, 'HHMM'), '') AS next_Call_Time,
                      (SELECT FRA_ORD_NO FROM HMC0011D WHERE MAT_ORD_NO = C.SALES_ORD_NO AND ROWNUM = 1) AS FRA_ORD_NO,
                      '(' || Q.PROMO_CODE || ') ' || Q.PROMO_DESC AS SALES_PROMOTION,
-                     D.STK_CTGRY_ID AS PROD_CAT
+                     TO_CHAR(D.STK_CTGRY_ID) AS PROD_CAT
               FROM LOG0038D A
               INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
               INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
