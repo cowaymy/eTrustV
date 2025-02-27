@@ -349,11 +349,6 @@
 		      headerText : "",
 		      width : 0
 		    },{
-			       dataField : "waRemarks",
-			       headerText : 'WA Remarks',
-			       editable : false,
-			       width : 100
-			    }, {
             dataField : "c3",
             headerText : 'Order key in date',
             dataType: "date",

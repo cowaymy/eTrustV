@@ -302,7 +302,6 @@
         , Extent1.WA_STUS_CODE_ID
         , Extent1.WA_STUS_CODE
         , Extent1.WA_STUS_DESC
-        , Extent1.WA_REMARKS
 		FROM (
             SELECT
 		      vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID

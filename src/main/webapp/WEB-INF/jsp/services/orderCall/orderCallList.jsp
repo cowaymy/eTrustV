@@ -244,11 +244,6 @@
       headerText : "",
       width : 0
     },{
-        dataField : "waRemarks",
-        headerText : 'WA Remarks',
-        editable : false,
-        width : 100
-    },{
         dataField : "c3",
         headerText : 'Order key in date',
         dataType: "date",
@@ -403,6 +398,10 @@
     $("#searchFeedBackCode").val("");
     $("#sortBy").val("0");
   }
+
+  function fn_callLogAppointmentBlastPop(){
+      Common.popupDiv("/callCenter/callLogAppointmentManualBlastPop.do", null, null, true, '_callLogAppointmentManualBlastPop');
+	}
 
 </script>
 <section id="content">
@@ -671,6 +670,24 @@
 </dl>
 </aside><!-- link_btns_wrap end --> --%>
   </form>
+
+  <!-- title_line start -->
+    <article class="link_btns_wrap">
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt><spring:message code="sal.title.text.link" /></dt>
+            <dd>
+                <ul class="btns">
+                <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                     <li><p class="link_btn"><a href="javascript:fn_callLogAppointmentBlastPop();" id="waAppointmentBlastPop">Whatsapp Manual Blast</a></li>
+                     </c:if>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </article>
+  <!-- title_line end -->
+
  </section>
  <!-- search_table end -->
  <section class="search_result">

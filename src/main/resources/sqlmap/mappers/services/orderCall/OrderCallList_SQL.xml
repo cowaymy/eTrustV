@@ -62,7 +62,6 @@
           , extent1.WA_STUS_CODE_ID
           , extent1.WA_STUS_CODE
           , extent1.WA_STUS_DESC
-          , extent1.WA_REMARKS
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
                    , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -112,7 +111,6 @@
                    , vCallLogOrderCall.WA_STUS_CODE_ID
                    , vCallLogOrderCall.WA_STUS_CODE
                    , vCallLogOrderCall.WA_STUS_DESC
-                   , vCallLogOrderCall.WA_REMARKS
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
            <if test="branchTypeId != null and branchTypeId != ''">
@@ -1036,4 +1034,89 @@
     ORDER BY C1 ASC
   </select>
 
+  <select id="getCallLogAppointmentList"  parameterType="Map" resultType="egovMap">
+	SELECT
+    A.ID, A.CALL_ENTRY_ID, A.SALES_ORD_ID, A.SALES_ORD_NO, A.CUST_ID, A.CUST_NAME, A.TEL_NO, A.NRIC, A.PRODUCT_IMAGE, A.PRODUCT_MODEL, A.MTH_RENT_AMT,
+    A.CONTRACT_PERIOD, A.CUST_ADD_ID, A.ADDR_DTL, A.TNC_FLAG, A.TNC_FILE_NAME, A.STUS_CODE_ID, A.REMARKS, TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH24:MM:SS') AS CRT_DT, C.CODE, C.NAME
+	FROM CBT0007M A
+	JOIN CCR0006D B
+	ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+	JOIN SYS0038M C
+	ON A.STUS_CODE_ID = C.STUS_CODE_ID
+	<if test='crtDt != null and endDt != null'>
+		<if test='crtDt != "" and endDt != ""'>
+			AND A.CRT_DT BETWEEN TO_DATE(#{crtDt},'DD/MM/YYYY') AND (TO_DATE(#{endDt},'DD/MM/YYYY') + 1)
+		</if>
+	</if>
+	<if test="statusIdList != null and statusIdList != ''">
+      AND A.STUS_CODE_ID in
+      <foreach item="item" collection="statusIdList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+	</if>
+  </select>
+
+  <select id="getCallLogAppointmentsInfo" parameterType="Map" resultType="egovMap">
+      <if test="idValue != null and idValue != '' ">
+       	SELECT SUBSTR(A.NRIC,-6) AS LAST_6_NRIC,A.*,C.ITM_STK_ID,D.STK_CODE
+		FROM CBT0007M A
+		JOIN CCR0006D B
+		ON A.SALES_ORD_ID = B.SALES_ORD_ID AND A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+		JOIN SAL0002D C
+		ON A.SALES_ORD_ID = C.SALES_ORD_ID
+		JOIN SYS0026M D
+		ON C.ITM_STK_ID = D.STK_ID
+		WHERE
+		1=1
+      	AND A.ID IN
+      	<foreach item="item" collection="idValue" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      	</foreach>
+    </if>
+   </select>
+
+    <select id="getCallLogExpirySetting" resultType="String">
+        SELECT CODE FROM SYS0094M WHERE IND = 'WA_CL_EXPR'
+     </select>
+
+        <update id="updateCallLogAppointmentSentStatus" parameterType="Map">
+        	UPDATE CBT0007M SET STUS_CODE_ID = #{stusCodeId} WHERE CALL_ENTRY_ID = #{callEntryId}
+        </update>
+
+        <update id="updateCCR0006DCallLogAppointmentSentStatus" parameterType="Map">
+	        UPDATE CCR0006D SET
+	        WA_STUS_CODE_ID = #{stusCodeId}
+	        WHERE CALL_ENTRY_ID = #{callEntryId}
+        </update>
+
+       	<insert id="insertApiAccessLog" parameterType="Map">
+		   INSERT INTO API0004M
+		   (
+		        RESP_ID
+		       ,REQ_PARAM
+		       ,RESP_PARAM
+		       ,RESP_CODE
+		       ,RESP_TM
+		       ,IP_ADDR
+		       ,PGM_PATH
+		       ,ERR_MSG
+		       ,CRT_DT
+		       ,API_USER_ID
+		       ,REF_NO
+		    ) VALUES (
+		        API0004M_RESP_ID_SEQ.NEXTVAL
+		        , #{reqParam}
+		        , #{respParam}
+		        , #{respCde}
+		        , #{respTm}
+		        , #{ipAddr}
+		        , #{prgPath}
+		        , #{errMsg}
+		        , SYSDATE
+		        , #{apiUserId}
+		        , #{refNo}
+		    )
+		</insert>
 </mapper>

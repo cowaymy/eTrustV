@@ -24,9 +24,6 @@
 	<update id="updateCCR0006DStatus" parameterType="Map" >
 		UPDATE CCR0006D
 		SET WA_STUS_CODE_ID = #{stusCodeId}
-		<if test='waRemarks != null and waRemarks !=""'>
-			,WA_REMARKS = #{waRemarks}
-		</if>
 		WHERE
 		CALL_ENTRY_ID = #{requestId}
 	</update>
@@ -36,7 +33,7 @@
 		B.CALL_ENTRY_ID, B.SALES_ORD_ID, B.TYPE_ID, B.STUS_CODE_ID, B.RESULT_ID,
 		B.DOC_ID, B.CRT_USER_ID, B.CRT_DT, TO_CHAR(B.CALL_DT,'DD/MM/YYYY') AS CALL_DT,
 		B.IS_WAIT_FOR_CANCL, B.HAPY_CALLER_ID, B.UPD_DT, B.UPD_USER_ID, TO_CHAR(B.ORI_CALL_DT,'DD/MM/YYYY') AS ORI_CALL_DT,
-		B.CUR_SEQ_NO, B.MAIN_DEPT, B.SUB_DEPT, B.RCD_TMS, B.WA_STUS_CODE_ID, B.WA_REMARKS,
+		B.CUR_SEQ_NO, B.MAIN_DEPT, B.SUB_DEPT, B.RCD_TMS, B.WA_STUS_CODE_ID,
 		C.ITM_STK_ID,A.SALES_ORD_NO,D.STK_CODE
 		FROM CBT0007M A
 		JOIN CCR0006D B
@@ -351,7 +348,6 @@
 		                  , UPD_USER_ID = #{updUserId}
 		                  , CALL_DT = TO_DATE(#{callDt},'DD/MM/YYYY')
 		                  , WA_STUS_CODE_ID = #{waStusCodeId}
-		                  , WA_REMARKS = #{waRemarks}
 		WHERE ( CALL_ENTRY_ID = #{callEntryId} )
 	</update>
 
