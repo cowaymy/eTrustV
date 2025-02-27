@@ -1841,4 +1841,18 @@
             ,TRG.REMARKS = 'Cancelled before installation.'
    </update>
 
+   <update id="updateCancelSAL0408D" parameterType="Map">
+    UPDATE SAL0408D
+		SET STUS_ID = 8
+		,UPD_DT = SYSDATE
+		,UPD_USER_ID = 349
+	   ,REMARKS = 'Early extrade - Cancelled before installation.'
+	WHERE
+	STUS_ID = 1
+	AND SALES_ORD_ID IN (
+	   SELECT A.OLD_SALES_ORD_ID OLD_SALES_ORD_ID FROM SAL0432D A
+		LEFT JOIN SAL0408D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		WHERE A.SALES_ORD_ID = #{salesOrdId} )
+   </update>
+
 </mapper>

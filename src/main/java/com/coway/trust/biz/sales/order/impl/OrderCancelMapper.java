@@ -259,4 +259,5 @@ public interface OrderCancelMapper {
   void updateCancelSAL0424D(Map<String, Object> params);
 
   void updateCancelSAL0432D(Map<String, Object> params);
+  void updateCancelSAL0408D(Map<String, Object> params);
 }
