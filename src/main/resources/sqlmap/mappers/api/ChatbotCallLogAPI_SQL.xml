@@ -244,6 +244,7 @@
 		    ) FF ON FF.CT_ID = AA.CT AND FF.INSTALL_DT = AA.C_DATE
 		    ) WHERE HOLIDAY = 'N' AND VACATION='N' AND NO_SERVICE='N'
 		    AND TO_DATE(C_DATE,'YYYY/MM/DD') = TO_DATE(#{appointmentDate},'DD/MM/YYYY')
+		    AND AVAIL_INS_CNT > 0
 		    AND ROWNUM = 1
 	</select>
 
