@@ -2159,8 +2159,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			map2.put("toPeriod",orderRentInst.get("maxRentInstNo"));
 			map2.put("promoId",CommonUtils.intNvl(salesOrderMVO.getPromoId()));
 			map2.put("percentage",100);
-			BigDecimal CNamt = salesOrderMVO.getMthRentAmt();
-			map2.put("cnAmt",CNamt);
+			map2.put("cnAmt",orderRentInst.get("rentInstAmt"));
 			map2.put("status",CommonUtils.intNvl("1"));
 			map2.put("userId",sessionVO.getUserId());
 
