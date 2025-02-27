@@ -241,7 +241,7 @@ public class SelfServiceManagementServiceImpl extends EgovAbstractServiceImpl im
     tckInfo.put("itmDesc", ssItmString.get("itmList"));
 
     Map<String, Object> custInfo = new HashMap<>();
-    custInfo.put("name", addrMap.get("name"));
+    custInfo.put("name", addrMap.get("custName"));
     custInfo.put("addr1", addrMap.get("addrDtl"));
     custInfo.put("addr2",
         Optional.ofNullable(addrMap.get("street")).map(Object::toString).filter(s -> !s.trim().isEmpty()).orElse("-"));

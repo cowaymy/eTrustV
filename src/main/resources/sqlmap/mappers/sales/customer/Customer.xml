@@ -465,6 +465,7 @@
     resultType="egovMap">
                  SELECT Extent1.CUST_ADD_ID CUST_ADD_ID  ,
                            Extent1.CUST_ID CUST_ID  ,
+                           Extent10.NAME CUST_NAME,
                            Extent1.CRT_USER_ID CRT_USER_ID  ,
                            Extent2.NAME NAME  ,
                            Extent5.ISO,
@@ -515,6 +516,7 @@
                            LEFT JOIN SYS0005M Extent7   ON Extent5.SO_BRNCH_CODE     = Extent7.CODE
                            LEFT JOIN SYS0005M Extent8   ON Extent5.CODY_BRNCH_CODE = Extent8.CODE
                            LEFT JOIN SYS0005M Extent9   ON Extent5.HT_BRNCH_CODE      = Extent9.CODE
+                           LEFT JOIN SAL0029D Extent10  ON Extent1.CUST_ID = Extent10.CUST_ID
     <![CDATA[
                     WHERE
                          8 <> Extent1.STUS_CODE_ID
