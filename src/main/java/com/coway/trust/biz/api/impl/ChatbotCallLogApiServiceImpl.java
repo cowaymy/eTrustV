@@ -98,7 +98,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			callDetails.put("callFeedBackId", feedbackStusId);
 			callDetails.put("callCTId",  null);
 			callDetails.put("callRemark", "WA Customer feedback the order details is incorrect during WA verification. Sales person please follow up with the customer.");
-			callDetails.put("callCreateBy", cbtApiUserId);
+			callDetails.put("callCreateBy", 349);
 			callDetails.put("callCreateAt", new Date());
 			callDetails.put("callCreateByDept", 0);
 			callDetails.put("callHCID", 0);
@@ -116,7 +116,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			callEntry.put("resultId", maxId);
 			callEntry.put("callDt", CommonUtils.nvl(appointmentDtl.get("callDt")));
 			callEntry.put("updDt", new Date());
-			callEntry.put("updUserId", cbtApiUserId);
+			callEntry.put("updUserId", 349);
 			callEntry.put("waStusCodeId", 134); // Incorrect detail
 
 			chatbotCallLogApiMapper.updateCallEntry(callEntry);
@@ -369,12 +369,12 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					installMaster.put("installStkId", CommonUtils.intNvl(orderParam.get("itmStkId")));
 					installMaster.put("installResultId", 0);
 					installMaster.put("created", new Date());
-					installMaster.put("creator", cbtApiUserId);
+					installMaster.put("creator", 349);
 					installMaster.put("allowComm", false);
 					installMaster.put("isTradeIn", false);
 					installMaster.put("CTGroup", CommonUtils.nvl(firstAvailUser.get("ctSubGrp")));
 					installMaster.put("updated", new Date());
-					installMaster.put("updator", cbtApiUserId);
+					installMaster.put("updator", 349);
 					installMaster.put("revId", 0);
 					installMaster.put("stock", stockGrade);
 
@@ -389,7 +389,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				logPram.put("P_TYPE", pType);
 				logPram.put("P_PRGNM", pPrgm);
 
-				logPram.put("USERID", cbtApiUserId);
+				logPram.put("USERID", 349);
 
 				chatbotCallLogApiMapper.SP_LOGISTIC_REQUEST(logPram);
 
@@ -425,7 +425,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					callDetails.put("callFeedBackId", feedbackStusId);
 					callDetails.put("callCTId", CommonUtils.nvl(firstAvailUser.get("ct")));
 					callDetails.put("callRemark", "");
-					callDetails.put("callCreateBy", cbtApiUserId);
+					callDetails.put("callCreateBy", 349);
 					callDetails.put("callCreateAt", new Date());
 					callDetails.put("callCreateByDept", 0);
 					callDetails.put("callHCID", 0);
@@ -450,7 +450,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					callEntry.put("isWaitForCancl", CommonUtils.nvl(orderInfo.get("isWaitForCancl")));
 					callEntry.put("happyCallerId", CommonUtils.nvl(orderInfo.get("happyCallerId")));
 					callEntry.put("updDt", new Date());
-					callEntry.put("updUserId", cbtApiUserId);// Set to Chatbot?
+					callEntry.put("updUserId", 349);
 					callEntry.put("oriCallDt", CommonUtils.nvl(orderInfo.get("oriCallDt")));
 					callEntry.put("waStusCodeId", 4); // Complete WA
 
@@ -484,7 +484,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				    orderLogList.put("logDate", new Date());
 				    orderLogList.put("refId", installMaster.get("installEntryId").toString());
 				    orderLogList.put("isLock", true);
-				    orderLogList.put("logCreator", cbtApiUserId);
+				    orderLogList.put("logCreator", 349);
 				    orderLogList.put("logCreated", new Date());
 				    chatbotCallLogApiMapper.insertSalesOrderLog(orderLogList);
 
