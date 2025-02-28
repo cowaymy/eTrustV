@@ -77,6 +77,51 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
 			chatbotCallLogApiMapper.updateCCR0006DStatus(updateParam);
 
+			EgovMap searchParam = new EgovMap();
+			searchParam.put("callEntryId", params.getRequestId());
+			searchParam.put("salesOrdNo", params.getOrderNo());
+			EgovMap appointmentDtl = chatbotCallLogApiMapper.selectCallLogCbtOrderInfo(searchParam);
+
+			//INSERT CALLLOG RESULT
+			String maxId = "";
+			int callStusId = 19; // Recall
+			int feedbackStusId = 1615; // FB24- Awaiting CPE/RFD
+			Map<String, Object> callEntry = new HashMap<String, Object>();
+			// Map<String, Object> callMaster = new HashMap<String, Object>();
+			Map<String, Object> callDetails = new HashMap<String, Object>();
+			Map<String, Object> maxIdValueParam = new EgovMap();
+
+			callDetails.put("callEntryId", CommonUtils.nvl(appointmentDtl.get("callEntryId")));
+			callDetails.put("callStatusId", callStusId);
+			callDetails.put("callCallDate", CommonUtils.nvl(appointmentDtl.get("callDt")));
+			callDetails.put("callActionDate", "");
+			callDetails.put("callFeedBackId", feedbackStusId);
+			callDetails.put("callCTId",  null);
+			callDetails.put("callRemark", "WA Customer feedback the order details is incorrect during WA verification. Sales person please follow up with the customer.");
+			callDetails.put("callCreateBy", cbtApiUserId);
+			callDetails.put("callCreateAt", new Date());
+			callDetails.put("callCreateByDept", 0);
+			callDetails.put("callHCID", 0);
+			callDetails.put("callROSAmt", 0);
+			callDetails.put("callSMS", false);
+			callDetails.put("CallSMSRemark", "");
+			chatbotCallLogApiMapper.insertCallResult(callDetails);
+
+			maxIdValueParam.put("value", "callResultId");
+			maxIdValueParam.put("callEntryId", CommonUtils.nvl(appointmentDtl.get("callEntryId")));
+			maxId = chatbotCallLogApiMapper.selectMaxId(maxIdValueParam);
+
+			callEntry.put("callEntryId", CommonUtils.nvl(appointmentDtl.get("callEntryId")));
+			callEntry.put("stusCodeId", callStusId);
+			callEntry.put("resultId", maxId);
+			callEntry.put("callDt", CommonUtils.nvl(appointmentDtl.get("callDt")));
+			callEntry.put("updDt", new Date());
+			callEntry.put("updUserId", cbtApiUserId);
+			callEntry.put("waStusCodeId", 134); // Incorrect detail
+
+			chatbotCallLogApiMapper.updateCallEntry(callEntry);
+			//
+
 			resultValue.setSuccess(true);
 			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
 		}
