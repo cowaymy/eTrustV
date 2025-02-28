@@ -60,7 +60,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.order.vo.SupplementMasterVO;
 import com.coway.trust.biz.services.bs.impl.HsManualMapper;
-//import com.coway.trust.biz.services.chatbot.impl.ChatbotMapper;
+import com.coway.trust.biz.services.chatbot.impl.ChatbotMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -109,8 +109,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
   @Resource(name = "hsManualMapper")
   private HsManualMapper hsManualMapper;
 
-//  @Resource(name = "chatbotMapper")
-//  private ChatbotMapper chatbotMapper;
+  @Resource(name = "chatbotMapper")
+  private ChatbotMapper chatbotMapper;
 
   @Resource(name = "hcOrderListService")
 	private HcOrderListService hcOrderListService;
@@ -2430,49 +2430,49 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       callEntryVO.setDocId(salesOrdId);
       orderRegisterMapper.insertCallEntry(callEntryVO);
 
-//      if (orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
-//          /*Call log insert, API Call to hypemind. - Frango 20250120*/
-//          int entryId = callEntryVO.getCallEntryId();
-//
-//          //WILL AUX ORDER CREATE CALLLOG? IF YES then BYPASS
-//          Map<String, Object> custInfoParam = new HashMap();
-//    	  custInfoParam.put("salesOrdId", salesOrderMVO.getSalesOrdId());
-//          EgovMap custWADetails = chatbotMapper.getCustWADetailsByOrd(custInfoParam);
-//
-//          if(custWADetails != null){
-//        	  custInfoParam.put("seq", chatbotMapper.getCBT0007M_Seq());
-//              custInfoParam.put("custId", salesOrderMVO.getCustId());
-//        	  custInfoParam.put("callEntryId", callEntryVO.getCallEntryId());
-//        	  custInfoParam.put("salesOrdNo", salesOrderMVO.getSalesOrdNo());
-//
-//        	  custInfoParam.put("custName", CommonUtils.nvl(custWADetails.get("name")));
-//        	  custInfoParam.put("nric", CommonUtils.nvl(custWADetails.get("nric")));
-//        	  custInfoParam.put("telNo", CommonUtils.nvl(custWADetails.get("telM1")));
-//
-//        	  custInfoParam.put("productImage", "/products/" + CommonUtils.nvl(custWADetails.get("stkCode")) + ".png");
-//        	  custInfoParam.put("productModel", CommonUtils.nvl(custWADetails.get("stkDesc")));
-//        	  custInfoParam.put("mthRentAmt", CommonUtils.nvl(custWADetails.get("feeAmt")));
-//        	  custInfoParam.put("contractPeriod", CommonUtils.nvl(custWADetails.get("obligationPeriod")));
-//        	  custInfoParam.put("custAddId", CommonUtils.nvl(custWADetails.get("custAddId")));
-//        	  custInfoParam.put("addrDtl", CommonUtils.nvl(custWADetails.get("addrDtl")));
-//        	  custInfoParam.put("tncFlag", 1);
-//
-//        	  if(CommonUtils.nvl(custWADetails.get("prodCat")).equals("HA")){
-//	        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HA_TNC_FILE_NAME);
-//        	  }
-//        	  else{
-//	        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HC_TNC_FILE_NAME);
-//        	  }
-//
-//        	  chatbotMapper.insertWAAppointment(custInfoParam);
-//
-//        	  custInfoParam.put("waStusCodeId", 44); //Pending for WA Apointment Status
-//        	  chatbotMapper.updateCallLogWAStatus(custInfoParam);
-//          }
-//          else{
-//        	  //NOT SURE? PROCEED OR BLOCK?
-//          }
-//      }
+      if (orderAppType != SalesConstants.APP_TYPE_CODE_ID_AUX) {
+          /*Call log insert, API Call to hypemind. - Frango 20250120*/
+          int entryId = callEntryVO.getCallEntryId();
+
+          //WILL AUX ORDER CREATE CALLLOG? IF YES then BYPASS
+          Map<String, Object> custInfoParam = new HashMap();
+    	  custInfoParam.put("salesOrdId", salesOrderMVO.getSalesOrdId());
+          EgovMap custWADetails = chatbotMapper.getCustWADetailsByOrd(custInfoParam);
+
+          if(custWADetails != null){
+        	  custInfoParam.put("seq", chatbotMapper.getCBT0007M_Seq());
+              custInfoParam.put("custId", salesOrderMVO.getCustId());
+        	  custInfoParam.put("callEntryId", callEntryVO.getCallEntryId());
+        	  custInfoParam.put("salesOrdNo", salesOrderMVO.getSalesOrdNo());
+
+        	  custInfoParam.put("custName", CommonUtils.nvl(custWADetails.get("name")));
+        	  custInfoParam.put("nric", CommonUtils.nvl(custWADetails.get("nric")));
+        	  custInfoParam.put("telNo", CommonUtils.nvl(custWADetails.get("telM1")));
+
+        	  custInfoParam.put("productImage", "/products/" + CommonUtils.nvl(custWADetails.get("stkCode")) + ".png");
+        	  custInfoParam.put("productModel", CommonUtils.nvl(custWADetails.get("stkDesc")));
+        	  custInfoParam.put("mthRentAmt", CommonUtils.nvl(custWADetails.get("feeAmt")));
+        	  custInfoParam.put("contractPeriod", CommonUtils.nvl(custWADetails.get("obligationPeriod")));
+        	  custInfoParam.put("custAddId", CommonUtils.nvl(custWADetails.get("custAddId")));
+        	  custInfoParam.put("addrDtl", CommonUtils.nvl(custWADetails.get("addrDtl")));
+        	  custInfoParam.put("tncFlag", 1);
+
+        	  if(CommonUtils.nvl(custWADetails.get("prodCat")).equals("HA")){
+	        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HA_TNC_FILE_NAME);
+        	  }
+        	  else{
+	        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HC_TNC_FILE_NAME);
+        	  }
+
+        	  chatbotMapper.insertWAAppointment(custInfoParam);
+
+        	  custInfoParam.put("waStusCodeId", 44); //Pending for WA Apointment Status
+        	  chatbotMapper.updateCallLogWAStatus(custInfoParam);
+          }
+          else{
+        	  //NOT SURE? PROCEED OR BLOCK?
+          }
+      }
     }
 
     // APP TYPE = SERVICE
