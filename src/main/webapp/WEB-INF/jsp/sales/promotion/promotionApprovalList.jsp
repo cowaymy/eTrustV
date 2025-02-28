@@ -1385,7 +1385,8 @@
               billDiscType: $('#billDiscType option:selected').val(),
               billDiscValue: $('#billDiscValue').val(),
               billDiscPeriodFrom: $('#billDiscPeriodFrom').val(),
-              billDiscPeriodTo: $('#billDiscPeriodTo').val()
+              billDiscPeriodTo: $('#billDiscPeriodTo').val(),
+              promoGroup: $('#promoGroup').val()
           },
           salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID)
 /*           freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)

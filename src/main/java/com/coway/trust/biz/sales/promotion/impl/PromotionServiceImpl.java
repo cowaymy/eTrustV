@@ -677,6 +677,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		salesPromoMVO.setBillDiscValue(CommonUtils.intNvl(promoReqstInfo.get("billDiscValue")));
 		salesPromoMVO.setBillDiscPeriodFrom(CommonUtils.intNvl(promoReqstInfo.get("billDiscFr")));
 		salesPromoMVO.setBillDiscPeriodTo(CommonUtils.intNvl(promoReqstInfo.get("billDiscTo")));
+		salesPromoMVO.setPromoGroup(CommonUtils.nvl(promoReqstInfo.get("promoGroup")));
 
 		salesPromoMVO.setPromoMtchId(0);
 		salesPromoMVO.setPromoStusId(SalesConstants.STATUS_ACTIVE);
