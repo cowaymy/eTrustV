@@ -505,8 +505,8 @@
                                       PARTNER_CODE AS PARTNER_CODE,
                                       MEM_CODE as MEM_CODE,
                                       NTU AS NTU,
-                                      SRV_TYPE AS SRV_TYPE
-
+                                      SRV_TYPE AS SRV_TYPE,
+                                      VOLTAGE AS VOLTAGE
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
@@ -606,7 +606,8 @@
                                            THEN (SELECT MEM_CODE FROM ORG0001D WHERE ORG0001D.MEM_ID = SVC0004d.PARTNER_CODE)
                                            ELSE '' END AS MEM_CODE,
                                            NVL (SVC0004d.NTU, '') AS NTU,
-                                           SAL0090D.SRV_TYPE AS SRV_TYPE
+                                           SAL0090D.SRV_TYPE AS SRV_TYPE,
+                                           TO_CHAR(SVC0004d.VOLT) AS VOLTAGE
                                     FROM sal0001d,
                                          sal0002d,
                                          sal0022d,
@@ -1769,7 +1770,8 @@
                LONGITUDE AS LONGITUDE,
                PARTNER_CODE AS PARTNER_CODE,
                TO_CHAR(SRV_TYPE) AS SRV_TYPE,
-               NTU AS NTU
+               NTU AS NTU,
+               TO_CHAR(VOLT) AS VOLTAGE,
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
