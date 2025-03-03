@@ -793,93 +793,90 @@
   </select>
 
   <select id="getAsBasic" parameterType="Map" resultType="egovMap">
-    SELECT *
-    FROM (SELECT Extent4.SALES_ORD_NO
-               , Extent4.sales_ord_id
-               , Extent1.as_id
-               , Extent1.as_no
-               , Extent7.AS_RESULT_ID
-               , Extent7.AS_RESULT_NO
-               , Extent7.AS_ENTRY_ID
-               , Extent1.AS_SO_ID
-               , Extent7.AS_CT_ID
-               , Extent7.AS_SETL_DT
-               , Extent7.AS_SETL_TM
-               , Extent7.AS_RESULT_STUS_ID
-               , Extent7.AS_FAIL_RESN_ID
-               , Extent7.AS_REN_COLCT_ID
-               , CASE WHEN Extent7.AS_CMMS IS NULL
-                   THEN Extent1.AS_ALLOW_COMM
-                   ELSE Extent7.AS_CMMS END AS AS_CMMS
-               <!-- , Extent7.AS_BRNCH_ID -->
-               , Extent9.BRNCH AS AS_BRNCH_ID
-               , Extent7.AS_WH_ID
-               , Extent7.AS_RESULT_REM
-               , Extent7.AS_RESULT_CRT_DT
-               , Extent7.AS_RESULT_CRT_USER_ID
-               , CASE WHEN Extent7.AS_MALFUNC_ID IS NULL
-                   THEN Extent1.AS_MALFUNC_ID
-                   ELSE Extent7.AS_MALFUNC_ID END AS AS_MALFUNC_ID
-               , CASE WHEN Extent7.AS_MALFUNC_RESN_ID IS NULL
-                   THEN Extent1.AS_MALFUNC_RESN_ID
-                   ELSE Extent7.AS_MALFUNC_RESN_ID END AS AS_MALFUNC_RESN_ID
-               , Extent7.AS_DEFECT_TYPE_ID
-               , Extent7.AS_DEFECT_GRP_ID
-               , Extent7.AS_DEFECT_ID
-               , Extent7.AS_DEFECT_PART_GRP_ID
-               , Extent7.AS_DEFECT_PART_ID
-               , Extent7.AS_DEFECT_DTL_RESN_ID
-               , Extent7.AS_SLUTN_RESN_ID
-               , Extent7.AS_WORKMNSH
-               , nvl(Extent7.AS_FILTER_AMT,0) as AS_FILTER_AMT
-               , nvl(Extent7.AS_ACSRS_AMT,0) as AS_ACSRS_AMT
-               , nvl(Extent7.AS_TOT_AMT,0) as AS_TOT_AMT
-               , Extent7.AS_RESULT_IS_SYNCH
-               , Extent7.AS_RCALL
-               , Extent7.AS_RESULT_STOCK_USE
-               , Extent7.AS_RESULT_TYPE_ID
-               , Extent7.AS_RESULT_IS_CURR
-               , Extent7.AS_RESULT_MTCH_ID
-               , Extent7.AS_RESULT_NO_ERR
-               , Extent7.AS_RESULT_UPD_DT
-               , Extent7.AS_RESULT_UPD_USER_ID
-               , Extent7.AS_ENTRY_POINT
-               , Extent7.AS_WORKMNSH_TAX_CODE_ID
-               , Extent7.AS_WORKMNSH_TXS
-               , Extent7.AS_RESULT_MOBILE_ID
-               , Extent7.APPNT_DT
-               , Extent7.APPNT_TM
-               , Extent7.IN_HUSE_REPAIR_REM
-               , Extent7.IN_HUSE_REPAIR_REPLACE_YN
-               , Extent7.IN_HUSE_REPAIR_PROMIS_DT
-               , Extent7.IN_HUSE_REPAIR_GRP_CODE
-               , Extent7.IN_HUSE_REPAIR_PRODUCT_CODE
-               , Extent7.IN_HUSE_REPAIR_SERIAL_NO
-               , Extent7.RESULT_CUST_NAME
-               , Extent7.RESULT_MOBILE_NO
-               , Extent7.RESULT_REP_EMAIL_NO
-               , Extent7.RESULT_ACEPT_NAME
-               , Extent7.SGN_DT
-               , Extent7.TRNSC_ID
-               , (SELECT MEM_ID
-                  FROM ORG0001D
-                  WHERE mem_code = #{userId}) as user_id
-               , (SELECT USER_ID
-                  FROM SYS0047M
-                  WHERE USER_NAME = #{userId}) as upd_usr_id
-          FROM SVC0001D Extent1
-             , SVC0004D Extent7
-             , SAL0001D Extent4
-             , (SELECT DISTINCT MEM_ID, BRNCH FROM ORG0001D WHERE mem_code = #{userId} AND ROWNUM = 1) Extent9
-          WHERE 1=1
-            AND Extent1.AS_MEM_ID = Extent9.MEM_ID (+)
-            AND Extent1.AS_ID = Extent7.AS_ENTRY_ID(+)
-            AND Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
-            AND Extent4.SALES_ORD_NO = #{salesOrderNo}
-            AND Extent1.as_no = #{serviceNo}
-          ORDER BY Extent7.AS_RESULT_ID DESC
-       )
-    WHERE ROWNUM = 1
+    SELECT * FROM (SELECT EXTENT4.SALES_ORD_NO
+                                     , EXTENT4.SALES_ORD_ID
+                                     , EXTENT1.AS_ID
+                                     , EXTENT1.AS_NO
+                                     , EXTENT1.AS_SO_ID
+                                     , EXTENT1.AS_MEM_ID AS AS_CT_ID
+                                     , EXTENT7.AS_RESULT_ID
+                                     , EXTENT7.AS_RESULT_NO
+                                     , EXTENT7.AS_ENTRY_ID
+                                     , EXTENT7.AS_SETL_DT
+                                     , EXTENT7.AS_SETL_TM
+                                     , EXTENT7.AS_RESULT_STUS_ID
+                                     , EXTENT7.AS_FAIL_RESN_ID
+                                     , EXTENT7.AS_REN_COLCT_ID
+                                     , CASE WHEN EXTENT7.AS_CMMS IS NULL
+                                               THEN EXTENT1.AS_ALLOW_COMM
+                                               ELSE EXTENT7.AS_CMMS END AS AS_CMMS
+                                     , CASE WHEN EXTENT7.AS_WH_ID IS NULL
+                                               THEN EXTENT1.AS_BRNCH_ID
+                                               ELSE EXTENT7.AS_WH_ID END AS AS_BRNCH_ID
+                                     , EXTENT7.AS_WH_ID
+                                     , EXTENT7.AS_RESULT_REM
+                                     , EXTENT7.AS_RESULT_CRT_DT
+                                     , EXTENT7.AS_RESULT_CRT_USER_ID
+                                     , CASE WHEN EXTENT7.AS_MALFUNC_ID IS NULL
+                                               THEN EXTENT1.AS_MALFUNC_ID
+                                               ELSE EXTENT7.AS_MALFUNC_ID END AS AS_MALFUNC_ID
+                                     , CASE WHEN EXTENT7.AS_MALFUNC_RESN_ID IS NULL
+                                               THEN EXTENT1.AS_MALFUNC_RESN_ID
+                                               ELSE EXTENT7.AS_MALFUNC_RESN_ID END AS AS_MALFUNC_RESN_ID
+                                     , EXTENT7.AS_DEFECT_TYPE_ID
+                                     , EXTENT7.AS_DEFECT_GRP_ID
+                                     , EXTENT7.AS_DEFECT_ID
+                                     , EXTENT7.AS_DEFECT_PART_GRP_ID
+                                     , EXTENT7.AS_DEFECT_PART_ID
+                                     , EXTENT7.AS_DEFECT_DTL_RESN_ID
+                                     , EXTENT7.AS_SLUTN_RESN_ID
+                                     , EXTENT7.AS_WORKMNSH
+                                     , NVL(EXTENT7.AS_FILTER_AMT,0) AS AS_FILTER_AMT
+                                     , NVL(EXTENT7.AS_ACSRS_AMT,0) AS AS_ACSRS_AMT
+                                     , NVL(EXTENT7.AS_TOT_AMT,0) AS AS_TOT_AMT
+                                     , EXTENT7.AS_RESULT_IS_SYNCH
+                                     , EXTENT7.AS_RCALL
+                                     , EXTENT7.AS_RESULT_STOCK_USE
+                                     , EXTENT7.AS_RESULT_TYPE_ID
+                                     , EXTENT7.AS_RESULT_IS_CURR
+                                     , EXTENT7.AS_RESULT_MTCH_ID
+                                     , EXTENT7.AS_RESULT_NO_ERR
+                                     , EXTENT7.AS_RESULT_UPD_DT
+                                     , EXTENT7.AS_RESULT_UPD_USER_ID
+                                     , EXTENT7.AS_ENTRY_POINT
+                                     , EXTENT7.AS_WORKMNSH_TAX_CODE_ID
+                                     , EXTENT7.AS_WORKMNSH_TXS
+                                     , EXTENT7.AS_RESULT_MOBILE_ID
+                                     , EXTENT7.APPNT_DT
+                                     , EXTENT7.APPNT_TM
+                                     , EXTENT7.IN_HUSE_REPAIR_REM
+                                     , EXTENT7.IN_HUSE_REPAIR_REPLACE_YN
+                                     , EXTENT7.IN_HUSE_REPAIR_PROMIS_DT
+                                     , EXTENT7.IN_HUSE_REPAIR_GRP_CODE
+                                     , EXTENT7.IN_HUSE_REPAIR_PRODUCT_CODE
+                                     , EXTENT7.IN_HUSE_REPAIR_SERIAL_NO
+                                     , EXTENT7.RESULT_CUST_NAME
+                                     , EXTENT7.RESULT_MOBILE_NO
+                                     , EXTENT7.RESULT_REP_EMAIL_NO
+                                     , EXTENT7.RESULT_ACEPT_NAME
+                                     , EXTENT7.SGN_DT
+                                     , EXTENT7.TRNSC_ID
+                                     , (SELECT MEM_ID
+                                        FROM ORG0001D
+                                        WHERE MEM_CODE = #{userId}) AS USER_ID
+                                     , (SELECT USER_ID
+                                        FROM SYS0047M
+                                        WHERE USER_NAME = #{userId}) AS UPD_USR_ID
+                           FROM SVC0001D EXTENT1
+                                  , SVC0004D EXTENT7
+                                  , SAL0001D EXTENT4
+                           WHERE 1=1
+                               AND EXTENT1.AS_ID = EXTENT7.AS_ENTRY_ID(+)
+                               AND EXTENT1.AS_SO_ID = EXTENT4.SALES_ORD_ID
+                               AND EXTENT4.SALES_ORD_NO = #{salesOrderNo}
+                               AND EXTENT1.AS_NO = #{serviceNo}
+                           ORDER BY EXTENT7.AS_RESULT_ID DESC
+    ) WHERE ROWNUM = 1
   </select>
 
   <select id="selectAsBasicInfo" parameterType="Map" resultType="egovMap">
