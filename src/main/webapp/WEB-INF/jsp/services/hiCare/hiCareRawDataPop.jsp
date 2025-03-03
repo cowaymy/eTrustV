@@ -91,7 +91,7 @@ function btnGenerate_Click(){
         $("#viewType").val("");
 
         if($("#rcrtsdt").val() != '' && $("#rcrtsdt").val() != null && $("#rcrtedt").val() != '' && $("#rcrtedt").val() != null){
-        	whereSQL += " and D.UPD_DT between TO_DATE( '" + $("#rcrtsdt").val() + "','DD/MM/YYYY') and TO_DATE( '" + $("#rcrtedt").val() + "','DD/MM/YYYY') ";
+        	whereSQL += " and A.UPD_DT between TO_DATE( '" + $("#rcrtsdt").val() + "','DD/MM/YYYY') and TO_DATE( '" + $("#rcrtedt").val() + "','DD/MM/YYYY') ";
         }
 
         if($('#sBranchCode :selected').val() > 0){
