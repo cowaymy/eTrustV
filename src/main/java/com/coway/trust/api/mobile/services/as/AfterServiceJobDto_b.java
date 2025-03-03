@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "AfterServiceJobDto_b", description = "공통코드 Dto")
 public class AfterServiceJobDto_b {
-
   @ApiModelProperty(value = "주문번호")
   private String salesOrderNo;
 
@@ -281,68 +280,73 @@ public class AfterServiceJobDto_b {
 
   private String srvType;
 
+  private String voltage;
+
+  private String partnerCode;
+
+  private String partnerCodeName;
+
   public String getSrvType() {
-	return srvType;
-}
+    return srvType;
+  }
 
-public void setSrvType(String srvType) {
-	this.srvType = srvType;
-}
+  public void setSrvType( String srvType ) {
+    this.srvType = srvType;
+  }
 
-public int getNtu() {
-	return ntu;
-}
+  public int getNtu() {
+    return ntu;
+  }
 
-public String getInstAccs() {
-	return instAccs;
-}
+  public String getInstAccs() {
+    return instAccs;
+  }
 
-public String getInstAccsVal() {
-	return instAccsVal;
-}
+  public String getInstAccsVal() {
+    return instAccsVal;
+  }
 
-public void setNtu(int ntu) {
-	this.ntu = ntu;
-}
+  public void setNtu( int ntu ) {
+    this.ntu = ntu;
+  }
 
-public void setInstAccs(String instAccs) {
-	this.instAccs = instAccs;
-}
+  public void setInstAccs( String instAccs ) {
+    this.instAccs = instAccs;
+  }
 
-public void setInstAccsVal(String instAccsVal) {
-	this.instAccsVal = instAccsVal;
-}
+  public void setInstAccsVal( String instAccsVal ) {
+    this.instAccsVal = instAccsVal;
+  }
 
-public String getWaterSrcType() {
-	return waterSrcType;
-}
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
 
-public void setWaterSrcType(String waterSrcType) {
-	this.waterSrcType = waterSrcType;
-}
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
 
-public String getReworkProj() {
-	return reworkProj;
-}
+  public String getReworkProj() {
+    return reworkProj;
+  }
 
-public void setReworkProj(String reworkProj) {
-	this.reworkProj = reworkProj;
-}
-
+  public void setReworkProj( String reworkProj ) {
+    this.reworkProj = reworkProj;
+  }
 
   public String getAsUnmatchReason() {
-	return asUnmatchReason;
-}
+    return asUnmatchReason;
+  }
 
-  public void setAsUnmatchReason(String asUnmatchReason) {
-	this.asUnmatchReason = asUnmatchReason;
-}
+  public void setAsUnmatchReason( String asUnmatchReason ) {
+    this.asUnmatchReason = asUnmatchReason;
+  }
 
   public String getPsi() {
     return psi;
   }
 
-  public void setPsi(String psi) {
+  public void setPsi( String psi ) {
     this.psi = psi;
   }
 
@@ -350,7 +354,7 @@ public void setReworkProj(String reworkProj) {
     return lpm;
   }
 
-  public void setLpm(String lpm) {
+  public void setLpm( String lpm ) {
     this.lpm = lpm;
   }
 
@@ -358,7 +362,7 @@ public void setReworkProj(String reworkProj) {
     return prodcat;
   }
 
-  public void setProdcat(int prodcat) {
+  public void setProdcat( int prodcat ) {
     this.prodcat = prodcat;
   }
 
@@ -366,7 +370,7 @@ public void setReworkProj(String reworkProj) {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(String salesOrderNo) {
+  public void setSalesOrderNo( String salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -374,7 +378,7 @@ public void setReworkProj(String reworkProj) {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -382,7 +386,7 @@ public void setReworkProj(String reworkProj) {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -390,7 +394,7 @@ public void setReworkProj(String reworkProj) {
     return jobType;
   }
 
-  public void setJobType(String jobType) {
+  public void setJobType( String jobType ) {
     this.jobType = jobType;
   }
 
@@ -398,7 +402,7 @@ public void setReworkProj(String reworkProj) {
     return jobStatus;
   }
 
-  public void setJobStatus(String jobStatus) {
+  public void setJobStatus( String jobStatus ) {
     this.jobStatus = jobStatus;
   }
 
@@ -406,7 +410,7 @@ public void setReworkProj(String reworkProj) {
     return appointmentDate;
   }
 
-  public void setAppointmentDate(String appointmentDate) {
+  public void setAppointmentDate( String appointmentDate ) {
     this.appointmentDate = appointmentDate;
   }
 
@@ -414,7 +418,7 @@ public void setReworkProj(String reworkProj) {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public void setAppointmentTime( String appointmentTime ) {
     this.appointmentTime = appointmentTime;
   }
 
@@ -422,7 +426,7 @@ public void setReworkProj(String reworkProj) {
     return jobSession;
   }
 
-  public void setJobSession(String jobSession) {
+  public void setJobSession( String jobSession ) {
     this.jobSession = jobSession;
   }
 
@@ -430,7 +434,7 @@ public void setReworkProj(String reworkProj) {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -438,7 +442,7 @@ public void setReworkProj(String reworkProj) {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -446,7 +450,7 @@ public void setReworkProj(String reworkProj) {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -454,7 +458,7 @@ public void setReworkProj(String reworkProj) {
     return customerType;
   }
 
-  public void setCustomerType(String customerType) {
+  public void setCustomerType( String customerType ) {
     this.customerType = customerType;
   }
 
@@ -462,7 +466,7 @@ public void setReworkProj(String reworkProj) {
     return customerId;
   }
 
-  public void setCustomerId(String customerId) {
+  public void setCustomerId( String customerId ) {
     this.customerId = customerId;
   }
 
@@ -470,7 +474,7 @@ public void setReworkProj(String reworkProj) {
     return serviceState;
   }
 
-  public void setServiceState(String serviceState) {
+  public void setServiceState( String serviceState ) {
     this.serviceState = serviceState;
   }
 
@@ -478,7 +482,7 @@ public void setReworkProj(String reworkProj) {
     return planYear;
   }
 
-  public void setPlanYear(String planYear) {
+  public void setPlanYear( String planYear ) {
     this.planYear = planYear;
   }
 
@@ -486,7 +490,7 @@ public void setReworkProj(String reworkProj) {
     return planMonth;
   }
 
-  public void setPlanMonth(String planMonth) {
+  public void setPlanMonth( String planMonth ) {
     this.planMonth = planMonth;
   }
 
@@ -494,7 +498,7 @@ public void setReworkProj(String reworkProj) {
     return customerGps;
   }
 
-  public void setCustomerGps(String customerGps) {
+  public void setCustomerGps( String customerGps ) {
     this.customerGps = customerGps;
   }
 
@@ -502,7 +506,7 @@ public void setReworkProj(String reworkProj) {
     return installAddress;
   }
 
-  public void setInstallAddress(String installAddress) {
+  public void setInstallAddress( String installAddress ) {
     this.installAddress = installAddress;
   }
 
@@ -510,7 +514,7 @@ public void setReworkProj(String reworkProj) {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -518,7 +522,7 @@ public void setReworkProj(String reworkProj) {
     return handphoneTel;
   }
 
-  public void setHandphoneTel(String handphoneTel) {
+  public void setHandphoneTel( String handphoneTel ) {
     this.handphoneTel = handphoneTel;
   }
 
@@ -526,7 +530,7 @@ public void setReworkProj(String reworkProj) {
     return homeTel;
   }
 
-  public void setHomeTel(String homeTel) {
+  public void setHomeTel( String homeTel ) {
     this.homeTel = homeTel;
   }
 
@@ -534,7 +538,7 @@ public void setReworkProj(String reworkProj) {
     return officeTel;
   }
 
-  public void setOfficeTel(String officeTel) {
+  public void setOfficeTel( String officeTel ) {
     this.officeTel = officeTel;
   }
 
@@ -542,7 +546,7 @@ public void setReworkProj(String reworkProj) {
     return mailAddress;
   }
 
-  public void setMailAddress(String mailAddress) {
+  public void setMailAddress( String mailAddress ) {
     this.mailAddress = mailAddress;
   }
 
@@ -550,7 +554,7 @@ public void setReworkProj(String reworkProj) {
     return customerVaNo;
   }
 
-  public void setCustomerVaNo(String customerVaNo) {
+  public void setCustomerVaNo( String customerVaNo ) {
     this.customerVaNo = customerVaNo;
   }
 
@@ -558,7 +562,7 @@ public void setReworkProj(String reworkProj) {
     return customerJomPayRefNo;
   }
 
-  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+  public void setCustomerJomPayRefNo( String customerJomPayRefNo ) {
     this.customerJomPayRefNo = customerJomPayRefNo;
   }
 
@@ -566,7 +570,7 @@ public void setReworkProj(String reworkProj) {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void setImageUrl( String imageUrl ) {
     this.imageUrl = imageUrl;
   }
 
@@ -574,7 +578,7 @@ public void setReworkProj(String reworkProj) {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName( String productName ) {
     this.productName = productName;
   }
 
@@ -582,7 +586,7 @@ public void setReworkProj(String reworkProj) {
     return productCode;
   }
 
-  public void setProductCode(String productCode) {
+  public void setProductCode( String productCode ) {
     this.productCode = productCode;
   }
 
@@ -590,7 +594,7 @@ public void setReworkProj(String reworkProj) {
     return appType;
   }
 
-  public void setAppType(String appType) {
+  public void setAppType( String appType ) {
     this.appType = appType;
   }
 
@@ -598,7 +602,7 @@ public void setReworkProj(String reworkProj) {
     return instruction;
   }
 
-  public void setInstruction(String instruction) {
+  public void setInstruction( String instruction ) {
     this.instruction = instruction;
   }
 
@@ -606,7 +610,7 @@ public void setReworkProj(String reworkProj) {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(String salesPromotion) {
+  public void setSalesPromotion( String salesPromotion ) {
     this.salesPromotion = salesPromotion;
   }
 
@@ -614,7 +618,7 @@ public void setReworkProj(String reworkProj) {
     return requestor;
   }
 
-  public void setRequestor(String requestor) {
+  public void setRequestor( String requestor ) {
     this.requestor = requestor;
   }
 
@@ -622,7 +626,7 @@ public void setReworkProj(String reworkProj) {
     return requestorContact;
   }
 
-  public void setRequestorContact(String requestorContact) {
+  public void setRequestorContact( String requestorContact ) {
     this.requestorContact = requestorContact;
   }
 
@@ -630,7 +634,7 @@ public void setReworkProj(String reworkProj) {
     return contractDuration;
   }
 
-  public void setContractDuration(String contractDuration) {
+  public void setContractDuration( String contractDuration ) {
     this.contractDuration = contractDuration;
   }
 
@@ -638,7 +642,7 @@ public void setReworkProj(String reworkProj) {
     return monthlyRentalFees;
   }
 
-  public void setMonthlyRentalFees(String monthlyRentalFees) {
+  public void setMonthlyRentalFees( String monthlyRentalFees ) {
     this.monthlyRentalFees = monthlyRentalFees;
   }
 
@@ -646,7 +650,7 @@ public void setReworkProj(String reworkProj) {
     return registrationFees;
   }
 
-  public void setRegistrationFees(String registrationFees) {
+  public void setRegistrationFees( String registrationFees ) {
     this.registrationFees = registrationFees;
   }
 
@@ -654,7 +658,7 @@ public void setReworkProj(String reworkProj) {
     return paymentMode;
   }
 
-  public void setPaymentMode(String paymentMode) {
+  public void setPaymentMode( String paymentMode ) {
     this.paymentMode = paymentMode;
   }
 
@@ -662,7 +666,7 @@ public void setReworkProj(String reworkProj) {
     return bankCode;
   }
 
-  public void setBankCode(String bankCode) {
+  public void setBankCode( String bankCode ) {
     this.bankCode = bankCode;
   }
 
@@ -670,7 +674,7 @@ public void setReworkProj(String reworkProj) {
     return bankName;
   }
 
-  public void setBankName(String bankName) {
+  public void setBankName( String bankName ) {
     this.bankName = bankName;
   }
 
@@ -678,7 +682,7 @@ public void setReworkProj(String reworkProj) {
     return cardAccountNo;
   }
 
-  public void setCardAccountNo(String cardAccountNo) {
+  public void setCardAccountNo( String cardAccountNo ) {
     this.cardAccountNo = cardAccountNo;
   }
 
@@ -686,7 +690,7 @@ public void setReworkProj(String reworkProj) {
     return outstanding;
   }
 
-  public void setOutstanding(String outstanding) {
+  public void setOutstanding( String outstanding ) {
     this.outstanding = outstanding;
   }
 
@@ -694,7 +698,7 @@ public void setReworkProj(String reworkProj) {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -702,7 +706,7 @@ public void setReworkProj(String reworkProj) {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -710,7 +714,7 @@ public void setReworkProj(String reworkProj) {
     return warranty;
   }
 
-  public void setWarranty(String warranty) {
+  public void setWarranty( String warranty ) {
     this.warranty = warranty;
   }
 
@@ -718,7 +722,7 @@ public void setReworkProj(String reworkProj) {
     return MembershipContractExpiry;
   }
 
-  public void setMembershipContractExpiry(String membershipContractExpiry) {
+  public void setMembershipContractExpiry( String membershipContractExpiry ) {
     MembershipContractExpiry = membershipContractExpiry;
   }
 
@@ -726,7 +730,7 @@ public void setReworkProj(String reworkProj) {
     return rentalStatus;
   }
 
-  public void setRentalStatus(String rentalStatus) {
+  public void setRentalStatus( String rentalStatus ) {
     this.rentalStatus = rentalStatus;
   }
 
@@ -734,7 +738,7 @@ public void setReworkProj(String reworkProj) {
     return dscCode;
   }
 
-  public void setDscCode(String dscCode) {
+  public void setDscCode( String dscCode ) {
     this.dscCode = dscCode;
   }
 
@@ -742,7 +746,7 @@ public void setReworkProj(String reworkProj) {
     return installationDate;
   }
 
-  public void setInstallationDate(String installationDate) {
+  public void setInstallationDate( String installationDate ) {
     this.installationDate = installationDate;
   }
 
@@ -750,7 +754,7 @@ public void setReworkProj(String reworkProj) {
     return labourCharge;
   }
 
-  public void setLabourCharge(String labourCharge) {
+  public void setLabourCharge( String labourCharge ) {
     this.labourCharge = labourCharge;
   }
 
@@ -758,7 +762,7 @@ public void setReworkProj(String reworkProj) {
     return defectTypeId;
   }
 
-  public void setDefectTypeId(String defectTypeId) {
+  public void setDefectTypeId( String defectTypeId ) {
     this.defectTypeId = defectTypeId;
   }
 
@@ -766,7 +770,7 @@ public void setReworkProj(String reworkProj) {
     return defectGroupId;
   }
 
-  public void setDefectGroupId(String defectGroupId) {
+  public void setDefectGroupId( String defectGroupId ) {
     this.defectGroupId = defectGroupId;
   }
 
@@ -774,7 +778,7 @@ public void setReworkProj(String reworkProj) {
     return defectId;
   }
 
-  public void setDefectId(String defectId) {
+  public void setDefectId( String defectId ) {
     this.defectId = defectId;
   }
 
@@ -782,7 +786,7 @@ public void setReworkProj(String reworkProj) {
     return defectPartGroupId;
   }
 
-  public void setDefectPartGroupId(String defectPartGroupId) {
+  public void setDefectPartGroupId( String defectPartGroupId ) {
     this.defectPartGroupId = defectPartGroupId;
   }
 
@@ -790,7 +794,7 @@ public void setReworkProj(String reworkProj) {
     return defectPartId;
   }
 
-  public void setDefectPartId(String defectPartId) {
+  public void setDefectPartId( String defectPartId ) {
     this.defectPartId = defectPartId;
   }
 
@@ -798,7 +802,7 @@ public void setReworkProj(String reworkProj) {
     return defectDetailReasonId;
   }
 
-  public void setDefectDetailReasonId(String defectDetailReasonId) {
+  public void setDefectDetailReasonId( String defectDetailReasonId ) {
     this.defectDetailReasonId = defectDetailReasonId;
   }
 
@@ -806,7 +810,7 @@ public void setReworkProj(String reworkProj) {
     return solutionReasonId;
   }
 
-  public void setSolutionReasonId(String solutionReasonId) {
+  public void setSolutionReasonId( String solutionReasonId ) {
     this.solutionReasonId = solutionReasonId;
   }
 
@@ -814,7 +818,7 @@ public void setReworkProj(String reworkProj) {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -822,7 +826,7 @@ public void setReworkProj(String reworkProj) {
     return ownerCode;
   }
 
-  public void setOwnerCode(String ownerCode) {
+  public void setOwnerCode( String ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -830,7 +834,7 @@ public void setReworkProj(String reworkProj) {
     return ownerCodeNm;
   }
 
-  public void setOwnerCodeNm(String ownerCodeNm) {
+  public void setOwnerCodeNm( String ownerCodeNm ) {
     this.ownerCodeNm = ownerCodeNm;
   }
 
@@ -838,7 +842,7 @@ public void setReworkProj(String reworkProj) {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -846,7 +850,7 @@ public void setReworkProj(String reworkProj) {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -854,7 +858,7 @@ public void setReworkProj(String reworkProj) {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -862,7 +866,7 @@ public void setReworkProj(String reworkProj) {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -870,7 +874,7 @@ public void setReworkProj(String reworkProj) {
     return rcCode;
   }
 
-  public void setRcCode(String rcCode) {
+  public void setRcCode( String rcCode ) {
     this.rcCode = rcCode;
   }
 
@@ -878,7 +882,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionCode;
   }
 
-  public void setMalfunctionCode(String malfunctionCode) {
+  public void setMalfunctionCode( String malfunctionCode ) {
     this.malfunctionCode = malfunctionCode;
   }
 
@@ -886,7 +890,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionName;
   }
 
-  public void setMalfunctionName(String malfunctionName) {
+  public void setMalfunctionName( String malfunctionName ) {
     this.malfunctionName = malfunctionName;
   }
 
@@ -894,7 +898,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionReasonCode;
   }
 
-  public void setMalfunctionReasonCode(String malfunctionReasonCode) {
+  public void setMalfunctionReasonCode( String malfunctionReasonCode ) {
     this.malfunctionReasonCode = malfunctionReasonCode;
   }
 
@@ -902,7 +906,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionReasonName;
   }
 
-  public void setMalfunctionReasonName(String malfunctionReasonName) {
+  public void setMalfunctionReasonName( String malfunctionReasonName ) {
     this.malfunctionReasonName = malfunctionReasonName;
   }
 
@@ -910,7 +914,7 @@ public void setReworkProj(String reworkProj) {
     return failReasonCode;
   }
 
-  public void setFailReasonCode(String failReasonCode) {
+  public void setFailReasonCode( String failReasonCode ) {
     this.failReasonCode = failReasonCode;
   }
 
@@ -918,7 +922,7 @@ public void setReworkProj(String reworkProj) {
     return failReasonName;
   }
 
-  public void setFailReasonName(String failReasonName) {
+  public void setFailReasonName( String failReasonName ) {
     this.failReasonName = failReasonName;
   }
 
@@ -926,7 +930,7 @@ public void setReworkProj(String reworkProj) {
     return settledBy;
   }
 
-  public void setSettledBy(String settledBy) {
+  public void setSettledBy( String settledBy ) {
     this.settledBy = settledBy;
   }
 
@@ -934,7 +938,7 @@ public void setReworkProj(String reworkProj) {
     return settledDate;
   }
 
-  public void setSettledDate(String settledDate) {
+  public void setSettledDate( String settledDate ) {
     this.settledDate = settledDate;
   }
 
@@ -942,7 +946,7 @@ public void setReworkProj(String reworkProj) {
     return settledTime;
   }
 
-  public void setSettledTime(String settledTime) {
+  public void setSettledTime( String settledTime ) {
     this.settledTime = settledTime;
   }
 
@@ -950,7 +954,7 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairRemark;
   }
 
-  public void setInHouseRepairRemark(String inHouseRepairRemark) {
+  public void setInHouseRepairRemark( String inHouseRepairRemark ) {
     this.inHouseRepairRemark = inHouseRepairRemark;
   }
 
@@ -958,7 +962,7 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairPromisedDate;
   }
 
-  public void setInHouseRepairPromisedDate(String inHouseRepairPromisedDate) {
+  public void setInHouseRepairPromisedDate( String inHouseRepairPromisedDate ) {
     this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
   }
 
@@ -966,7 +970,7 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairProductCode;
   }
 
-  public void setInHouseRepairProductCode(String inHouseRepairProductCode) {
+  public void setInHouseRepairProductCode( String inHouseRepairProductCode ) {
     this.inHouseRepairProductCode = inHouseRepairProductCode;
   }
 
@@ -974,7 +978,7 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairSerialNo;
   }
 
-  public void setInHouseRepairSerialNo(String inHouseRepairSerialNo) {
+  public void setInHouseRepairSerialNo( String inHouseRepairSerialNo ) {
     this.inHouseRepairSerialNo = inHouseRepairSerialNo;
   }
 
@@ -982,7 +986,7 @@ public void setReworkProj(String reworkProj) {
     return renCollectionId;
   }
 
-  public void setRenCollectionId(String renCollectionId) {
+  public void setRenCollectionId( String renCollectionId ) {
     this.renCollectionId = renCollectionId;
   }
 
@@ -990,7 +994,7 @@ public void setReworkProj(String reworkProj) {
     return lastPaymentDate;
   }
 
-  public void setLastPaymentDate(String lastPaymentDate) {
+  public void setLastPaymentDate( String lastPaymentDate ) {
     this.lastPaymentDate = lastPaymentDate;
   }
 
@@ -998,7 +1002,7 @@ public void setReworkProj(String reworkProj) {
     return asrNo;
   }
 
-  public void setAsrNo(String asrNo) {
+  public void setAsrNo( String asrNo ) {
     this.asrNo = asrNo;
   }
 
@@ -1006,7 +1010,7 @@ public void setReworkProj(String reworkProj) {
     return filterAmount;
   }
 
-  public void setFilterAmount(String filterAmount) {
+  public void setFilterAmount( String filterAmount ) {
     this.filterAmount = filterAmount;
   }
 
@@ -1014,7 +1018,7 @@ public void setReworkProj(String reworkProj) {
     return accessoriesAmount;
   }
 
-  public void setAccessoriesAmount(String accessoriesAmount) {
+  public void setAccessoriesAmount( String accessoriesAmount ) {
     this.accessoriesAmount = accessoriesAmount;
   }
 
@@ -1022,7 +1026,7 @@ public void setReworkProj(String reworkProj) {
     return totalAmount;
   }
 
-  public void setTotalAmount(String totalAmount) {
+  public void setTotalAmount( String totalAmount ) {
     this.totalAmount = totalAmount;
   }
 
@@ -1030,7 +1034,7 @@ public void setReworkProj(String reworkProj) {
     return inhouserepairreplacementyn;
   }
 
-  public void setInhouserepairreplacementyn(String inhouserepairreplacementyn) {
+  public void setInhouserepairreplacementyn( String inhouserepairreplacementyn ) {
     this.inhouserepairreplacementyn = inhouserepairreplacementyn;
   }
 
@@ -1038,7 +1042,7 @@ public void setReworkProj(String reworkProj) {
     return inhouserepairproductgroupcode;
   }
 
-  public void setInhouserepairproductgroupcode(String inhouserepairproductgroupcode) {
+  public void setInhouserepairproductgroupcode( String inhouserepairproductgroupcode ) {
     this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
   }
 
@@ -1046,28 +1050,52 @@ public void setReworkProj(String reworkProj) {
     return inhouserepairyn;
   }
 
-  public void setInhouserepairyn(String inhouserepairyn) {
+  public void setInhouserepairyn( String inhouserepairyn ) {
     this.inhouserepairyn = inhouserepairyn;
   }
 
-  public BigDecimal getLatitude(){
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude){
+  public void setLatitude( BigDecimal latitude ) {
     this.latitude = latitude;
   }
 
-  public BigDecimal getLongitude(){
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude){
-     this.longitude = longitude;
+  public void setLongitude( BigDecimal longitude ) {
+    this.longitude = longitude;
   }
 
-  public static AfterServiceJobDto_b create(EgovMap egovMap) {
-    return BeanConverter.toBean(egovMap, AfterServiceJobDto_b.class);
+  public String getVoltage() {
+    return voltage;
   }
 
+  public void setVoltage( String voltage ) {
+    this.voltage = voltage;
+  }
+
+  public String getPartnerCode() {
+    return partnerCode;
+  }
+
+  public void setPartnerCode( String partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public String getPartnerCodeName() {
+    return partnerCodeName;
+  }
+
+  public void setPartnerCodeName( String partnerCodeName ) {
+    this.partnerCodeName = partnerCodeName;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static AfterServiceJobDto_b create( EgovMap egovMap ) {
+    return BeanConverter.toBean( egovMap, AfterServiceJobDto_b.class );
+  }
 }
