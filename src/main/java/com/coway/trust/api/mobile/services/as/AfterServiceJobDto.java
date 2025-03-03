@@ -1,6 +1,5 @@
 package com.coway.trust.api.mobile.services.as;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 import java.math.BigDecimal;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -280,6 +279,12 @@ public class AfterServiceJobDto {
   private String instAccsVal;
 
   private String srvType;
+
+  private String voltage;
+
+  private String partnerCode;
+
+  private String partnerCodeName;
 
   public String getSrvType() {
 	return srvType;
@@ -1074,6 +1079,31 @@ public void setReworkProj(String reworkProj) {
      this.longitude = longitude;
   }
 
+  public String getVoltage() {
+    return voltage;
+  }
+
+  public void setVoltage( String voltage ) {
+    this.voltage = voltage;
+  }
+
+  public String getPartnerCode() {
+    return partnerCode;
+  }
+
+  public void setPartnerCode( String partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public String getPartnerCodeName() {
+    return partnerCodeName;
+  }
+
+  public void setPartnerCodeName( String partnerCodeName ) {
+    this.partnerCodeName = partnerCodeName;
+  }
+
+  @SuppressWarnings("unchecked")
   public static AfterServiceJobDto create(EgovMap egovMap) {
     return BeanConverter.toBean(egovMap, AfterServiceJobDto.class);
   }
