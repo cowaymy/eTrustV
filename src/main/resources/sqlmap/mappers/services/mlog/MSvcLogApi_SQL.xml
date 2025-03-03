@@ -799,6 +799,7 @@
                                      , EXTENT1.AS_NO
                                      , EXTENT1.AS_SO_ID
                                      , EXTENT1.AS_MEM_ID AS AS_CT_ID
+
                                      , EXTENT7.AS_RESULT_ID
                                      , EXTENT7.AS_RESULT_NO
                                      , EXTENT7.AS_ENTRY_ID
@@ -1768,7 +1769,7 @@
                PARTNER_CODE AS PARTNER_CODE,
                TO_CHAR(SRV_TYPE) AS SRV_TYPE,
                NTU AS NTU,
-               TO_CHAR(VOLT) AS VOLTAGE,
+               TO_CHAR(VOLT) AS VOLTAGE
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
