@@ -227,6 +227,7 @@ public class ServiceApiController {
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
+
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
@@ -268,14 +269,6 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList(params);
 
-    /*
-    LOGGER.debug("==================================[MB]HEART SERVICE JOB LIST SEARCH====================================");
-    for (int i = 0; i < HeartServiceJobList.size(); i++) {
-      LOGGER.debug("heartServiceJobList: {}", HeartServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]HEART SERVICE JOB LIST SEARCH====================================");
-    */
-
     List<HeartServiceJobDto> list = HeartServiceJobList.stream().map(r -> HeartServiceJobDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
@@ -289,19 +282,12 @@ public class ServiceApiController {
 
     List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList_b(params);
 
-    /*
-    LOGGER.debug("==================================[MB]HEART SERVICE JOB BATCH SEARCH====================================");
-    for (int i = 0; i < HeartServiceJobList.size(); i++) {
-      LOGGER.debug("heartServiceJobList_b : {}", HeartServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]HEART SERVICE JOB BATCH SEARCH====================================");
-    */
-
     List<HeartServiceJobDto> list = HeartServiceJobList.stream().map(r -> HeartServiceJobDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "AfterServiceJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/afterServiceJobList", method = RequestMethod.GET)
   public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob(@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
@@ -310,19 +296,12 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
 
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
-    for (int i = 0; i < AfterServiceJobList.size(); i++) {
-      LOGGER.debug("afterServiceJobList : {}", AfterServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
-    */
-
     List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "AfterServiceJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/afterServiceJobList_b", method = RequestMethod.GET)
   public ResponseEntity<List<AfterServiceJobDto_b>> getHeartServiceJob_b(@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
@@ -330,14 +309,6 @@ public class ServiceApiController {
     Map<String, Object> params = AfterServiceJobForm.createMap(AfterServiceJobForm);
 
     List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList_b(params);
-
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
-    for (int i = 0; i < AfterServiceJobList.size(); i++) {
-      LOGGER.debug("afterServiceJobList_b : {}", AfterServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB BATCH SEARCH====================================");
-    */
 
     List<AfterServiceJobDto_b> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto_b.create(r)).collect(Collectors.toList());
 
@@ -347,21 +318,9 @@ public class ServiceApiController {
   @ApiOperation(value = "InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/installationJobList", method = RequestMethod.GET)
   public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
-
     Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
-
     List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
-    for (int i = 0; i < InstallationJobList.size(); i++) {
-      LOGGER.debug("installationJobList : {}", InstallationJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
-    */
-
     List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
-
     return ResponseEntity.ok(list);
   }
 
@@ -373,14 +332,6 @@ public class ServiceApiController {
 
     List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
 
-    /*
-    LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
-    for (int i = 0; i < InstallationJobList.size(); i++) {
-      LOGGER.debug("installationJobList_b    값 : {}", InstallationJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]INSTALLATION JOB BATCH SEARCH====================================");
-    */
-
     List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
@@ -389,20 +340,9 @@ public class ServiceApiController {
   @ApiOperation(value = "ProductRetrunJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
   public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
-
     Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
-
     List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
-
-    /*LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
-    for (int i = 0; i < ProductRetrunJobList.size(); i++) {
-      LOGGER.debug("productRetrunJobList : {}", ProductRetrunJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
-    */
-
     List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
-
     return ResponseEntity.ok(list);
   }
 
@@ -1053,142 +993,6 @@ public class ServiceApiController {
   @RequestMapping(value = "/productReturnResult", method = RequestMethod.POST)
   public ResponseEntity<ProductReturnResultDto> productReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
     return serviceApiPRService.productReturnResult(productReturnResultForm);
-
-    // String transactionId = "";
-    //
-    // List<Map<String, Object>> prTransLogs = null;
-    // SessionVO sessionVO1 = new SessionVO();
-    //
-    // LOGGER.debug("==================================[MB]PRODUCT RETURN RESULT
-    // REGISTRATION - START - ====================================");
-    // LOGGER.debug("### PRODUCT RETURN FORM : ", productReturnResultForm);
-    //
-    // prTransLogs = new ArrayList<>();
-    // for (ProductReturnResultForm prService : productReturnResultForm) {
-    // prTransLogs.addAll(prService.createMaps(prService));
-    // }
-    //
-    // LOGGER.debug("### PRODUCT RETURN SIZE : " + prTransLogs.size());
-    // for (int i = 0; i < prTransLogs.size(); i++) {
-    //
-    // LOGGER.debug("### PRODUCT RETURN DETAIL : " + prTransLogs.get(i));
-    // Map<String, Object> paramsTran = prTransLogs.get(i);
-    // Map<String, Object> cvMp = new HashMap<String, Object>();
-    //
-    // cvMp.put("stkRetnStusId", "4");
-    // cvMp.put("stkRetnStkIsRet", "1");
-    // cvMp.put("stkRetnRem", String.valueOf(paramsTran.get("resultRemark")));
-    // cvMp.put("stkRetnResnId", paramsTran.get("resultCode"));
-    // cvMp.put("stkRetnCcId", paramsTran.get("ccCode"));
-    // cvMp.put("stkRetnCrtUserId", paramsTran.get("userId"));
-    // cvMp.put("stkRetnUpdUserId", paramsTran.get("userId"));
-    // cvMp.put("stkRetnResultIsSynch", "0");
-    // cvMp.put("stkRetnAllowComm", "1");
-    // cvMp.put("stkRetnCtMemId", paramsTran.get("userId"));
-    // cvMp.put("checkinDt", String.valueOf(paramsTran.get("checkInDate")));
-    // cvMp.put("checkinTm", String.valueOf(paramsTran.get("checkInTime")));
-    // cvMp.put("checkinGps", String.valueOf(paramsTran.get("checkInGps")));
-    // cvMp.put("signData", paramsTran.get("signData"));
-    // cvMp.put("signRegDt", String.valueOf(paramsTran.get("signRegDate")));
-    // cvMp.put("signRegTm", String.valueOf(paramsTran.get("signRegTime")));
-    // cvMp.put("ownerCode", String.valueOf(paramsTran.get("ownerCode")));
-    // cvMp.put("resultCustName",
-    // String.valueOf(paramsTran.get("resultCustName")));
-    // cvMp.put("resultIcmobileNo",
-    // String.valueOf(paramsTran.get("resultIcMobileNo")));
-    // cvMp.put("resultRptEmailNo",
-    // String.valueOf(paramsTran.get("resultReportEmailNo")));
-    // cvMp.put("resultAceptName",
-    // String.valueOf(paramsTran.get("resultAcceptanceName")));
-    // cvMp.put("salesOrderNo", String.valueOf(paramsTran.get("salesOrderNo")));
-    // cvMp.put("userId", String.valueOf(paramsTran.get("userId")));
-    // cvMp.put("serviceNo", String.valueOf(paramsTran.get("serviceNo")));
-    // cvMp.put("transactionId",
-    // String.valueOf(paramsTran.get("transactionId")));
-    //
-    // LOGGER.debug("### PRODUCT RETURN INFORMATION : " + cvMp.toString());
-    //
-    // transactionId = String.valueOf(paramsTran.get("transactionId"));
-    //
-    // try {
-    // // CREATE LOG HISTORY
-    // MSvcLogApiService.insert_SVC0026T(cvMp);
-    // } catch (Exception e) {
-    // MSvcLogApiService.updatePRErrStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "PR");
-    // m.put("SVC_NO", cvMp.get("serviceNo"));
-    // m.put("ERR_CODE", "02");
-    // m.put("ERR_MSG", "[API] " + e.toString());
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    //
-    // return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
-    // }
-    //
-    // // CHECK CT VALID TO PERFORM THIS ACTION
-    // int memCnt = MSvcLogApiService.prdResultSync(cvMp);
-    //
-    // if (memCnt > 0) {
-    // int isPrdRtnCnt = MSvcLogApiService.isPrdRtnAlreadyResult(cvMp);
-    // if (isPrdRtnCnt == 0) {
-    // try {
-    // EgovMap rtnValue = MSvcLogApiService.productReturnResult(cvMp);
-    //
-    // if (null != rtnValue) {
-    // HashMap spMap = (HashMap) rtnValue.get("spMap");
-    // if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-    // rtnValue.put("logerr", "Y");
-    // }
-    // servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-    // }
-    // } catch (Exception ee) {
-    // MSvcLogApiService.updatePRErrStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "PR");
-    // m.put("SVC_NO", cvMp.get("serviceNo"));
-    // m.put("ERR_CODE", "02");
-    // m.put("ERR_MSG", "[API] " + ee.toString());
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
-    // }
-    // } else {
-    // MSvcLogApiService.updatePRErrStatus(transactionId);
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "PR");
-    // m.put("SVC_NO", cvMp.get("serviceNo"));
-    // m.put("ERR_CODE", "04");
-    // m.put("ERR_MSG", "[API] [" + cvMp.get("userId") + "] THIS PR ALREADY NOT
-    // IN ACTIVE STATUS. ");
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // }
-    // } else {
-    // MSvcLogApiService.updatePRErrStatus(transactionId);
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "PR");
-    // m.put("SVC_NO", cvMp.get("serviceNo"));
-    // m.put("ERR_CODE", "01");
-    // m.put("ERR_MSG", "[API] [" + cvMp.get("userId") + "] IT IS NOT ASSIGNED
-    // CT CODE. ");
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
-    // }
-    //
-    // MSvcLogApiService.updatePRStatus(transactionId);
-    // }
-    // LOGGER.debug("==================================[MB]PRODUCT RETURN RESULT
-    // REGISTRATION - END - ====================================");
-    //
-    // return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
   }
 
   @ApiOperation(value = "Heart Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
