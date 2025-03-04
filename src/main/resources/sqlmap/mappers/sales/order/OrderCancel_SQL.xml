@@ -86,6 +86,7 @@
 					   THEN A.APP_DT
 					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END APP_DT,
 					A.ASSIGN_CT,
+					A.PARTNER_CODE,
 					A.RCD_TMS,
 					B.CODE AS DSC ,
 					A.ATCH_FILE_GRP_ID ,
@@ -159,6 +160,7 @@
             						NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
             						V.APP_DT AS APP_DT,
             						V.ASSIGN_CT,
+            						V.PARTNER_CODE,
             						V.RCD_TMS,
             						V.STK_CTGRY_ID ,
             						V.ATCH_FILE_GRP_ID ,
@@ -234,6 +236,7 @@
                         						ELSE ORG2.USER_NAME END PRD_RTN_LST_UPD,
                         						RE.APP_DT AS APP_DT,
                         						ORG3.MEM_CODE AS ASSIGN_CT,
+                        						ORG4.MEM_CODE AS PARTNER_CODE,
                         						R.RCD_TMS AS RCD_TMS,
                         						STK.STK_CTGRY_ID STK_CTGRY_ID,
                         						SOM.BNDL_ID,
@@ -276,6 +279,7 @@
             						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID
                                     LEFT JOIN SYS0013M FU ON FU.CODE_ID = R.SO_REQ_FOLLOW_UP
                                     LEFT JOIN SAL0213M K ON K.SALES_ORD_ID = SOM.SALES_ORD_ID
+                                    LEFT JOIN ORG0001d ORG4 ON ORG4.mem_id = RER.PARTNER_CODE
                         ) V) ) A
 				LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
 				 ]]>

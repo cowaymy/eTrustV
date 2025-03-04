@@ -440,6 +440,13 @@
     $("#ddlDSCCode").val(result[0].asBrnchId);
     $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlDSCCodeText").val(result[0].c5);
+
+    $("#partnerCode").val(result[0].partnerCode);
+    $("#volt").val(result[0].volt);
+
+  	doGetCombo('/services/getInstallCtPairByCtCode.do?ctMemCode='+ result[0].c12, '', result[0].partnerCode, 'partnerCode', 'S', ''); //PARTNER CODE
+
+
     isSet = 1;
 
     $("#ddlWarehouse").val(result[0].asWhId);
@@ -624,6 +631,7 @@
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
       $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
       $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+  	doGetCombo('/services/getInstallCtPairByCtCode.do?ctMemCode='+ selectedItems[0].item.memCode, '', selectedItems[0].item.partnerCode, 'partnerCode', 'S', ''); //PARTNER CODE
     }
 
     switch ($("#ddlStatus").val()) {
@@ -683,6 +691,8 @@
       $("#m12").hide();
       $("#m13").hide();
       $("#m14").hide();
+      $("#m18").hide();
+      $("#m30").hide();
       $("#mInH3").hide();
 
       $("#reminder").hide();
@@ -792,6 +802,7 @@
     $("#m13").show();
     $("#m14").show();
 
+    fn_setMandatoryLC(4);
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide()
       $("#addDiv").hide();
@@ -807,6 +818,8 @@
       $("#psiRcd").attr("disabled", true);
       $("#lpmRcd").attr("disabled", true);
       $("#ntuCom").attr("disabled", true);
+      $("#partnerCode").attr("disabled", true);
+      $("#volt").attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -920,6 +933,8 @@
     $("#m14").hide();
     $("#txtRemark").val("");
     $("#txtRemark").attr("disabled", "disabled");
+
+    fn_setMandatoryLC(8);
 
     if (this.ops.MOD == "RESULTVIEW") {
       $("#btnSaveDiv").hide();
@@ -1111,6 +1126,8 @@
     $("#m12").hide();
     $("#m13").hide();
     $("#m14").show();
+
+    fn_setMandatoryLC(10);
   }
 
   function fn_openField_Fail() {
@@ -1138,6 +1155,9 @@
       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
     }
+
+    fn_setMandatoryLC(21);
+
   }
 
   function fn_clearPageField() {
@@ -1154,6 +1174,8 @@
     $('#ddlWarehouse').val("").attr("disabled", true);
     $('#txtRemark').val("").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
+
+    fn_setMandatoryLC(8);
 
     fn_clearPanelField_ASChargesFees();
 
@@ -1690,6 +1712,16 @@
           }
         }
 
+        if($('#PROD_CAT').val()){ // 7760 - LC Laundry Care
+	      	if ( $("#partnerCode").val() == "") {
+	          msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
+	        }
+
+	      	if ( $("#volt").val() == "") {
+	            msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+	          }
+	      }
+
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
@@ -1841,6 +1873,8 @@
       AS_UNMATCH_REASON : $('#asNotMatch').val(),
       NTU : $('#ntuCom').val(),
       INS_ACC_CHK : $("#chkInstallAcc").prop("checked") ? 'on' : '',
+      PARTNER_CODE : $('#partnerCode').val(),
+      VOLT : $('#volt').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -2731,6 +2765,25 @@
             $('#attch3').change();
         }
      }
+
+    function fn_setMandatoryLC(status){
+     	if ($('#PROD_CAT').val() == "7760" || status == 4){
+			$("#pairCodeLbl").append('<span class="must">*</span>');
+			$('#partnerCode').removeAttr("disabled").removeClass("readonly");
+			$("#m15").show();
+			$("#psiRcd").attr("disabled", false);
+			$("#m30").show();
+        	$("#volt").attr("disabled", false);
+        	$("#m18").hide();
+
+		}else{
+			$("#pairCodeLbl").find("span").remove();
+			$("#partnerCode").attr("disabled", true);
+			$("#m30").hide();
+			$("#volt").attr("disabled", true);
+		}
+
+    }
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
   <input type="hidden" name="pSerialNo" id="pSerialNo" /> <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" /> <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" /> <input type="hidden" name="pRefDocNo" id="pRefDocNo" /> <input type="hidden" name="pItmCode" id="pItmCode" /> <input type="hidden" name="pCallGbn" id="pCallGbn" /> <input type="hidden" name="pMobileYn" id="pMobileYn" />
@@ -2828,10 +2881,16 @@
             <tr>
               <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display: none">*</span></th>
               <td><select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p" onChange="fn_errDescCheck(1)"></select></td>
-              <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+              <th id="pairCodeLbl" scope="row"><spring:message code='service.title.PairingCode' /></th>
+          	<td><select id='partnerCode' name='partnerCode' class="w100p"></select></td>
+            </tr>
+            <tr>
+            <th scope="row"><spring:message code='sal.title.warehouse' /></th>
               <td><select class="disabled w100p" disabled="disabled" id='ddlWarehouse' name='ddlWarehouse'>
                   <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
               </select></td>
+             <th scope="row"><spring:message code='service.title.Volt' /><span name="m30" id="m30" class="must">*</span></th>
+             <td><input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' /></td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must">*</span></th>

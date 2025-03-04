@@ -334,4 +334,6 @@ public interface InstallationResultListMapper {
 
  void insertPreFilterChargeOut (Map<String, Object> params);
 
+ List<EgovMap> getInstallCtPairByCtCode(Map<String, Object> params);
+
 }

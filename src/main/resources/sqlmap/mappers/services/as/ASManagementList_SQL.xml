@@ -51,7 +51,8 @@
            NVL(Z.NO, '-') AS BS_NO,
            S.INST_CITY,
            S.DEFECT_DESC,
-           S.RESN_DESC
+           S.RESN_DESC,
+           S.PARTNER_CODE
     FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
                            E.AS_NO AS_NO ,
                            E.ASSOID1 AS_SO_ID ,
@@ -107,6 +108,7 @@
                            E.HSR_NO,
                            E.INST_CITY,
                            E.DEFECT_DESC,
+                           E.PARTNER_CODE,
                            Extent17.RESN_DESC
            FROM ( SELECT Extent1.AS_ID AS_ID ,
                          Extent1.AS_NO AS_NO ,
@@ -145,7 +147,8 @@
                          Extent1.AS_CRT_DT,
                          Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC,
                          NVL(ma1.CITY, '-') AS INST_CITY,
-                         Extent16.DEFECT_DESC
+                         Extent16.DEFECT_DESC,
+                         Extent7.PARTNER_CODE
                   FROM SVC0001D Extent1
                   JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
                   JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -166,7 +169,8 @@
                                      AS_SETL_DT,
                                      AS_RESULT_CRT_DT,
                                      AS_CMMS,
-                                     NVL(USER_NAME, '-') as USER_NAME
+                                     NVL(USER_NAME, '-') as USER_NAME,
+                                     PARTNER_CODE
                               FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
                                              AS_RESULT_ID,
                                              AS_RESULT_NO,
@@ -180,9 +184,11 @@
                                              AS_SETL_DT,
                                              AS_RESULT_CRT_DT,
                                              AS_CMMS,
-                                             B.USER_NAME
+                                             B.USER_NAME,
+                                             C.MEM_CODE AS PARTNER_CODE
                                      FROM SVC0004D A
                                      LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
+                                     LEFT JOIN ORG0001D C ON A.PARTNER_CODE = C.MEM_ID
                                      WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
                   ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
                               AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
@@ -1665,6 +1671,8 @@
            S.REWORK_PROJ,
            S.CODE_NAME AS REWORK_PROJ_NAME,
            S.NTU,
+           S.PARTNER_CODE,
+           S.VOLT,
            S.ATCH_FILE_GRP_ID
     FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
                   E.AS_RESULT_NO AS_RESULT_NO ,
@@ -1741,6 +1749,8 @@
                   E.REWORK_PROJ,
                   E5.CODE_NAME,
                   E.NTU,
+                  E.VOLT,
+                  E.PARTNER_CODE,
                   NVL(E.ATCH_FILE_GRP_ID,0) ATCH_FILE_GRP_ID
            FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
            LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
@@ -3208,7 +3218,8 @@
                            AS_TRANSFER_TO_DT,
                            ATCH_FILE_GRP_ID,
                            PARTNER_CODE,
-                           NTU
+                           NTU,
+                           VOLT
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3274,7 +3285,8 @@
                #{ATTACHMENT},
                #{PARTNER_CODE},
                <!-- #{PARTNER_CODE_ID} , -->
-               #{NTU}
+               #{NTU},
+               NVL(#{VOLT},0)
     )
   </insert>
 

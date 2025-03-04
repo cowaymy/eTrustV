@@ -36,6 +36,16 @@ $(document).ready(function() {
         }
     }
 
+    if("${orderInfo.stkCtgryId}" == "7760"){ // 7760 - LC Laundry Care
+        $("#pairCodeLbl").show();
+        $("#partnerCode").show();
+        $("#pairCodeLbl").append('<span class="must">*</span>');
+    }else{
+    	$("#pairCodeLbl").hide();
+        $("#partnerCode").hide();
+        $("#pairCodeLbl").find("span").remove();
+    }
+
 
     if("${stock}"  != null){
 
@@ -89,6 +99,16 @@ $(document).ready(function() {
                 $("#addInstallForm #installDate").prop("readonly" , false);
                 $("#addInstallForm #installDate").attr("class" , "j_date w100p hasDatepicker");
                 $("#addInstallForm #installDate").attr("placeholder" , "DD/MM/YYYY");
+
+                if("${orderInfo.stkCtgryId}" == "7760"){ // 7760 - LC Laundry Care
+                    $("#pairCodeLbl").show();
+                    $("#partnerCode").show();
+                    $("#pairCodeLbl").append('<span class="must">*</span>');
+                }else{
+                	$("#pairCodeLbl").hide();
+                    $("#partnerCode").hide();
+                    $("#pairCodeLbl").find("span").remove();
+                }
         }
         else{
 
@@ -98,6 +118,10 @@ $(document).ready(function() {
             $("#addInstallForm #installDate").attr("readonly" , true);
             $("#addInstallForm #installDate").attr("class" , "disabled");
             $("#addInstallForm #installDate").attr("placeholder" , "only complete case");
+
+            $("#pairCodeLbl").hide();
+            $("#partnerCode").hide();
+            $("#pairCodeLbl").find("span").remove();
         }
 
     });
@@ -137,6 +161,13 @@ function fn_saveInstall(){
 			Common.alert("Please insert 'Actual Product Return Date', 'Acctance Name',  'Acctance Relationship' <br/>in complete status");
             return;
         }
+
+		if("${orderInfo.stkCtgryId}" == "7760"){ // 7760 - LC Laundry Care
+	      	if ( $("#partnerCode").val() == "") {
+	      		Common.alert("Please select Pairing Code.");
+	            return;
+	        }
+	      }
 	 }
 
 	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
@@ -183,6 +214,7 @@ function fn_saveInstall(){
 
 function fn_saveclose(){
 	addInstallationPopupId.remove();
+	$("#popup_wrap").remove();
 	fn_orderCancelListAjax();
 }
 function fn_viewInstallResultSearch(){
@@ -217,10 +249,9 @@ function fn_serialChangePop(){
     $("#serialNoChangeForm #pSalesOrdId").val( $("#hidSalesOrderId").val() ); // 주문 ID
     $("#serialNoChangeForm #pSalesOrdNo").val( $("#salesOrdNo").val() ); // 주문 번호
     $("#serialNoChangeForm #pRefDocNo").val( pRetnNo ); // Retn No
-    $("#serialNoChangeForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+    $("#serialNoChangeForm #pItmCode").val( '${orderInfo.stkCode}' ); // 제품 ID
     $("#serialNoChangeForm #pCallGbn").val( "RETURN" ); //
     $("#serialNoChangeForm #pMobileYn").val("N"  ); //
-
     if(Common.checkPlatformType() == "mobile") {
         popupObj = Common.popupWin("inBoundInForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
     } else{
@@ -469,8 +500,8 @@ var gridPros = {
     </c:if>
     <c:if test="${installResult.codeid1  == '258' }">
         <td>
-        <input type="hidden" id="stkCode" name="stkCode" value="${orderInfo.c6}" />
-        <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
+        <input type="hidden" id="stkCode" name="stkCode" value="${orderInfo.stkCode}" />
+        <span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span>
         </td>
     </c:if>
     <th scope="row"><spring:message code='service.title.Promotion'/></th>
@@ -900,9 +931,19 @@ var gridPros = {
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td colspan="3"><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
     <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+    </td>
     <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
     <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>
+</tr>
+<tr>
+ <th id="pairCodeLbl" scope="row"><spring:message code='service.title.PairingCode' /></th>
+    <td colspan="3"><select class="w100p" id="partnerCode" name="partnerCode">
+        <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+        <c:forEach var="list" items="${dtPairList}">
+        <option value="${list.codeId}">${list.codeName}</option>
+        </c:forEach></select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

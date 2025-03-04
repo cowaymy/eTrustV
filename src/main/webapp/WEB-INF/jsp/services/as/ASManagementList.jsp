@@ -205,6 +205,12 @@
           width : 100
         },
         {
+            dataField : "partnerCode",
+            headerText : "<spring:message code='service.title.PairingCode'/>",
+            editable : false,
+            width : 100
+        },
+        {
           dataField : "brnchCode",
           headerText : "<spring:message code='service.title.ASBrch'/>",
           width : 100

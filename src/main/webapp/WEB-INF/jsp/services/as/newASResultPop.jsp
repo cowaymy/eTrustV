@@ -364,6 +364,8 @@
 		$("#ddlCTCodeText").val(result[0].c12);
 		$("#ddlCTCode").val(result[0].c11);
 		$("#CTID").val(result[0].c11);
+		$("#partnerCode").val(result[0].partnerCode);
+		$("#volt").val(result[0].volt);
 
 		$("#ddlWarehouse").val(result[0].asWhId);
 		$("#txtRemark").val(result[0].asResultRem);
@@ -1023,6 +1025,9 @@
 		$("#ddlCTCodeText").val(selectedItems[0].item.memCode);
 		$("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
+		doGetCombo('/services/getInstallCtPairByCtCode.do?ctMemCode='+ selectedItems[0].item.memCode, '', selectedItems[0].item.partnerCode, 'partnerCode', 'S', ''); //PARTNER CODE
+
+
 		if (selectedItems[0].item.asMalfuncId != "") {
 			$("#ddlErrorCode").val(selectedItems[0].item.asMalfuncId);
 			asMalfuncResnId = selectedItems[0].item.asMalfuncResnId;
@@ -1117,6 +1122,7 @@
 			$("#m15").hide();
 			$("#m16").hide();
 			$("#m28").hide();
+			$("#m30").hide();
 			break;
 		}
 	}
@@ -1351,6 +1357,19 @@
 			}else{
 			  $("#reworkProj").attr("disabled", true);
 			}
+
+		 if ($('#PROD_CAT').val() == "7760"){
+				$("#pairCodeLbl").append('<span class="must">*</span>');
+				$('#partnerCode').removeAttr("disabled").removeClass("readonly");
+				$("#m15").show();
+				$("#psiRcd").attr("disabled", false);
+				$("#m30").show();
+	            $("#volt").attr("disabled", false);
+			}else{
+				$("#pairCodeLbl").find("span").remove();
+				$("#partnerCode").attr("disabled", true);
+			}
+
 	}
 
 	function fn_openField_Cancel() {
@@ -1372,6 +1391,7 @@
 		$("#m18").hide();
 		$("#m19").hide();
 		$("#m28").hide();
+		$("#m30").hide();
 		$("#iscommission").attr("disabled", false);
 
 		$("#def_type").attr("disabled", "disabled");
@@ -1385,6 +1405,10 @@
 		$("#ntuCom").val("0");
 		$('#waterSrcType').attr("disabled", "disabled");
 		$('#reworkProj').attr("disabled", "disabled");
+
+		$("#pairCodeLbl").find("span").remove();
+		$("#partnerCode").attr("disabled", true);
+		$("#volt").attr("disabled", true);
 
 		/* document.querySelectorAll(".imageFile").forEach(res=>{
 		    res.style.display="none";
@@ -1428,6 +1452,7 @@
 		$("#m18").hide();
 		$("#m19").hide();
 		$("#m28").hide();
+		$("#m30").hide();
 
 		$("#def_type").attr("disabled", "disabled");
 		$("#def_code").attr("disabled", "disabled");
@@ -1439,6 +1464,10 @@
 		$('#ntuCom').attr("disabled", "disabled");
 		$("#ntuCom").val("0");
 		$('#waterSrcType').attr("disabled", "disabled");
+
+		$("#pairCodeLbl").find("span").remove();
+		$("#partnerCode").attr("disabled", true);
+		$("#volt").attr("disabled", true);
 
 	    /* document.querySelectorAll(".imageFile").forEach(res=>{
 	          res.style.display="none";
@@ -1491,6 +1520,9 @@
 		$('#ddlWarehouse').attr("disabled", true);
 		$('#txtRemark').attr("disabled", true);
 		$("#iscommission").attr("disabled", true);
+		$("#pairCodeLbl").find("span").remove();
+		$("#partnerCode").attr("disabled", true);
+		$("#volt").attr("disabled", true);
 
         /* document.querySelectorAll(".imageFile").forEach(res=>{
             res.style.display="none";
@@ -1638,6 +1670,8 @@
 			AS_RESULT_REM : $('#txtRemark').val(),
 			AS_MALFUNC_ID : $('#ddlErrorCode').val(),
 			AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
+			PARTNER_CODE : $('#partnerCode').val(),
+		    VOLT : $('#volt').val(),
 
 			AS_PSI : $('#psiRcd').val(),
 			AS_LPM : $('#lpmRcd').val(),
@@ -1821,6 +1855,9 @@
 		$("#iscommission").attr("disabled", true);
 		$("#psiRcd").attr("disabled", true);
 		$("#lpmRcd").attr("disabled", true);
+
+		$("#partnerCode").attr("disabled", true);
+		$("#volt").attr("disabled", true);
 
 		$("#def_type").attr("disabled", true);
 		$("#def_code").attr("disabled", true);
@@ -2007,6 +2044,16 @@
 				      		}
 				      }
 				}
+
+				if($('#PROD_CAT').val()){ // 7760 - LC Laundry Care
+			      	if ( $("#partnerCode").val() == "") {
+			          msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
+			        }
+
+			      	if ( $("#volt").val() == "") {
+			            msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+			          }
+			      }
 
 				//if ($("#waterSrcType").val() == "6676"){
 	                if (document.getElementById("imageFile1").parentElement.parentElement.querySelector("input[type=file]").files.length == 0) {
@@ -3096,7 +3143,7 @@
                         <!------------------------------------------------------------------------------
 				          Order Detail Page Include START
 				         ------------------------------------------------------------------------------->
-                         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+                       <%--   <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
                         <!------------------------------------------------------------------------------
 				        Order Detail Page Include END
 				       ------------------------------------------------------------------------------->
@@ -3215,8 +3262,14 @@
                                         <th scope="row"><spring:message code='service.grid.ErrDesc' />
                                             <span id='m8' name='m8' class="must" style="display: none" >*</span></th>
                                         <td><select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p" onChange="fn_errDescCheck()"></select></td>
-                                        <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+                                        <th id="pairCodeLbl" scope="row"><spring:message code='service.title.PairingCode' /></th>
+          								<td><select id='partnerCode' name='partnerCode' class="w100p"></select></td>
+                                    </tr>
+                                    <tr>
+                                    <th scope="row"><spring:message code='sal.title.warehouse' /></th>
                                         <td><select disabled="disabled" id='ddlWarehouse' name='ddlWarehouse' class="w100p" ></select></td>
+                                        <th scope="row"><spring:message code='service.title.Volt' /><span name="m30" id="m30" class="must">*</span></th>
+            							<td><input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><spring:message code='service.title.Remark' />

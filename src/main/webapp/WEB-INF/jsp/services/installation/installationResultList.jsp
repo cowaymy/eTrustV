@@ -232,7 +232,12 @@
       headerText : '<spring:message code="service.grid.CTCode" />',
       editable : false,
       width : 100
-    },{
+    }, {
+        dataField : "pairCode",
+        headerText : '<spring:message code="service.title.PairingCode" />',
+        editable : false,
+        width : 100
+      },{
         dataField : "",
         headerText : "Installation Note",
         width : 150,

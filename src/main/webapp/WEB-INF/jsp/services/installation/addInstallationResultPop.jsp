@@ -136,6 +136,11 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+
+        if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+        	fn_defaultMandatoryForLC(4);
+        }
+
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -176,6 +181,10 @@
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
       }
+
+        if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+        	fn_defaultMandatoryForLC(21);
+        }
      }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -292,6 +301,10 @@
             // Added to enable "Add used parts during installation" check box. Hui Ding, 09-04-2021
             $("#chkCrtAS").prop("disabled", false);
 
+            if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+            	fn_defaultMandatoryForLC(4);
+            }
+
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
@@ -334,6 +347,10 @@
             $("#addInstallForm #m16").show();
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
+
+            if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+            	fn_defaultMandatoryForLC(21);
+            }
 
             var currDtt = new Date();
             currDtt.setDate(currDtt.getDate()+1);
@@ -450,6 +467,10 @@
       }
       if ("${orderInfo.stkCtgryId}" == "55"){
           notMandatoryForAP();
+      }
+
+      if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+      	fn_defaultMandatoryForLC(4);
       }
 
       // Attachment picture
@@ -736,6 +757,16 @@
       	}else{
       		msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
       	}
+      }
+
+      if("${orderInfo.stkCtgryId}" == "7760"){ // 7760 - LC Laundry Care
+      	if ( $("#dtPairCode").val() == "") {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
+        }
+
+      	if ( $("#volt").val() == "") {
+            msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+          }
       }
 
       // Installation Accessory checking for Complete status
@@ -1847,6 +1878,61 @@
 	  function fn_popCloseCompetitor(){
 		  $('input[name="competitor"]').prop('checked', false);
       }
+
+	  function fn_defaultMandatoryForLC(status){
+		  if(status == 4){
+			  $("#m8").show();
+		      $("#psiRcd").attr("disabled", false);
+		      $("#m9").hide();
+		      $("#lpmRcd").attr("disabled", true);
+		      $("#m10").show();
+		      $("#volt").attr("disabled", false);
+		      $("#m11").hide();
+		      $("#tds").attr("disabled", true);
+		      $("#m12").hide();
+		      $("#roomTemp").attr("disabled", true);
+		      $("#m13").hide();
+		      $("#waterSourceTemp").attr("disabled", true);
+		      $("#m14").hide();
+		      $("#adptUsed").attr("disabled", true);
+		      $("#m24").hide();
+		      $("#turbLvl").attr("disabled", true);
+		      $("#addInstallForm #m28").hide();
+		      $("#addInstallForm #m29").hide();
+		      $("#ntuCom").attr("disabled", true);
+		      $("#ntuFail").attr("disabled", true);
+			  $("#pairCodeLbl").show();
+              $("#dtPairCode").show();
+              $("#pairCodeLbl").append('<span class="must">*</span>');
+              $("#addInstallForm #chkInstallAcc").prop("checked", false);
+
+		  }else{
+			  $("#m8").hide();
+		      $("#psiRcd").attr("disabled", true);
+		      $("#m9").hide();
+		      $("#lpmRcd").attr("disabled", true);
+		      $("#m10").hide();
+		      $("#volt").attr("disabled", true);
+		      $("#m11").hide();
+		      $("#tds").attr("disabled", true);
+		      $("#m12").hide();
+		      $("#roomTemp").attr("disabled", true);
+		      $("#m13").hide();
+		      $("#waterSourceTemp").attr("disabled", true);
+		      $("#m14").hide();
+		      $("#adptUsed").attr("disabled", true);
+		      $("#m24").hide();
+		      $("#turbLvl").attr("disabled", true);
+		      $("#addInstallForm #m28").hide();
+		      $("#addInstallForm #m29").hide();
+		      $("#ntuCom").attr("disabled", true);
+		      $("#ntuFail").attr("disabled", true);
+			  $("#pairCodeLbl").hide();
+		      $("#dtPairCode").hide();
+		      $("#pairCodeLbl").find("span").remove();
+		      $("#addInstallForm #chkInstallAcc").prop("checked", false);
+		  }
+	  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -1879,7 +1965,7 @@
         <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-        <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+<%--         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
         <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
@@ -2310,6 +2396,15 @@
             <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
             <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" /> <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" /></td>
           </tr>
+          <tr>
+          <th id="pairCodeLbl" scope="row"><spring:message code='service.title.PairingCode' /></th>
+      		<td colspan="3"><select class="w100p" id="dtPairCode" name="dtPairCode">
+        		<option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+            	<c:forEach var="list" items="${dtPairList}">
+                <option value="${list.codeId}">${list.codeName}</option>
+        		</c:forEach></select>
+        	</td>
+          </tr>
           <th scope="row">JomTukar<span class="must">*</span></th>
             <td colspan="3">
                  <label><input type="radio" id="jomTukar" name="jomTukar" <c:if test="${installResult.jomTukarFlag eq 'Y'}">checked</c:if> value="Y" onClick="return false"/><span>Yes</span></label>
@@ -2376,7 +2471,7 @@
           <tr>
             <th scope="row"><spring:message code='service.title.AddUsedParts' /></th>
             <td><label><input type="checkbox" id='chkCrtAS' name='chkCrtAS' onChange="fn_chkCrtAS(this)" /></label></td>
-            <th scope="row"></th>
+        	<th scope="row"></th>
             <td></td>
           <%--   <th scope="row">Mobile</th>
 	        <td>

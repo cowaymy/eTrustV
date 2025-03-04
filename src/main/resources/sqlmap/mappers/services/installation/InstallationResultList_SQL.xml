@@ -190,6 +190,7 @@
                     , SOM.SALES_ORD_NO
                     , IE.INSTALL_DT
                     , MEM.MEM_CODE
+                    , MEM2.MEM_CODE AS PAIR_CODE
                     , STK.STK_DESC
                     , SOM.CUST_ID
                     , CUST.NAME AS CUST_NAME
@@ -240,6 +241,7 @@
       LEFT JOIN SYS0013M CD2 ON CD2.CODE_ID = som.APP_TYPE_ID
       LEFT JOIN SYS0038M ST ON ST.STUS_CODE_ID = IE.STUS_CODE_ID
       LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = IE.CT_ID
+      LEFT JOIN ORG0001D MEM2 ON IR.DT_PAIR_ID = MEM2.MEM_ID
       JOIN SYS0005M BRANCH ON BRANCH.BRNCH_ID = I.BRNCH_ID
       JOIN SAL0023D CUSTADD ON CUSTADD.CUST_ADD_ID = I.ADD_ID
       JOIN SAL0029D CUST ON CUST.CUST_ID = CUSTADD.CUST_ID
@@ -5739,6 +5741,16 @@ AND J.CODE IN ('COM','FAL','CAN')
     AND ORG.STUS = 1
     AND ORG.MEM_CODE <![CDATA[<>]]> #{ctMemCode}
     AND ORG.BRNCH IN (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{ctMemCode})
+</select>
+
+<select id="getInstallCtPairByCtCode" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID AS CODE_ID,
+    MEM_CODE AS CODE_NAME
+    FROM ORG0001D
+    WHERE MEM_TYPE IN ('3')
+    AND STUS = 1
+    AND MEM_CODE <![CDATA[<>]]> #{ctMemCode}
+    AND BRNCH IN (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{ctMemCode})
 </select>
 
 <update id="updateEmailSentCount" parameterType="Map">

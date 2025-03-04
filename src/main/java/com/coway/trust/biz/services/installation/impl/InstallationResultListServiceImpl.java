@@ -4198,4 +4198,9 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     public List<EgovMap> selectCompetitorBrand() {
       return installationResultListMapper.selectCompetitorBrand();
     }
+
+    @Override
+    public List<EgovMap> getInstallCtPairByCtCode(Map<String, Object> params) {
+      return installationResultListMapper.getInstallCtPairByCtCode(params);
+    }
 }

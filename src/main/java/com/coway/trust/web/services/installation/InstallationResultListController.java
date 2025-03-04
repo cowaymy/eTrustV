@@ -327,6 +327,8 @@ public class InstallationResultListController {
 
     List<EgovMap> competitorBrand = installationResultListService.selectCompetitorBrand(); //COMPETITOR BRAND [CELESTE: 20240814 - JOMTUKAR ]
 
+    List<EgovMap> dtPairList = installationResultListService.getInstallCtPairByCtCode(installResult);
+
     params.put("ststusCodeId", 1);
     params.put("reasonTypeId", 172);
 
@@ -437,6 +439,7 @@ public class InstallationResultListController {
     model.addAttribute("waterSrcType", waterSrcType);
     // model.addAttribute("customerAddress", customerAddress);
     model.addAttribute("competitorBrand", competitorBrand);
+    model.addAttribute("dtPairList", dtPairList);
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
@@ -497,6 +500,7 @@ public class InstallationResultListController {
     EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
     EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
     EgovMap orderInfo = null;
+    List<EgovMap> dtPairList = installationResultListService.getInstallCtPairByCtCode(installResult);
 
     if (params.get("codeId").toString().equals("258")) {
       orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
@@ -609,6 +613,7 @@ public class InstallationResultListController {
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
     model.addAttribute("promotionView", promotionView);
     model.addAttribute("waterSrcType", waterSrcType);
+    model.addAttribute("dtPairList", dtPairList);
 
     return "services/installation/addInstallationResultProductDetailPop";
   }
@@ -1919,6 +1924,14 @@ public class InstallationResultListController {
     List<EgovMap> competitorBrand = installationResultListService.selectCompetitorBrand();
 
     return ResponseEntity.ok(competitorBrand);
+  }
+
+  @RequestMapping(value = "/getInstallCtPairByCtCode.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getInstallCtPairByCtCode(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model) throws Exception {
+
+    List<EgovMap> list  = installationResultListService.getInstallCtPairByCtCode(params);
+      return ResponseEntity.ok(list);
   }
 
 }

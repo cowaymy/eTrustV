@@ -67,9 +67,9 @@ var installAccTypeId = 582;
               $("#addInstallForm #m28").show();
               $("#ntuCom").attr("disabled", false);
             } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
-            	$("#addInstallForm #m28").show();
-                $("#ntuCom").attr("disabled", false);
-            } else {
+              $("#addInstallForm #m28").show();
+              $("#ntuCom").attr("disabled", false);
+            }else {
               $("#addInstallForm #m17").hide();
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
@@ -80,6 +80,11 @@ var installAccTypeId = 582;
 
             }
             $("#nextCallDate").val("");
+
+            if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+              	fn_defaultMandatoryForLC(4);
+              }
+
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
@@ -120,6 +125,10 @@ var installAccTypeId = 582;
             $("#addInstallForm #m16").show();
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
+
+            if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+              	fn_defaultMandatoryForLC(21);
+              }
 
             var currDt = new Date(),
             month = '' + (currDt.getMonth()+1),
@@ -257,6 +266,10 @@ var installAccTypeId = 582;
           $("#addInstallForm #instChklstDesc").show();
         }
 
+        if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+          	fn_defaultMandatoryForLC(21);
+          }
+
       } else {
         $("#addInstallForm #m8").show();
         $("#addInstallForm #m9").show();
@@ -285,6 +298,10 @@ var installAccTypeId = 582;
           $("#addInstallForm #instChklstCheckBox").show();
           $("#addInstallForm #instChklstDesc").show();
         }
+
+        if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+          	fn_defaultMandatoryForLC(4);
+          }
 
       }
 
@@ -357,9 +374,9 @@ var installAccTypeId = 582;
                $("#addInstallForm #m28").show();
                $("#ntuCom").attr("disabled", false);
              } else if("${orderInfo.stkCtgryId}" == "400"){ // POE
-                 $("#addInstallForm #m28").show();
-                 $("#ntuCom").attr("disabled", false);
-             }else {
+               $("#addInstallForm #m28").show();
+               $("#ntuCom").attr("disabled", false);
+             } else {
                $("#addInstallForm #m17").hide();
                $("#addInstallForm #grid_wrap_instChk_view").hide();
                $("#addInstallForm #instChklstCheckBox").hide();
@@ -369,6 +386,10 @@ var installAccTypeId = 582;
                $("#ntuCom").val("0");
              }
              $("#nextCallDate").val("");
+
+             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+               	fn_defaultMandatoryForLC(4);
+               }
 
            } else {
              notMandatoryForAP()
@@ -407,6 +428,10 @@ var installAccTypeId = 582;
              $("#addInstallForm #m16").show();
              $("#addInstallForm #failDeptChk").show();
              $("#addInstallForm #failDeptChkDesc").show();
+
+             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+               	fn_defaultMandatoryForLC(21);
+               }
 
              var currDt = new Date(),
              month = '' + (currDt.getMonth()+1),
@@ -506,6 +531,10 @@ var installAccTypeId = 582;
         if ("${orderInfo.stkCtgryId}" == "55"){
             notMandatoryForAP();
         }
+
+        if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+          	fn_defaultMandatoryForLC(4);
+          }
 
         // Attachment picture
         $('#attch1').change(function(evt) {
@@ -713,6 +742,15 @@ var installAccTypeId = 582;
         	}else{
         		msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
         	}
+        }
+
+      if("${orderInfo.stkCtgryId}" == "7760"){ // 7760 - LC Laundry Care
+         	if ( $("#dtPairCode").val() == "") {
+            	msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
+          	}
+        	if ( $("#volt").val() == "") {
+                msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+            }
         }
 
    // Installation Accessory checking for Complete status
@@ -1289,6 +1327,60 @@ var installAccTypeId = 582;
 		    }
 		  }
 
+	  function fn_defaultMandatoryForLC(status){
+		  if(status == 4){
+			  $("#m8").show();
+		      $("#psiRcd").attr("disabled", false);
+		      $("#m9").hide();
+		      $("#lpmRcd").attr("disabled", true);
+		      $("#m10").show();
+		      $("#volt").attr("disabled", false);
+		      $("#m11").hide();
+		      $("#tds").attr("disabled", true);
+		      $("#m12").hide();
+		      $("#roomTemp").attr("disabled", true);
+		      $("#m13").hide();
+		      $("#waterSourceTemp").attr("disabled", true);
+		      $("#m14").hide();
+		      $("#adptUsed").attr("disabled", true);
+		      $("#m24").hide();
+		      $("#turbLvl").attr("disabled", true);
+		      $("#addInstallForm #m28").hide();
+		      $("#addInstallForm #m29").hide();
+		      $("#ntuCom").attr("disabled", true);
+		      $("#ntuFail").attr("disabled", true);
+			  $("#pairCodeLbl").show();
+              $("#dtPairCode").show();
+              $("#pairCodeLbl").append('<span class="must">*</span>');
+              $("#addInstallForm #chkInstallAcc").prop("checked", false);
+
+		  }else{
+			  $("#m8").hide();
+		      $("#psiRcd").attr("disabled", true);
+		      $("#m9").hide();
+		      $("#lpmRcd").attr("disabled", true);
+		      $("#m10").hide();
+		      $("#volt").attr("disabled", true);
+		      $("#m11").hide();
+		      $("#tds").attr("disabled", true);
+		      $("#m12").hide();
+		      $("#roomTemp").attr("disabled", true);
+		      $("#m13").hide();
+		      $("#waterSourceTemp").attr("disabled", true);
+		      $("#m14").hide();
+		      $("#adptUsed").attr("disabled", true);
+		      $("#m24").hide();
+		      $("#turbLvl").attr("disabled", true);
+		      $("#addInstallForm #m28").hide();
+		      $("#addInstallForm #m29").hide();
+		      $("#ntuCom").attr("disabled", true);
+		      $("#ntuFail").attr("disabled", true);
+			  $("#pairCodeLbl").hide();
+		      $("#dtPairCode").hide();
+		      $("#pairCodeLbl").find("span").remove();
+		      $("#addInstallForm #chkInstallAcc").prop("checked", false);
+		  }
+	  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -1474,7 +1566,7 @@ var installAccTypeId = 582;
      <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-     <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+<%--      <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
      <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
@@ -2434,11 +2526,21 @@ var installAccTypeId = 582;
       <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>"
        placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" />
        <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
+       </td>
        <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
        <%-- <th scope="row"><spring:message code='service.title.CTName' /></th>
               <td><input type="text" title="" placeholder=""
                 class="readonly w100p" readonly="readonly" id="ctName"
                 name="ctName" /></td> --%>
+     </tr>
+     <tr>
+     <th id="pairCodeLbl" scope="row"><spring:message code='service.title.PairingCode' /></th>
+      		<td colspan="3"><select class="w100p" id="dtPairCode" name="dtPairCode">
+        		<option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+            	<c:forEach var="list" items="${dtPairList}">
+                <option value="${list.codeId}">${list.codeName}</option>
+        		</c:forEach></select>
+        	</td>
      </tr>
      <tr>
             <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>

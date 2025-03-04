@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -403,6 +404,15 @@ public class OrderListController {
 		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
 		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
 		EgovMap pRCtInfo =orderListService.getPrCTInfo(params);
+
+
+		if(pRCtInfo != null && !pRCtInfo.isEmpty()){
+		  params.put("ctMemCode", pRCtInfo.get("memCode"));
+		  List<EgovMap> dtPairList = installationResultListService.getInstallCtPairByCtCode(params);
+		  model.addAttribute("dtPairList", dtPairList);
+		}else{
+		  model.addAttribute("dtPairList", Collections.emptyList());
+		}
 		//if(params.get("codeId").toString().equals("258")){
 
 		//}
@@ -519,6 +529,7 @@ public class OrderListController {
           cvMp.put("productId",  params.get("hidProductId"));
           cvMp.put("categoryId",  params.get("hidCategoryId"));
           cvMp.put("brnchId",  sessionVO.getUserBranchId());
+          cvMp.put("partnerCode",  CommonUtils.intNvl((params.get("partnerCode"))));
 
           //INSERT SMS FOR APPOINTMENT - KEYI - 2022/01/12
           cvMp.put("soReqCurStusId",  String.valueOf(pReturnParam.get("soReqCurStusId"))); //REQ_STAGE_ID

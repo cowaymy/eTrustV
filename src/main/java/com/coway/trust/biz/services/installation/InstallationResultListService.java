@@ -166,4 +166,6 @@ public interface InstallationResultListService {
 
   List<EgovMap> selectCompetitorBrand();
 
+  List<EgovMap> getInstallCtPairByCtCode(Map<String, Object> params);
+
 }
