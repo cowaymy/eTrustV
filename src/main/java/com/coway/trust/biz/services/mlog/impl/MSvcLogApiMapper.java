@@ -3,8 +3,6 @@ package com.coway.trust.biz.services.mlog.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -157,10 +155,8 @@ public interface MSvcLogApiMapper {
 
   void insertInsFailServiceLog(Map<String, Object> params);
 
-  /* Woongjin Jun */
   void updateInsFailServiceLog(int resultSeq);
 
-  /* ProductReturnResult API */
   int updateState_LOG0038D(Map<String, Object> params);
 
   int updateState_SAL0001D(Map<String, Object> params);
@@ -207,7 +203,6 @@ public interface MSvcLogApiMapper {
 
   List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params);
 
-  // call SP_RETURN_BILLING_EARLY_TERMI( #{ORD_ID},#{USER_ID},#{SERVICE_NO} )
   void SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params);
 
   String getInstallDate(Map<String, Object> insApiresult);
@@ -250,7 +245,6 @@ public interface MSvcLogApiMapper {
 
   List<EgovMap> getCareServiceParts_b(Map<String, Object> params);
 
-  /* Woongjin Jun */
   List<EgovMap> getCareServiceJobList(Map<String, Object> params);
 
   List<EgovMap> getHcServiceJobList(Map<String, Object> params);
@@ -286,11 +280,8 @@ public interface MSvcLogApiMapper {
   EgovMap getPrFraOrdInfo(Map<String, Object> params);
 
   String getBeforeProductSerialNo(Map<String, Object> params);
-  /* Woongjin Jun */
 
-  /* Woongjin han */
   EgovMap getDelvryNo(Map<String, Object> params);
-  /* Woongjin han */
 
   List<EgovMap> getRelateOrdLst(Map<String, Object> params);
 
