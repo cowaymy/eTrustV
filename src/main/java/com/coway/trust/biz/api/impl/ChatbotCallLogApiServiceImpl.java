@@ -367,7 +367,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				if (installMaster != null && callEntId > 0) {
 					// PRE INSERT INSTALL ENTRY
 					installMaster.put("installEntryId", chatbotCallLogApiMapper.installEntryIdSeq());
-					installMaster.put("installEntryNo", nextDocNo);
+					installMaster.put("installEntryNo", installNo.get("docNo"));
 					installMaster.put("salesOrderId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
 					installMaster.put("statusCodeId", 1);
 					installMaster.put("CTID", CommonUtils.nvl(firstAvailUser.get("ct")));
