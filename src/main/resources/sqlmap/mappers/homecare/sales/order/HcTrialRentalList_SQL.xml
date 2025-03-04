@@ -698,7 +698,6 @@
 		        SOM.NOR_RNT_FEE,
 		        B.SRV_CNTRCT_PAC_DUR
 		    FROM SAL0001D som
-		        -- JOIN SAL0070D i   ON som.SALES_ORD_ID = i.SALES_ORD_ID
 		        JOIN SAL0081D B ON B.SRV_CNTRCT_PAC_ID = som.SRV_PAC_ID
 		        JOIN SAL0046D ie   ON ie.SALES_ORD_ID = som.SALES_ORD_ID
 		        AND ie.STUS_CODE_ID = 4
