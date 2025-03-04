@@ -62,6 +62,7 @@
           , extent1.WA_STUS_CODE_ID
           , extent1.WA_STUS_CODE
           , extent1.WA_STUS_DESC
+          , extent1.WA_REMARKS
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
                    , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -111,6 +112,7 @@
                    , vCallLogOrderCall.WA_STUS_CODE_ID
                    , vCallLogOrderCall.WA_STUS_CODE
                    , vCallLogOrderCall.WA_STUS_DESC
+                   , vCallLogOrderCall.WA_REMARKS
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
            <if test="branchTypeId != null and branchTypeId != ''">
@@ -1089,12 +1091,19 @@
      </select>
 
         <update id="updateCallLogAppointmentSentStatus" parameterType="Map">
-        	UPDATE CBT0007M SET STUS_CODE_ID = #{stusCodeId} WHERE CALL_ENTRY_ID = #{callEntryId}
+        	UPDATE CBT0007M SET STUS_CODE_ID = #{stusCodeId}
+			<if test='waRemarks != null and waRemarks !=""'>
+				,WA_REMARKS = #{waRemarks}
+			</if>
+        	WHERE CALL_ENTRY_ID = #{callEntryId}
         </update>
 
         <update id="updateCCR0006DCallLogAppointmentSentStatus" parameterType="Map">
 	        UPDATE CCR0006D SET
 	        WA_STUS_CODE_ID = #{stusCodeId}
+			<if test='waRemarks != null and waRemarks !=""'>
+				,WA_REMARKS = #{waRemarks}
+			</if>
 	        WHERE CALL_ENTRY_ID = #{callEntryId}
         </update>
 

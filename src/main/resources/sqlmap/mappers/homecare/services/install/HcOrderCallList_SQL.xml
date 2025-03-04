@@ -302,6 +302,7 @@
         , Extent1.WA_STUS_CODE_ID
         , Extent1.WA_STUS_CODE
         , Extent1.WA_STUS_DESC
+        , Extent1.WA_REMARKS
 		FROM (
             SELECT
 		      vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
@@ -356,6 +357,7 @@
 				, vCallLogOrderCall.WA_STUS_CODE_ID
 				, vCallLogOrderCall.WA_STUS_CODE
 				, vCallLogOrderCall.WA_STUS_DESC
+				, vCallLogOrderCall.WA_REMARKS
 		FROM CCR1002V vCallLogOrderCall
 		<!-- Added by Wawa  20230619-->
         JOIN CCR0006D callog ON callog.call_entry_id  = (SELECT MIN(CALL_ENTRY_ID) FROM CCR0006D WHERE CCR0006D.SALES_ORD_ID = vcalllogordercall.SALES_ORD_ID GROUP BY CCR0006D.SALES_ORD_ID)

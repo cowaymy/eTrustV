@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
@@ -918,11 +919,17 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	            		String cbtUrl = CBTApiDomains + CBTApiUrlCallLogAppointmentReq;
 	                    cbtApiParams.put("jsonString", json);
 	                    cbtApiParams.put("cbtUrl", cbtUrl);
-	                    cbtCallLogReqApi(cbtApiParams);
+	                    Map<String,Object> result = cbtCallLogReqApi(cbtApiParams);
 
+	                    if(result != null){
+		      		      	message.setMessage(CommonUtils.nvl(result.get("responseMessage")));
+		      		      	message.setCode(CommonUtils.nvl(result.get("responseCode")));
+	                    }
+	                    else{
+		      		      	message.setMessage("Success");
+		      		      	message.setCode("00");
+	                    }
 
-	      		      	message.setMessage("Success");
-	      		      	message.setCode("00");
 					}catch (Exception e) {
 					      message.setMessage("Unexpected Error Occurs.");
 					      message.setCode("99");
@@ -1007,6 +1014,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 									/*Success send*/
 									updateRecord.put("stusCodeId", 44); //Pending Next Step
 									updateRecord.put("callEntryId", result.getRequestId());
+									updateRecord.put("waRemarks","Whatsapp appointment sent.");
 
 									orderCallListMapper.updateCallLogAppointmentSentStatus(updateRecord);
 									orderCallListMapper.updateCCR0006DCallLogAppointmentSentStatus(updateRecord);
@@ -1015,6 +1023,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 									/*Fail send*/
 									updateRecord.put("stusCodeId", 21);
 									updateRecord.put("callEntryId", result.getRequestId());
+									updateRecord.put("waRemarks","Whatsapp appointment send failed.");
 
 									orderCallListMapper.updateCallLogAppointmentSentStatus(updateRecord);
 									orderCallListMapper.updateCCR0006DCallLogAppointmentSentStatus(updateRecord);
@@ -1039,10 +1048,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 					resultValue.put("message", "No Response");
 				}
 			}catch(Exception e){
-				p.setErrorCode(405);
+				p.setErrorCode(99);
 				p.setSuccess(false);
-				resultValue.put("status", 405);
-				resultValue.put("message", "Time Out");
+				resultValue.put("status", AppConstants.FAIL);
+				resultValue.put("message", !CommonUtils.isEmpty(e.getMessage()) ? e.getMessage() : "Failed to get info.");
 			}finally{
 		          stopWatch.stop();
 		          respTm = stopWatch.toString();

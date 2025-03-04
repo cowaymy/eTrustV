@@ -13,7 +13,7 @@
 	<update id="updateCBT0007MStatus" parameterType="Map" >
 		UPDATE CBT0007M
 		SET STUS_CODE_ID = #{stusCodeId}
-		<if test='remarks != null and remarks !=""'>
+		<if test='waRemarks != null and waRemarks !=""'>
 			,REMARKS = #{waRemarks}
 		</if>
 		WHERE
@@ -24,6 +24,9 @@
 	<update id="updateCCR0006DStatus" parameterType="Map" >
 		UPDATE CCR0006D
 		SET WA_STUS_CODE_ID = #{stusCodeId}
+		<if test='waRemarks != null and waRemarks !=""'>
+			,WA_REMARKS = #{waRemarks}
+		</if>
 		WHERE
 		CALL_ENTRY_ID = #{requestId}
 	</update>
@@ -353,6 +356,9 @@
 		                  , UPD_USER_ID = #{updUserId}
 		                  , CALL_DT = TO_DATE(#{callDt},'DD/MM/YYYY')
 		                  , WA_STUS_CODE_ID = #{waStusCodeId}
+		                  <if test='waRemarks != null and waRemarks !=""'>
+							,WA_REMARKS = #{waRemarks}
+						  </if>
 		WHERE ( CALL_ENTRY_ID = #{callEntryId} )
 	</update>
 

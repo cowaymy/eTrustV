@@ -73,10 +73,10 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			updateParam.put("requestId", params.getRequestId());
 			updateParam.put("ordNo", params.getOrderNo());
 			updateParam.put("stusCodeId", 134);
-			updateParam.put("waRemarks", "Customer Detail Incorrect Upon Verification");
+			updateParam.put("waRemarks", "The order details is incorrect during WA verification. Sales person please follow up with customer.");
 
 			chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
-			chatbotCallLogApiMapper.updateCCR0006DStatus(updateParam);
+//			chatbotCallLogApiMapper.updateCCR0006DStatus(updateParam);
 
 			EgovMap searchParam = new EgovMap();
 			searchParam.put("callEntryId", params.getRequestId());
@@ -98,7 +98,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			callDetails.put("callActionDate", "");
 			callDetails.put("callFeedBackId", feedbackStusId);
 			callDetails.put("callCTId",  null);
-			callDetails.put("callRemark", "WA Customer feedback the order details is incorrect during WA verification. Sales person please follow up with the customer.");
+			callDetails.put("callRemark", "The order details is incorrect during WA verification. Sales person please follow up with customer");
 			callDetails.put("callCreateBy", 349);
 			callDetails.put("callCreateAt", new Date());
 			callDetails.put("callCreateByDept", 0);
@@ -119,6 +119,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			callEntry.put("updDt", new Date());
 			callEntry.put("updUserId", 349);
 			callEntry.put("waStusCodeId", 134); // Incorrect detail
+			callEntry.put("waRemarks", "The order details is incorrect during WA verification. Sales person please follow up with customer");
 
 			chatbotCallLogApiMapper.updateCallEntry(callEntry);
 			//
@@ -324,7 +325,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 //					EgovMap updateParam = new EgovMap();
 //					updateParam.put("requestId", params.getRequestId());
 //					updateParam.put("ordNo", params.getOrderNo());
-//					updateParam.put("stusCodeId", 21);
+//					updateParam.put("stusCodeId", 134);
 //					updateParam.put("waRemarks","Whatsapp Appointment lack of stock to proceed.");
 //
 //					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
@@ -459,6 +460,7 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					callEntry.put("updDt", new Date());
 					callEntry.put("updUserId", 349);
 					callEntry.put("oriCallDt", CommonUtils.nvl(orderInfo.get("oriCallDt")));
+					callEntry.put("waRemarks","Whatsapp appointment confirmed.");
 					callEntry.put("waStusCodeId", 4); // Complete WA
 
 					chatbotCallLogApiMapper.updateCallEntry(callEntry);
