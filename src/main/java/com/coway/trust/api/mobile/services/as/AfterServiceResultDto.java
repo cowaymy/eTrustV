@@ -2,8 +2,6 @@ package com.coway.trust.api.mobile.services.as;
 
 import java.util.Map;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
-import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.util.CommonUtils;
 
 import io.swagger.annotations.ApiModel;
@@ -13,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class AfterServiceResultDto {
   @ApiModelProperty(value = "결과값")
   private String transactionId;
+
   private String status;
 
   public String getTransactionId() {
@@ -39,8 +38,8 @@ public class AfterServiceResultDto {
 
   public static AfterServiceResultDto create( Map<String, Object> rtnResultMap ) {
     AfterServiceResultDto dto = new AfterServiceResultDto();
-    dto.setTransactionId( CommonUtils.nvl(rtnResultMap.get( "result" )) );
-    dto.setStatus( CommonUtils.nvl(rtnResultMap.get( "status" )) );
+    dto.setTransactionId( CommonUtils.nvl( rtnResultMap.get( "result" ) ) );
+    dto.setStatus( CommonUtils.nvl( rtnResultMap.get( "status" ) ) );
     return dto;
   }
 }
