@@ -137,6 +137,7 @@
           $("#addInstallForm #instChklstDesc").show();
         }
 
+        $("#dtPairCode").attr("disabled", true);
         if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
         	fn_defaultMandatoryForLC(4);
         }
@@ -182,6 +183,7 @@
           $("#addInstallForm #instChklstDesc").show();
       }
 
+        $("#dtPairCode").attr("disabled", true);
         if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
         	fn_defaultMandatoryForLC(21);
         }
@@ -301,6 +303,7 @@
             // Added to enable "Add used parts during installation" check box. Hui Ding, 09-04-2021
             $("#chkCrtAS").prop("disabled", false);
 
+            $("#dtPairCode").attr("disabled", true);
             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
             	fn_defaultMandatoryForLC(4);
             }
@@ -348,6 +351,7 @@
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
 
+            $("#dtPairCode").attr("disabled", true);
             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
             	fn_defaultMandatoryForLC(21);
             }
@@ -469,6 +473,7 @@
           notMandatoryForAP();
       }
 
+      $("#dtPairCode").attr("disabled", true);
       if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
       	fn_defaultMandatoryForLC(4);
       }
@@ -763,6 +768,10 @@
       	if ( $("#dtPairCode").val() == "") {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
         }
+
+      	if ( $("#psiRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          }
 
       	if ( $("#volt").val() == "") {
             msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
@@ -1896,13 +1905,14 @@
 		      $("#m14").hide();
 		      $("#adptUsed").attr("disabled", true);
 		      $("#m24").hide();
+		      $("#m18").hide();
+		      $("#waterSrcType").attr("disabled", true);
 		      $("#turbLvl").attr("disabled", true);
 		      $("#addInstallForm #m28").hide();
 		      $("#addInstallForm #m29").hide();
 		      $("#ntuCom").attr("disabled", true);
 		      $("#ntuFail").attr("disabled", true);
-			  $("#pairCodeLbl").show();
-              $("#dtPairCode").show();
+		      $("#dtPairCode").attr("disabled", false);
               $("#pairCodeLbl").append('<span class="must">*</span>');
               $("#addInstallForm #chkInstallAcc").prop("checked", false);
 
@@ -1922,13 +1932,14 @@
 		      $("#m14").hide();
 		      $("#adptUsed").attr("disabled", true);
 		      $("#m24").hide();
+		      $("#m18").hide();
+		      $("#waterSrcType").attr("disabled", true);
 		      $("#turbLvl").attr("disabled", true);
 		      $("#addInstallForm #m28").hide();
 		      $("#addInstallForm #m29").hide();
 		      $("#ntuCom").attr("disabled", true);
 		      $("#ntuFail").attr("disabled", true);
-			  $("#pairCodeLbl").hide();
-		      $("#dtPairCode").hide();
+		      $("#dtPairCode").attr("disabled", true);
 		      $("#pairCodeLbl").find("span").remove();
 		      $("#addInstallForm #chkInstallAcc").prop("checked", false);
 		  }

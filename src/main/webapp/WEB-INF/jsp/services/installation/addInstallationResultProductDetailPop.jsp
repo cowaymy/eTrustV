@@ -80,7 +80,7 @@ var installAccTypeId = 582;
 
             }
             $("#nextCallDate").val("");
-
+			$("#dtPairCode").attr("disabled", true);
             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
               	fn_defaultMandatoryForLC(4);
               }
@@ -126,6 +126,7 @@ var installAccTypeId = 582;
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
 
+			$("#dtPairCode").attr("disabled", true);
             if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
               	fn_defaultMandatoryForLC(21);
               }
@@ -266,6 +267,7 @@ var installAccTypeId = 582;
           $("#addInstallForm #instChklstDesc").show();
         }
 
+		$("#dtPairCode").attr("disabled", true);
         if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
           	fn_defaultMandatoryForLC(21);
           }
@@ -299,6 +301,7 @@ var installAccTypeId = 582;
           $("#addInstallForm #instChklstDesc").show();
         }
 
+        $("#dtPairCode").attr("disabled", true);
         if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
           	fn_defaultMandatoryForLC(4);
           }
@@ -387,6 +390,7 @@ var installAccTypeId = 582;
              }
              $("#nextCallDate").val("");
 
+             $("#dtPairCode").attr("disabled", true);
              if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
                	fn_defaultMandatoryForLC(4);
                }
@@ -429,6 +433,7 @@ var installAccTypeId = 582;
              $("#addInstallForm #failDeptChk").show();
              $("#addInstallForm #failDeptChkDesc").show();
 
+             $("#dtPairCode").attr("disabled", true);
              if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
                	fn_defaultMandatoryForLC(21);
                }
@@ -532,6 +537,7 @@ var installAccTypeId = 582;
             notMandatoryForAP();
         }
 
+        $("#dtPairCode").attr("disabled", true);
         if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
           	fn_defaultMandatoryForLC(4);
           }
@@ -748,6 +754,9 @@ var installAccTypeId = 582;
          	if ( $("#dtPairCode").val() == "") {
             	msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
           	}
+         	if ( $("#psiRcd").val() == "") {
+                msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+              }
         	if ( $("#volt").val() == "") {
                 msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
             }
@@ -1349,8 +1358,7 @@ var installAccTypeId = 582;
 		      $("#addInstallForm #m29").hide();
 		      $("#ntuCom").attr("disabled", true);
 		      $("#ntuFail").attr("disabled", true);
-			  $("#pairCodeLbl").show();
-              $("#dtPairCode").show();
+		      $("#dtPairCode").attr("disabled", false);
               $("#pairCodeLbl").append('<span class="must">*</span>');
               $("#addInstallForm #chkInstallAcc").prop("checked", false);
 
@@ -1375,8 +1383,7 @@ var installAccTypeId = 582;
 		      $("#addInstallForm #m29").hide();
 		      $("#ntuCom").attr("disabled", true);
 		      $("#ntuFail").attr("disabled", true);
-			  $("#pairCodeLbl").hide();
-		      $("#dtPairCode").hide();
+		      $("#dtPairCode").attr("disabled", true);
 		      $("#pairCodeLbl").find("span").remove();
 		      $("#addInstallForm #chkInstallAcc").prop("checked", false);
 		  }

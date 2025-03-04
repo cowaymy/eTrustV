@@ -2045,13 +2045,20 @@
 				      }
 				}
 
-				if($('#PROD_CAT').val()){ // 7760 - LC Laundry Care
-			      	if ( $("#partnerCode").val() == "") {
-			          msg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
-			        }
+				if($('#PROD_CAT').val() == "7760"){ // 7760 - LC Laundry Care
+			      	/* if ( $("#partnerCode").val() == "") {
+			          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Pairing Code' htmlEscape='false'/> </br>";
+						rtnValue = false;
+			        } */
 
-			      	if ( $("#volt").val() == "") {
-			            msg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+			        if (FormUtil.checkReqValue($("#psiRcd"))) {
+						rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+						rtnValue = false;
+					}
+
+			      	if (FormUtil.checkReqValue($("#volt"))) {
+			      		rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Voltage' htmlEscape='false'/> </br>";
+						rtnValue = false;
 			          }
 			      }
 
