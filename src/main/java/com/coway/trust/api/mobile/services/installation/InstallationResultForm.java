@@ -4,412 +4,203 @@ import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
-import com.coway.trust.api.mobile.services.ServiceApiController;
-import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
-import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModelProperty;
 
 public class InstallationResultForm {
-  private static final Logger LOGGER = LoggerFactory.getLogger( InstallationResultForm.class );
-
-  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
-  private String userId;
-
-  @ApiModelProperty(value = "주문번호")
-  private int salesOrderNo;
-
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
-  private String serviceNo;
-
-  @ApiModelProperty(value = "sirim 코드")
-  private String sirimNo;
-
-  @ApiModelProperty(value = "serial 코드")
-  private String serialNo;
-
-  @ApiModelProperty(value = "before INST 교체여부")
-  private String asExchangeYN;
-
-  @ApiModelProperty(value = "before INST 교체제품 SN")
-  private String beforeProductSerialNo;
-
-  @ApiModelProperty(value = "결과 등록 메모")
-  private String resultRemark;
-
-  @ApiModelProperty(value = "결과 등록시, Owner Code")
-  private int ownerCode;
-
-  @ApiModelProperty(value = "결과 등록시, Cust Name")
-  private String resultCustName;
-
-  @ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
-  private String resultIcMobileNo;
-
-  @ApiModelProperty(value = "결과 등록시, Email_No")
-  private String resultReportEmailNo;
-
-  @ApiModelProperty(value = "결과 등록시, Acceptance Name")
-  private String resultAcceptanceName;
-
-  @ApiModelProperty(value = "base64 Data")
-  private String signData;
-
-  @ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
-  private String transactionId;
-
-  private String signRegDate;
-
-  private String signRegTime;
-
-  private String checkInDate;
-
-  private String checkInTime;
-
-  private String checkInGps;
-
-  private String scanSerial;
-
-  private String fraSerialNo;
-
-  private String serialRequireChkYn;
-
-  private String psiRcd;
-
-  private String lpmRcd;
-
-  private String volt;
-
-  private String tds;
-
-  private String roomTemp;
-
-  private String waterSourceTemp;
-
-  private String adptUsed;
-
-  private String instChklstCheckBox;
-
-  private String instNoteChk;
-
-  private String boosterPump;
-
-  private String aftPsi;
-
-  private String aftLpm;
-
-  private String turbLvl;
-
-  private String ntu;
-
-  private String competitor;
-
-  private String competitorBrand;
-
-  private String waterSrcType;
-
-  private String chkCrtAs;
-
-  private String chkSms;
-
-  private String checkSend;
-
-  private String custMobileNo;
-
-  private String customerType;
-
-  private String partnerCode;
-
-  private String memCode;
-
-  private String type;
-
-  private int insAccPartId;
-
-  private String chkInstallAcc;
-
-  private String dispComm;
-
+  // private static final Logger LOGGER = LoggerFactory.getLogger( InstallationResultForm.class );
   @ApiModelProperty(value = "installAccList")
   private List<InstallationResultDetailForm> installAccList;
 
   @ApiModelProperty(value = "partList")
   private List<InstallationResultDetailForm> partList;
 
-  public String getChkInstallAcc() {
-    return chkInstallAcc;
-  }
+  @ApiModelProperty(value = "USER ID")
+  private String userId;
+
+  @ApiModelProperty(value = "SALES ORDER NO")
+  private int salesOrderNo;
+
+  @ApiModelProperty(value = "INSTALLATION NO")
+  private String serviceNo;
+
+  @ApiModelProperty(value = "PRODUCT SIRIM NO")
+  private String sirimNo;
+
+  @ApiModelProperty(value = "PRODUCT SERIAL NO")
+  private String serialNo;
+
+  @ApiModelProperty(value = "AS EXCHANGE INDICATOR")
+  private String asExchangeYN;
+
+  @ApiModelProperty(value = "BEFORE PRODUCT SERIAL NO")
+  private String beforeProductSerialNo;
+
+  @ApiModelProperty(value = "RESULT REMARK")
+  private String resultRemark;
+
+  @ApiModelProperty(value = "OWNER CODE")
+  private int ownerCode;
+
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
+  private String resultCustName;
+
+  @ApiModelProperty(value = "RESULT MOBILE NO")
+  private String resultIcMobileNo;
+
+  @ApiModelProperty(value = "RESULT EMAIL ADDRESS")
+  private String resultReportEmailNo;
+
+  @ApiModelProperty(value = "REUSLT ACCEPTANCE NAME")
+  private String resultAcceptanceName;
+
+  @ApiModelProperty(value = "BASE 64 SIGNATURE")
+  private String signData;
+
+  @ApiModelProperty(value = "TRANSACTION")
+  private String transactionId;
+
+  @ApiModelProperty(value = "SIGNATURE REGISTER DATE")
+  private String signRegDate;
+
+  @ApiModelProperty(value = "SIGNATURE REGISTER TIME")
+  private String signRegTime;
+
+  @ApiModelProperty(value = "CHECK IN DATE")
+  private String checkInDate;
+
+  @ApiModelProperty(value = "CHECK IN TIME")
+  private String checkInTime;
+
+  @ApiModelProperty(value = "CHECK IN GPS")
+  private String checkInGps;
+
+  @ApiModelProperty(value = "SCAN SERIAL INDICATOR")
+  private String scanSerial;
+
+  @ApiModelProperty(value = "FRAME SERIAL NO")
+  private String fraSerialNo;
+
+  @ApiModelProperty(value = "REQUIRE SERIAL CHECK INDICATOR")
+  private String serialRequireChkYn;
+
+  @ApiModelProperty(value = "PSI")
+  private String psiRcd;
+
+  @ApiModelProperty(value = "LPM")
+  private String lpmRcd;
+
+  @ApiModelProperty(value = "VOLTAGE")
+  private String volt;
+
+  @ApiModelProperty(value = "TDS")
+  private String tds;
+
+  @ApiModelProperty(value = "ROOM TEMP")
+  private String roomTemp;
+
+  @ApiModelProperty(value = "WATER SOURCE TEMP")
+  private String waterSourceTemp;
+
+  @ApiModelProperty(value = "USED ADAPTER")
+  private String adptUsed;
+
+  @ApiModelProperty(value = "INSTALLATION CHECK LIST INDICATOR")
+  private String instChklstCheckBox;
+
+  @ApiModelProperty(value = "INSTALLATION AGGREMENT CHECK LIST INDICATOR")
+  private String instNoteChk;
+
+  @ApiModelProperty(value = "BOOSTER PUMP")
+  private String boosterPump;
+
+  @ApiModelProperty(value = "AFTER PSI")
+  private String aftPsi;
+
+  @ApiModelProperty(value = "AFTER LPM")
+  private String aftLpm;
+
+  @ApiModelProperty(value = "TURBITY LEVEL")
+  private String turbLvl;
+
+  @ApiModelProperty(value = "NTU")
+  private String ntu;
+
+  @ApiModelProperty(value = "COMPETITOR")
+  private String competitor;
+
+  @ApiModelProperty(value = "COMPETITOR BRAND")
+  private String competitorBrand;
+
+  @ApiModelProperty(value = "WATER SOURCE TYPE")
+  private String waterSrcType;
+
+  @ApiModelProperty(value = "CREATE AS INDICATOR")
+  private String chkCrtAs;
+
+  @ApiModelProperty(value = "CHECK SMS INDICATOR")
+  private String chkSms;
+
+  @ApiModelProperty(value = "SEND INDICATOR")
+  private String checkSend;
+
+  @ApiModelProperty(value = "CUSTOMER MOBILE NO")
+  private String custMobileNo;
+
+  @ApiModelProperty(value = "CUSTOMER TYPE")
+  private String customerType;
+
+  @ApiModelProperty(value = "PARTNER CODE")
+  private String partnerCode;
+
+  @ApiModelProperty(value = "PARTNER NAME")
+  private String memCode;
+
+  @ApiModelProperty(value = "TYPE")
+  private String type;
+
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES PART ID")
+  private int insAccPartId;
+
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES INDICATOR")
+  private String chkInstallAcc;
+
+  @ApiModelProperty(value = "DISPOSAL COMMISSION INDICATOR")
+  private String dispComm;
+
+  @ApiModelProperty(value = "SERIAL CHECK INDICATOR")
+  private String serialChk;
+
+  @ApiModelProperty(value = "REAL AS EXCHANGE INDICATOR")
+  private String realAsExchangeYn;
+
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT CODE")
+  private String realBeforeProductCode;
+
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT NAME")
+  private String realBeforeProductName;
+
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT SERIAL NO")
+  private String realBeforeProductSerialNo;
 
   public List<InstallationResultDetailForm> getInstallAccList() {
     return installAccList;
-  }
-
-  public void setChkInstallAcc( String chkInstallAcc ) {
-    this.chkInstallAcc = chkInstallAcc;
   }
 
   public void setInstallAccList( List<InstallationResultDetailForm> installAccList ) {
     this.installAccList = installAccList;
   }
 
-  public String getType() {
-    return type;
+  public List<InstallationResultDetailForm> getPartList() {
+    return partList;
   }
 
-  public String getNtu() {
-    return ntu;
-  }
-
-  public void setNtu( String ntu ) {
-    this.ntu = ntu;
-  }
-
-  public void setType( String type ) {
-    this.type = type;
-  }
-
-  public int getInsAccPartId() {
-    return insAccPartId;
-  }
-
-  public void setInsAccPartId( int insAccPartId ) {
-    this.insAccPartId = insAccPartId;
-  }
-
-  public String getChkCrtAs() {
-    return chkCrtAs;
-  }
-
-  public String getPartnerCode() {
-    return partnerCode;
-  }
-
-  public String getMemCode() {
-    return memCode;
-  }
-
-  public void setPartnerCode( String partnerCode ) {
-    this.partnerCode = partnerCode;
-  }
-
-  public void setMemCode( String memCode ) {
-    this.memCode = memCode;
-  }
-
-  public void setChkCrtAs( String chkCrtAs ) {
-    this.chkCrtAs = chkCrtAs;
-  }
-
-  public String getTurbLvl() {
-    return turbLvl;
-  }
-
-  public void setTurbLvl( String turbLvl ) {
-    this.turbLvl = turbLvl;
-  }
-
-  public String getWaterSrcType() {
-    return waterSrcType;
-  }
-
-  public void setWaterSrcType( String waterSrcType ) {
-    this.waterSrcType = waterSrcType;
-  }
-
-  public String getCheckSend() {
-    return checkSend;
-  }
-
-  public void setCheckSend( String checkSend ) {
-    this.checkSend = checkSend;
-  }
-
-  public String getChkSms() {
-    return chkSms;
-  }
-
-  public void setChkSms( String chkSms ) {
-    this.chkSms = chkSms;
-  }
-
-  public String getCustMobileNo() {
-    return custMobileNo;
-  }
-
-  public void setCustMobileNo( String custMobileNo ) {
-    this.custMobileNo = custMobileNo;
-  }
-
-  public String getCustomerType() {
-    return customerType;
-  }
-
-  public void setCustomerType( String customerType ) {
-    this.customerType = customerType;
-  }
-
-  public String getBoosterPump() {
-    return boosterPump;
-  }
-
-  public void setBoosterPump( String boosterPump ) {
-    this.boosterPump = boosterPump;
-  }
-
-  public String getAftPsi() {
-    return aftPsi;
-  }
-
-  public void setAftPsi( String aftPsi ) {
-    this.aftPsi = aftPsi;
-  }
-
-  public String getAftLpm() {
-    return aftLpm;
-  }
-
-  public void setAftLpm( String aftLpm ) {
-    this.aftLpm = aftLpm;
-  }
-
-  public String getLpmRcd() {
-    return lpmRcd;
-  }
-
-  public void setLpmRcd( String lpmRcd ) {
-    this.lpmRcd = lpmRcd;
-  }
-
-  public String getPsiRcd() {
-    return psiRcd;
-  }
-
-  public void setPsiRcd( String psiRcd ) {
-    this.psiRcd = psiRcd;
-  }
-
-  public String getVolt() {
-    return volt;
-  }
-
-  public void setVolt( String volt ) {
-    this.volt = volt;
-  }
-
-  public String getTds() {
-    return tds;
-  }
-
-  public void setTds( String tds ) {
-    this.tds = tds;
-  }
-
-  public String getRoomTemp() {
-    return roomTemp;
-  }
-
-  public void setRoomTemp( String roomTemp ) {
-    this.roomTemp = roomTemp;
-  }
-
-  public String getWaterSourceTemp() {
-    return waterSourceTemp;
-  }
-
-  public void setWaterSourceTemp( String waterSourceTemp ) {
-    this.waterSourceTemp = waterSourceTemp;
-  }
-
-  public String getAdptUsed() {
-    return adptUsed;
-  }
-
-  public void setAdptUsed( String adptUsed ) {
-    this.adptUsed = adptUsed;
-  }
-
-  public String getInstChklstCheckBox() {
-    return instChklstCheckBox;
-  }
-
-  public void setInstChklstCheckBox( String instChklstCheckBox ) {
-    this.instChklstCheckBox = instChklstCheckBox;
-  }
-
-  public String getInstNoteChk() {
-    return instNoteChk;
-  }
-
-  public void setInstNoteChk( String instNoteChk ) {
-    this.instNoteChk = instNoteChk;
-  }
-
-  public String getSerialRequireChkYn() {
-    return serialRequireChkYn;
-  }
-
-  public void setSerialRequireChkYn( String serialRequireChkYn ) {
-    this.serialRequireChkYn = serialRequireChkYn;
-  }
-
-  public String getScanSerial() {
-    return scanSerial;
-  }
-
-  public void setScanSerial( String scanSerial ) {
-    this.scanSerial = scanSerial;
-  }
-
-  public String getFraSerialNo() {
-    return fraSerialNo;
-  }
-
-  public void setFraSerialNo( String fraSerialNo ) {
-    this.fraSerialNo = fraSerialNo;
-  }
-
-  public String getCheckInDate() {
-    return checkInDate;
-  }
-
-  public void setCheckInDate( String checkInDate ) {
-    this.checkInDate = checkInDate;
-  }
-
-  public String getCheckInTime() {
-    return checkInTime;
-  }
-
-  public void setCheckInTime( String checkInTime ) {
-    this.checkInTime = checkInTime;
-  }
-
-  public String getCheckInGps() {
-    return checkInGps;
-  }
-
-  public void setCheckInGps( String checkInGps ) {
-    this.checkInGps = checkInGps;
-  }
-
-  public String getSignRegDate() {
-    return signRegDate;
-  }
-
-  public void setSignRegDate( String signRegDate ) {
-    this.signRegDate = signRegDate;
-  }
-
-  public String getSignRegTime() {
-    return signRegTime;
-  }
-
-  public void setSignRegTime( String signRegTime ) {
-    this.signRegTime = signRegTime;
+  public void setPartList( List<InstallationResultDetailForm> partList ) {
+    this.partList = partList;
   }
 
   public String getUserId() {
@@ -532,54 +323,180 @@ public class InstallationResultForm {
     this.transactionId = transactionId;
   }
 
-  private String serialChk;
-
-  public String getSerialChk() {
-    return serialChk;
+  public String getSignRegDate() {
+    return signRegDate;
   }
 
-  public void setSerialChk( String serialChk ) {
-    this.serialChk = serialChk;
+  public void setSignRegDate( String signRegDate ) {
+    this.signRegDate = signRegDate;
   }
 
-  private String realAsExchangeYn;
-
-  public String getRealAsExchangeYn() {
-    return realAsExchangeYn;
+  public String getSignRegTime() {
+    return signRegTime;
   }
 
-  public void setRealAsExchangeYn( String realAsExchangeYn ) {
-    this.realAsExchangeYn = realAsExchangeYn;
+  public void setSignRegTime( String signRegTime ) {
+    this.signRegTime = signRegTime;
   }
 
-  private String realBeforeProductCode;
-
-  public String getRealBeforeProductCode() {
-    return realBeforeProductCode;
+  public String getCheckInDate() {
+    return checkInDate;
   }
 
-  public void setRealBeforeProductCode( String realBeforeProductCode ) {
-    this.realBeforeProductCode = realBeforeProductCode;
+  public void setCheckInDate( String checkInDate ) {
+    this.checkInDate = checkInDate;
   }
 
-  private String realBeforeProductName;
-
-  public String getRealBeforeProductName() {
-    return realBeforeProductName;
+  public String getCheckInTime() {
+    return checkInTime;
   }
 
-  public void setRealBeforeProductName( String realBeforeProductName ) {
-    this.realBeforeProductName = realBeforeProductName;
+  public void setCheckInTime( String checkInTime ) {
+    this.checkInTime = checkInTime;
   }
 
-  private String realBeforeProductSerialNo;
-
-  public String getRealBeforeProductSerialNo() {
-    return realBeforeProductSerialNo;
+  public String getCheckInGps() {
+    return checkInGps;
   }
 
-  public void setRealBeforeProductSerialNo( String realBeforeProductSerialNo ) {
-    this.realBeforeProductSerialNo = realBeforeProductSerialNo;
+  public void setCheckInGps( String checkInGps ) {
+    this.checkInGps = checkInGps;
+  }
+
+  public String getScanSerial() {
+    return scanSerial;
+  }
+
+  public void setScanSerial( String scanSerial ) {
+    this.scanSerial = scanSerial;
+  }
+
+  public String getFraSerialNo() {
+    return fraSerialNo;
+  }
+
+  public void setFraSerialNo( String fraSerialNo ) {
+    this.fraSerialNo = fraSerialNo;
+  }
+
+  public String getSerialRequireChkYn() {
+    return serialRequireChkYn;
+  }
+
+  public void setSerialRequireChkYn( String serialRequireChkYn ) {
+    this.serialRequireChkYn = serialRequireChkYn;
+  }
+
+  public String getPsiRcd() {
+    return psiRcd;
+  }
+
+  public void setPsiRcd( String psiRcd ) {
+    this.psiRcd = psiRcd;
+  }
+
+  public String getLpmRcd() {
+    return lpmRcd;
+  }
+
+  public void setLpmRcd( String lpmRcd ) {
+    this.lpmRcd = lpmRcd;
+  }
+
+  public String getVolt() {
+    return volt;
+  }
+
+  public void setVolt( String volt ) {
+    this.volt = volt;
+  }
+
+  public String getTds() {
+    return tds;
+  }
+
+  public void setTds( String tds ) {
+    this.tds = tds;
+  }
+
+  public String getRoomTemp() {
+    return roomTemp;
+  }
+
+  public void setRoomTemp( String roomTemp ) {
+    this.roomTemp = roomTemp;
+  }
+
+  public String getWaterSourceTemp() {
+    return waterSourceTemp;
+  }
+
+  public void setWaterSourceTemp( String waterSourceTemp ) {
+    this.waterSourceTemp = waterSourceTemp;
+  }
+
+  public String getAdptUsed() {
+    return adptUsed;
+  }
+
+  public void setAdptUsed( String adptUsed ) {
+    this.adptUsed = adptUsed;
+  }
+
+  public String getInstChklstCheckBox() {
+    return instChklstCheckBox;
+  }
+
+  public void setInstChklstCheckBox( String instChklstCheckBox ) {
+    this.instChklstCheckBox = instChklstCheckBox;
+  }
+
+  public String getInstNoteChk() {
+    return instNoteChk;
+  }
+
+  public void setInstNoteChk( String instNoteChk ) {
+    this.instNoteChk = instNoteChk;
+  }
+
+  public String getBoosterPump() {
+    return boosterPump;
+  }
+
+  public void setBoosterPump( String boosterPump ) {
+    this.boosterPump = boosterPump;
+  }
+
+  public String getAftPsi() {
+    return aftPsi;
+  }
+
+  public void setAftPsi( String aftPsi ) {
+    this.aftPsi = aftPsi;
+  }
+
+  public String getAftLpm() {
+    return aftLpm;
+  }
+
+  public void setAftLpm( String aftLpm ) {
+    this.aftLpm = aftLpm;
+  }
+
+  public String getTurbLvl() {
+    return turbLvl;
+  }
+
+  public void setTurbLvl( String turbLvl ) {
+    this.turbLvl = turbLvl;
+  }
+
+  public String getNtu() {
+    return ntu;
+  }
+
+  public void setNtu( String ntu ) {
+    this.ntu = ntu;
   }
 
   public String getCompetitor() {
@@ -598,6 +515,94 @@ public class InstallationResultForm {
     this.competitorBrand = competitorBrand;
   }
 
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
+
+  public String getChkCrtAs() {
+    return chkCrtAs;
+  }
+
+  public void setChkCrtAs( String chkCrtAs ) {
+    this.chkCrtAs = chkCrtAs;
+  }
+
+  public String getChkSms() {
+    return chkSms;
+  }
+
+  public void setChkSms( String chkSms ) {
+    this.chkSms = chkSms;
+  }
+
+  public String getCheckSend() {
+    return checkSend;
+  }
+
+  public void setCheckSend( String checkSend ) {
+    this.checkSend = checkSend;
+  }
+
+  public String getCustMobileNo() {
+    return custMobileNo;
+  }
+
+  public void setCustMobileNo( String custMobileNo ) {
+    this.custMobileNo = custMobileNo;
+  }
+
+  public String getCustomerType() {
+    return customerType;
+  }
+
+  public void setCustomerType( String customerType ) {
+    this.customerType = customerType;
+  }
+
+  public String getPartnerCode() {
+    return partnerCode;
+  }
+
+  public void setPartnerCode( String partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public String getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode( String memCode ) {
+    this.memCode = memCode;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType( String type ) {
+    this.type = type;
+  }
+
+  public int getInsAccPartId() {
+    return insAccPartId;
+  }
+
+  public void setInsAccPartId( int insAccPartId ) {
+    this.insAccPartId = insAccPartId;
+  }
+
+  public String getChkInstallAcc() {
+    return chkInstallAcc;
+  }
+
+  public void setChkInstallAcc( String chkInstallAcc ) {
+    this.chkInstallAcc = chkInstallAcc;
+  }
+
   public String getDispComm() {
     return dispComm;
   }
@@ -606,54 +611,49 @@ public class InstallationResultForm {
     this.dispComm = dispComm;
   }
 
-  public List<InstallationResultDetailForm> getPartList() {
-    return partList;
+  public String getSerialChk() {
+    return serialChk;
   }
 
-  public void setPartList( List<InstallationResultDetailForm> partList ) {
-    this.partList = partList;
+  public void setSerialChk( String serialChk ) {
+    this.serialChk = serialChk;
   }
 
-  // public static Map<String, Object> createMaps(InstallationResultForm
-  // installationResultForm) {
-  // Map<String, Object> params = new HashMap<>();
-  // params.put("userId", installationResultForm.getUserId());
-  // params.put("salesOrderNo", installationResultForm.getSalesOrderNo());
-  // params.put("serviceNo", installationResultForm.getServiceNo());
-  // params.put("sirimNo", installationResultForm.getSirimNo());
-  // params.put("serialNo", installationResultForm.getSerialNo());
-  // params.put("asExchangeYN", installationResultForm.getAsExchangeYN());
-  // params.put("beforeProductSerialNo",
-  // installationResultForm.getBeforeProductSerialNo());
-  // params.put("resultRemark", installationResultForm.getResultRemark());
-  // params.put("ownerCode", installationResultForm.getOwnerCode());
-  // params.put("resultCustName", installationResultForm.getResultCustName());
-  // params.put("resultIcMobileNo",
-  // installationResultForm.getResultIcMobileNo());
-  // params.put("resultReportEmailNo",
-  // installationResultForm.getResultReportEmailNo());
-  // params.put("resultAcceptanceName",
-  // installationResultForm.getResultAcceptanceName());
-  //
-  // params.put("signData",
-  // Base64.decodeBase64(installationResultForm.getSignData()));
-  //
-  // params.put("transactionId", installationResultForm.getTransactionId());
-  //
-  // return params;
-  // }
+  public String getRealAsExchangeYn() {
+    return realAsExchangeYn;
+  }
+
+  public void setRealAsExchangeYn( String realAsExchangeYn ) {
+    this.realAsExchangeYn = realAsExchangeYn;
+  }
+
+  public String getRealBeforeProductCode() {
+    return realBeforeProductCode;
+  }
+
+  public void setRealBeforeProductCode( String realBeforeProductCode ) {
+    this.realBeforeProductCode = realBeforeProductCode;
+  }
+
+  public String getRealBeforeProductName() {
+    return realBeforeProductName;
+  }
+
+  public void setRealBeforeProductName( String realBeforeProductName ) {
+    this.realBeforeProductName = realBeforeProductName;
+  }
+
+  public String getRealBeforeProductSerialNo() {
+    return realBeforeProductSerialNo;
+  }
+
+  public void setRealBeforeProductSerialNo( String realBeforeProductSerialNo ) {
+    this.realBeforeProductSerialNo = realBeforeProductSerialNo;
+  }
 
   public List<Map<String, Object>> createMaps( InstallationResultForm installationResultForm ) {
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
-
-    // for(InstallationResultForm form : installationResultForm){
-    //// map = BeanConverter.toMap(installationResultForm, "signData");
-    //// map.put("signData",
-    // Base64.decodeBase64(installationResultForm.getSignData()));
-    //
-    // list.add(map);
-    // }
 
     map = BeanConverter.toMap( installationResultForm, "signData" );
     map.put( "signData", Base64.decodeBase64( installationResultForm.getSignData() ) );
@@ -675,7 +675,6 @@ public class InstallationResultForm {
     map.put( "signRegDate", installationResultForm.getSignRegDate() );
     map.put( "signRegTime", installationResultForm.getSignRegTime() );
 
-    /////////////////////////////// ADD FILTER / PARTS /MISC /////////////////////////////////////
     if ( partList != null && partList.size() > 0 ) {
       for ( InstallationResultDetailForm dtl : partList ) {
         map.put( "filterCode", dtl.getFilterCode() );
@@ -688,9 +687,7 @@ public class InstallationResultForm {
         map.put( "retSmoSerialNo", dtl.getRetSmoSerialNo() );
       }
     }
-    /////////////////////////////// ADD FILTER / PARTS / MISC /////////////////////////////////////
 
-    /////////////////////////////// ADD INSTALLATION ACCES. /////////////////////////////////////
     if ( installAccList != null && installAccList.size() > 0 ) {
       for ( InstallationResultDetailForm dtl : installAccList ) {
         map.put( "resultNo", dtl.getResultNo() );
@@ -700,22 +697,8 @@ public class InstallationResultForm {
         map.put( "crtUserId", dtl.getCrtUserId() );
       }
     }
-    /////////////////////////////// ADD INSTALLATION ACCES.  /////////////////////////////////////
 
     list.add( map );
     return list;
   }
-
-  /*
-   * public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
-   * List<Map<String, Object>> list = new ArrayList<>(); if (partList != null && partList.size() >
-   * 0) { Map<String, Object> map; for (InstallationResultDetailForm dtl : partList) { map =
-   * BeanConverter.toMap(installationResultForm, "signData", "partList"); map.put("signData",
-   * Base64.decodeBase64(installationResultForm.getSignData())); // as Dtails map.put("filterCode",
-   * dtl.getFilterCode()); map.put("chargesFoc", dtl.getChargesFoc()); map.put("exchangeId",
-   * dtl.getExchangeId()); map.put("salesPrice", dtl.getSalesPrice()); map.put("filterChangeQty",
-   * dtl.getFilterChangeQty()); map.put("partsType", dtl.getPartsType());
-   * map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo()); map.put("retSmoSerialNo",
-   * dtl.getRetSmoSerialNo()); list.add(map); } } return list; }
-   */
 }
