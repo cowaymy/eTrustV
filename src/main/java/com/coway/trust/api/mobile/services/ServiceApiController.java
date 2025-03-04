@@ -1,25 +1,17 @@
 package com.coway.trust.api.mobile.services;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
-import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
-import com.coway.trust.api.mobile.payment.payment.PaymentDto;
-import com.coway.trust.api.mobile.payment.payment.PaymentForm;
-import com.coway.trust.api.mobile.payment.paymentList.PaymentListDto;
-import com.coway.trust.api.mobile.payment.paymentList.PaymentListForm;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.as.ASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.as.ASReAppointmentRequestDto;
@@ -49,16 +35,12 @@ import com.coway.trust.api.mobile.services.as.AfterServiceJobDto_b;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
-import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
-import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiDto;
-import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiForm;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiDto;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyForm;
-import com.coway.trust.api.mobile.services.serviceMileage.ServiceMileageDto;
 import com.coway.trust.api.mobile.services.serviceMileage.ServiceMileageForm;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
@@ -71,7 +53,6 @@ import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceJobForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServicePartsDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServicePartsForm;
-import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
 import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.api.mobile.services.history.AsDetailDto;
@@ -102,7 +83,6 @@ import com.coway.trust.api.mobile.services.sales.OutStandignResultDetail;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
-import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.AsFromCodyApiService;
@@ -112,9 +92,7 @@ import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
-import com.coway.trust.util.CommonUtils;
 import com.google.gson.JsonObject;
 //import com.ibm.icu.text.DateFormat;
 //import com.ibm.icu.text.SimpleDateFormat;
@@ -131,58 +109,23 @@ import com.coway.trust.biz.services.as.ServiceApiASService;
 import com.coway.trust.biz.services.as.ServiceMileageApiService;
 import com.coway.trust.biz.services.pr.ServiceApiPRService;
 
-import com.coway.trust.api.mobile.services.careService.CSFailJobRequestDto;
-import com.coway.trust.api.mobile.services.careService.CSFailJobRequestForm;
-import com.coway.trust.api.mobile.services.careService.CSReAppointmtRequestDto;
-import com.coway.trust.api.mobile.services.careService.CSReAppointmtRequestForm;
 import com.coway.trust.api.mobile.services.careService.CareServiceJobDto;
 import com.coway.trust.api.mobile.services.careService.CareServiceJobForm;
 import com.coway.trust.api.mobile.services.careService.CareServicePartsDto;
 import com.coway.trust.api.mobile.services.careService.HcServiceJobDto;
 import com.coway.trust.api.mobile.services.careService.HcServiceJobForm;
 import com.coway.trust.api.mobile.services.careService.CareServicePartsForm;
-import com.coway.trust.api.mobile.services.careService.CareServiceResultDetailForm;
-import com.coway.trust.api.mobile.services.careService.CareServiceResultDto;
-import com.coway.trust.api.mobile.services.careService.CareServiceResultForm;
 import com.coway.trust.api.mobile.services.careService.RelateOrderListDto;
 import com.coway.trust.api.mobile.services.careService.RelateOrderListForm;
 import com.coway.trust.api.mobile.services.careService.SalesDetailDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestForm;
-import com.coway.trust.api.mobile.services.dtAs.DtASReAppointmentRequestDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASReAppointmentRequestForm;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestCustDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestCustForm;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestRegistDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestRegistForm;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestResultDto;
-import com.coway.trust.api.mobile.services.dtAs.DtASRequestResultForm;
 import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobDto;
-import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobDto_b;
 import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceJobForm;
 import com.coway.trust.api.mobile.services.dtAs.DtAfterServicePartsDto;
 import com.coway.trust.api.mobile.services.dtAs.DtAfterServicePartsForm;
-import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultDetailForm;
-import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultDto;
-import com.coway.trust.api.mobile.services.dtAs.DtAfterServiceResultForm;
-
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallFailJobRequestDto;
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallFailJobRequestForm;
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallReAppointmentRequestDto;
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallReAppointmentRequestForm;
 import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationJobDto;
 import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationJobForm;
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationResultDto;
-import com.coway.trust.api.mobile.services.dtInstallation.DtInstallationResultForm;
-
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRFailJobRequestDto;
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRFailJobRequestForm;
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRReAppointmentRequestDto;
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtPRReAppointmentRequestForm;
 import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductRetrunJobForm;
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultDto;
-import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResultForm;
 import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListDto;
 import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
 
@@ -204,6 +147,8 @@ import com.coway.trust.api.mobile.services.dtRc.DtRentalCollectionListForm;
  * 07/07/2022 FARUQ  1.0.13 - establish /mobile/api/v1/service/insertAsFromCodyRequest
  * 03/04/2022 FANNIE 1.0.14 - Add function update GPS
  * 02/10/2023 ONGHC 1.0.15 - Remove Heavy Load Logger
+ *********************************************************************************************
+ * 04/03/2025 ONGHC 2.0.1   - File Restructure
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -225,14 +170,14 @@ public class ServiceApiController {
   @Resource(name = "hsManualService")
   private HsManualService hsManualService;
 
-  @Autowired
-  private MessageSourceAccessor messageAccessor;
+  // @Autowired
+  // private MessageSourceAccessor messageAccessor;
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
-  @Autowired
-  private AdaptorService adaptorService;
+  // @Autowired
+  // private AdaptorService adaptorService;
 
    @Resource(name = "HomecareServiceApiService")
    private HomecareServiceApiService homecareServiceApiService;
@@ -261,6 +206,9 @@ public class ServiceApiController {
   @Resource(name = "serviceMileageApiService")
   private ServiceMileageApiService serviceMileageApiService;
 
+  /* MOBILE HOME APPLIANCE */
+  /* HA HEART SERVICE  - START */
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
   public ResponseEntity<List<HeartServiceJobDto>> getHeartServiceJob(@ModelAttribute HeartServiceJobForm HeartServiceJobForm) throws Exception {
@@ -274,6 +222,7 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "Heart Service Job List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/heartServiceJobList_b", method = RequestMethod.GET)
   public ResponseEntity<List<HeartServiceJobDto>> getHeartServiceJob_b(@ModelAttribute HeartServiceJobForm HeartServiceJobForm) throws Exception {
@@ -287,6 +236,62 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
+  @ApiOperation(value = "Heart Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/heartServiceParts", method = RequestMethod.GET)
+  public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
+
+    Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
+
+    List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts(params);
+
+    List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Heart Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/heartServiceParts_b", method = RequestMethod.GET)
+  public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts_b(@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
+
+    Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
+
+    List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts_b(params);
+
+    List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Heart Service Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
+  public ResponseEntity<HeartServiceResultDto> hsRegistration(@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
+    return serviceApiHSService.hsResult(heartForms);
+  }
+
+  @ApiOperation(value = "Heart Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hSReAppointmtRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSReAppointmtRequestDto> hSReAppointmtRequest(@RequestBody HSReAppointmtRequestForm hSReAppointmtRequestForm) throws Exception {
+    String transactionId = "";
+
+    Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
+
+    if (RegistrationConstants.IS_INSERT_HSRE_LOG) {
+      MSvcLogApiService.saveHsReServiceLogs(params);
+    }
+
+    MSvcLogApiService.updateHsReAppointmentReturnResult(params);
+    return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
+  }
+
+  @ApiOperation(value = "Heart Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hSFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSFailJobRequestDto> hSFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
+    return serviceApiHSService.hsFailJobRequest(hSFailJobRequestForm);
+  }
+
+  /* HA HEART SERVICE - END */
+
+  /* HA AFTER SERVICE - START */
   @SuppressWarnings("static-access")
   @ApiOperation(value = "AfterServiceJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/afterServiceJobList", method = RequestMethod.GET)
@@ -315,100 +320,6 @@ public class ServiceApiController {
     return ResponseEntity.ok(list);
   }
 
-  @ApiOperation(value = "InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/installationJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
-    Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
-    List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList(params);
-    List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "InstallationJob List batchSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/installationJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<InstallationJobDto>> getInstallationJobList_b(@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
-
-    Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
-
-    List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
-
-    List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "ProductRetrunJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
-    Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
-    List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
-    List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "ProductRetrunJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/productRetrunJobList_b", method = RequestMethod.GET)
-  public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList_b(@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
-
-    Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
-
-    List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
-
-    /*
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
-    for (int i = 0; i < ProductRetrunJobList.size(); i++) {
-      LOGGER.debug("productRetrunJobList_b : {}", ProductRetrunJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB BATCH SEARCH====================================");
-    */
-
-    List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Heart Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/heartServiceParts", method = RequestMethod.GET)
-  public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
-
-    Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
-
-    List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts(params);
-
-    /*
-    LOGGER.debug("==================================[MB]HEART SERVICE PART LIST SEARCH====================================");
-    for (int i = 0; i < HeartServiceParts.size(); i++) {
-      LOGGER.debug("heartServiceParts : {}", HeartServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]HEART SERVICE PART LIST SEARCH====================================");
-    */
-
-    List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Heart Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/heartServiceParts_b", method = RequestMethod.GET)
-  public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts_b(@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
-
-    Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm);
-
-    List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts_b(params);
-
-    /*
-    LOGGER.debug("==================================[MB]HEART SERVICE PART LIST BATCH SEARCH====================================");
-    for (int i = 0; i < HeartServiceParts.size(); i++) {
-      LOGGER.debug("heartServiceParts_b : {}", HeartServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]HEART SERVICE PART LIST BATCH SEARCH====================================");
-    */
-
-    List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
   @ApiOperation(value = "After Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/afterServiceParts", method = RequestMethod.GET)
   public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts(@ModelAttribute AfterServicePartsForm afterServicePartsForm) throws Exception {
@@ -416,14 +327,6 @@ public class ServiceApiController {
     Map<String, Object> params = AfterServicePartsForm.createMap(afterServicePartsForm);
 
     List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts(params);
-
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
-    for (int i = 0; i < AfterServiceParts.size(); i++) {
-      LOGGER.debug("afterServiceParts : {}", AfterServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
-    */
 
     List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r)).collect(Collectors.toList());
 
@@ -438,640 +341,15 @@ public class ServiceApiController {
 
     List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts_b(params);
 
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
-    for (int i = 0; i < AfterServiceParts.size(); i++) {
-      LOGGER.debug("afterServiceParts_b  : {}", AfterServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST BATCH SEARCH====================================");
-    */
-
     List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r)).collect(Collectors.toList());
 
     return ResponseEntity.ok(list);
   }
 
-  /* Woongjin Jun */
-  @ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
-  public ResponseEntity<HeartServiceResultDto> hsRegistration(@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
-    return serviceApiHSService.hsResult(heartForms);
-
-    // String transactionId = "";
-    // List<Map<String, Object>> heartLogs = null;
-    // List<Map<String, Object>> hsTransLogs1 = null;
-    // SessionVO sessionVO = new SessionVO();
-    //
-    // Calendar cal = Calendar.getInstance();
-    //
-    // SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-    // String strToday = sdf.format(cal.getTime());
-    //
-    // // CURRENT YEAR, MONTH, DAY
-    // StringBuffer today2 = new StringBuffer();
-    // today2.append(String.format("%02d", cal.get(cal.DATE)));
-    // today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
-    // today2.append(String.format("%04d", cal.get(cal.YEAR)));
-    //
-    // String toSetlDt = today2.toString();
-    //
-    // int year = cal.get(cal.YEAR);
-    // int month = cal.get(cal.MONTH) + 1;
-    // int date = cal.get(cal.DATE);
-    //
-    // String todate2 = (String.valueOf(date) + String.valueOf(month) +
-    // String.valueOf(year));
-    //
-    // // INSERT DATA FROM MOBILE INTO LOG TABLE
-    // LOGGER.debug("==================================[MB]HEART SERVICE RESULT
-    // - START - ====================================");
-    // LOGGER.debug("### INSERT HEART LOG? : {}" +
-    // RegistrationConstants.IS_INSERT_HEART_LOG);
-    // LOGGER.debug("### TRANSACTION ID? : {}" +
-    // RegistrationConstants.IS_INSERT_HEART_LOG);
-    // LOGGER.debug("### HS FORM : {}" + heartForms);
-    //
-    // if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-    // LOGGER.debug("==================================[MB]HEART SERVICE RESULT
-    // > SAVE HS LOG - START - ====================================");
-    // heartLogs = new ArrayList<>();
-    //
-    // for (HeartServiceResultForm heart : heartForms) {
-    // heartLogs.addAll(heart.createMaps(heart));
-    // }
-    //
-    // // List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r ->
-    // r.createMaps(r)).collect(Collectors.toList());
-    // MSvcLogApiService.saveHearLogs(heartLogs);
-    // transactionId = heartForms.get(0).getTransactionId();
-    // LOGGER.debug("### TRANSACTION ID : " + transactionId);
-    // LOGGER.debug("==================================[MB]HEART SERVICE RESULT
-    // > SAVE HS LOG - END - ====================================");
-    // }
-    //
-    // hsTransLogs1 = new ArrayList<>();
-    // for (HeartServiceResultForm hsService1 : heartForms) {
-    // hsTransLogs1.addAll(hsService1.createMaps1(hsService1));
-    // }
-    //
-    // if (hsTransLogs1.size() > 0) {
-    // LOGGER.debug("### HS TRANSACTION TOTAL : " + hsTransLogs1.size());
-    // for (int i = 0; i < hsTransLogs1.size(); i++) {
-    //
-    // LOGGER.debug("### HS TRANSACTION DETAILS : " + hsTransLogs1.get(i));
-    //
-    // Map<String, Object> hfterServiceDetail = null;
-    // List<Map<String, Object>> paramsDetail =
-    // HeartServiceResultDetailForm.createMaps((List<HeartServiceResultDetailForm>)
-    // hsTransLogs1.get(i).get("heartDtails"));
-    // List<Object> paramsDetailList =
-    // HeartServiceResultDetailForm.createMaps1((List<HeartServiceResultDetailForm>)
-    // hsTransLogs1.get(i).get("heartDtails"));
-    // List<Object> paramsDetailObj = (List<Object>)
-    // hsTransLogs1.get(i).get("heartDtails");
-    //
-    // Map<String, Object> params = hsTransLogs1.get(i);
-    // params.put("updList", paramsDetail);
-    //
-    // LOGGER.debug("### HS TRANSACTION PARAM : " + params.toString());
-    //
-    // // CHECK IF SVC0008D MEM_CODE AND SVC0006D MEM_CODE ARE THE SAME
-    // int hsResultMemId = hsManualService.hsResultSync(params);
-    //
-    // if (hsResultMemId > 0) {
-    //
-    // // RESULT CHECK HS IS ACTIVE
-    // int isHsCnt = hsManualService.isHsAlreadyResult(params);
-    //
-    // // IF NO RESULT OR IS 0
-    // if (isHsCnt == 0) {
-    // Map rtnValue = null;
-    //
-    // try {
-    // String userId = MSvcLogApiService.getUseridToMemid(params);
-    // sessionVO.setUserId(Integer.parseInt(userId));
-    //
-    // // UPDATE FAUCET EXCHANGE
-    // if (params.get("faucetExch") != null) {
-    // if ("1".equals(CommonUtils.nvl(params.get("faucetExch").toString()))) {
-    // int cnt = MSvcLogApiService.updFctExch(params);
-    // LOGGER.debug("### FAUCET EXCHANGE UPDATE COUNT : " + cnt);
-    // }
-    // }
-    //
-    // Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
-    // LOGGER.debug("### HS BASIC INFO : " + getHsBasic.toString());
-    //
-    // // API SETTING
-    // params.put("hidschdulId", getHsBasic.get("schdulId"));
-    // params.put("hidSalesOrdId",
-    // String.valueOf(getHsBasic.get("salesOrdId")));
-    // params.put("hidCodyId", (String) userId);
-    // params.put("settleDate", toSetlDt);
-    // params.put("resultIsSync", '0');
-    // params.put("resultIsEdit", '0');
-    // params.put("resultStockUse", '1');
-    // params.put("resultIsCurr", '1');
-    // params.put("resultMtchId", '0');
-    // params.put("resultIsAdj", '0');
-    // params.put("cmbStatusType", "4");
-    // params.put("renColctId", "0");
-    //
-    // // API OVER
-    // params.put("remark", hsTransLogs1.get(i).get("resultRemark"));
-    // params.put("cmbCollectType",
-    // String.valueOf(hsTransLogs1.get(i).get("rcCode")));
-    //
-    // // API ADDED
-    // params.put("temperateSetng",
-    // String.valueOf(hsTransLogs1.get(i).get("temperatureSetting")));
-    // params.put("nextAppntDt",
-    // hsTransLogs1.get(i).get("nextAppointmentDate"));
-    // params.put("nextAppointmentTime",
-    // String.valueOf(hsTransLogs1.get(i).get("nextAppointmentTime")));
-    // params.put("ownerCode",
-    // String.valueOf(hsTransLogs1.get(i).get("ownerCode")));
-    // params.put("resultCustName", hsTransLogs1.get(i).get("resultCustName"));
-    // params.put("resultMobileNo",
-    // String.valueOf(hsTransLogs1.get(i).get("resultIcMobileNo")));
-    // params.put("resultRptEmailNo",
-    // String.valueOf(hsTransLogs1.get(i).get("resultReportEmailNo")));
-    // params.put("resultAceptName",
-    // hsTransLogs1.get(i).get("resultAcceptanceName"));
-    // params.put("sgnDt", hsTransLogs1.get(i).get("signData"));
-    // params.put("stage", "API");
-    //
-    // LOGGER.debug("### HS PARAM : " + params.toString());
-    // LOGGER.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
-    //
-    // // STOCK CHECKING
-    // //for (int x = 0; x < paramsDetailList.size(); x++) {
-    // //Map<String, Object> filterLst = (Map<String, Object>)
-    // paramsDetailList.get(x);
-    //
-    // //if (filterLst.get("filterCode") != null ||
-    // !("".equals(filterLst.get("filterCode")))) {
-    // //Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-    // //locInfoEntry.put("CT_CODE",
-    // CommonUtils.nvl(params.get("userId").toString()));
-    // //locInfoEntry.put("STK_CODE",
-    // CommonUtils.nvl(filterLst.get("filterCode").toString()));
-    //
-    // //EgovMap locInfo = (EgovMap)
-    // servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
-    //
-    // //LOGGER.debug("LOC. INFO. : {}" + locInfo);
-    // //if (locInfo != null) {
-    // //if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
-    // // FAIL CT NOT ENOUGH STOCK
-    // //MSvcLogApiService.updateErrStatus(transactionId);
-    //
-    // //Map<String, Object> m = new HashMap();
-    // //m.put("APP_TYPE", "HS");
-    // //m.put("SVC_NO", params.get("serviceNo"));
-    // //m.put("ERR_CODE", "03");
-    // //m.put("ERR_MSG", "[API] [" + params.get("userId") + "] STOCK FOR [" +
-    // filterLst.get("filterCode") + "] IS UNAVAILABLE. " +
-    // locInfo.get("availQty").toString());
-    // //m.put("TRNSC_ID", transactionId);
-    //
-    // //MSvcLogApiService.insert_SVC0066T(m);
-    //
-    // //return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
-    // //}
-    // //} else {
-    // // FAIL CT NOT ENOUGH STOCK
-    // //MSvcLogApiService.updateErrStatus(transactionId);
-    //
-    // //Map<String, Object> m = new HashMap();
-    // //m.put("APP_TYPE", "HS");
-    // //m.put("SVC_NO", params.get("serviceNo"));
-    // //m.put("ERR_CODE", "03");
-    // //m.put("ERR_MSG", "[API] [" + params.get("userId") + "] STOCK FOR [" +
-    // filterLst.get("filterCode") + "] IS UNAVAILABLE. ");
-    // //m.put("TRNSC_ID", transactionId);
-    //
-    // //MSvcLogApiService.insert_SVC0066T(m);
-    //
-    // //return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
-    // //}
-    // //}
-    // //}
-    //
-    // // SERVICE TO VALUE SETTING
-    // Map<String, Object> asResultInsert = new HashMap();
-    // LOGGER.debug("### HS INSERT [BEFORE] : " + asResultInsert.toString());
-    //
-    // rtnValue = hsManualService.addIHsResult(params, paramsDetailList,
-    // sessionVO);
-    // LOGGER.debug("### HS INSERT RESULT : " + rtnValue.toString());
-    //
-    // if (null != rtnValue) {
-    // HashMap spMap = (HashMap) rtnValue.get("spMap");
-    // LOGGER.debug("spMap :" + spMap.toString());
-    // if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-    // rtnValue.put("logerr", "Y");
-    // }
-    //
-    // servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-    //
-    // // HS LOG HISTORY
-    // if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-    // MSvcLogApiService.updateSuccessStatus(transactionId);
-    // }
-    // }
-    // } catch (Exception e) {
-    // MSvcLogApiService.updateErrStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "HS");
-    // m.put("SVC_NO", params.get("serviceNo"));
-    // m.put("ERR_CODE", "02");
-    // m.put("ERR_MSG", "[API]" + e.toString());
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // }
-    // } else {
-    // LOGGER.debug("### HS NOT IN ACTIVE STATUS. ");
-    // }
-    // } else {
-    // MSvcLogApiService.updateErrStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "HS");
-    // m.put("SVC_NO", params.get("serviceNo"));
-    // m.put("ERR_CODE", "01");
-    // m.put("ERR_MSG", "[API] [" + params.get("userId") + "] IT IS NOT ASSIGNED
-    // CODY CODE.");
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // }
-    // }
-    // }
-    // LOGGER.debug("==================================[MB]HEART SERVICE RESULT
-    // - END - ====================================");
-    //
-    // return ResponseEntity.ok(HeartServiceResultDto.create(transactionId));
-  }
-
-  /* Woongjin Jun */
-  @ApiOperation(value = "AfterService Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiOperation(value = "After Service Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/afterServiceResult", method = RequestMethod.POST)
   public ResponseEntity<AfterServiceResultDto> asRegistration(@RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
     return serviceApiASService.asResult(afterServiceForms);
-  }
-
-  /* Woongjin Jun */
-  @ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-  public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
-
-    // InstallationResultForm form = installationResultForms.get(0);
-    // Map<String, Object> map = form.createMaps(form).get(0);
-    // int userId = Integer.valueOf(MSvcLogApiService.getUseridToMemid(map));
-    // ASManagementListService.insertASResultLog(form.createMaps(form).toString(), "/mobile/installationResult", null, userId);
-
-    LOGGER.debug("============ServiceApiController.java @ installationResult============");
-
-    return serviceApiInstallationService.installationResult(installationResultForms);
-
-    // String transactionId = "";
-    //
-    // Calendar cal = Calendar.getInstance();
-    //
-    // // CURRENT YEAR, MONTH, DAY
-    // int year = cal.get(cal.YEAR);
-    // int month = cal.get(cal.MONTH) + 1;
-    // int date = cal.get(cal.DATE);
-    //
-    // List<Map<String, Object>> insTransLogs = null;
-    // SessionVO sessionVO1 = new SessionVO();
-    //
-    // LOGGER.debug("==================================[MB]INSTALLATION RESULT
-    // REGISTRATION - START - ====================================");
-    // LOGGER.debug("### INSTALLATION FORM : ", installationResultForms);
-    //
-    // insTransLogs = new ArrayList<>();
-    // for (InstallationResultForm insService : installationResultForms) {
-    // insTransLogs.addAll(insService.createMaps(insService));
-    // transactionId = insService.getTransactionId();
-    // }
-    //
-    // LOGGER.debug("### INSTALLATION SIZE : " + insTransLogs.size());
-    // for (int i = 0; i < insTransLogs.size(); i++) {
-    // LOGGER.debug("### INSTALLATION DETAILS : " + insTransLogs.get(i));
-    //
-    // Map<String, Object> insApiresult = insTransLogs.get(i);
-    //
-    // // INSERT LOG HISTORY
-    // if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-    // MSvcLogApiService.saveInstallServiceLogs(insApiresult);
-    // }
-    //
-    // Map<String, Object> params = insTransLogs.get(i);
-    //
-    // transactionId = String.valueOf(params.get("transactionId"));
-    //
-    // // VERIFY CT CODE
-    // int isInsMemIdCnt = installationResultListService.insResultSync(params);
-    //
-    // if (isInsMemIdCnt > 0) {
-    // int isInsCnt =
-    // installationResultListService.isInstallAlreadyResult(params);
-    // // MAKE SURE IT'S ALREADY PROCEEDED
-    // if (isInsCnt == 0) {
-    // String statusId = "4"; // INSTALLATION STATUS
-    //
-    // EgovMap installResult =
-    // MSvcLogApiService.getInstallResultByInstallEntryID(params);
-    // params.put("installEntryId", installResult.get("installEntryId"));
-    //
-    // try {
-    // params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
-    // params.put("hidInstallation_AreaID", installResult.get("areaId"));
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    //
-    // EgovMap orderInfo = installationResultListService.getOrderInfo(params);
-    //
-    // LOGGER.debug("### INSTALLATION STOCK : " + orderInfo.get("stkId"));
-    // if (orderInfo.get("stkId") != null ||
-    // !("".equals(orderInfo.get("stkId")))) {
-    // // CHECK STOCK QUANTITY
-    // Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-    // locInfoEntry.put("CT_CODE",
-    // CommonUtils.nvl(insTransLogs.get(i).get("userId").toString()));
-    // locInfoEntry.put("STK_CODE",
-    // CommonUtils.nvl(orderInfo.get("stkId").toString()));
-    //
-    // LOGGER.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
-    //
-    // EgovMap locInfo = (EgovMap)
-    // servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
-    //
-    // LOGGER.debug("LOC. INFO. : {}" + locInfo);
-    //
-    // if (locInfo != null) {
-    // if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
-    // MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "INS");
-    // m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
-    // m.put("ERR_CODE", "03");
-    // m.put("ERR_MSG", "[API] [" + insTransLogs.get(i).get("userId") + "]
-    // PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. "
-    // + locInfo.get("availQty").toString());
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    //
-    // return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-    // }
-    // } else {
-    // MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "INS");
-    // m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
-    // m.put("ERR_CODE", "03");
-    // m.put("ERR_MSG", "[API] [" + insTransLogs.get(i).get("userId") + "]
-    // PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE.
-    // ");
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    //
-    // return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-    // }
-    // }
-    //
-    // String userId = MSvcLogApiService.getUseridToMemid(params);
-    // String installDate = MSvcLogApiService.getInstallDate(insApiresult);
-    //
-    // sessionVO1.setUserId(Integer.parseInt(userId));
-    //
-    // params.put("installStatus", String.valueOf(statusId));
-    // params.put("statusCodeId",
-    // Integer.parseInt(params.get("installStatus").toString()));
-    // params.put("hidEntryId",
-    // String.valueOf(installResult.get("installEntryId")));
-    // params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
-    // params.put("hidSalesOrderId",
-    // String.valueOf(installResult.get("salesOrdId")));
-    // params.put("hidTaxInvDSalesOrderNo",
-    // String.valueOf(installResult.get("salesOrdNo")));
-    // params.put("hidStockIsSirim",
-    // String.valueOf(installResult.get("isSirim")));
-    // params.put("hidStockGrade", installResult.get("stkGrad"));
-    // params.put("hidSirimTypeId",
-    // String.valueOf(installResult.get("stkCtgryId")));
-    // params.put("hiddeninstallEntryNo",
-    // String.valueOf(installResult.get("installEntryNo")));
-    // params.put("hidTradeLedger_InstallNo",
-    // String.valueOf(installResult.get("installEntryNo")));
-    // params.put("hidCallType", String.valueOf(installResult.get("typeId")));
-    //
-    // params.put("installDate", installDate);
-    // params.put("CTID", String.valueOf(userId));
-    // params.put("updator", String.valueOf(userId));
-    // params.put("nextCallDate", "01-01-1999");
-    // params.put("refNo1", "0");
-    // params.put("refNo2", "0");
-    // params.put("codeId", String.valueOf(installResult.get("257")));
-    // params.put("checkCommission", 1);
-    //
-    // if (orderInfo != null) {
-    // params.put("hidOutright_Price",
-    // CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
-    // } else {
-    // params.put("hidOutright_Price", "0");
-    // }
-    //
-    // params.put("hidAppTypeId", installResult.get("codeId"));
-    //
-    // params.put("hidStockIsSirim",
-    // String.valueOf(insTransLogs.get(i).get("sirimNo")));
-    // params.put("hidSerialNo",
-    // String.valueOf(insTransLogs.get(i).get("serialNo")));
-    // params.put("remark", insTransLogs.get(i).get("resultRemark"));
-    //
-    // params.put("EXC_CT_ID", String.valueOf(userId));
-    //
-    // LOGGER.debug("### INSTALLATION PARAM : " + params.toString());
-    //
-    // try {
-    // Map rtnValue =
-    // installationResultListService.insertInstallationResult(params,
-    // sessionVO1);
-    // if (null != rtnValue) {
-    // HashMap spMap = (HashMap) rtnValue.get("spMap");
-    // if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-    // rtnValue.put("logerr", "Y");
-    // } else {
-    // if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-    // MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-    // }
-    // }
-    // servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-    // }
-    //
-    // } catch (Exception e) {
-    // MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "INS");
-    // m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
-    // m.put("ERR_CODE", "02");
-    // m.put("ERR_MSG", "[API] " + e.toString());
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // }
-    // } else {
-    // if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-    // MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
-    // }
-    // }
-    // } else {
-    // MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
-    //
-    // Map<String, Object> m = new HashMap();
-    // m.put("APP_TYPE", "INS");
-    // m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
-    // m.put("ERR_CODE", "01");
-    // m.put("ERR_MSG", "[API] [" + insTransLogs.get(i).get("userId") + "] IT IS
-    // NOT ASSIGNED CT CODE. ");
-    // m.put("TRNSC_ID", transactionId);
-    //
-    // MSvcLogApiService.insert_SVC0066T(m);
-    // }
-    //
-    // LOGGER.debug("### INSTALLATION FINAL PARAM : " + params.toString());
-    // }
-    // LOGGER.debug("==================================[MB]INSTALLATION RESULT
-    // REGISTRATION - END - ====================================");
-    //
-    // return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-
-  }
-
-  @ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/rcList", method = RequestMethod.POST)
-  public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@RequestBody RentalServiceCustomerForm rentalForm) throws Exception {
-
-    String transactionId = "";
-    Map<String, Object> map = new HashMap();
-
-    map.put("userId", String.valueOf(rentalForm.getUserId()));
-    map.put("searchType", String.valueOf(rentalForm.getSearchType()));
-    map.put("searchKeyword", String.valueOf(rentalForm.getSearchKeyword()));
-
-    List<EgovMap> rcList = MSvcLogApiService.getRentalCustomerList(map);
-    LOGGER.debug("==================================[MB]DISPLAY RC LIST ====================================");
-    LOGGER.debug("### RC LIST : ", rcList);
-    LOGGER.debug("==================================[MB]DISPLAY RC LIST ====================================");
-
-    List<RentalServiceCustomerDto> list = null;
-
-    // hsManualService.selecthSFilterUseHistorycall(params);
-    // List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
-
-    if (rcList != null) {
-      list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r)).collect(Collectors.toList());
-    }
-
-    return ResponseEntity.ok(list);
-
-  }
-
-  /* Woongjin Jun */
-  @ApiOperation(value = "Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/productReturnResult", method = RequestMethod.POST)
-  public ResponseEntity<ProductReturnResultDto> productReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
-    return serviceApiPRService.productReturnResult(productReturnResultForm);
-  }
-
-  @ApiOperation(value = "Heart Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/hSReAppointmtRequest", method = RequestMethod.POST)
-  public ResponseEntity<HSReAppointmtRequestDto> hSReAppointmtRequest(@RequestBody HSReAppointmtRequestForm hSReAppointmtRequestForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
-
-    /*
-    LOGGER.debug("==================================[MB]HS RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### HS RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]HS RE APPOINMENT REQUEST ====================================");
-    */
-
-    // CREATE HISTORY LOG
-    if (RegistrationConstants.IS_INSERT_HSRE_LOG) {
-      MSvcLogApiService.saveHsReServiceLogs(params);
-    }
-
-    MSvcLogApiService.updateHsReAppointmentReturnResult(params);
-    return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
-  }
-
-  @ApiOperation(value = "Installation Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/installReAppointmentRequest", method = RequestMethod.POST)
-  public ResponseEntity<InstallReAppointmentRequestDto> installReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
-
-    LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
-
-    // CREATE HISTORY LOG
-    if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
-      MSvcLogApiService.saveInsReServiceLogs(params);
-    }
-
-    String appTime = String.valueOf(params.get("appointmentTime"));
-    int hour = Integer.parseInt(appTime.substring(0, 2));
-
-    if (hour >= 00 && hour <= 10) {
-      params.put("sesionCode", "M");
-    } else if (hour >= 10 && hour <= 14) {
-      params.put("sesionCode", "A");
-    } else if (hour >= 14 && hour <= 19) {
-      params.put("sesionCode", "E");
-    } else {
-      params.put("sesionCode", "O");
-    }
-
-    LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST INFO : ", params);
-
-    MSvcLogApiService.updateInsReAppointmentReturnResult(params);
-
-    return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
-  }
-
-  @ApiOperation(value = "Product Return Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/pRReAppointmentRequest", method = RequestMethod.POST)
-  public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody PRReAppointmentRequestForm pRReAppointmentRequestForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> params = PRReAppointmentRequestForm.createMaps(pRReAppointmentRequestForm);
-
-    LOGGER.debug("==================================[MB]PRODUCT RETURN RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### PRODUCT RETURN RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]PRODUCT RETURN RE APPOINMENT REQUEST ====================================");
-
-    if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
-      MSvcLogApiService.savePrReServiceLogs(params);
-    }
-
-    MSvcLogApiService.updatePrReAppointmentReturnResult(params);
-
-    transactionId = pRReAppointmentRequestForm.getTransactionId();
-    return ResponseEntity.ok(PRReAppointmentRequestDto.create(transactionId));
   }
 
   @ApiOperation(value = "After Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1079,24 +357,20 @@ public class ServiceApiController {
   public ResponseEntity<ASReAppointmentRequestDto> aSReAppointmentRequest(@RequestBody ASReAppointmentRequestForm aSReAppointmentRequestForm) throws Exception {
     String transactionId = "";
     SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
-    SimpleDateFormat transFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+    // SimpleDateFormat transFormat1 = new SimpleDateFormat("yyyy-MM-dd");
     DateFormat sdFormat = new SimpleDateFormat("ddMMyyyy");
-    DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+    // DateFormat sdFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 
     DateFormat timeFormatOrg = new SimpleDateFormat("HHmm");
     DateFormat timeFormatNew = new SimpleDateFormat("HH:mm:ss.SSS");
 
     Map<String, Object> params = ASReAppointmentRequestForm.createMaps(aSReAppointmentRequestForm);
 
-    LOGGER.debug("==================================[MB]AS RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### AS RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]AS RE APPOINMENT REQUEST ====================================");
-
     if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
       MSvcLogApiService.saveAsReServiceLogs(params);
     }
 
-    String userId = MSvcLogApiService.getUseridToMemid(params);
+    // String userId = MSvcLogApiService.getUseridToMemid(params);
     Date appointmentTime = timeFormatOrg.parse((String) params.get("appointmentTime"));
     String appointmentTime1 = timeFormatNew.format(appointmentTime);
 
@@ -1119,204 +393,272 @@ public class ServiceApiController {
     params.put("AS_NO", params.get("serviceNo"));
     params.put("AS_UPD_USER_ID", params.get("userId"));
 
-    LOGGER.debug("### AS RE APPOINTMENT REQUEST INFO : ", params.toString());
     // ASManagementListService.updateASEntry(params);
 
     MSvcLogApiService.updateReApointResult(params);
     return ResponseEntity.ok(ASReAppointmentRequestDto.create(transactionId));
   }
 
-  @ApiOperation(value = "Heart Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/hSFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<HSFailJobRequestDto> hSFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
-    return serviceApiHSService.hsFailJobRequest(hSFailJobRequestForm);
-
-    // String transactionId = "";
-    //
-    // Map<String, Object> params =
-    // HSFailJobRequestForm.createMaps(hSFailJobRequestForm);
-    //
-    // LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST
-    // ====================================");
-    // LOGGER.debug("### HS FAIL JOB REQUEST FORM : " + params.toString());
-    // LOGGER.debug("==================================[MB]HS FAIL JOB REQUEST
-    // ====================================");
-    //
-    // // INSERT LOG HISTORY
-    // if (RegistrationConstants.IS_INSERT_HSFAIL_LOG) {
-    // MSvcLogApiService.saveHsFailServiceLogs(params);
-    // }
-    //
-    // MSvcLogApiService.insertHsFailJobResult(params);
-    // MSvcLogApiService.upDateHsFailJobResultM(params);
-    //
-    // return ResponseEntity.ok(HSFailJobRequestDto.create(transactionId));
-  }
-
   @ApiOperation(value = "After Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/aSFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<ASFailJobRequestDto> aSFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm) throws Exception {
     return serviceApiASService.asFailJobRequest(aSFailJobRequestForm);
-
-    // String transactionId = "";
-    //
-    // Map<String, Object> params =
-    // ASFailJobRequestForm.createMaps(aSFailJobRequestForm);
-    //
-    // LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST
-    // ====================================");
-    // LOGGER.debug("### AS FAIL JOB REQUEST FORM : " + params.toString());
-    // LOGGER.debug("==================================[MB]AS FAIL JOB REQUEST
-    // ====================================");
-    //
-    // if (RegistrationConstants.IS_INSERT_ASFAIL_LOG) {
-    // MSvcLogApiService.saveAsFailServiceLogs(params);
-    // }
-    //
-    // MSvcLogApiService.insertAsFailJobResult(params);
-    // MSvcLogApiService.upDatetAsFailJobResultM(params);
-    //
-    // return ResponseEntity.ok(ASFailJobRequestDto.create(transactionId));
   }
 
-  // FAIL INSTALLATION
+  @ApiOperation(value = "AS Request Result List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/aSRequestResultList", method = RequestMethod.POST)
+  public ResponseEntity<List<ASRequestResultDto>> aSRequestResultList(@RequestBody ASRequestResultForm aSRequestResultForm) throws Exception {
+    Map<String, Object> map = new HashMap<String, Object>();
+
+    map.put("userId", (String) aSRequestResultForm.getUserId());
+    map.put("searchFromDate", (String) aSRequestResultForm.getSearchFromDate());
+    map.put("searchToDate", (String) aSRequestResultForm.getSearchToDate());
+
+    List<EgovMap> rcList = MSvcLogApiService.getASRequestResultList(map);
+
+    List<ASRequestResultDto> list = rcList.stream().map(r -> ASRequestResultDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "AS Request Customer Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/aSRequestCust", method = RequestMethod.POST)
+  public ResponseEntity<List<ASRequestCustDto>> aSRequestCust(@RequestBody ASRequestCustForm aSRequestCustForm) throws Exception {
+    Map<String, Object> map = new HashMap<String, Object>();
+
+    map.put("userId", (String) aSRequestCustForm.getUserId());
+    map.put("searchType", (String) aSRequestCustForm.getSearchType());
+    map.put("searchKeyword", (String) aSRequestCustForm.getSearchKeyword());
+
+    List<EgovMap> rcList = MSvcLogApiService.getASRequestCustList(map);
+
+    List<ASRequestCustDto> list = rcList.stream().map(r -> ASRequestCustDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "AS Request Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/aSRequestRegistration", method = RequestMethod.POST)
+  public ResponseEntity<ASRequestRegistDto> aSRequestRegistration(@RequestBody ASRequestRegistForm aSRequestRegistForm) throws Exception {
+
+    String transactionId = "";
+    Map<String, Object> params = ASRequestRegistForm.createMaps(aSRequestRegistForm);
+
+
+    if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
+      MSvcLogApiService.saveASRequestRegistrationLogs(params);
+    }
+
+    MSvcLogApiService.insertASRequestRegist(params);
+
+    return ResponseEntity.ok(ASRequestRegistDto.create(transactionId));
+  }
+
+  /* HA AFTER SERVICE - END */
+
+  /* HA INSTALLATION - START */
+  @SuppressWarnings("static-access")
+  @ApiOperation(value = "InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installationJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
+    Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
+
+    List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList(params);
+
+    List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @SuppressWarnings("static-access")
+  @ApiOperation(value = "InstallationJob List batchSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installationJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<InstallationJobDto>> getInstallationJobList_b(@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
+
+    Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
+
+    List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
+
+    List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installationResult", method = RequestMethod.POST)
+  public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+    return serviceApiInstallationService.installationResult(installationResultForms);
+  }
+
+  @ApiOperation(value = "Installation Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installReAppointmentRequest", method = RequestMethod.POST)
+  public ResponseEntity<InstallReAppointmentRequestDto> installReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm) throws Exception {
+    String transactionId = "";
+
+    Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
+
+    if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+      MSvcLogApiService.saveInsReServiceLogs(params);
+    }
+
+    String appTime = String.valueOf(params.get("appointmentTime"));
+    int hour = Integer.parseInt(appTime.substring(0, 2));
+
+    if (hour >= 00 && hour <= 10) {
+      params.put("sesionCode", "M");
+    } else if (hour >= 10 && hour <= 14) {
+      params.put("sesionCode", "A");
+    } else if (hour >= 14 && hour <= 19) {
+      params.put("sesionCode", "E");
+    } else {
+      params.put("sesionCode", "O");
+    }
+
+    MSvcLogApiService.updateInsReAppointmentReturnResult(params);
+
+    return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
+  }
+
   @ApiOperation(value = "Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/installFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<InstallFailJobRequestDto> installFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
     return serviceApiInstallationService.installFailJobRequest(installFailJobRequestForm);
   }
 
+  /* HA INSTALLATION - END */
+
+  /* HA PRODUCT RETURN - START */
+  @SuppressWarnings("static-access")
+  @ApiOperation(value = "ProductReturnJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
+    Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
+
+    List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
+
+    List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @SuppressWarnings("static-access")
+  @ApiOperation(value = "ProductReturnJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/productRetrunJobList_b", method = RequestMethod.GET)
+  public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList_b(@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
+
+    Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
+
+    List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
+
+    List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/productReturnResult", method = RequestMethod.POST)
+  public ResponseEntity<ProductReturnResultDto> productReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
+    return serviceApiPRService.productReturnResult(productReturnResultForm);
+  }
+
+  @ApiOperation(value = "Product Return Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/pRReAppointmentRequest", method = RequestMethod.POST)
+  public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody PRReAppointmentRequestForm pRReAppointmentRequestForm) throws Exception {
+    String transactionId = "";
+
+    Map<String, Object> params = PRReAppointmentRequestForm.createMaps(pRReAppointmentRequestForm);
+
+    if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
+      MSvcLogApiService.savePrReServiceLogs(params);
+    }
+
+    MSvcLogApiService.updatePrReAppointmentReturnResult(params);
+
+    transactionId = pRReAppointmentRequestForm.getTransactionId();
+    return ResponseEntity.ok(PRReAppointmentRequestDto.create(transactionId));
+  }
+
   @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/pRFailJobRequest", method = RequestMethod.POST)
   public ResponseEntity<PRFailJobRequestDto> pRReAppointmentRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
     return serviceApiPRService.prReAppointmentRequest(pRFailJobRequestForm);
-
-    // String transactionId = "";
-    //
-    // Map<String, Object> params =
-    // PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
-    //
-    // LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL
-    // JOB REQUEST ====================================");
-    // LOGGER.debug("### PRODUCT RETURN FAIL JOB REQUEST FORM : " +
-    // params.toString());
-    // LOGGER.debug("==================================[MB]PRODUCT RETURN FAIL
-    // JOB REQUEST ====================================");
-    //
-    // if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-    // // NO LOG
-    // }
-    //
-    // MSvcLogApiService.savePrFailServiceLogs(params);
-    // MSvcLogApiService.setPRFailJobRequest(params);
-    // // Call Log Update
-    //
-    // transactionId = pRFailJobRequestForm.getTransactionId();
-    //
-    // if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-    // // MSvcLogApiService.updatePrFailServiceLogs(transactionId);
-    // }
-    //
-    // return ResponseEntity.ok(PRFailJobRequestDto.create(transactionId));
   }
 
-  @ApiOperation(value = "Cancel SMS Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/canSMSRequestRequest", method = RequestMethod.POST)
-  public ResponseEntity<CanCelDto> canSMSRequestRequest(@RequestBody CanCelSmsForm canCelSmsForm) throws Exception {
-    String transactionId = "";
-    SessionVO session = new SessionVO();
+  /* HA PRODUCT RETURN - END */
 
-    Map<String, Object> params = CanCelSmsForm.createMap(canCelSmsForm);
+  /* HOMECARE */
+  /* HC HEART SERVICE - START */
+  @ApiOperation(value = "HomeCare Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
+    Map<String, Object> params = CareServiceJobForm.createMap(careServiceJobForm);
 
-    LOGGER.debug("==================================[MB]CANCEL SMS REQUEST ====================================");
-    LOGGER.debug("### CANCEL SMS REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]CANCEL SMS REQUEST ====================================");
+    List<EgovMap> careServiceJobList = MSvcLogApiService.getCareServiceJobList(params);
 
-    List<String> mobileNumList = new ArrayList<String>();
+    List<CareServiceJobDto> list = careServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
 
-    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-      MSvcLogApiService.saveCanSMSServiceLogs(params);
-    }
-
-    String cancReqNo = "";
-    cancReqNo = MSvcLogApiService.getcancReqNo(params);
-    params.put("cancReqNo", cancReqNo);
-
-    MSvcLogApiService.insertCancelSMS(params);
-
-    // send SMS
-    SmsVO sms = new SmsVO(session.getUserId(), 975);
-
-    String smsString = ("Do you really want to cancel for the current month Heart Service? " + "\n" + " HS Order Number :" + params.get("serviceNo") + "\n" + " Cancel Request Number :" + cancReqNo);
-
-    sms.setMessage(smsString);
-    sms.setMobiles((String) canCelSmsForm.getReceiverTelNo());
-
-    LOGGER.debug("### CANCEL SMS REQUEST STRING : ", smsString);
-
-    SmsResult smsResult = adaptorService.sendSMS(sms);
-
-    return ResponseEntity.ok(CanCelDto.create(transactionId));
+    return ResponseEntity.ok(list);
   }
 
-  @ApiOperation(value = "selectSyncIhr", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/selectSyncIhr", method = RequestMethod.GET)
-  public ResponseEntity<List<SyncIhrApiDto>> selectSyncIhr(@ModelAttribute SyncIhrApiForm param) throws Exception {
-    List<EgovMap> selectSyncIhr = ihrApiService.selectSyncIhr(param);
-    if (LOGGER.isErrorEnabled()) {
-      for (int i = 0; i < selectSyncIhr.size(); i++) {
-        LOGGER.debug("selectSyncIhr    값 : {}", selectSyncIhr.get(i));
-      }
-    }
-    return ResponseEntity.ok(selectSyncIhr.stream().map(r -> SyncIhrApiDto.create(r)).collect(Collectors.toList()));
+  @ApiOperation(value = "HomeCare Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hcServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<HcServiceJobDto>> getHcServiceJob(@ModelAttribute HcServiceJobForm hcServiceJobForm) throws Exception {
+    Map<String, Object> params = HcServiceJobForm.createMap(hcServiceJobForm);
+
+    List<EgovMap> hcServiceJobList = MSvcLogApiService.getHcServiceJobList(params);
+
+    List<HcServiceJobDto> list = hcServiceJobList.stream().map(r -> HcServiceJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
   }
 
-	 @ApiOperation(value = "selectPartnerCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	    @RequestMapping(value = "/selectPartnerCode", method = RequestMethod.GET)
-	    public ResponseEntity<List<HomecareServiceApiDto>> selectPartnerCode(@ModelAttribute HomecareServiceApiForm param) throws Exception {
-	        List<EgovMap>  selectPartnerCode = homecareServiceApiService.selectPartnerCode(param);
-	        if(LOGGER.isErrorEnabled()){
-	            for (int i = 0; i < selectPartnerCode.size(); i++) {
-	                    LOGGER.debug("selectPartnerCode    값 : {}", selectPartnerCode.get(i));
-	            }
-	        }
-	        return ResponseEntity.ok(selectPartnerCode.stream().map(r -> HomecareServiceApiDto.create(r)).collect(Collectors.toList()));
-	    }
+  @ApiOperation(value = "HomeCare Heart Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceParts", method = RequestMethod.GET)
+  public ResponseEntity<List<CareServicePartsDto>> getCareServiceParts(@ModelAttribute CareServicePartsForm careServicePartsForm) throws Exception {
+    Map<String, Object> params = CareServicePartsForm.createMap(careServicePartsForm);
 
-	 @ApiOperation(value = "selectAsPartnerCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	    @RequestMapping(value = "/selectAsPartnerCode", method = RequestMethod.GET)
-	    public ResponseEntity<List<HomecareAfterServiceApiDto>> selectAsPartnerCode(@ModelAttribute HomecareAfterServiceApiForm param) throws Exception {
-	        List<EgovMap>  selectAsPartnerCode = homecareServiceApiService.selectAsPartnerCode(param);
-	        if(LOGGER.isErrorEnabled()){
-	            for (int i = 0; i < selectAsPartnerCode.size(); i++) {
-	                    LOGGER.debug("selectAsPartnerCode    값 : {}", selectAsPartnerCode.get(i));
-	            }
-	        }
-	        return ResponseEntity.ok(selectAsPartnerCode.stream().map(r -> HomecareAfterServiceApiDto.create(r)).collect(Collectors.toList()));
-	    }
+    List<EgovMap> careServiceParts = MSvcLogApiService.heartServiceParts(params);
 
-  @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/selectAsDetails", method = RequestMethod.GET)
-  public ResponseEntity<AsDetailDto> selectAsDetails(@ModelAttribute AsDetailForm param) throws Exception {
-    return ResponseEntity.ok(MSvcLogApiService.selectAsDetails(param));
+    List<CareServicePartsDto> list = careServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
   }
 
-  @ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
-  public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm) throws Exception {
+  @ApiOperation(value = "Homecare Heart Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hTReAppointmtRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSReAppointmtRequestDto> hTReAppointmtRequest(@RequestBody HSReAppointmtRequestForm hSReAppointmtRequestForm) throws Exception {
     String transactionId = "";
 
+    Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
+
+    MSvcLogApiService.updateHTReAppointmentReturnResult(params);
+
+    return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
+  }
+
+  @ApiOperation(value = "Homecare Heart Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/htFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<HSFailJobRequestDto> htFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
+    return serviceApiHSService.htFailJobRequest(hSFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Homecare Heart Service Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/careServiceResult", method = RequestMethod.POST)
+  public ResponseEntity<HeartServiceResultDto> careServiceResult(@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
+    return serviceApiHSService.htResult(heartForms);
+  }
+
+  @SuppressWarnings("unchecked")
+  @ApiOperation(value = "HomeCare Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/hcServiceHistory", method = RequestMethod.POST)
+  public ResponseEntity<List<ServiceHistoryDto>> hcServiceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm) throws Exception {
     Map<String, Object> params = ServiceHistoryForm.createMaps(serviceHistoryForm);
 
-    LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
-    LOGGER.debug("### SERVICE HISTORY LIST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
-
-    List<EgovMap> headerList = MSvcLogApiService.serviceHistory(params);
+    List<EgovMap> headerList = MSvcLogApiService.hcServiceHistory(params);
 
     List<ServiceHistoryDto> hList = new ArrayList<>();
     for (int i = 0; i < headerList.size(); i++) {
-      LOGGER.debug("### SERVICE HISTORY LIST : " + headerList.get(i).toString());
+      LOGGER.debug("# SERVICE HISTORY LIST : " + headerList.get(i).toString());
     }
 
     for (int i = 0; i < headerList.size(); i++) {
@@ -1325,10 +667,9 @@ public class ServiceApiController {
       for (int j = 0; j < hList.size(); j++) {
         Map<String, Object> tmpMap = headerList.get(j);
 
-        LOGGER.debug("### REQUEST STATUS HEADER 1 : ", tmpMap.get("jobType"));
+        LOGGER.debug("# REQUEST STATUS HEADER 1 : ", tmpMap.get("jobType"));
 
         if ("AS".equals(tmpMap.get("jobType").toString())) {
-          // tmpMap.put("asResultId", params.get("asResultId"));
           List<EgovMap> historyParts = MSvcLogApiService.getAsPartsHistoryDList(tmpMap);
 
           List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
@@ -1345,16 +686,280 @@ public class ServiceApiController {
       for (int k = 0; k < hList.size(); k++) {
         Map<String, Object> tmpMap1 = headerList.get(k);
 
-        LOGGER.debug("### REQUEST STATUS HEADER 2 : " + tmpMap1.get("jobType").toString());
+        LOGGER.debug("# REQUEST STATUS HEADER 2 : " + tmpMap1.get("jobType").toString());
 
         if ("AS".equals(tmpMap1.get("jobType").toString())) {
-          // tmpMap1.put("searchStatus", params.get("searchStatus"));
           List<EgovMap> historyFilters = MSvcLogApiService.getAsFilterHistoryDList(tmpMap1);
 
           List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
           hList.get(k).setFilterList(filterList);
         } else {
-          // tmpMap1.put("searchStatus", params.get("searchStatus"));
+          tmpMap1.put("bsResultId", tmpMap1.get("asResultId"));
+          List<EgovMap> historyFilters = MSvcLogApiService.getHsFilterHistoryDList(tmpMap1);
+
+          List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
+          hList.get(k).setFilterList(filterList);
+        }
+      }
+    }
+
+    return ResponseEntity.ok(hList);
+  }
+
+  /* HC HEART SERVICE - END */
+
+  /* HC AFTER SERVICE - START */
+  @ApiOperation(value = "Homecare After Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServiceJobDto>> getDtAfterServiceJobList(@ModelAttribute DtAfterServiceJobForm dtAfterServiceJobForm) throws Exception {
+    Map<String, Object> params = DtAfterServiceJobForm.createMap(dtAfterServiceJobForm);
+
+    List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
+
+    List<DtAfterServiceJobDto> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Homecare After Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceParts", method = RequestMethod.GET)
+  public ResponseEntity<List<DtAfterServicePartsDto>> getDtAfterServiceParts(@ModelAttribute DtAfterServicePartsForm dtAfterServicePartsForm) throws Exception {
+    Map<String, Object> params = DtAfterServicePartsForm.createMap(dtAfterServicePartsForm);
+
+    List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts(params);
+
+    List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Homecare After Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAsFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<ASFailJobRequestDto> dtAsFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm) throws Exception {
+    return serviceApiASService.asFailJobRequest(aSFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Homecare After Service Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtAfterServiceResult", method = RequestMethod.POST)
+  public ResponseEntity<AfterServiceResultDto> dtAfterServiceResult(@RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
+    return serviceApiASService.asDtResult(afterServiceForms);
+  }
+
+  /* HC AFTER SERVICE - END */
+
+  /* HC INSTALLATION - START */
+  @ApiOperation(value = "Homecare Installation Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallationJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList(@ModelAttribute DtInstallationJobForm dtInstallationJobForm) throws Exception {
+    Map<String, Object> params = DtInstallationJobForm.createMap(dtInstallationJobForm);
+
+    List<EgovMap> dtInstallationJobList = MSvcLogApiService.getDtInstallationJobList(params);
+
+    List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Homecare Installation DT Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/installDtReAppointmentRequest", method = RequestMethod.POST)
+  public ResponseEntity<InstallReAppointmentRequestDto> installDtReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm) throws Exception {
+    String transactionId = "";
+
+    Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
+
+    if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
+      MSvcLogApiService.saveInsReServiceLogs(params);
+    }
+
+    String appTime = String.valueOf(params.get("appointmentTime"));
+    int hour = Integer.parseInt(appTime.substring(0, 2));
+
+    if (hour >= 00 && hour <= 10) {
+      params.put("sesionCode", "M");
+    } else if (hour >= 10 && hour <= 14) {
+      params.put("sesionCode", "A");
+    } else if (hour >= 14 && hour <= 19) {
+      params.put("sesionCode", "E");
+    } else {
+      params.put("sesionCode", "O");
+    }
+
+    MSvcLogApiService.updateInsDtReAppointmentReturnResult(params);
+
+    return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
+  }
+
+  @ApiOperation(value = "Homecare Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<InstallFailJobRequestDto> dtInstallFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
+    return serviceApiInstallationService.installDtFailJobRequest(installFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Homecare Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtInstallationResult", method = RequestMethod.POST)
+  public ResponseEntity<InstallationResultDto> dtInstallationResult(@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+    return serviceApiInstallationService.installationDtResult(installationResultForms);
+  }
+
+  /* HC INSTALLATION - END */
+
+  /* HC PRODUCT RETURN - START */
+  @ApiOperation(value = "Homecare Product Return Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtProductRetrunJobList", method = RequestMethod.GET)
+  public ResponseEntity<List<DtProductRetrunJobDto>> getDtProductRetrunJobList(@ModelAttribute DtProductRetrunJobForm dtProductRetrunJobForm) throws Exception {
+    Map<String, Object> params = DtProductRetrunJobForm.createMap(dtProductRetrunJobForm);
+
+    List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
+
+    List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Homecare Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtPRFailJobRequest", method = RequestMethod.POST)
+  public ResponseEntity<PRFailJobRequestDto> dtPRFailJobRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
+    return serviceApiPRService.prReAppointmentDtRequest(pRFailJobRequestForm);
+  }
+
+  @ApiOperation(value = "Homecare Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/dtProductReturnResult", method = RequestMethod.POST)
+  public ResponseEntity<ProductReturnResultDto> dtProductReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
+    return serviceApiPRService.productReturnDtResult(productReturnResultForm);
+  }
+  /* HC PRODUCT RETURN - END */
+
+  /* OTHER - RC LISTING */
+  @ApiOperation(value = "Display RC List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/rcList", method = RequestMethod.POST)
+  public ResponseEntity<List<RentalServiceCustomerDto>> rentalCustomerPaymentList(@RequestBody RentalServiceCustomerForm rentalForm) throws Exception {
+
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("userId", String.valueOf(rentalForm.getUserId()));
+    map.put("searchType", String.valueOf(rentalForm.getSearchType()));
+    map.put("searchKeyword", String.valueOf(rentalForm.getSearchKeyword()));
+
+    List<EgovMap> rcList = MSvcLogApiService.getRentalCustomerList(map);
+
+    List<RentalServiceCustomerDto> list = null;
+
+    if (rcList != null) {
+      list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r)).collect(Collectors.toList());
+    }
+
+    return ResponseEntity.ok(list);
+  }
+
+  @ApiOperation(value = "Cancel SMS Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/canSMSRequestRequest", method = RequestMethod.POST)
+  public ResponseEntity<CanCelDto> canSMSRequestRequest(@RequestBody CanCelSmsForm canCelSmsForm) throws Exception {
+    String transactionId = "";
+    SessionVO session = new SessionVO();
+
+    Map<String, Object> params = CanCelSmsForm.createMap(canCelSmsForm);
+
+    // List<String> mobileNumList = new ArrayList<String>();
+
+    if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+      MSvcLogApiService.saveCanSMSServiceLogs(params);
+    }
+
+    String cancReqNo = "";
+    cancReqNo = MSvcLogApiService.getcancReqNo(params);
+    params.put("cancReqNo", cancReqNo);
+
+    MSvcLogApiService.insertCancelSMS(params);
+
+    SmsVO sms = new SmsVO(session.getUserId(), 975);
+
+    String smsString = ("Do you really want to cancel for the current month Heart Service? " + "\n" + " HS Order Number :" + params.get("serviceNo") + "\n" + " Cancel Request Number :" + cancReqNo);
+
+    sms.setMessage(smsString);
+    sms.setMobiles((String) canCelSmsForm.getReceiverTelNo());
+
+    // SmsResult smsResult = adaptorService.sendSMS(sms);
+
+    return ResponseEntity.ok(CanCelDto.create(transactionId));
+  }
+
+  @ApiOperation(value = "selectSyncIhr", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectSyncIhr", method = RequestMethod.GET)
+  public ResponseEntity<List<SyncIhrApiDto>> selectSyncIhr(@ModelAttribute SyncIhrApiForm param) throws Exception {
+    List<EgovMap> selectSyncIhr = ihrApiService.selectSyncIhr(param);
+
+    if (LOGGER.isErrorEnabled()) {
+      for (int i = 0; i < selectSyncIhr.size(); i++) {
+        LOGGER.debug("selectSyncIhr    값 : {}", selectSyncIhr.get(i));
+      }
+    }
+
+    return ResponseEntity.ok(selectSyncIhr.stream().map(r -> SyncIhrApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "selectPartnerCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectPartnerCode", method = RequestMethod.GET)
+  public ResponseEntity<List<HomecareServiceApiDto>> selectPartnerCode(@ModelAttribute HomecareServiceApiForm param) throws Exception {
+      List<EgovMap>  selectPartnerCode = homecareServiceApiService.selectPartnerCode(param);
+      if(LOGGER.isErrorEnabled()){
+          for (int i = 0; i < selectPartnerCode.size(); i++) {
+            LOGGER.debug("PAIRING PARTNER CODE : {}", selectPartnerCode.get(i));
+          }
+      }
+      return ResponseEntity.ok(selectPartnerCode.stream().map(r -> HomecareServiceApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectAsDetails", method = RequestMethod.GET)
+  public ResponseEntity<AsDetailDto> selectAsDetails(@ModelAttribute AsDetailForm param) throws Exception {
+    return ResponseEntity.ok(MSvcLogApiService.selectAsDetails(param));
+  }
+
+  @SuppressWarnings("unchecked")
+  @ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
+  public ResponseEntity<List<ServiceHistoryDto>> serviceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm) throws Exception {
+    Map<String, Object> params = ServiceHistoryForm.createMaps(serviceHistoryForm);
+
+    List<EgovMap> headerList = MSvcLogApiService.serviceHistory(params);
+
+    List<ServiceHistoryDto> hList = new ArrayList<>();
+    for (int i = 0; i < headerList.size(); i++) {
+      LOGGER.debug("# SERVICE HISTORY LIST : " + headerList.get(i).toString());
+    }
+
+    for (int i = 0; i < headerList.size(); i++) {
+      hList = headerList.stream().map(r -> ServiceHistoryDto.create(r)).collect(Collectors.toList());
+
+      for (int j = 0; j < hList.size(); j++) {
+        Map<String, Object> tmpMap = headerList.get(j);
+
+        LOGGER.debug("# REQUEST STATUS HEADER 1 : ", tmpMap.get("jobType"));
+
+        if ("AS".equals(tmpMap.get("jobType").toString())) {
+          List<EgovMap> historyParts = MSvcLogApiService.getAsPartsHistoryDList(tmpMap);
+
+          List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
+          hList.get(j).setPartList(partsList);
+        } else {
+          tmpMap.put("bsResultId", tmpMap.get("asResultId"));
+          List<EgovMap> historyParts = MSvcLogApiService.getHsPartsHistoryDList(tmpMap);
+
+          List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
+          hList.get(j).setPartList(partsList);
+        }
+      }
+
+      for (int k = 0; k < hList.size(); k++) {
+        Map<String, Object> tmpMap1 = headerList.get(k);
+
+        LOGGER.debug("# REQUEST STATUS HEADER 2 : " + tmpMap1.get("jobType").toString());
+
+        if ("AS".equals(tmpMap1.get("jobType").toString())) {
+          List<EgovMap> historyFilters = MSvcLogApiService.getAsFilterHistoryDList(tmpMap1);
+
+          List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
+          hList.get(k).setFilterList(filterList);
+        } else {
           tmpMap1.put("bsResultId", tmpMap1.get("asResultId"));
           List<EgovMap> historyFilters = MSvcLogApiService.getHsFilterHistoryDList(tmpMap1);
 
@@ -1369,23 +974,17 @@ public class ServiceApiController {
   @ApiOperation(value = "Outstanding Result", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/outstandingResult", method = RequestMethod.POST)
   public ResponseEntity<OutStandingResultVo> outStandingResult(@RequestBody RentalServiceCustomerForm rentalForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> map = new HashMap();
+    Map<String, Object> map = new HashMap<String, Object>();
 
     map.put("userId", (String) rentalForm.getUserId());
     map.put("salesOrderNo", (String) rentalForm.getSalesOrderNo());
-
-    LOGGER.debug("==================================[MB]OUTSTANDING RESULT ====================================");
-    LOGGER.debug("### OUTSTANDING RESULT FORM : " + rentalForm.toString());
-    LOGGER.debug("==================================[MB]OUTSTANDING RESULT ====================================");
 
     OutStandingResultVo orv = new OutStandingResultVo();
 
     Map<String, Object> rmap = MSvcLogApiService.selectOutstandingResult(map);
 
     if (rmap != null) {
-      LOGGER.debug(" :::: {}", rmap);
+      LOGGER.debug(" rmap {}", rmap);
     }
 
     List<EgovMap> rcList = MSvcLogApiService.selectOutstandingResultDetailList(map);
@@ -1408,385 +1007,8 @@ public class ServiceApiController {
       orv.setSumAdjust("0");
     }
 
-    /*
-     * List<OutStandignResultDetail> list = rcList.stream().map(r ->
-     * RentalServiceCustomerDto.create(r)) .collect(Collectors.toList());
-     */
     return ResponseEntity.ok(orv);
 
-  }
-
-  @ApiOperation(value = "AS Request Result List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/aSRequestResultList", method = RequestMethod.POST)
-  public ResponseEntity<List<ASRequestResultDto>> aSRequestResultList(@RequestBody ASRequestResultForm aSRequestResultForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> map = new HashMap();
-
-    map.put("userId", (String) aSRequestResultForm.getUserId());
-    map.put("searchFromDate", (String) aSRequestResultForm.getSearchFromDate());
-    map.put("searchToDate", (String) aSRequestResultForm.getSearchToDate());
-
-    List<EgovMap> rcList = MSvcLogApiService.getASRequestResultList(map);
-
-    LOGGER.debug("==================================[MB]AS REQUEST RESULT LIST ====================================");
-    LOGGER.debug("### AS REQUEST RESULT LIST : " + rcList.toString());
-    LOGGER.debug("==================================[MB]AS REQUEST RESULT LIST ====================================");
-
-    List<ASRequestResultDto> list = rcList.stream().map(r -> ASRequestResultDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-
-  }
-
-  @ApiOperation(value = "AS Request Customer Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/aSRequestCust", method = RequestMethod.POST)
-  public ResponseEntity<List<ASRequestCustDto>> aSRequestCust(@RequestBody ASRequestCustForm aSRequestCustForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> map = new HashMap();
-
-    map.put("userId", (String) aSRequestCustForm.getUserId());
-    map.put("searchType", (String) aSRequestCustForm.getSearchType());
-    map.put("searchKeyword", (String) aSRequestCustForm.getSearchKeyword());
-
-    List<EgovMap> rcList = MSvcLogApiService.getASRequestCustList(map);
-
-    LOGGER.debug("==================================[MB]AS REQUEST CUSTOMER SEARCH ====================================");
-    LOGGER.debug("### AS REQUEST CUSTOMER SEARCH : " + rcList.toString());
-    LOGGER.debug("==================================[MB]AS REQUEST CUSTOMER SEARCH ====================================");
-
-    List<ASRequestCustDto> list = rcList.stream().map(r -> ASRequestCustDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-
-  }
-
-  @ApiOperation(value = "AS Request Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/aSRequestRegistration", method = RequestMethod.POST)
-  public ResponseEntity<ASRequestRegistDto> aSRequestRegistration(@RequestBody ASRequestRegistForm aSRequestRegistForm) throws Exception {
-
-    String transactionId = "";
-    Map<String, Object> params = ASRequestRegistForm.createMaps(aSRequestRegistForm);
-
-    LOGGER.debug("==================================[MB]AS REQUEST REGISTRATION ====================================");
-    LOGGER.debug("### AS REQUEST REGISTRATION FORM : ", params.toString());
-    LOGGER.debug("==================================[MB]AS REQUEST REGISTRATION ====================================");
-
-    if (RegistrationConstants.IS_INSERT_ASRE_LOG) {
-      MSvcLogApiService.saveASRequestRegistrationLogs(params);
-    }
-
-    MSvcLogApiService.insertASRequestRegist(params);
-
-    return ResponseEntity.ok(ASRequestRegistDto.create(transactionId));
-  }
-
-  /* Woongjin Jun */
-  @ApiOperation(value = "Care Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/careServiceJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<CareServiceJobDto>> getCareServiceJob(@ModelAttribute CareServiceJobForm careServiceJobForm) throws Exception {
-    Map<String, Object> params = CareServiceJobForm.createMap(careServiceJobForm);
-
-    List<EgovMap> careServiceJobList = MSvcLogApiService.getCareServiceJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
-    for (int i = 0; i < careServiceJobList.size(); i++) {
-      LOGGER.debug("careServiceJobList: {}", careServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]CARE SERVICE JOB LIST SEARCH====================================");
-    */
-
-    List<CareServiceJobDto> list = careServiceJobList.stream().map(r -> CareServiceJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Home Care Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/hcServiceJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<HcServiceJobDto>> getHcServiceJob(@ModelAttribute HcServiceJobForm hcServiceJobForm) throws Exception {
-    Map<String, Object> params = HcServiceJobForm.createMap(hcServiceJobForm);
-
-    List<EgovMap> hcServiceJobList = MSvcLogApiService.getHcServiceJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
-    for (int i = 0; i < hcServiceJobList.size(); i++) {
-      LOGGER.debug("careServiceJobList: {}", hcServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]HOME CARE SERVICE JOB LIST SEARCH====================================");
-    */
-
-    List<HcServiceJobDto> list = hcServiceJobList.stream().map(r -> HcServiceJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Care Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/careServiceParts", method = RequestMethod.GET)
-  public ResponseEntity<List<CareServicePartsDto>> getCareServiceParts(@ModelAttribute CareServicePartsForm careServicePartsForm) throws Exception {
-    Map<String, Object> params = CareServicePartsForm.createMap(careServicePartsForm);
-
-    List<EgovMap> careServiceParts = MSvcLogApiService.heartServiceParts(params);
-
-    /*
-    LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
-    for (int i = 0; i < careServiceParts.size(); i++) {
-      LOGGER.debug("careServiceParts : {}", careServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]CARE SERVICE PART LIST SEARCH====================================");
-    */
-
-    List<CareServicePartsDto> list = careServiceParts.stream().map(r -> CareServicePartsDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT AfterServiceJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAfterServiceJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<DtAfterServiceJobDto>> getDtAfterServiceJobList(@ModelAttribute DtAfterServiceJobForm dtAfterServiceJobForm) throws Exception {
-    Map<String, Object> params = DtAfterServiceJobForm.createMap(dtAfterServiceJobForm);
-
-    List<EgovMap> dtAfterServiceJobList = MSvcLogApiService.getAfterServiceJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
-    for (int i = 0; i < dtAfterServiceJobList.size(); i++) {
-      LOGGER.debug("dtAfterServiceJobList : {}", dtAfterServiceJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE JOB LIST SEARCH====================================");
-    */
-
-    List<DtAfterServiceJobDto> list = dtAfterServiceJobList.stream().map(r -> DtAfterServiceJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT After Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAfterServiceParts", method = RequestMethod.GET)
-  public ResponseEntity<List<DtAfterServicePartsDto>> getDtAfterServiceParts(@ModelAttribute DtAfterServicePartsForm dtAfterServicePartsForm) throws Exception {
-    Map<String, Object> params = DtAfterServicePartsForm.createMap(dtAfterServicePartsForm);
-
-    List<EgovMap> dtAfterServiceParts = MSvcLogApiService.afterServiceParts(params);
-
-    /*
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
-    for (int i = 0; i < dtAfterServiceParts.size(); i++) {
-      LOGGER.debug("dtAfterServiceParts : {}", dtAfterServiceParts.get(i));
-    }
-    LOGGER.debug("==================================[MB]AFTER SERVICE PART LIST SEARCH====================================");
-    */
-
-    List<DtAfterServicePartsDto> list = dtAfterServiceParts.stream().map(r -> DtAfterServicePartsDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT ProductRetrunJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtProductRetrunJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<DtProductRetrunJobDto>> getDtProductRetrunJobList(@ModelAttribute DtProductRetrunJobForm dtProductRetrunJobForm) throws Exception {
-    Map<String, Object> params = DtProductRetrunJobForm.createMap(dtProductRetrunJobForm);
-
-    List<EgovMap> dtProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
-    for (int i = 0; i < dtProductRetrunJobList.size(); i++) {
-      LOGGER.debug("dtProductRetrunJobList : {}", dtProductRetrunJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]PRODUCT RETURN JOB LIST SEARCH====================================");
-    */
-
-    List<DtProductRetrunJobDto> list = dtProductRetrunJobList.stream().map(r -> DtProductRetrunJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "DT InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtInstallationJobList", method = RequestMethod.GET)
-  public ResponseEntity<List<DtInstallationJobDto>> getDtInstallationJobList(@ModelAttribute DtInstallationJobForm dtInstallationJobForm) throws Exception {
-    Map<String, Object> params = DtInstallationJobForm.createMap(dtInstallationJobForm);
-
-    List<EgovMap> dtInstallationJobList = MSvcLogApiService.getDtInstallationJobList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
-    for (int i = 0; i < dtInstallationJobList.size(); i++) {
-      LOGGER.debug("dtInstallationJobList : {}", dtInstallationJobList.get(i));
-    }
-    LOGGER.debug("==================================[MB]INSTALLATION JOB LIST SEARCH====================================");
-    */
-
-    List<DtInstallationJobDto> list = dtInstallationJobList.stream().map(r -> DtInstallationJobDto.create(r)).collect(Collectors.toList());
-
-    return ResponseEntity.ok(list);
-  }
-
-  @ApiOperation(value = "Care Service Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/hTReAppointmtRequest", method = RequestMethod.POST)
-  public ResponseEntity<HSReAppointmtRequestDto> hTReAppointmtRequest(@RequestBody HSReAppointmtRequestForm hSReAppointmtRequestForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> params = HSReAppointmtRequestForm.createMaps(hSReAppointmtRequestForm);
-
-    /*
-    LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### HT RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]HT RE APPOINMENT REQUEST ====================================");
-    */
-
-    MSvcLogApiService.updateHTReAppointmentReturnResult(params);
-
-    return ResponseEntity.ok(HSReAppointmtRequestDto.create(transactionId));
-  }
-
-  @ApiOperation(value = "Installation DT Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/installDtReAppointmentRequest", method = RequestMethod.POST)
-  public ResponseEntity<InstallReAppointmentRequestDto> installDtReAppointmentRequest(@RequestBody InstallReAppointmentRequestForm installReAppointmentRequestForm) throws Exception {
-    String transactionId = "";
-
-    Map<String, Object> params = InstallReAppointmentRequestForm.createMaps(installReAppointmentRequestForm);
-
-    /*
-    LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
-    LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]INSTALLATION RE APPOINMENT REQUEST ====================================");
-    */
-
-    // CREATE HISTORY LOG
-    if (RegistrationConstants.IS_INSERT_INSRE_LOG) {
-      MSvcLogApiService.saveInsReServiceLogs(params);
-    }
-
-    String appTime = String.valueOf(params.get("appointmentTime"));
-    int hour = Integer.parseInt(appTime.substring(0, 2));
-
-    if (hour >= 00 && hour <= 10) {
-      params.put("sesionCode", "M");
-    } else if (hour >= 10 && hour <= 14) {
-      params.put("sesionCode", "A");
-    } else if (hour >= 14 && hour <= 19) {
-      params.put("sesionCode", "E");
-    } else {
-      params.put("sesionCode", "O");
-    }
-
-    LOGGER.debug("### INSTALLATION RE APPOINTMENT REQUEST INFO : ", params);
-
-    MSvcLogApiService.updateInsDtReAppointmentReturnResult(params);
-
-    return ResponseEntity.ok(InstallReAppointmentRequestDto.create(transactionId));
-  }
-
-  @ApiOperation(value = "Care Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/htFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<HSFailJobRequestDto> htFailJobRequest(@RequestBody HSFailJobRequestForm hSFailJobRequestForm) throws Exception {
-    return serviceApiHSService.htFailJobRequest(hSFailJobRequestForm);
-  }
-
-  @ApiOperation(value = "After Service Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAsFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<ASFailJobRequestDto> dtAsFailJobRequest(@RequestBody ASFailJobRequestForm aSFailJobRequestForm) throws Exception {
-    return serviceApiASService.asFailJobRequest(aSFailJobRequestForm);
-  }
-
-  @ApiOperation(value = "Installation Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtInstallFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<InstallFailJobRequestDto> dtInstallFailJobRequest(@RequestBody InstallFailJobRequestForm installFailJobRequestForm) throws Exception {
-    return serviceApiInstallationService.installDtFailJobRequest(installFailJobRequestForm);
-  }
-
-  @ApiOperation(value = "Product Return Fail Job Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtPRFailJobRequest", method = RequestMethod.POST)
-  public ResponseEntity<PRFailJobRequestDto> dtPRFailJobRequest(@RequestBody PRFailJobRequestForm pRFailJobRequestForm) throws Exception {
-    return serviceApiPRService.prReAppointmentDtRequest(pRFailJobRequestForm);
-  }
-
-  @ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/careServiceResult", method = RequestMethod.POST)
-  public ResponseEntity<HeartServiceResultDto> careServiceResult(@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
-    return serviceApiHSService.htResult(heartForms);
-  }
-
-  @ApiOperation(value = "AfterService Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtAfterServiceResult", method = RequestMethod.POST)
-  public ResponseEntity<AfterServiceResultDto> dtAfterServiceResult(@RequestBody List<AfterServiceResultForm> afterServiceForms) throws Exception {
-    return serviceApiASService.asDtResult(afterServiceForms);
-  }
-
-  @ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtInstallationResult", method = RequestMethod.POST)
-  public ResponseEntity<InstallationResultDto> dtInstallationResult(@RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
-    return serviceApiInstallationService.installationDtResult(installationResultForms);
-  }
-
-  @ApiOperation(value = "Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/dtProductReturnResult", method = RequestMethod.POST)
-  public ResponseEntity<ProductReturnResultDto> dtProductReturnResult(@RequestBody List<ProductReturnResultForm> productReturnResultForm) throws Exception {
-    return serviceApiPRService.productReturnDtResult(productReturnResultForm);
-  }
-
-  @ApiOperation(value = "HomeCare Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/hcServiceHistory", method = RequestMethod.POST)
-  public ResponseEntity<List<ServiceHistoryDto>> hcServiceHistory(@RequestBody ServiceHistoryForm serviceHistoryForm) throws Exception {
-    Map<String, Object> params = ServiceHistoryForm.createMaps(serviceHistoryForm);
-
-    LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
-    LOGGER.debug("### SERVICE HISTORY LIST FORM : " + params.toString());
-    LOGGER.debug("==================================[MB]SERVICE HISTORY LIST ====================================");
-
-    List<EgovMap> headerList = MSvcLogApiService.hcServiceHistory(params);
-
-    List<ServiceHistoryDto> hList = new ArrayList<>();
-    for (int i = 0; i < headerList.size(); i++) {
-      LOGGER.debug("### SERVICE HISTORY LIST : " + headerList.get(i).toString());
-    }
-
-    for (int i = 0; i < headerList.size(); i++) {
-      hList = headerList.stream().map(r -> ServiceHistoryDto.create(r)).collect(Collectors.toList());
-
-      for (int j = 0; j < hList.size(); j++) {
-        Map<String, Object> tmpMap = headerList.get(j);
-
-        LOGGER.debug("### REQUEST STATUS HEADER 1 : ", tmpMap.get("jobType"));
-
-        if ("AS".equals(tmpMap.get("jobType").toString())) {
-          // tmpMap.put("asResultId", params.get("asResultId"));
-          List<EgovMap> historyParts = MSvcLogApiService.getAsPartsHistoryDList(tmpMap);
-
-          List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
-          hList.get(j).setPartList(partsList);
-        } else {
-          tmpMap.put("bsResultId", tmpMap.get("asResultId"));
-          List<EgovMap> historyParts = MSvcLogApiService.getHsPartsHistoryDList(tmpMap);
-
-          List<ServiceHistoryPartDetailDto> partsList = historyParts.stream().map(r -> ServiceHistoryPartDetailDto.create(r)).collect(Collectors.toList());
-          hList.get(j).setPartList(partsList);
-        }
-      }
-
-      for (int k = 0; k < hList.size(); k++) {
-        Map<String, Object> tmpMap1 = headerList.get(k);
-
-        LOGGER.debug("### REQUEST STATUS HEADER 2 : " + tmpMap1.get("jobType").toString());
-
-        if ("AS".equals(tmpMap1.get("jobType").toString())) {
-          List<EgovMap> historyFilters = MSvcLogApiService.getAsFilterHistoryDList(tmpMap1);
-
-          List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
-          hList.get(k).setFilterList(filterList);
-        } else {
-          tmpMap1.put("bsResultId", tmpMap1.get("asResultId"));
-          List<EgovMap> historyFilters = MSvcLogApiService.getHsFilterHistoryDList(tmpMap1);
-
-          List<ServiceHistoryFilterDetailDto> filterList = historyFilters.stream().map(r -> ServiceHistoryFilterDetailDto.create(r)).collect(Collectors.toList());
-          hList.get(k).setFilterList(filterList);
-        }
-      }
-    }
-
-    return ResponseEntity.ok(hList);
   }
 
   @ApiOperation(value = "Serial List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1796,22 +1018,18 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(selectSerialList);
   }
-  /* Woongjin Jun */
 
+  @SuppressWarnings({ "unchecked", "static-access" })
   @ApiOperation(value = "Related Order List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/getRelateOrderInfo", method = RequestMethod.POST)
   public ResponseEntity<List<RelateOrderListDto>> getRelateOrderInfo(@RequestBody RelateOrderListForm RelateOrderListForm) throws Exception {
     Map<String, Object> params = RelateOrderListForm.createMaps(RelateOrderListForm);
 
-    LOGGER.debug("==================================[MB] RELATED ORDER LISTING ====================================");
-    LOGGER.debug("### RELATED ORDER LIST FORM (CUSTOMER BASED) : " + params.toString());
-    LOGGER.debug("==================================[MB] RELATED ORDER LISTING ====================================");
-
     List<EgovMap> headerList = MSvcLogApiService.getRelateOrdLst(params);
 
     List<RelateOrderListDto> hList = new ArrayList<>();
     for (int i = 0; i < headerList.size(); i++) {
-      LOGGER.debug("### RELATED ORDER LIST : " + headerList.get(i).toString());
+      LOGGER.debug("# RELATED ORDER LIST : " + headerList.get(i).toString());
     }
 
     for (int i = 0; i < headerList.size(); i++) {
@@ -1830,23 +1048,14 @@ public class ServiceApiController {
     return ResponseEntity.ok(hList);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "Rental Collection List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/searchRentalCollectionByBSNewList", method = RequestMethod.GET)
   public ResponseEntity<List<DtRentalCollectionListDto>> searchRentalCollectionByBSNewList(@ModelAttribute DtRentalCollectionListForm DtRentalCollectionListForm) throws Exception {
 
     Map<String, Object> params = DtRentalCollectionListForm.createMap(DtRentalCollectionListForm);
 
-    LOGGER.debug("Rental Collection Param", params);
-
     List<EgovMap> DtRentalCollectionList = MSvcLogApiService.searchRentalCollectionByBSNewList(params);
-
-    /*
-    LOGGER.debug("==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
-    for (int i = 0; i < DtRentalCollectionList.size(); i++) {
-      LOGGER.debug("DtRentalCollectionList: {}", DtRentalCollectionList.get(i));
-    }
-    LOGGER.debug("==================================[MB]RENTAL COLLECTION LIST SEARCH====================================");
-    */
 
     List<DtRentalCollectionListDto> list = DtRentalCollectionList.stream().map(r -> DtRentalCollectionListDto.create(r)).collect(Collectors.toList());
 
@@ -1859,10 +1068,10 @@ public class ServiceApiController {
     return ResponseEntity.ok(asFromCodyApiService.selectSubmissionRecords(asFromCodyForm));
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "select Order Info", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectOrderInfo", method = RequestMethod.GET)
   public ResponseEntity<AsFromCodyDto> selectOrderInfo(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
-    @SuppressWarnings("static-access")
     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
     EgovMap resultMap = null;
     resultMap = asFromCodyApiService.selectOrderInfo(params);
@@ -1879,6 +1088,7 @@ public class ServiceApiController {
     asFromCodyApiService.insertAsFromCodyRequest(asFromCodyForm);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "selectSubmissionRecordsAll List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectSubmissionRecordsAll", method = RequestMethod.GET)
   public ResponseEntity<List<AsFromCodyDto>> selectSubmissionRecordsAll(@ModelAttribute AsFromCodyForm asFromCodyForm) throws Exception {
@@ -1886,7 +1096,6 @@ public class ServiceApiController {
     Map<String, Object> params = asFromCodyForm.createMap(asFromCodyForm);
     List<EgovMap> selectSubmissionRecordsAll = null;
 
-    // 주문 조회
     selectSubmissionRecordsAll = asFromCodyApiService.selectSubmissionRecordsAll(params);
 
     List<AsFromCodyDto> recordtList = selectSubmissionRecordsAll.stream().map(r -> AsFromCodyDto.create(r)).collect(Collectors.toList());
@@ -1894,17 +1103,14 @@ public class ServiceApiController {
     return ResponseEntity.ok(recordtList);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "SYSTEM GPS UPDATED", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/updateGPS", method = RequestMethod.POST)
   public ResponseEntity<ArrayList<String>> systemGpsUpdate(@RequestBody UpdateGPSForm UpdateGPSForm) throws Exception {
     Map<String, Object> params = UpdateGPSForm.createMap(UpdateGPSForm);
-    LOGGER.info("[ServiceApiController params updateGPS] params:: {} " + params);
-    LOGGER.debug("##### ServiceApiController params updateGPS #####", params.toString());
 
     JsonObject rtnUpdateGpsObj = new JsonObject();
     rtnUpdateGpsObj = MSvcLogApiService.updateGPS(params);
-    LOGGER.info("[ServiceApiController params updateGPS] rtnUpdateGpsObj:: {} " + rtnUpdateGpsObj);
-    LOGGER.debug("##### ServiceApiController rtnUpdateGpsObj updateGPS #####", rtnUpdateGpsObj.toString());
 
     ArrayList<String> rtn = new ArrayList<String>();
     rtn.add(0, (String) rtnUpdateGpsObj.get("oRtnCode").toString());
@@ -1915,16 +1121,17 @@ public class ServiceApiController {
     return ResponseEntity.ok(rtn);
   }
 
+  @SuppressWarnings("static-access")
   @ApiOperation(value = "CHECK IN MILEAGE", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkInMileage", method = RequestMethod.POST)
   public ResponseEntity<List<EgovMap>> checkInMileage(@RequestBody ServiceMileageForm serviceMileageForm) throws Exception {
 
-       Map<String, Object> params = serviceMileageForm.createMap(serviceMileageForm);
-       List<EgovMap> checkInMileageStat = null;
+     Map<String, Object> params = serviceMileageForm.createMap(serviceMileageForm);
+     List<EgovMap> checkInMileageStat = null;
 
-       checkInMileageStat = serviceMileageApiService.checkInMileage(params);
+     checkInMileageStat = serviceMileageApiService.checkInMileage(params);
 
-       return ResponseEntity.ok(checkInMileageStat);
+     return ResponseEntity.ok(checkInMileageStat);
   }
 
   @ApiOperation(value = "GET CUSTOMER NRIC", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -1934,4 +1141,5 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(getCustNRIC);
   }
+  /* OTHER - END */
 }
