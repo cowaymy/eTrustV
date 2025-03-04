@@ -506,7 +506,8 @@
                                       MEM_CODE as MEM_CODE,
                                       NTU AS NTU,
                                       SRV_TYPE AS SRV_TYPE,
-                                      VOLTAGE AS VOLTAGE
+                                      VOLTAGE AS VOLTAGE,
+                                      PARTNER_CODE_NAME AS PARTNER_CODE_NAME
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
                                            sal0001d.sales_ord_no AS sales_Order_No,
@@ -607,7 +608,8 @@
                                            ELSE '' END AS MEM_CODE,
                                            NVL (SVC0004d.NTU, '') AS NTU,
                                            SAL0090D.SRV_TYPE AS SRV_TYPE,
-                                           TO_CHAR(SVC0004d.VOLT) AS VOLTAGE
+                                           TO_CHAR(SVC0004d.VOLT) AS VOLTAGE,
+                                           TO_CHAR(UPPER(PARTNER.MEM_CODE ||'-'|| PARTNER.NAME)) AS PARTNER_CODE_NAME
                                     FROM sal0001d,
                                          sal0002d,
                                          sal0022d,
@@ -627,7 +629,8 @@
                                          sys0026m,
                                          CCR0006D,
                                          CCR0007D,
-                                         SAL0090D
+                                         SAL0090D,
+                                         ORG0001D PARTNER
                                     WHERE svc0001d.as_mem_id = org0001d.mem_id
                                       AND sal0001d.sales_ord_id = sal0002d.sales_ord_id
                                       AND sal0001d.sales_ord_id = svc0001d.as_so_id
@@ -650,6 +653,7 @@
                                       AND CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID
                                       AND ORG0001D.MEM_CODE = #{userId}
                                       AND SAL0001D.SALES_ORD_ID = SAL0090D.SRV_SO_ID
+                                      AND PARTNER.MEM_ID = SVC0004D.PARTNER_CODE
                                       AND SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                                       AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')))
                               WHERE 1 = 1 AND rn = 1)
@@ -1769,7 +1773,8 @@
                PARTNER_CODE AS PARTNER_CODE,
                TO_CHAR(SRV_TYPE) AS SRV_TYPE,
                NTU AS NTU,
-               TO_CHAR(VOLT) AS VOLTAGE
+               TO_CHAR(VOLT) AS VOLTAGE,
+               TP_CHAR(PARTNER_CODE_NAME) AS PARTNER_CODE_NAME
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
