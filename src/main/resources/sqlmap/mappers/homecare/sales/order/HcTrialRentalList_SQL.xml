@@ -717,7 +717,7 @@
 		        (D.THE_NO - 1) AS INST_NO,
 		        (CASE
 		              WHEN ( (D.THE_NO - 1) = 0 ) THEN t2.INSTALL_DT
-		              ELSE GBSLCVD.FN_GET_FIRST_DAY_MONTH(ADD_MONTHS(t2.INSTALL_DT, (D.THE_NO - 1)))
+		              ELSE FN_GET_FIRST_DAY_MONTH(ADD_MONTHS(t2.INSTALL_DT, (D.THE_NO - 1)))
 		        END) AS INST_DT,
 		        159 AS INST_TYPE_ID,
 		         (CASE WHEN ((NVL(PROMO_DISC_ON_BILL,0)) = 7620 AND ((D.THE_NO - 1) = 1))  THEN 0  ELSE
