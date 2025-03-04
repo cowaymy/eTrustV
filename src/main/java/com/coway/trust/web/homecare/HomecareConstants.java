@@ -29,8 +29,8 @@ public class HomecareConstants {
     		case SalesConstants.APP_TYPE_CODE_ID_RENTAL:
     			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
     			break;
-    		case SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL:
-    			appTypeName = SalesConstants.APP_TYPE_CODE_PRE_RENTAL_FULL;
+    		case SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL:
+    			appTypeName = SalesConstants.APP_TYPE_CODE_TRIAL_RENTAL_FULL;
     			break;
     		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT:
     			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHT_FULL;

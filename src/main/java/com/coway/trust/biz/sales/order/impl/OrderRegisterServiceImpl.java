@@ -134,7 +134,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     BigDecimal orderPrice, orderPV, orderRentalFees;
 
     if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))
-    || SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))) {
+    || SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))) {
       // orderPrice = "₩" +
       // ((BigDecimal)priceInfo.get("rentalDeposit")).toString();
       // orderPV = "₩" + ((BigDecimal)priceInfo.get("pv")).toString();
@@ -236,7 +236,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         if (priceInfo != null) {
           if (SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer
               .parseInt(String.valueOf((BigDecimal) priceInfo.get("promoAppTypeId"))) ||
-              SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN == Integer
+              SalesConstants.PROMO_APP_TYPE_CODE_ID_TRL_REN == Integer
               .parseInt(String.valueOf((BigDecimal) priceInfo.get("promoAppTypeId")))) { // Rental
 
         	 orderPricePromo = (BigDecimal) priceInfo.get("promoPrcRpf");
@@ -1572,7 +1572,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL)
     // || (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId
     // == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
-    if (orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType != SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL ) {
+    if (orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType != SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL ) {
       // APP TYPE != RENTAL || APP TYPE == RENTAL && RACE == KOREAN
       if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
         // APP TYPE == SERVICES
@@ -1608,7 +1608,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
     int reliefTypeId = 0;
 
-    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType == SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) {
+    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType == SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) {
       reliefTypeId = 1374; // Foreign Mission And International Organization
     } else if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT
         || orderAppType == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
@@ -1826,13 +1826,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       regOrderVO.seteStatementReqVO(eStatementReqVO);
     }
 
-    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL
+    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL
         || orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
 
       this.preprocRentPaySetMaster(rentPaySetVO, sessionVO);
       regOrderVO.setRentPaySetVO(rentPaySetVO);
 
-      if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) {
+      if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) {
         this.preprocRentalSchemeMaster(rentalSchemeVO, sessionVO);
         regOrderVO.setRentalSchemeVO(rentalSchemeVO);
       }
@@ -1846,7 +1846,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, custNric, sessionVO);
       regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
 
-      if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) {
+      if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) {
         // SALES ORDER CONTRACT
         SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
         this.preprocSalesOrderContract(salesOrderContractVO, salesOrderMVO, sessionVO);
@@ -1857,7 +1857,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     this.preprocDocumentList(docSubVOList, sessionVO);
     regOrderVO.setDocSubVOList(docSubVOList);
 
-    if ((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType !=  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL
+    if ((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType !=  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL
         && orderAppType != SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS)
     // || (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId
     // == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)
@@ -2015,7 +2015,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
 
     // Self Service Rebate
-    if((orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) && srvType != null && srvType.equals("SS")){
+    if((orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) && srvType != null && srvType.equals("SS")){
       EgovMap params = new EgovMap();
       params.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
       EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
@@ -2375,7 +2375,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     }
 
     // APP TYPE = RENTAL
-    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) {
+    if (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType ==  SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) {
 
       // RENTAL PAY SETTING
       if (rentPaySetVO != null && rentPaySetVO.getModeId() > 0) {

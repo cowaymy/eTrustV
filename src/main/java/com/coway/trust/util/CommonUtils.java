@@ -1088,8 +1088,8 @@ public final class CommonUtils {
 
 		if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_REN;
-		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL) {
-			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN;
+		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL) {
+			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_TRL_REN;
 		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT) {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT;
 		} else if (iAppTypeId == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
@@ -1098,8 +1098,8 @@ public final class CommonUtils {
 			iPromoAppTypeId = SalesConstants.PROMO_APP_TYPE_CODE_ID_OUTPLS;
 		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_RENTAL;
-		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN) {
-			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL;
+		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_TRL_REN) {
+			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_TRIAL_RENTAL;
 		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_OUT) {
 			iPromoAppTypeId = SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT;
 		} else if (iAppTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_INS) {

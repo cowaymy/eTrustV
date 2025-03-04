@@ -200,6 +200,14 @@
     <th scope="row">Rebate Binding No</th>
     <td colspan="1">${orderDetail.basicInfo.mainRebateOrdNo}</td>
 </tr>
+<c:if test="${orderDetail.prodUsgMthInfo.trialrenUsage != null}">
+	<tr>
+	    <th scope="row"><spring:message code="sales.trialDt" /></th>
+	    <td colspan="2">${orderDetail.prodUsgMthInfo.trialrenStartDt} - ${orderDetail.prodUsgMthInfo.trialrenEndDt}</td>
+	    <th scope="row"><spring:message code="sales.trialRenUsg" /></th>
+	    <td colspan="2">${orderDetail.prodUsgMthInfo.trialrenUsage}</td>
+	</tr>
+</c:if>
 </tbody>
 </table><!-- table end -->
 
