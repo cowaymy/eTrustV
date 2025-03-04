@@ -34,18 +34,11 @@ import com.coway.trust.util.CommonUtils;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-/**
- * @ClassName : ServiceApiInstallationDetailServiceImpl.java
- * @Description : Mobile Installation Data Save
- *
- *
- * @History Date Author Description /********************************************************************************************* DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 17/09/2019 JUN 1.0.1 - Jun First creation 16/07/2020 ONGHC 1.0.2 - Amend installFailJobRequestProc 17/08/2020 FARUQ 1.0.3 - Get the product name when fail on mobile site
- *********************************************************************************************/
-
 @Service("serviceApiInstallationDetailService")
-public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractServiceImpl
-    implements ServiceApiInstallationDetailService {
-  private static final Logger logger = LoggerFactory.getLogger(ServiceApiInstallationDetailServiceImpl.class);
+public class ServiceApiInstallationDetailServiceImpl
+  extends EgovAbstractServiceImpl
+  implements ServiceApiInstallationDetailService {
+  private static final Logger logger = LoggerFactory.getLogger( ServiceApiInstallationDetailServiceImpl.class );
 
   @Resource(name = "MSvcLogApiService")
   private MSvcLogApiService MSvcLogApiService;
@@ -60,362 +53,340 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   private InstallationResultListMapper installationResultListMapper;
 
   @Resource(name = "hcInstallResultListService")
-	private HcInstallResultListService hcInstallResultListService;
+  private HcInstallResultListService hcInstallResultListService;
 
   @Resource(name = "stockMapper")
   private StockMapper stockMapper;
 
+  @SuppressWarnings({ "unchecked", "unused", "rawtypes" })
   @Override
-  public ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult) throws Exception {
+  public ResponseEntity<InstallationResultDto> installationResultProc( Map<String, Object> insApiresult )
+    throws Exception {
     String transactionId = "";
     String serviceNo = "";
 
     SessionVO sessionVO1 = new SessionVO();
-
     Map<String, Object> params = insApiresult;
 
-    transactionId = String.valueOf(params.get("transactionId"));
-    serviceNo = String.valueOf(params.get("serviceNo"));
+    transactionId = String.valueOf( params.get( "transactionId" ) );
+    serviceNo = String.valueOf( params.get( "serviceNo" ) );
 
     // SAL0046D CHECK
-    int isInsMemIdCnt = installationResultListService.insResultSync(params);
-
-    if (isInsMemIdCnt > 0) {
+    int isInsMemIdCnt = installationResultListService.insResultSync( params );
+    if ( isInsMemIdCnt > 0 ) {
       // SAL0046D CHECK (STUS_CODE_ID <> '1')
-      int isInsCnt = installationResultListService.isInstallAlreadyResult(params);
+      int isInsCnt = installationResultListService.isInstallAlreadyResult( params );
 
       // MAKE SURE IT'S ALREADY PROCEEDED
-      if (isInsCnt == 0) {
+      if ( isInsCnt == 0 ) {
         String statusId = "4"; // INSTALLATION STATUS
-
         // DETAIL INFO SELECT (SALES_ORD_NO, INSTALL_ENTRY_NO)
-        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
-        params.put("installEntryId", installResult.get("installEntryId"));
+        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID( params );
 
-        logger.debug("### insApiresult :  " + insApiresult.toString());
+        params.put( "installEntryId", installResult.get( "installEntryId" ) );
+        logger.debug( "### insApiresult :  " + insApiresult.toString() );
 
-        // INST AS FILTER CHARGE PARTS 19/05/2021 ALEXXX
-        List<Map<String, Object>> paramsDetail = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("partList"));
-        logger.debug("### INST AS PART INFO : " + paramsDetail.toString());
-
+        // INST AS FILTER CHARGE PARTS
+        List<Map<String, Object>> paramsDetail = InstallationResultDetailForm.createMaps( (List<InstallationResultDetailForm>) insApiresult.get( "partList" ) );
+        logger.debug( "### INST AS PART INFO : " + paramsDetail.toString() );
 
         Map<String, Object> salesOrdId = new HashMap<String, Object>();
-        salesOrdId.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
-        String beforeProductSerialNo = MSvcLogApiService.getBeforeProductSerialNo(salesOrdId); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+        salesOrdId.put( "salesOrdId", String.valueOf( installResult.get( "salesOrdId" ) ) );
+
+        String beforeProductSerialNo = MSvcLogApiService.getBeforeProductSerialNo( salesOrdId ); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
 
         // DETAIL INFO SELECT (installEntryId)
-        EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+        EgovMap orderInfo = installationResultListService.getOrderInfo( params );
+        logger.debug( "### INSTALLATION STOCK : " + orderInfo.get( "stkId" ) );
 
-        logger.debug("### INSTALLATION STOCK : " + orderInfo.get("stkId"));
-        if (orderInfo.get("stkId") != null || !("".equals(orderInfo.get("stkId")))) {
+        if ( orderInfo.get( "stkId" ) != null || !( "".equals( orderInfo.get( "stkId" ) ) ) ) {
           // CHECK STOCK QUANTITY
           Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-          locInfoEntry.put("CT_CODE", CommonUtils.nvl(insApiresult.get("userId").toString()));
-          locInfoEntry.put("STK_CODE", CommonUtils.nvl(orderInfo.get("stkId").toString()));
 
-          logger.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
+          locInfoEntry.put( "CT_CODE", CommonUtils.nvl( insApiresult.get( "userId" ).toString() ) );
+          locInfoEntry.put( "STK_CODE", CommonUtils.nvl( orderInfo.get( "stkId" ).toString() ) );
 
-          // select FN_GET_SVC_AVAILABLE_INVENTORY(#{CT_CODE}, #{STK_CODE}) AVAIL_QTY from dual
-          // 재고 수량 조회
-          EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+          logger.debug( "LOC. INFO. ENTRY : {}" + locInfoEntry );
 
-          logger.debug("LOC. INFO. : {}" + locInfo);
+          EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY( locInfoEntry );
 
-          if (locInfo != null) {
-            if (Integer.parseInt(locInfo.get("availQty").toString()) < 1) {
-              MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+          logger.debug( "LOC. INFO. : {}" + locInfo );
 
+          if ( locInfo != null ) {
+            if ( Integer.parseInt( locInfo.get( "availQty" ).toString() ) < 1 ) {
+              MSvcLogApiService.updateSuccessErrInstallStatus( transactionId );
               Map<String, Object> m = new HashMap();
-              m.put("APP_TYPE", "INS");
-              m.put("SVC_NO", insApiresult.get("serviceNo"));
-              m.put("ERR_CODE", "03");
-              m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
-              m.put("TRNSC_ID", transactionId);
+              m.put( "APP_TYPE", "INS" );
+              m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
+              m.put( "ERR_CODE", "03" );
+              m.put( "ERR_MSG", "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " + locInfo.get( "availQty" ).toString() );
+              m.put( "TRNSC_ID", transactionId );
 
-              MSvcLogApiService.insert_SVC0066T(m);
+              MSvcLogApiService.insert_SVC0066T( m );
 
               String procTransactionId = transactionId;
               String procName = "Installation";
               String procKey = serviceNo;
               String procMsg = "PRODUCT UNAVAILABLE";
-              String errorMsg = "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
-              logger.debug("exception param : " + procTransactionId);
-              logger.debug("exception param : " + procName);
-              logger.debug("exception param : " + procKey);
-              logger.debug("exception param : " + procMsg);
-              logger.debug("exception param : " + errorMsg);
-              throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              String errorMsg = "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " + locInfo.get( "availQty" ).toString();
+
+              throw new BizException( "03", procTransactionId, procName, procKey, procMsg, errorMsg, null );
             }
           } else {
-            MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+            MSvcLogApiService.updateSuccessErrInstallStatus( transactionId );
 
             Map<String, Object> m = new HashMap();
-            m.put("APP_TYPE", "INS");
-            m.put("SVC_NO", insApiresult.get("serviceNo"));
-            m.put("ERR_CODE", "03");
-            m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR [" + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. ");
-            m.put("TRNSC_ID", transactionId);
+            m.put( "APP_TYPE", "INS" );
+            m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
+            m.put( "ERR_CODE", "03" );
+            m.put( "ERR_MSG", "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " );
+            m.put( "TRNSC_ID", transactionId );
 
-            MSvcLogApiService.insert_SVC0066T(m);
+            MSvcLogApiService.insert_SVC0066T( m );
 
             String procTransactionId = transactionId;
             String procName = "Installation";
             String procKey = serviceNo;
             String procMsg = "PRODUCT LOC NO DATA";
             String errorMsg = "PRODUCT LOC NO DATA";
-            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+
+            throw new BizException( "03", procTransactionId, procName, procKey, procMsg, errorMsg, null );
           }
         }
 
-        String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
-        String installDate = MSvcLogApiService.getInstallDate(insApiresult); // SELECT TO_CHAR( TO_DATE(#{checkInDate} ,'YYYY/MM/DD') , 'DD/MM/YYYY' ) FROM DUAL
+        String userId = MSvcLogApiService.getUseridToMemid( params ); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+        String installDate = MSvcLogApiService.getInstallDate( insApiresult ); // SELECT TO_CHAR( TO_DATE(#{checkInDate} ,'YYYY/MM/DD') , 'DD/MM/YYYY' ) FROM DUAL
 
-        params.put("installStatus", CommonUtils.nvl(statusId));
-        params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-        params.put("hidEntryId", CommonUtils.nvl(installResult.get("installEntryId")));
-        params.put("hidCustomerId", CommonUtils.nvl(installResult.get("custId")));
-        params.put("hidSalesOrderId", CommonUtils.nvl(installResult.get("salesOrdId")));
-        params.put("hidTaxInvDSalesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
-        params.put("hidStockIsSirim", CommonUtils.nvl(installResult.get("isSirim")));
-        params.put("hidStockGrade", CommonUtils.nvl(installResult.get("stkGrad")));
-        params.put("hidSirimTypeId", CommonUtils.nvl(installResult.get("stkCtgryId")));
-        params.put("hiddeninstallEntryNo", CommonUtils.nvl(installResult.get("installEntryNo")));
-        params.put("hidTradeLedger_InstallNo", CommonUtils.nvl(installResult.get("installEntryNo")));
-        params.put("hidCallType", CommonUtils.nvl(installResult.get("typeId")));
+        params.put( "installStatus", CommonUtils.nvl( statusId ) );
+        params.put( "statusCodeId", Integer.parseInt( params.get( "installStatus" ).toString() ) );
+        params.put( "hidEntryId", CommonUtils.nvl( installResult.get( "installEntryId" ) ) );
+        params.put( "hidCustomerId", CommonUtils.nvl( installResult.get( "custId" ) ) );
+        params.put( "hidSalesOrderId", CommonUtils.nvl( installResult.get( "salesOrdId" ) ) );
+        params.put( "hidTaxInvDSalesOrderNo", CommonUtils.nvl( installResult.get( "salesOrdNo" ) ) );
+        params.put( "hidStockIsSirim", CommonUtils.nvl( installResult.get( "isSirim" ) ) );
+        params.put( "hidStockGrade", CommonUtils.nvl( installResult.get( "stkGrad" ) ) );
+        params.put( "hidSirimTypeId", CommonUtils.nvl( installResult.get( "stkCtgryId" ) ) );
+        params.put( "hiddeninstallEntryNo", CommonUtils.nvl( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidTradeLedger_InstallNo", CommonUtils.nvl( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidCallType", CommonUtils.nvl( installResult.get( "typeId" ) ) );
         // params.put("resultIcMobileNo", String.valueOf(insApiresult.get("resultIcMobileNo")));
-        params.put("installDate", CommonUtils.nvl(installDate));
-        params.put("CTID", CommonUtils.nvl(userId));
-        params.put("updator", CommonUtils.nvl(userId));
-        params.put("nextCallDate", "01-01-1999");
-        params.put("refNo1", "0");
-        params.put("refNo2", "0");
-        params.put("codeId", CommonUtils.nvl(installResult.get("257")));
-        params.put("checkCommission", 1);
-        params.put("boosterPump", CommonUtils.nvl(insApiresult.get("boosterPump")));
-        params.put("aftPsi", CommonUtils.nvl(insApiresult.get("aftPsi")));
-        params.put("aftLpm", CommonUtils.nvl(insApiresult.get("aftLpm")));
-        params.put("turbLvl", CommonUtils.nvl(insApiresult.get("turbLvl")));
-        params.put("waterSrcType", CommonUtils.nvl(insApiresult.get("waterSrcType")));
-        params.put("custMobileNo", CommonUtils.nvl(insApiresult.get("custMobileNo")));
-        params.put("chkSMS", CommonUtils.nvl(insApiresult.get("chkSMS")));
-        params.put("checkSend", CommonUtils.nvl(insApiresult.get("checkSend")));
-        params.put("dtPairCode", CommonUtils.nvl(insApiresult.get("partnerCode")));
+        params.put( "installDate", CommonUtils.nvl( installDate ) );
+        params.put( "CTID", CommonUtils.nvl( userId ) );
+        params.put( "updator", CommonUtils.nvl( userId ) );
+        params.put( "nextCallDate", "01-01-1999" );
+        params.put( "refNo1", "0" );
+        params.put( "refNo2", "0" );
+        params.put( "codeId", CommonUtils.nvl( installResult.get( "257" ) ) );
+        params.put( "checkCommission", 1 );
+        params.put( "boosterPump", CommonUtils.nvl( insApiresult.get( "boosterPump" ) ) );
+        params.put( "aftPsi", CommonUtils.nvl( insApiresult.get( "aftPsi" ) ) );
+        params.put( "aftLpm", CommonUtils.nvl( insApiresult.get( "aftLpm" ) ) );
+        params.put( "turbLvl", CommonUtils.nvl( insApiresult.get( "turbLvl" ) ) );
+        params.put( "waterSrcType", CommonUtils.nvl( insApiresult.get( "waterSrcType" ) ) );
+        params.put( "custMobileNo", CommonUtils.nvl( insApiresult.get( "custMobileNo" ) ) );
+        params.put( "chkSMS", CommonUtils.nvl( insApiresult.get( "chkSMS" ) ) );
+        params.put( "checkSend", CommonUtils.nvl( insApiresult.get( "checkSend" ) ) );
+        params.put( "dtPairCode", CommonUtils.nvl( insApiresult.get( "partnerCode" ) ) );
 
-        if (orderInfo != null) {
-          params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
+        if ( orderInfo != null ) {
+          params.put( "hidOutright_Price", CommonUtils.nvl( String.valueOf( orderInfo.get( "c5" ) ) ) );
         } else {
-          params.put("hidOutright_Price", "0");
+          params.put( "hidOutright_Price", "0" );
         }
 
-        params.put("hidAppTypeId", CommonUtils.nvl(installResult.get("codeId")));
-        params.put("hidStockIsSirim", CommonUtils.nvl(insApiresult.get("sirimNo")));
-        params.put("hidSerialNo", CommonUtils.nvl(insApiresult.get("serialNo")));
-        params.put("remark", CommonUtils.nvl(insApiresult.get("resultRemark")));
-        params.put("EXC_CT_ID", CommonUtils.nvl(userId));
-        params.put("hidSerialRequireChkYn", CommonUtils.nvl(insApiresult.get("serialRequireChkYn")));
-        params.put("mobileYn", "Y");
+        params.put( "hidAppTypeId", CommonUtils.nvl( installResult.get( "codeId" ) ) );
+        params.put( "hidStockIsSirim", CommonUtils.nvl( insApiresult.get( "sirimNo" ) ) );
+        params.put( "hidSerialNo", CommonUtils.nvl( insApiresult.get( "serialNo" ) ) );
+        params.put( "remark", CommonUtils.nvl( insApiresult.get( "resultRemark" ) ) );
+        params.put( "EXC_CT_ID", CommonUtils.nvl( userId ) );
+        params.put( "hidSerialRequireChkYn", CommonUtils.nvl( insApiresult.get( "serialRequireChkYn" ) ) );
+        params.put( "mobileYn", "Y" );
+        logger.debug( "### INSTALLATION PARAM : " + params.toString() );
 
-        logger.debug("### INSTALLATION PARAM : " + params.toString());
+        sessionVO1.setUserId( Integer.parseInt( userId ) );
 
-        sessionVO1.setUserId(Integer.parseInt(userId));
-
-        List<Map<String, Object>> paramsDetailInstAccLst = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("installAccList"));
-        logger.debug("### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString());
+        List<Map<String, Object>> paramsDetailInstAccLst = InstallationResultDetailForm.createMaps( (List<InstallationResultDetailForm>) insApiresult.get( "installAccList" ) );
+        logger.debug( "# INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString() );
         List<String> lstStr = new ArrayList<>();
-        for (Map<String, Object> accLst : paramsDetailInstAccLst) {
-          if (accLst != null) {
-            lstStr.add(String.valueOf(accLst.get("insAccPartId")));
+
+        for ( Map<String, Object> accLst : paramsDetailInstAccLst ) {
+          if ( accLst != null ) {
+            lstStr.add( String.valueOf( accLst.get( "insAccPartId" ) ) );
           }
         }
 
-        params.put("instAccLst", lstStr);
+        params.put( "instAccLst", lstStr );
 
         try {
-          Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
+          Map rtnValue = installationResultListService.insertInstallationResult( params, sessionVO1 );
+          if ( null != rtnValue ) {
+            HashMap spMap = (HashMap) rtnValue.get( "spMap" );
 
-          if (null != rtnValue) {
-            HashMap spMap = (HashMap) rtnValue.get("spMap");
-            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-              rtnValue.put("logerr", "Y");
+            if ( !"000".equals( spMap.get( "P_RESULT_MSG" ) ) ) {
+              rtnValue.put( "logerr", "Y" );
             }
 
-            if ("Y".equals(String.valueOf(insApiresult.get("serialRequireChkYn")))) {
-              if ("Y".equals(String.valueOf(insApiresult.get("serialChk")))) {
-                if ("Y".equals(String.valueOf(insApiresult.get("realAsExchangeYn")))) {
-                  if (beforeProductSerialNo != String.valueOf(insApiresult.get("realBeforeProductSerialNo"))) {
-                    params.put("scanSerial", String.valueOf(insApiresult.get("realBeforeProductSerialNo")));
-                    params.put("realBeforeProductSerialNo", beforeProductSerialNo);
-                    params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
-                    params.put("itmCode", String.valueOf(insApiresult.get("realBeforeProductCode")));
-                    params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
-                    params.put("callGbn", "EXCH_RETURN");
-                    params.put("mobileYn", "Y");
-                    params.put("userId", userId);
-                    params.put("pErrcode", "");
-                    params.put("pErrmsg", "");
-                    MSvcLogApiService.SP_SVC_BARCODE_CHANGE(params);
+            if ( "Y".equals( String.valueOf( insApiresult.get( "serialRequireChkYn" ) ) ) ) {
+              if ( "Y".equals( String.valueOf( insApiresult.get( "serialChk" ) ) ) ) {
+                if ( "Y".equals( String.valueOf( insApiresult.get( "realAsExchangeYn" ) ) ) ) {
+                  if ( beforeProductSerialNo != String.valueOf( insApiresult.get( "realBeforeProductSerialNo" ) ) ) {
+                    params.put( "scanSerial", String.valueOf( insApiresult.get( "realBeforeProductSerialNo" ) ) );
+                    params.put( "realBeforeProductSerialNo", beforeProductSerialNo );
+                    params.put( "salesOrdId", String.valueOf( installResult.get( "salesOrdId" ) ) );
+                    params.put( "itmCode", String.valueOf( insApiresult.get( "realBeforeProductCode" ) ) );
+                    params.put( "reqstNo", String.valueOf( installResult.get( "installEntryNo" ) ) );
+                    params.put( "callGbn", "EXCH_RETURN" );
+                    params.put( "mobileYn", "Y" );
+                    params.put( "userId", userId );
+                    params.put( "pErrcode", "" );
+                    params.put( "pErrmsg", "" );
+                    MSvcLogApiService.SP_SVC_BARCODE_CHANGE( params );
 
-                    if (!"000".equals(params.get("pErrcode"))) {
+                    if ( !"000".equals( params.get( "pErrcode" ) ) ) {
                       String procTransactionId = transactionId;
                       String procName = "Installation";
                       String procKey = serviceNo;
                       String procMsg = "Failed to Barcode Save";
-                      String errorMsg = "[API] " + params.get("pErrmsg");
-                      throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+                      String errorMsg = "[API] " + params.get( "pErrmsg" );
+                      throw new BizException( "01", procTransactionId, procName, procKey, procMsg, errorMsg, null );
                     }
                   }
                 }
               }
 
-              // KR_HAN ADD
-              // SP_SVC_BARCODE_SAVE : KR_HAN ADD START
-              params.put("scanSerial", String.valueOf(insApiresult.get("serialNo")));
-              params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
-              params.put("reqstNo", String.valueOf(installResult.get("installEntryNo")));
-              params.put("delvryNo", null); // ?????????
-              params.put("callGbn", "INSTALL");
-              params.put("mobileYn", "Y");
-              params.put("userId", userId);
-              params.put("pErrcode", "");
-              params.put("pErrmsg", "");
-              MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+              params.put( "scanSerial", String.valueOf( insApiresult.get( "serialNo" ) ) );
+              params.put( "salesOrdId", String.valueOf( installResult.get( "salesOrdId" ) ) );
+              params.put( "reqstNo", String.valueOf( installResult.get( "installEntryNo" ) ) );
+              params.put( "delvryNo", null );
+              params.put( "callGbn", "INSTALL" );
+              params.put( "mobileYn", "Y" );
+              params.put( "userId", userId );
+              params.put( "pErrcode", "" );
+              params.put( "pErrmsg", "" );
 
-              if (!"000".equals(params.get("pErrcode"))) {
+              MSvcLogApiService.SP_SVC_BARCODE_SAVE( params );
+
+              if ( !"000".equals( params.get( "pErrcode" ) ) ) {
                 String procTransactionId = transactionId;
                 String procName = "Installation";
                 String procKey = serviceNo;
                 String procMsg = "Failed to Barcode Save";
-                String errorMsg = "[API] " + params.get("pErrmsg");
-                throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+                String errorMsg = "[API] " + params.get( "pErrmsg" );
+                throw new BizException( "01", procTransactionId, procName, procKey, procMsg, errorMsg, null );
               }
-              // SP_SVC_BARCODE_SAVE : KR_HAN ADD END
 
-              logger.debug("+++ SP_SVC_BARCODE_SAVE params ::" + params.toString());
+              spMap.put( "pErrcode", "" );
+              spMap.put( "pErrmsg", "" );
 
-              spMap.put("pErrcode", "");
-              spMap.put("pErrmsg", "");
-              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL( spMap );
 
-              String errCode = (String) spMap.get("pErrcode");
-              String errMsg = (String) spMap.get("pErrmsg");
+              String errCode = (String) spMap.get( "pErrcode" );
+              String errMsg = (String) spMap.get( "pErrmsg" );
 
-              // pErrcode : 000 = Success, others = Fail
-              if (!"000".equals(errCode)) {
+              if ( !"000".equals( errCode ) ) {
                 String procTransactionId = transactionId;
                 String procName = "Installation";
                 String procKey = serviceNo;
                 String procMsg = "Failed to Save";
                 String errorMsg = "[API] " + errMsg;
-                throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+                throw new BizException( "02", procTransactionId, procName, procKey, procMsg, errorMsg, null );
               }
             } else {
-              // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
-              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+              servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST( spMap );
             }
 
-            //send sms
             Map<String, Object> smsResultValue = new HashMap<String, Object>();
-
             try {
-              smsResultValue = installationResultListService.installationSendSMS(params.get("hidAppTypeId").toString(), params);
-            } catch (Exception e){
-              logger.info("===smsResultValue===" + smsResultValue.toString());
-              logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
+              smsResultValue = installationResultListService.installationSendSMS( params.get( "hidAppTypeId" ).toString(), params );
+            } catch ( Exception e ) {
+              logger.info( "===smsResultValue===" + smsResultValue.toString() );
+              logger.info( "===Failed to send SMS to" + params.get( "custMobileNo" ).toString() + "===" );
             }
           }
 
-          logger.info("###insApiresult.get(chkCrtAs): " + insApiresult.get("chkCrtAs"));
+          logger.info( "###insApiresult.get(chkCrtAs): " + insApiresult.get( "chkCrtAs" ) );
+          // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
+          if ( insApiresult.get( "chkCrtAs" ) != null && insApiresult.get( "chkCrtAs" ).toString().equals( "1" ) ) {
+            int user_id_47 = 0;
+            installResult.put( "ctId", String.valueOf( userId ) );
 
-         // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
-        if (insApiresult.get("chkCrtAs") != null && insApiresult.get("chkCrtAs").toString().equals("1")){
-          // user_id
-          int user_id_47 = 0;
+            if ( userId != null ) {
+              Map<String, Object> p = new HashMap<String, Object>();
+              p.put( "memId", String.valueOf( userId ) );
+              EgovMap userIdResult = installationResultListMapper.selectUserByMemId( p );
 
-          // set CT_ID into installResult
-          installResult.put("ctId", String.valueOf(userId)); // mem_id
-
-      if (userId != null){ // get user_id from mem_code
-            Map<String, Object> p = new HashMap<String, Object>();
-            p.put("memId", String.valueOf(userId));
-            EgovMap userIdResult = installationResultListMapper.selectUserByMemId(p);
-
-            if (userIdResult != null && userIdResult.get("userId") != null){
-              user_id_47 = Integer.valueOf(userIdResult.get("userId").toString());
-            }
-          }
-
-          // change format from
-          String appntDtFormatted = null;
-
-          if (installResult.get("appntDt") != null){
-            Date appntDtOri = new SimpleDateFormat("yyyy-MM-dd").parse(installResult.get("appntDt").toString());
-            appntDtFormatted = CommonUtils.getFormattedString("dd/MM/yyyy", appntDtOri);
-            installResult.put("appntDt", appntDtFormatted); // format date (in string) to dd/MM/yy  y format
-          }
-
-          logger.info("### appointment date after: " + installResult.get("appntDt"));
-          logger.info("### INS AS (filter param) : " + paramsDetail.toString());
-
-          /** Added for INS AS. Hui Ding, 2021-10-26 **/
-          double totalPrice = 0.00;
-
-          List<Map<String, Object>> newPartList = new ArrayList<Map<String, Object>>();
-          Map<String, Object> newPart = null;
-          Map<String, Object> filter = null;
-          for (Map<String, Object> part : paramsDetail){
-            if (part != null){
-              newPart = new HashMap<String, Object>();
-              filter = new HashMap<String, Object>();
-
-              // to add stock code as filterStockCode. 02/10/2024, Hui Ding
-              filter.put("stkId", String.valueOf(part.get("filterCode")));
-              String filterStockCode = stockMapper.selectStkCodeById(filter);
-              if (filterStockCode != null && !filterStockCode.isEmpty())
-                newPart.put("filterStockCode", filterStockCode);
-              // end. to add stock code as filterStockCode. 02/10/2024, Hui Ding
-
-              newPart.put("filterID", String.valueOf(part.get("filterCode")));
-              newPart.put("srvFilterLastSerial", String.valueOf(part.get("filterBarcdSerialNo")));
-              newPart.put("filterQty", String.valueOf(part.get("filterChangeQty")));
-              newPart.put("stockTypeId", String.valueOf(part.get("partsType")));
-              newPart.put("filterPrice", String.valueOf(part.get("salesPrice")));
-              newPart.put("filterTotal", String.valueOf(part.get("salesPrice")));
-              newPart.put("filterDesc", "API");
-              newPart.put("filterExCode", 0);
-              newPart.put("filterRemark", "NA");
-
-              totalPrice += (part.get("salesPrice") != null ? Double.parseDouble(part.get("salesPrice").toString()) : 0.00);
-
-              if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
-                newPart.put("filterType", "FOC");
-                totalPrice = 0.00;
-              } else {
-                newPart.put("filterType", "CHG");
+              if ( userIdResult != null && userIdResult.get( "userId" ) != null ) {
+                user_id_47 = Integer.valueOf( userIdResult.get( "userId" ).toString() );
               }
-
-              newPartList.add(newPart);
             }
+
+            String appntDtFormatted = null;
+
+            if ( installResult.get( "appntDt" ) != null ) {
+              Date appntDtOri = new SimpleDateFormat( "yyyy-MM-dd" ).parse( installResult.get( "appntDt" ).toString() );
+              appntDtFormatted = CommonUtils.getFormattedString( "dd/MM/yyyy", appntDtOri );
+              installResult.put( "appntDt", appntDtFormatted ); // format date (in string) to dd/MM/yy  y format
+            }
+
+            logger.info( "### appointment date after: " + installResult.get( "appntDt" ) );
+            logger.info( "### INS AS (filter param) : " + paramsDetail.toString() );
+
+            /** Added for INS AS. Hui Ding, 2021-10-26 **/
+            double totalPrice = 0.00;
+            List<Map<String, Object>> newPartList = new ArrayList<Map<String, Object>>();
+            Map<String, Object> newPart = null;
+            Map<String, Object> filter = null;
+            for ( Map<String, Object> part : paramsDetail ) {
+              if ( part != null ) {
+                newPart = new HashMap<String, Object>();
+                filter = new HashMap<String, Object>();
+                // to add stock code as filterStockCode. 02/10/2024, Hui Ding
+                filter.put( "stkId", String.valueOf( part.get( "filterCode" ) ) );
+                String filterStockCode = stockMapper.selectStkCodeById( filter );
+
+                if ( filterStockCode != null && !filterStockCode.isEmpty() )
+                  newPart.put( "filterStockCode", filterStockCode );
+                // end. to add stock code as filterStockCode. 02/10/2024, Hui Ding
+                newPart.put( "filterID", String.valueOf( part.get( "filterCode" ) ) );
+                newPart.put( "srvFilterLastSerial", String.valueOf( part.get( "filterBarcdSerialNo" ) ) );
+                newPart.put( "filterQty", String.valueOf( part.get( "filterChangeQty" ) ) );
+                newPart.put( "stockTypeId", String.valueOf( part.get( "partsType" ) ) );
+                newPart.put( "filterPrice", String.valueOf( part.get( "salesPrice" ) ) );
+                newPart.put( "filterTotal", String.valueOf( part.get( "salesPrice" ) ) );
+                newPart.put( "filterDesc", "API" );
+                newPart.put( "filterExCode", 0 );
+                newPart.put( "filterRemark", "NA" );
+
+                totalPrice += ( part.get( "salesPrice" ) != null ? Double.parseDouble( part.get( "salesPrice" ).toString() ) : 0.00 );
+
+                if ( part.get( "chargesFoc" ) != null && part.get( "chargesFoc" ).toString().equals( "1" ) ) {
+                  newPart.put( "filterType", "FOC" );
+                  totalPrice = 0.00;
+                } else {
+                  newPart.put( "filterType", "CHG" );
+                }
+                newPartList.add( newPart );
+              }
+            }
+
+            params.put( "txtFilterCharge", totalPrice );
+            params.put( "txtTotalCharge", totalPrice );
+            params.put( "txtLabourCharge", 0.00 ); // temporary set foc
+            installationResultListService.saveInsAsEntry( newPartList, params, installResult, user_id_47 );
           }
-
-          params.put("txtFilterCharge", totalPrice);
-          params.put("txtTotalCharge", totalPrice);
-          params.put("txtLabourCharge", 0.00); // temporary set foc
-
-          installationResultListService.saveInsAsEntry(newPartList, params, installResult, user_id_47 );
-        }
-        // End of inserting charge out filters and spare parts at AS
-
-        } catch (Exception e) {
+          // End of inserting charge out filters and spare parts at AS
+        } catch ( Exception e ) {
           String procTransactionId = transactionId;
           String procName = "Installation";
           String procKey = serviceNo;
           String procMsg = "Failed to Save";
           String errorMsg = "[API] " + e.toString();
-          throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          throw new BizException( "02", procTransactionId, procName, procKey, procMsg, errorMsg, null );
         }
-      } else {
-        if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-          MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
+      }
+      else {
+        if ( RegistrationConstants.IS_INSERT_INSTALL_LOG ) {
+          MSvcLogApiService.updateSuccessInstallStatus( String.valueOf( params.get( "transactionId" ) ) );
         }
       }
     } else {
@@ -423,427 +394,354 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       String procName = "Installation";
       String procKey = serviceNo;
       String procMsg = "NoTarget Data";
-      String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
-      throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+      String errorMsg = "[API] [" + insApiresult.get( "userId" ) + "] IT IS NOT ASSIGNED CT CODE.";
+      throw new BizException( "01", procTransactionId, procName, procKey, procMsg, errorMsg, null );
     }
-    logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
-    return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+    logger.debug( "### INSTALLATION FINAL PARAM : " + params.toString() );
+    return ResponseEntity.ok( InstallationResultDto.create( transactionId ) );
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes", "finally" })
+  @SuppressWarnings({ "rawtypes", "finally" })
   @Override
-  public EgovMap installFailJobRequestProc(Map<String, Object> params) throws Exception {
-    Map<String, Object> errMap = new HashMap<String,Object>();
+  public EgovMap installFailJobRequestProc( Map<String, Object> params ) throws Exception {
+    Map<String, Object> errMap = new HashMap<String, Object>();
     EgovMap rtnResultMap = new EgovMap();
-    String serviceNo = CommonUtils.nvl(params.get("serviceNo"));
+
+    String serviceNo = CommonUtils.nvl( params.get( "serviceNo" ) );
     SessionVO sessionVO = new SessionVO();
+
     int resultSeq = 0;
+
     rtnResultMap.put( "result", serviceNo );
 
     try {
-      if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-        resultSeq = (Integer) params.get("resultSeq");
+      if ( RegistrationConstants.IS_INSERT_INSTALL_LOG ) {
+        resultSeq = (Integer) params.get( "resultSeq" );
       }
 
       Date dt = new Date();
       Calendar cal = Calendar.getInstance();
-      cal.setTime(dt);
-      cal.add(Calendar.DATE, 1);
+      cal.setTime( dt );
+      cal.add( Calendar.DATE, 1 );
+      int year = cal.get( Calendar.YEAR );
+      String month = String.format( "%02d", cal.get( Calendar.MONTH ) + 1 );
+      String date = String.format( "%02d", cal.get( Calendar.DATE ) );
+      String todayPlusOne = ( CommonUtils.nvl( date ) + '/' + CommonUtils.nvl( month ) + '/' + CommonUtils.nvl( year ) );
 
-      int year = cal.get(Calendar.YEAR);
-      String month = String.format("%02d", cal.get(Calendar.MONTH) + 1);
-      String date = String.format("%02d", cal.get(Calendar.DATE));
-      String todayPlusOne = (CommonUtils.nvl(date) + '/' + CommonUtils.nvl(month) + '/' + CommonUtils.nvl(year));
+      int isInsCnt = installationResultListService.isInstallAlreadyResult( params ); // SAL0046D STATUS <> 1
 
-      int isInsCnt = installationResultListService.isInstallAlreadyResult(params); // SAL0046D STATUS <> 1
-
-      if (isInsCnt == 0) { // INSTALLATION IS ACTIVE
+      if ( isInsCnt == 0 ) { // INSTALLATION IS ACTIVE
         String statusId = "21"; // FAILL STATUS IS 21
+        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID( params ); // GET LIST OF INSTALLATION DETAILS BASED ON SALES ORDER NUMBER & INSTALLATION NO
+        params.put( "installEntryId", installResult.get( "installEntryId" ) );
+        String userId = CommonUtils.nvl( MSvcLogApiService.getUseridToMemid( params ) ); // GET USER ID FROM ORG0001D > MEM_ID
 
-        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params); // GET LIST OF INSTALLATION DETAILS BASED ON SALES ORDER NUMBER & INSTALLATION NO
-        params.put("installEntryId", installResult.get("installEntryId"));
-
-        String userId = CommonUtils.nvl(MSvcLogApiService.getUseridToMemid(params)); // GET USER ID FROM ORG0001D > MEM_ID
-        if (!"".equals( userId )) {
-          sessionVO.setUserId(Integer.parseInt(userId)); // SET USER SESSION
+        if ( !"".equals( userId ) ) {
+          sessionVO.setUserId( Integer.parseInt( userId ) ); // SET USER SESSION
         } else {
           errMap.put( "no", serviceNo );
-          errMap.put( "exception", "User ID does not Exist (" + CommonUtils.nvl(params.get( "userId" )) + ") " );
-          MSvcLogApiService.saveErrorToDatabase(errMap);
-          throw new ApplicationException(AppConstants.FAIL, "User ID does not Exist (" + CommonUtils.nvl(params.get( "userId" )) + ") ");
+          errMap.put( "exception", "User ID does not Exist (" + CommonUtils.nvl( params.get( "userId" ) ) + ") " );
+          MSvcLogApiService.saveErrorToDatabase( errMap );
+          throw new ApplicationException( AppConstants.FAIL, "User ID does not Exist (" + CommonUtils.nvl( params.get( "userId" ) ) + ") " );
         }
 
-        params.put("hidAppTypeId", CommonUtils.nvl(installResult.get("codeId")));
-
-        if (installResult.get("sirimNo") != null) {
-          params.put("sirimNo", CommonUtils.nvl(installResult.get("sirimNo")));
+        params.put( "hidAppTypeId", CommonUtils.nvl( installResult.get( "codeId" ) ) );
+        if ( installResult.get( "sirimNo" ) != null ) {
+          params.put( "sirimNo", CommonUtils.nvl( installResult.get( "sirimNo" ) ) );
         } else {
-          params.put("sirimNo", "");
+          params.put( "sirimNo", "" );
         }
 
-        if (installResult.get("serialNo") != null) {
-          params.put("serialNo", CommonUtils.nvl(installResult.get("serialNo")));
+        if ( installResult.get( "serialNo" ) != null ) {
+          params.put( "serialNo", CommonUtils.nvl( installResult.get( "serialNo" ) ) );
         } else {
-          params.put("serialNo", "");
+          params.put( "serialNo", "" );
         }
 
         // ADDITTION PARAM(S) NEED TO ADD HERE
-        params.put("installStatus", CommonUtils.nvl(statusId));
-        params.put("statusCodeId", Integer.parseInt(CommonUtils.nvl(params.get("installStatus").toString())));
-        params.put("hidEntryId", CommonUtils.nvl(installResult.get("installEntryId")));
-        params.put("hidCustomerId", CommonUtils.nvl(installResult.get("custId")));
-        params.put("hidSalesOrderId", CommonUtils.nvl(installResult.get("salesOrdId")));
-        params.put("hidTaxInvDSalesOrderNo", CommonUtils.nvl(installResult.get("salesOrdNo")));
-        params.put("hidStockIsSirim", CommonUtils.nvl(installResult.get("isSirim")));
-        params.put("hidStockGrade", CommonUtils.nvl(installResult.get("stkGrad")));
-        params.put("hidSirimTypeId", CommonUtils.nvl(installResult.get("stkCtgryId")));
-        params.put("hiddeninstallEntryNo", CommonUtils.nvl(installResult.get("installEntryNo")));
-        params.put("hidTradeLedger_InstallNo", CommonUtils.nvl(installResult.get("installEntryNo")));
-        params.put("hidCallType", CommonUtils.nvl(installResult.get("typeId")));
-        params.put("hidDocId", CommonUtils.nvl(installResult.get("docId")));
-        params.put("CTID", CommonUtils.nvl(userId));
-        params.put("installDate", ""); // NO INSTALLATION DATE DUE TO FAIL INSTALLATION
-        params.put("updator", CommonUtils.nvl(userId));
-        params.put("nextCallDate", CommonUtils.nvl(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
-        params.put("refNo1", "0");
-        params.put("refNo2", "0");
-        params.put("codeId", CommonUtils.nvl(installResult.get("typeId")));
-        params.put("failReason", CommonUtils.nvl(params.get("failReasonCode")));
-        params.put("failLocCde", CommonUtils.nvl(params.get("failLocCde")));
-        params.put("volt", CommonUtils.nvl(params.get("volt")));
-        params.put("psiRcd", CommonUtils.nvl(params.get("psiRcd")));
-        params.put("lpmRcd", CommonUtils.nvl(params.get("lpmRcd")));
-        params.put("tds", CommonUtils.nvl(params.get("tds")));
-        params.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")));
-        params.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")));
-        params.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")));
-        params.put("ntu", CommonUtils.nvl(params.get("ntu")));
-        params.put("customerType", CommonUtils.nvl(installResult.get("custType")));
-        params.put("waterSrcType", CommonUtils.nvl(params.get("waterSrcType")));
-        params.put("remark", CommonUtils.nvl(params.get("remark")));
-        params.put("failLct", CommonUtils.nvl(params.get("failLocCde")));
-        params.put("failDeptChk", CommonUtils.nvl(params.get("failBfDepWH")));
-        params.put("chkInstallAcc", 'N');
-        params.put("instAccLst", null);
-        params.put("mobileYn", 'Y');
+        params.put( "installStatus", CommonUtils.nvl( statusId ) );
+        params.put( "statusCodeId", Integer.parseInt( CommonUtils.nvl( params.get( "installStatus" ).toString() ) ) );
+        params.put( "hidEntryId", CommonUtils.nvl( installResult.get( "installEntryId" ) ) );
+        params.put( "hidCustomerId", CommonUtils.nvl( installResult.get( "custId" ) ) );
+        params.put( "hidSalesOrderId", CommonUtils.nvl( installResult.get( "salesOrdId" ) ) );
+        params.put( "hidTaxInvDSalesOrderNo", CommonUtils.nvl( installResult.get( "salesOrdNo" ) ) );
+        params.put( "hidStockIsSirim", CommonUtils.nvl( installResult.get( "isSirim" ) ) );
+        params.put( "hidStockGrade", CommonUtils.nvl( installResult.get( "stkGrad" ) ) );
+        params.put( "hidSirimTypeId", CommonUtils.nvl( installResult.get( "stkCtgryId" ) ) );
+        params.put( "hiddeninstallEntryNo", CommonUtils.nvl( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidTradeLedger_InstallNo", CommonUtils.nvl( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidCallType", CommonUtils.nvl( installResult.get( "typeId" ) ) );
+        params.put( "hidDocId", CommonUtils.nvl( installResult.get( "docId" ) ) );
+        params.put( "CTID", CommonUtils.nvl( userId ) );
+        params.put( "installDate", "" ); // NO INSTALLATION DATE DUE TO FAIL INSTALLATION
+        params.put( "updator", CommonUtils.nvl( userId ) );
+        params.put( "nextCallDate", CommonUtils.nvl( params.get( "nxtCallDate" ) ) != "" ? String.valueOf( params.get( "nxtCallDate" ) ) : todayPlusOne );
+        params.put( "refNo1", "0" );
+        params.put( "refNo2", "0" );
+        params.put( "codeId", CommonUtils.nvl( installResult.get( "typeId" ) ) );
+        params.put( "failReason", CommonUtils.nvl( params.get( "failReasonCode" ) ) );
+        params.put( "failLocCde", CommonUtils.nvl( params.get( "failLocCde" ) ) );
+        params.put( "volt", CommonUtils.nvl( params.get( "volt" ) ) );
+        params.put( "psiRcd", CommonUtils.nvl( params.get( "psiRcd" ) ) );
+        params.put( "lpmRcd", CommonUtils.nvl( params.get( "lpmRcd" ) ) );
+        params.put( "tds", CommonUtils.nvl( params.get( "tds" ) ) );
+        params.put( "roomTemp", CommonUtils.nvl( params.get( "roomTemp" ) ) );
+        params.put( "waterSourceTemp", CommonUtils.nvl( params.get( "waterSourceTemp" ) ) );
+        params.put( "turbLvl", CommonUtils.nvl( params.get( "turbLvl" ) ) );
+        params.put( "ntu", CommonUtils.nvl( params.get( "ntu" ) ) );
+        params.put( "customerType", CommonUtils.nvl( installResult.get( "custType" ) ) );
+        params.put( "waterSrcType", CommonUtils.nvl( params.get( "waterSrcType" ) ) );
+        params.put( "remark", CommonUtils.nvl( params.get( "remark" ) ) );
+        params.put( "failLct", CommonUtils.nvl( params.get( "failLocCde" ) ) );
+        params.put( "failDeptChk", CommonUtils.nvl( params.get( "failBfDepWH" ) ) );
+        params.put( "chkInstallAcc", 'N' );
+        params.put( "instAccLst", null );
+        params.put( "mobileYn", 'Y' );
+        EgovMap orderInfo = installationResultListService.getOrderInfo( params ); // GET LIST OF ORDER & INSTALLATION DETAILS INSTALLATION ENTRY ID
 
-        EgovMap orderInfo = installationResultListService.getOrderInfo(params); // GET LIST OF ORDER & INSTALLATION DETAILS INSTALLATION ENTRY ID
-
-        if (orderInfo != null) {
-          params.put("hidOutright_Price", CommonUtils.nvl(orderInfo.get("c5")));
+        if ( orderInfo != null ) {
+          params.put( "hidOutright_Price", CommonUtils.nvl( orderInfo.get( "c5" ) ) );
         } else {
-          params.put("hidOutright_Price", "0");
+          params.put( "hidOutright_Price", "0" );
         }
 
-        logger.debug("= INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString());
+        logger.debug( "= INSTALLATION FAIL JOB REQUEST PARAM : " + params.toString() );
 
         // START CALL ETRUST API BY PASSING PARAMS
-        Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO);
+        Map rtnValue = installationResultListService.insertInstallationResult( params, sessionVO );
+        if ( null != rtnValue ) {
+          HashMap spMap = (HashMap) rtnValue.get( "spMap" );
 
-        if (null != rtnValue) {
-          HashMap spMap = (HashMap) rtnValue.get("spMap");
-          if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
+          if ( !"000".equals( spMap.get( "P_RESULT_MSG" ) ) ) {
             String procTransactionId = serviceNo;
             String procName = "Installation";
             String procKey = serviceNo;
             String procMsg = "PRODUCT FAIL";
             String errorMsg = "PRODUCT FAIL";
-
             errMap.put( "no", serviceNo );
-            errMap.put( "exception", "PRODUCT INSTALLATION FAIL (" + CommonUtils.nvl(spMap.get("P_RESULT_MSG")) + ") " );
-            MSvcLogApiService.saveErrorToDatabase(errMap);
+            errMap.put( "exception", "PRODUCT INSTALLATION FAIL (" + CommonUtils.nvl( spMap.get( "P_RESULT_MSG" ) ) + ") " );
+            MSvcLogApiService.saveErrorToDatabase( errMap );
             // SET RETURN VALUE SET AS FALSE DUE TO ERROR
             rtnResultMap.put( "status", false );
-            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+            throw new BizException( "03", procTransactionId, procName, procKey, procMsg, errorMsg, null );
           } else {
-            if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-              MSvcLogApiService.updateSuccessInsFailServiceLogs(resultSeq);
+            if ( RegistrationConstants.IS_INSERT_INSTALL_LOG ) {
+              MSvcLogApiService.updateSuccessInsFailServiceLogs( resultSeq );
               // SET RETURN VALUE SET AS TRUE
               rtnResultMap.put( "status", true );
             }
           }
-
-          /*spMap.put("pErrcode", "");
-            spMap.put("pErrmsg", "");
-
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
-
-            String errCode = (String) spMap.get("pErrcode");
-            String errMsg = (String) spMap.get("pErrmsg");
-
-            logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
-            logger.debug("= SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
-
-            // pErrcode : 000 = Success, others = Fail
-            if (!"000".equals(errCode)) {
-              String procTransactionId = serviceNo;
-              String procName = "Installation";
-              String procKey = serviceNo;
-              String procMsg = "PRODUCT LOC NO DATA";
-              String errorMsg = "PRODUCT LOC NO DATA";
-             throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
-            }
-          */
         }
       } else { // INSTALLATION IS NOT ACTICE
-        if (RegistrationConstants.IS_INSERT_INSFAIL_LOG) {
+        if ( RegistrationConstants.IS_INSERT_INSFAIL_LOG ) {
           // UPDATE ERROR LOG SVC0150D
           errMap.put( "no", serviceNo );
-          errMap.put( "exception", "INSTALLATION STATUS NOT ACTIVE (" + CommonUtils.nvl(isInsCnt) + ") " );
-
-          MSvcLogApiService.saveErrorToDatabase(errMap);
-          MSvcLogApiService.updateInsFailServiceLogs(params);
-
+          errMap.put( "exception", "INSTALLATION STATUS NOT ACTIVE (" + CommonUtils.nvl( isInsCnt ) + ") " );
+          MSvcLogApiService.saveErrorToDatabase( errMap );
+          MSvcLogApiService.updateInsFailServiceLogs( params );
           // SET RETURN VALUE SET AS FALSE DUE TO ERROR
           rtnResultMap.put( "status", false );
         }
       }
-    } catch (Exception e) {
+    } catch ( Exception e ) {
       logger.error( e.getMessage() );
-
       errMap.put( "no", serviceNo );
       errMap.put( "exception", e );
-      MSvcLogApiService.saveErrorToDatabase(errMap);
-
+      MSvcLogApiService.saveErrorToDatabase( errMap );
       // SET RETURN VALUE SET AS FALSE DUE TO ERROR
       rtnResultMap.put( "status", false );
-
-      throw new ApplicationException(AppConstants.FAIL, e.getMessage());
+      throw new ApplicationException( AppConstants.FAIL, e.getMessage() );
     } finally {
       return rtnResultMap;
     }
   }
 
+  @SuppressWarnings({ "unused", "unchecked", "rawtypes" })
   @Override
-  public ResponseEntity<InstallationResultDto> installationDtResultProc(Map<String, Object> insApiresult)
-      throws Exception {
+  public ResponseEntity<InstallationResultDto> installationDtResultProc( Map<String, Object> insApiresult )
+    throws Exception {
     String transactionId = "";
     String serviceNo = "";
 
     SessionVO sessionVO1 = new SessionVO();
-
     Map<String, Object> params = insApiresult;
-
-    transactionId = String.valueOf(params.get("transactionId"));
-    serviceNo = String.valueOf(params.get("serviceNo"));
+    transactionId = String.valueOf( params.get( "transactionId" ) );
+    serviceNo = String.valueOf( params.get( "serviceNo" ) );
 
     // SAL0046D CHECK
-    int isInsMemIdCnt = installationResultListService.insResultSync(params);
+    int isInsMemIdCnt = installationResultListService.insResultSync( params );
 
-    if (isInsMemIdCnt > 0) {
+    if ( isInsMemIdCnt > 0 ) {
       // SAL0046D CHECK (STUS_CODE_ID <> '1')
-      int isInsCnt = installationResultListService.isInstallAlreadyResult(params);
+      int isInsCnt = installationResultListService.isInstallAlreadyResult( params );
 
       // MAKE SURE IT'S ALREADY PROCEEDED
-      if (isInsCnt == 0) {
+      if ( isInsCnt == 0 ) {
         String statusId = "4"; // INSTALLATION STATUS
-
         // DETAIL INFO SELECT (SALES_ORD_NO, INSTALL_ENTRY_NO)
-        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
-        params.put("installEntryId", installResult.get("installEntryId"));
+        EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID( params );
+
+        params.put( "installEntryId", installResult.get( "installEntryId" ) );
 
         // DETAIL INFO SELECT (installEntryId)
-        EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+        EgovMap orderInfo = installationResultListService.getOrderInfo( params );
+        logger.debug( "### INSTALLATION STOCK : " + orderInfo.get( "stkId" ) );
 
-        logger.debug("### INSTALLATION STOCK : " + orderInfo.get("stkId"));
-        if (orderInfo.get("stkId") != null || !("".equals(orderInfo.get("stkId")))) {
+        if ( orderInfo.get( "stkId" ) != null || !( "".equals( orderInfo.get( "stkId" ) ) ) ) {
           // CHECK STOCK QUANTITY
           Map<String, Object> locInfoEntry = new HashMap<String, Object>();
-          locInfoEntry.put("CT_CODE", CommonUtils.nvl(insApiresult.get("userId").toString()));
-          locInfoEntry.put("STK_CODE", CommonUtils.nvl(orderInfo.get("stkId").toString()));
+          locInfoEntry.put( "CT_CODE", CommonUtils.nvl( insApiresult.get( "userId" ).toString() ) );
+          locInfoEntry.put( "STK_CODE", CommonUtils.nvl( orderInfo.get( "stkId" ).toString() ) );
+          logger.debug( "LOC. INFO. ENTRY : {}" + locInfoEntry );
+          EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY( locInfoEntry );
+          logger.debug( "LOC. INFO. : {}" + locInfo );
 
-          logger.debug("LOC. INFO. ENTRY : {}" + locInfoEntry);
-
-          // select FN_GET_SVC_AVAILABLE_INVENTORY(#{CT_CODE}, #{STK_CODE}) AVAIL_QTY from dual
-          // 재고 수량 조회
-          EgovMap locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
-
-          logger.debug("LOC. INFO. : {}" + locInfo);
-
-          if (locInfo != null) {
-            if (Integer.parseInt(locInfo.get("availQty").toString()) < 1) {
+          if ( locInfo != null ) {
+            if ( Integer.parseInt( locInfo.get( "availQty" ).toString() ) < 1 ) {
               Map<String, Object> m = new HashMap();
-              m.put("APP_TYPE", "INS");
-              m.put("SVC_NO", insApiresult.get("serviceNo"));
-              m.put("ERR_CODE", "03");
-              m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR ["
-                  + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString());
-              m.put("TRNSC_ID", transactionId);
+              m.put( "APP_TYPE", "INS" );
+              m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
+              m.put( "ERR_CODE", "03" );
+              m.put( "ERR_MSG", "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " + locInfo.get( "availQty" ).toString() );
+              m.put( "TRNSC_ID", transactionId );
 
-              MSvcLogApiService.insert_SVC0066T(m);
-
+              MSvcLogApiService.insert_SVC0066T( m );
               String procTransactionId = transactionId;
               String procName = "Installation";
               String procKey = serviceNo;
               String procMsg = "PRODUCT UNAVAILABLE";
-              String errorMsg = "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR ["
-                  + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. " + locInfo.get("availQty").toString();
-              logger.debug("exception param : " + procTransactionId);
-              logger.debug("exception param : " + procName);
-              logger.debug("exception param : " + procKey);
-              logger.debug("exception param : " + procMsg);
-              logger.debug("exception param : " + errorMsg);
-              throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              String errorMsg = "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " + locInfo.get( "availQty" ).toString();
+
+              throw new BizException( "03", procTransactionId, procName, procKey, procMsg, errorMsg, null );
             }
           } else {
             Map<String, Object> m = new HashMap();
-            m.put("APP_TYPE", "INS");
-            m.put("SVC_NO", insApiresult.get("serviceNo"));
-            m.put("ERR_CODE", "03");
-            m.put("ERR_MSG", "[API] [" + insApiresult.get("userId") + "] PRODUCT FOR ["
-                + orderInfo.get("stkId").toString() + "] IS UNAVAILABLE. ");
-            m.put("TRNSC_ID", transactionId);
+            m.put( "APP_TYPE", "INS" );
+            m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
+            m.put( "ERR_CODE", "03" );
+            m.put( "ERR_MSG", "[API] [" + insApiresult.get( "userId" ) + "] PRODUCT FOR [" + orderInfo.get( "stkId" ).toString() + "] IS UNAVAILABLE. " );
+            m.put( "TRNSC_ID", transactionId );
 
-            MSvcLogApiService.insert_SVC0066T(m);
-
+            MSvcLogApiService.insert_SVC0066T( m );
             String procTransactionId = transactionId;
             String procName = "Installation";
             String procKey = serviceNo;
             String procMsg = "PRODUCT LOC NO DATA";
             String errorMsg = "PRODUCT LOC NO DATA";
-            throw new BizException("03", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+            throw new BizException( "03", procTransactionId, procName, procKey, procMsg, errorMsg, null );
           }
         }
+        String userId = MSvcLogApiService.getUseridToMemid( params ); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
+        String installDate = MSvcLogApiService.getInstallDate( insApiresult ); // SELECT TO_CHAR( TO_DATE(#{checkInDate} ,'YYYY/MM/DD') , 'DD/MM/YYYY' ) FROM DUAL
 
-        String userId = MSvcLogApiService.getUseridToMemid(params); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
-        String installDate = MSvcLogApiService.getInstallDate(insApiresult); // SELECT TO_CHAR( TO_DATE(#{checkInDate} ,'YYYY/MM/DD') , 'DD/MM/YYYY' ) FROM DUAL
+        params.put( "installStatus", String.valueOf( statusId ) );
+        params.put( "statusCodeId", Integer.parseInt( params.get( "installStatus" ).toString() ) );
+        params.put( "hidEntryId", String.valueOf( installResult.get( "installEntryId" ) ) );
+        params.put( "hidCustomerId", String.valueOf( installResult.get( "custId" ) ) );
+        params.put( "hidSalesOrderId", String.valueOf( installResult.get( "salesOrdId" ) ) );
+        params.put( "hidTaxInvDSalesOrderNo", String.valueOf( installResult.get( "salesOrdNo" ) ) );
+        params.put( "hidStockIsSirim", String.valueOf( installResult.get( "isSirim" ) ) );
+        params.put( "hidStockGrade", installResult.get( "stkGrad" ) );
+        params.put( "hidSirimTypeId", String.valueOf( installResult.get( "stkCtgryId" ) ) );
+        params.put( "hiddeninstallEntryNo", String.valueOf( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidTradeLedger_InstallNo", String.valueOf( installResult.get( "installEntryNo" ) ) );
+        params.put( "hidCallType", String.valueOf( installResult.get( "typeId" ) ) );
+        params.put( "installDate", installDate );
+        params.put( "CTID", String.valueOf( userId ) );
+        params.put( "updator", String.valueOf( userId ) );
+        params.put( "nextCallDate", "01-01-1999" );
+        params.put( "refNo1", "0" );
+        params.put( "refNo2", "0" );
+        params.put( "codeId", String.valueOf( installResult.get( "257" ) ) );
+        params.put( "checkCommission", 1 );
 
-        params.put("installStatus", String.valueOf(statusId));
-        params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-        params.put("hidEntryId", String.valueOf(installResult.get("installEntryId")));
-        params.put("hidCustomerId", String.valueOf(installResult.get("custId")));
-        params.put("hidSalesOrderId", String.valueOf(installResult.get("salesOrdId")));
-        params.put("hidTaxInvDSalesOrderNo", String.valueOf(installResult.get("salesOrdNo")));
-        params.put("hidStockIsSirim", String.valueOf(installResult.get("isSirim")));
-        params.put("hidStockGrade", installResult.get("stkGrad"));
-        params.put("hidSirimTypeId", String.valueOf(installResult.get("stkCtgryId")));
-        params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
-        params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
-        params.put("hidCallType", String.valueOf(installResult.get("typeId")));
-        params.put("installDate", installDate);
-        params.put("CTID", String.valueOf(userId));
-        params.put("updator", String.valueOf(userId));
-        params.put("nextCallDate", "01-01-1999");
-        params.put("refNo1", "0");
-        params.put("refNo2", "0");
-        params.put("codeId", String.valueOf(installResult.get("257")));
-        params.put("checkCommission", 1);
-
-        if (orderInfo != null) {
-          params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
+        if ( orderInfo != null ) {
+          params.put( "hidOutright_Price", CommonUtils.nvl( String.valueOf( orderInfo.get( "c5" ) ) ) );
         } else {
-          params.put("hidOutright_Price", "0");
+          params.put( "hidOutright_Price", "0" );
         }
 
-        params.put("hidAppTypeId", installResult.get("codeId"));
-        params.put("hidStockIsSirim", String.valueOf(insApiresult.get("sirimNo")));
-        params.put("hidSerialNo", String.valueOf(insApiresult.get("serialNo")));
-        params.put("remark", insApiresult.get("resultRemark"));
-        params.put("dtPairCode", insApiresult.get("partnerCode"));
-        params.put("EXC_CT_ID", String.valueOf(userId));
+        params.put( "hidAppTypeId", installResult.get( "codeId" ) );
+        params.put( "hidStockIsSirim", String.valueOf( insApiresult.get( "sirimNo" ) ) );
+        params.put( "hidSerialNo", String.valueOf( insApiresult.get( "serialNo" ) ) );
+        params.put( "remark", insApiresult.get( "resultRemark" ) );
+        params.put( "dtPairCode", insApiresult.get( "partnerCode" ) );
+        params.put( "EXC_CT_ID", String.valueOf( userId ) );
+        params.put( "hidSerialRequireChkYn", "Y" );
+        params.put( "mobileYn", "Y" );
+        logger.debug( "### INSTALLATION PARAM : " + params.toString() );
 
-        params.put("hidSerialRequireChkYn", "Y");
-        params.put("mobileYn", "Y");
-
-        logger.debug("### INSTALLATION PARAM : " + params.toString());
-
-        sessionVO1.setUserId(Integer.parseInt(userId));
+        sessionVO1.setUserId( Integer.parseInt( userId ) );
 
         // INST. ACCS LIST START
-        List<Map<String, Object>> paramsDetailInstAccLst = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("installAccList"));
-        logger.debug("### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString());
-        //List lstStr = null;
+        List<Map<String, Object>> paramsDetailInstAccLst = InstallationResultDetailForm.createMaps( (List<InstallationResultDetailForm>) insApiresult.get( "installAccList" ) );
+        logger.debug( "### INST ACCS LIST INFO : " + paramsDetailInstAccLst.toString() );
         List<String> lstStr = new ArrayList<>();
-        for (Map<String, Object> accLst : paramsDetailInstAccLst) {
 
-        	logger.debug("accLst : " + accLst.size());
-          if (accLst != null) {
-            lstStr.add(String.valueOf(accLst.get("insAccPartId")));
-            logger.debug("### insAccPartIdT : " + String.valueOf(accLst.get("insAccPartId")));
+        for ( Map<String, Object> accLst : paramsDetailInstAccLst ) {
+          if ( accLst != null ) {
+            lstStr.add( String.valueOf( accLst.get( "insAccPartId" ) ) );
           }
         }
-        logger.debug("### INST ACCS LIST SIZE : " + lstStr.size());
-
-        params.put("instAccLst", lstStr);
+        logger.debug( "### INST ACCS LIST SIZE : " + lstStr.size() );
+        params.put( "instAccLst", lstStr );
         // INST. ACCS LIST END
 
         try {
-          Map rtnValue = installationResultListService.insertInstallationResult(params, sessionVO1);
+          Map rtnValue = installationResultListService.insertInstallationResult( params, sessionVO1 );
+          if ( null != rtnValue ) {
+            HashMap spMap = (HashMap) rtnValue.get( "spMap" );
 
-          if (null != rtnValue) {
-
-            HashMap spMap = (HashMap) rtnValue.get("spMap");
-            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-              rtnValue.put("logerr", "Y");
+            if ( !"000".equals( spMap.get( "P_RESULT_MSG" ) ) ) {
+              rtnValue.put( "logerr", "Y" );
             }
 
-            params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
-            params.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
-            params.put("reqstNo", String.valueOf(insApiresult.get("serviceNo")));
-            params.put("delvryNo", null);
-            params.put("callGbn", "INSTALL");
-            params.put("mobileYn", "Y");
-            params.put("userId", userId);
-            params.put("pErrcode", "");
-            params.put("pErrmsg", "");
-            MSvcLogApiService.SP_SVC_BARCODE_SAVE(params);
+            params.put( "scanSerial", String.valueOf( insApiresult.get( "scanSerial" ) ) );
+            params.put( "salesOrdId", String.valueOf( installResult.get( "salesOrdId" ) ) );
+            params.put( "reqstNo", String.valueOf( insApiresult.get( "serviceNo" ) ) );
+            params.put( "delvryNo", null );
+            params.put( "callGbn", "INSTALL" );
+            params.put( "mobileYn", "Y" );
+            params.put( "userId", userId );
+            params.put( "pErrcode", "" );
+            params.put( "pErrmsg", "" );
 
-            if (!"000".equals(params.get("pErrcode"))) {
+            MSvcLogApiService.SP_SVC_BARCODE_SAVE( params );
+
+            if ( !"000".equals( params.get( "pErrcode" ) ) ) {
               String procTransactionId = transactionId;
               String procName = "Installation";
               String procKey = serviceNo;
               String procMsg = "Failed to Barcode Save";
-              String errorMsg = "[API] " + params.get("pErrmsg");
-              throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              String errorMsg = "[API] " + params.get( "pErrmsg" );
+              throw new BizException( "02", procTransactionId, procName, procKey, procMsg, errorMsg, null );
             }
+            spMap.put( "pErrcode", "" );
+            spMap.put( "pErrmsg", "" );
 
-            spMap.put("pErrcode", "");
-            spMap.put("pErrmsg", "");
-            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
+            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL( spMap );
 
-            String errCode = (String) spMap.get("pErrcode");
-            String errMsg = (String) spMap.get("pErrmsg");
+            String errCode = (String) spMap.get( "pErrcode" );
+            String errMsg = (String) spMap.get( "pErrmsg" );
 
-            logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
-            logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
-
-            // pErrcode : 000 = Success, others = Fail
-            if (!"000".equals(errCode)) {
+            if ( !"000".equals( errCode ) ) {
               String procTransactionId = transactionId;
               String procName = "Installation";
               String procKey = serviceNo;
               String procMsg = "Failed to Save";
               String errorMsg = "[API] " + errMsg;
-              throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+              throw new BizException( "02", procTransactionId, procName, procKey, procMsg, errorMsg, null );
             }
-
-            /*Map<String, Object> smsResultValue = new HashMap<String, Object>();
-
-            try {
-              smsResultValue = hcInstallResultListService.hcInstallationSendSMS(params.get("hidAppTypeId").toString(), params);
-              logger.info("===DONE SEND TO CUST===");
-              EgovMap salesmanInfo = hcInstallResultListService.selectOrderSalesmanViewByOrderID(params);
-              params.put("hpPhoneNo",salesmanInfo.get("telMobile"));
-              params.put("hpMemId",salesmanInfo.get("memId"));
-              String hpMsg = "COWAY: Order " + params.get("salesOrderNo") + "\n Name: " + params.get("resultCustName") + "Install Status: Completed" ;
-              params.put("hpMsg",hpMsg);
-              smsResultValue = hcInstallResultListService.hcInstallationSendHPSMS(params);
-              logger.info("===DONE SEND TO HP===");
-            } catch (Exception e) {
-              logger.info("===smsResultValue===" + smsResultValue.toString());
-              logger.info("===Failed to send SMS to" + params.get("custMobileNo").toString() + "===");
-            }*/
           }
-        } catch (Exception e) {
+        } catch ( Exception e ) {
           String procTransactionId = transactionId;
           String procName = "Installation";
           String procKey = serviceNo;
           String procMsg = "Failed to Save";
           String errorMsg = "[API] " + e.toString();
-          throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+          throw new BizException( "02", procTransactionId, procName, procKey, procMsg, errorMsg, null );
         }
       } else {
-        // 대상이 없다면 정상 완료 처리
         // Insert Log Adapter. So Delete Log
         // if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
         // MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
@@ -854,24 +752,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       String procName = "Installation";
       String procKey = serviceNo;
       String procMsg = "NoTarget Data";
-      String errorMsg = "[API] [" + insApiresult.get("userId") + "] IT IS NOT ASSIGNED CT CODE.";
-      throw new BizException("01", procTransactionId, procName, procKey, procMsg, errorMsg, null);
+      String errorMsg = "[API] [" + insApiresult.get( "userId" ) + "] IT IS NOT ASSIGNED CT CODE.";
+      throw new BizException( "01", procTransactionId, procName, procKey, procMsg, errorMsg, null );
     }
-
-    logger.debug("### INSTALLATION FINAL PARAM : " + params.toString());
-
-    return ResponseEntity.ok(InstallationResultDto.create(transactionId));
+    logger.debug( "### INSTALLATION FINAL PARAM : " + params.toString() );
+    return ResponseEntity.ok( InstallationResultDto.create( transactionId ) );
   }
-
-  /*@Override
-	public void installationResultProcSendEmail(Map<String, Object> params) {
-	  logger.info("paramsSendEmail1111====" + params.toString() + "===");
-
-	  try{
-	  	installationResultListService.installationSendEmail(params);
-  	  }catch (Exception e){
-  		logger.info("===Failed to send e-mail to" + params.get("resultReportEmailNo").toString() + "===");
-  	  }
-   }*/
 
 }
