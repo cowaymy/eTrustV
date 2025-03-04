@@ -1566,7 +1566,7 @@ var installAccTypeId = 582;
      <!------------------------------------------------------------------------------
     Order Detail Page Include START
 ------------------------------------------------------------------------------->
-<%--      <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
+     <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
      <!------------------------------------------------------------------------------
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
