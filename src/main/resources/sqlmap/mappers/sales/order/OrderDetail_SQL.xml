@@ -759,7 +759,7 @@
                  JOIN SYS0013M T4 ON T4.CODE_ID = T2.APP_TYPE_ID
                  JOIN SAL0029D T5 ON T5.CUST_ID = T2.CUST_ID
                  WHERE T1.SALES_ORD_ID = #{salesOrderId}
-                     AND 66 = T1.APP_TYPE_ID
+                     AND T1.APP_TYPE_ID IN (66, 7759)
                      AND T1.CUST_BILL_ID > 0
       ) T ORDER BY T.SALES_ORD_NO
     ]]>
@@ -1302,7 +1302,7 @@
                LEFT OUTER JOIN PAY0022D ON TO_CHAR(RENT_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
                                                      AND ( RENT_DOC_NO LIKE '%OR%' OR RENT_DOC_TYPE_ID = 155 OR RENT_DOC_TYPE_ID = 157 )
                                                      AND RENT_SO_ID = #{salesOrdId}
-    ) WHERE 66 = #{appTypeId}
+    ) WHERE #{appTypeId} IN (66, 7759)
     GROUP BY TYPE
 
     UNION ALL
@@ -1331,7 +1331,7 @@
                LEFT OUTER JOIN PAY0035D ON TO_CHAR(TRADE_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
                                                      AND ( TRADE_DOC_NO LIKE '%OR%' OR TRADE_DOC_TYPE_ID = 155 OR TRADE_DOC_TYPE_ID = 157 )
                                                      AND TRADE_SO_ID = #{salesOrdId}
-    ) WHERE 66 != #{appTypeId}
+    ) WHERE #{appTypeId} NOT IN (66, 7759)
       GROUP BY TYPE
 
     UNION ALL
@@ -1621,7 +1621,7 @@
 	        LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
 	        LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
 	        LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
-	        WHERE B.APP_TYPE_ID = 66
+	        WHERE B.APP_TYPE_ID IN (66, 7759)
 	        AND A.CCP_SALES_ORD_ID = #{salesOrdId}
 	        ORDER BY A.CCP_ID DESC
 	    )WHERE ROWNUM = 1
@@ -1710,7 +1710,7 @@
 	        LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
 	        LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
 	        LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
-	        WHERE B.APP_TYPE_ID = 66
+	        WHERE B.APP_TYPE_ID IN (66, 7759)
 	        AND A.CCP_SALES_ORD_ID = #{salesOrdId}
 	        ORDER BY A.CCP_ID DESC
 	    )WHERE ROWNUM = 1

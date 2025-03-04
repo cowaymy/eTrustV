@@ -2453,7 +2453,7 @@ SELECT * FROM
                             SOM.TOT_AMT AS ORD_AMT,
                             (
                                 CASE
-                                    WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.MTH_RENT_AMT,0)
+                                    WHEN SOM.APP_TYPE_ID IN (66, 7759) THEN NVL(SOM.MTH_RENT_AMT,0)
                                     ELSE 0
                                 END
                             ) ORD_MTH_RENTAL,

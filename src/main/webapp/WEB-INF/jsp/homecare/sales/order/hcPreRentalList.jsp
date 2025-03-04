@@ -98,6 +98,26 @@
             //$('#listSearchForm').clearForm();
             window.location.reload();
         });
+        $('#btnConvrt').click(function() {
+        	var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+            if(selIdx > -1) {
+            	var ordId = AUIGrid.getCellValue(listMyGridID, selIdx, "ordId");
+                var ordStusId = AUIGrid.getCellValue(listMyGridID, selIdx, "ordStusId");
+
+                if(ordStusId == '4' ){
+                	Common.popupDiv("/homecare/sales/order/hcPreRentalConvertPop.do", {ordId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId")}, null , true);
+                }
+                else{
+                	Common.alert('Failed to Convert Order' + DEFAULT_DELIMITER + '<b>This order is not in complete status.<br/>Convert order is disallowed.</b>');
+                }
+            }
+            else {
+                Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+            }
+
+            //Common.popupDiv("/homecare/sales/order/hcPreRentalConvertPop.do", {custId: "948884", productId : "2116", productName : "500001 - COWAY MASSAGE CHAIR (MC-ST01B)"}, null , true);
+            });
         $('#btnExport').click(function() {
 
             var grdLength = "0";
@@ -248,8 +268,7 @@
           , {headerText : "<spring:message code='sal.text.lastUpdateAtByUsr'/>",   dataField : "lastUpdUsr",      editable : false, width : 180}
           , {headerText : "<spring:message code='sal.text.lastUpdateAtByDt'/>",   dataField : "lastUpdDt",      editable : false, width : 180}
           , {headerText : "ordId",                                                              dataField : "ordId",                  visible   : false}
-          , {headerText : "productId",                                                              dataField : "productId",                  visible   : false}
-          , {headerText : "custId",                                                              dataField : "custId",                  visible   : false}
+          , {headerText : "ordStusId",                                                           dataField : "ordStusId",        visible   : false}
             ];
 
         //그리드 속성 설정
@@ -398,7 +417,7 @@
 
     function fn_excelDown(){
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("list_grid_wrap", "xlsx", "Homecare Mattress HC");
+    	GridCommon.exportTo("list_grid_wrap", "xlsx", "Pre-Rental (HC)");
     }
 
 </script>

@@ -1897,6 +1897,8 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 			defaultPacID=3;
 		}else if(Integer.parseInt(params.get("applicationTypeID").toString())==144){
 			defaultPacID=10;
+		}else if(Integer.parseInt(params.get("applicationTypeID").toString())==7759){
+			defaultPacID=35;
 		}else{
 			defaultPacID=2;
 		}
@@ -2144,7 +2146,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
             int adjDrAccID = 0;
             int adjCrAccID = 0;
 
-            if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+            if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759  || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
             	logger.debug("-------------3---------------");
             	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
             		adjTypeSetID = 7;
@@ -2260,7 +2262,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
                     addAccTRXes(accTRXMinus);
 
                     */
-                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759 ){
                     	logger.debug("-------------5---------------");
                     	EgovMap  qryPreBill = getQryPreBill(params);
 //                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
@@ -2610,7 +2612,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 
 
 
-	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
 	    			logger.debug("-------------14---------------");
 	    			int adjTypeSetID = 0;
 	                int adjDrAccID = 0;
@@ -2733,7 +2735,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	                  //  addAccTRXes(accTRXMinus);
 
 
-	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759){
 	                    	logger.debug("-------------17---------------");
 	                    	EgovMap  qryPreBill = getQryPreBill(params);
 //	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
@@ -2818,7 +2820,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	                    }
 	                }else{
 	                	logger.debug("-------------21---------------");
-	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759){
 	                		logger.debug("-------------22---------------");
 	                	}else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
 	                		logger.debug("-------------23---------------");
@@ -3054,7 +3056,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	    		addSalesorderLog(salesorderLog);
 
 
-	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
 	    			logger.debug("-------------26---------------");
 	    			int adjTypeSetID = 0;
 	                int adjDrAccID = 0;
@@ -3169,7 +3171,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 
 	                //    addAccTRXes(accTRXMinus);
 
-	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759){
 	                    	logger.debug("-------------28---------------");
 	                    	EgovMap  qryPreBill = getQryPreBill(params);
 //	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
@@ -3247,7 +3249,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	                    }
 	                }else{
 	                	logger.debug("-------------32---------------");
-	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==7759){
 	                		logger.debug("-------------33---------------");
 	                	}else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
 	                		logger.debug("-------------34---------------");

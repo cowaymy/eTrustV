@@ -346,7 +346,7 @@
              , NVL(T.PRC_COSTING, 0) AS COST
              , NVL(T.AMT, 0) AS NORMAL_PRICE
              , NVL(T.PRC_PV, 0) AS PV
-             , DECODE(T.APP_TYPE_ID, 66, T.AMT, 0) AS MONTHLY_RENTAL
+             , CASE WHEN T.APP_TYPE_ID IN (66, 7759) THEN T.AMT ELSE 0 END AS MONTHLY_RENTAL
              , NVL(T.PRC_RPF, 0) RENTAL_DEPOSIT
              , NVL(T.TRADE_IN_PV, 0) TRADE_IN_PV
     FROM ( SELECT T2.PRC_ID
@@ -392,7 +392,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999, 7761, 7759), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -429,7 +429,7 @@
                  JOIN SAL0017D T2
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
-                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 99999, 7761, 7759), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
@@ -449,7 +449,7 @@
                   </if>
                  LEFT OUTER
                  JOIN SAL0081D T3
-                   ON 2284 = #{appTypeId}
+                   ON #{appTypeId} IN (2284, 7761)
                   AND T3.SRV_CNTRCT_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T3.SRV_CNTRCT_PAC_STUS_ID = '1'
                   AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -457,7 +457,7 @@
                   AND T3.PAC_TYPE = '2'
                  LEFT OUTER
                  JOIN SAL0091M T4
-                   ON 2284 != #{appTypeId}
+                   ON #{appTypeId} NOT IN (2284, 7761)
                   AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T4.SRV_MEM_STUS_ID = '1'
                   AND T4.PAC_TYPE = '2'
@@ -814,7 +814,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 7761, 7759)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
@@ -860,7 +860,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 7761, 7759)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE
            T1.PROMO_ITM_STUS_ID = 1
@@ -907,7 +907,7 @@
           LEFT OUTER
           JOIN SAL0016M T4
             ON T4.STK_ID = T1.PROMO_ITM_STK_ID
-           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144)
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 7553, 144, 7761, 7759)
            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T3.PROMO_DISC_ON_BILL
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1

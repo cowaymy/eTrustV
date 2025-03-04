@@ -506,7 +506,7 @@
 		     , PRC_CHRG    = #{pricecharges}
 		     , PRC_COSTING = #{pricecosting}
 			</if>
-			<if test="appTypeId !=null and appTypeId == '66'">
+			<if test="appTypeId !=null and (appTypeId == '66' or appTypeId == '7759')">
 		      ,  AMT         = TO_NUMBER (replace(#{amt},',', ''))
 		      ,  PRC_RPF     = #{pricerpf}
 		      ,  PRC_PV      = #{pricepv}
@@ -1052,22 +1052,24 @@
     CASE WHEN CODE_MASTER_ID = 367 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 66 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
             WHEN CODE_MASTER_ID = 368 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 67 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
             WHEN CODE_MASTER_ID = 370 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 1412 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
+            WHEN CODE_MASTER_ID = 614 THEN (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 7759 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| CODE_NAME
      ELSE NULL END AS CODE_NAME,
     DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION,
     CASE WHEN CODE_MASTER_ID = 367 THEN 66
     WHEN CODE_MASTER_ID = 368 THEN 67
     WHEN CODE_MASTER_ID = 370 THEN 1412
+    WHEN CODE_MASTER_ID = 614 THEN 7759
     ELSE NULL END AS APPTYPEID
     FROM SYS0013M
     WHERE DISAB = 0
-    AND CODE_MASTER_ID IN (367,368,370)
+    AND CODE_MASTER_ID IN (367,368,370,614)
 
   </select>
 
   <select id="selectPriceInfo2" parameterType="Map" resultType="egovMap">
    SELECT
    <if test="typeId !=null and typeId == '61'">
-                <if test="appTypeId !=null and appTypeId == '66'">
+                <if test="appTypeId !=null and (appTypeId == '66' || appTypeId == '7759')">
                     NVL(PRC_COSTING, 0) PRICECOST,
 				    0 AMT,
 				    NVL(PRC_PV, 0) PRICEPV,

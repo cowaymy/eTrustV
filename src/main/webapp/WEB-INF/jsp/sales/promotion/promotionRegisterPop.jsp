@@ -40,7 +40,7 @@
         $('.extradeMonth').attr("hidden", true);
 
         $('#promoAppTypeId').change(function(){
-        	if($('#promoAppTypeId').val() == "2284" || $('#promoAppTypeId').val() == "2285" ){
+        	if($('#promoAppTypeId').val() == "2284" || $('#promoAppTypeId').val() == "7761" || $('#promoAppTypeId').val() == "2285"){
                 $('.extradeMonth').removeAttr("hidden");
                 $('#extradeMonthFrom').val('0');
                 $('#extradeMonthTo').val('0');
@@ -329,7 +329,7 @@
                 orgPvVal = orgPvVal * (70/100);
             }
 
-            if($('#promoAppTypeId').val() == '2284') {
+            if($('#promoAppTypeId').val() == '2284' || $('#promoAppTypeId').val() == '7761') {
                 dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
             }
             else if($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287'){
@@ -587,7 +587,7 @@
             msg += "<spring:message code='sales.promo.msg20'/><br />";
         }
 
-        if($('#promoAppTypeId option:selected').val() == 2284 || $('#promoAppTypeId option:selected').val() == 2285){
+        if($('#promoAppTypeId option:selected').val() == 2284 || $('#promoAppTypeId option:selected').val() == 7761 || $('#promoAppTypeId option:selected').val() == 2285){
 	        if( !$('#extradeAppType').is(":disabled") && FormUtil.isEmpty($('#extradeAppType').val())) {
 	            isValid = false;
 	            msg += "Extrade App Type must be selected";
@@ -731,7 +731,7 @@
         var promoCustVal = $('#promoCustType').val();
 
         //Promo Application = Rental / Outright / Outright Plus
-        if(promoAppVal == '2284'|| promoAppVal == '2285'|| promoAppVal == '2287') {
+        if(promoAppVal == '2284'|| promoAppVal == '7761'|| promoAppVal == '2285'|| promoAppVal == '2287') {
             $('#exTrade').removeAttr("disabled");
 
             if($('#exTrade').val() == "1"){
@@ -771,7 +771,7 @@
         }
 
         //Promo Application = Rental & Promotion Type = Discount
-        if(promoAppVal == '2284' && promoTypVal == '2282') {
+        if((promoAppVal == '2284' || promoAppVal == '7761')&& promoTypVal == '2282') {
             console.log('Promo Application = Rental & Promotion Type = Discount');
 
             $('#promoDiscType').removeAttr("disabled");
@@ -888,7 +888,7 @@
         }
 
         //Promo Application = Rental
-        if(promoAppVal == '2284') {
+        if(promoAppVal == '2284' || promoAppVal == '7761') {
             $('#promoDiscPeriodTp').val('2293');
             $('#promoDiscPeriod').val('').prop("disabled", true);
 

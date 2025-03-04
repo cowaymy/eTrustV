@@ -408,7 +408,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
         //rental package
         smap2.put("stockId", params.get("stockId"));
         smap2.put("amt", params.get("dMonthlyRental"));
-        smap2.put("appTypeId", "66");
+        smap2.put("appTypeId", params.get("appTypeId").toString());
         smap2.put("pricecharges", 0);
         smap2.put("pricecosting", params.get("dCost"));
         smap2.put("statuscodeid", 1);
@@ -418,7 +418,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
         smap2.put("srvpacid", params.get("srvPackageId"));
 
         List<EgovMap> info = null;
-        if(params.get("appTypeId").toString().equals("66")){
+        if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
         	info = stockMapper.selectPriceInfo2(smap2);
         }else if(params.get("appTypeId").toString().equals("67")){
         	info = stockMapper.selectPriceInfo2(smap);
@@ -443,7 +443,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
             	   int sm2 = stockMapper.chcekCountPacId(smap);
             	   logger.debug("sm ====== " + sm);
             	   logger.debug("sm2 ===== " + sm2);
-            	   if(params.get("appTypeId").toString().equals("66")){
+            	   if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
             		   if( sm == 1){
                 		   pac_id = stockMapper.selectExistPacId(smap2);
                 	   }else if(sm == 0){
@@ -475,20 +475,20 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 
 
         if(isEmptyPriceInfo == false){
-			if(params.get("appTypeId").toString().equals("66")){
+			if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
 				 stockMapper.updateSalePriceInfo(smap2);
 			}else if(params.get("appTypeId").toString().equals("67")){
 				stockMapper.updateSalePriceInfo(smap);
 			}
         }else{
-			if(params.get("appTypeId").toString().equals("66")){
+			if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
 				 stockMapper.insertSalePriceInfo(smap2);
 			}else if(params.get("appTypeId").toString().equals("67")){
 				stockMapper.insertSalePriceInfo(smap);
 			}
         }
 
-		if(params.get("appTypeId").toString().equals("66")){
+		if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
 			stockMapper.insertSalePriceInfoHistory(smap2);
 		}else if(params.get("appTypeId").toString().equals("67")){
 			stockMapper.insertSalePriceInfoHistory(smap);
@@ -576,7 +576,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		    //rental package
 		    smap2.put("stockId", params.get("stockId"));
 		    smap2.put("amt", params.get("dMonthlyRental"));
-		    smap2.put("appTypeId", "66");
+		    smap2.put("appTypeId", params.get("appTypeId").toString());
 		    smap2.put("pricecharges", 0);
 		    smap2.put("pricecosting", params.get("dCost"));
 		    smap2.put("pricepv", params.get("dPV"));
@@ -584,7 +584,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 		    smap2.put("pricerpf", params.get("dRentalDeposit"));
 		    smap2.put("srvpacid", params.get("srvPackageId"));
 
-		    if(params.get("appTypeId").toString().equals("66")){
+		    if(params.get("appTypeId").toString().equals("66") || params.get("appTypeId").toString().equals("7759")){
 		    	stockMapper.insertSalePriceReqst(smap2);
 		    	}else if(params.get("appTypeId").toString().equals("67")){
 		    		stockMapper.insertSalePriceReqst(smap);

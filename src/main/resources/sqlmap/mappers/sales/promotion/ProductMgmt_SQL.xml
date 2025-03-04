@@ -223,6 +223,8 @@ SELECT TM.PRC_REQST_ID, TM.APP_TYPE_ID, TM.STK_ID, STK.STK_TYPE_ID, STK.STK_CODE
 SP.MEM_PAC_ID,
     CASE WHEN TM.APP_TYPE_ID = 66 THEN
     (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 66 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 367 and CODE = TO_CHAR(TM.MEM_PAC_ID))
+            WHEN TM.APP_TYPE_ID = 7759 THEN
+    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 7759 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 614 and CODE = TO_CHAR(TM.MEM_PAC_ID))
             WHEN TM.APP_TYPE_ID = 67 THEN
     (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = 67 and DISAB = 0 AND CODE_MASTER_ID = 10) ||' - '|| (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 368 and CODE = TO_CHAR(TM.MEM_PAC_ID))
             WHEN TM.APP_TYPE_ID = 1412 THEN
@@ -290,7 +292,7 @@ WHERE 1 = 1
   <select id="selectPriceReqstInfo" parameterType="Map" resultType="egovMap">
    SELECT A.APPV_STUS, A.REMARK, A.CHG_REMARK,
    <if test="typeId !=null and typeId == '61'">
-                <if test="appTypeId !=null and appTypeId == '66'">
+                <if test="appTypeId !=null and (appTypeId == '66' || appTypeId == '7759')">
                     NVL(A.PRC_COSTING, 0) PRICECOST,
                     0 AMT,
                     NVL(A.PRC_PV, 0) PRICEPV,

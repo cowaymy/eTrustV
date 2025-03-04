@@ -108,6 +108,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     }
 
     if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode").toString())
+        || SalesConstants.APP_TYPE_CODE_PRE_RENTAL.equals(basicInfo.get("appTypeCode").toString())
         || SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS.equals(basicInfo.get("appTypeCode").toString())) {
 
       rentPaySetInf = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
@@ -393,7 +394,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 
     mailingInfo.put("fullAddress", fullAddress);
 
-    if (!SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
+    if (!SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))
+    	&& !SalesConstants.APP_TYPE_CODE_PRE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
       mailingInfo.put("billGrpNo", "-");
     }
 
@@ -429,11 +431,13 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     String rentalStatus = "-";
     int obligationYear = 0;
 
-    if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
+    if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))
+    || SalesConstants.APP_TYPE_CODE_PRE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
       mthRentalFees = (BigDecimal) basicInfo.get("ordMthRental");
     }
 
     if (SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))
+        || SalesConstants.APP_TYPE_CODE_PRE_RENTAL.equals(basicInfo.get("appTypeCode"))
         || SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS.equals(basicInfo.get("appTypeCode"))) {
 
       Date salesDt = (Date) basicInfo.get("ordDt");

@@ -871,7 +871,7 @@
         var newRentalGST = fn_calcGst(newRental);
         var newPv = $('#ordPvGST').val();
 
-        if (APP_TYPE_ID != '66') {
+        if (APP_TYPE_ID != '66' && APP_TYPE_ID != '7759') {
             oldPriceGST = Math.floor(oldPriceGST / 10) * 10;
             newPriceGST = Math.floor(newPriceGST / 10) * 10;
         }
@@ -938,7 +938,7 @@
     var newRentalGST = fn_calcGst(newRental);
     var newPv = $('#ordPvGST').val();
 
-    if (APP_TYPE_ID != '66') {
+    if (APP_TYPE_ID != '66' && APP_TYPE_ID != '7759') {
       oldPriceGST = Math.floor(oldPriceGST / 10) * 10;
       newPriceGST = Math.floor(newPriceGST / 10) * 10;
     }
@@ -1121,7 +1121,7 @@
             return false;
         }
 
-        if (tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '1412') {
+        if (tabNm == 'PAY' && APP_TYPE_ID != '66' && APP_TYPE_ID != '7759' && APP_TYPE_ID != '1412') {
             var msg = '<spring:message code="sal.msg.rentOrdAllowEdit" arguments="'+ORD_NO+';'+APP_TYPE_DESC+'" argumentSeparator=";"/>';
 
             Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
@@ -1199,7 +1199,7 @@
       $('#scBI').addClass("blind");
     }
     if (tabNm == 'MAL') {
-      if (APP_TYPE_ID == '66') {
+      if (APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') {
         $('#scMA').removeClass("blind");
         fn_loadBillGrpMailAddr(ORD_ID);
       } else {
@@ -1298,7 +1298,7 @@
           fn_getGstCertFileDown(result.atchFileGrpId);
         }
       } else {
-        if (APP_TYPE_ID == '66') {
+        if (APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') {
           $('#eurcRliefAppTypeId').val('1374');
         } else if (APP_TYPE_ID == '67' || APP_TYPE_ID == '68') {
           $('#eurcRliefAppTypeId').val('1373');
@@ -1331,7 +1331,7 @@
       $('#pBtnCal').addClass("blind");
     }
 
-    if (APP_TYPE_ID != 66) {
+    if (APP_TYPE_ID != 66 && APP_TYPE_ID != 7759) {
       SRV_PAC_ID = 0;
     }
     Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {
@@ -2009,7 +2009,7 @@
 
         $('#modKeyInBranch').val(basicInfo.keyinBrnchId);
 
-        if (basicInfo.appTypeId == '66' && basicInfo.typeId == '965' && basicInfo.ordPvMonth == '0' && basicInfo.ordPvYear == '0') {
+        if ((basicInfo.appTypeId == '66' || basicInfo.appTypeId == '7759' ) && basicInfo.typeId == '965' && basicInfo.ordPvMonth == '0' && basicInfo.ordPvYear == '0') {
             $('#modCorpCustType').removeAttr("disabled").val(basicInfo.corpCustTypeId);
             $('#modAgreementType').removeAttr("disabled").val(basicInfo.agreementTypeId);
 
@@ -2436,7 +2436,7 @@
       msg += '<spring:message code="sal.alert.msg.plzSelTheKeyinbrnch" />';
     }
 
-    if (APP_TYPE_ID == '66' && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
+    if ((APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') && CUST_TYPE_ID == '965' && PV_MONTH == '0' && PV_YEAR == '0') {
         if ($("#modCorpCustType option:selected").index() <= 0) {
               isValid = false;
               msg += '* Please select the SST Type</br>';
@@ -2718,7 +2718,7 @@
             $('#pBtnCal').addClass("blind");
         }
 
-        if (APP_TYPE_ID != 66) {
+        if (APP_TYPE_ID != 66 && APP_TYPE_ID != 7759) {
             SRV_PAC_ID = 0;
         }
 
@@ -2751,7 +2751,7 @@
     function fn_doSavePromoPriceInfo() {
         $('#promoDiscPeriodTp').removeAttr("disabled");
 
-        if (APP_TYPE_ID == 66) {    // Rental
+        if (APP_TYPE_ID == 66 || APP_TYPE_ID == 7759) {    // Rental
             var salesOrderMVO = {
                 salesOrdId : ORD_ID,
                 promoId : $('#ordPromo').val().trim(),

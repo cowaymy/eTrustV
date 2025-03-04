@@ -227,7 +227,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
       EgovMap salesReqCancel = orderCancelMapper.newSearchCancelSAL0020D(saveParam);
 
-      if (appTypeId == 66) { // RENTAL
+      if (appTypeId == 66 || appTypeId == 7759) { // RENTAL
         EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam); // RentalScheme
         saveParam.put("renSchId", getRenSchId.get("renSchId"));
         if (reqStageId == 25) { // after installation
@@ -329,7 +329,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
           }
         }
 
-        if (appTypeId == 66) {
+        if (appTypeId == 66 || appTypeId == 7759) {
       	  //early extrade 202502 - AP Extrade without Product Return (Early Extrade)
       	  orderCancelMapper.updateCancelSAL0432D(saveParam);
       	  orderCancelMapper.updateCancelSAL0408D(saveParam);
@@ -349,7 +349,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
 
       orderCancelMapper.updateCancelSAL0349D(saveParam); // update the table sal0349d disb = 1 for Air Con Bulk promotion package
 
-      if (appTypeId == 66) {
+      if (appTypeId == 66 || appTypeId == 7759) {
     	  //rebate combo 202411 - [Enhancement] RM10 Rebate for HC Product Purchases (Combo)
     	  orderCancelMapper.updateCancelSAL0424D(saveParam);
       }
@@ -408,7 +408,7 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
         //logger.info("##### reqStageId ###############" + (String) params.get("reqStageId"));
       }
 
-      if (appTypeId == 66) { // RENTAL
+      if (appTypeId == 66 || appTypeId == 7759) { // RENTAL
         EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam); // RentalScheme
         saveParam.put("renSchId", getRenSchId.get("renSchId"));
         saveParam.put("salesOrdId", getRenSchId.get("salesOrdId"));

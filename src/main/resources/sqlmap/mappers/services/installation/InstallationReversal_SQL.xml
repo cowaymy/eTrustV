@@ -543,7 +543,7 @@ AND ROWNUM                    <= 1
 				        LEFT JOIN PAY0022D Extent2
 				                ON ( Extent1.SALES_ORD_ID   = Extent2.RENT_SO_ID )
 				                AND ( 161                   = Extent2.RENT_DOC_TYPE_ID )
-				                AND ( 66                    = Extent1.APP_TYPE_ID )
+				                AND ( Extent1.APP_TYPE_ID IN (66, 7759))
 				                AND ( Extent2.RENT_AMT   >= UTILS.CONVERT_TO_FLOAT(0,53) )
 				                AND ( ( ( Extent2.RENT_DOC_NO = #{einstallEntryNo} )
 				                AND ( Extent2.RENT_DT_TM >= #{rentDateTime} ) )

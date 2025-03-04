@@ -967,7 +967,19 @@
         var obj = document.getElementById("exPkgCombo");
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
-       if(srvPacVal.includes("Rental")){
+
+        if(srvPacVal.includes("Pre-Rental")){
+            appTypeId = "7759";
+            if(editYN == "Y"){
+                if(typeId2 == '61'){
+                    fn_makeDisabled("R");
+                }else if(typeId2 == "63"){
+                    fn_makeDisabled("O");
+                }
+
+            }
+        }
+        else if(srvPacVal.includes("Rental")){
            appTypeId = "66";
            if(editYN == "Y"){
         	   if(typeId2 == '61'){
@@ -1027,7 +1039,9 @@
         var obj = document.getElementById("exPkgCombo");
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
-       if(srvPacVal.includes("Rental")){
+       if(srvPacVal.includes("Pre-Rental")){
+            appTypeId = "7759";
+       }else if(srvPacVal.includes("Rental")){
            appTypeId = "66";
        }else if(srvPacVal.includes("Outright Plus")){
            appTypeId = "1412";
@@ -1035,7 +1049,7 @@
            appTypeId = "67";
        }
 
-       if(appTypeId == "66"){
+       if(appTypeId == "66" || appTypeId == "7759"){
     	   if(typeId2 == "61"){
     		   fn_makeDisabled("R");
     	   } else if (typeId2 == "63"){
@@ -1073,7 +1087,9 @@
         var obj = document.getElementById("exPkgCombo");
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
-       if(srvPacVal.includes("Rental")){
+       if(srvPacVal.includes("Pre-Rental")){
+            appTypeId = "7759";
+       }else if(srvPacVal.includes("Rental")){
            appTypeId = "66";
        }else if(srvPacVal.includes("Outright Plus")){
            appTypeId = "1412";

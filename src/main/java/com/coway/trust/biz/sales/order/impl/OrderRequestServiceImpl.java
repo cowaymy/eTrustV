@@ -2007,7 +2007,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         orderRequestMapper.updateCallEntry(callEntryMasterVO);
 
         // RENTAL SCHEME
-        if (appTypeId == 66) {
+        if (appTypeId == 66 || appTypeId == 7759) {
           EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
 
           if (stsMap != null) {

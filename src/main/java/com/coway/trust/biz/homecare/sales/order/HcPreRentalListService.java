@@ -3,6 +3,9 @@ package com.coway.trust.biz.homecare.sales.order;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -57,4 +60,10 @@ public interface HcPreRentalListService {
   EgovMap getOrgDtls(Map<String, Object> params);
 
   EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params);
+
+  List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params);
+
+  EgovMap getPreRentalBasicInfo(Map<String, Object> params);
+
+  int convertPreRental(OrderVO orderVO, SessionVO sessionVO);
 }

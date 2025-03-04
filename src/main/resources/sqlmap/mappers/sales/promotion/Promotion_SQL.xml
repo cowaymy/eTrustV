@@ -231,6 +231,17 @@
 		          AND T1.PAC_TYPE = '0'
                   AND T1.SRV_MEM_PAC_ID IN (10)
 		          AND '6' = #{selType}
+		         UNION ALL
+                SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                 FROM SAL0081D T1
+                    , SYS0013M T2
+                WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '614'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_CNTRCT_PAC_ID
+                  AND '7' = #{selType}
 		     )
 		 ORDER BY CODE_ID
     </select>

@@ -1356,7 +1356,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     /////////////////////// add by hgham get taxRate //////////////////
 
-    if (ApptypeID.equals("66")) {
+    if (ApptypeID.equals("66") || ApptypeID.equals("7759")) {
 
       int salesDt = CommonUtils.intNvl(ordInfo.get("salesDt"));
       int salesGSTcutOffDate = CommonUtils.intNvl(CommonUtils.getNowDate());
@@ -1988,7 +1988,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
      * APPLICATION TYPE -------------------------------- 66 - RENTAL 67 - OUTRIGHT 68 - INSTALLMENT 1412 - OUTRIGHT PLUS
      */
 
-    if (ApptypeID.equals("66")) {
+    if (ApptypeID.equals("66") || ApptypeID.equals("7759")) {
       int salesDt = CommonUtils.intNvl(ordInfo.get("salesDt"));
       int salesGSTcutOffDate = CommonUtils.intNvl(CommonUtils.getNowDate());
       if (salesDt < salesGSTcutOffDate) {
@@ -2380,7 +2380,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
     // update SalesM Status
     installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
 
-    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID)) {
+    if ("66".equals(ApptypeID) || "7759".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID)) {
       // Rental || Sponsor || Education
 
       if (installResult.get("statusCodeId").toString().equals("4")) {
@@ -2443,7 +2443,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
       if (isExchange != null) {
         installationResultListMapper.updateSal0004d(orderLog);
       }
-      if ("66".equals(ApptypeID)) {
+      if ("66".equals(ApptypeID) || "7759".equals(ApptypeID)) {
         installationResultListMapper.updateRentalStatus(orderLog);
       }
     }
@@ -2555,7 +2555,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 //    installResult.put("checkSend", checkSend);
 
     // Rental || Sponsor || Education || AUX
-    if ("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
+    if ("66".equals(ApptypeID) || "7759".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID) || "5764".equals(ApptypeID) || "145".equals(ApptypeID)) { //add on Free Trial
       if (installResult.get("statusCodeId").toString().equals("4")) {
         EgovMap s46dup = new EgovMap();
         s46dup.put("installResultId", maxId);
@@ -2680,7 +2680,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
           // INSERT Self Service Rebate IF TYPE = AFTER INSTALL , APP TYPE = RENTAL , SERVICE TYPE = SS
           if (exchangeInfo.get("soExchgNwSrvType") != null && exchangeInfo.get("soExchgNwSrvType").toString().equals("SS")
-              && "66".equals(ApptypeID)) {
+              && ("66".equals(ApptypeID) || "7759".equals(ApptypeID))) {
             EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
             Map<String, Object> ssRebateParams = new HashMap();
             if (!srvPackageResult.isEmpty()) {
@@ -2762,7 +2762,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         }
       }
 
-      if ("66".equals(ApptypeID)) { // RENTAL
+      if ("66".equals(ApptypeID) || "7759".equals(ApptypeID)) { // RENTAL
         installationResultListMapper.updateRentalStatus(orderLog); // IT WILL
                                                                    // UPDATE ALL
       }
@@ -4027,7 +4027,7 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
 
 		// INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
 		 if(installResult.get("chkSms").equals("Y")){ //IF SMS CHECKBOX IS CHECKED
-			 if((ApptypeID.equals("66") || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
+			 if((ApptypeID.equals("66") || ApptypeID.equals("7759")  || ApptypeID.equals("67") || ApptypeID.equals("68")) //APPY_TYPE = RENTAL/OUTRIGHT/INSTALLMENT
 			    		&& (CommonUtils.nvl(installResult.get("custType")).equals("Individual") || CommonUtils.nvl(installResult.get("customerType")).equals("964")))  //IF CUST_TYPE = INDIVIDUAL(WEB) || CUST_TYPE = 964 (MOBILE)
 			    {
 				 logger.debug("================INSMS================");

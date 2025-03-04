@@ -430,8 +430,11 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			selType = "4";
 		}
 		else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_EDU) {
-      selType = "6";
-    }
+			selType = "6";
+        }
+		else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN) {
+            selType = "7";
+        }
 
 		params.put("selType", selType);
 
@@ -444,7 +447,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		int promoAppType = CommonUtils.intNvl(params.get("promoAppTypeId"));
 		String selType = "";
 
-		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
+		if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_REN || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_RSVM) {
 			selType = "1";
 		}else if(promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL_OSVM || promoAppType == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL_RSVM) {
 			selType = "3";
@@ -487,7 +490,7 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 			params.put("appTypeId", appTypeId);
 			params.put("promoSrvMemPacId", promotionVO.getSalesPromoMVO().getPromoSrvMemPacId());
 
-			if(appTypeId == 66)
+			if(appTypeId == 66 || appTypeId == 7759)
 			{
 				params.put("srvPacId", promotionVO.getSalesPromoMVO().getPromoSrvMemPacId());
 			}
@@ -546,6 +549,10 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_FIL_OSVM) {
 			promoAppTypId = 1035;
 		}
+		else if(appTypeId == SalesConstants.PROMO_APP_TYPE_CODE_ID_PRE_REN) {
+			promoAppTypId = SalesConstants.APP_TYPE_CODE_ID_PRE_RENTAL;
+		}
+
 
 		return promoAppTypId;
 	}

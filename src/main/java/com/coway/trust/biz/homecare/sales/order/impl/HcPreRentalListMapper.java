@@ -3,6 +3,10 @@ package com.coway.trust.biz.homecare.sales.order.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.SalesOrderContractVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -60,4 +64,31 @@ public interface HcPreRentalListMapper {
 
   EgovMap hcSelectOrderSimulatorViewByOrderNo(Map<String, Object> params);
 
+  EgovMap getPreRentalBasicInfo(Map<String, Object> params);
+
+  List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params);
+
+  int updateSAL0001D(SalesOrderMVO salesOrderMVO);
+
+  int updateSAL0225D(SalesOrderMVO salesOrderMVO);
+
+  int updateSAL0002D(SalesOrderDVO salesOrderDVO);
+
+  int updateSAL0003D(SalesOrderContractVO salesOrderContractVO);
+
+  int insertSAL0095D(Map<String, Object> params);
+
+  int insertSAL0088D(Map<String, Object> params);
+
+  int insertSAL0070D(Map<String, Object> params);
+
+  int getPreRentalConvertHistorySeq();
+
+  int checkActivePreRentalConvertHistory(Map<String, Object> params);
+
+  int insertPreRentalConvertHistory(Map<String, Object> params);
+
+  int updatePreRentalConvertHistory(Map<String, Object> params);
+
+  int updateOldPreRentalConvertHistory(Map<String, Object> params);
 }

@@ -11,22 +11,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.sales.order.HcPreRentalListService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -166,4 +167,75 @@ public class HcPreRentalListController {
 		return ResponseEntity.ok(hcPreRentalListService.selectHcPreRentalList(params));
 	}
 
+	@RequestMapping(value = "/selectPreRentalConvertServicePackageList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPreRentalConvertServicePackageList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = hcPreRentalListService.selectPreRentalConvertServicePackageList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+    @RequestMapping(value = "/hcPreRentalConvertPop.do")
+	public String hcPreRentalConvertPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    	EgovMap getPreRentalBasicInfo = hcPreRentalListService.getPreRentalBasicInfo(params);
+    	model.put("basicInfo", getPreRentalBasicInfo);
+
+		// code List
+        params.clear();
+        params.put("groupCode", 10);
+        params.put("orderValue", "CODE_ID");
+        params.put("codeIn", SalesConstants.APP_TYPE_CODE_RENTAL);
+        List<EgovMap> codeList_10 = commonService.selectCodeList(params);
+        params.clear();
+
+        params.put("groupCode", 19);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_19 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 17);
+        params.put("orderValue", "CODE_NAME");
+        List<EgovMap> codeList_17 = commonService.selectCodeList(params);
+
+        params.put("groupCode", 322);
+        params.put("orderValue", "CODE_ID");
+        List<EgovMap> codeList_322 = commonService.selectCodeList(params);
+
+    	String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+    				SalesConstants.DEFAULT_DATE_FORMAT1);
+    	String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    	model.put("bfDay", bfDay);
+    	model.put("toDay", toDay);
+
+    	model.put("codeList_10", codeList_10);
+    	model.put("codeList_17", codeList_17);
+    	model.put("codeList_19", codeList_19);
+    	model.put("codeList_322", codeList_322);
+    	model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
+    	model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		return "homecare/sales/order/hcPreRentalConvertPop";
+	}
+
+	@RequestMapping(value = "/hcPreRentalConfmConvertDetailPop.do")
+	public String hcCnfmOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "homecare/sales/order/hcPreRentalConfmConvertDetailPop";
+	}
+
+    @RequestMapping(value = "/convertPreRental.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> convertPreRental(@RequestBody OrderVO orderVO, SessionVO sessionVO) {
+
+    	int orderNumber = hcPreRentalListService.convertPreRental(orderVO, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(orderNumber > 0){
+        	message.setCode(AppConstants.SUCCESS);
+            message.setMessage("Order Number : " + String.valueOf(orderNumber) + "<br /> Successfully converted.");
+        }
+        else{
+        	message.setCode(AppConstants.FAIL);
+            message.setMessage("Failed to convert order.");
+        }
+
+        return ResponseEntity.ok(message);
+	}
 }

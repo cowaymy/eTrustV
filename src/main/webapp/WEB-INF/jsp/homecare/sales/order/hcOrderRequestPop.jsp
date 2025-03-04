@@ -271,7 +271,9 @@
 
             if($('#cmbAppTypeAexc').val() == '66') {
                 appSubType = '367';
-            } else if($('#cmbAppTypeAexc').val() == '67') {
+            } else if($('#cmbAppTypeAexc').val() == '7759') {
+                appSubType = '614';
+            }else if($('#cmbAppTypeAexc').val() == '67') {
                 appSubType = '368';
             } else if($('#cmbAppTypeAexc').val() == '68') {
                 appSubType = '369';
@@ -335,7 +337,7 @@
             }
 
             if(idx > 0) {
-                var stkType = $("#cmbAppTypeAexc").val() == '66' ? '1' : '2';
+                var stkType = $("#cmbAppTypeAexc").val() == '66' || $("#cmbAppTypeAexc").val() == '7759'  ? '1' : '2';
 
                 Common.ajax("GET", "/homecare/sales/order/selectHcProductCodeList.do", {stkType:stkType, srvPacId:selVal, stkCtgryId:'${orderDetail.basicInfo.stkCtgryId}'}, function(result) {
                     if(result != null && result.length > 0) {
@@ -671,7 +673,7 @@
         var newRentalGST = fn_calcGst(newRental);
         var newPv        = $('#ordPvGST').val();
 
-        if(APP_TYPE_ID != '66') {
+        if(APP_TYPE_ID != '66' && APP_TYPE_ID != '7759' ) {
             oldPriceGST = Math.floor(oldPriceGST/10) * 10;
             newPriceGST = Math.floor(newPriceGST/10) * 10;
         }
@@ -698,7 +700,7 @@
         var newRentalGST = fn_calcGst(newRental);
         var newPv            = $('#ordPvGSTAexc').val();
 
-        if($('#cmbAppTypeAexc').val() != '66') {
+        if($('#cmbAppTypeAexc').val() != '66' && $('#cmbAppTypeAexc').val() != '7759' ) {
             oldPriceGST = Math.floor(oldPriceGST/10) * 10;
             newPriceGST = Math.floor(newPriceGST/10) * 10;
         }
@@ -1260,7 +1262,7 @@
 
         var totalAmount = 0;
 
-        if("${orderDetail.basicInfo.appTypeId}" == "66") {
+        if("${orderDetail.basicInfo.appTypeId}" == "66" || "${orderDetail.basicInfo.appTypeId}" == "7759") {
             Common.ajaxSync("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : ORD_NO}, function(result) {
                 if(result != null) {
                     isNull2 = false;
@@ -1317,7 +1319,7 @@
     function fn_loadProductPromotionAexc(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         $('#cmbPromotionAexc option').remove();
 
-        if(appTypeVal == '' || exTrade == '') return;
+        if(appTypeVal == null || appTypeVal == '' || exTrade == '') return;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y', voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, '', 'cmbPromotionAexc', 'S', 'voucherPromotionCheckAexc'); //Common Code
@@ -1334,7 +1336,7 @@
         chgPromoNum = tagNum;
         $('#ordPromo'+tagNum).removeAttr("disabled");
 
-        if(appTypeVal !=66){
+        if(appTypeVal !=66 && appTypeVal !=7759){
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:srvPacId, voucherPromotion: voucherAppliedStatus,custStatus: custStatusId}, promoId, 'ordPromo'+tagNum, 'S', 'fn_chgPromo'); //Common Code
@@ -1426,6 +1428,13 @@
                         return false;
                     }
                 }
+                 if(todayYY >= 2018) {
+                     if(todayDD == 1 || todayDD == 2) {
+                         msg = '<spring:message code="sal.msg.chkCancDate" />';
+                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                         return false;
+                     }
+                 }
             } else {
                 msg = "Sorry. You have no access rights to request order cancellation.";
                 Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
@@ -1436,6 +1445,12 @@
         // Product Exchange - 제품변경
         if(tabNm == 'PEXC') {
             if(fn_getCheckAccessRight(logInUserid, 10)) {
+                if(APP_TYPE_ID == 7759){
+                    msg = "Sorry. " + APP_TYPE_DESC + " order is not allow to product exchange.";
+                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                    return false;
+                }
+
             	Common.ajaxSync("GET", "/sales/order/chkCboPromPck.do", {promo : PROMO_CODE}, function(rsltInfo) {
                     if (rsltInfo == 1) {
                         Common.alert('<spring:message code="sales.msg.errEdtPromCbo" />');
@@ -1512,6 +1527,11 @@
 
         if(tabNm == 'OTRN') {
             if(fn_getCheckAccessRight(logInUserid, 12)) {
+                if(APP_TYPE_ID == 7759){
+                    msg = "Sorry. " + APP_TYPE_DESC + " order is not allow to transfer ownership.";
+                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
+                    return false;
+                }
 
                 if(ORD_STUS_ID != '4') {
                     msg = '<spring:message code="sal.msg.underOwnTrans" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
@@ -1803,6 +1823,9 @@
             $('#cmbAppTypeAexc').append("<option value='67'>Outright</option>");
             $('#cmbAppTypeAexc').append("<option value='68'>Installment</option>");
         }
+        else if(appTypeId == '7759') {
+            $('#cmbAppTypeAexc').append("<option value=''>Choose One</option>");
+        }
         else if(appTypeId == '67') {
             $('#cmbAppTypeAexc').append("<option value=''>Choose One</option>");
             $('#cmbAppTypeAexc').append("<option value='68'>Installment</option>");
@@ -1814,7 +1837,7 @@
     }
 
     function fn_loadOrderInfoOwnt() {
-        if(APP_TYPE_ID == '66') {
+        if(APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') {
             fn_tabOnOffSetOwnt('REN_PAY', 'SHOW');
         }
 
@@ -1838,7 +1861,7 @@
             $('#spPrfRtnDt').removeClass("blind");
             $('#dpReturnDate').removeAttr("disabled");
 
-            if(APP_TYPE_ID == '66') {
+            if(APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') {
                 $('#scOP').removeClass("blind");
             }
         }
@@ -1862,7 +1885,7 @@
     }
 
     function fn_loadOutstandingPenaltyInfo() {
-        if(APP_TYPE_ID == '66' && ORD_STUS_ID == '4') {
+        if((APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') && ORD_STUS_ID == '4') {
 
             var vTotalUseMth = fn_getOrderLastRentalBillLedger1();
 
@@ -2032,7 +2055,7 @@
         if(ORD_STUS_ID == '4') {
             msg += '<spring:message code="sal.alert.msg.prefRtrnDt" /> : ' + $('#dpReturnDate').val() + '<br />';
 
-            if(APP_TYPE_ID == 66) {
+            if(APP_TYPE_ID == 66 || APP_TYPE_ID == 7759) {
                 msg += '<br />';
                 msg += '<spring:message code="sales.TotalUsedMonth" /> : '        + $('#txtTotalUseMth').val()      + '<br/>';
                 msg += '<spring:message code="sal.text.obligationPeriod" /> : '   + $('#txtObPeriod').val()         + '<br/>';
@@ -2292,7 +2315,7 @@
 
     function fn_validReqOwntRentPaySet() {
         var isValid = true, msg = "";
-        if(APP_TYPE_ID == '66') {
+        if(APP_TYPE_ID == '66' || APP_TYPE_ID == '7759') {
             if($('#btnThirdPartyOwnt').is(":checked")) {
                 if(FormUtil.checkReqValue($('#txtHiddenThirdPartyIDOwnt'))) {
                     isValid = false;
@@ -2588,14 +2611,14 @@
     }
 
     function fn_loadListPexch() {
-        var stkType = APP_TYPE_ID == '66' ? '1' : '2';
+        var stkType = APP_TYPE_ID == '66' || APP_TYPE_ID == '7759' ? '1' : '2';
 
         if(ORD_STUS_ID == '4'){
         	console.log("fn_loadListPexch" + APP_TYPE_ID);
 
         	if(APP_TYPE_ID  == "5764"){
         	//if(!(APP_TYPE_ID  == 66 || APP_TYPE_ID  == 67)){
-                stkType = "${hcOrder.anoOrdAppType}" == '66' ? '1' : '2';
+                stkType = "${hcOrder.anoOrdAppType}" == '66' || "${hcOrder.anoOrdAppType}" == '7759' ? '1' : '2';
         		doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'2'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
         	}else{
                 doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', productType:'1'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성

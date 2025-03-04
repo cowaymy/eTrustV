@@ -10,10 +10,20 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.order.HcPreRentalListService;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRequestServiceImpl;
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderContractVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -41,6 +51,12 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
 
   @Resource(name = "orderRequestMapper")
   private OrderRequestMapper orderRequestMapper;
+
+  @Resource(name = "orderRegisterMapper")
+  private OrderRegisterMapper orderRegisterMapper;
+
+  @Resource(name = "orderRegisterService")
+  private OrderRegisterService orderRegisterService;
 
   private static Logger logger = LoggerFactory.getLogger(OrderRequestServiceImpl.class);
 
@@ -395,5 +411,130 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
         logger.debug("fraSOID111===" + view.toString());
 
 	    return view;
+  }
+
+  @Override
+  public List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params) {
+    return hcPreRentalListMapper.selectPreRentalConvertServicePackageList(params);
+  }
+
+  @Override
+  public EgovMap getPreRentalBasicInfo(Map<String, Object> params) {
+      return hcPreRentalListMapper.getPreRentalBasicInfo(params);
+  }
+
+  @Override
+  @Transactional
+  public int convertPreRental(OrderVO orderVO, SessionVO sessionVO) {
+	  SalesOrderMVO salesOrderMVO = orderVO.getSalesOrderMVO1();
+	  SalesOrderDVO salesOrderDVO = orderVO.getSalesOrderDVO1();
+
+	  salesOrderMVO.setSalesOrdId(orderVO.getSalesOrdId());
+	  salesOrderDVO.setSalesOrdId(orderVO.getSalesOrdId());
+	  salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+	  salesOrderDVO.setUpdUserId(sessionVO.getUserId());
+
+	  int salesOrdId = orderVO.getSalesOrdId();
+
+	  Map<String, Object> params = new HashMap<>();
+	  params.put("ordId", salesOrdId);
+
+	  int preRentalConvertHistorySeq = hcPreRentalListMapper.getPreRentalConvertHistorySeq();
+	  Map<String, Object> inPreRentalConvertHistory = new HashMap<>();
+
+	  try {
+		  EgovMap preRentalInfo = hcPreRentalListMapper.getPreRentalBasicInfo(params);
+
+		  if(preRentalInfo != null && preRentalInfo.size() > 0){
+			  int orderNumber = Integer.parseInt(orderVO.getSalesOrdNoFirst());
+
+			  int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
+			  int srvPacId = CommonUtils.intNvl(salesOrderMVO.getSrvPacId());
+			  int appTypeId = CommonUtils.intNvl(salesOrderMVO.getAppTypeId());
+
+		      inPreRentalConvertHistory.clear();
+		      inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
+		      inPreRentalConvertHistory.put("salesOrdId", salesOrdId);
+		      inPreRentalConvertHistory.put("convertStusId", 1);
+
+		      inPreRentalConvertHistory.put("oldStusId", preRentalInfo.get("ordStusId"));
+		      inPreRentalConvertHistory.put("oldAppTypeId", preRentalInfo.get("appTypeId"));
+		      inPreRentalConvertHistory.put("oldSvcPacId", preRentalInfo.get("srvPacId"));
+		      inPreRentalConvertHistory.put("oldPromoId", preRentalInfo.get("ordPromoId"));
+
+		      inPreRentalConvertHistory.put("newStusId", preRentalInfo.get("ordStusId"));
+		      inPreRentalConvertHistory.put("newAppTypeId", appTypeId);
+		      inPreRentalConvertHistory.put("newSvcPacId", srvPacId);
+		      inPreRentalConvertHistory.put("newPromoId", promoId);
+
+		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+
+			  int check = hcPreRentalListMapper.checkActivePreRentalConvertHistory(inPreRentalConvertHistory);
+			  if(check == 0){
+			      hcPreRentalListMapper.insertPreRentalConvertHistory(inPreRentalConvertHistory);
+			  }else{
+			      inPreRentalConvertHistory.put("convertStusId", 21);
+				  hcPreRentalListMapper.updateOldPreRentalConvertHistory(inPreRentalConvertHistory);
+				  return 0;
+			  }
+
+		      EgovMap iMap2 = new EgovMap();
+
+		      iMap2.put("srvCntrctPacId", srvPacId);
+
+		      EgovMap oMap2 = orderRegisterMapper.selectServiceContractPackage(iMap2);
+
+		      SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
+		      salesOrderContractVO.setCntrctSalesOrdId(salesOrdId);
+		      salesOrderContractVO.setCntrctRentalPriod(CommonUtils.intNvl(oMap2.get("srvCntrctPacDur")));
+		      salesOrderContractVO.setCntrctObligtPriod(CommonUtils.intNvl(oMap2.get("obligtPriod")));
+		      salesOrderContractVO.setCntrctRcoPriod(CommonUtils.intNvl(oMap2.get("rcoPriod")));
+		      salesOrderContractVO.setCntrctUpdUserId(sessionVO.getUserId());
+
+		      hcPreRentalListMapper.updateSAL0001D(salesOrderMVO);
+		      hcPreRentalListMapper.updateSAL0225D(salesOrderMVO);
+		      hcPreRentalListMapper.updateSAL0002D(salesOrderDVO);
+		      hcPreRentalListMapper.updateSAL0003D(salesOrderContractVO);
+
+		      Map<String, Object> inSal0095d = new HashMap<>();
+		      inSal0095d.put("salesOrdId", salesOrdId);
+		      inSal0095d.put("srvPacId", srvPacId);
+		      inSal0095d.put("custCntId", salesOrderMVO.getCustCntId());
+		      inSal0095d.put("userId", sessionVO.getUserId());
+		      hcPreRentalListMapper.insertSAL0095D(inSal0095d);
+
+		      Map<String, Object> inSal0088d = new HashMap<>();
+		      inSal0088d.put("salesOrdId", salesOrdId);
+		      inSal0088d.put("userId", sessionVO.getUserId());
+		      hcPreRentalListMapper.insertSAL0088D(inSal0088d);
+
+		      Map<String, Object> inSal0070d = new HashMap<>();
+		      inSal0070d.put("salesOrdId", salesOrdId);
+		      inSal0070d.put("userId", sessionVO.getUserId());
+		      hcPreRentalListMapper.insertSAL0070D(inSal0070d);
+
+		      inPreRentalConvertHistory.clear();
+		      inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
+		      inPreRentalConvertHistory.put("convertStusId", 4);
+		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+
+		      hcPreRentalListMapper.updatePreRentalConvertHistory(inPreRentalConvertHistory);
+
+		      return orderNumber;
+		  }
+		  else{
+			  inPreRentalConvertHistory.clear();
+			  inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
+		      inPreRentalConvertHistory.put("convertStusId", 21);
+		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+
+		      hcPreRentalListMapper.updatePreRentalConvertHistory(inPreRentalConvertHistory);
+
+			  return 0;
+		  }
+	  }
+	  catch(Exception ex){
+		  throw new ApplicationException(AppConstants.FAIL, "Failed to convert order.");
+	  }
   }
 }
