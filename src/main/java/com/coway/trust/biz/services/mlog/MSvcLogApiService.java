@@ -3,10 +3,8 @@ package com.coway.trust.biz.services.mlog;
 import java.util.List;
 import java.util.Map;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceResultForm;
 import com.coway.trust.api.mobile.services.history.AsDetailDto;
 import com.coway.trust.api.mobile.services.history.AsDetailForm;
-import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.google.gson.JsonObject;
 
@@ -95,7 +93,6 @@ public interface MSvcLogApiService {
 
   void saveInsFailServiceLogs(Map<String, Object> params);
 
-  /* Woongjin Jun */
   void updateSuccessInsFailServiceLogs(int resultSeq);
 
   void saveAsFailServiceLogs(Map<String, Object> params);
@@ -192,7 +189,6 @@ public interface MSvcLogApiService {
 
   List<EgovMap> getCareServiceParts_b(Map<String, Object> params);
 
-  /* Woongjin Jun */
   List<EgovMap> getCareServiceJobList(Map<String, Object> params);
 
   List<EgovMap> getHcServiceJobList(Map<String, Object> params);
@@ -226,11 +222,8 @@ public interface MSvcLogApiService {
   EgovMap getPrFraOrdInfo(Map<String, Object> params);
 
   String getBeforeProductSerialNo(Map<String, Object> params);
-  /* Woongjin Jun */
 
-  /* Woongjin Han */
   EgovMap getDelvryNo(Map<String, Object> params);
-  /* Woongjin Han */
 
   List<EgovMap> getRelateOrdLst(Map<String, Object> params);
 
@@ -238,7 +231,7 @@ public interface MSvcLogApiService {
 
   void insertSVC0115D(Map<String, Object> params);
 
-  //void sendSms(Map<String, Object> smsList);
+  // void sendSms(Map<String, Object> smsList);
 
   String selectSVC0115D(Map<String, Object> params);
 
