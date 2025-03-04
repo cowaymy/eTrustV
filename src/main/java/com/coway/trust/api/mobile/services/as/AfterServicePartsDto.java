@@ -6,113 +6,89 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModelProperty;
 
 public class AfterServicePartsDto {
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "AS NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "제품코드")
+  @ApiModelProperty(value = "PRODUCT CODE")
   private String productCode;
 
-  @ApiModelProperty(value = "필터코드")
+  @ApiModelProperty(value = "PART CODE")
   private String partCode;
 
-  @ApiModelProperty(value = "part id 값")
+  @ApiModelProperty(value = "PART ID")
   private String partId;
 
-  @ApiModelProperty(value = "필터명")
+  @ApiModelProperty(value = "PART NAME")
   private String partName;
 
-  @ApiModelProperty(value = "필요수량")
+  @ApiModelProperty(value = "QUANTITY")
   private Integer quanity;
 
-  @ApiModelProperty(value = "교체수량")
+  @ApiModelProperty(value = "CHANGE QUANTITY")
   private String chgQty;
 
-  @ApiModelProperty(value = "foc??")
+  @ApiModelProperty(value = "CHARGES/FOC")
   private String chargesFoc;
 
-  @ApiModelProperty(value = "chgid??")
+  @ApiModelProperty(value = "EXCHANGE ID")
   private String exChgid;
 
-  @ApiModelProperty(value = "filter price")
+  @ApiModelProperty(value = "FILTER PRICE")
   private String salesPrice;
 
-  @ApiModelProperty(value = "교체여부")
+  @ApiModelProperty(value = "CHANGE INDICATOR")
   private String chgYN;
 
-  @ApiModelProperty(value = "마지막교체일_날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "LAST CHANGE DATE")
   private String lastChgDate;
 
-  @ApiModelProperty(value = "마지막교체일_시간(HHMMSS)")
+  @ApiModelProperty(value = "LAST CHANGE TIME")
   private String lastChgTime;
 
-  @ApiModelProperty(value = "마지막교체일_날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "LAST CHANGE DATE ORIGIN")
   private String lastChgDateOrigin;
 
-  @ApiModelProperty(value = "마지막교체일_시간(HHMMSS)")
+  @ApiModelProperty(value = "LAST CHANGE TIME ORIGIN")
   private String lastChgTimeOrigin;
 
-  @ApiModelProperty(value = "filter / sparepart / msc(Miscellaneous) 구분")
+  @ApiModelProperty(value = "PART TYPE")
   private String partType;
 
-  @ApiModelProperty(value = "필터교체 주기")
+  @ApiModelProperty(value = "PART PERIOD")
   private String partsPeriod;
 
-  @ApiModelProperty(value = "모바일 전용 필드 (API 와 무관함)")
+  @ApiModelProperty(value = "CHARGE INDICATOR")
   private String chargeYN;
 
-  @ApiModelProperty(value = "Filter Barcode Check")
+  @ApiModelProperty(value = "FILTER BARCODE CHECK INDICATOR")
   private String filterBarcdChkYn;
 
+  @ApiModelProperty(value = "SMO INDICATOR")
   private String isSmo;
 
+  @ApiModelProperty(value = "IS RERIAL REPLACEMENT INDICATOR")
   private String isSerialReplace;
 
+  @ApiModelProperty(value = "PS REMARK")
   private String psRemark;
 
+  @ApiModelProperty(value = "OLD FILTER BARCODE SERIAL")
   private String filterBarcdSerialNoOld;
 
+  @ApiModelProperty(value = "NEW FILTER BARCODE SERIAL")
   private String filterBarcdSerialNo;
 
+  @ApiModelProperty(value = "FILTER SERIAL UNMATCH REASON")
   private String filterSerialUnmatchReason;
 
+  @ApiModelProperty(value = "OLD SYSTEM FILTER BARCIDE SERIAL")
   private String sysFilterBarcdSerialNoOld;
 
+  @ApiModelProperty(value = "IS FILL FILTER INFO. INDICATOR")
   private String isFillFilterInfo;
-
-  public String getFilterBarcdChkYn() {
-    return filterBarcdChkYn;
-  }
-
-  public void setFilterBarcdChkYn( String filterBarcdChkYN ) {
-    this.filterBarcdChkYn = filterBarcdChkYN;
-  }
-
-  public String getIsSmo() {
-    return isSmo;
-  }
-
-  public void setIsSmo( String isSmo ) {
-    this.isSmo = isSmo;
-  }
-
-  public String getIsSerialReplace() {
-    return isSerialReplace;
-  }
-
-  public void setIsSerialReplace( String isSerialReplace ) {
-    this.isSerialReplace = isSerialReplace;
-  }
-
-  public String getPsRemark() {
-    return psRemark;
-  }
-
-  public void setPsRemark( String psRemark ) {
-    this.psRemark = psRemark;
-  }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
@@ -266,6 +242,38 @@ public class AfterServicePartsDto {
     this.chargeYN = chargeYN;
   }
 
+  public String getFilterBarcdChkYn() {
+    return filterBarcdChkYn;
+  }
+
+  public void setFilterBarcdChkYn( String filterBarcdChkYn ) {
+    this.filterBarcdChkYn = filterBarcdChkYn;
+  }
+
+  public String getIsSmo() {
+    return isSmo;
+  }
+
+  public void setIsSmo( String isSmo ) {
+    this.isSmo = isSmo;
+  }
+
+  public String getIsSerialReplace() {
+    return isSerialReplace;
+  }
+
+  public void setIsSerialReplace( String isSerialReplace ) {
+    this.isSerialReplace = isSerialReplace;
+  }
+
+  public String getPsRemark() {
+    return psRemark;
+  }
+
+  public void setPsRemark( String psRemark ) {
+    this.psRemark = psRemark;
+  }
+
   public String getFilterBarcdSerialNoOld() {
     return filterBarcdSerialNoOld;
   }
@@ -306,6 +314,7 @@ public class AfterServicePartsDto {
     this.isFillFilterInfo = isFillFilterInfo;
   }
 
+  @SuppressWarnings("unchecked")
   public static AfterServicePartsDto create( EgovMap egovMap ) {
     return BeanConverter.toBean( egovMap, AfterServicePartsDto.class );
   }
