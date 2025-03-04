@@ -2424,6 +2424,58 @@
         </if>
   </select>
 
+<select id="selectSerialInfoMul" parameterType="Map" resultType="egovMap">
+    SELECT x.REQST_NO,
+               x.DELVRY_NO,
+               x.ITM_CODE,
+               x.IO_TYPE
+    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN,
+                          A.SERIAL_NO,
+                          A.SCAN_NO,
+                          A.ITM_CODE,
+                          A.SCAN_STUS_CODE,
+                          A.REQST_NO,
+                          A.REQST_NO_ITM,
+                          NVL(A.DELVRY_NO,'') DELVRY_NO,
+                          A.DELVRY_NO_ITM,
+                          A.FROM_LOC_ID,
+                          A.TO_LOC_ID,
+                          A.TRNSC_TYPE,
+                          A.IO_TYPE
+              FROM LOG0099D A
+              WHERE 1=1
+
+              <if test="arrReqstNo != null ">
+                AND ( A.DELVRY_NO IN
+
+                  <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+
+                OR
+
+                A.REQST_NO in
+                  <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                )
+
+              </if>
+
+              <if test="arrReqstNo == null ">
+                AND A.DELVRY_NO = ''
+              </if>
+
+              <if test="zIoType !=null and zIoType !=''">
+                AND A.IO_TYPE = #{zIoType}
+              </if>
+    ) X WHERE X.RN = 1
+    GROUP BY x.ITM_CODE,
+                   x.REQST_NO,
+                   x.DELVRY_NO,
+                   x.IO_TYPE
+  </select>
+
   <update id="updateDeliveryGrDetail" parameterType="Map">
     /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrDetail]  */
     update LOG0099D set scan_stus_code = 'C'
@@ -2439,10 +2491,11 @@
                                                                  <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
                                                                    REQST_NO = #{reqstNo}
                                                                  </if>
-
+                                                                 AND scan_stus_code = 'D'
                                                                  AND ITM_CODE = #{itmCode}
                                                               ) x where x.rn =1
-    )
+
+    )AND scan_stus_code = 'D'
   </update>
 
   <update id="updateDeliveryGrMain" parameterType="Map">
@@ -2458,6 +2511,16 @@
          LAST_REQST_NO = #{reqstNo}
       </if>
        AND ITM_CODE = #{itmCode}
+       AND SERIAL_NO IN (
+            SELECT SERIAL_NO FROM LOG0099D WHERE
+            <if test="delvryNo !=null and delvryNo !=''">
+                last_DELVRY_NO = #{delvryNo}
+            </if>
+            <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+                LAST_REQST_NO = #{reqstNo}
+            </if>
+            AND SCAN_STUS_CODE = 'C'
+        )
   </update>
 
   <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
@@ -2482,9 +2545,21 @@
 
   <update id="updateDeliveryGrHist" parameterType="Map">
     /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrHist]  */
-    update LOG0101H set stus_code = #{ioType}
-    WHERE serial_no = #{serialNo}
-        AND SEQ = #{seq}
+    merge into LOG0101H a
+        using (select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        ,'I' io_type
+        FROM LOG0101h
+        WHERE
+            last_DELVRY_NO = #{delvryNo}
+        AND ITM_CODE = #{itmCode}
+        )x where RN =1)
+        b on (b.SERIAL_NO = a.SERIAL_NO and b.seq = a.seq)
+        when matched then
+        UPDATE SET
+        a.stus_code = b.io_type
   </update>
 
   <select id="selectSMDitmExist" parameterType="Map" resultType="integer">

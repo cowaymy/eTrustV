@@ -983,26 +983,28 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
   /* Woongjin Han */
 
   public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception { // HLTANG 202111 - filter barcode scan
-    List<EgovMap> grListmain = MlogApiMapper.selectSerialInfo(params);
+//    List<EgovMap> grListmain = MlogApiMapper.selectSerialInfo(params);
+    List<EgovMap> grListmain = MlogApiMapper.selectSerialInfoMul(params);
 
     Map<String, Object> mainMap = null;
     for (Object obj : grListmain) {
       mainMap = (Map<String, Object>) obj;
       MlogApiMapper.updateDeliveryGrDetail(mainMap);// log0099m
       MlogApiMapper.updateDeliveryGrMain(mainMap);// log0100m
+      MlogApiMapper.updateDeliveryGrHist(mainMap);// log0101h
 
-      List<EgovMap> grList1 = MlogApiMapper.selectDeliveryGrHist(mainMap);
-      Map<String, Object> oMap = null;
-      for (EgovMap info : grList1) {
-        oMap = new HashMap<String, Object>();
-        oMap.put("updUserId", sessionVo.getUserId());
-        oMap.put("crtUserId", sessionVo.getUserId());
-        oMap.put("serialNo", info.get("serialNo").toString());
-        oMap.put("seq", info.get("seq").toString());
-        oMap.put("ioType", mainMap.get("ioType"));
-
-        MlogApiMapper.updateDeliveryGrHist(oMap);// log0101h
-      }
+//      List<EgovMap> grList1 = MlogApiMapper.selectDeliveryGrHist(mainMap);
+//      Map<String, Object> oMap = null;
+//      for (EgovMap info : grList1) {
+//        oMap = new HashMap<String, Object>();
+//        oMap.put("updUserId", sessionVo.getUserId());
+//        oMap.put("crtUserId", sessionVo.getUserId());
+//        oMap.put("serialNo", info.get("serialNo").toString());
+//        oMap.put("seq", info.get("seq").toString());
+//        oMap.put("ioType", mainMap.get("ioType"));
+//
+//        MlogApiMapper.updateDeliveryGrHist(oMap);// log0101h
+//      }
     }
   }
 

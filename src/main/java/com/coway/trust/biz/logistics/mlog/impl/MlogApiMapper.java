@@ -155,8 +155,9 @@ public interface MlogApiMapper {
 
   List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
 
-  // HLTANG 202111 - FILTER BARCODE SCAN
   public List<EgovMap> selectSerialInfo(Map<String, Object> obj);
+
+  public List<EgovMap> selectSerialInfoMul(Map<String, Object> obj) throws Exception;
 
   public void updateDeliveryGrDetail(Map<String, Object> obj);
 
