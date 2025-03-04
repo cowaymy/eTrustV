@@ -1,310 +1,172 @@
 package com.coway.trust.api.mobile.services.as;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.coway.trust.api.mobile.logistics.audit.InputBarcodeListForm;
-import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
-import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ApiModel(value = "AfterServiceResultForm", description = "AfterServiceResultForm")
 public class AfterServiceResultForm {
-  private static final Logger LOGGER = LoggerFactory.getLogger( AfterServiceResultForm.class );
+  // private static final Logger LOGGER = LoggerFactory.getLogger( AfterServiceResultForm.class );
+  @ApiModelProperty(value = "partList")
+  private List<AfterServiceResultDetailForm> partList;
 
-  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
+  @ApiModelProperty(value = "installAccList")
+  private List<AfterServiceResultDetailForm> installAccList;
+
+  @ApiModelProperty(value = "USER ID")
   private String userId;
 
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "AS NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "0/60/120")
+  @ApiModelProperty(value = "LABOUR CHARGE")
   private double labourCharge;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DEFECT ID")
   private int defectId;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DEFECT PART ID")
   private int defectPartId;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DEFECT DETAIL REASON ID")
   private int defectDetailReasonId;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "SOLUTION REASON ID")
   private int solutionReasonId;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DEFECT TYPE ID")
   private int defectTypeId;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPAIR REMARK")
   private String inHouseRepairRemark;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPARI REPLACEMENT INDICATOR")
   private String inHouseRepairReplacementYN;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PROMISED DATE")
   private String inHouseRepairPromisedDate;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT GROUP CODE")
   private String inHouseRepairProductGroupCode;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT CODE")
   private String inHouseRepairProductCode;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "IN HOUSE REPAIR SERIAL NO")
   private String inHouseRepairSerialNo;
 
-  @ApiModelProperty(value = "결과 등록 메모")
+  @ApiModelProperty(value = "RESULT REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "결과 등록시, Owner Code")
+  @ApiModelProperty(value = "OWNER CODE")
   private int ownerCode;
 
-  @ApiModelProperty(value = "결과 등록시, Cust Name")
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
+  @ApiModelProperty(value = "RESULT MOBILE NO")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "결과 등록시, Email_No")
+  @ApiModelProperty(value = "RESULT REPORT EMAIL NO")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "결과 등록시, Acceptance Name")
+  @ApiModelProperty(value = "RESULT ACCPETANCE NAME")
   private String resultAcceptanceName;
 
-  @ApiModelProperty(value = "base64 Data")
+  @ApiModelProperty(value = "BASE 64 SINGNATURE")
   private String signData;
 
-  @ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
+  @ApiModelProperty(value = "TRANSACTION ID")
   private String transactionId;
 
+  @ApiModelProperty(value = "SERIAL SCAN INDICATOR")
   private String scanSerial;
 
+  @ApiModelProperty(value = "SERIAL CHECK INDICATOR")
   private String serialRequireChkYn;
 
+  @ApiModelProperty(value = "PSI")
   private String psiRcd;
 
+  @ApiModelProperty(value = "LPM")
   private String lpmRcd;
 
+  @ApiModelProperty(value = "AS UNMATCH REASON")
   private String asUnmatchReason;
 
+  @ApiModelProperty(value = "REWORK PROJECT")
   private String reworkProj;
 
+  @ApiModelProperty(value = "WATER SOURCE TYPE")
   private String waterSrcType;
 
+  @ApiModelProperty(value = "PARTNER CODE")
   private int partnerCode;
 
+  @ApiModelProperty(value = "PARTNER CODE NAME")
   private String memCode;
 
+  @ApiModelProperty(value = "NTU")
   private String ntu;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES")
   private String instAccs;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES VALUE")
   private int instAccsVal;
 
+  @ApiModelProperty(value = "TYPE")
   private String type;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES PART ID")
   private int insAccPartId;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSERIES INDICATOR")
   private String chkInstallAcc;
 
+  @ApiModelProperty(value = "SIGNATURE DATE")
   private String signRegDate;
 
+  @ApiModelProperty(value = "SIGNATURE TIME")
   private String signRegTime;
 
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
+  @ApiModelProperty(value = "VOLTAGE")
   private String voltage;
 
-  public String getType() {
-    return type;
+  public List<AfterServiceResultDetailForm> getPartList() {
+    return partList;
   }
 
-  public int getInsAccPartId() {
-    return insAccPartId;
-  }
-
-  public void setType( String type ) {
-    this.type = type;
-  }
-
-  public void setInsAccPartId( int insAccPartId ) {
-    this.insAccPartId = insAccPartId;
-  }
-
-  public String getNtu() {
-    return ntu;
-  }
-
-  public String getInstAccs() {
-    return instAccs;
-  }
-
-  public int getInstAccsVal() {
-    return instAccsVal;
-  }
-
-  public void setNtu( String ntu ) {
-    this.ntu = ntu;
-  }
-
-  public void setInstAccs( String instAccs ) {
-    this.instAccs = instAccs;
-  }
-
-  public void setInstAccsVal( int instAccsVal ) {
-    this.instAccsVal = instAccsVal;
-  }
-
-  public String getMemCode() {
-    return memCode;
-  }
-
-  public void setMemCode( String memCode ) {
-    this.memCode = memCode;
-  }
-
-  public int getPartnerCode() {
-    return partnerCode;
-  }
-
-  public void setPartnerCode( int partnerCode ) {
-    this.partnerCode = partnerCode;
-  }
-
-  public String getWaterSrcType() {
-    return waterSrcType;
-  }
-
-  public void setWaterSrcType( String waterSrcType ) {
-    this.waterSrcType = waterSrcType;
-  }
-
-  public String getReworkProj() {
-    return reworkProj;
-  }
-
-  public void setReworkProj( String reworkProj ) {
-    this.reworkProj = reworkProj;
-  }
-
-  public String getAsUnmatchReason() {
-    return asUnmatchReason;
-  }
-
-  public void setAsUnmatchReason( String asUnmatchReason ) {
-    this.asUnmatchReason = asUnmatchReason;
-  }
-
-  public String getLpmRcd() {
-    return lpmRcd;
-  }
-
-  public void setLpmRcd( String lpmRcd ) {
-    this.lpmRcd = lpmRcd;
-  }
-
-  public String getPsiRcd() {
-    return psiRcd;
-  }
-
-  public void setPsiRcd( String psiRcd ) {
-    this.psiRcd = psiRcd;
-  }
-
-  public String getSerialRequireChkYn() {
-    return serialRequireChkYn;
-  }
-
-  public void setSerialRequireChkYn( String serialRequireChkYn ) {
-    this.serialRequireChkYn = serialRequireChkYn;
-  }
-
-  public String getScanSerial() {
-    return scanSerial;
-  }
-
-  public void setScanSerial( String scanSerial ) {
-    this.scanSerial = scanSerial;
-  }
-
-  public String getSignRegDate() {
-    return signRegDate;
-  }
-
-  public void setSignRegDate( String signRegDate ) {
-    this.signRegDate = signRegDate;
-  }
-
-  public String getSignRegTime() {
-    return signRegTime;
-  }
-
-  public void setSignRegTime( String signRegTime ) {
-    this.signRegTime = signRegTime;
-  }
-
-  public String getCheckInDate() {
-    return checkInDate;
-  }
-
-  public void setCheckInDate( String checkInDate ) {
-    this.checkInDate = checkInDate;
-  }
-
-  public String getCheckInTime() {
-    return checkInTime;
-  }
-
-  public void setCheckInTime( String checkInTime ) {
-    this.checkInTime = checkInTime;
-  }
-
-  public String getCheckInGps() {
-    return checkInGps;
-  }
-
-  public void setCheckInGps( String checkInGps ) {
-    this.checkInGps = checkInGps;
-  }
-
-  public String getChkInstallAcc() {
-    return chkInstallAcc;
+  public void setPartList( List<AfterServiceResultDetailForm> partList ) {
+    this.partList = partList;
   }
 
   public List<AfterServiceResultDetailForm> getInstallAccList() {
     return installAccList;
   }
 
-  public void setChkInstallAcc( String chkInstallAcc ) {
-    this.chkInstallAcc = chkInstallAcc;
-  }
-
   public void setInstallAccList( List<AfterServiceResultDetailForm> installAccList ) {
     this.installAccList = installAccList;
   }
-
-  @ApiModelProperty(value = "partList")
-  private List<AfterServiceResultDetailForm> partList;
-
-  @ApiModelProperty(value = "installAccList")
-  private List<AfterServiceResultDetailForm> installAccList;
 
   public String getUserId() {
     return userId;
@@ -386,20 +248,20 @@ public class AfterServiceResultForm {
     this.inHouseRepairRemark = inHouseRepairRemark;
   }
 
-  public String getInHouseRepairPromisedDate() {
-    return inHouseRepairPromisedDate;
-  }
-
-  public void setInHouseRepairPromisedDate( String inHouseRepairPromisedDate ) {
-    this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
-  }
-
   public String getInHouseRepairReplacementYN() {
     return inHouseRepairReplacementYN;
   }
 
   public void setInHouseRepairReplacementYN( String inHouseRepairReplacementYN ) {
     this.inHouseRepairReplacementYN = inHouseRepairReplacementYN;
+  }
+
+  public String getInHouseRepairPromisedDate() {
+    return inHouseRepairPromisedDate;
+  }
+
+  public void setInHouseRepairPromisedDate( String inHouseRepairPromisedDate ) {
+    this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
   }
 
   public String getInHouseRepairProductGroupCode() {
@@ -474,14 +336,6 @@ public class AfterServiceResultForm {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
-  public String getVoltage() {
-    return voltage;
-  }
-
-  public void setVoltage( String voltage ) {
-    this.voltage = voltage;
-  }
-
   public String getSignData() {
     return signData;
   }
@@ -498,17 +352,178 @@ public class AfterServiceResultForm {
     this.transactionId = transactionId;
   }
 
-  public List<AfterServiceResultDetailForm> getPartList() {
-    return partList;
+  public String getScanSerial() {
+    return scanSerial;
   }
 
-  public void setPartList( List<AfterServiceResultDetailForm> partList ) {
-    this.partList = partList;
+  public void setScanSerial( String scanSerial ) {
+    this.scanSerial = scanSerial;
+  }
+
+  public String getSerialRequireChkYn() {
+    return serialRequireChkYn;
+  }
+
+  public void setSerialRequireChkYn( String serialRequireChkYn ) {
+    this.serialRequireChkYn = serialRequireChkYn;
+  }
+
+  public String getPsiRcd() {
+    return psiRcd;
+  }
+
+  public void setPsiRcd( String psiRcd ) {
+    this.psiRcd = psiRcd;
+  }
+
+  public String getLpmRcd() {
+    return lpmRcd;
+  }
+
+  public void setLpmRcd( String lpmRcd ) {
+    this.lpmRcd = lpmRcd;
+  }
+
+  public String getAsUnmatchReason() {
+    return asUnmatchReason;
+  }
+
+  public void setAsUnmatchReason( String asUnmatchReason ) {
+    this.asUnmatchReason = asUnmatchReason;
+  }
+
+  public String getReworkProj() {
+    return reworkProj;
+  }
+
+  public void setReworkProj( String reworkProj ) {
+    this.reworkProj = reworkProj;
+  }
+
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
+
+  public int getPartnerCode() {
+    return partnerCode;
+  }
+
+  public void setPartnerCode( int partnerCode ) {
+    this.partnerCode = partnerCode;
+  }
+
+  public String getMemCode() {
+    return memCode;
+  }
+
+  public void setMemCode( String memCode ) {
+    this.memCode = memCode;
+  }
+
+  public String getNtu() {
+    return ntu;
+  }
+
+  public void setNtu( String ntu ) {
+    this.ntu = ntu;
+  }
+
+  public String getInstAccs() {
+    return instAccs;
+  }
+
+  public void setInstAccs( String instAccs ) {
+    this.instAccs = instAccs;
+  }
+
+  public int getInstAccsVal() {
+    return instAccsVal;
+  }
+
+  public void setInstAccsVal( int instAccsVal ) {
+    this.instAccsVal = instAccsVal;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType( String type ) {
+    this.type = type;
+  }
+
+  public int getInsAccPartId() {
+    return insAccPartId;
+  }
+
+  public void setInsAccPartId( int insAccPartId ) {
+    this.insAccPartId = insAccPartId;
+  }
+
+  public String getChkInstallAcc() {
+    return chkInstallAcc;
+  }
+
+  public void setChkInstallAcc( String chkInstallAcc ) {
+    this.chkInstallAcc = chkInstallAcc;
+  }
+
+  public String getSignRegDate() {
+    return signRegDate;
+  }
+
+  public void setSignRegDate( String signRegDate ) {
+    this.signRegDate = signRegDate;
+  }
+
+  public String getSignRegTime() {
+    return signRegTime;
+  }
+
+  public void setSignRegTime( String signRegTime ) {
+    this.signRegTime = signRegTime;
+  }
+
+  public String getCheckInDate() {
+    return checkInDate;
+  }
+
+  public void setCheckInDate( String checkInDate ) {
+    this.checkInDate = checkInDate;
+  }
+
+  public String getCheckInTime() {
+    return checkInTime;
+  }
+
+  public void setCheckInTime( String checkInTime ) {
+    this.checkInTime = checkInTime;
+  }
+
+  public String getCheckInGps() {
+    return checkInGps;
+  }
+
+  public void setCheckInGps( String checkInGps ) {
+    this.checkInGps = checkInGps;
+  }
+
+  public String getVoltage() {
+    return voltage;
+  }
+
+  public void setVoltage( String voltage ) {
+    this.voltage = voltage;
   }
 
   public List<Map<String, Object>> createMaps( AfterServiceResultForm afterServiceResultForm ) {
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
+
     map = BeanConverter.toMap( afterServiceResultForm, "signData", "partList" );
     map.put( "signData", Base64.decodeBase64( afterServiceResultForm.getSignData() ) );
 
@@ -522,10 +537,10 @@ public class AfterServiceResultForm {
         map.put( "partsType", dtl.getPartsType() );
         map.put( "filterBarcdSerialNo", dtl.getFilterBarcdSerialNo() );
         map.put( "retSmoSerialNo", dtl.getRetSmoSerialNo() );
-        map.put( "filterBarcdNewSerialNo", dtl.getFilterBarcdNewSerialNo());
-        map.put( "filterBarcdOldSerialNo", dtl.getFilterBarcdOldSerialNo());
-        map.put( "filterSerialUnmatchReason", dtl.getFilterSerialUnmatchReason());
-        map.put( "sysFilterBarcdSerialNo", dtl.getSysFilterBarcdSerialNo());
+        map.put( "filterBarcdNewSerialNo", dtl.getFilterBarcdNewSerialNo() );
+        map.put( "filterBarcdOldSerialNo", dtl.getFilterBarcdOldSerialNo() );
+        map.put( "filterSerialUnmatchReason", dtl.getFilterSerialUnmatchReason() );
+        map.put( "sysFilterBarcdSerialNo", dtl.getSysFilterBarcdSerialNo() );
       }
     }
 
@@ -538,16 +553,20 @@ public class AfterServiceResultForm {
         map.put( "crtUserId", dtl.getCrtUserId() );
       }
     }
+
     list.add( map );
+
     return list;
   }
 
   public static List<Map<String, Object>> createMaps1( AfterServiceResultForm afterServiceResultForm ) {
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
+
     map = BeanConverter.toMap( afterServiceResultForm, "signData" );
     map.put( "signData", Base64.decodeBase64( afterServiceResultForm.getSignData() ) );
     list.add( map );
+
     return list;
   }
 }
