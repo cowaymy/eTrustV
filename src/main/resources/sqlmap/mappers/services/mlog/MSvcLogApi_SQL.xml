@@ -1774,7 +1774,7 @@
                TO_CHAR(SRV_TYPE) AS SRV_TYPE,
                NTU AS NTU,
                TO_CHAR(VOLT) AS VOLTAGE,
-               TP_CHAR(PARTNER_CODE_NAME) AS PARTNER_CODE_NAME
+               TO_CHAR(PARTNER_CODE_NAME) AS PARTNER_CODE_NAME
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
