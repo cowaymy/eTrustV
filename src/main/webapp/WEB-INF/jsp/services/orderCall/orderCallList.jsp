@@ -173,7 +173,7 @@
   }
 
   function fn_openAddCall() {
-	  if(waStusCodeId == 44){
+	  if(waStusCodeId == "44" && callStusId == "1"){
           var todayDate = new Date();
           var crtDateExpiry = new Date(callCrtDt);
           crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);

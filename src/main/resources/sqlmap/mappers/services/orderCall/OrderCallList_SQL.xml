@@ -1055,11 +1055,14 @@
         #{item}
       </foreach>
 	</if>
+	ORDER BY A.SALES_ORD_NO DESC
   </select>
 
   <select id="getCallLogAppointmentsInfo" parameterType="Map" resultType="egovMap">
       <if test="idValue != null and idValue != '' ">
-       	SELECT SUBSTR(A.NRIC,-6) AS LAST_6_NRIC,A.*,C.ITM_STK_ID,D.STK_CODE
+       	SELECT SUBSTR(A.NRIC,-6) AS LAST_6_NRIC,A.*,C.ITM_STK_ID,D.STK_CODE,
+       	E.BRNCH_ID,F.CODE AS STOCK_CAT_CODE,
+		CASE WHEN GET_HOMECARE_FLAG_YN(D.STK_CTGRY_ID) = 1 THEN 'Y' ELSE 'N' END AS HC_INDICATOR
 		FROM CBT0007M A
 		JOIN CCR0006D B
 		ON A.SALES_ORD_ID = B.SALES_ORD_ID AND A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
@@ -1067,6 +1070,10 @@
 		ON A.SALES_ORD_ID = C.SALES_ORD_ID
 		JOIN SYS0026M D
 		ON C.ITM_STK_ID = D.STK_ID
+		JOIN SAL0045D E
+        ON E.SALES_ORD_ID = A.SALES_ORD_ID
+        JOIN SYS0013M F
+        ON F.CODE_ID = D.STK_CTGRY_ID
 		WHERE
 		1=1
       	AND A.ID IN

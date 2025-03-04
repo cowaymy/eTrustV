@@ -269,7 +269,7 @@
         waStusDesc = selectedItems[0].item.waStusDesc;
         callCrtDt = selectedItems[0].item.crtDt;
 
-  	  if(waStusCodeId == 44){
+  	  if(waStusCodeId == "44" && callStusId == "1"){
           var todayDate = new Date();
           var crtDateExpiry = new Date(callCrtDt);
           crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);

@@ -73,4 +73,15 @@ public interface OrderCallListMapper {
 
   List<EgovMap> selectPromotionList();
 
+  List<EgovMap> getCallLogAppointmentList(Map<String, Object> params);
+
+  List<EgovMap> getCallLogAppointmentsInfo(Map<String, Object> params);
+
+  String getCallLogExpirySetting();
+
+	void updateCallLogAppointmentSentStatus(Map<String, Object> params);
+
+	void updateCCR0006DCallLogAppointmentSentStatus(Map<String, Object> params);
+
+	void insertApiAccessLog(Map<String, Object> params);
 }

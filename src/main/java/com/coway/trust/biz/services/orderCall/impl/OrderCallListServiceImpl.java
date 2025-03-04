@@ -1,6 +1,12 @@
 package com.coway.trust.biz.services.orderCall.impl;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +27,17 @@ import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
+import com.coway.trust.biz.services.orderCall.vo.ChatbotCallLogResult;
+import com.coway.trust.biz.services.orderCall.vo.ChatbotCallLogResult.Result;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 import com.coway.trust.web.services.installation.InstallationResultListController;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -61,6 +74,18 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
   @Value("${etrust.base.url}")
   private String etrustBaseUrl;
+
+	@Value("${cbt.api.client.username}")
+	private String CBTApiClientUser;
+
+	@Value("${cbt.api.client.password}")
+	private String CBTApiClientPassword;
+
+    @Value("${cbt.api.url.domains.callLog}")
+    private String CBTApiDomains;
+
+    @Value("${cbt.api.url.callLogAppointmentReq}")
+    private String CBTApiUrlCallLogAppointmentReq;
 
   @Override
   public List<EgovMap> selectOrderCall(Map<String, Object> params) {
@@ -817,4 +842,239 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		logger.info("===resultValue===" + smsResultValue.toString());
 		return smsResultValue;
 	}
+
+	  @Override
+	  public List<EgovMap> getCallLogAppointmentList(Map<String, Object> params) {
+	    return orderCallListMapper.getCallLogAppointmentList(params);
+	  }
+
+	  @Override
+	  public ReturnMessage blastCallLogAppointmentList(Map<String, Object> params){
+		  ReturnMessage message = new ReturnMessage();
+		  List<EgovMap> appointmentList = orderCallListMapper.getCallLogAppointmentsInfo(params);
+
+		  List<EgovMap> customers = new ArrayList();
+			String defaultExpiry = orderCallListMapper.getCallLogExpirySetting();
+
+			//Safety check for if setting not applied
+			if(defaultExpiry.equals("")){
+				defaultExpiry = "24";
+			}
+
+		  if(appointmentList.size() > 0){
+				for(int i=0; i<appointmentList.size();i++){
+					EgovMap appointmentDtl = appointmentList.get(i);
+
+					//Check RDC Stock before add
+					EgovMap orderParam = new EgovMap();
+					orderParam.put("salesOrdNo", CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
+					orderParam.put("productCode", CommonUtils.nvl(appointmentDtl.get("stkCode")));
+
+					if(CommonUtils.nvl(appointmentDtl.get("hcIndicator")).equals("Y")){
+						orderParam.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
+						orderParam.put("productCat", CommonUtils.nvl(appointmentDtl.get("stockCatCode")));
+					}
+
+					EgovMap rdcStock = orderCallListMapper.selectRdcStock(orderParam);
+
+					if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
+							/*Failed due to no stock*/
+					      message.setMessage("No RDC stock found for Order No: " + CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
+					      message.setCode("99");
+					      return message;
+					}else{
+						EgovMap customerInfo = new EgovMap();
+						customerInfo.put("requestId", CommonUtils.nvl(appointmentDtl.get("callEntryId")));
+						customerInfo.put("type", CommonUtils.nvl("order"));
+						customerInfo.put("language", CommonUtils.nvl("en"));
+						customerInfo.put("customerName", CommonUtils.nvl(appointmentDtl.get("custName")));
+						customerInfo.put("phoneNumber", CommonUtils.nvl(appointmentDtl.get("telNo")));
+						customerInfo.put("last6DigitNric", CommonUtils.nvl(appointmentDtl.get("last6Nric")));
+						customerInfo.put("orderNo", CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
+						customerInfo.put("productImage", CommonUtils.nvl(appointmentDtl.get("productImage")));
+						customerInfo.put("productModel", CommonUtils.nvl(appointmentDtl.get("productModel")));
+						customerInfo.put("monthlyRentalFees", CommonUtils.nvl(appointmentDtl.get("mthRentAmt")));
+						customerInfo.put("contractPeriod", CommonUtils.nvl(appointmentDtl.get("contractPeriod")));
+						customerInfo.put("installationAddress", CommonUtils.nvl(appointmentDtl.get("addrDtl")));
+						customerInfo.put("showTnc", true);
+						customerInfo.put("tncFile", CommonUtils.nvl(appointmentDtl.get("tncFileName")));
+						customerInfo.put("expireAfterHours", Integer.parseInt(defaultExpiry));
+
+						customers.add(customerInfo);
+					}
+				}
+
+				if(customers.size() > 0){
+	                String json = "";
+					try{
+				        Map<String, Object> cbtApiParams = new HashMap<String, Object>();
+		    			Gson gson = new GsonBuilder().create();
+
+		    			/*to cater format for API, new to build a outer MAP*/
+		    			Map<String,Object> customersObj = new HashMap();
+		    			customersObj.put("customers", customers);
+		    			json = gson.toJson(customersObj);
+
+	            		String cbtUrl = CBTApiDomains + CBTApiUrlCallLogAppointmentReq;
+	                    cbtApiParams.put("jsonString", json);
+	                    cbtApiParams.put("cbtUrl", cbtUrl);
+	                    cbtCallLogReqApi(cbtApiParams);
+
+
+	      		      	message.setMessage("Success");
+	      		      	message.setCode("00");
+					}catch (Exception e) {
+					      message.setMessage("Unexpected Error Occurs.");
+					      message.setCode("99");
+	                }
+				}
+				else{
+				      message.setMessage("No appointment list found.");
+				      message.setCode("99");
+				      return message;
+				}
+		  }
+		  else{
+		      message.setMessage("No appointment list found.");
+		      message.setCode("99");
+		      return message;
+		  }
+
+		  return message;
+	  }
+
+		private Map<String, Object> cbtCallLogReqApi(Map<String, Object> params){
+			Map<String, Object> resultValue = new HashMap<String, Object>();
+			resultValue.put("status", "99");
+			resultValue.put("message", "CBT Failed: Please contact Administrator.");
+
+			String respTm = null;
+
+			StopWatch stopWatch = new StopWatch();
+		    stopWatch.reset();
+		    stopWatch.start();
+
+		    String cbtUrl = params.get("cbtUrl").toString();
+			String jsonString = params.get("jsonString").toString();
+			String output1 = "";
+
+			ChatbotCallLogResult p = new ChatbotCallLogResult();
+
+			try{
+				URL url = new URL(cbtUrl);
+
+				//insert to api0004m
+		        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		        conn.setDoOutput(true);
+		        conn.setRequestMethod("POST");
+		        conn.setRequestProperty("Content-Type", "application/json");
+		        conn.setRequestProperty("ClientId", CBTApiClientUser);
+		        conn.setRequestProperty("ClientAccessToken", CBTApiClientPassword);
+//		        conn.setRequestProperty("Authorization", authorization); // Uncomment if using BASIC AUTH
+		        OutputStream os = conn.getOutputStream();
+		        os.write(jsonString.getBytes());
+		        os.flush();
+
+
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+					BufferedReader br = new BufferedReader(new InputStreamReader(
+			                (conn.getInputStream())));
+					conn.getResponseMessage();
+
+			        String output = "";
+			        while ((output = br.readLine()) != null) {
+			        	output1 = output;
+			        }
+
+			        Gson g = new Gson();
+			        p = g.fromJson(output1, ChatbotCallLogResult.class);
+			        if(p.isSuccess() == true){
+			        	p.setErrorCode(200);
+			        	resultValue.put("status", "00");
+						resultValue.put("message", "Success");
+
+						if(p.getResult() != null){
+							List<Result> results = new ArrayList<>();
+							results = p.getResult();
+
+							for(int i=0; i <results.size(); i++){
+								/*UPDATE CBT0007M*/
+								Result result = new Result();
+								result = results.get(i);
+
+								Map<String,Object> updateRecord = new HashMap();
+								if(result.isSent()){
+									/*Success send*/
+									updateRecord.put("stusCodeId", 44); //Pending Next Step
+									updateRecord.put("callEntryId", result.getRequestId());
+
+									orderCallListMapper.updateCallLogAppointmentSentStatus(updateRecord);
+									orderCallListMapper.updateCCR0006DCallLogAppointmentSentStatus(updateRecord);
+								}
+								else{
+									/*Fail send*/
+									updateRecord.put("stusCodeId", 21);
+									updateRecord.put("callEntryId", result.getRequestId());
+
+									orderCallListMapper.updateCallLogAppointmentSentStatus(updateRecord);
+									orderCallListMapper.updateCCR0006DCallLogAppointmentSentStatus(updateRecord);
+								}
+							}
+						}
+			        }else{
+			        	p.setErrorCode(400);
+			        	resultValue.put("status", "99");
+						resultValue.put("message", "Fail -" + p.getError());
+
+						/*Have to Update CBT0007M?*/
+			        }
+
+					conn.disconnect();
+
+					br.close();
+				}else{
+					p.setErrorCode(400);
+					p.setSuccess(false);
+					resultValue.put("status", "99");
+					resultValue.put("message", "No Response");
+				}
+			}catch(Exception e){
+				p.setErrorCode(405);
+				p.setSuccess(false);
+				resultValue.put("status", 405);
+				resultValue.put("message", "Time Out");
+			}finally{
+		          stopWatch.stop();
+		          respTm = stopWatch.toString();
+
+				    params.put("responseCode", resultValue.get("status") == null ? "" : resultValue.get("status").toString());
+		            params.put("responseMessage", resultValue.get("message") == null ? "" : resultValue.get("message").toString());
+		            params.put("reqPrm", jsonString != null ? jsonString.length() >= 2000 ? jsonString.substring(0,2000) : jsonString : jsonString);
+		            params.put("url", cbtUrl);
+		            params.put("respTm", respTm);
+		            params.put("resPrm", output1);
+		            params.put("apiUserId", 7);
+
+		          this.rtnRespMsg(params);
+
+			}
+
+			return params;
+		}
+
+		private void rtnRespMsg(Map<String, Object> param) {
+
+		    EgovMap data = new EgovMap();
+		    Map<String, Object> params = new HashMap<>();
+
+		      params.put("respCde", param.get("responseCode"));
+		      params.put("errMsg", param.get("responseMessage"));
+		      params.put("reqParam", param.get("reqPrm"));
+		      params.put("prgPath", param.get("url"));
+		      params.put("respTm", param.get("respTm"));
+		      params.put("respParam", param.get("resPrm"));
+		      params.put("apiUserId", param.get("apiUserId"));
+
+		      orderCallListMapper.insertApiAccessLog(params);
+		  }
 }
