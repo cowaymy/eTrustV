@@ -968,7 +968,7 @@
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
 
-        if(srvPacVal.includes("Pre-Rental")){
+        if(srvPacVal.includes("Trial Rental")){
             appTypeId = "7759";
             if(editYN == "Y"){
                 if(typeId2 == '61'){
@@ -1039,7 +1039,7 @@
         var obj = document.getElementById("exPkgCombo");
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
-       if(srvPacVal.includes("Pre-Rental")){
+       if(srvPacVal.includes("Trial Rental")){
             appTypeId = "7759";
        }else if(srvPacVal.includes("Rental")){
            appTypeId = "66";
@@ -1087,7 +1087,7 @@
         var obj = document.getElementById("exPkgCombo");
         var srvPacVal = obj.options[obj.selectedIndex].text;
         var appTypeId ="";
-       if(srvPacVal.includes("Pre-Rental")){
+       if(srvPacVal.includes("Trial Rental")){
             appTypeId = "7759";
        }else if(srvPacVal.includes("Rental")){
            appTypeId = "66";

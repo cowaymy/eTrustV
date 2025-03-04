@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcPreRentalListMapper">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcTrialRentalListMapper">
 
     <!-- Homecare 주문내역 조회 -->
-    <select id="selectHcPreRentalList" parameterType="Map" resultType="egovMap">
+    <select id="selectHcTrialRentalList" parameterType="Map" resultType="egovMap">
          /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderListMapper.selectHcOrderList */
          WITH HC_CATEGORY AS (
                 SELECT AA.CODE_ID
@@ -56,9 +56,9 @@
                  , T.BNDL_NO
                  ,TO_CHAR(T.UPD_DT , 'DD/MM/YYYY')AS LAST_UPD_DT
                  ,T.USER_FULL_NAME AS LAST_UPD_USR
-                 ,TO_CHAR(T.INSTALL_DT, 'DD/MM/YYYY') AS PREREN_START_DT
-                 ,TO_CHAR(T.INSTALL_DT + 30, 'DD/MM/YYYY') AS PREREN_END_DT
-                 ,CASE WHEN T.INSTALL_DT IS NOT NULL THEN (TRUNC(SYSDATE) - TRUNC(T.INSTALL_DT)) || ' days' ELSE '' END AS PREREN_USAGE
+                 ,TO_CHAR(T.INSTALL_DT, 'DD/MM/YYYY') AS TRIALREN_START_DT
+                 ,TO_CHAR(T.INSTALL_DT + 30, 'DD/MM/YYYY') AS TRIALREN_END_DT
+                 ,CASE WHEN T.INSTALL_DT IS NOT NULL THEN (TRUNC(SYSDATE) - TRUNC(T.INSTALL_DT)) || ' days' ELSE '' END AS TRIALREN_USAGE
          FROM ( SELECT
                               V1.APP_TYPE_CODE
                             , V1.APP_TYPE_ID
@@ -288,7 +288,7 @@
     </select>
 
     <!-- Homecare 정보 조회(매핑테이블 조회) -->
-    <select id="selectHcPreRentalInfo" parameterType="Map" resultType="egovMap">
+    <select id="selectHcTrialRentalInfo" parameterType="Map" resultType="egovMap">
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderListMapper.selectHcOrderInfo */
         SELECT A.ORD_SEQ_NO
                  , A.CUST_ID
@@ -452,7 +452,7 @@
       AND ROWNUM &lt;= 1
   </select>
 
-  <select id="getPreRentalBasicInfo" parameterType="Map" resultType="egovMap">
+  <select id="getTrialRentalBasicInfo" parameterType="Map" resultType="egovMap">
         SELECT
             A.ORD_ID,
             A.ORD_NO,
@@ -491,7 +491,7 @@
         WHERE A.ORD_ID = #{ordId}
     </select>
 
-    <select id="selectPreRentalConvertServicePackageList" parameterType="Map" resultType="egovMap">
+    <select id="selectTrialRentalConvertServicePackageList" parameterType="Map" resultType="egovMap">
           SELECT CODE
              , CODE_NAME
           FROM
@@ -756,21 +756,21 @@
 	]]>
     </insert>
 
-    <select id="getPreRentalConvertHistorySeq" resultType="Integer">
+    <select id="getTrialRentalConvertHistorySeq" resultType="Integer">
         SELECT SAL0435D_CONVERT_ID_SEQ.NEXTVAL FROM DUAL
     </select>
 
-    <select id="checkActivePreRentalConvertHistory" resultType="Integer">
+    <select id="checkActiveTrialRentalConvertHistory" resultType="Integer">
         SELECT COUNT(1) FROM SAL0435D
         WHERE SO_ID = #{salesOrdId} AND CONVERT_STUS_ID = 1
     </select>
 
-    <insert id="insertPreRentalConvertHistory" parameterType="Map">
+    <insert id="insertTrialRentalConvertHistory" parameterType="Map">
 	    INSERT INTO SAL0435D (CONVERT_ID, CONVERT_TYPE_ID, CONVERT_STUS_ID, CONVERT_REM, SO_ID, SO_OLD_STUS_ID, SO_NEW_STUS_ID, SO_OLD_APP_TYPE_ID, SO_NEW_APP_TYPE_ID, SO_OLD_SVC_PAC_ID, SO_NEW_SVC_PAC_ID, SO_OLD_PROMO_ID, SO_NEW_PROMO_ID, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID)
         VALUES(#{convertId}, 1, #{convertStusId}, '', #{salesOrdId}, #{oldStusId}, #{newStusId}, #{oldAppTypeId}, #{newAppTypeId}, #{oldSvcPacId}, #{newSvcPacId}, #{oldPromoId}, #{newPromoId}, SYSDATE, #{userId}, SYSDATE, #{userId})
     </insert>
 
-    <update id="updatePreRentalConvertHistory" parameterType="Map">
+    <update id="updateTrialRentalConvertHistory" parameterType="Map">
         UPDATE SAL0435D
         SET
             CONVERT_STUS_ID = #{convertStusId},
@@ -779,7 +779,7 @@
         WHERE CONVERT_ID = #{convertId}
    </update>
 
-   <update id="updateOldPreRentalConvertHistory" parameterType="Map">
+   <update id="updateOldTrialRentalConvertHistory" parameterType="Map">
         UPDATE SAL0435D
         SET
             CONVERT_STUS_ID = #{convertStusId},

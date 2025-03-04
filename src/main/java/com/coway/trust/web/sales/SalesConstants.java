@@ -44,7 +44,7 @@ public class SalesConstants {
 
   // STATUS CODE
   public static final String APP_TYPE_CODE_RENTAL = "REN"; // Rental
-  public static final String APP_TYPE_CODE_PRE_RENTAL = "PREREN"; // Rental
+  public static final String APP_TYPE_CODE_PRE_RENTAL = "TRLREN"; // Rental
   public static final String APP_TYPE_CODE_OUTRIGHT = "OUT"; // Outright
   public static final String APP_TYPE_CODE_INSTALLMENT = "INS"; // Installment
   public static final String APP_TYPE_CODE_DONATION = "DON"; // Donation
@@ -65,7 +65,7 @@ public class SalesConstants {
   public static final int APP_TYPE_CODE_ID_IHR_LOAN       = 5788;  // IHR -- Hidden. only applicable for On-Loan Order Module.
 
   public static final String APP_TYPE_CODE_RENTAL_FULL = "Rental"; // Rental
-  public static final String APP_TYPE_CODE_PRE_RENTAL_FULL = "Pre-Rental"; // Rental
+  public static final String APP_TYPE_CODE_PRE_RENTAL_FULL = "Trial Rental"; // Trial Rental
   public static final String APP_TYPE_CODE_OUTRIGHT_FULL = "Outright"; // Outright
   public static final String APP_TYPE_CODE_INSTALLMENT_FULL = "Installment"; // Installment
   public static final String APP_TYPE_CODE_DONATION_FULL = "Donation"; // Donation
@@ -115,7 +115,7 @@ public class SalesConstants {
 
   // Promotion Application
   public static final int PROMO_APP_TYPE_CODE_ID_REN = 2284; // Rental
-  public static final int PROMO_APP_TYPE_CODE_ID_PRE_REN = 7761; // Pre-Rental
+  public static final int PROMO_APP_TYPE_CODE_ID_PRE_REN = 7761; // Trial Rental
   public static final int PROMO_APP_TYPE_CODE_ID_OUT = 2285; // Outright
   public static final int PROMO_APP_TYPE_CODE_ID_INS = 2286; // Installment
   public static final int PROMO_APP_TYPE_CODE_ID_OUTPLS = 2287; // Outright Plus

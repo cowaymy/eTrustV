@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
-import com.coway.trust.biz.homecare.sales.order.HcPreRentalListService;
+import com.coway.trust.biz.homecare.sales.order.HcTrialRentalListService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
@@ -45,12 +45,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Controller
 @RequestMapping(value = "/homecare/sales/order")
-public class HcPreRentalListController {
+public class HcTrialRentalListController {
 
-	private static Logger logger = LoggerFactory.getLogger(HcPreRentalListController.class);
+	private static Logger logger = LoggerFactory.getLogger(HcTrialRentalListController.class);
 
-    @Resource(name = "hcPreRentalListService")
-    private HcPreRentalListService hcPreRentalListService;
+    @Resource(name = "hcTrialRentalListService")
+    private HcTrialRentalListService hcTrialRentalListService;
 
     @Resource(name = "commonService")
     private CommonService commonService;
@@ -74,7 +74,7 @@ public class HcPreRentalListController {
      * @return
      * @throws ParseException
      */
-    @RequestMapping(value = "/hcPreRentalList.do")
+    @RequestMapping(value = "/hcTrialRentalList.do")
     public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
         String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
                 SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -97,7 +97,7 @@ public class HcPreRentalListController {
         List<EgovMap> categoryCdList = commonService.selectStatusCategoryCodeList(params);
 
         // Product
-        List<EgovMap> productList_1 = hcPreRentalListService.selectProductCodeList();
+        List<EgovMap> productList_1 = hcTrialRentalListService.selectProductCodeList();
 
         if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
 		    params.put("userId", sessionVO.getUserId());
@@ -120,7 +120,7 @@ public class HcPreRentalListController {
         model.put("categoryCdList", categoryCdList);
         model.put("productList_1", productList_1);
 
-        return "homecare/sales/order/hcPreRentalList";
+        return "homecare/sales/order/hcTrialRentalList";
     }
 
 	/**
@@ -133,7 +133,7 @@ public class HcPreRentalListController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/selectHcPreRentalList", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectHcTrialRentalList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHcOrderList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		//String[] arrAppType       	= request.getParameterValues("appType"); 		// Application Type
@@ -158,26 +158,26 @@ public class HcPreRentalListController {
 		}
 		if(params.containsKey("salesmanCode")) {
             if(!"".equals(params.get("salesmanCode").toString())) {
-                int memberID = hcPreRentalListService.getMemberID(params);
+                int memberID = hcTrialRentalListService.getMemberID(params);
                 params.put("memID", memberID);
             }
         }
 		logger.debug("params ===========> " + params);
 		// 데이터 리턴.
-		return ResponseEntity.ok(hcPreRentalListService.selectHcPreRentalList(params));
+		return ResponseEntity.ok(hcTrialRentalListService.selectHcTrialRentalList(params));
 	}
 
-	@RequestMapping(value = "/selectPreRentalConvertServicePackageList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPreRentalConvertServicePackageList(@RequestParam Map<String, Object> params) {
-		List<EgovMap> codeList = hcPreRentalListService.selectPreRentalConvertServicePackageList(params);
+	@RequestMapping(value = "/selectTrialRentalConvertServicePackageList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTrialRentalConvertServicePackageList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = hcTrialRentalListService.selectTrialRentalConvertServicePackageList(params);
 		return ResponseEntity.ok(codeList);
 	}
 
-    @RequestMapping(value = "/hcPreRentalConvertPop.do")
-	public String hcPreRentalConvertPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    @RequestMapping(value = "/hcTrialRentalConvertPop.do")
+	public String hcTrialRentalConvertPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-    	EgovMap getPreRentalBasicInfo = hcPreRentalListService.getPreRentalBasicInfo(params);
-    	model.put("basicInfo", getPreRentalBasicInfo);
+    	EgovMap getTrialRentalBasicInfo = hcTrialRentalListService.getTrialRentalBasicInfo(params);
+    	model.put("basicInfo", getTrialRentalBasicInfo);
 
 		// code List
         params.clear();
@@ -213,18 +213,18 @@ public class HcPreRentalListController {
     	model.put("codeList_562", commonService.selectCodeList("562", "CODE_NAME"));
     	model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
-		return "homecare/sales/order/hcPreRentalConvertPop";
+		return "homecare/sales/order/hcTrialRentalConvertPop";
 	}
 
-	@RequestMapping(value = "/hcPreRentalConfmConvertDetailPop.do")
+	@RequestMapping(value = "/hcTrialRentalConfmConvertDetailPop.do")
 	public String hcCnfmOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "homecare/sales/order/hcPreRentalConfmConvertDetailPop";
+		return "homecare/sales/order/hcTrialRentalConfmConvertDetailPop";
 	}
 
-    @RequestMapping(value = "/convertPreRental.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> convertPreRental(@RequestBody OrderVO orderVO, SessionVO sessionVO) {
+    @RequestMapping(value = "/convertTrialRental.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> convertTrialRental(@RequestBody OrderVO orderVO, SessionVO sessionVO) {
 
-    	int orderNumber = hcPreRentalListService.convertPreRental(orderVO, sessionVO);
+    	int orderNumber = hcTrialRentalListService.convertTrialRental(orderVO, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         if(orderNumber > 0){

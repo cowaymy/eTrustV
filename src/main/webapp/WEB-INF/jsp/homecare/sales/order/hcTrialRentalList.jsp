@@ -83,7 +83,7 @@
     function fn_selectListAjax() {
         // console.log($("#listSearchForm").serialize());
 
-   	 Common.ajax("GET", "/homecare/sales/order/selectHcPreRentalList", $("#listSearchForm").serialize(), function(result) {
+   	 Common.ajax("GET", "/homecare/sales/order/selectHcTrialRentalList", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
     }
@@ -106,7 +106,7 @@
                 var ordStusId = AUIGrid.getCellValue(listMyGridID, selIdx, "ordStusId");
 
                 if(ordStusId == '4' ){
-                	Common.popupDiv("/homecare/sales/order/hcPreRentalConvertPop.do", {ordId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId")}, null , true);
+                	Common.popupDiv("/homecare/sales/order/hcTrialRentalConvertPop.do", {ordId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId")}, null , true);
                 }
                 else{
                 	Common.alert('Failed to Convert Order' + DEFAULT_DELIMITER + '<b>This order is not in complete status.<br/>Convert order is disallowed.</b>');
@@ -116,7 +116,7 @@
                 Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
             }
 
-            //Common.popupDiv("/homecare/sales/order/hcPreRentalConvertPop.do", {custId: "948884", productId : "2116", productName : "500001 - COWAY MASSAGE CHAIR (MC-ST01B)"}, null , true);
+            //Common.popupDiv("/homecare/sales/order/hcTrialRentalConvertPop.do", {custId: "948884", productId : "2116", productName : "500001 - COWAY MASSAGE CHAIR (MC-ST01B)"}, null , true);
             });
         $('#btnExport').click(function() {
 
@@ -255,16 +255,16 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [
             {headerText : "<spring:message code='sales.OrderNo'/>",           dataField : "ordNo",                editable : false, width : 150}
-          , {headerText : "<spring:message code='sales.preRenStus1'/>",       dataField : "ordStusCode",        editable : false, width : 150}
+          , {headerText : "<spring:message code='sales.trialRenStus1'/>",       dataField : "ordStusCode",        editable : false, width : 150}
        //   , {headerText : "<spring:message code='sales.AppType'/>",           dataField : "appTypeCode",      editable : false, width : 130}
           , {headerText : "<spring:message code='sales.ordDt'/>",               dataField : "ordDt",                  editable : false, width : 150}
           , {headerText : "<spring:message code='sales.refNo2'/>",              dataField : "refNo",                 editable : false, width : 180}
           , {headerText : "<spring:message code='sales.prod'/>",                 dataField : "productName",      editable : false, width : 280}
           , {headerText : "<spring:message code='sales.cusName'/>",          dataField : "custName",           editable : false, width : 350}
           , {headerText : "<spring:message code='sal.text.salPersonCode'/>",   dataField : "salesmanCode",      editable : false, width : 180}
-          , {headerText : "<spring:message code='sales.preRenStrDt'/>",   dataField : "prerenStartDt",      editable : false, width : 150}
-          , {headerText : "<spring:message code='sales.preRenEndDt'/>",   dataField : "prerenEndDt",      editable : false, width : 150}
-          , {headerText : "<spring:message code='sales.preRenUsg'/>",   dataField : "prerenUsage",      editable : false, width : 180}
+          , {headerText : "<spring:message code='sales.trialRenStrDt'/>",   dataField : "trialrenStartDt",      editable : false, width : 150}
+          , {headerText : "<spring:message code='sales.trialRenEndDt'/>",   dataField : "trialrenEndDt",      editable : false, width : 150}
+          , {headerText : "<spring:message code='sales.trialRenUsg'/>",   dataField : "trialrenUsage",      editable : false, width : 180}
           , {headerText : "<spring:message code='sal.text.lastUpdateAtByUsr'/>",   dataField : "lastUpdUsr",      editable : false, width : 180}
           , {headerText : "<spring:message code='sal.text.lastUpdateAtByDt'/>",   dataField : "lastUpdDt",      editable : false, width : 180}
           , {headerText : "ordId",                                                              dataField : "ordId",                  visible   : false}
@@ -417,7 +417,7 @@
 
     function fn_excelDown(){
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    	GridCommon.exportTo("list_grid_wrap", "xlsx", "Pre-Rental (HC)");
+    	GridCommon.exportTo("list_grid_wrap", "xlsx", "Trial Rental (HC)");
     }
 
 </script>
@@ -438,7 +438,7 @@
             <a href="#" class="click_add_on">My menu</a>
         </p>
         <h2>
-            <spring:message code='sales.title.preRentalList' />
+            <spring:message code='sales.title.trialRentalList' />
         </h2>
         <ul class="right_btns">
 
@@ -534,7 +534,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><spring:message code='sales.preRenStus' /></th>
+                        <th scope="row"><spring:message code='sales.trialRenStus' /></th>
                         <td>
                              <select id="listOrdStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
                                  <option value="1">Active</option>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.homecare.sales.order.HcPreRentalListService;
+import com.coway.trust.biz.homecare.sales.order.HcTrialRentalListService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.biz.sales.order.impl.OrderRequestMapper;
@@ -43,11 +43,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 05. 20.   KR-ONGHC  Add selectProductCodeList
  *          </pre>
  */
-@Service("hcPreRentalListService")
-public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements HcPreRentalListService {
+@Service("hcTrialRentalListService")
+public class HcTrialRentalServiceImpl extends EgovAbstractServiceImpl implements HcTrialRentalListService {
 
-  @Resource(name = "hcPreRentalListMapper")
-  private HcPreRentalListMapper hcPreRentalListMapper;
+  @Resource(name = "hcTrialRentalListMapper")
+  private HcTrialRentalListMapper hcTrialRentalListMapper;
 
   @Resource(name = "orderRequestMapper")
   private OrderRequestMapper orderRequestMapper;
@@ -70,8 +70,8 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
    * @see com.coway.trust.biz.homecare.sales.order.HcOrderListService#selectHcOrderList(java.util.Map)
    */
   @Override
-  public List<EgovMap> selectHcPreRentalList(Map<String, Object> params) {
-    return hcPreRentalListMapper.selectHcPreRentalList(params);
+  public List<EgovMap> selectHcTrialRentalList(Map<String, Object> params) {
+    return hcTrialRentalListMapper.selectHcTrialRentalList(params);
   }
 
   /**
@@ -84,8 +84,8 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
    * @see com.coway.trust.biz.homecare.sales.order.HcOrderListService#selectHcOrderInfo(java.util.Map)
    */
   @Override
-  public EgovMap selectHcPreRentalInfo(Map<String, Object> params) {
-    return hcPreRentalListMapper.selectHcPreRentalInfo(params);
+  public EgovMap selectHcTrialRentalInfo(Map<String, Object> params) {
+    return hcTrialRentalListMapper.selectHcTrialRentalInfo(params);
   }
 
   /**
@@ -99,28 +99,28 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
    */
   @Override
   public EgovMap selectProductInfo(String salesOrdId) {
-    return hcPreRentalListMapper.selectProductInfo(salesOrdId);
+    return hcTrialRentalListMapper.selectProductInfo(salesOrdId);
   }
 
   @Override
   public List<EgovMap> selectProductCodeList() {
-    return hcPreRentalListMapper.selectProductCodeList();
+    return hcTrialRentalListMapper.selectProductCodeList();
   }
 
   @Override
   public int getMemberID(Map<String, Object> params) {
-      return hcPreRentalListMapper.getMemberID(params);
+      return hcTrialRentalListMapper.getMemberID(params);
   }
 
   @Override
   public EgovMap getOrgDtls(Map<String, Object> params) {
-      return hcPreRentalListMapper.getOrgDtls(params);
+      return hcTrialRentalListMapper.getOrgDtls(params);
   }
 
   @Override
   public EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params) {
 
-	  EgovMap view = hcPreRentalListMapper.hcSelectOrderSimulatorViewByOrderNo(params);
+	  EgovMap view = hcTrialRentalListMapper.hcSelectOrderSimulatorViewByOrderNo(params);
 
 	    int CurrentBillMth = 0;
 	    int CurrentBillMthFrame = 0;
@@ -414,18 +414,18 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
   }
 
   @Override
-  public List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params) {
-    return hcPreRentalListMapper.selectPreRentalConvertServicePackageList(params);
+  public List<EgovMap> selectTrialRentalConvertServicePackageList(Map<String, Object> params) {
+    return hcTrialRentalListMapper.selectTrialRentalConvertServicePackageList(params);
   }
 
   @Override
-  public EgovMap getPreRentalBasicInfo(Map<String, Object> params) {
-      return hcPreRentalListMapper.getPreRentalBasicInfo(params);
+  public EgovMap getTrialRentalBasicInfo(Map<String, Object> params) {
+      return hcTrialRentalListMapper.getTrialRentalBasicInfo(params);
   }
 
   @Override
   @Transactional
-  public int convertPreRental(OrderVO orderVO, SessionVO sessionVO) {
+  public int convertTrialRental(OrderVO orderVO, SessionVO sessionVO) {
 	  SalesOrderMVO salesOrderMVO = orderVO.getSalesOrderMVO1();
 	  SalesOrderDVO salesOrderDVO = orderVO.getSalesOrderDVO1();
 
@@ -439,42 +439,42 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
 	  Map<String, Object> params = new HashMap<>();
 	  params.put("ordId", salesOrdId);
 
-	  int preRentalConvertHistorySeq = hcPreRentalListMapper.getPreRentalConvertHistorySeq();
-	  Map<String, Object> inPreRentalConvertHistory = new HashMap<>();
+	  int trialRentalConvertHistorySeq = hcTrialRentalListMapper.getTrialRentalConvertHistorySeq();
+	  Map<String, Object> inTrialRentalConvertHistory = new HashMap<>();
 
 	  try {
-		  EgovMap preRentalInfo = hcPreRentalListMapper.getPreRentalBasicInfo(params);
+		  EgovMap trialRentalInfo = hcTrialRentalListMapper.getTrialRentalBasicInfo(params);
 
-		  if(preRentalInfo != null && preRentalInfo.size() > 0){
+		  if(trialRentalInfo != null && trialRentalInfo.size() > 0){
 			  int orderNumber = Integer.parseInt(orderVO.getSalesOrdNoFirst());
 
 			  int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
 			  int srvPacId = CommonUtils.intNvl(salesOrderMVO.getSrvPacId());
 			  int appTypeId = CommonUtils.intNvl(salesOrderMVO.getAppTypeId());
 
-		      inPreRentalConvertHistory.clear();
-		      inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
-		      inPreRentalConvertHistory.put("salesOrdId", salesOrdId);
-		      inPreRentalConvertHistory.put("convertStusId", 1);
+		      inTrialRentalConvertHistory.clear();
+		      inTrialRentalConvertHistory.put("convertId", trialRentalConvertHistorySeq);
+		      inTrialRentalConvertHistory.put("salesOrdId", salesOrdId);
+		      inTrialRentalConvertHistory.put("convertStusId", 1);
 
-		      inPreRentalConvertHistory.put("oldStusId", preRentalInfo.get("ordStusId"));
-		      inPreRentalConvertHistory.put("oldAppTypeId", preRentalInfo.get("appTypeId"));
-		      inPreRentalConvertHistory.put("oldSvcPacId", preRentalInfo.get("srvPacId"));
-		      inPreRentalConvertHistory.put("oldPromoId", preRentalInfo.get("ordPromoId"));
+		      inTrialRentalConvertHistory.put("oldStusId", trialRentalInfo.get("ordStusId"));
+		      inTrialRentalConvertHistory.put("oldAppTypeId", trialRentalInfo.get("appTypeId"));
+		      inTrialRentalConvertHistory.put("oldSvcPacId", trialRentalInfo.get("srvPacId"));
+		      inTrialRentalConvertHistory.put("oldPromoId", trialRentalInfo.get("ordPromoId"));
 
-		      inPreRentalConvertHistory.put("newStusId", preRentalInfo.get("ordStusId"));
-		      inPreRentalConvertHistory.put("newAppTypeId", appTypeId);
-		      inPreRentalConvertHistory.put("newSvcPacId", srvPacId);
-		      inPreRentalConvertHistory.put("newPromoId", promoId);
+		      inTrialRentalConvertHistory.put("newStusId", trialRentalInfo.get("ordStusId"));
+		      inTrialRentalConvertHistory.put("newAppTypeId", appTypeId);
+		      inTrialRentalConvertHistory.put("newSvcPacId", srvPacId);
+		      inTrialRentalConvertHistory.put("newPromoId", promoId);
 
-		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+		      inTrialRentalConvertHistory.put("userId", sessionVO.getUserId());
 
-			  int check = hcPreRentalListMapper.checkActivePreRentalConvertHistory(inPreRentalConvertHistory);
+			  int check = hcTrialRentalListMapper.checkActiveTrialRentalConvertHistory(inTrialRentalConvertHistory);
 			  if(check == 0){
-			      hcPreRentalListMapper.insertPreRentalConvertHistory(inPreRentalConvertHistory);
+			      hcTrialRentalListMapper.insertTrialRentalConvertHistory(inTrialRentalConvertHistory);
 			  }else{
-			      inPreRentalConvertHistory.put("convertStusId", 21);
-				  hcPreRentalListMapper.updateOldPreRentalConvertHistory(inPreRentalConvertHistory);
+			      inTrialRentalConvertHistory.put("convertStusId", 21);
+				  hcTrialRentalListMapper.updateOldTrialRentalConvertHistory(inTrialRentalConvertHistory);
 				  return 0;
 			  }
 
@@ -491,44 +491,44 @@ public class HcPreRentalServiceImpl extends EgovAbstractServiceImpl implements H
 		      salesOrderContractVO.setCntrctRcoPriod(CommonUtils.intNvl(oMap2.get("rcoPriod")));
 		      salesOrderContractVO.setCntrctUpdUserId(sessionVO.getUserId());
 
-		      hcPreRentalListMapper.updateSAL0001D(salesOrderMVO);
-		      hcPreRentalListMapper.updateSAL0225D(salesOrderMVO);
-		      hcPreRentalListMapper.updateSAL0002D(salesOrderDVO);
-		      hcPreRentalListMapper.updateSAL0003D(salesOrderContractVO);
+		      hcTrialRentalListMapper.updateSAL0001D(salesOrderMVO);
+		      hcTrialRentalListMapper.updateSAL0225D(salesOrderMVO);
+		      hcTrialRentalListMapper.updateSAL0002D(salesOrderDVO);
+		      hcTrialRentalListMapper.updateSAL0003D(salesOrderContractVO);
 
 		      Map<String, Object> inSal0095d = new HashMap<>();
 		      inSal0095d.put("salesOrdId", salesOrdId);
 		      inSal0095d.put("srvPacId", srvPacId);
 		      inSal0095d.put("custCntId", salesOrderMVO.getCustCntId());
 		      inSal0095d.put("userId", sessionVO.getUserId());
-		      hcPreRentalListMapper.insertSAL0095D(inSal0095d);
+		      hcTrialRentalListMapper.insertSAL0095D(inSal0095d);
 
 		      Map<String, Object> inSal0088d = new HashMap<>();
 		      inSal0088d.put("salesOrdId", salesOrdId);
 		      inSal0088d.put("userId", sessionVO.getUserId());
-		      hcPreRentalListMapper.insertSAL0088D(inSal0088d);
+		      hcTrialRentalListMapper.insertSAL0088D(inSal0088d);
 
 		      Map<String, Object> inSal0070d = new HashMap<>();
 		      inSal0070d.put("salesOrdId", salesOrdId);
 		      inSal0070d.put("userId", sessionVO.getUserId());
-		      hcPreRentalListMapper.insertSAL0070D(inSal0070d);
+		      hcTrialRentalListMapper.insertSAL0070D(inSal0070d);
 
-		      inPreRentalConvertHistory.clear();
-		      inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
-		      inPreRentalConvertHistory.put("convertStusId", 4);
-		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+		      inTrialRentalConvertHistory.clear();
+		      inTrialRentalConvertHistory.put("convertId", trialRentalConvertHistorySeq);
+		      inTrialRentalConvertHistory.put("convertStusId", 4);
+		      inTrialRentalConvertHistory.put("userId", sessionVO.getUserId());
 
-		      hcPreRentalListMapper.updatePreRentalConvertHistory(inPreRentalConvertHistory);
+		      hcTrialRentalListMapper.updateTrialRentalConvertHistory(inTrialRentalConvertHistory);
 
 		      return orderNumber;
 		  }
 		  else{
-			  inPreRentalConvertHistory.clear();
-			  inPreRentalConvertHistory.put("convertId", preRentalConvertHistorySeq);
-		      inPreRentalConvertHistory.put("convertStusId", 21);
-		      inPreRentalConvertHistory.put("userId", sessionVO.getUserId());
+			  inTrialRentalConvertHistory.clear();
+			  inTrialRentalConvertHistory.put("convertId", trialRentalConvertHistorySeq);
+		      inTrialRentalConvertHistory.put("convertStusId", 21);
+		      inTrialRentalConvertHistory.put("userId", sessionVO.getUserId());
 
-		      hcPreRentalListMapper.updatePreRentalConvertHistory(inPreRentalConvertHistory);
+		      hcTrialRentalListMapper.updateTrialRentalConvertHistory(inTrialRentalConvertHistory);
 
 			  return 0;
 		  }

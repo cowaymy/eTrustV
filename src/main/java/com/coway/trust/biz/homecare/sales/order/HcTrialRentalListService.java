@@ -21,7 +21,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 05. 20.   KR-ONGHC  Add selectProductCodeList
  *          </pre>
  */
-public interface HcPreRentalListService {
+public interface HcTrialRentalListService {
 
   /**
    * Search Homacare OrderList
@@ -31,7 +31,7 @@ public interface HcPreRentalListService {
    * @param params
    * @return
    */
-  public List<EgovMap> selectHcPreRentalList(Map<String, Object> params);
+  public List<EgovMap> selectHcTrialRentalList(Map<String, Object> params);
 
   /**
    * Search Homacare OrderInfo
@@ -41,7 +41,7 @@ public interface HcPreRentalListService {
    * @param params
    * @return
    */
-  public EgovMap selectHcPreRentalInfo(Map<String, Object> params);
+  public EgovMap selectHcTrialRentalInfo(Map<String, Object> params);
 
   /**
    * select Product Info
@@ -61,9 +61,9 @@ public interface HcPreRentalListService {
 
   EgovMap selectOrderSimulatorViewByOrderNo(Map<String, Object> params);
 
-  List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params);
+  List<EgovMap> selectTrialRentalConvertServicePackageList(Map<String, Object> params);
 
-  EgovMap getPreRentalBasicInfo(Map<String, Object> params);
+  EgovMap getTrialRentalBasicInfo(Map<String, Object> params);
 
-  int convertPreRental(OrderVO orderVO, SessionVO sessionVO);
+  int convertTrialRental(OrderVO orderVO, SessionVO sessionVO);
 }

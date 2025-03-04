@@ -790,7 +790,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
 		    logger.debug("//SMS params" + params.toString());
 
-		       if(params.get("appType").equals("REN") || params.get("appType").equals("PREREN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
+		       if(params.get("appType").equals("REN") || params.get("appType").equals("TRLREN") || params.get("appType").equals("OUT") || params.get("appType").equals("INS"))//IF APPTYPE = RENTAL/OUTRIGHT/INSTALLMENT
 		       {
 		    	   logger.debug("//IN SMS1");
 

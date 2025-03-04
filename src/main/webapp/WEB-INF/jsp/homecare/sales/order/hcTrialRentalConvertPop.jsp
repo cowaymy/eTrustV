@@ -398,7 +398,7 @@
 
                             break;
 
-                        case '7759' : //PRE-RENTAL
+                        case '7759' : //TRIALRENTAL
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
@@ -549,7 +549,7 @@
                     //    doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     //} else {
                         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-                        doGetComboData('/homecare/sales/order/selectPreRentalConvertServicePackageList.do', {appSubType : appSubType, pType : pType, stkId:stkId, postcode:postcode}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
+                        doGetComboData('/homecare/sales/order/selectTrialRentalConvertServicePackageList.do', {appSubType : appSubType, pType : pType, stkId:stkId, postcode:postcode}, '', 'srvPacId', 'S', 'fn_srvPacId'); //APPLICATION SUBTYPE
                     //}
 
 
@@ -1602,7 +1602,7 @@
     }
 
     function fn_popOrderDetail() {
-        Common.popupDiv("/homecare/sales/order/hcPreRentalConfmConvertDetailPop.do");
+        Common.popupDiv("/homecare/sales/order/hcTrialRentalConfmConvertDetailPop.do");
     }
 
     function fn_excludeGstAmt() {
@@ -1779,7 +1779,7 @@
         };
          console.log(orderVO);
          $("#btnConfirm_RW").hide();
-         Common.ajax("POST", "/homecare/sales/order/convertPreRental.do", orderVO, function(result) {
+         Common.ajax("POST", "/homecare/sales/order/convertTrialRental.do", orderVO, function(result) {
         	 if(result.code == "00"){
                  Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
         		 fn_selectListAjax();
@@ -2299,7 +2299,7 @@
             }
         });
 
-        if(exceedQuota == true) Common.alert("Pre-Rental Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
+        if(exceedQuota == true) Common.alert("Trial Rental Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
 
         return exceedQuota;
     }
@@ -3081,7 +3081,7 @@
 <!--div id="popup_wrap" class="popup_wrap pop_win"--><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.preRentalConvert" /></h1>
+<h1><spring:message code="sal.title.text.trialRentalConvert" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="btnOrdRegClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>

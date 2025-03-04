@@ -131,7 +131,7 @@
 	<li><a id="aTabCI" href="#" onClick="javascript:chgTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
 	<li><a id="aTabIns" href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
 	<li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
-<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' || orderDetail.basicInfo.appTypeCode == 'PREREN' || orderDetail.basicInfo.appTypeCode == 'OUTPLS'}">
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' || orderDetail.basicInfo.appTypeCode == 'TRLREN' || orderDetail.basicInfo.appTypeCode == 'OUTPLS'}">
 	<li><a  id="aTabPay" href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
 </c:if>
 	<li><a id="aTabMI" href="#" onClick="javascript:chgTab('memInfo');"><spring:message code="sal.title.text.memshipInfo" /></a></li>
@@ -175,7 +175,7 @@
 <!------------------------------------------------------------------------------
     Payment Channel
 ------------------------------------------------------------------------------->
-<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' || orderDetail.basicInfo.appTypeCode == 'PREREN' || orderDetail.basicInfo.appTypeCode == 'OUTPLS'}">
+<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' || orderDetail.basicInfo.appTypeCode == 'TRLREN' || orderDetail.basicInfo.appTypeCode == 'OUTPLS'}">
 <%@ include file="/WEB-INF/jsp/sales/order/include/payChannel.jsp" %>
 </c:if>
 <!------------------------------------------------------------------------------

@@ -994,7 +994,7 @@
 
                             break;
 
-                        case '7759' : //PRE-RENTAL
+                        case '7759' : // TRIALRENTAL
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");

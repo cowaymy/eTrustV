@@ -23,8 +23,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 05. 20.   KR-ONGHC  Add selectProductCodeList
  *          </pre>
  */
-@Mapper("hcPreRentalListMapper")
-public interface HcPreRentalListMapper {
+@Mapper("hcTrialRentalListMapper")
+public interface HcTrialRentalListMapper {
 
   /**
    * Search Homacare OrderList
@@ -34,7 +34,7 @@ public interface HcPreRentalListMapper {
    * @param params
    * @return list
    */
-  public List<EgovMap> selectHcPreRentalList(Map<String, Object> params);
+  public List<EgovMap> selectHcTrialRentalList(Map<String, Object> params);
 
   /**
    * Search Homacare OrderInfo
@@ -44,7 +44,7 @@ public interface HcPreRentalListMapper {
    * @param params
    * @return
    */
-  public EgovMap selectHcPreRentalInfo(Map<String, Object> params);
+  public EgovMap selectHcTrialRentalInfo(Map<String, Object> params);
 
   /**
    * select Product Info
@@ -64,9 +64,9 @@ public interface HcPreRentalListMapper {
 
   EgovMap hcSelectOrderSimulatorViewByOrderNo(Map<String, Object> params);
 
-  EgovMap getPreRentalBasicInfo(Map<String, Object> params);
+  EgovMap getTrialRentalBasicInfo(Map<String, Object> params);
 
-  List<EgovMap> selectPreRentalConvertServicePackageList(Map<String, Object> params);
+  List<EgovMap> selectTrialRentalConvertServicePackageList(Map<String, Object> params);
 
   int updateSAL0001D(SalesOrderMVO salesOrderMVO);
 
@@ -82,13 +82,13 @@ public interface HcPreRentalListMapper {
 
   int insertSAL0070D(Map<String, Object> params);
 
-  int getPreRentalConvertHistorySeq();
+  int getTrialRentalConvertHistorySeq();
 
-  int checkActivePreRentalConvertHistory(Map<String, Object> params);
+  int checkActiveTrialRentalConvertHistory(Map<String, Object> params);
 
-  int insertPreRentalConvertHistory(Map<String, Object> params);
+  int insertTrialRentalConvertHistory(Map<String, Object> params);
 
-  int updatePreRentalConvertHistory(Map<String, Object> params);
+  int updateTrialRentalConvertHistory(Map<String, Object> params);
 
-  int updateOldPreRentalConvertHistory(Map<String, Object> params);
+  int updateOldTrialRentalConvertHistory(Map<String, Object> params);
 }
