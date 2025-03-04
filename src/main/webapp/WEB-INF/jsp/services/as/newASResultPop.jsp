@@ -1263,6 +1263,7 @@
 		$("#m15").show();
 		$("#m16").show();
 		$("#m28").show();
+		$("#m30").hide();
 
 		$("#image1").append('<span class="must">*</span>');
 	    $("#image2").append('<span class="must">*</span>');
@@ -1359,8 +1360,8 @@
 			}
 
 		 if ($('#PROD_CAT').val() == "7760"){
-				$("#pairCodeLbl").append('<span class="must">*</span>');
-				$('#partnerCode').removeAttr("disabled").removeClass("readonly");
+				/* $("#pairCodeLbl").append('<span class="must">*</span>');
+				$('#partnerCode').removeAttr("disabled").removeClass("readonly"); */
 				$("#m15").show();
 				$("#psiRcd").attr("disabled", false);
 				$("#m30").show();
@@ -1368,6 +1369,8 @@
 			}else{
 				$("#pairCodeLbl").find("span").remove();
 				$("#partnerCode").attr("disabled", true);
+				$("#m30").hide();
+	            $("#volt").attr("disabled", true);
 			}
 
 	}
