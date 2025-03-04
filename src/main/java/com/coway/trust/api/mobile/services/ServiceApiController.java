@@ -37,6 +37,8 @@ import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
+import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiDto;
+import com.coway.trust.api.mobile.services.as.HomecareAfterServiceApiForm;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiDto;
 import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
 import com.coway.trust.api.mobile.services.asFromCody.AsFromCodyDto;
@@ -906,6 +908,18 @@ public class ServiceApiController {
           }
       }
       return ResponseEntity.ok(selectPartnerCode.stream().map(r -> HomecareServiceApiDto.create(r)).collect(Collectors.toList()));
+  }
+
+  @ApiOperation(value = "selectAsPartnerCode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectAsPartnerCode", method = RequestMethod.GET)
+  public ResponseEntity<List<HomecareAfterServiceApiDto>> selectAsPartnerCode(@ModelAttribute HomecareAfterServiceApiForm param) throws Exception {
+      List<EgovMap>  selectAsPartnerCode = homecareServiceApiService.selectAsPartnerCode(param);
+      if(LOGGER.isErrorEnabled()){
+          for (int i = 0; i < selectAsPartnerCode.size(); i++) {
+                  LOGGER.debug("selectAsPartnerCode    값 : {}", selectAsPartnerCode.get(i));
+          }
+      }
+      return ResponseEntity.ok(selectAsPartnerCode.stream().map(r -> HomecareAfterServiceApiDto.create(r)).collect(Collectors.toList()));
   }
 
   @ApiOperation(value = "selectAsDetails", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
