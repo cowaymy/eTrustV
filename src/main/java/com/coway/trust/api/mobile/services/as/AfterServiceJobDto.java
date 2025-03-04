@@ -8,247 +8,265 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "AfterServiceJobDto", description = "공통코드 Dto")
 public class AfterServiceJobDto {
-
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "AS NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "CUSTOMER NAME")
   private String custName;
 
-  @ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+  @ApiModelProperty(value = "AS / HS / INST / PR ")
   private String jobType;
 
-  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
+  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE")
   private int jobStatus;
 
-  @ApiModelProperty(value = "작업 예정날짜")
+  @ApiModelProperty(value = "APPOINTMENT DATE")
   private String appointmentDate;
 
-  @ApiModelProperty(value = "작업 예정시간")
+  @ApiModelProperty(value = "APPOINTMENT TIME")
   private String appointmentTime;
 
-  @ApiModelProperty(value = "오전/오후/저녁(신규)")
+  @ApiModelProperty(value = "JOB SESSION")
   private String jobSession;
 
-  @ApiModelProperty(value = "체크인 날짜")
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
-  @ApiModelProperty(value = "체크인 시간")
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
-  @ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
-  @ApiModelProperty(value = "일반/법인 고객 구분")
+  @ApiModelProperty(value = "CUSTOMER TYPE")
   private int customerType;
 
-  @ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
+  @ApiModelProperty(value = "CUSTOMER ID")
   private int customerId;
 
-  @ApiModelProperty(value = "작업 영역(State)_170906 추가")
+  @ApiModelProperty(value = "SERVICE STATE")
   private String serviceState;
 
-  @ApiModelProperty(value = "작업예정일(년)_170908 추가")
+  @ApiModelProperty(value = "YEAR")
   private String planYear;
 
-  @ApiModelProperty(value = "작업예정일(월)_170908 추가")
+  @ApiModelProperty(value = "MONTH")
   private String planMonth;
 
-  @ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "GPS")
   private String customerGps;
 
-  @ApiModelProperty(value = "설치주소(Magic Address 체계?)")
+  @ApiModelProperty(value = "INSTALLATION ADDRESS")
   private String installAddress;
 
-  @ApiModelProperty(value = "우편번호")
+  @ApiModelProperty(value = "POSTCODE")
   private String postcode;
 
-  @ApiModelProperty(value = "핸드폰 번호")
+  @ApiModelProperty(value = "MOBILE NO")
   private String handphoneTel;
 
-  @ApiModelProperty(value = "집전화 번호")
+  @ApiModelProperty(value = "RESIDENT CONTACT NO")
   private String homeTel;
 
-  @ApiModelProperty(value = "회사 번호")
+  @ApiModelProperty(value = "OFFICE CONTACT NO")
   private String officeTel;
 
-  @ApiModelProperty(value = "메일 주소")
+  @ApiModelProperty(value = "MAIL ADDRESS")
   private String mailAddress;
 
-  @ApiModelProperty(value = "고객 VA 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER VA NUMBER")
   private String customerVaNo;
 
-  @ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER JOM PAY REF. NO")
   private String customerJomPayRefNo;
 
-  @ApiModelProperty(value = "제품 사진 url")
+  @ApiModelProperty(value = "IMAGE URL")
   private String imageUrl;
 
-  @ApiModelProperty(value = "제품명")
+  @ApiModelProperty(value = "PRODUCT NAME")
   private String productName;
 
-  @ApiModelProperty(value = "제품코드")
+  @ApiModelProperty(value = "PRODUCT CODE")
   private String productCode;
 
-  @ApiModelProperty(value = "application Type (Rental…)")
+  @ApiModelProperty(value = "APPLICATION TYPE")
   private String appType;
 
+  @ApiModelProperty(value = "INSTRUCTION")
   private String instruction;
 
+  @ApiModelProperty(value = "PROMOTION")
   private String salesPromotion;
 
+  @ApiModelProperty(value = "REQUESTOR")
   private String requestor;
 
+  @ApiModelProperty(value = "REQUESTOR CONTACT NO")
   private String requestorContact;
 
+  @ApiModelProperty(value = "CONTRACT DURATION")
   private int contractDuration;
 
+  @ApiModelProperty(value = "RENTAL MONTHLY FEES")
   private int monthlyRentalFees;
 
+  @ApiModelProperty(value = "REGISTRATION FEES")
   private int registrationFees;
 
-  @ApiModelProperty(value = "결제 방식 - Code")
+  @ApiModelProperty(value = "PAYMENT MODE")
   private String paymentMode;
 
-  @ApiModelProperty(value = "결제 은행")
+  @ApiModelProperty(value = "BANK CODE")
   private int bankCode;
 
-  @ApiModelProperty(value = "결제 은행명")
+  @ApiModelProperty(value = "BANK NAME")
   private String bankName;
 
-  @ApiModelProperty(value = "결제 정보")
+  @ApiModelProperty(value = "CARD ACCOUNT NO")
   private String cardAccountNo;
 
-  @ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
+  @ApiModelProperty(value = "ACCOUNT OUTSTANDING")
   private String outstanding;
 
-  @ApiModelProperty(value = "sirim 코드")
+  @ApiModelProperty(value = "PRODUCT SIRIM NO")
   private String sirimNo;
 
-  @ApiModelProperty(value = "serial 코드")
+  @ApiModelProperty(value = "PRODUCT SERIAL NO")
   private String serialNo;
 
   @ApiModelProperty(value = "WARRANTY ")
   private String warranty;
 
-  @ApiModelProperty(value = "멤버십 만료 기간")
+  @ApiModelProperty(value = "ORDER MEMBERSHIP CONTRACT EXPIRY DATE")
   private String MembershipContractExpiry;
 
-  @ApiModelProperty(value = "렌탈 현황")
+  @ApiModelProperty(value = "RENTAL STATUS")
   private String rentalStatus;
 
+  @ApiModelProperty(value = "DSC CIDE")
   private String dscCode;
 
-  @ApiModelProperty(value = "설치일자 (YYYYMMDD)")
+  @ApiModelProperty(value = "INSTALLATION DATE")
   private String installationDate;
 
-  @ApiModelProperty(value = "labour Charge 금액 (작업결과보기시 필요)")
+  @ApiModelProperty(value = "LABOUR CHARGE")
   private String labourCharge;
 
+  @ApiModelProperty(value = "DEFECT TYPE")
   private int defectTypeId;
 
+  @ApiModelProperty(value = "DEFECT GROUP")
   private int defectGroupId;
 
+  @ApiModelProperty(value = "DEFECT ID")
   private int defectId;
 
+  @ApiModelProperty(value = "DEFECT PART GROUP")
   private int defectPartGroupId;
 
+  @ApiModelProperty(value = "DEFECT PART ID")
   private int defectPartId;
 
+  @ApiModelProperty(value = "DEFECT DETAIL REASON ID")
   private int defectDetailReasonId;
 
+  @ApiModelProperty(value = "SOLUTION ID")
   private int solutionReasonId;
 
+  @ApiModelProperty(value = "REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+  @ApiModelProperty(value = "OWNER CODE")
   private String ownerCode;
 
-  @ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+  @ApiModelProperty(value = "OWNER NAME")
   private String ownerCodeNm;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "nric 번호")
+  @ApiModelProperty(value = "RESULT CUSTOMER MOBILE NO")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "고객메일주소")
+  @ApiModelProperty(value = "RESULT CUSTOMER EMAIL")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "신규 요건(default : 고객명)")
+  @ApiModelProperty(value = "RESULT ACCEPTANCE NAME")
   private String resultAcceptanceName;
 
+  @ApiModelProperty(value = "RENTAL COLLECTION CODE")
   private String rcCode;
 
-  @ApiModelProperty(value = "결함코드")
+  @ApiModelProperty(value = "MALFUNCTION CODE")
   private int malfunctionCode;
 
-  @ApiModelProperty(value = "결함코드명")
+  @ApiModelProperty(value = "MALFUNCTION NAME")
   private String malfunctionName;
 
-  @ApiModelProperty(value = "결함 사유 코드")
+  @ApiModelProperty(value = "MALFUNCTION REASON")
   private int malfunctionReasonCode;
 
-  @ApiModelProperty(value = "결함 사유명")
+  @ApiModelProperty(value = "MALFUNCTION REASON NAME")
   private String malfunctionReasonName;
 
-  @ApiModelProperty(value = "실패 사유 코드")
+  @ApiModelProperty(value = "FAIL REASON")
   private int failReasonCode;
 
-  @ApiModelProperty(value = "실패 사유명")
+  @ApiModelProperty(value = "FAIL REASON NAME")
   private String failReasonName;
 
-  @ApiModelProperty(value = "설치자")
+  @ApiModelProperty(value = "SETTLED BY")
   private String settledBy;
 
-  @ApiModelProperty(value = "설치날짜")
+  @ApiModelProperty(value = "SETTLED DATE")
   private String settledDate;
 
-  @ApiModelProperty(value = "설치시간")
+  @ApiModelProperty(value = "SETTLED TIME")
   private String settledTime;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Remark_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR REMARK")
   private String inHouseRepairRemark;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Replacement 여부_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR REPLACEMENT INDICATOR")
   private String inhouserepairreplacementyn;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 약속일자_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PROMISED DATE")
   private String inHouseRepairPromisedDate;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품대그룹 코드_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT GROUP CODE")
   private String inhouserepairproductgroupcode;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품코드_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT CODE")
   private String inHouseRepairProductCode;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품 SN_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR SERIAL NO")
   private String inHouseRepairSerialNo;
 
-  @ApiModelProperty(value = "inHouseRepair 대상 여부(작업처리시, 대상이 Y 이면, 보여주기만하고 Complete)")
+  @ApiModelProperty(value = "IN HOUSE REPAIR INDICATOR")
   private String inhouserepairyn;
 
+  @ApiModelProperty(value = "RENTAL COLLECTION ID")
   private int renCollectionId;
 
-  @ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
+  @ApiModelProperty(value = "ORDER LAST PAYMENT DATE")
   private String lastPaymentDate;
 
-  @ApiModelProperty(value = "asr no")
+  @ApiModelProperty(value = "AS RESULT NO")
   private String asrNo;
 
-  @ApiModelProperty(value = "필터서비스 금액")
+  @ApiModelProperty(value = "FILTER AMOUNT")
   private int filterAmount;
 
-  @ApiModelProperty(value = "부가서비스 금액")
+  @ApiModelProperty(value = "ACCESSORIES AMOUNT")
   private int accessoriesAmount;
 
-  @ApiModelProperty(value = "서비스 총 금액")
+  @ApiModelProperty(value = "TOTAL AMOUNT")
   private int totalAmount;
 
+  @ApiModelProperty(value = "SERIAL CHECK")
   private String serialChk;
 
   @ApiModelProperty(value = "PSI")
@@ -257,129 +275,50 @@ public class AfterServiceJobDto {
   @ApiModelProperty(value = "LPM")
   private String lpm;
 
-  @ApiModelProperty(value = "PRODCAT")
+  @ApiModelProperty(value = "PRODUCT CATEGORY")
   private int prodcat;
 
-  @ApiModelProperty(value = "AS_UNMATCH_REASON")
+  @ApiModelProperty(value = "AS UNMATCH REASON")
   private String asUnmatchReason;
 
+  @ApiModelProperty(value = "LATITUDE")
   private BigDecimal latitude;
 
+  @ApiModelProperty(value = "LONGTITUDE")
   private BigDecimal longitude;
 
-  @ApiModelProperty(value = "REWORK_PROJ")
+  @ApiModelProperty(value = "REWORK PROJECT")
   private String reworkProj;
 
+  @ApiModelProperty(value = "WATER SOURCE TYPE")
   private String waterSrcType;
 
+  @ApiModelProperty(value = "NTU")
   private BigDecimal ntu;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSORIES")
   private String instAccs;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSORIES VALUE")
   private String instAccsVal;
 
+  @ApiModelProperty(value = "SERVICE TYPE")
   private String srvType;
 
+  @ApiModelProperty(value = "VOLTAGE")
   private String voltage;
 
+  @ApiModelProperty(value = "PAIRING PARTNER CODE")
   private String partnerCode;
 
+  @ApiModelProperty(value = "PAIRING PARTNER NAME")
   private String partnerCodeName;
-
-  public String getSrvType() {
-	return srvType;
-}
-
-public void setSrvType(String srvType) {
-	this.srvType = srvType;
-}
-
-public BigDecimal getNtu() {
-	return ntu;
-}
-
-public String getInstAccs() {
-	return instAccs;
-}
-
-public String getInstAccsVal() {
-	return instAccsVal;
-}
-
-public void setNtu(BigDecimal ntu) {
-	this.ntu = ntu;
-}
-
-public void setInstAccs(String instAccs) {
-	this.instAccs = instAccs;
-}
-
-public void setInstAccsVal(String instAccsVal) {
-	this.instAccsVal = instAccsVal;
-}
-
-public String getWaterSrcType() {
-	return waterSrcType;
-}
-
-public void setWaterSrcType(String waterSrcType) {
-	this.waterSrcType = waterSrcType;
-}
-
-public String getReworkProj() {
-	return reworkProj;
-}
-
-public void setReworkProj(String reworkProj) {
-	this.reworkProj = reworkProj;
-}
-
-
-  public String getAsUnmatchReason() {
-	return asUnmatchReason;
-}
-
-  public void setAsUnmatchReason(String asUnmatchReason) {
-	this.asUnmatchReason = asUnmatchReason;
-}
-
-  public int getProdcat() {
-    return prodcat;
-  }
-
-  public void setProdcat(int prodcat) {
-    this.prodcat = prodcat;
-  }
-
-  public String getPsi() {
-    return psi;
-  }
-
-  public void setPsi(String psi) {
-    this.psi = psi;
-  }
-
-  public String getLpm() {
-    return lpm;
-  }
-
-  public void setLpm(String lpm) {
-    this.lpm = lpm;
-  }
-
-  public String getSerialChk() {
-    return serialChk;
-  }
-
-  public void setSerialChk(String serialChk) {
-    this.serialChk = serialChk;
-  }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(String salesOrderNo) {
+  public void setSalesOrderNo( String salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -387,7 +326,7 @@ public void setReworkProj(String reworkProj) {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -395,7 +334,7 @@ public void setReworkProj(String reworkProj) {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -403,7 +342,7 @@ public void setReworkProj(String reworkProj) {
     return jobType;
   }
 
-  public void setJobType(String jobType) {
+  public void setJobType( String jobType ) {
     this.jobType = jobType;
   }
 
@@ -411,7 +350,7 @@ public void setReworkProj(String reworkProj) {
     return jobStatus;
   }
 
-  public void setJobStatus(int jobStatus) {
+  public void setJobStatus( int jobStatus ) {
     this.jobStatus = jobStatus;
   }
 
@@ -419,7 +358,7 @@ public void setReworkProj(String reworkProj) {
     return appointmentDate;
   }
 
-  public void setAppointmentDate(String appointmentDate) {
+  public void setAppointmentDate( String appointmentDate ) {
     this.appointmentDate = appointmentDate;
   }
 
@@ -427,7 +366,7 @@ public void setReworkProj(String reworkProj) {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public void setAppointmentTime( String appointmentTime ) {
     this.appointmentTime = appointmentTime;
   }
 
@@ -435,7 +374,7 @@ public void setReworkProj(String reworkProj) {
     return jobSession;
   }
 
-  public void setJobSession(String jobSession) {
+  public void setJobSession( String jobSession ) {
     this.jobSession = jobSession;
   }
 
@@ -443,7 +382,7 @@ public void setReworkProj(String reworkProj) {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -451,7 +390,7 @@ public void setReworkProj(String reworkProj) {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -459,7 +398,7 @@ public void setReworkProj(String reworkProj) {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -467,7 +406,7 @@ public void setReworkProj(String reworkProj) {
     return customerType;
   }
 
-  public void setCustomerType(int customerType) {
+  public void setCustomerType( int customerType ) {
     this.customerType = customerType;
   }
 
@@ -475,7 +414,7 @@ public void setReworkProj(String reworkProj) {
     return customerId;
   }
 
-  public void setCustomerId(int customerId) {
+  public void setCustomerId( int customerId ) {
     this.customerId = customerId;
   }
 
@@ -483,7 +422,7 @@ public void setReworkProj(String reworkProj) {
     return serviceState;
   }
 
-  public void setServiceState(String serviceState) {
+  public void setServiceState( String serviceState ) {
     this.serviceState = serviceState;
   }
 
@@ -491,7 +430,7 @@ public void setReworkProj(String reworkProj) {
     return planYear;
   }
 
-  public void setPlanYear(String planYear) {
+  public void setPlanYear( String planYear ) {
     this.planYear = planYear;
   }
 
@@ -499,7 +438,7 @@ public void setReworkProj(String reworkProj) {
     return planMonth;
   }
 
-  public void setPlanMonth(String planMonth) {
+  public void setPlanMonth( String planMonth ) {
     this.planMonth = planMonth;
   }
 
@@ -507,7 +446,7 @@ public void setReworkProj(String reworkProj) {
     return customerGps;
   }
 
-  public void setCustomerGps(String customerGps) {
+  public void setCustomerGps( String customerGps ) {
     this.customerGps = customerGps;
   }
 
@@ -515,7 +454,7 @@ public void setReworkProj(String reworkProj) {
     return installAddress;
   }
 
-  public void setInstallAddress(String installAddress) {
+  public void setInstallAddress( String installAddress ) {
     this.installAddress = installAddress;
   }
 
@@ -523,7 +462,7 @@ public void setReworkProj(String reworkProj) {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -531,7 +470,7 @@ public void setReworkProj(String reworkProj) {
     return handphoneTel;
   }
 
-  public void setHandphoneTel(String handphoneTel) {
+  public void setHandphoneTel( String handphoneTel ) {
     this.handphoneTel = handphoneTel;
   }
 
@@ -539,7 +478,7 @@ public void setReworkProj(String reworkProj) {
     return homeTel;
   }
 
-  public void setHomeTel(String homeTel) {
+  public void setHomeTel( String homeTel ) {
     this.homeTel = homeTel;
   }
 
@@ -547,7 +486,7 @@ public void setReworkProj(String reworkProj) {
     return officeTel;
   }
 
-  public void setOfficeTel(String officeTel) {
+  public void setOfficeTel( String officeTel ) {
     this.officeTel = officeTel;
   }
 
@@ -555,7 +494,7 @@ public void setReworkProj(String reworkProj) {
     return mailAddress;
   }
 
-  public void setMailAddress(String mailAddress) {
+  public void setMailAddress( String mailAddress ) {
     this.mailAddress = mailAddress;
   }
 
@@ -563,7 +502,7 @@ public void setReworkProj(String reworkProj) {
     return customerVaNo;
   }
 
-  public void setCustomerVaNo(String customerVaNo) {
+  public void setCustomerVaNo( String customerVaNo ) {
     this.customerVaNo = customerVaNo;
   }
 
@@ -571,7 +510,7 @@ public void setReworkProj(String reworkProj) {
     return customerJomPayRefNo;
   }
 
-  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+  public void setCustomerJomPayRefNo( String customerJomPayRefNo ) {
     this.customerJomPayRefNo = customerJomPayRefNo;
   }
 
@@ -579,7 +518,7 @@ public void setReworkProj(String reworkProj) {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void setImageUrl( String imageUrl ) {
     this.imageUrl = imageUrl;
   }
 
@@ -587,7 +526,7 @@ public void setReworkProj(String reworkProj) {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName( String productName ) {
     this.productName = productName;
   }
 
@@ -595,7 +534,7 @@ public void setReworkProj(String reworkProj) {
     return productCode;
   }
 
-  public void setProductCode(String productCode) {
+  public void setProductCode( String productCode ) {
     this.productCode = productCode;
   }
 
@@ -603,7 +542,7 @@ public void setReworkProj(String reworkProj) {
     return appType;
   }
 
-  public void setAppType(String appType) {
+  public void setAppType( String appType ) {
     this.appType = appType;
   }
 
@@ -611,7 +550,7 @@ public void setReworkProj(String reworkProj) {
     return instruction;
   }
 
-  public void setInstruction(String instruction) {
+  public void setInstruction( String instruction ) {
     this.instruction = instruction;
   }
 
@@ -619,7 +558,7 @@ public void setReworkProj(String reworkProj) {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(String salesPromotion) {
+  public void setSalesPromotion( String salesPromotion ) {
     this.salesPromotion = salesPromotion;
   }
 
@@ -627,7 +566,7 @@ public void setReworkProj(String reworkProj) {
     return requestor;
   }
 
-  public void setRequestor(String requestor) {
+  public void setRequestor( String requestor ) {
     this.requestor = requestor;
   }
 
@@ -635,7 +574,7 @@ public void setReworkProj(String reworkProj) {
     return requestorContact;
   }
 
-  public void setRequestorContact(String requestorContact) {
+  public void setRequestorContact( String requestorContact ) {
     this.requestorContact = requestorContact;
   }
 
@@ -643,7 +582,7 @@ public void setReworkProj(String reworkProj) {
     return contractDuration;
   }
 
-  public void setContractDuration(int contractDuration) {
+  public void setContractDuration( int contractDuration ) {
     this.contractDuration = contractDuration;
   }
 
@@ -651,7 +590,7 @@ public void setReworkProj(String reworkProj) {
     return monthlyRentalFees;
   }
 
-  public void setMonthlyRentalFees(int monthlyRentalFees) {
+  public void setMonthlyRentalFees( int monthlyRentalFees ) {
     this.monthlyRentalFees = monthlyRentalFees;
   }
 
@@ -659,7 +598,7 @@ public void setReworkProj(String reworkProj) {
     return registrationFees;
   }
 
-  public void setRegistrationFees(int registrationFees) {
+  public void setRegistrationFees( int registrationFees ) {
     this.registrationFees = registrationFees;
   }
 
@@ -667,7 +606,7 @@ public void setReworkProj(String reworkProj) {
     return paymentMode;
   }
 
-  public void setPaymentMode(String paymentMode) {
+  public void setPaymentMode( String paymentMode ) {
     this.paymentMode = paymentMode;
   }
 
@@ -675,7 +614,7 @@ public void setReworkProj(String reworkProj) {
     return bankCode;
   }
 
-  public void setBankCode(int bankCode) {
+  public void setBankCode( int bankCode ) {
     this.bankCode = bankCode;
   }
 
@@ -683,7 +622,7 @@ public void setReworkProj(String reworkProj) {
     return bankName;
   }
 
-  public void setBankName(String bankName) {
+  public void setBankName( String bankName ) {
     this.bankName = bankName;
   }
 
@@ -691,7 +630,7 @@ public void setReworkProj(String reworkProj) {
     return cardAccountNo;
   }
 
-  public void setCardAccountNo(String cardAccountNo) {
+  public void setCardAccountNo( String cardAccountNo ) {
     this.cardAccountNo = cardAccountNo;
   }
 
@@ -699,7 +638,7 @@ public void setReworkProj(String reworkProj) {
     return outstanding;
   }
 
-  public void setOutstanding(String outstanding) {
+  public void setOutstanding( String outstanding ) {
     this.outstanding = outstanding;
   }
 
@@ -707,7 +646,7 @@ public void setReworkProj(String reworkProj) {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -715,7 +654,7 @@ public void setReworkProj(String reworkProj) {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -723,7 +662,7 @@ public void setReworkProj(String reworkProj) {
     return warranty;
   }
 
-  public void setWarranty(String warranty) {
+  public void setWarranty( String warranty ) {
     this.warranty = warranty;
   }
 
@@ -731,7 +670,7 @@ public void setReworkProj(String reworkProj) {
     return MembershipContractExpiry;
   }
 
-  public void setMembershipContractExpiry(String membershipContractExpiry) {
+  public void setMembershipContractExpiry( String membershipContractExpiry ) {
     MembershipContractExpiry = membershipContractExpiry;
   }
 
@@ -739,7 +678,7 @@ public void setReworkProj(String reworkProj) {
     return rentalStatus;
   }
 
-  public void setRentalStatus(String rentalStatus) {
+  public void setRentalStatus( String rentalStatus ) {
     this.rentalStatus = rentalStatus;
   }
 
@@ -747,7 +686,7 @@ public void setReworkProj(String reworkProj) {
     return dscCode;
   }
 
-  public void setDscCode(String dscCode) {
+  public void setDscCode( String dscCode ) {
     this.dscCode = dscCode;
   }
 
@@ -755,7 +694,7 @@ public void setReworkProj(String reworkProj) {
     return installationDate;
   }
 
-  public void setInstallationDate(String installationDate) {
+  public void setInstallationDate( String installationDate ) {
     this.installationDate = installationDate;
   }
 
@@ -763,7 +702,7 @@ public void setReworkProj(String reworkProj) {
     return labourCharge;
   }
 
-  public void setLabourCharge(String labourCharge) {
+  public void setLabourCharge( String labourCharge ) {
     this.labourCharge = labourCharge;
   }
 
@@ -771,7 +710,7 @@ public void setReworkProj(String reworkProj) {
     return defectTypeId;
   }
 
-  public void setDefectTypeId(int defectTypeId) {
+  public void setDefectTypeId( int defectTypeId ) {
     this.defectTypeId = defectTypeId;
   }
 
@@ -779,7 +718,7 @@ public void setReworkProj(String reworkProj) {
     return defectGroupId;
   }
 
-  public void setDefectGroupId(int defectGroupId) {
+  public void setDefectGroupId( int defectGroupId ) {
     this.defectGroupId = defectGroupId;
   }
 
@@ -787,7 +726,7 @@ public void setReworkProj(String reworkProj) {
     return defectId;
   }
 
-  public void setDefectId(int defectId) {
+  public void setDefectId( int defectId ) {
     this.defectId = defectId;
   }
 
@@ -795,7 +734,7 @@ public void setReworkProj(String reworkProj) {
     return defectPartGroupId;
   }
 
-  public void setDefectPartGroupId(int defectPartGroupId) {
+  public void setDefectPartGroupId( int defectPartGroupId ) {
     this.defectPartGroupId = defectPartGroupId;
   }
 
@@ -803,7 +742,7 @@ public void setReworkProj(String reworkProj) {
     return defectPartId;
   }
 
-  public void setDefectPartId(int defectPartId) {
+  public void setDefectPartId( int defectPartId ) {
     this.defectPartId = defectPartId;
   }
 
@@ -811,7 +750,7 @@ public void setReworkProj(String reworkProj) {
     return defectDetailReasonId;
   }
 
-  public void setDefectDetailReasonId(int defectDetailReasonId) {
+  public void setDefectDetailReasonId( int defectDetailReasonId ) {
     this.defectDetailReasonId = defectDetailReasonId;
   }
 
@@ -819,7 +758,7 @@ public void setReworkProj(String reworkProj) {
     return solutionReasonId;
   }
 
-  public void setSolutionReasonId(int solutionReasonId) {
+  public void setSolutionReasonId( int solutionReasonId ) {
     this.solutionReasonId = solutionReasonId;
   }
 
@@ -827,7 +766,7 @@ public void setReworkProj(String reworkProj) {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -835,7 +774,7 @@ public void setReworkProj(String reworkProj) {
     return ownerCode;
   }
 
-  public void setOwnerCode(String ownerCode) {
+  public void setOwnerCode( String ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -843,7 +782,7 @@ public void setReworkProj(String reworkProj) {
     return ownerCodeNm;
   }
 
-  public void setOwnerCodeNm(String ownerCodeNm) {
+  public void setOwnerCodeNm( String ownerCodeNm ) {
     this.ownerCodeNm = ownerCodeNm;
   }
 
@@ -851,7 +790,7 @@ public void setReworkProj(String reworkProj) {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -859,7 +798,7 @@ public void setReworkProj(String reworkProj) {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -867,7 +806,7 @@ public void setReworkProj(String reworkProj) {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -875,7 +814,7 @@ public void setReworkProj(String reworkProj) {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -883,7 +822,7 @@ public void setReworkProj(String reworkProj) {
     return rcCode;
   }
 
-  public void setRcCode(String rcCode) {
+  public void setRcCode( String rcCode ) {
     this.rcCode = rcCode;
   }
 
@@ -891,7 +830,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionCode;
   }
 
-  public void setMalfunctionCode(int malfunctionCode) {
+  public void setMalfunctionCode( int malfunctionCode ) {
     this.malfunctionCode = malfunctionCode;
   }
 
@@ -899,7 +838,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionName;
   }
 
-  public void setMalfunctionName(String malfunctionName) {
+  public void setMalfunctionName( String malfunctionName ) {
     this.malfunctionName = malfunctionName;
   }
 
@@ -907,7 +846,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionReasonCode;
   }
 
-  public void setMalfunctionReasonCode(int malfunctionReasonCode) {
+  public void setMalfunctionReasonCode( int malfunctionReasonCode ) {
     this.malfunctionReasonCode = malfunctionReasonCode;
   }
 
@@ -915,7 +854,7 @@ public void setReworkProj(String reworkProj) {
     return malfunctionReasonName;
   }
 
-  public void setMalfunctionReasonName(String malfunctionReasonName) {
+  public void setMalfunctionReasonName( String malfunctionReasonName ) {
     this.malfunctionReasonName = malfunctionReasonName;
   }
 
@@ -923,7 +862,7 @@ public void setReworkProj(String reworkProj) {
     return failReasonCode;
   }
 
-  public void setFailReasonCode(int failReasonCode) {
+  public void setFailReasonCode( int failReasonCode ) {
     this.failReasonCode = failReasonCode;
   }
 
@@ -931,7 +870,7 @@ public void setReworkProj(String reworkProj) {
     return failReasonName;
   }
 
-  public void setFailReasonName(String failReasonName) {
+  public void setFailReasonName( String failReasonName ) {
     this.failReasonName = failReasonName;
   }
 
@@ -939,7 +878,7 @@ public void setReworkProj(String reworkProj) {
     return settledBy;
   }
 
-  public void setSettledBy(String settledBy) {
+  public void setSettledBy( String settledBy ) {
     this.settledBy = settledBy;
   }
 
@@ -947,7 +886,7 @@ public void setReworkProj(String reworkProj) {
     return settledDate;
   }
 
-  public void setSettledDate(String settledDate) {
+  public void setSettledDate( String settledDate ) {
     this.settledDate = settledDate;
   }
 
@@ -955,7 +894,7 @@ public void setReworkProj(String reworkProj) {
     return settledTime;
   }
 
-  public void setSettledTime(String settledTime) {
+  public void setSettledTime( String settledTime ) {
     this.settledTime = settledTime;
   }
 
@@ -963,23 +902,39 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairRemark;
   }
 
-  public void setInHouseRepairRemark(String inHouseRepairRemark) {
+  public void setInHouseRepairRemark( String inHouseRepairRemark ) {
     this.inHouseRepairRemark = inHouseRepairRemark;
+  }
+
+  public String getInhouserepairreplacementyn() {
+    return inhouserepairreplacementyn;
+  }
+
+  public void setInhouserepairreplacementyn( String inhouserepairreplacementyn ) {
+    this.inhouserepairreplacementyn = inhouserepairreplacementyn;
   }
 
   public String getInHouseRepairPromisedDate() {
     return inHouseRepairPromisedDate;
   }
 
-  public void setInHouseRepairPromisedDate(String inHouseRepairPromisedDate) {
+  public void setInHouseRepairPromisedDate( String inHouseRepairPromisedDate ) {
     this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
+  }
+
+  public String getInhouserepairproductgroupcode() {
+    return inhouserepairproductgroupcode;
+  }
+
+  public void setInhouserepairproductgroupcode( String inhouserepairproductgroupcode ) {
+    this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
   }
 
   public String getInHouseRepairProductCode() {
     return inHouseRepairProductCode;
   }
 
-  public void setInHouseRepairProductCode(String inHouseRepairProductCode) {
+  public void setInHouseRepairProductCode( String inHouseRepairProductCode ) {
     this.inHouseRepairProductCode = inHouseRepairProductCode;
   }
 
@@ -987,15 +942,23 @@ public void setReworkProj(String reworkProj) {
     return inHouseRepairSerialNo;
   }
 
-  public void setInHouseRepairSerialNo(String inHouseRepairSerialNo) {
+  public void setInHouseRepairSerialNo( String inHouseRepairSerialNo ) {
     this.inHouseRepairSerialNo = inHouseRepairSerialNo;
+  }
+
+  public String getInhouserepairyn() {
+    return inhouserepairyn;
+  }
+
+  public void setInhouserepairyn( String inhouserepairyn ) {
+    this.inhouserepairyn = inhouserepairyn;
   }
 
   public int getRenCollectionId() {
     return renCollectionId;
   }
 
-  public void setRenCollectionId(int renCollectionId) {
+  public void setRenCollectionId( int renCollectionId ) {
     this.renCollectionId = renCollectionId;
   }
 
@@ -1003,7 +966,7 @@ public void setReworkProj(String reworkProj) {
     return lastPaymentDate;
   }
 
-  public void setLastPaymentDate(String lastPaymentDate) {
+  public void setLastPaymentDate( String lastPaymentDate ) {
     this.lastPaymentDate = lastPaymentDate;
   }
 
@@ -1011,7 +974,7 @@ public void setReworkProj(String reworkProj) {
     return asrNo;
   }
 
-  public void setAsrNo(String asrNo) {
+  public void setAsrNo( String asrNo ) {
     this.asrNo = asrNo;
   }
 
@@ -1019,7 +982,7 @@ public void setReworkProj(String reworkProj) {
     return filterAmount;
   }
 
-  public void setFilterAmount(int filterAmount) {
+  public void setFilterAmount( int filterAmount ) {
     this.filterAmount = filterAmount;
   }
 
@@ -1027,7 +990,7 @@ public void setReworkProj(String reworkProj) {
     return accessoriesAmount;
   }
 
-  public void setAccessoriesAmount(int accessoriesAmount) {
+  public void setAccessoriesAmount( int accessoriesAmount ) {
     this.accessoriesAmount = accessoriesAmount;
   }
 
@@ -1035,48 +998,112 @@ public void setReworkProj(String reworkProj) {
     return totalAmount;
   }
 
-  public void setTotalAmount(int totalAmount) {
+  public void setTotalAmount( int totalAmount ) {
     this.totalAmount = totalAmount;
   }
 
-  public String getInhouserepairreplacementyn() {
-    return inhouserepairreplacementyn;
+  public String getSerialChk() {
+    return serialChk;
   }
 
-  public void setInhouserepairreplacementyn(String inhouserepairreplacementyn) {
-    this.inhouserepairreplacementyn = inhouserepairreplacementyn;
+  public void setSerialChk( String serialChk ) {
+    this.serialChk = serialChk;
   }
 
-  public String getInhouserepairproductgroupcode() {
-    return inhouserepairproductgroupcode;
+  public String getPsi() {
+    return psi;
   }
 
-  public void setInhouserepairproductgroupcode(String inhouserepairproductgroupcode) {
-    this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
+  public void setPsi( String psi ) {
+    this.psi = psi;
   }
 
-  public String getInhouserepairyn() {
-    return inhouserepairyn;
+  public String getLpm() {
+    return lpm;
   }
 
-  public void setInhouserepairyn(String inhouserepairyn) {
-    this.inhouserepairyn = inhouserepairyn;
+  public void setLpm( String lpm ) {
+    this.lpm = lpm;
   }
 
-  public BigDecimal getLatitude(){
+  public int getProdcat() {
+    return prodcat;
+  }
+
+  public void setProdcat( int prodcat ) {
+    this.prodcat = prodcat;
+  }
+
+  public String getAsUnmatchReason() {
+    return asUnmatchReason;
+  }
+
+  public void setAsUnmatchReason( String asUnmatchReason ) {
+    this.asUnmatchReason = asUnmatchReason;
+  }
+
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude){
+  public void setLatitude( BigDecimal latitude ) {
     this.latitude = latitude;
   }
 
-  public BigDecimal getLongitude(){
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude){
-     this.longitude = longitude;
+  public void setLongitude( BigDecimal longitude ) {
+    this.longitude = longitude;
+  }
+
+  public String getReworkProj() {
+    return reworkProj;
+  }
+
+  public void setReworkProj( String reworkProj ) {
+    this.reworkProj = reworkProj;
+  }
+
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
+
+  public BigDecimal getNtu() {
+    return ntu;
+  }
+
+  public void setNtu( BigDecimal ntu ) {
+    this.ntu = ntu;
+  }
+
+  public String getInstAccs() {
+    return instAccs;
+  }
+
+  public void setInstAccs( String instAccs ) {
+    this.instAccs = instAccs;
+  }
+
+  public String getInstAccsVal() {
+    return instAccsVal;
+  }
+
+  public void setInstAccsVal( String instAccsVal ) {
+    this.instAccsVal = instAccsVal;
+  }
+
+  public String getSrvType() {
+    return srvType;
+  }
+
+  public void setSrvType( String srvType ) {
+    this.srvType = srvType;
   }
 
   public String getVoltage() {
@@ -1104,8 +1131,7 @@ public void setReworkProj(String reworkProj) {
   }
 
   @SuppressWarnings("unchecked")
-  public static AfterServiceJobDto create(EgovMap egovMap) {
-    return BeanConverter.toBean(egovMap, AfterServiceJobDto.class);
+  public static AfterServiceJobDto create( EgovMap egovMap ) {
+    return BeanConverter.toBean( egovMap, AfterServiceJobDto.class );
   }
-
 }
