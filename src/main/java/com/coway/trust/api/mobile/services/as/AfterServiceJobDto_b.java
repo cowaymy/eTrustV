@@ -2,7 +2,6 @@ package com.coway.trust.api.mobile.services.as;
 
 import java.math.BigDecimal;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -11,244 +10,263 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "AfterServiceJobDto_b", description = "공통코드 Dto")
 public class AfterServiceJobDto_b {
-  @ApiModelProperty(value = "주문번호")
+
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "AS NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "CUSTOMER NAME")
   private String custName;
 
-  @ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+  @ApiModelProperty(value = "AS / HS / INST / PR ")
   private String jobType;
 
-  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
+  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCEL ")
   private String jobStatus;
 
-  @ApiModelProperty(value = "작업 예정날짜")
+  @ApiModelProperty(value = "APPOINTMENT DATE")
   private String appointmentDate;
 
-  @ApiModelProperty(value = "작업 예정시간")
+  @ApiModelProperty(value = "APPOINTMENT TIME")
   private String appointmentTime;
 
-  @ApiModelProperty(value = "오전/오후/저녁(신규)")
+  @ApiModelProperty(value = "JOB SESSION")
   private String jobSession;
 
-  @ApiModelProperty(value = "체크인 날짜")
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
-  @ApiModelProperty(value = "체크인 시간")
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
-  @ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
-  @ApiModelProperty(value = "일반/법인 고객 구분")
+  @ApiModelProperty(value = "CUSTOMER TYPE")
   private String customerType;
 
-  @ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
+  @ApiModelProperty(value = "CUSTOMER ID")
   private String customerId;
 
-  @ApiModelProperty(value = "작업 영역(State)_170906 추가")
+  @ApiModelProperty(value = "SERVICE STATE")
   private String serviceState;
 
-  @ApiModelProperty(value = "작업예정일(년)_170908 추가")
+  @ApiModelProperty(value = "YEAR")
   private String planYear;
 
-  @ApiModelProperty(value = "작업예정일(월)_170908 추가")
+  @ApiModelProperty(value = "MONTH")
   private String planMonth;
 
-  @ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "GPS")
   private String customerGps;
 
-  @ApiModelProperty(value = "설치주소(Magic Address 체계?)")
+  @ApiModelProperty(value = "INSTALLATION ADDRESS")
   private String installAddress;
 
-  @ApiModelProperty(value = "우편번호")
+  @ApiModelProperty(value = "POSTCODE")
   private String postcode;
 
-  @ApiModelProperty(value = "핸드폰 번호")
+  @ApiModelProperty(value = "MOBILE NO")
   private String handphoneTel;
 
-  @ApiModelProperty(value = "집전화 번호")
+  @ApiModelProperty(value = "RESIDENT CONTACT NO")
   private String homeTel;
 
-  @ApiModelProperty(value = "회사 번호")
+  @ApiModelProperty(value = "OFFICE CONTACT NO")
   private String officeTel;
 
-  @ApiModelProperty(value = "메일 주소")
+  @ApiModelProperty(value = "EMAIL ADDRESS")
   private String mailAddress;
 
-  @ApiModelProperty(value = "고객 VA 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER VA NO")
   private String customerVaNo;
 
-  @ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+  @ApiModelProperty(value = "JOM PAY REFERENCE NO")
   private String customerJomPayRefNo;
 
-  @ApiModelProperty(value = "제품 사진 url")
+  @ApiModelProperty(value = "IMAGE URL")
   private String imageUrl;
 
-  @ApiModelProperty(value = "제품명")
+  @ApiModelProperty(value = "PRODUCT NAME")
   private String productName;
 
-  @ApiModelProperty(value = "제품코드")
+  @ApiModelProperty(value = "PRODUCT CODE")
   private String productCode;
 
-  @ApiModelProperty(value = "application Type (Rental…)")
+  @ApiModelProperty(value = "APPLICATION TYPE")
   private String appType;
 
+  @ApiModelProperty(value = "REMARK")
   private String instruction;
 
+  @ApiModelProperty(value = "SALES PROMOTION")
   private String salesPromotion;
 
+  @ApiModelProperty(value = "REQUESTOR")
   private String requestor;
 
+  @ApiModelProperty(value = "REQUEST CONTACT")
   private String requestorContact;
 
+  @ApiModelProperty(value = "ORDER CONTRACT DURATION")
   private String contractDuration;
 
+  @ApiModelProperty(value = "ORDER MONTLY RENTAL FEES")
   private String monthlyRentalFees;
 
+  @ApiModelProperty(value = "ORDER REGISTRATION FEES")
   private String registrationFees;
 
-  @ApiModelProperty(value = "결제 방식 - Code")
+  @ApiModelProperty(value = "PAYMENT MODE")
   private String paymentMode;
 
-  @ApiModelProperty(value = "결제 은행")
+  @ApiModelProperty(value = "BANK CODE")
   private String bankCode;
 
-  @ApiModelProperty(value = "결제 은행명")
+  @ApiModelProperty(value = "BANK NAME")
   private String bankName;
 
-  @ApiModelProperty(value = "결제 정보")
+  @ApiModelProperty(value = "CARD ACCOUNT NO")
   private String cardAccountNo;
 
-  @ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
+  @ApiModelProperty(value = "OUTSTANDING")
   private String outstanding;
 
-  @ApiModelProperty(value = "sirim 코드")
+  @ApiModelProperty(value = "SIRIM")
   private String sirimNo;
 
-  @ApiModelProperty(value = "serial 코드")
+  @ApiModelProperty(value = "SERIAL")
   private String serialNo;
 
-  @ApiModelProperty(value = "WARRANTY ")
+  @ApiModelProperty(value = "WARRANTY")
   private String warranty;
 
-  @ApiModelProperty(value = "멤버십 만료 기간")
+  @ApiModelProperty(value = "MEMBERSHIP CONTRACT EXPIRY")
   private String MembershipContractExpiry;
 
-  @ApiModelProperty(value = "렌탈 현황")
+  @ApiModelProperty(value = "RENTAL STATUS")
   private String rentalStatus;
 
+  @ApiModelProperty(value = "DSC CODE")
   private String dscCode;
 
-  @ApiModelProperty(value = "설치일자 (YYYYMMDD)")
+  @ApiModelProperty(value = "INSTALLATION DATE")
   private String installationDate;
 
-  @ApiModelProperty(value = "labour Charge 금액 (작업결과보기시 필요)")
+  @ApiModelProperty(value = "LABOUR CHARGE")
   private String labourCharge;
 
+  @ApiModelProperty(value = "DEFECT TYPE ID")
   private String defectTypeId;
 
+  @ApiModelProperty(value = "DEFECT GROUP ID")
   private String defectGroupId;
 
+  @ApiModelProperty(value = "DEFECT ID")
   private String defectId;
 
+  @ApiModelProperty(value = "DEFECT PART GROUP ID")
   private String defectPartGroupId;
 
+  @ApiModelProperty(value = "DEFECT PART ID")
   private String defectPartId;
 
+  @ApiModelProperty(value = "DEFECT DETAIL REASON ID")
   private String defectDetailReasonId;
 
+  @ApiModelProperty(value = "SOLUTION REASON ID")
   private String solutionReasonId;
 
+  @ApiModelProperty(value = "RESULT REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+  @ApiModelProperty(value = "OWNER CODE")
   private String ownerCode;
 
-  @ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+  @ApiModelProperty(value = "OWNER CODE NAME")
   private String ownerCodeNm;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "nric 번호")
+  @ApiModelProperty(value = "RESULT MOBILE NO")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "고객메일주소")
+  @ApiModelProperty(value = "RESULT EMAIL")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "신규 요건(default : 고객명)")
+  @ApiModelProperty(value = "RESULT ACCEPTANCE NAME")
   private String resultAcceptanceName;
 
+  @ApiModelProperty(value = "RC CODE")
   private String rcCode;
 
-  @ApiModelProperty(value = "결함코드")
+  @ApiModelProperty(value = "MALFUNCTION CODE")
   private String malfunctionCode;
 
-  @ApiModelProperty(value = "결함코드명")
+  @ApiModelProperty(value = "MALFUNCTION NAME")
   private String malfunctionName;
 
-  @ApiModelProperty(value = "결함 사유 코드")
+  @ApiModelProperty(value = "MALFUNCTION REASON CODE")
   private String malfunctionReasonCode;
 
-  @ApiModelProperty(value = "결함 사유명")
+  @ApiModelProperty(value = "MALFUNCTION REASON NAME")
   private String malfunctionReasonName;
 
-  @ApiModelProperty(value = "실패 사유 코드")
+  @ApiModelProperty(value = "FAIL REASON CODE")
   private String failReasonCode;
 
-  @ApiModelProperty(value = "실패 사유명")
+  @ApiModelProperty(value = "FAIL REASON NAME")
   private String failReasonName;
 
-  @ApiModelProperty(value = "설치자")
+  @ApiModelProperty(value = "SETTLED BY")
   private String settledBy;
 
-  @ApiModelProperty(value = "설치날짜")
+  @ApiModelProperty(value = "SETTLED DATE")
   private String settledDate;
 
-  @ApiModelProperty(value = "설치시간")
+  @ApiModelProperty(value = "SETTLED TIME")
   private String settledTime;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Remark_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR REMARK")
   private String inHouseRepairRemark;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Replacement 여부_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR REPLACEMENT INDICATOR")
   private String inhouserepairreplacementyn;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 약속일자_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PROMISED DATE")
   private String inHouseRepairPromisedDate;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품대그룹 코드_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT GROUP CODE")
   private String inhouserepairproductgroupcode;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품코드_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR PRODUCT CODE")
   private String inHouseRepairProductCode;
 
-  @ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품 SN_170906 추가")
+  @ApiModelProperty(value = "IN HOUSE REPAIR SERIAL NO")
   private String inHouseRepairSerialNo;
 
-  @ApiModelProperty(value = "inHouseRepair 대상 여부(작업처리시, 대상이 Y 이면, 보여주기만하고 Complete)")
+  @ApiModelProperty(value = "IN HOUSE REPAIR INDICATOR")
   private String inhouserepairyn;
 
+  @ApiModelProperty(value = "RENTAL COLLECTION TARGET ID")
   private String renCollectionId;
 
-  @ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
+  @ApiModelProperty(value = "LAST PAYMENT DATE")
   private String lastPaymentDate;
 
-  @ApiModelProperty(value = "asr no")
+  @ApiModelProperty(value = "AS RESULT NO")
   private String asrNo;
 
-  @ApiModelProperty(value = "필터서비스 금액")
+  @ApiModelProperty(value = "FILTER AMOUNT")
   private String filterAmount;
 
-  @ApiModelProperty(value = "부가서비스 금액")
+  @ApiModelProperty(value = "ACCESSORIES AMOUNT")
   private String accessoriesAmount;
 
-  @ApiModelProperty(value = "서비스 총 금액")
+  @ApiModelProperty(value = "TOTAL AMOUNT")
   private String totalAmount;
 
   @ApiModelProperty(value = "PSI")
@@ -257,114 +275,44 @@ public class AfterServiceJobDto_b {
   @ApiModelProperty(value = "LPM")
   private String lpm;
 
-  @ApiModelProperty(value = "PRODCAT")
+  @ApiModelProperty(value = "PRODUCT CATEGORY")
   private int prodcat;
 
-  @ApiModelProperty(value = "AS_UNMATCH_REASON")
+  @ApiModelProperty(value = "AS UNMATCH REASON")
   private String asUnmatchReason;
 
+  @ApiModelProperty(value = "LATITUDE")
   private BigDecimal latitude;
 
+  @ApiModelProperty(value = "LONGTIDE")
   private BigDecimal longitude;
 
-  @ApiModelProperty(value = "REWORK_PROJ")
+  @ApiModelProperty(value = "REWORK PROJECT")
   private String reworkProj;
 
+  @ApiModelProperty(value = "WATER SOURCE TYPE")
   private String waterSrcType;
 
+  @ApiModelProperty(value = "NTU")
   private int ntu;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSORIES")
   private String instAccs;
 
+  @ApiModelProperty(value = "INSTALLATION ACCESSORIES VALUE")
   private String instAccsVal;
 
+  @ApiModelProperty(value = "SERVICE TYPE")
   private String srvType;
 
+  @ApiModelProperty(value = "VOLTAGE")
   private String voltage;
 
+  @ApiModelProperty(value = "PARTNER CODE")
   private String partnerCode;
 
+  @ApiModelProperty(value = "PARTNER CODE NAME")
   private String partnerCodeName;
-
-  public String getSrvType() {
-    return srvType;
-  }
-
-  public void setSrvType( String srvType ) {
-    this.srvType = srvType;
-  }
-
-  public int getNtu() {
-    return ntu;
-  }
-
-  public String getInstAccs() {
-    return instAccs;
-  }
-
-  public String getInstAccsVal() {
-    return instAccsVal;
-  }
-
-  public void setNtu( int ntu ) {
-    this.ntu = ntu;
-  }
-
-  public void setInstAccs( String instAccs ) {
-    this.instAccs = instAccs;
-  }
-
-  public void setInstAccsVal( String instAccsVal ) {
-    this.instAccsVal = instAccsVal;
-  }
-
-  public String getWaterSrcType() {
-    return waterSrcType;
-  }
-
-  public void setWaterSrcType( String waterSrcType ) {
-    this.waterSrcType = waterSrcType;
-  }
-
-  public String getReworkProj() {
-    return reworkProj;
-  }
-
-  public void setReworkProj( String reworkProj ) {
-    this.reworkProj = reworkProj;
-  }
-
-  public String getAsUnmatchReason() {
-    return asUnmatchReason;
-  }
-
-  public void setAsUnmatchReason( String asUnmatchReason ) {
-    this.asUnmatchReason = asUnmatchReason;
-  }
-
-  public String getPsi() {
-    return psi;
-  }
-
-  public void setPsi( String psi ) {
-    this.psi = psi;
-  }
-
-  public String getLpm() {
-    return lpm;
-  }
-
-  public void setLpm( String lpm ) {
-    this.lpm = lpm;
-  }
-
-  public int getProdcat() {
-    return prodcat;
-  }
-
-  public void setProdcat( int prodcat ) {
-    this.prodcat = prodcat;
-  }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
@@ -958,12 +906,28 @@ public class AfterServiceJobDto_b {
     this.inHouseRepairRemark = inHouseRepairRemark;
   }
 
+  public String getInhouserepairreplacementyn() {
+    return inhouserepairreplacementyn;
+  }
+
+  public void setInhouserepairreplacementyn( String inhouserepairreplacementyn ) {
+    this.inhouserepairreplacementyn = inhouserepairreplacementyn;
+  }
+
   public String getInHouseRepairPromisedDate() {
     return inHouseRepairPromisedDate;
   }
 
   public void setInHouseRepairPromisedDate( String inHouseRepairPromisedDate ) {
     this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
+  }
+
+  public String getInhouserepairproductgroupcode() {
+    return inhouserepairproductgroupcode;
+  }
+
+  public void setInhouserepairproductgroupcode( String inhouserepairproductgroupcode ) {
+    this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
   }
 
   public String getInHouseRepairProductCode() {
@@ -980,6 +944,14 @@ public class AfterServiceJobDto_b {
 
   public void setInHouseRepairSerialNo( String inHouseRepairSerialNo ) {
     this.inHouseRepairSerialNo = inHouseRepairSerialNo;
+  }
+
+  public String getInhouserepairyn() {
+    return inhouserepairyn;
+  }
+
+  public void setInhouserepairyn( String inhouserepairyn ) {
+    this.inhouserepairyn = inhouserepairyn;
   }
 
   public String getRenCollectionId() {
@@ -1030,28 +1002,36 @@ public class AfterServiceJobDto_b {
     this.totalAmount = totalAmount;
   }
 
-  public String getInhouserepairreplacementyn() {
-    return inhouserepairreplacementyn;
+  public String getPsi() {
+    return psi;
   }
 
-  public void setInhouserepairreplacementyn( String inhouserepairreplacementyn ) {
-    this.inhouserepairreplacementyn = inhouserepairreplacementyn;
+  public void setPsi( String psi ) {
+    this.psi = psi;
   }
 
-  public String getInhouserepairproductgroupcode() {
-    return inhouserepairproductgroupcode;
+  public String getLpm() {
+    return lpm;
   }
 
-  public void setInhouserepairproductgroupcode( String inhouserepairproductgroupcode ) {
-    this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
+  public void setLpm( String lpm ) {
+    this.lpm = lpm;
   }
 
-  public String getInhouserepairyn() {
-    return inhouserepairyn;
+  public int getProdcat() {
+    return prodcat;
   }
 
-  public void setInhouserepairyn( String inhouserepairyn ) {
-    this.inhouserepairyn = inhouserepairyn;
+  public void setProdcat( int prodcat ) {
+    this.prodcat = prodcat;
+  }
+
+  public String getAsUnmatchReason() {
+    return asUnmatchReason;
+  }
+
+  public void setAsUnmatchReason( String asUnmatchReason ) {
+    this.asUnmatchReason = asUnmatchReason;
   }
 
   public BigDecimal getLatitude() {
@@ -1068,6 +1048,54 @@ public class AfterServiceJobDto_b {
 
   public void setLongitude( BigDecimal longitude ) {
     this.longitude = longitude;
+  }
+
+  public String getReworkProj() {
+    return reworkProj;
+  }
+
+  public void setReworkProj( String reworkProj ) {
+    this.reworkProj = reworkProj;
+  }
+
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
+
+  public int getNtu() {
+    return ntu;
+  }
+
+  public void setNtu( int ntu ) {
+    this.ntu = ntu;
+  }
+
+  public String getInstAccs() {
+    return instAccs;
+  }
+
+  public void setInstAccs( String instAccs ) {
+    this.instAccs = instAccs;
+  }
+
+  public String getInstAccsVal() {
+    return instAccsVal;
+  }
+
+  public void setInstAccsVal( String instAccsVal ) {
+    this.instAccsVal = instAccsVal;
+  }
+
+  public String getSrvType() {
+    return srvType;
+  }
+
+  public void setSrvType( String srvType ) {
+    this.srvType = srvType;
   }
 
   public String getVoltage() {
