@@ -534,6 +534,7 @@ public class HcTrialRentalServiceImpl extends EgovAbstractServiceImpl implements
 		  }
 	  }
 	  catch(Exception ex){
+		  logger.debug("convertTrialRental: " + ex.getMessage());
 		  throw new ApplicationException(AppConstants.FAIL, "Failed to convert order.");
 	  }
   }
