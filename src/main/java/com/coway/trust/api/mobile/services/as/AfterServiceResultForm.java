@@ -130,6 +130,8 @@ public class AfterServiceResultForm {
 
   private String checkInGps;
 
+  private String voltage;
+
   public String getType() {
     return type;
   }
@@ -470,6 +472,14 @@ public class AfterServiceResultForm {
 
   public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
+  }
+
+  public String getVoltage() {
+    return voltage;
+  }
+
+  public void setVoltage( String voltage ) {
+    this.voltage = voltage;
   }
 
   public String getSignData() {
