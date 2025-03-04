@@ -1093,7 +1093,7 @@
         <update id="updateCallLogAppointmentSentStatus" parameterType="Map">
         	UPDATE CBT0007M SET STUS_CODE_ID = #{stusCodeId}
 			<if test='waRemarks != null and waRemarks !=""'>
-				,WA_REMARKS = #{waRemarks}
+				,REMARKS = #{waRemarks}
 			</if>
         	WHERE CALL_ENTRY_ID = #{callEntryId}
         </update>
