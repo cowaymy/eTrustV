@@ -27,16 +27,9 @@ import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.util.CommonUtils;
-import com.ibm.icu.text.DecimalFormat;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-/**
- * @ClassName : ServiceApiASDetailServiceImpl.java
- * @Description : MOBILE AFTER SERVICE DATA SAVE
- * @History : ONGHC (03/03/2025) - INITIAL BASE
- */
 @Service("serviceApiASDetailService")
 public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiASDetailService {
   private static final Logger logger = LoggerFactory.getLogger( ServiceApiASDetailServiceImpl.class );
@@ -75,6 +68,8 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     transactionId = CommonUtils.nvl( insApiresult.get( "transactionId" ) );
     serviceNo = CommonUtils.nvl( insApiresult.get( "serviceNo" ) );
     rtnResultMap.put( "result", serviceNo );
+
+    logger.debug( "==================================[MB]AFTER SERVICE RESULT - START - ====================================" );
 
     try {
       // SVC0001D CHECK IF MEM_CODE AND MEM_CODE ARE THE SAME
@@ -392,6 +387,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     return ResponseEntity.ok( ASFailJobRequestDto.create( serviceNo ) );
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public ResponseEntity<AfterServiceResultDto> asDtResultProc( Map<String, Object> insApiresult ) throws Exception {
     String transactionId = "";
@@ -414,6 +410,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
     transactionId = String.valueOf( insApiresult.get( "transactionId" ) );
     serviceNo = String.valueOf( insApiresult.get( "serviceNo" ) );
 
+    logger.debug( "==================================[MB] HOMECARE AFTER SERVICE RESULT - START - ====================================" );
     // SVC0001D CHECK IF MEM_CODE AND MEM_CODE ARE THE SAME
     int asResultMemId = ASManagementListService.asResultSync( insApiresult );
     if ( asResultMemId > 0 ) {
@@ -423,7 +420,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
       if ( isAsCnt == 0 ) {
         String userId = MSvcLogApiService.getUseridToMemid( insApiresult ); // SELECT MEM_ID FROM ORG0001D WHERE mem_code = #{userId}
 
-        @SuppressWarnings("unchecked")
         List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps( (List<AfterServiceResultDetailForm>) insApiresult.get( "partList" ) );
 
         logger.debug( "### AS PART INFO : " + paramsDetail.toString() );
@@ -443,7 +439,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
             logger.debug( "LOC. INFO. : {}" + locInfo );
             if ( locInfo != null ) {
               if ( Integer.parseInt( locInfo.get( "availQty" ).toString() ) < 1 ) {
-                Map<String, Object> m = new HashMap();
+                Map<String, Object> m = new HashMap<String, Object>();
                 m.put( "APP_TYPE", "AS" );
                 m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
                 m.put( "ERR_CODE", "03" );
@@ -459,7 +455,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
               }
             }
             else {
-              Map<String, Object> m = new HashMap();
+              Map<String, Object> m = new HashMap<String, Object>();
               m.put( "APP_TYPE", "AS" );
               m.put( "SVC_NO", insApiresult.get( "serviceNo" ) );
               m.put( "ERR_CODE", "03" );
@@ -883,7 +879,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         // INST. ACCS LIST END
 
         logger.debug( "### AS PARAM [AFTER]: ", params );
-        Map<String, Object> asResultInsert = new HashMap();
+        Map<String, Object> asResultInsert = new HashMap<String, Object>();
         asResultInsert.put( "asResultM", params );
         asResultInsert.put( "updator", getAsBasic.get( "updUsrId" ) );
         asResultInsert.put( "add", paramsDetailCvt ); // FILTER LIST
@@ -894,7 +890,6 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
         try {
           EgovMap rtnValue = ASManagementListService.asResult_insert( asResultInsert );
           if ( null != rtnValue ) {
-            @SuppressWarnings("unchecked")
             HashMap<String, Object> spMap = (HashMap<String, Object>) rtnValue.get( "spMap" );
             logger.debug( "spMap :" + spMap.toString() );
             if ( !"000".equals( spMap.get( "P_RESULT_MSG" ) ) ) {
@@ -959,7 +954,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
       String errorMsg = "[API] [" + insApiresult.get( "userId" ) + "] IT IS NOT ASSIGNED CODY CODE.";
       throw new BizException( "01", procTransactionId, procName, procKey, procMsg, errorMsg, null );
     }
-    logger.debug( "==================================[MB]AFTER SERVICE RESULT - END - ====================================" );
+    logger.debug( "==================================[MB] HOMECARE AFTER SERVICE RESULT - END - ====================================" );
     return ResponseEntity.ok( AfterServiceResultDto.create( transactionId ) );
   }
 }
