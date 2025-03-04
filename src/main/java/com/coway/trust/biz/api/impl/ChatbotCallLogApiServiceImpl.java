@@ -19,6 +19,7 @@ import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentReqForm;
 import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentRespDto;
 import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentRespDto.CallLogAppointmentDate;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.homecare.HomecareConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -312,6 +313,12 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 				//Check Stock Availability before proceed
  				orderParam.put("productCode", CommonUtils.nvl(orderInfo.get("stkCode")));
 				orderParam.put("itmStkId", CommonUtils.nvl(orderInfo.get("itmStkId")));
+
+				if(CommonUtils.nvl(orderInfo.get("hcIndicator")).equals("Y")){
+					orderParam.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
+					orderParam.put("productCat", CommonUtils.nvl(orderInfo.get("stockCatCode")));
+				}
+
 				EgovMap rdcStock = chatbotCallLogApiMapper.selectRdcStock(orderParam);
 				if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
 //					EgovMap updateParam = new EgovMap();
