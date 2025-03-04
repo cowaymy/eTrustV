@@ -8,135 +8,133 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "InstallationJobDto", description = "공통코드 Dto")
 public class InstallationJobDto {
-
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "INSTALLATION NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "CUSTOMER NAME")
   private String custName;
 
-  @ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+  @ApiModelProperty(value = "AS / HS / INST / PR")
   private String jobType;
 
-  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
+  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCEL")
   private int jobStatus;
 
-  @ApiModelProperty(value = "작업 예정날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "APPOINTMENT DATE")
   private String appointmentDate;
 
+  @ApiModelProperty(value = "APPOINTMENT TIME")
   private String appointmentTime;
 
-  @ApiModelProperty(value = "오전/오후/저녁")
+  @ApiModelProperty(value = "JOB SESSION")
   private String jobSession;
 
-  @ApiModelProperty(value = "체크인 날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
-  @ApiModelProperty(value = "체크인 시간(HHMM)")
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
-  @ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
-  @ApiModelProperty(value = "일반/법인 고객 구분")
+  @ApiModelProperty(value = "CUSTOMER TYPE")
   private String customerType;
 
-  @ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
+  @ApiModelProperty(value = "CUSTOMER ID")
   private int customerId;
 
-  @ApiModelProperty(value = "작업 영역(State)_170906 추가")
+  @ApiModelProperty(value = "SERVICE STATE")
   private String serviceState;
 
-  @ApiModelProperty(value = "작업예정일(년)_170908 추가")
+  @ApiModelProperty(value = "YEAR")
   private int planYear;
 
-  @ApiModelProperty(value = "작업예정일(월)_170908 추가")
+  @ApiModelProperty(value = "MONTH")
   private int planMonth;
 
-  @ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "GPS")
   private String customerGps;
 
-  @ApiModelProperty(value = "설치주소(Magic Address 체계?)")
+  @ApiModelProperty(value = "INSTALLATION ADDRESS")
   private String installAddress;
 
-  @ApiModelProperty(value = "우편번호")
+  @ApiModelProperty(value = "POSTCODE")
   private String postcode;
 
-  @ApiModelProperty(value = "핸드폰 번호")
+  @ApiModelProperty(value = "MOBILE NO")
   private String handphoneTel;
 
-  @ApiModelProperty(value = "집전화 번호")
+  @ApiModelProperty(value = "RESIDENT CONTACT NO")
   private String homeTel;
 
-  @ApiModelProperty(value = "회사 번호")
+  @ApiModelProperty(value = "OFFICE CONTACT NO")
   private String officeTel;
 
-  @ApiModelProperty(value = "메일 주소")
+  @ApiModelProperty(value = "MAILLING ADDRESS")
   private String mailAddress;
 
-  @ApiModelProperty(value = "고객 VA 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER VA NO")
   private String customerVaNo;
 
-  @ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER JOM PAY REFERENCE NO")
   private String customerJomPayRefNo;
 
-  @ApiModelProperty(value = "제품 사진 url")
+  @ApiModelProperty(value = "IMAGE URL")
   private String imageUrl;
 
-  @ApiModelProperty(value = "제품명")
+  @ApiModelProperty(value = "PRODUCT NAME")
   private String productName;
 
-  @ApiModelProperty(value = "제품코드")
+  @ApiModelProperty(value = "PRODUCT CODE")
   private String productCode;
 
-  @ApiModelProperty(value = "application Type (Rental…)")
+  @ApiModelProperty(value = "APPLICATION TYPE")
   private String appType;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "REMARK")
   private String instruction;
 
-  /* Woongjin Jun */
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "SALES PROMOTION")
   private String salesPromotion;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "CONTRACT DURATION")
   private int contractDuration;
 
-  @ApiModelProperty(value = "")
-  /* KV - private int monthlyRentalFees ; */
+  @ApiModelProperty(value = "ORDER MONTHLY RENTAL FEES")
   private String monthlyRentalFees;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "ORDER REGISRATION FEES")
   private int registrationFees;
 
-  @ApiModelProperty(value = "결제 방식")
+  @ApiModelProperty(value = "PAYMENT MODE")
   private String paymentMode;
 
-  @ApiModelProperty(value = "결제 은행")
+  @ApiModelProperty(value = "BANK CODE")
   private int bankCode;
 
-  @ApiModelProperty(value = "결제 은행명")
+  @ApiModelProperty(value = "BANK NAME")
   private String bankName;
 
-  @ApiModelProperty(value = "결제 정보")
+  @ApiModelProperty(value = "CARD ACCOUNT NO")
   private String cardAccountNo;
 
-  @ApiModelProperty(value = "outstanding 정보")
+  @ApiModelProperty(value = "OUTSTANDING")
   private String outstanding;
 
-  @ApiModelProperty(value = "유효기간 만료일 - YYYYMMDD")
+  @ApiModelProperty(value = "EXPIRY DATE")
   private String expiryDate;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DSC CODE")
   private String dscCode;
 
-  @ApiModelProperty(value = "sirim 코드")
+  @ApiModelProperty(value = "PRODUCT SIRIM")
   private String sirimNo;
 
-  @ApiModelProperty(value = "serial 코드")
+  @ApiModelProperty(value = "PRODUCT SERIAL")
   private String serialNo;
 
   @ApiModelProperty(value = "HP NAME")
@@ -157,379 +155,203 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "HM TEL NUMBER")
   private String hmTel;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "BILL AMOUNT")
   private String billAmount;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "PAID AMOUNT")
   private String paidAmount;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "ADJUSTMENT AMOUNT")
   private String adjustmentAmount;
 
-  @ApiModelProperty(value = "설치시 등록한 이미지 정보_1")
+  @ApiModelProperty(value = "FILE IMAGE URL 1")
   private String fileImg1Url;
 
-  @ApiModelProperty(value = "설치시 등록한 이미지 정보_2")
+  @ApiModelProperty(value = "FILE IMAGE URL 2")
   private String fileImg2Url;
 
-  @ApiModelProperty(value = "설치시 등록한 이미지 정보_3")
+  @ApiModelProperty(value = "FILE IMAGE URL 3")
   private String fileImg3Url;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "RESULT REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+  @ApiModelProperty(value = "OWNER CODE")
   private String ownerCode;
 
-  @ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+  @ApiModelProperty(value = "OWNER CODE NAME")
   private String ownerCodeNm;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "REUSLT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "nric 번호")
+  @ApiModelProperty(value = "RESULT MOBILE NO")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "고객메일주소")
+  @ApiModelProperty(value = "RESULT EMAIL ADDRESS")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "신규 요건(default : 고객명)")
+  @ApiModelProperty(value = "RESULT ACCEPTANCE NAME")
   private String resultAcceptanceName;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "RC CODE")
   private int rcCode;
 
-  @ApiModelProperty(value = "실패 사유 코드")
+  @ApiModelProperty(value = "FAIL REASON CODE")
   private int failReasonCode;
 
-  @ApiModelProperty(value = "실패 사유명")
+  @ApiModelProperty(value = "FAIL REASON NAME")
   private String failReasonName;
 
-  @ApiModelProperty(value = "설치자")
+  @ApiModelProperty(value = "SETTLED BY")
   private String settledBy;
 
-  @ApiModelProperty(value = "설치날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "SETTLED DATE")
   private String settledDate;
 
-  @ApiModelProperty(value = "설치시간(HHMM)")
+  @ApiModelProperty(value = "SETTLED TIME")
   private String settledTime;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "LAST PAYMENT DATE")
   private String lastPaymentDate;
 
-  @ApiModelProperty(value = "YYYYMMDD")
+  @ApiModelProperty(value = "NEXT CALL LOG DATE")
   private String nextCallDate;
 
-  @ApiModelProperty(value = "HHMM")
+  @ApiModelProperty(value = "NEXT CALL LOG TIME")
   private String nextCallTime;
 
-  @ApiModelProperty(value = "Product Exchange 대상 여부")
+  @ApiModelProperty(value = "AS EXCHANGE INDICATOR")
   private String asExchangeYN;
 
-  @ApiModelProperty(value = "Product Exchange 대상일 경우, 교체대상 제품코드")
+  @ApiModelProperty(value = "BEFORE PRODUCT CODE")
   private String beforeProductCode;
 
-  @ApiModelProperty(value = "Product Exchange 대상일 경우, 교체대상 제품 SN")
+  @ApiModelProperty(value = "BEFORE PRODUCT SERIAL NO")
   private String beforeProductSerialNo;
 
-  @ApiModelProperty(value = "fraYn")
+  @ApiModelProperty(value = "IS FRAME INDICATOR")
   private String fraYn;
 
-  @ApiModelProperty(value = "fraOrdNo")
+  @ApiModelProperty(value = "FRAME ORDER NO")
   private String fraOrdNo;
 
-  @ApiModelProperty(value = "fraProductCode")
+  @ApiModelProperty(value = "FRAME PRODUCT CODE")
   private String fraProductCode;
 
-  @ApiModelProperty(value = "fraProductName")
+  @ApiModelProperty(value = "FRAME PRODUCT NAME")
   private String fraProductName;
 
-  @ApiModelProperty(value = "psi")
+  @ApiModelProperty(value = "PSI")
   private String psi;
 
-  @ApiModelProperty(value = "lpm")
+  @ApiModelProperty(value = "LPM")
   private String lpm;
 
-  @ApiModelProperty(value = "PRODCAT")
+  @ApiModelProperty(value = "PRODUCT CATEGORY")
   private String prodcat;
 
+  @ApiModelProperty(value = "WATER SOURCE TYPE")
   private String waterSrcType;
 
+  @ApiModelProperty(value = "SERIAL CHEKC INDICATOR")
   private String serialChk;
 
+  @ApiModelProperty(value = "SALES PROMOTION CODE")
   private String salesPromotionCde;
 
+  @ApiModelProperty(value = "VOLTAGE")
   private String voltage;
 
+  @ApiModelProperty(value = "TDS")
   private String tds;
 
+  @ApiModelProperty(value = "ROOM TEMP.")
   private String roomTemp;
 
+  @ApiModelProperty(value = "WATER SOURCE TEMP.")
   private String waterSrcTemp;
 
+  @ApiModelProperty(value = "USED ADAPTOR")
   private String adptUsed;
 
+  @ApiModelProperty(value = "INSTALLATION CHECK LIST")
   private String instChkLst;
 
+  @ApiModelProperty(value = "INSTALLATION AGREEMENT CHECK LIST")
   private String instNoteChk;
 
+  @ApiModelProperty(value = "BOOSTER PUMP")
   private String boosterPump;
 
+  @ApiModelProperty(value = "AFTER PSI")
   private String aftPsi;
 
+  @ApiModelProperty(value = "AFTER LPM")
   private String aftLpm;
 
+  @ApiModelProperty(value = "TURBITY LEVEL")
   private String turbLvl;
 
+  @ApiModelProperty(value = "CHECK SMS INDICAOTR")
   private String chkSms;
 
+  @ApiModelProperty(value = "SEND INDICATOR")
   private String checkSend;
 
+  @ApiModelProperty(value = "CUSTOMER MOBILE NO")
   private String custMobileNo;
 
+  @ApiModelProperty(value = "LATITUDE")
   private BigDecimal latitude;
 
+  @ApiModelProperty(value = "LONGTIDU")
   private BigDecimal longitude;
 
+  @ApiModelProperty(value = "NTU")
   private BigDecimal ntu;
 
+  @ApiModelProperty(value = "IS JOM TUKAR INDICATOR")
   private String isJomTukar;
 
+  @ApiModelProperty(value = "IS COMPETITOR PRODUCT INDICATOR")
   private String isComptProd;
 
+  @ApiModelProperty(value = "COMPETITOR BRAND")
   private String comptBrnd;
 
+  @ApiModelProperty(value = "SERVICE TYPE")
   private String srvTyp;
 
+  @ApiModelProperty(value = "PARTNER CODE")
   private String partnerCode;
 
+  @ApiModelProperty(value = "PARTNER NAME")
   private String partnerCodeName;
 
-  public BigDecimal getNtu() {
-	return ntu;
-}
-
-public void setNtu(BigDecimal ntu) {
-	this.ntu = ntu;
-}
-
-public String getCustMobileNo() {
-	return custMobileNo;
-  }
-
-  public void setCustMobileNo(String custMobileNo) {
-	this.custMobileNo = custMobileNo;
-  }
-
-  public String getCheckSend() {
-	return checkSend;
-  }
-
-  public void setCheckSend(String checkSend) {
-	this.checkSend = checkSend;
-  }
-
-  String getChkSms() {
-	return chkSms;
-  }
-
-  public void setChkSms(String chkSms) {
-	this.chkSms = chkSms;
-  }
-
-  public String getTurbLvl() {
-	return turbLvl;
-}
-
-public void setTurbLvl(String turbLvl) {
-	this.turbLvl = turbLvl;
-}
-
-public String getWaterSrcType() {
-    return waterSrcType;
-  }
-
-  public void setWaterSrcType(String waterSrcType) {
-    this.waterSrcType = waterSrcType;
-  }
-
-public String getBoosterPump() {
-	return boosterPump;
-}
-
-public void setBoosterPump(String boosterPump) {
-	this.boosterPump = boosterPump;
-}
-
-public String getAftPsi() {
-	return aftPsi;
-}
-
-public void setAftPsi(String aftPsi) {
-	this.aftPsi = aftPsi;
-}
-
-public String getAftLpm() {
-	return aftLpm;
-}
-
-public void setAftLpm(String aftLpm) {
-	this.aftLpm = aftLpm;
-}
-
-public String getVoltage() {
-    return voltage;
-  }
-
-  public void setVoltage(String voltage) {
-    this.voltage = voltage;
-  }
-
-  public String getTds() {
-    return tds;
-  }
-
-  public void setTds(String tds) {
-    this.tds = tds;
-  }
-
-  public String getRoomTemp() {
-    return roomTemp;
-  }
-
-  public void setRoomTemp(String roomTemp) {
-    this.roomTemp = roomTemp;
-  }
-
-  public String getWaterSrcTemp() {
-    return waterSrcTemp;
-  }
-
-  public void setWaterSrcTemp(String waterSrcTemp) {
-    this.waterSrcTemp = waterSrcTemp;
-  }
-
-  public String getAdptUsed() {
-    return adptUsed;
-  }
-
-  public void setAdptUsed(String adptUsed) {
-    this.adptUsed = adptUsed;
-  }
-
-  public String getInstChkLst() {
-    return instChkLst;
-  }
-
-  public void setInstChkLst(String instChkLst) {
-    this.instChkLst = instChkLst;
-  }
-
-  public String getInstNoteChk() {
-    return instNoteChk;
-  }
-
-  public void setInstNoteChk(String instNoteChk) {
-    this.instNoteChk = instNoteChk;
-  }
-
-  public String getProdcat() {
-    return prodcat;
-  }
-
-  public void setProdcat(String prodcat) {
-    this.prodcat = prodcat;
-  }
-
-  public String getPsi() {
-    return psi;
-  }
-
-  public void setPsi(String psi) {
-    this.psi = psi;
-  }
-
-  public String getLpm() {
-    return lpm;
-  }
-
-  public void setLpm(String lpm) {
-    this.lpm = lpm;
-  }
-
-  public String getSerialChk() {
-    return serialChk;
-  }
-
-  public void setSerialChk(String serialChk) {
-    this.serialChk = serialChk;
-  }
-
+  @ApiModelProperty(value = "FRAME SERIAL CHECK INDICATOR")
   private String fraSerialChk;
 
-  public String getFraSerialChk() {
-    return fraSerialChk;
-  }
-
-  public void setFraSerialChk(String fraSerialChk) {
-    this.fraSerialChk = fraSerialChk;
-  }
-
+  @ApiModelProperty(value = "FRAME SERIAL NO")
   private String selFraSerialNo;
 
-  public String getSelFraSerialNo() {
-    return selFraSerialNo;
-  }
-
-  public void setSelFraSerialNo(String selFraSerialNo) {
-    this.selFraSerialNo = selFraSerialNo;
-  }
-
+  @ApiModelProperty(value = "REAL AS EXCHANGE INDICATOR")
   private String realAsExchangeYn;
 
-  public String getRealAsExchangeYn() {
-    return realAsExchangeYn;
-  }
-
-  public void setRealAsExchangeYn(String realAsExchangeYn) {
-    this.realAsExchangeYn = realAsExchangeYn;
-  }
-
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT CODE")
   private String realBeforeProductCode;
 
-  public String getRealBeforeProductCode() {
-    return realBeforeProductCode;
-  }
-
-  public void setRealBeforeProductCode(String realBeforeProductCode) {
-    this.realBeforeProductCode = realBeforeProductCode;
-  }
-
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT NAME")
   private String realBeforeProductName;
 
-  public String getRealBeforeProductName() {
-    return realBeforeProductName;
-  }
-
-  public void setRealBeforeProductName(String realBeforeProductName) {
-    this.realBeforeProductName = realBeforeProductName;
-  }
-
+  @ApiModelProperty(value = "REAL BEFORE PRODUCT SERIAL NO")
   private String realBeforeProductSerialNo;
-
-  public String getRealBeforeProductSerialNo() {
-    return realBeforeProductSerialNo;
-  }
-
-  public void setRealBeforeProductSerialNo(String realBeforeProductSerialNo) {
-    this.realBeforeProductSerialNo = realBeforeProductSerialNo;
-  }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(String salesOrderNo) {
+  public void setSalesOrderNo( String salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -537,7 +359,7 @@ public String getVoltage() {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -545,7 +367,7 @@ public String getVoltage() {
     return custName;
   }
 
-  public void setCustName(String  custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -553,7 +375,7 @@ public String getVoltage() {
     return jobType;
   }
 
-  public void setJobType(String jobType) {
+  public void setJobType( String jobType ) {
     this.jobType = jobType;
   }
 
@@ -561,7 +383,7 @@ public String getVoltage() {
     return jobStatus;
   }
 
-  public void setJobStatus(int jobStatus) {
+  public void setJobStatus( int jobStatus ) {
     this.jobStatus = jobStatus;
   }
 
@@ -569,7 +391,7 @@ public String getVoltage() {
     return appointmentDate;
   }
 
-  public void setAppointmentDate(String appointmentDate) {
+  public void setAppointmentDate( String appointmentDate ) {
     this.appointmentDate = appointmentDate;
   }
 
@@ -577,7 +399,7 @@ public String getVoltage() {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public void setAppointmentTime( String appointmentTime ) {
     this.appointmentTime = appointmentTime;
   }
 
@@ -585,7 +407,7 @@ public String getVoltage() {
     return jobSession;
   }
 
-  public void setJobSession(String jobSession) {
+  public void setJobSession( String jobSession ) {
     this.jobSession = jobSession;
   }
 
@@ -593,7 +415,7 @@ public String getVoltage() {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -601,7 +423,7 @@ public String getVoltage() {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -609,7 +431,7 @@ public String getVoltage() {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -617,7 +439,7 @@ public String getVoltage() {
     return customerType;
   }
 
-  public void setCustomerType(String customerType) {
+  public void setCustomerType( String customerType ) {
     this.customerType = customerType;
   }
 
@@ -625,7 +447,7 @@ public String getVoltage() {
     return customerId;
   }
 
-  public void setCustomerId(int customerId) {
+  public void setCustomerId( int customerId ) {
     this.customerId = customerId;
   }
 
@@ -633,7 +455,7 @@ public String getVoltage() {
     return serviceState;
   }
 
-  public void setServiceState(String serviceState) {
+  public void setServiceState( String serviceState ) {
     this.serviceState = serviceState;
   }
 
@@ -641,7 +463,7 @@ public String getVoltage() {
     return planYear;
   }
 
-  public void setPlanYear(int planYear) {
+  public void setPlanYear( int planYear ) {
     this.planYear = planYear;
   }
 
@@ -649,7 +471,7 @@ public String getVoltage() {
     return planMonth;
   }
 
-  public void setPlanMonth(int planMonth) {
+  public void setPlanMonth( int planMonth ) {
     this.planMonth = planMonth;
   }
 
@@ -657,7 +479,7 @@ public String getVoltage() {
     return customerGps;
   }
 
-  public void setCustomerGps(String customerGps) {
+  public void setCustomerGps( String customerGps ) {
     this.customerGps = customerGps;
   }
 
@@ -665,7 +487,7 @@ public String getVoltage() {
     return installAddress;
   }
 
-  public void setInstallAddress(String installAddress) {
+  public void setInstallAddress( String installAddress ) {
     this.installAddress = installAddress;
   }
 
@@ -673,7 +495,7 @@ public String getVoltage() {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -681,7 +503,7 @@ public String getVoltage() {
     return handphoneTel;
   }
 
-  public void setHandphoneTel(String handphoneTel) {
+  public void setHandphoneTel( String handphoneTel ) {
     this.handphoneTel = handphoneTel;
   }
 
@@ -689,7 +511,7 @@ public String getVoltage() {
     return homeTel;
   }
 
-  public void setHomeTel(String homeTel) {
+  public void setHomeTel( String homeTel ) {
     this.homeTel = homeTel;
   }
 
@@ -697,7 +519,7 @@ public String getVoltage() {
     return officeTel;
   }
 
-  public void setOfficeTel(String officeTel) {
+  public void setOfficeTel( String officeTel ) {
     this.officeTel = officeTel;
   }
 
@@ -705,7 +527,7 @@ public String getVoltage() {
     return mailAddress;
   }
 
-  public void setMailAddress(String mailAddress) {
+  public void setMailAddress( String mailAddress ) {
     this.mailAddress = mailAddress;
   }
 
@@ -713,7 +535,7 @@ public String getVoltage() {
     return customerVaNo;
   }
 
-  public void setCustomerVaNo(String customerVaNo) {
+  public void setCustomerVaNo( String customerVaNo ) {
     this.customerVaNo = customerVaNo;
   }
 
@@ -721,7 +543,7 @@ public String getVoltage() {
     return customerJomPayRefNo;
   }
 
-  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+  public void setCustomerJomPayRefNo( String customerJomPayRefNo ) {
     this.customerJomPayRefNo = customerJomPayRefNo;
   }
 
@@ -729,7 +551,7 @@ public String getVoltage() {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void setImageUrl( String imageUrl ) {
     this.imageUrl = imageUrl;
   }
 
@@ -737,7 +559,7 @@ public String getVoltage() {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName( String productName ) {
     this.productName = productName;
   }
 
@@ -745,7 +567,7 @@ public String getVoltage() {
     return productCode;
   }
 
-  public void setProductCode(String productCode) {
+  public void setProductCode( String productCode ) {
     this.productCode = productCode;
   }
 
@@ -753,7 +575,7 @@ public String getVoltage() {
     return appType;
   }
 
-  public void setAppType(String appType) {
+  public void setAppType( String appType ) {
     this.appType = appType;
   }
 
@@ -761,7 +583,7 @@ public String getVoltage() {
     return instruction;
   }
 
-  public void setInstruction(String instruction) {
+  public void setInstruction( String instruction ) {
     this.instruction = instruction;
   }
 
@@ -769,7 +591,7 @@ public String getVoltage() {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(String salesPromotion) {
+  public void setSalesPromotion( String salesPromotion ) {
     this.salesPromotion = salesPromotion;
   }
 
@@ -777,17 +599,15 @@ public String getVoltage() {
     return contractDuration;
   }
 
-  public void setContractDuration(int contractDuration) {
+  public void setContractDuration( int contractDuration ) {
     this.contractDuration = contractDuration;
   }
 
   public String getMonthlyRentalFees() {
-    /* KV - public int getMonthlyRentalFees() { */
     return monthlyRentalFees;
   }
 
-  public void setMonthlyRentalFees(String monthlyRentalFees) {
-    /* KV - public void setMonthlyRentalFees(int monthlyRentalFees) { */
+  public void setMonthlyRentalFees( String monthlyRentalFees ) {
     this.monthlyRentalFees = monthlyRentalFees;
   }
 
@@ -795,7 +615,7 @@ public String getVoltage() {
     return registrationFees;
   }
 
-  public void setRegistrationFees(int registrationFees) {
+  public void setRegistrationFees( int registrationFees ) {
     this.registrationFees = registrationFees;
   }
 
@@ -803,7 +623,7 @@ public String getVoltage() {
     return paymentMode;
   }
 
-  public void setPaymentMode(String paymentMode) {
+  public void setPaymentMode( String paymentMode ) {
     this.paymentMode = paymentMode;
   }
 
@@ -811,7 +631,7 @@ public String getVoltage() {
     return bankCode;
   }
 
-  public void setBankCode(int bankCode) {
+  public void setBankCode( int bankCode ) {
     this.bankCode = bankCode;
   }
 
@@ -819,7 +639,7 @@ public String getVoltage() {
     return bankName;
   }
 
-  public void setBankName(String bankName) {
+  public void setBankName( String bankName ) {
     this.bankName = bankName;
   }
 
@@ -827,7 +647,7 @@ public String getVoltage() {
     return cardAccountNo;
   }
 
-  public void setCardAccountNo(String cardAccountNo) {
+  public void setCardAccountNo( String cardAccountNo ) {
     this.cardAccountNo = cardAccountNo;
   }
 
@@ -835,7 +655,7 @@ public String getVoltage() {
     return outstanding;
   }
 
-  public void setOutstanding(String outstanding) {
+  public void setOutstanding( String outstanding ) {
     this.outstanding = outstanding;
   }
 
@@ -843,7 +663,7 @@ public String getVoltage() {
     return expiryDate;
   }
 
-  public void setExpiryDate(String expiryDate) {
+  public void setExpiryDate( String expiryDate ) {
     this.expiryDate = expiryDate;
   }
 
@@ -851,7 +671,7 @@ public String getVoltage() {
     return dscCode;
   }
 
-  public void setDscCode(String dscCode) {
+  public void setDscCode( String dscCode ) {
     this.dscCode = dscCode;
   }
 
@@ -859,7 +679,7 @@ public String getVoltage() {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -867,7 +687,7 @@ public String getVoltage() {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -875,7 +695,7 @@ public String getVoltage() {
     return hpName;
   }
 
-  public void setHpName(String hpName) {
+  public void setHpName( String hpName ) {
     this.hpName = hpName;
   }
 
@@ -883,7 +703,7 @@ public String getVoltage() {
     return hpTel;
   }
 
-  public void setHpTel(String hpTel) {
+  public void setHpTel( String hpTel ) {
     this.hpTel = hpTel;
   }
 
@@ -891,7 +711,7 @@ public String getVoltage() {
     return smName;
   }
 
-  public void setSmName(String smName) {
+  public void setSmName( String smName ) {
     this.smName = smName;
   }
 
@@ -899,7 +719,7 @@ public String getVoltage() {
     return smTel;
   }
 
-  public void setSmTel(String smTel) {
+  public void setSmTel( String smTel ) {
     this.smTel = smTel;
   }
 
@@ -907,7 +727,7 @@ public String getVoltage() {
     return hmName;
   }
 
-  public void setHmName(String hmName) {
+  public void setHmName( String hmName ) {
     this.hmName = hmName;
   }
 
@@ -915,7 +735,7 @@ public String getVoltage() {
     return hmTel;
   }
 
-  public void setHmTel(String hmTel) {
+  public void setHmTel( String hmTel ) {
     this.hmTel = hmTel;
   }
 
@@ -923,7 +743,7 @@ public String getVoltage() {
     return billAmount;
   }
 
-  public void setBillAmount(String billAmount) {
+  public void setBillAmount( String billAmount ) {
     this.billAmount = billAmount;
   }
 
@@ -931,7 +751,7 @@ public String getVoltage() {
     return paidAmount;
   }
 
-  public void setPaidAmount(String paidAmount) {
+  public void setPaidAmount( String paidAmount ) {
     this.paidAmount = paidAmount;
   }
 
@@ -939,7 +759,7 @@ public String getVoltage() {
     return adjustmentAmount;
   }
 
-  public void setAdjustmentAmount(String adjustmentAmount) {
+  public void setAdjustmentAmount( String adjustmentAmount ) {
     this.adjustmentAmount = adjustmentAmount;
   }
 
@@ -947,7 +767,7 @@ public String getVoltage() {
     return fileImg1Url;
   }
 
-  public void setFileImg1Url(String fileImg1Url) {
+  public void setFileImg1Url( String fileImg1Url ) {
     this.fileImg1Url = fileImg1Url;
   }
 
@@ -955,7 +775,7 @@ public String getVoltage() {
     return fileImg2Url;
   }
 
-  public void setFileImg2Url(String fileImg2Url) {
+  public void setFileImg2Url( String fileImg2Url ) {
     this.fileImg2Url = fileImg2Url;
   }
 
@@ -963,7 +783,7 @@ public String getVoltage() {
     return fileImg3Url;
   }
 
-  public void setFileImg3Url(String fileImg3Url) {
+  public void setFileImg3Url( String fileImg3Url ) {
     this.fileImg3Url = fileImg3Url;
   }
 
@@ -971,7 +791,7 @@ public String getVoltage() {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -979,7 +799,7 @@ public String getVoltage() {
     return ownerCode;
   }
 
-  public void setOwnerCode(String ownerCode) {
+  public void setOwnerCode( String ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -987,7 +807,7 @@ public String getVoltage() {
     return ownerCodeNm;
   }
 
-  public void setOwnerCodeNm(String ownerCodeNm) {
+  public void setOwnerCodeNm( String ownerCodeNm ) {
     this.ownerCodeNm = ownerCodeNm;
   }
 
@@ -995,7 +815,7 @@ public String getVoltage() {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -1003,7 +823,7 @@ public String getVoltage() {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -1011,7 +831,7 @@ public String getVoltage() {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -1019,7 +839,7 @@ public String getVoltage() {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -1027,7 +847,7 @@ public String getVoltage() {
     return rcCode;
   }
 
-  public void setRcCode(int rcCode) {
+  public void setRcCode( int rcCode ) {
     this.rcCode = rcCode;
   }
 
@@ -1035,7 +855,7 @@ public String getVoltage() {
     return failReasonCode;
   }
 
-  public void setFailReasonCode(int failReasonCode) {
+  public void setFailReasonCode( int failReasonCode ) {
     this.failReasonCode = failReasonCode;
   }
 
@@ -1043,7 +863,7 @@ public String getVoltage() {
     return failReasonName;
   }
 
-  public void setFailReasonName(String failReasonName) {
+  public void setFailReasonName( String failReasonName ) {
     this.failReasonName = failReasonName;
   }
 
@@ -1051,7 +871,7 @@ public String getVoltage() {
     return settledBy;
   }
 
-  public void setSettledBy(String settledBy) {
+  public void setSettledBy( String settledBy ) {
     this.settledBy = settledBy;
   }
 
@@ -1059,7 +879,7 @@ public String getVoltage() {
     return settledDate;
   }
 
-  public void setSettledDate(String settledDate) {
+  public void setSettledDate( String settledDate ) {
     this.settledDate = settledDate;
   }
 
@@ -1067,7 +887,7 @@ public String getVoltage() {
     return settledTime;
   }
 
-  public void setSettledTime(String settledTime) {
+  public void setSettledTime( String settledTime ) {
     this.settledTime = settledTime;
   }
 
@@ -1075,7 +895,7 @@ public String getVoltage() {
     return lastPaymentDate;
   }
 
-  public void setLastPaymentDate(String lastPaymentDate) {
+  public void setLastPaymentDate( String lastPaymentDate ) {
     this.lastPaymentDate = lastPaymentDate;
   }
 
@@ -1083,7 +903,7 @@ public String getVoltage() {
     return nextCallDate;
   }
 
-  public void setNextCallDate(String nextCallDate) {
+  public void setNextCallDate( String nextCallDate ) {
     this.nextCallDate = nextCallDate;
   }
 
@@ -1091,7 +911,7 @@ public String getVoltage() {
     return nextCallTime;
   }
 
-  public void setNextCallTime(String nextCallTime) {
+  public void setNextCallTime( String nextCallTime ) {
     this.nextCallTime = nextCallTime;
   }
 
@@ -1099,7 +919,7 @@ public String getVoltage() {
     return asExchangeYN;
   }
 
-  public void setAsExchangeYN(String asExchangeYN) {
+  public void setAsExchangeYN( String asExchangeYN ) {
     this.asExchangeYN = asExchangeYN;
   }
 
@@ -1107,7 +927,7 @@ public String getVoltage() {
     return beforeProductCode;
   }
 
-  public void setBeforeProductCode(String beforeProductCode) {
+  public void setBeforeProductCode( String beforeProductCode ) {
     this.beforeProductCode = beforeProductCode;
   }
 
@@ -1115,7 +935,7 @@ public String getVoltage() {
     return beforeProductSerialNo;
   }
 
-  public void setBeforeProductSerialNo(String beforeProductSerialNo) {
+  public void setBeforeProductSerialNo( String beforeProductSerialNo ) {
     this.beforeProductSerialNo = beforeProductSerialNo;
   }
 
@@ -1123,7 +943,7 @@ public String getVoltage() {
     return fraYn;
   }
 
-  public void setFraYn(String fraYn) {
+  public void setFraYn( String fraYn ) {
     this.fraYn = fraYn;
   }
 
@@ -1131,7 +951,7 @@ public String getVoltage() {
     return fraOrdNo;
   }
 
-  public void setFraOrdNo(String fraOrdNo) {
+  public void setFraOrdNo( String fraOrdNo ) {
     this.fraOrdNo = fraOrdNo;
   }
 
@@ -1139,7 +959,7 @@ public String getVoltage() {
     return fraProductCode;
   }
 
-  public void setFraProductCode(String fraProductCode) {
+  public void setFraProductCode( String fraProductCode ) {
     this.fraProductCode = fraProductCode;
   }
 
@@ -1147,32 +967,192 @@ public String getVoltage() {
     return fraProductName;
   }
 
-  public void setFraProductName(String fraProductName) {
+  public void setFraProductName( String fraProductName ) {
     this.fraProductName = fraProductName;
+  }
+
+  public String getPsi() {
+    return psi;
+  }
+
+  public void setPsi( String psi ) {
+    this.psi = psi;
+  }
+
+  public String getLpm() {
+    return lpm;
+  }
+
+  public void setLpm( String lpm ) {
+    this.lpm = lpm;
+  }
+
+  public String getProdcat() {
+    return prodcat;
+  }
+
+  public void setProdcat( String prodcat ) {
+    this.prodcat = prodcat;
+  }
+
+  public String getWaterSrcType() {
+    return waterSrcType;
+  }
+
+  public void setWaterSrcType( String waterSrcType ) {
+    this.waterSrcType = waterSrcType;
+  }
+
+  public String getSerialChk() {
+    return serialChk;
+  }
+
+  public void setSerialChk( String serialChk ) {
+    this.serialChk = serialChk;
   }
 
   public String getSalesPromotionCde() {
     return salesPromotionCde;
   }
 
-  public void setSalesPromotionCde(String salesPromotionCde) {
+  public void setSalesPromotionCde( String salesPromotionCde ) {
     this.salesPromotionCde = salesPromotionCde;
   }
 
-  public BigDecimal getLatitude(){
+  public String getVoltage() {
+    return voltage;
+  }
+
+  public void setVoltage( String voltage ) {
+    this.voltage = voltage;
+  }
+
+  public String getTds() {
+    return tds;
+  }
+
+  public void setTds( String tds ) {
+    this.tds = tds;
+  }
+
+  public String getRoomTemp() {
+    return roomTemp;
+  }
+
+  public void setRoomTemp( String roomTemp ) {
+    this.roomTemp = roomTemp;
+  }
+
+  public String getWaterSrcTemp() {
+    return waterSrcTemp;
+  }
+
+  public void setWaterSrcTemp( String waterSrcTemp ) {
+    this.waterSrcTemp = waterSrcTemp;
+  }
+
+  public String getAdptUsed() {
+    return adptUsed;
+  }
+
+  public void setAdptUsed( String adptUsed ) {
+    this.adptUsed = adptUsed;
+  }
+
+  public String getInstChkLst() {
+    return instChkLst;
+  }
+
+  public void setInstChkLst( String instChkLst ) {
+    this.instChkLst = instChkLst;
+  }
+
+  public String getInstNoteChk() {
+    return instNoteChk;
+  }
+
+  public void setInstNoteChk( String instNoteChk ) {
+    this.instNoteChk = instNoteChk;
+  }
+
+  public String getBoosterPump() {
+    return boosterPump;
+  }
+
+  public void setBoosterPump( String boosterPump ) {
+    this.boosterPump = boosterPump;
+  }
+
+  public String getAftPsi() {
+    return aftPsi;
+  }
+
+  public void setAftPsi( String aftPsi ) {
+    this.aftPsi = aftPsi;
+  }
+
+  public String getAftLpm() {
+    return aftLpm;
+  }
+
+  public void setAftLpm( String aftLpm ) {
+    this.aftLpm = aftLpm;
+  }
+
+  public String getTurbLvl() {
+    return turbLvl;
+  }
+
+  public void setTurbLvl( String turbLvl ) {
+    this.turbLvl = turbLvl;
+  }
+
+  public String getChkSms() {
+    return chkSms;
+  }
+
+  public void setChkSms( String chkSms ) {
+    this.chkSms = chkSms;
+  }
+
+  public String getCheckSend() {
+    return checkSend;
+  }
+
+  public void setCheckSend( String checkSend ) {
+    this.checkSend = checkSend;
+  }
+
+  public String getCustMobileNo() {
+    return custMobileNo;
+  }
+
+  public void setCustMobileNo( String custMobileNo ) {
+    this.custMobileNo = custMobileNo;
+  }
+
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude){
+  public void setLatitude( BigDecimal latitude ) {
     this.latitude = latitude;
   }
 
-  public BigDecimal getLongitude(){
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude){
-     this.longitude = longitude;
+  public void setLongitude( BigDecimal longitude ) {
+    this.longitude = longitude;
+  }
+
+  public BigDecimal getNtu() {
+    return ntu;
+  }
+
+  public void setNtu( BigDecimal ntu ) {
+    this.ntu = ntu;
   }
 
   public String getIsJomTukar() {
@@ -1223,8 +1203,56 @@ public String getVoltage() {
     this.partnerCodeName = partnerCodeName;
   }
 
-  public static InstallationJobDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, InstallationJobDto.class);
+  public String getFraSerialChk() {
+    return fraSerialChk;
   }
 
+  public void setFraSerialChk( String fraSerialChk ) {
+    this.fraSerialChk = fraSerialChk;
+  }
+
+  public String getSelFraSerialNo() {
+    return selFraSerialNo;
+  }
+
+  public void setSelFraSerialNo( String selFraSerialNo ) {
+    this.selFraSerialNo = selFraSerialNo;
+  }
+
+  public String getRealAsExchangeYn() {
+    return realAsExchangeYn;
+  }
+
+  public void setRealAsExchangeYn( String realAsExchangeYn ) {
+    this.realAsExchangeYn = realAsExchangeYn;
+  }
+
+  public String getRealBeforeProductCode() {
+    return realBeforeProductCode;
+  }
+
+  public void setRealBeforeProductCode( String realBeforeProductCode ) {
+    this.realBeforeProductCode = realBeforeProductCode;
+  }
+
+  public String getRealBeforeProductName() {
+    return realBeforeProductName;
+  }
+
+  public void setRealBeforeProductName( String realBeforeProductName ) {
+    this.realBeforeProductName = realBeforeProductName;
+  }
+
+  public String getRealBeforeProductSerialNo() {
+    return realBeforeProductSerialNo;
+  }
+
+  public void setRealBeforeProductSerialNo( String realBeforeProductSerialNo ) {
+    this.realBeforeProductSerialNo = realBeforeProductSerialNo;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static InstallationJobDto create( EgovMap egvoMap ) {
+    return BeanConverter.toBean( egvoMap, InstallationJobDto.class );
+  }
 }
