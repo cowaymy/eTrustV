@@ -97,6 +97,26 @@ var photo1Name = "";
     	    			$("#ntuFail").val("0");
     	    		}
     	    	}
+
+    	    	if ("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+    	    		if($("#failReasonCode").val() == 8001 || $("#failReasonCode").val() == 8002 || $("#failReasonCode").val() == 8011){
+    	    			$("#editInstallForm #m4").show();
+    	    	    	$("#editInstallForm #psiRcd").attr("disabled", false);
+    	    	    	$("#editInstallForm #m6").hide();
+    	    	    	$("#editInstallForm #volt").attr("disabled", true);
+
+    	    		}else if($("#failReasonCode").val() == 8008){
+    	    			$("#editInstallForm #m6").show();
+    	    	    	$("#editInstallForm #volt").attr("disabled", false);
+    	    	    	$("#editInstallForm #m4").hide();
+    	    	    	$("#editInstallForm #psiRcd").attr("disabled", true);
+    	    		}else{
+    	    			$("#editInstallForm #m4").hide();
+    	    	    	$("#editInstallForm #psiRcd").attr("disabled", true);
+    	    	    	$("#editInstallForm #m6").hide();
+    	    	    	$("#editInstallForm #volt").attr("disabled", true);
+    	    		}
+    	    	}
     });
 
 
@@ -106,7 +126,6 @@ var photo1Name = "";
     // 58 - BIDET
     // 400 - POE
     if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
-
 
     	if ("${orderInfo.stkCtgryId}" != "54") {
         $("#editInstallForm #m4").show();
@@ -154,6 +173,10 @@ var photo1Name = "";
       $("#editInstallForm #waterSourceTemp").attr("disabled", true);
       $("#editInstallForm #m10").hide();
       $("#editInstallForm #adptUsed").attr("disabled", true);
+
+      if ("${orderInfo.stkCtgryId}" == "7760"){ // LC - Laundry Care
+      	fn_defaultMandatoryForLC(failReasonCode);
+      }
     }
     if ("${orderInfo.stkCtgryId}" == "55"){
         notMandatoryForAP();
@@ -168,6 +191,38 @@ function notMandatoryForAP(){
     $("#editInstallForm #m8").hide();
     $("#editInstallForm #m9").hide();
     $("#editInstallForm #m10").hide();
+}
+
+function fn_defaultMandatoryForLC(failReasonCode){
+	if(failReasonCode == 8001 || failReasonCode == 8002 || failReasonCode == 8011){
+		$("#m4").show();
+	    $("#psiRcd").attr("disabled", false);
+	    $("#m6").hide();
+	    $("#volt").attr("disabled", true);
+	}else if(failReasonCode == 8008){
+		$("#m6").show();
+	    $("#volt").attr("disabled", false);
+	    $("#m4").hide();
+	    $("#psiRcd").attr("disabled", true);
+	}else{
+		$("#m4").hide();
+	    $("#psiRcd").attr("disabled", true);
+	    $("#m6").hide();
+	    $("#volt").attr("disabled", true);
+	}
+     $("#m5").hide();
+     $("#lpmRcd").attr("disabled", true);
+     $("#m7").hide();
+     $("#tds").attr("disabled", true);
+     $("#m8").hide();
+     $("#roomTemp").attr("disabled", true);
+     $("#m9").hide();
+     $("#waterSourceTemp").attr("disabled", true);
+     $("#m10").hide();
+     $("#adptUsed").attr("disabled", true);
+     $("#m29").hide();
+	 $("#ntuFail").attr("disabled", true);
+	 $("#ntuFail").val("0");
 }
 
   function validate(evt) {
@@ -517,6 +572,20 @@ function notMandatoryForAP(){
       			msg += "* <spring:message code='sys.msg.invalid' arguments='NTU' htmlEscape='false'/> </br>";
       		}
     	}
+	}
+
+	if("${orderInfo.stkCtgryId}" == "7760") { // LC - Laundry Care
+		if($("#failReasonCode").val() == 8001 || $("#failReasonCode").val() == 8002 || $("#failReasonCode").val() == 8011){ // IF40 - LOW PSI AND LPM , IF41 - LOW PIS , IF 50 - HIGH PSI
+			 if ( $("#psiRcd").val() == "") {
+			        msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+			      }
+		}
+
+		if($("#failReasonCode").val() == 8008){ // IF47 - INSUFFICENT AMP/VOLTAGE
+			 if ( $("#volt").val() == "") {
+		          msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
+		        }
+		}
 	}
 
     if (msg != "") {
