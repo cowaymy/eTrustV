@@ -652,7 +652,7 @@
                                       AND svc0001d.AS_CALLLOG_ID = CCR0006D.CALL_ENTRY_ID
                                       AND CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID
                                       AND ORG0001D.MEM_CODE = #{userId}
-                                      AND SAL0001D.SALES_ORD_ID = SAL0090D.SRV_SO_ID
+                                      AND SAL0001D.SALES_ORD_ID = SAL0090D.SRV_SO_ID(+)
                                       AND SVC0004D.PARTNER_CODE = PARTNER.MEM_ID(+)
                                       AND SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
                                       AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')))
