@@ -212,6 +212,12 @@
 			width : '100%'
 		});
 
+		$('#waStusCodeId').change(function() { //Added by Frango
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
+
 		$('#product').change(function(event) { //Added by Frango
 			event.preventDefault();
 			fn_disableGroupOption();
@@ -269,16 +275,16 @@
         waStusDesc = selectedItems[0].item.waStusDesc;
         callCrtDt = selectedItems[0].item.crtDt;
 
-  	  if(waStusCodeId == "44" && callStusId == "1"){
-          var todayDate = new Date();
-          var crtDateExpiry = new Date(callCrtDt);
-          crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
+//   	  if(waStusCodeId == "44" && callStusId == "1"){
+//           var todayDate = new Date();
+//           var crtDateExpiry = new Date(callCrtDt);
+//           crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
 
-			if(todayDate <= crtDateExpiry) {
-			      Common.alert("Pending Whatsapp Appointment Confirmation.");
-		          return;
-			}
-	  }
+// 			if(todayDate <= crtDateExpiry) {
+// 			      Common.alert("Pending Whatsapp Appointment Confirmation.");
+// 		          return;
+// 			}
+// 	  }
 
 		if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
 			Common
@@ -726,6 +732,21 @@
 						<td><input id="isECommerce" name="isECommerce"
 							type="checkbox" /></td>
 					</tr>
+				     <tr>
+				     	<th scope="row">WA Status</th>
+						<td>
+					    <select id="waStusCodeId" name="waStusCodeId" class="multy_select w100p" multiple="multiple">
+				               <option value="44">Pending</option>
+				               <option value="134">Follow-up</option>
+				               <option value="4">Confirm</option>
+				               <option value="21">Failed</option>
+				        </select>
+						</td>
+						<th></th>
+						<td></td>
+						<th></th>
+						<td></td>
+				     </tr>
 				</tbody>
 			</table>
 			<!-- table end -->

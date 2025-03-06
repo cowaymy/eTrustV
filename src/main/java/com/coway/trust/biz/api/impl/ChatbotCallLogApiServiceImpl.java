@@ -1,5 +1,6 @@
 package com.coway.trust.biz.api.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
@@ -18,8 +20,14 @@ import com.coway.trust.biz.api.ChatbotCallLogApiService;
 import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentReqForm;
 import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentRespDto;
 import com.coway.trust.biz.api.vo.chatbotCallLog.CallLogAppointmentRespDto.CallLogAppointmentDate;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
+import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.homecare.HomecareConstants;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -29,11 +37,20 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 	private int cbtApiUserId = 7;
 
-	@Resource(name = "chatbotCallLogApiMapper")
-	private ChatbotCallLogApiMapper chatbotCallLogApiMapper;
+    @Resource(name = "chatbotCallLogApiMapper")
+    private ChatbotCallLogApiMapper chatbotCallLogApiMapper;
 
-	@Resource(name = "CommonApiMapper")
-	private CommonApiMapper commonApiMapper;
+    @Resource(name = "CommonApiMapper")
+    private CommonApiMapper commonApiMapper;
+
+    @Resource(name = "servicesLogisticsPFCService")
+    private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+     @Resource(name = "servicesLogisticsPFCMapper")
+     private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+
+     @Value("${etrust.base.url}")
+     private String etrustBaseUrl;
 
 	@Override
 	public CallLogAppointmentRespDto reconfirmCustomerDetail(CallLogAppointmentReqForm params,
@@ -199,7 +216,18 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			if (orderInfo.get("waStusCodeId").toString().equals("44")
 					&& orderInfo.get("stusCodeId").toString().equals("1")) {
 				orderParam.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
-				orderParam.put("type", "6665"); // HA TYPE
+
+				if(CommonUtils.nvl(orderInfo.get("hcIndicator")).equals("N")){
+					orderParam.put("type", "6665"); // HA TYPE
+				}
+				else{
+					if(CommonUtils.nvl(orderInfo.get("brnchId")).equals("43")){
+						orderParam.put("type", "7321"); // HC-AC TYPE
+					}
+					else{
+						orderParam.put("type", "6666"); // HC TYPE
+					}
+				}
 
 				List<EgovMap> allocationResult = chatbotCallLogApiMapper.selectAvailAllocationList(orderParam);
 
@@ -300,16 +328,16 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			}
 
 			if (CommonUtils.nvl(orderInfo.get("waStusCodeId")).equals("44")
-					&& CommonUtils.nvl(orderInfo.get("stusCodeId")).equals("1")
-					&& params.getTncFlag() == 1) {
-				Map<String, Object> installMaster = new HashMap<String, Object>();
-				Map<String, Object> logPram = new HashMap<String, Object>();
+					&& CommonUtils.nvl(orderInfo.get("stusCodeId")).equals("1")) {
 
-				EgovMap installNo = new EgovMap();
-				boolean stat = false;
-				String pType = "";
-				String pPrgm = "";
-				String stockGrade = "A"; // only new installation so new stock
+				if(CommonUtils.nvl(orderInfo.get("rental")).equals("Y")){
+					if(params.getTncFlag() != 1){
+						resultValue.setSuccess(false);
+						resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
+						resultValue.setMessage("TnC not checked.");
+						return resultValue;
+					}
+				}
 
 				//Check Stock Availability before proceed
  				orderParam.put("productCode", CommonUtils.nvl(orderInfo.get("stkCode")));
@@ -339,8 +367,18 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 				// Using appointment date, get an CTID
 				orderParam.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
-				orderParam.put("type", "6665"); // HA TYPE
-				orderParam.put("appointmentDate", params.getAptDate()); // HA TYPE
+				if(CommonUtils.nvl(orderInfo.get("hcIndicator")).equals("N")){
+					orderParam.put("type", "6665"); // HA TYPE
+				}
+				else{
+					if(CommonUtils.nvl(orderInfo.get("brnchId")).equals("43")){
+						orderParam.put("type", "7321"); // HC-AC TYPE
+					}
+					else{
+						orderParam.put("type", "6666"); // HC TYPE
+					}
+				}
+				orderParam.put("appointmentDate", params.getAptDate());
 
 				EgovMap firstAvailUser = chatbotCallLogApiMapper.selectFirstAvailAllocationUser(orderParam);
 
@@ -351,167 +389,41 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					return resultValue;
 				}
 
-				installNo = getDocNo("9");
-				String nextDocNo = getNextDocNo("INS", installNo.get("docNo").toString());
-				installNo.put("nextDocNo", nextDocNo);
-
-				chatbotCallLogApiMapper.updateDocNo(installNo);
-
-				int callEntId = 0;
-				if (orderParam.get("callEntryId") != null) {
-					callEntId = Integer.parseInt(orderParam.get("callEntryId").toString());
+				if(CommonUtils.nvl(orderInfo.get("hcIndicator")).equals("N")){
+					resultValue = this.confirmAppointmentHAHC(params,firstAvailUser,orderInfo,false,true);
 				}
+				else{
+					//get AUX order and check stock availability before proceed
+					EgovMap auxOrderParam = new EgovMap();
+					auxOrderParam.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
+					EgovMap auxOrderInfo = chatbotCallLogApiMapper.selectAuxCallLogCbtOrderInfo(auxOrderParam);
+					if(auxOrderInfo != null){
+						auxOrderParam.put("salesOrdNo", CommonUtils.nvl(auxOrderInfo.get("salesOrdNo")));
+						auxOrderParam.put("productCode", CommonUtils.nvl(auxOrderInfo.get("stkCode")));
+						auxOrderParam.put("itmStkId", CommonUtils.nvl(auxOrderInfo.get("itmStkId")));
+						if(CommonUtils.nvl(auxOrderInfo.get("hcIndicator")).equals("Y")){
+							auxOrderParam.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
+							auxOrderParam.put("productCat", CommonUtils.nvl(auxOrderInfo.get("stockCatCode")));
+						}
 
-				// TO_DO INSTALLMASTER PARAM NEED TO BE SET
-				// IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
-				if (installMaster != null && callEntId > 0) {
-					// PRE INSERT INSTALL ENTRY
-					installMaster.put("installEntryId", chatbotCallLogApiMapper.installEntryIdSeq());
-					installMaster.put("installEntryNo", installNo.get("docNo"));
-					installMaster.put("salesOrderId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
-					installMaster.put("statusCodeId", 1);
-					installMaster.put("CTID", CommonUtils.nvl(firstAvailUser.get("ct")));
-					installMaster.put("installDate", params.getAptDate());
-					installMaster.put("appDate", params.getAptDate());
-					installMaster.put("callEntryId", CommonUtils.nvl(orderParam.get("callEntryId")));
-					installMaster.put("installStkId", CommonUtils.intNvl(orderParam.get("itmStkId")));
-					installMaster.put("installResultId", 0);
-					installMaster.put("created", new Date());
-					installMaster.put("creator", 349);
-					installMaster.put("allowComm", false);
-					installMaster.put("isTradeIn", false);
-					installMaster.put("CTGroup", CommonUtils.nvl(firstAvailUser.get("ctSubGrp")));
-					installMaster.put("updated", new Date());
-					installMaster.put("updator", 349);
-					installMaster.put("revId", 0);
-					installMaster.put("stock", stockGrade);
-
-					chatbotCallLogApiMapper.insertInstallEntry(installMaster);
-				}
-
-				pType = "OD01";
-				pPrgm = "OCALL";
-
-				logPram.put("ORD_ID", installMaster.get("installEntryNo"));
-				logPram.put("RETYPE", "SVO");
-				logPram.put("P_TYPE", pType);
-				logPram.put("P_PRGNM", pPrgm);
-
-				logPram.put("USERID", 349);
-
-				chatbotCallLogApiMapper.SP_LOGISTIC_REQUEST(logPram);
-
-				logPram.put("P_RESULT_TYPE", "IN");
-				logPram.put("P_RESULT_MSG", logPram.get("p1"));
-
-				if (!"000".equals(logPram.get("p1"))) {
-					stat = false;
-					// REMOVE INSTALL ENTRY
-					if (installMaster != null && callEntId > 0) {
-						// PRE INSERT INSTALL ENTRY
-						chatbotCallLogApiMapper.deleteInstallEntry(installMaster);
-					}
-				} else {
-					stat = true;
-					chatbotCallLogApiMapper.SP_SVC_LOGISTIC_REQUEST(logPram);
-				}
-
-				if (stat) {
-
-					String maxId = "";
-					int callStusId = 20; // Ready To Install
-					int feedbackStusId = 225; // FB01-Ready for DO
-					Map<String, Object> callEntry = new HashMap<String, Object>();
-					// Map<String, Object> callMaster = new HashMap<String, Object>();
-					Map<String, Object> callDetails = new HashMap<String, Object>();
-					Map<String, Object> maxIdValueParam = new EgovMap();
-
-					callDetails.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
-					callDetails.put("callStatusId", callStusId);
-					callDetails.put("callCallDate", CommonUtils.nvl(orderInfo.get("callDt")));
-					callDetails.put("callActionDate", params.getAptDate());
-					callDetails.put("callFeedBackId", feedbackStusId);
-					callDetails.put("callCTId", CommonUtils.nvl(firstAvailUser.get("ct")));
-					callDetails.put("callRemark", "");
-					callDetails.put("callCreateBy", 349);
-					callDetails.put("callCreateAt", new Date());
-					callDetails.put("callCreateByDept", 0);
-					callDetails.put("callHCID", 0);
-					callDetails.put("callROSAmt", 0);
-					callDetails.put("callSMS", false);
-					callDetails.put("CallSMSRemark", "");
-					chatbotCallLogApiMapper.insertCallResult(callDetails);
-
-					maxIdValueParam.put("value", "callResultId");
-					maxIdValueParam.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
-					maxId = chatbotCallLogApiMapper.selectMaxId(maxIdValueParam);
-
-					callEntry.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
-					callEntry.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
-					callEntry.put("typeId", CommonUtils.nvl(orderInfo.get("typeId")));
-					callEntry.put("stusCodeId", callStusId);
-					callEntry.put("resultId", maxId);
-					callEntry.put("docId", CommonUtils.nvl(orderInfo.get("docId")));
-					callEntry.put("crtUserId", CommonUtils.nvl(orderInfo.get("crtUserId")));
-					callEntry.put("crtDt", CommonUtils.nvl(orderInfo.get("crtDt")));
-					callEntry.put("callDt", CommonUtils.nvl(orderInfo.get("callDt")));
-					callEntry.put("isWaitForCancl", CommonUtils.nvl(orderInfo.get("isWaitForCancl")));
-					callEntry.put("happyCallerId", CommonUtils.nvl(orderInfo.get("happyCallerId")));
-					callEntry.put("updDt", new Date());
-					callEntry.put("updUserId", 349);
-					callEntry.put("oriCallDt", CommonUtils.nvl(orderInfo.get("oriCallDt")));
-					callEntry.put("waRemarks","Whatsapp appointment confirmed.");
-					callEntry.put("waStusCodeId", 4); // Complete WA
-
-					chatbotCallLogApiMapper.updateCallEntry(callEntry);
-
-					EgovMap updateParam = new EgovMap();
-					updateParam.put("requestId", params.getRequestId());
-					updateParam.put("ordNo", params.getOrderNo());
-					updateParam.put("stusCodeId", 4);
-					updateParam.put("waRemarks","Whatsapp appointment confirmed.");
-					chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
-
-					if (callEntId > 0) {
-						EgovMap salesEntry = chatbotCallLogApiMapper.selectOrderEntry(CommonUtils.nvl(orderInfo.get("salesOrdNo")));
-						if (salesEntry != null) {
-							if (salesEntry.get("cpntId") != null && !salesEntry.get("cpntId").toString().equals("")) {
-								if (Integer.parseInt(salesEntry.get("cpntId").toString()) > 0) {
-									salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
-									salesEntry.put("CTID", firstAvailUser.get("ct"));
-									salesEntry.put("CTgroup", firstAvailUser.get("ctSubGrp"));
-									chatbotCallLogApiMapper.updateASEntry(salesEntry);
-								}
-							}
+						EgovMap auxRdcStock = chatbotCallLogApiMapper.selectRdcStock(auxOrderParam);
+						if (auxRdcStock == null || Integer.parseInt(CommonUtils.nvl2(auxRdcStock.get("availQty"),"0")) == 0) {
+							resultValue.setSuccess(false);
+							resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NO_STOCK);
+							resultValue.setMessage("Not enough aux stock to proceed.");
+							return resultValue;
 						}
 					}
 
-					Map<String, Object> orderLogList = new HashMap<String, Object>();
-				    orderLogList.put("logId", 0);
-				    orderLogList.put("salesOrderId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
-				    orderLogList.put("progressId", 4);
-				    orderLogList.put("logDate", new Date());
-				    orderLogList.put("refId", installMaster.get("installEntryId").toString());
-				    orderLogList.put("isLock", true);
-				    orderLogList.put("logCreator", 349);
-				    orderLogList.put("logCreated", new Date());
-				    chatbotCallLogApiMapper.insertSalesOrderLog(orderLogList);
+					//Main order
+					resultValue = this.confirmAppointmentHAHC(params,firstAvailUser,orderInfo,true,true);
 
-					resultValue.setSuccess(true);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
-					resultValue.setMessage("Appointment Confirmed.");
-				} else {
-					// REMOVE INSTALL ENTRY
-					if (installMaster != null && callEntId > 0) {
-						// PRE INSERT INSTALL ENTRY
-						chatbotCallLogApiMapper.deleteInstallEntry(installMaster);
+					if(auxOrderInfo != null){
+						if(resultValue.getStatusCode() == AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS){
+							resultValue = this.confirmAppointmentHAHC(params,firstAvailUser,auxOrderInfo,true,false);
+						}
 					}
-
-					resultValue.setSuccess(false);
-					resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_FAILED);
-					resultValue.setMessage("Appointment Confirm Failed.");
 				}
-
 			} else {
 				resultValue.setSuccess(false);
 				resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_NOT_FOUND);
@@ -624,4 +536,209 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 
 		return reqPrm;
 	}
+
+    private CallLogAppointmentRespDto confirmAppointmentHAHC(CallLogAppointmentReqForm params,EgovMap firstAvailUser,EgovMap orderInfo,boolean isHC,boolean updateAppointment){
+		CallLogAppointmentRespDto resultValue = new CallLogAppointmentRespDto();
+
+		Map<String, Object> installMaster = new HashMap<String, Object>();
+		Map<String, Object> logPram = new HashMap<String, Object>();
+
+		boolean stat = false;
+		String pType = "";
+		String pPrgm = "";
+		String stockGrade = "A"; // only new installation so new stock
+
+		EgovMap installNo = new EgovMap();
+		installNo = getDocNo("9");
+		String nextDocNo = getNextDocNo("INS", installNo.get("docNo").toString());
+		installNo.put("nextDocNo", nextDocNo);
+
+		chatbotCallLogApiMapper.updateDocNo(installNo);
+
+		int callEntId = 0;
+		if (orderInfo.get("callEntryId") != null) {
+			callEntId = Integer.parseInt(orderInfo.get("callEntryId").toString());
+		}
+
+		// TO_DO INSTALLMASTER PARAM NEED TO BE SET
+		// IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
+		if (installMaster != null && callEntId > 0) {
+			// PRE INSERT INSTALL ENTRY
+			installMaster.put("installEntryId", chatbotCallLogApiMapper.installEntryIdSeq());
+			installMaster.put("installEntryNo", installNo.get("docNo"));
+			installMaster.put("salesOrderId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
+			installMaster.put("statusCodeId", 1);
+			installMaster.put("CTID", CommonUtils.nvl(firstAvailUser.get("ct")));
+			installMaster.put("installDate", params.getAptDate());
+			installMaster.put("appDate", params.getAptDate());
+			installMaster.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
+			installMaster.put("installStkId", CommonUtils.intNvl(orderInfo.get("itmStkId")));
+			installMaster.put("installResultId", 0);
+			installMaster.put("created", new Date());
+			installMaster.put("creator", 349);
+			installMaster.put("allowComm", false);
+			installMaster.put("isTradeIn", false);
+			installMaster.put("CTGroup", CommonUtils.nvl(firstAvailUser.get("ctSubGrp")));
+			installMaster.put("updated", new Date());
+			installMaster.put("updator", 349);
+			installMaster.put("revId", 0);
+			installMaster.put("stock", stockGrade);
+
+			if(isHC){
+	            if ("ACI".equals(CommonUtils.nvl(orderInfo.get("stockCatCode")))) {
+	            	  try{
+	            			BitMatrix bitMatrix = new MultiFormatWriter().encode(etrustBaseUrl+"/homecare/services/install/getAcInstallationInfo.do?insNo="+installNo.get("docNo"), BarcodeFormat.QR_CODE, 200, 200);
+
+	                  		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	                  		MatrixToImageWriter.writeToStream(bitMatrix, "png", bos);
+	                  		installMaster.put("insQr", bos.toByteArray());
+	            	  }catch(Exception e){
+	            	  }
+	            }
+			}
+
+			chatbotCallLogApiMapper.insertInstallEntry(installMaster);
+		}
+
+		pType = "OD01";
+		pPrgm = "OCALL";
+
+		logPram.put("ORD_ID", installMaster.get("installEntryNo"));
+		logPram.put("RETYPE", "SVO");
+		logPram.put("P_TYPE", pType);
+		logPram.put("P_PRGNM", pPrgm);
+
+		logPram.put("USERID", 349);
+
+		if(isHC == false){
+			//HA
+			servicesLogisticsPFCService.SP_LOGISTIC_REQUEST(logPram);
+		}
+		else{
+			//HC
+			servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+		}
+
+		logPram.put("P_RESULT_TYPE", "IN");
+		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+
+		if (!"000".equals(logPram.get("p1"))) {
+			stat = false;
+			// REMOVE INSTALL ENTRY
+			if (installMaster != null && callEntId > 0) {
+				// PRE INSERT INSTALL ENTRY
+				chatbotCallLogApiMapper.deleteInstallEntry(installMaster);
+			}
+		} else {
+			stat = true;
+			if(isHC == false){
+				//HA
+				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
+			}
+			else{
+				//HC
+	        	servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(logPram);
+			}
+		}
+
+		if(stat){
+  			String maxId = "";
+  			int callStusId = 20; // Ready To Install
+  			int feedbackStusId = 225; // FB01-Ready for DO
+  			Map<String, Object> callEntry = new HashMap<String, Object>();
+  			// Map<String, Object> callMaster = new HashMap<String, Object>();
+  			Map<String, Object> callDetails = new HashMap<String, Object>();
+  			Map<String, Object> maxIdValueParam = new EgovMap();
+
+  			callDetails.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
+  			callDetails.put("callStatusId", callStusId);
+  			callDetails.put("callCallDate", CommonUtils.nvl(orderInfo.get("callDt")));
+  			callDetails.put("callActionDate", params.getAptDate());
+  			callDetails.put("callFeedBackId", feedbackStusId);
+  			callDetails.put("callCTId", CommonUtils.nvl(firstAvailUser.get("ct")));
+  			callDetails.put("callRemark", "");
+  			callDetails.put("callCreateBy", 349);
+  			callDetails.put("callCreateAt", new Date());
+  			callDetails.put("callCreateByDept", 0);
+  			callDetails.put("callHCID", 0);
+  			callDetails.put("callROSAmt", 0);
+  			callDetails.put("callSMS", false);
+  			callDetails.put("CallSMSRemark", "");
+  			chatbotCallLogApiMapper.insertCallResult(callDetails);
+
+  			maxIdValueParam.put("value", "callResultId");
+  			maxIdValueParam.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
+  			maxId = chatbotCallLogApiMapper.selectMaxId(maxIdValueParam);
+
+  			callEntry.put("callEntryId", CommonUtils.nvl(orderInfo.get("callEntryId")));
+  			callEntry.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
+  			callEntry.put("typeId", CommonUtils.nvl(orderInfo.get("typeId")));
+  			callEntry.put("stusCodeId", callStusId);
+  			callEntry.put("resultId", maxId);
+  			callEntry.put("docId", CommonUtils.nvl(orderInfo.get("docId")));
+  			callEntry.put("crtUserId", CommonUtils.nvl(orderInfo.get("crtUserId")));
+  			callEntry.put("crtDt", CommonUtils.nvl(orderInfo.get("crtDt")));
+//  			callEntry.put("callDt", CommonUtils.nvl(orderInfo.get("callDt")));
+  			callEntry.put("isWaitForCancl", CommonUtils.nvl(orderInfo.get("isWaitForCancl")));
+  			callEntry.put("happyCallerId", CommonUtils.nvl(orderInfo.get("happyCallerId")));
+  			callEntry.put("updDt", new Date());
+  			callEntry.put("updUserId", 349);
+  			callEntry.put("oriCallDt", CommonUtils.nvl(orderInfo.get("oriCallDt")));
+  			callEntry.put("waRemarks","Whatsapp appointment confirmed.");
+  			callEntry.put("waStusCodeId", 4); // Complete WA
+
+  			chatbotCallLogApiMapper.updateCallEntry(callEntry);
+
+  			if(updateAppointment){
+    			EgovMap updateParam = new EgovMap();
+    			updateParam.put("requestId", params.getRequestId());
+    			updateParam.put("ordNo", params.getOrderNo());
+    			updateParam.put("stusCodeId", 4);
+    			updateParam.put("waRemarks","Whatsapp appointment confirmed.");
+    			chatbotCallLogApiMapper.updateCBT0007MStatus(updateParam);
+			}
+
+			if (callEntId > 0) {
+				EgovMap salesEntry = chatbotCallLogApiMapper.selectOrderEntry(CommonUtils.nvl(orderInfo.get("salesOrdNo")));
+				if (salesEntry != null) {
+					if (salesEntry.get("cpntId") != null && !salesEntry.get("cpntId").toString().equals("")) {
+						if (Integer.parseInt(salesEntry.get("cpntId").toString()) > 0) {
+							salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
+							salesEntry.put("CTID", firstAvailUser.get("ct"));
+							salesEntry.put("CTgroup", firstAvailUser.get("ctSubGrp"));
+							chatbotCallLogApiMapper.updateASEntry(salesEntry);
+						}
+					}
+				}
+			}
+
+			Map<String, Object> orderLogList = new HashMap<String, Object>();
+		    orderLogList.put("logId", 0);
+		    orderLogList.put("salesOrderId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
+		    orderLogList.put("progressId", 4);
+		    orderLogList.put("logDate", new Date());
+		    orderLogList.put("refId", installMaster.get("installEntryId").toString());
+		    orderLogList.put("isLock", true);
+		    orderLogList.put("logCreator", 349);
+		    orderLogList.put("logCreated", new Date());
+		    chatbotCallLogApiMapper.insertSalesOrderLog(orderLogList);
+
+			resultValue.setSuccess(true);
+			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_SUCCESS);
+			resultValue.setMessage("Appointment Confirmed.");
+		}
+		else{
+  			// REMOVE INSTALL ENTRY
+  			if (installMaster != null && callEntId > 0) {
+  				// PRE INSERT INSTALL ENTRY
+  				chatbotCallLogApiMapper.deleteInstallEntry(installMaster);
+  			}
+
+  			resultValue.setSuccess(false);
+  			resultValue.setStatusCode(AppConstants.RESPONSE_CODE_INTERNAL_FAILED);
+  			resultValue.setMessage("Appointment Confirm Failed.");
+		}
+
+		return resultValue;
+    }
 }

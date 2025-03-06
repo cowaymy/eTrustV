@@ -122,6 +122,7 @@ public class OrderCallListController {
     String[] promotionListSp = request.getParameterValues("promotion");
     String[] DSCCode = request.getParameterValues("DSCCode");
     String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode");
+    String[] waStusCodeId = request.getParameterValues("waStusCodeId");
 
     params.put("appTypeList", appTypeList);
     params.put("callLogTypeList", callLogTypeList);
@@ -131,6 +132,7 @@ public class OrderCallListController {
     params.put("promotionListSp", promotionListSp);
     params.put("DSCCode",DSCCode);
     params.put("searchFeedBackCode",searchFeedBackCode);
+    params.put("waStusCodeId",waStusCodeId);
 
     logger.debug("searchOrderCallList - params : {}", params);
 

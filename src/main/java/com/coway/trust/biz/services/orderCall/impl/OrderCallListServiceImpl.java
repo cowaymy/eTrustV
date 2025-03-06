@@ -878,12 +878,39 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
 					EgovMap rdcStock = orderCallListMapper.selectRdcStock(orderParam);
 
-					if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) == 0) {
+
+					if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) <= 0) {
 							/*Failed due to no stock*/
 					      message.setMessage("No RDC stock found for Order No: " + CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
 					      message.setCode("99");
 					      return message;
 					}else{
+						/**/
+						if(CommonUtils.nvl(appointmentDtl.get("hcIndicator")).equals("Y")){
+	    					//get AUX order and check stock availability before proceed if is a HC Type
+	    					EgovMap auxOrderParam = new EgovMap();
+	    					auxOrderParam.put("salesOrdId", CommonUtils.nvl(appointmentDtl.get("salesOrdId")));
+	    					EgovMap auxOrderInfo = orderCallListMapper.selectAuxCallLogCbtOrderInfo(auxOrderParam);
+	    					if(auxOrderInfo != null){
+	    						auxOrderParam.put("salesOrdNo", CommonUtils.nvl(auxOrderInfo.get("salesOrdNo")));
+	    						auxOrderParam.put("productCode", CommonUtils.nvl(auxOrderInfo.get("stkCode")));
+	    						auxOrderParam.put("itmStkId", CommonUtils.nvl(auxOrderInfo.get("itmStkId")));
+	    						if(CommonUtils.nvl(auxOrderInfo.get("hcIndicator")).equals("Y")){
+	    							auxOrderParam.put("branchTypeId", HomecareConstants.HDC_BRANCH_TYPE);
+	    							auxOrderParam.put("productCat", CommonUtils.nvl(auxOrderInfo.get("stockCatCode")));
+	    						}
+
+	    						EgovMap auxRdcStock = orderCallListMapper.selectRdcStock(auxOrderParam);
+	    						if (auxRdcStock == null || Integer.parseInt(CommonUtils.nvl2(auxRdcStock.get("availQty"),"0")) <= 0) {
+	    							/*Failed due to no stock*/
+	    						      message.setMessage("No RDC stock found for Aux Order No: " + CommonUtils.nvl(auxOrderParam.get("salesOrdNo")));
+	    						      message.setCode("99");
+	    						      return message;
+	    						}
+	    					}
+						}
+						/**/
+
 						EgovMap customerInfo = new EgovMap();
 						customerInfo.put("requestId", CommonUtils.nvl(appointmentDtl.get("callEntryId")));
 						customerInfo.put("type", CommonUtils.nvl("order"));

@@ -156,6 +156,11 @@
       width : '100%'
     });
 
+	$('#waStusCodeId').change(function() { //Added by Frango
+	}).multipleSelect({
+		selectAll : true, // 전체선택
+		width : '100%'
+	});
   }
 
   function fn_orderCallList() {
@@ -173,16 +178,16 @@
   }
 
   function fn_openAddCall() {
-	  if(waStusCodeId == "44" && callStusId == "1"){
-          var todayDate = new Date();
-          var crtDateExpiry = new Date(callCrtDt);
-          crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
+// 	  if(waStusCodeId == "44" && callStusId == "1"){
+//           var todayDate = new Date();
+//           var crtDateExpiry = new Date(callCrtDt);
+//           crtDateExpiry.setDate(crtDateExpiry.getDate() + 1);
 
-			if(todayDate <= crtDateExpiry) {
-			      Common.alert("Pending Whatsapp Appointment Confirmation.");
-		          return;
-			}
-	  }
+// 			if(todayDate <= crtDateExpiry) {
+// 			      Common.alert("Pending Whatsapp Appointment Confirmation.");
+// 		          return;
+// 			}
+// 	  }
 
     if (callStusId == "1" || callStusId == "19" || callStusId == "30") {
       Common.ajax("POST", "/callCenter/selRcdTms.do", {
@@ -401,6 +406,7 @@
     $("#listDSCCode").val("");
     $("#PONum").val("");
     $("#searchFeedBackCode").val("");
+    $("#waStusCodeId").val("");
     $("#sortBy").val("0");
   }
 
@@ -640,6 +646,21 @@
     <td>
     <input id="isECommerce" name="isECommerce" type="checkbox"/>
     </td>
+     </tr>
+     <tr>
+     	<th scope="row">WA Status</th>
+		<td>
+	    <select id="waStusCodeId" name="waStusCodeId" class="multy_select w100p" multiple="multiple">
+               <option value="44">Pending</option>
+               <option value="134">Follow-up</option>
+               <option value="4">Confirm</option>
+               <option value="21">Failed</option>
+        </select>
+		</td>
+		<th></th>
+		<td></td>
+		<th></th>
+		<td></td>
      </tr>
 
     </tbody>

@@ -84,4 +84,6 @@ public interface OrderCallListMapper {
 	void updateCCR0006DCallLogAppointmentSentStatus(Map<String, Object> params);
 
 	void insertApiAccessLog(Map<String, Object> params);
+
+	EgovMap selectAuxCallLogCbtOrderInfo(Map<String,Object> params);
 }

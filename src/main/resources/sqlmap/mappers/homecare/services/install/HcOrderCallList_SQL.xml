@@ -478,6 +478,14 @@
 			AND Extent1.ECOMM_ORD_ID > 0
 		</if>
 
+		<if test="waStusCodeId != null and waStusCodeId != '' ">
+            AND Extent1.WA_STUS_CODE_ID IN
+            <foreach item="item" collection="waStusCodeId" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
 		<if test="sortBy != null and sortBy != '' and sortBy == 1 ">
 			ORDER BY Extent1.SALES_ORD_NO ASC
 		</if>

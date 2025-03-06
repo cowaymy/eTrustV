@@ -223,6 +223,13 @@
     <if test='isECommerce != null and isECommerce != ""'>
        AND Extent1.ECOMM_ORD_ID > 0
     </if>
+    <if test="waStusCodeId != null and waStusCodeId != '' ">
+      AND Extent1.WA_STUS_CODE_ID IN
+      <foreach item="item" collection="waStusCodeId" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
 
     <if test="sortBy != null and sortBy != '' and sortBy == 1 ">
       ORDER BY Extent1.SALES_ORD_NO ASC
@@ -1135,4 +1142,32 @@
 		        , #{refNo}
 		    )
 		</insert>
+
+	<select id="selectAuxCallLogCbtOrderInfo" parameterType="Map" resultType="egovMap">
+		SELECT * FROM (
+		SELECT H.CALL_ENTRY_ID, H.SALES_ORD_ID, H.TYPE_ID, H.STUS_CODE_ID, H.RESULT_ID,
+		H.DOC_ID, H.CRT_USER_ID, H.CRT_DT, TO_CHAR(H.CALL_DT,'DD/MM/YYYY') AS CALL_DT,
+		H.IS_WAIT_FOR_CANCL, H.HAPY_CALLER_ID, H.UPD_DT, H.UPD_USER_ID, TO_CHAR(H.ORI_CALL_DT,'DD/MM/YYYY') AS ORI_CALL_DT,
+		H.CUR_SEQ_NO, H.MAIN_DEPT, H.SUB_DEPT, H.RCD_TMS, H.WA_STUS_CODE_ID,
+		C.SALES_ORD_NO,D.ITM_STK_ID,E.STK_CODE,F.BRNCH_ID,G.CODE AS STOCK_CAT_CODE,
+		CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 1 THEN 'Y' ELSE 'N' END AS HC_INDICATOR
+		FROM SAL0001D A
+		JOIN HMC0011D B
+		ON A.BNDL_ID = B.ORD_SEQ_NO
+		JOIN SAL0001D C
+		ON C.SALES_ORD_NO = B.FRA_ORD_NO
+		JOIN SAL0002D D
+		ON C.SALES_ORD_ID = D.SALES_ORD_ID
+		JOIN SYS0026M E
+		ON D.ITM_STK_ID = E.STK_ID
+		JOIN SAL0045D F
+		ON F.SALES_ORD_ID = C.SALES_ORD_ID
+		JOIN SYS0013M G
+		ON G.CODE_ID = E.STK_CTGRY_ID
+        JOIN CCR0006D H
+        ON H.SALES_ORD_ID = C.SALES_ORD_ID
+        WHERE A.SALES_ORD_ID = #{salesOrdId}
+        ORDER BY CALL_ENTRY_ID DESC
+        ) WHERE ROWNUM = 1
+	</select>
 </mapper>

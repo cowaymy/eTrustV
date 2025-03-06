@@ -2458,7 +2458,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	  custInfoParam.put("contractPeriod", CommonUtils.nvl(custWADetails.get("obligationPeriod")));
         	  custInfoParam.put("custAddId", CommonUtils.nvl(custWADetails.get("custAddId")));
         	  custInfoParam.put("addrDtl", CommonUtils.nvl(custWADetails.get("addrDtl")));
-        	  custInfoParam.put("tncFlag", 1);
+
+        	  if(CommonUtils.nvl(custWADetails.get("rental")).equals("Y")){
+	        	  custInfoParam.put("tncFlag", 1);
+        	  }
+        	  else{
+	        	  custInfoParam.put("tncFlag", 0);
+        	  }
 
         	  if(CommonUtils.nvl(custWADetails.get("prodCat")).equals("HA")){
 	        	  custInfoParam.put("tncFileName", AppConstants.WA_CALL_LOG_HA_TNC_FILE_NAME);
@@ -2471,9 +2477,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
         	  custInfoParam.put("waStusCodeId", 44); //Pending for WA Apointment Status
         	  chatbotMapper.updateCallLogWAStatus(custInfoParam);
-          }
-          else{
-        	  //NOT SURE? PROCEED OR BLOCK?
           }
       }
     }

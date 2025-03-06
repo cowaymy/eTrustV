@@ -53,4 +53,6 @@ public interface ChatbotCallLogApiMapper {
 	EgovMap selectRdcStock(Map<String,Object> param);
 
 	EgovMap checkAccess(Map<String,Object> param);
+
+	EgovMap selectAuxCallLogCbtOrderInfo(Map<String,Object> param);
 }
