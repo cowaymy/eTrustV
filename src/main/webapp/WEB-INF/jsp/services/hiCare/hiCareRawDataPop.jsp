@@ -145,7 +145,7 @@ function btnGenerate_Click(){
             var runNo = 0;
 
             if (document.querySelector("#test>.ms-parent>button>span").innerText == "All selected" ){
-                condition = "New, Used, Defect, Repair";
+                condition = "New, Used, Defect, Repair, Obsolete";
             }else{
                 condition = document.querySelector("#test>.ms-parent>button>span").innerText;
             }

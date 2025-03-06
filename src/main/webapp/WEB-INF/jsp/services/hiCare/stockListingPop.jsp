@@ -155,7 +155,7 @@ function btnGenerate_Click(){
             var runNo = 0;
 
             if (document.querySelector("#test>.ms-parent>button>span").innerText == "All selected" ){
-                condition = "New, Used, Defect, Repair";
+                condition = "New, Used, Defect, Repair, Obsolete";
             }else{
                 condition = document.querySelector("#test>.ms-parent>button>span").innerText;
             }
@@ -601,6 +601,7 @@ CommonCombo.make('sOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType
             <option value="111" selected="selected"><spring:message code="sal.combo.text.used" /></option>
             <option value="112" selected="selected"><spring:message code="sal.combo.text.defect" /></option>
             <option value="122" selected="selected"><spring:message code="sal.combo.text.repair" /></option>
+            <option value="7" selected="selected">Obsolete</option>
         </select>
     </td>
 </tr>

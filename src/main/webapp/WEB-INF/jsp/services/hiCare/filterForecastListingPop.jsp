@@ -327,6 +327,7 @@ function fn_genReport() {
             <option value="111" selected="selected"><spring:message code="sal.combo.text.used" /></option>
             <option value="112" selected="selected"><spring:message code="sal.combo.text.defect" /></option>
             <option value="122" selected="selected"><spring:message code="sal.combo.text.repair" /></option>
+            <option value="7" selected="selected">Obsolete</option>
         </select>
     </td>
 </tr>
