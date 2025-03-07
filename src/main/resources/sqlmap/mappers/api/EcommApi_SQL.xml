@@ -60,7 +60,8 @@
       UPD_DT ,
       UPD_USER_ID,
       BNDL_ID,
-      PROD_CAT
+      PROD_CAT,
+      CW_STORE_ID
   ) VALUES
   (
       #{ecommOrdId} ,
@@ -108,7 +109,8 @@
       SYSDATE ,
       #{apiUserId},
       #{bndlId},
-      #{prodCat}
+      #{prodCat},
+      #{cwStoreId}
   )
 </insert>
 

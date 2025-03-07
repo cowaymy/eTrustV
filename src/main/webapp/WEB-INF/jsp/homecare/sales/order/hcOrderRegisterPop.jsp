@@ -72,6 +72,7 @@
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp1', 'S', '');      // Discount period
         doDefCombo(codeList_322, '', 'promoDiscPeriodTp2', 'S', '');      // Discount period
         doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+        doGetComboData('/common/selectCodeList.do', { groupCode : 609 , orderValue : 'CODE'}, '0', 'isStore', 'S', 'fn_loadStoreId');
 		doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
          doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
@@ -364,6 +365,28 @@
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
             }
         });
+    }
+
+    function displayStoreSection(defaultValue) {
+        if ($('#isStore option:selected').val() != null
+            && $('#isStore option:selected').val() != ""
+            && $('#isStore option:selected').val() != "0") {
+          $('#storeSection').show();
+          if($('#cwStoreId > option').length == 0){
+              doGetComboData('/common/selectStoreList.do', null, defaultValue, 'cwStoreId', 'S');
+          }
+        } else {
+          $('#storeSection').hide();
+          $('#cwStoreId').val('');
+        }
+    }
+
+    function fn_loadStoreId(){
+        if('${preOrderInfo.cwStoreId}' != null && '${preOrderInfo.cwStoreId}' != 0){
+            $('#isStore').val(1);
+
+            displayStoreSection('${preOrderInfo.cwStoreId}');
+        }
     }
 
     //for initial load
@@ -1956,6 +1979,7 @@
                 receivingMarketingMsgStatus   : $('input:radio[name="marketingMessageSelection"]:checked').val()
                 ,voucherCode : voucherAppliedCode
                 , tnbAccNo : $("#tnbAccNo").val(),
+                cwStoreId          : $('#cwStoreId').val(),
             },
             salesOrderMVO2 : {
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),
@@ -2265,6 +2289,18 @@
                     isValid = false;
                     msg += "* Please select the frame promotion code.<br>";
                 }
+            }
+        }
+
+        if ($('#isStore').val() == "") {
+            isValid = false;
+            msg += "* Please select whether the sales belong to the store (Yes or No).<br>";
+        }
+
+        if ($('#isStore').val() != "" && $('#isStore').val() > 0) {
+            if ($('#cwStoreId').val() == "" || $('#cwStoreId').val() == 0) {
+                isValid = false;
+                msg += "* You have specified that the sales belong to the store. Please select a store from the list.<br>";
             }
         }
 
@@ -3747,6 +3783,17 @@
 
         <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
         <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Store<span class="must">*</span></th>
+    <td colspan="3">
+        <p>
+            <select id="isStore" name="isStore" onchange="displayStoreSection()" class="w100p"></select>
+        </p>
+        <p id="storeSection" style="display: none;">
+            <select id="cwStoreId" name="cwStoreId" class="w100p"></select>
+        </p>
     </td>
 </tr>
 <tr>

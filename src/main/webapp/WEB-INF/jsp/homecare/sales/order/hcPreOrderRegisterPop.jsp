@@ -135,6 +135,7 @@
           doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
       doGetComboSepa ('/homecare/selectHomecareDscBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
       doDefCombo(codeList_562, '0', 'voucherType', 'S', 'displayVoucherSection');    // Voucher Type Code
+      doGetComboData('/common/selectCodeList.do', { groupCode : 609 , orderValue : 'CODE'}, '0', 'isStore', 'S');
 
       $("#tnbAccNoLbl").hide();
       $("#tnbAccNo").hide();
@@ -1214,6 +1215,18 @@
               }
           }
 
+          if ($('#isStore').val() == "") {
+              isValid = false;
+              msg += "* Please select whether the sales belong to the store (Yes or No).<br>";
+            }
+
+            if ($('#isStore').val() != "" && $('#isStore').val() > 0) {
+              if ($('#cwStoreId').val() == "" || $('#cwStoreId').val() == 0) {
+                isValid = false;
+                msg += "* You have specified that the sales belong to the store. Please select a store from the list.<br>";
+              }
+            }
+
           if($('#voucherType').val() == ""){
             isValid = false;
               msg += "* Please select voucher type.<br>";
@@ -1495,6 +1508,7 @@
               tnbAccNo : $("#tnbAccNo").val(),
               rebateOrderId          : $('#txtMainRebateOrderID').val(),
               rebateOrderNo          : $('#rebateNo').val(),
+              cwStoreId          : $('#cwStoreId').val(),
           };
 
           var formData = new FormData();
@@ -2029,6 +2043,20 @@
                   $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
               }
           });
+      }
+
+      function displayStoreSection() {
+          if ($('#isStore option:selected').val() != null
+              && $('#isStore option:selected').val() != ""
+              && $('#isStore option:selected').val() != "0") {
+            $('#storeSection').show();
+            if($('#cwStoreId > option').length == 0){
+                doGetComboData('/common/selectStoreList.do', null, null, 'cwStoreId', 'S');
+            }
+          } else {
+            $('#storeSection').hide();
+            $('#cwStoreId').val('');
+          }
       }
 
       function fn_resetSales() {
@@ -3308,6 +3336,17 @@
                     <input id="txtBusType" name="txtBusType" type="hidden" />
                     <input id="hiddenMonthExpired" name="hiddenMonthExpired" type="hidden" />
                     <input id="hiddenPreBook" name="hiddenPreBook" type="hidden" />
+                  </td>
+                </tr>
+                <tr>
+                <th scope="row">Store<span class="must">*</span></th>
+                  <td>
+                    <p>
+                      <select id="isStore" name="isStore" onchange="displayStoreSection()" class="w100p"></select>
+                    </p>
+                    <p id="storeSection" style="display: none;">
+                      <select id="cwStoreId" name="cwStoreId" class="w100p"></select>
+                    </p>
                   </td>
                 </tr>
                 <tr>

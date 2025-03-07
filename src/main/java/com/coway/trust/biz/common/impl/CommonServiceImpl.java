@@ -2556,4 +2556,9 @@ public class CommonServiceImpl
     }
     return hexString.toString();
   }
+
+  @Override
+  public List<EgovMap> selectStoreList( Map<String, Object> params ) {
+    return commonMapper.selectStoreList( params );
+  }
 }
