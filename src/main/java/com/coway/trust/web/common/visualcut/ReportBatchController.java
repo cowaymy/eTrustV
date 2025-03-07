@@ -3378,6 +3378,90 @@ public void batchAutoDebitAuthorization(){
 	LOGGER.info("[END] batchAutoDebitAuthorization...");
 }
 
+// New report for e-Invoice Self Bill - HP
+@RequestMapping(value = "/eInvoiceSelfBillHP.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void eInvoiceSelfBillHP() {
+    LOGGER.info("[START] eInvoiceSelfBillHP...");
+    int taskIDConf = this.calculateTaskId();
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillHP.rpt");// visualcut
+                                                                             // rpt
+                                                                             // file
+    																			   //name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TASKID", taskIDConf);
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+    		"e-Invoice Self Bill" + File.separator + "SelfBillHP_" + CommonUtils.getNowDate() + ".xls");
+    params.put("isEInvoice", "1");
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] eInvoiceSelfBillHP...");
+}
+
+// New report for e-Invoice Self Bill - CD
+@RequestMapping(value = "/eInvoiceSelfBillCD.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void eInvoiceSelfBillCD() {
+	LOGGER.info("[START] eInvoiceSelfBillCD...");
+	int taskIDConf = this.calculateTaskId();
+	Map<String, Object> params = new HashMap<>();
+	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillCD.rpt");// visualcut
+	// rpt
+	// file
+	//name.
+	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+	params.put("V_TASKID", taskIDConf);
+	params.put("V_TEMP", "TEMP");// parameter
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+			"e-Invoice Self Bill" + File.separator + "SelfBillCD_" + CommonUtils.getNowDate() + ".xls");
+	params.put("isEInvoice", "1");
+	this.viewProcedure(null, null, params);
+	LOGGER.info("[END] eInvoiceSelfBillCD...");
+}
+
+// New report for e-Invoice Self Bill - HT
+@RequestMapping(value = "/eInvoiceSelfBillHT.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void eInvoiceSelfBillHT() {
+	LOGGER.info("[START] eInvoiceSelfBillHT...");
+	int taskIDConf = this.calculateTaskId();
+	Map<String, Object> params = new HashMap<>();
+	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillHT.rpt");// visualcut
+	// rpt
+	// file
+	//name.
+	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+	params.put("V_TASKID", taskIDConf);
+	params.put("V_TEMP", "TEMP");// parameter
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+			"e-Invoice Self Bill" + File.separator + "SelfBillHT_" + CommonUtils.getNowDate() + ".xls");
+	params.put("isEInvoice", "1");
+	this.viewProcedure(null, null, params);
+	LOGGER.info("[END] eInvoiceSelfBillHT...");
+}
+
+// New report for e-Invoice Self Bill - Vendor
+@RequestMapping(value = "/eInvoiceSelfBillVendor.do")
+//@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
+public void eInvoiceSelfBillVendor() {
+	LOGGER.info("[START] eInvoiceSelfBillVendor...");
+	int taskIDConf = this.calculateTaskId();
+	Map<String, Object> params = new HashMap<>();
+	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillVendor.rpt");// visualcut
+	// rpt
+	// file
+	//name.
+	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+	params.put("V_TASKID", taskIDConf);
+	params.put("V_TEMP", "TEMP");// parameter
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+			"e-Invoice Self Bill" + File.separator + "SelfBillVendor_" + CommonUtils.getNowDate() + ".xls");
+	params.put("isEInvoice", "1");
+	this.viewProcedure(null, null, params);
+	LOGGER.info("[END] eInvoiceSelfBillVendor...");
+}
+
 public static int calculateTaskId() {
   // Get current date
   Calendar calendar = Calendar.getInstance();
@@ -3497,9 +3581,11 @@ public static int calculateTaskId() {
     //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
     boolean isAutoDebitAuthorization = false;
 
-    if(CommonUtils.isNotEmpty(params.get("isAutoDebitAuthorization").toString())){
+    /*if(CommonUtils.isNotEmpty(params.get("isAutoDebitAuthorization").toString())){
     	isAutoDebitAuthorization = true;
-    }
+    }*/
+
+    String isEInvoice = params.get("isEInvoice") != null ? params.get("isEInvoice").toString() : "" ;
 
     switch (viewType) {
       case CSV:
@@ -3514,7 +3600,13 @@ public static int calculateTaskId() {
     	  }
         break;
       case EXCEL:
-        ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
+
+    	  if(!isEInvoice.equals("")){
+    		  ReportUtils.viewDataEXCELEInvoice(response, clientDoc, downFileName, params);
+    	  }
+    	  else{
+    		  ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
+    	  }
         break;
       case EXCEL_FULL:
         ReportUtils.viewEXCEL(response, clientDoc, downFileName);

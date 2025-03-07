@@ -3,6 +3,8 @@
  */
 package com.coway.trust.web.commission.report;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +67,9 @@ public class CommissionReportController {
 
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
+
+	@Value("${web.resource.upload.file}")
+	private String uploadDirWeb;
 
 	// DataBase message accessor....
 	@Autowired
@@ -1420,6 +1426,97 @@ public class CommissionReportController {
 
 		commissionReportService.commSHIIndexDetailsCall2(params);
 		List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/checkDirectory.do", method = RequestMethod.GET)
+	public ResponseEntity<List<Map>> checkDirectory(@RequestParam Map<String, Object> params) {
+
+		String last = "";
+		if ("PB".equals(params.get("groupCode"))) {
+			last += "Public";
+		} else if ("BI".equals(params.get("groupCode"))) {
+            last += "BizIntel";
+        } else if ("FN".equals(params.get("groupCode"))) {
+            last += "Finance";
+        } else {
+			last += "Privacy";
+		}
+
+		// String path = uploadDir + "/RawData/" + last;
+		String path = uploadDirWeb + "/RawData/" + last;
+
+		File directory = new File(path);
+
+		logger.debug("directory    값 : {}", directory);
+
+		FileFilter directoryFileFilter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.isDirectory();
+			}
+		};
+
+
+		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+
+
+		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
+		for (File directoryAsFile : directoryListAsFile) {
+			foldersInDirectory.add(directoryAsFile.getName());
+		}
+
+		Collections.sort(foldersInDirectory);
+
+
+		List<Map> list = new ArrayList<>();
+		for (int i = 0; i < foldersInDirectory.size(); i++) {
+			Map<String, Object> rtn = new HashMap();
+			rtn.put("codeId", foldersInDirectory.get(i));
+			rtn.put("codeName", foldersInDirectory.get(i));
+
+			list.add(rtn);
+
+		}
+		logger.debug("foldersInDirectory23    값 : {}", foldersInDirectory);
+		logger.debug("list    값 : {}", list);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/rawdataList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<Map>> rawdataList(@RequestParam Map<String, Object> params) throws Exception {
+
+		logger.debug("groupCode : {}", params);
+		// String path = uploadDir + "/RawData/" + params.get("type");
+		String path = uploadDirWeb + "/RawData/" + params.get("type");
+		File dirFile = new File(path);
+		File[] fileList = dirFile.listFiles();
+		List<Map> list = new ArrayList<>();
+		for (File tempFile : fileList) {
+			if (tempFile.isFile()) {
+				Map<String, Object> rtn = new HashMap();
+				String tempPath = tempFile.getParent();
+				String tempFileName = tempFile.getName();
+				logger.debug("tempPath : {}", tempPath);
+				logger.debug("tempFileName : {}", tempFileName);
+				File f = new File(tempPath, tempFileName);
+				Date made = new Date(f.lastModified());
+				Long length = f.length();
+				logger.debug("made : {}", made);
+				logger.debug("length : {}", length);
+
+				rtn.put("orignlfilenm", tempFileName);
+				rtn.put("updDt", made);
+				rtn.put("filesize", length);
+				rtn.put("subpath", tempPath);
+				list.add(rtn);
+			}
+
+		}
+
+		logger.debug("rtn : {}", list);
 
 		return ResponseEntity.ok(list);
 	}

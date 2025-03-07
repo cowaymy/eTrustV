@@ -1302,4 +1302,72 @@ public class CRJavaHelper {
 				}
 			}
 		}
+
+	  public static void exportExcelDataOnlyEInvoice(ReportClientDocument clientDoc, HttpServletResponse response,
+				boolean attachment, String downFileName, Map<String, Object> params)
+				throws ReportSDKExceptionBase, IOException {
+			ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
+			exportEInvoice(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
+		}
+
+	  private static void exportEInvoice(ReportClientDocument clientDoc, ExportOptions exportOptions,
+				HttpServletResponse response, boolean attachment, String mimeType, String extension, String downFileName)
+				throws ReportSDKExceptionBase, IOException {
+
+			InputStream is = null;
+			try {
+				is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
+
+				byte[] data = new byte[1024];
+
+				if (response != null) {
+					response.setContentType(mimeType);
+				}
+
+				if (response != null && attachment) {
+					String name = "";
+					if (StringUtils.isNotEmpty(downFileName)) {
+						name = downFileName;
+					} else if (StringUtils.isEmpty(name)) {
+						name = clientDoc.getReportSource().getReportTitle();
+						name = name.replaceAll("\"", "");
+					}
+
+					if (StringUtils.isEmpty(name)) {
+						name = "Report-" + extension;
+					}
+
+					response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+					/// callback 호출시 필수.
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
+				}
+
+				if (response != null) {
+					OutputStream os = response.getOutputStream();
+					while (is.read(data) > -1) {
+						os.write(data);
+					}
+				} else {
+					LOGGER.info("this line is batch call =>downFileName : {}, mimeType : {}", downFileName, mimeType);
+
+					File targetFile1 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Finance"
+							+ File.separator + downFileName);
+
+					if (!targetFile1.exists()) {
+						LOGGER.debug("make dir1...");
+						targetFile1.mkdirs();
+					}
+
+
+					java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+					IOUtils.closeQuietly(is);
+				}
+
+			} finally {
+				if (is != null) {
+					is.close();
+				}
+			}
+		}
 }
