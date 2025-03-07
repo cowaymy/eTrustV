@@ -98,7 +98,9 @@
 		        NVL(EE.INS_SUM_CNT,0) - NVL(FF.CNT,0) AS AVAIL_INS_CNT
 		        FROM (
 		        SELECT MEM_ID CT,INS_DATE C_DATE,CT_SUB_GRP,BRNCH_ID
-		        FROM   (SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+		        FROM   (
+		           <if test='hcIndicator != null and hcIndicator =="N"'>
+		        	SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
 		                  FROM   SVC0054M T, ORG0001D TT
 		                 WHERE       1 = 1
 		                         AND T.MEM_ID = TT.MEM_ID
@@ -132,10 +134,74 @@
 		                                                SYS0064M F
 		                                        WHERE   1 = 1 AND A.SALES_ORD_ID =  #{salesOrdId}
 		                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+					</if>
+		            <if test='hcIndicator != null and hcIndicator =="Y"'>
+					  <choose>
+			            <when test="productCat != null and (productCat == 'ACO' or productCat == 'ACI')">
+			                 -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding
+			                    SELECT DISTINCT M.MEM_CODE, M.MEM_ID, M1.CT_SUB_GRP, M.BRNCH AS BRNCH_ID
+			                        FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME
+			                        JOIN SYS0045M R ON U.USER_ID = R.USER_ID
+			                        JOIN SYS0005M B ON B.BRNCH_ID = M.BRNCH
+			                        LEFT JOIN ORG0005D M1 ON M1.MEM_ID = M.MEM_ID
+			                        WHERE R.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
+			                        AND M1.MEM_LVL = 3 -- Admin only assign to ACM. and ACM will distribute to ACI accordingly.
+			                        AND M.STUS = 1
+			                        AND
+			                        B.CODE = (SELECT    F.AC_BRNCH_CODE
+			                                              FROM SAL0001D A
+			                                                      , SAL0045D B
+			                                                      , SAL0023D E
+			                                                      , SYS0064M F
+			                                             WHERE A.SALES_ORD_ID =#{salesOrdId}
+			                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+			            </when>
+			            <otherwise>
+			                SELECT DISTINCT TT.MEM_CODE, T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+			                    FROM SVC0054M T, ORG0001D TT
+			                   WHERE T.MEM_ID = TT.MEM_ID
+			                       AND TT.STUS = 1
+			                       AND CT_SUB_GRP IN (SELECT   F.DT_SUB_GRP
+			                                                       FROM SAL0001D A
+			                                                               , SAL0045D B
+			                                                               , SAL0023D E
+			                                                               , SYS0064M F
+			                                                      WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+			                                          UNION
+			                                          SELECT F.LT_SUB_GRP
+			                                                       FROM SAL0001D A
+			                                                               , SAL0045D B
+			                                                               , SAL0023D E
+			                                                               , SYS0064M F
+			                                                      WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+			                                          )
+			                   UNION
+			                   SELECT DISTINCT B.MEM_CODE, B.MEM_ID, C.CT_SUB_GRP, C.BRNCH_ID
+			                    FROM SYS0005M A
+			                            , ORG0001D B
+			                            , ORG0005D C
+			                            , SYS0064M M
+			                   WHERE A.BRNCH_ID = B.BRNCH
+			                      AND B.MEM_ID = C.MEM_ID
+			                      AND C.MEM_LVL = '2'
+			                      AND B.STUS = '1'
+			                      AND A.CODE = (SELECT   F.DT_BRNCH_CODE
+			                                              FROM SAL0001D A
+			                                                      , SAL0045D B
+			                                                      , SAL0023D E
+			                                                      , SYS0064M F
+			                                             WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+			            </otherwise>
+			        </choose>
+					</if>
 		             ) C,
 		            (SELECT TO_CHAR((SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM   DUAL  CONNECT BY   LEVEL <![CDATA[ <= ]]> 14) TB
 		    ORDER BY INS_DATE, CT_SUB_GRP ASC ) AA
 <!-- 		    HOLIDAY JOIN -->
+		    <if test='hcIndicator != null and hcIndicator =="N"'>
 		    LEFT JOIN (
 		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
 		        FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D
@@ -145,6 +211,18 @@
 		        AND   B.CT_MEM_ID     = C.MEM_ID
 		        AND   B.BRNCH_CODE   = D.CODE
 		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+		    </if>
+		    <if test='hcIndicator != null and hcIndicator =="Y"'>
+		    LEFT JOIN (
+		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
+		        FROM SYS0101M A, ORG0020D B, ORG0001D C ,SYS0005M D
+		        WHERE A.HOLIDAY = B.HOLIDAY
+		        AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+		        AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+		        AND   B.CT_MEM_ID     = C.MEM_ID
+		        AND   B.BRNCH_CODE   = D.CODE
+		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+		    </if>
 <!-- 		    VACATION JOIN -->
 		    LEFT JOIN (
 		        SELECT MEM_ID, TO_CHAR(VACT_STD_DT,'YYYY-MM-DD') AS  VACT_STD_DT, TO_CHAR(VACT_END_DT,'YYYY-MM-DD') VACT_END_DT, VACT_REPL_CT
@@ -197,7 +275,9 @@
 		        NVL(EE.INS_SUM_CNT,0) - NVL(FF.CNT,0) AS AVAIL_INS_CNT
 		        FROM (
 		        SELECT MEM_ID CT,INS_DATE C_DATE,CT_SUB_GRP,BRNCH_ID
-		        FROM   (SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+		        FROM   (
+		           <if test='hcIndicator != null and hcIndicator =="N"'>
+		        	SELECT   DISTINCT T.MEM_ID,TT.MEM_CODE, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
 		                  FROM   SVC0054M T, ORG0001D TT
 		                 WHERE       1 = 1
 		                         AND T.MEM_ID = TT.MEM_ID
@@ -231,10 +311,74 @@
 		                                                SYS0064M F
 		                                        WHERE   1 = 1 AND A.SALES_ORD_ID =  #{salesOrdId}
 		                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+					</if>
+		            <if test='hcIndicator != null and hcIndicator =="Y"'>
+					  <choose>
+			            <when test="productCat != null and (productCat == 'ACO' or productCat == 'ACI')">
+			                 -- Added for Air Conditioner project - Display ACT (A.K.A CT) in allocation list -- Hui Ding
+			                    SELECT DISTINCT M.MEM_CODE, M.MEM_ID, M1.CT_SUB_GRP, M.BRNCH AS BRNCH_ID
+			                        FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME
+			                        JOIN SYS0045M R ON U.USER_ID = R.USER_ID
+			                        JOIN SYS0005M B ON B.BRNCH_ID = M.BRNCH
+			                        LEFT JOIN ORG0005D M1 ON M1.MEM_ID = M.MEM_ID
+			                        WHERE R.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
+			                        AND M1.MEM_LVL = 3 -- Admin only assign to ACM. and ACM will distribute to ACI accordingly.
+			                        AND M.STUS = 1
+			                        AND
+			                        B.CODE = (SELECT    F.AC_BRNCH_CODE
+			                                              FROM SAL0001D A
+			                                                      , SAL0045D B
+			                                                      , SAL0023D E
+			                                                      , SYS0064M F
+			                                             WHERE A.SALES_ORD_ID =#{salesOrdId}
+			                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+			            </when>
+			            <otherwise>
+			                SELECT DISTINCT TT.MEM_CODE, T.MEM_ID, T.CT_SUB_GRP, TT.BRNCH AS BRNCH_ID
+			                    FROM SVC0054M T, ORG0001D TT
+			                   WHERE T.MEM_ID = TT.MEM_ID
+			                       AND TT.STUS = 1
+			                       AND CT_SUB_GRP IN (SELECT   F.DT_SUB_GRP
+			                                                       FROM SAL0001D A
+			                                                               , SAL0045D B
+			                                                               , SAL0023D E
+			                                                               , SYS0064M F
+			                                                      WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+			                                          UNION
+			                                          SELECT F.LT_SUB_GRP
+			                                                       FROM SAL0001D A
+			                                                               , SAL0045D B
+			                                                               , SAL0023D E
+			                                                               , SYS0064M F
+			                                                      WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                         AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID
+			                                          )
+			                   UNION
+			                   SELECT DISTINCT B.MEM_CODE, B.MEM_ID, C.CT_SUB_GRP, C.BRNCH_ID
+			                    FROM SYS0005M A
+			                            , ORG0001D B
+			                            , ORG0005D C
+			                            , SYS0064M M
+			                   WHERE A.BRNCH_ID = B.BRNCH
+			                      AND B.MEM_ID = C.MEM_ID
+			                      AND C.MEM_LVL = '2'
+			                      AND B.STUS = '1'
+			                      AND A.CODE = (SELECT   F.DT_BRNCH_CODE
+			                                              FROM SAL0001D A
+			                                                      , SAL0045D B
+			                                                      , SAL0023D E
+			                                                      , SYS0064M F
+			                                             WHERE A.SALES_ORD_ID = #{salesOrdId}
+			                                                AND A.SALES_ORD_ID = B.SALES_ORD_ID AND B.ADD_ID = E.CUST_ADD_ID AND E.AREA_ID = F.AREA_ID)
+			            </otherwise>
+			        </choose>
+					</if>
 		             ) C,
 		            (SELECT TO_CHAR((SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE FROM   DUAL  CONNECT BY   LEVEL <![CDATA[ <= ]]> 14) TB
 		    ORDER BY INS_DATE, CT_SUB_GRP ASC ) AA
 <!-- 		    HOLIDAY JOIN -->
+		    <if test='hcIndicator != null and hcIndicator =="N"'>
 		    LEFT JOIN (
 		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
 		        FROM SYS0081M A, ORG0020D B, ORG0001D C ,SYS0005M D
@@ -244,6 +388,18 @@
 		        AND   B.CT_MEM_ID     = C.MEM_ID
 		        AND   B.BRNCH_CODE   = D.CODE
 		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+		    </if>
+		    <if test='hcIndicator != null and hcIndicator =="Y"'>
+		    LEFT JOIN (
+		        SELECT C.MEM_CODE  ,C.MEM_ID,C.BRNCH, TO_CHAR(A.HOLIDAY, 'YYYY-MM-DD') AS HOLIDAY
+		        FROM SYS0101M A, ORG0020D B, ORG0001D C ,SYS0005M D
+		        WHERE A.HOLIDAY = B.HOLIDAY
+		        AND   B.HOLIDAY_TYPE = B.HOLIDAY_TYPE
+		        AND   A.HOLIDAY_SEQ  = B.HOLIDAY_SEQ
+		        AND   B.CT_MEM_ID     = C.MEM_ID
+		        AND   B.BRNCH_CODE   = D.CODE
+		    ) BB ON BB.MEM_ID = AA.CT  AND BB.BRNCH = AA.BRNCH_ID AND BB.HOLIDAY = AA.C_DATE
+		    </if>
 <!-- 		    VACATION JOIN -->
 		    LEFT JOIN (
 		        SELECT MEM_ID, TO_CHAR(VACT_STD_DT,'YYYY-MM-DD') AS  VACT_STD_DT, TO_CHAR(VACT_END_DT,'YYYY-MM-DD') VACT_END_DT, VACT_REPL_CT

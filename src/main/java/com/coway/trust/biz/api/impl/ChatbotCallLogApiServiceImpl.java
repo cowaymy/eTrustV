@@ -216,6 +216,8 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 			if (orderInfo.get("waStusCodeId").toString().equals("44")
 					&& orderInfo.get("stusCodeId").toString().equals("1")) {
 				orderParam.put("salesOrdId", CommonUtils.nvl(orderInfo.get("salesOrdId")));
+				orderParam.put("hcIndicator", CommonUtils.nvl(orderInfo.get("hcIndicator")));
+				orderParam.put("productCat", CommonUtils.nvl(orderInfo.get("stockCatCode")));
 
 				if(CommonUtils.nvl(orderInfo.get("hcIndicator")).equals("N")){
 					orderParam.put("type", "6665"); // HA TYPE
@@ -379,6 +381,8 @@ public class ChatbotCallLogApiServiceImpl extends EgovAbstractServiceImpl implem
 					}
 				}
 				orderParam.put("appointmentDate", params.getAptDate());
+				orderParam.put("hcIndicator", CommonUtils.nvl(orderInfo.get("hcIndicator")));
+				orderParam.put("productCat", CommonUtils.nvl(orderInfo.get("stockCatCode")));
 
 				EgovMap firstAvailUser = chatbotCallLogApiMapper.selectFirstAvailAllocationUser(orderParam);
 
