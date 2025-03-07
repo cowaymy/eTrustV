@@ -3494,7 +3494,13 @@ public static int calculateTaskId() {
 
     String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
 
-    boolean isAutoDebitAuthorization = Boolean.parseBoolean(params.get("isAutoDebitAuthorization").toString());
+    //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
+    boolean isAutoDebitAuthorization = false;
+
+    if(CommonUtils.isNotEmpty(params.get("isAutoDebitAuthorization").toString())){
+    	isAutoDebitAuthorization = true;
+    }
+
     switch (viewType) {
       case CSV:
         ReportUtils.viewCSV(response, clientDoc, downFileName);
