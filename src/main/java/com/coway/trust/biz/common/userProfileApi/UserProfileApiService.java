@@ -1,5 +1,7 @@
 package com.coway.trust.biz.common.userProfileApi;
 
+import java.util.Map;
+
 import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
 import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
 
@@ -22,4 +24,7 @@ public interface UserProfileApiService {
   UserProfileApiDto selectUserRole(UserProfileApiForm param) throws Exception;
 
   UserProfileApiDto selectProfileImg(UserProfileApiForm param) throws Exception;
+
+  boolean updateParticular(Map<String, Object> params) throws Exception;
+
 }
