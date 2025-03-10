@@ -133,7 +133,8 @@
         doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
         doGetCombo('/organization/getStateList.do','' , ''   , 'cmbState' , 'M', 'f_multiCombo');//Added by keyi 20211105
 
-
+        doGetComboData('/common/selectStoreList.do', '', '', 'cmbCwStore', 'M', 'f_multiCombo');
+        
         //excel download - added by Adib
         $('#excelDown').click(function() {
             var excelProps = {
@@ -204,6 +205,13 @@
                 selectAll: true, // 전체선택
                 width: '80%'
             });
+             
+            $('#cmbCwStore').change(function() {
+
+             }).multipleSelect({
+                 selectAll: true, // 전체선택
+                 width: '80%'
+             });
         });
     }
 
@@ -819,6 +827,7 @@
             $("#cmbCondition").multipleSelect("uncheckAll");
             $("#cmbProduct").multipleSelect("uncheckAll");
             $("#cmbSalesType").multipleSelect("uncheckAll");
+            $("#cmbCwStore").multipleSelect("uncheckAll");
         });
     };
 
@@ -1088,10 +1097,12 @@
 <tr>
      <th scope="row"><spring:message code='sales.srvType'/></th>
      <td><select class="w100p" id="cmbSrvType" name="cmbSrvType"></td>
-     <th scope="row"></th>
-     <td></td>
-     <th scope="row"></th>
-     <td></td>
+     <th scope="row"><spring:message code='sal.text.cwStoreCode'/></th>
+     <td><select class="w100p" id="cmbCwStore" name="cmbCwStore"></td>
+     <th scope="row">is cowayWorld</th>
+     <td>
+      <input id="isCwWorld" name="isCwWorld" type="checkbox"/>
+      </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>

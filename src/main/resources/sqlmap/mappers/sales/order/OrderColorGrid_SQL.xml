@@ -43,7 +43,8 @@
                                        THEN (SELECT NAME
                                                 FROM SYS0038M
                                                 WHERE STUS_CODE_ID = S0020D.SO_REQ_STUS_ID)
-                                       ELSE '' END AS CANCELLATION_STATUS_NAME
+                                       ELSE '' END AS CANCELLATION_STATUS_NAME,
+                                       SOM.CW_STORE_ID
                            FROM (SELECT * FROM SAL0001D A
                                      WHERE 1=1
 
@@ -304,7 +305,9 @@
                                               SOM.IS_EXTRADE_PR,
                                               SOM.CANCELLATION_REQUEST_NO,
                                               SOM.CANCELLATION_STATUS_NAME,
-                                              INS.SRV_TYPE AS SERVICE_TYPE
+                                              INS.SRV_TYPE AS SERVICE_TYPE,
+                                              SOM.CW_STORE_ID,
+                                              CWW.CHNNL
                                    FROM SOM
                                    JOIN SAL0002D SOD ON SOM.SALES_ORD_ID = SOD.SALES_ORD_ID
                                    JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
@@ -331,6 +334,7 @@
                                                                           AND NVL(IS_NW,1)= 0
                                    LEFT JOIN SAL0102D CCP ON CCP.CCP_SALES_ORD_ID = SOM.SALES_ORD_ID
                                    LEFT JOIN SYS0032M CCPRESN ON CCPRESN.RESN_ID = CCP.CCP_RESN_ID
+                                   LEFT JOIN SAL0213M CWW ON CWW.PRE_ORD_ID = SOM.PRE_ORD_ID
     ]]>
                                    WHERE 1=1
                                    <if test="cmbCondition != null and cmbCondition != ''">
@@ -478,6 +482,15 @@
                                     <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
                                       #{item}
                                     </foreach>
+                                </if>
+                                <if test="cmbCwStore != null and cmbCwStore != ''">
+                                    AND E.CW_STORE_ID IN
+                                 <foreach item="item" collection="cmbCwStore" index="index" open="(" separator="," close=")">
+                                   #{item}
+                                 </foreach>
+                                </if>
+                                <if test='isCwWorld != null and isCwWorld != ""'>
+                                    AND E.CHNNL = 2
                                 </if>
                             ) E1
                             <if test="contactNum != null and contactNum != ''">
