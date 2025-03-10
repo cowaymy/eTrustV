@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.chatbot.impl.ChatbotMapper">
   <select id="getCustWADetailsByOrd" parameterType="Map" resultType="egovMap">
-        SELECT B.CUST_ID,B.NAME,H.NRIC,B.TEL_M1,A.SALES_ORD_NO,E.STK_CODE, E.STK_DESC,
+        SELECT  B.CUST_ID,B.NAME,H.NRIC,B.TEL_M1,A.SALES_ORD_NO,E.STK_CODE, E.STK_DESC,
         CASE WHEN (A.APP_TYPE_ID = 66) THEN A.MTH_RENT_AMT ELSE A.TOT_AMT END AS FEE_AMT,
         CASE WHEN (A.APP_TYPE_ID = 66) THEN C.OBLIGT_PRIOD ELSE 0 END AS OBLIGATION_PERIOD,
         A.CUST_ADD_ID,

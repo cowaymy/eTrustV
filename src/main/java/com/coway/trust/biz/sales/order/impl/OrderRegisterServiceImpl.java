@@ -2437,7 +2437,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           /*Call log insert, API Call to hypemind. - Frango 20250120*/
           int entryId = callEntryVO.getCallEntryId();
 
-          //WILL AUX ORDER CREATE CALLLOG? IF YES then BYPASS
           Map<String, Object> custInfoParam = new HashMap();
     	  custInfoParam.put("salesOrdId", salesOrderMVO.getSalesOrdId());
           EgovMap custWADetails = chatbotMapper.getCustWADetailsByOrd(custInfoParam);
