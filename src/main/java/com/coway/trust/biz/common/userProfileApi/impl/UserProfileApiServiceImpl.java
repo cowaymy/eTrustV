@@ -1,5 +1,7 @@
 package com.coway.trust.biz.common.userProfileApi.impl;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.MapUtils;
@@ -80,6 +82,27 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
       return rtn.create(selectProfileImg);
     }
     return rtn;
+  }
+
+  @Override
+  public boolean updateParticular(Map<String, Object> params) throws Exception {
+    if (null == params) {
+      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+    }
+    if (CommonUtils.isEmpty(params.get( "userName" ))) {
+      throw new ApplicationException(AppConstants.FAIL, "User Name value does not exist.");
+    }
+    if (CommonUtils.isEmpty(params.get( "data" ))) {
+      throw new ApplicationException(AppConstants.FAIL, "Data value does not exist.");
+    }
+    int count = userProfileApiMapper.updateParticular(params);
+    System.out.println(">>>>>>>>>>>>>>>>> " + count);
+
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }
