@@ -10,7 +10,7 @@
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
     var _option = {
-        width : "1200px", // 창 가로 크기
+        width : "1200px", // 창 가로 크기 
         height : "800px" // 창 세로 크기
     };
 

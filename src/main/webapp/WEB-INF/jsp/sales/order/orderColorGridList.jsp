@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 
-/* 커스텀 행 스타일 */
+/* 커스텀 행 스타일 */ 
 .my-yellow-style {
     background:#FFE400;
     font-weight:bold;

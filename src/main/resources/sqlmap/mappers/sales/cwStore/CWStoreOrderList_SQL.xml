@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.sales.cwStore.impl.CWStoreOrderListMapper">
 
   <select id="selectCWStoreOrderList" parameterType="Map" resultType="egovMap">
-    SELECT T.APP_TYPE_CODE
+    SELECT T.APP_TYPE_CODE 
          , T.APP_TYPE_NAME
          , T.CRT_USER_ID
          , CASE WHEN LENGTH(T.CUST_IC) = 12 THEN REGEXP_REPLACE(SUBSTR(T.CUST_IC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(T.CUST_IC, 9,12)
