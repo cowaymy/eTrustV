@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.common.userProfileApi;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.http.MediaType;
@@ -52,5 +54,11 @@ public class UserProfileApiController {
   @RequestMapping(value = "/selectProfileImg", method = RequestMethod.GET)
   public ResponseEntity<UserProfileApiDto> selectProfileImg(@ModelAttribute UserProfileApiForm param) throws Exception {
     return ResponseEntity.ok(userProfileApiService.selectProfileImg(param));
+  }
+
+  @ApiOperation(value = "updateParticular", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/updateParticular", method = RequestMethod.POST)
+  public ResponseEntity<Boolean> updateParticular(@ModelAttribute Map<String, Object> params) throws Exception {
+    return ResponseEntity.ok(userProfileApiService.updateParticular(params));
   }
 }
