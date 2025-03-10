@@ -27,4 +27,6 @@ public interface UserProfileApiMapper {
 
   EgovMap selectProfileImg(Map<String, Object> params);
 
+  int updateParticular(Map<String, Object> params);
+
 }
