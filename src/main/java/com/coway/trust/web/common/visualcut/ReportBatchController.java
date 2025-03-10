@@ -3441,7 +3441,7 @@ public void eInvoiceSelfBillHT() {
 	LOGGER.info("[END] eInvoiceSelfBillHT...");
 }
 
-// New report for e-Invoice Self Bill - Vendor
+// New report for e-Invoice Self Bill - Vendors
 @RequestMapping(value = "/eInvoiceSelfBillVendor.do")
 //@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
 public void eInvoiceSelfBillVendor() {

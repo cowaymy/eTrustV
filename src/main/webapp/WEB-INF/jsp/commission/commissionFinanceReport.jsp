@@ -261,7 +261,7 @@
 						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>
 			</ul>
-<!-- Self Bill file section start -->
+<!-- Self Bill file section start [s]-->
 		<aside class="title_line">
 		<h3>SelfBill Raw File(s)</h3>
 		</aside><!-- title_line end -->
@@ -285,7 +285,7 @@
 		<article class="grid_wrap"><!-- grid_wrap start -->
 		<div id="grid_wrap2" style="width:100%; height:290px; margin:0 auto;"></div>
 		</article>
-<!-- Self Bill file section end -->
+<!-- Self Bill file section end [e]-->
 		</form>
 	</section>
 </section>

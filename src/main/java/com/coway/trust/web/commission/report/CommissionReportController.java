@@ -1513,7 +1513,6 @@ public class CommissionReportController {
 				rtn.put("subpath", tempPath);
 				list.add(rtn);
 			}
-
 		}
 
 		logger.debug("rtn : {}", list);
