@@ -23,7 +23,7 @@ var productCompntItemGridID;
 $(document).ready(function(){
 	doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '${promoInfo.promoAppTypeId}', 'prodCompntAppTypeId', 'S', '');  //Application Type
 	doGetComboAndGroup2('/common/selectProductCodeList.do', '', '1427', 'prodCompntProductId', 'S', 'fn_setOptGrpClass'); //product
-	doGetComboData('/sales/promotion/selectProductCompntPromotionList.do', {appType: '${promoInfo.promoAppTypeId}' , stkId : '1427' , effectStartDt : $('#prodCompntEffectStartDt').val() , effectEndDt : $('#prodCompntEffectEndDt').val() , promoId : '${promoInfo.promoId}'  , config : 1 }, '${promoInfo.promoId}' , 'prodCompntPromoId', 'S' , '');
+	doGetComboData('/sales/promotion/selectProductCompntPromotionList.do', {appType: '${promoInfo.promoAppTypeId}' , stkId : '1427' , promoId : '${promoInfo.promoId}'  , config : 1 }, '${promoInfo.promoId}' , 'prodCompntPromoId', 'S' , '');
 	doGetComboData('/sales/promotion/selectProductCompnt.do', '', '', 'productCompntId', 'S', ''); // Component
 
 	createProductCompntItemGrid();
@@ -259,8 +259,6 @@ function fn_closeProdCompntConfigPop() {
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
-  <input type="hidden" id="prodCompntEffectStartDt" value="${bfDay}">
-  <input type="hidden" id="prodCompntEffectEndDt" value="${toDay}">
   <header class="pop_header">
      <h1 id="productCompntConfigHeader"><spring:message code="sales.promo.text.productCompntConfigEdit" /></h1>
     <ul class="right_opt">

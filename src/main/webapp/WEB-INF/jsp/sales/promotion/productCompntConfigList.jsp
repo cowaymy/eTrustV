@@ -247,14 +247,14 @@ var excelListGridID;
 
 	  $("#newProdCompntConfig").click(
 		   function() {
-		          Common.popupDiv("/sales/promotion/productCompntConfigAddPop.do", { effectStartDt : $('#effectStartDt').val() , effectEndDt : $('#effectEndDt').val() }, null, true, '_insDiv');
+		          Common.popupDiv("/sales/promotion/productCompntConfigAddPop.do", { effectStartDt : $('#effectStartDt').val()}, null, true, '_insDiv');
 		});
 
 	  $("#editProdCompntConfig").click(
 			   function() {
 				   rowIdx = AUIGrid.getSelectedIndex(productCompntConfigGridID)[0];
 			        if (rowIdx > -1) {
-			          Common.popupDiv("/sales/promotion/productCompntConfigModifyPop.do", { promoId : AUIGrid.getCellValue(productCompntConfigGridID, rowIdx, "promoId") , effectStartDt : $('#effectStartDt').val() , effectEndDt : $('#effectEndDt').val() }, null, true, '_insDiv');
+			          Common.popupDiv("/sales/promotion/productCompntConfigModifyPop.do", { promoId : AUIGrid.getCellValue(productCompntConfigGridID, rowIdx, "promoId") , effectStartDt : $('#effectStartDt').val()}, null, true, '_insDiv');
 			        }else {
 			            Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
 			            return false;
@@ -284,12 +284,6 @@ var excelListGridID;
 
   function fn_validSearchList() {
 	    var isValid = true, msg = "";
-
-	    if ((!FormUtil.isEmpty($('#effectStartDt').val()) && FormUtil.isEmpty($('#effectEndDt').val()))
-	        || (FormUtil.isEmpty($('#effectStartDt').val()) && !FormUtil.isEmpty($('#effectEndDt').val()))) {
-	      msg += '<spring:message code="sales.promo.alert.msg.selectEffectiveDate" /><br/>';
-	      isValid = false;
-	    }
 
 	    if (!isValid)
 	      Common.alert('<spring:message code="sales.promo.text.productCompntConfigSearch" />'
@@ -385,17 +379,9 @@ var excelListGridID;
     		<td>
     		  <input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" />
     		</td>
-            <th scope="row"><spring:message code="sales.EffectDate" /><span class="must">*</span></th>
+            <th scope="row"><spring:message code="sales.EffectDate" /></th>
             <td>
-              <div class="date_set w100p">
-                <p>
-                  <input id="effectStartDt" name="effectStartDt" type="text" value="${bfDay}" title="Effective Start Date" placeholder="DD/MM/YYYY" class="j_date" />
-                </p>
-                <span>To</span>
-                <p>
-                  <input id="effectEndDt" name="effectEndDt" type="text" value="${toDay}" title="Effect End Date" placeholder="DD/MM/YYYY" class="j_date" />
-                </p>
-              </div>
+                  <input id="effectStartDt" name="effectStartDt" type="text" value="${toDay}" title="Effective Start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  />
             </td>
           </tr>
         </tbody>

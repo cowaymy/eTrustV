@@ -74,7 +74,7 @@ $(document).ready(function(){
 $(function() {
 	  $('#prodCompntConfigAppType').change(function() {
 		  if(!FormUtil.isEmpty($('#prodCompntConfigAppType').val())){
-		  doGetComboData('/sales/promotion/selectProductCompntPromotionList.do', {appType: $('#prodCompntConfigAppType').val() , stkId : $('#prodCompntConfigProduct').val() , effectStartDt : $('#prodCompntEffectStartDt').val() , effectEndDt : $('#prodCompntEffectEndDt').val() , config : 0 }, '' , 'prodCompntConfigPromo', 'S' , '');
+		  doGetComboData('/sales/promotion/selectProductCompntPromotionList.do', {appType: $('#prodCompntConfigAppType').val() , stkId : $('#prodCompntConfigProduct').val() , config : 0 }, '' , 'prodCompntConfigPromo', 'S' , '');
 		  }
 	  });
 
@@ -274,8 +274,6 @@ function fn_closeProdCompntConfigPop() {
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
-  <input type="hidden" id="prodCompntEffectStartDt" value="${bfDay}">
-  <input type="hidden" id="prodCompntEffectEndDt" value="${toDay}">
   <header class="pop_header">
      <h1 id="productCompntConfigHeader"><spring:message code="sales.promo.text.productCompntConfigNew" /></h1>
     <ul class="right_opt">
