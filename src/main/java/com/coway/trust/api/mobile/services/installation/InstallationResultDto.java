@@ -1,7 +1,5 @@
 package com.coway.trust.api.mobile.services.installation;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceResultDto;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
