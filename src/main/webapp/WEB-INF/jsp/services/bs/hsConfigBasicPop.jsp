@@ -19,7 +19,7 @@
     var srvTypeChgHistoryLogGridID;
 
     var srvTypeHistoryColumnLayout = [
-                                                        {dataField : "srvCrtDt", headerText : "<spring:message code='service.title.CreateDate'/>", width:150, editable : false , dataType : "date", formatString : "dd/mm/yyyy"},
+                                                        {dataField : "srvCrtDt", headerText : "<spring:message code='service.title.CreateDate'/>", width:150, editable : false , dataType : "date", formatString : "mm/dd/yyyy"},
                                                         {dataField : "srvTypeChgFrom", headerText : "<spring:message code='service.title.from'/>", width:80, editable : false},
                                                         {dataField : "srvTypeChgTo", headerText : "<spring:message code='service.title.to'/>", width:80, editable : false},
                                                         {dataField : "remark", headerText : "<spring:message code='service.title.Remark'/>", width:400, editable : false},
