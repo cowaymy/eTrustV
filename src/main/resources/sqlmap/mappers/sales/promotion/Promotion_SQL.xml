@@ -1890,7 +1890,9 @@ LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_
                                   WHEN T1.PROMO_APP_TYPE_ID = 2286 THEN 68
                                   WHEN T1.PROMO_APP_TYPE_ID = 7553 THEN 144
                              ELSE 0 END)
-       LEFT JOIN SAL0223M T5 ON T4.ITM_CPNT_ID = T5.ITM_CPNT_ID AND T5.DISAB = 0 AND T2.PROMO_ITM_STK_ID = T5.ITM_STK_ID
+       LEFT JOIN SAL0223M T5 ON T4.ITM_CPNT_ID = T5.ITM_CPNT_ID
+       <!-- AND T5.DISAB = 0 -->
+       AND T2.PROMO_ITM_STK_ID = T5.ITM_STK_ID
     WHERE T1.PROMO_ID = #{promoId}
     <if test='appTypeId != null and appTypeId != ""'>
           AND T1.PROMO_APP_TYPE_ID = #{appTypeId}
