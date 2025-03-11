@@ -1867,7 +1867,7 @@ LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_
     </if>
 
     <if test='effectStartDt != null and effectStartDt != ""'>
-         AND TO_DATE(#{effectStartDt},'DD/MM/YYYY') BETWEEN TO_DATE(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(T1.PROMO_DT_END, 'DD/MM/YYYY')
+         AND TO_DATE(#{effectStartDt},'DD/MM/YYYY') BETWEEN T1.PROMO_DT_FROM AND T1.PROMO_DT_END
     </if>
 
     <if test='appType != null and appType != ""'>
@@ -1921,7 +1921,7 @@ LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_
                  JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
                   AND T2.PROMO_APP_TYPE_ID = #{appType}
-                  <![CDATA[    AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(T2.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(T2.PROMO_DT_END, 'DD/MM/YYYY') ]]>
+                 AND SYSDATE BETWEEN T2.PROMO_DT_FROM AND T2.PROMO_DT_END
          LEFT JOIN SAL0237M T3 ON T1.PROMO_ID = T3.PROMO_ID AND T1.PROMO_ITM_STK_ID = T3.ITM_STK_ID AND T3.DISAB = 0
                                   AND T3.APP_TYPE_ID = (CASE WHEN T2.PROMO_APP_TYPE_ID = 2284 THEN 66
                                   WHEN T2.PROMO_APP_TYPE_ID = 2285 THEN 67
