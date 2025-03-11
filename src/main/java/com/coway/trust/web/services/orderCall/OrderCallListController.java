@@ -122,7 +122,6 @@ public class OrderCallListController {
     String[] promotionListSp = request.getParameterValues("promotion");
     String[] DSCCode = request.getParameterValues("DSCCode");
     String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode");
-    String[] waStusCodeId = request.getParameterValues("waStusCodeId");
 
     params.put("appTypeList", appTypeList);
     params.put("callLogTypeList", callLogTypeList);
@@ -132,7 +131,6 @@ public class OrderCallListController {
     params.put("promotionListSp", promotionListSp);
     params.put("DSCCode",DSCCode);
     params.put("searchFeedBackCode",searchFeedBackCode);
-    params.put("waStusCodeId",waStusCodeId);
 
     logger.debug("searchOrderCallList - params : {}", params);
 
@@ -541,30 +539,6 @@ public class OrderCallListController {
       return ResponseEntity.ok(codeList);
   }
 
-  @RequestMapping(value = "/callLogAppointmentManualBlastPop.do")
-  public String callLogAppointmentManualBlastPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    return "services/orderCall/callLogAppointmentManualBlastPop";
-  }
 
-  @RequestMapping(value = "/getCallLogAppointmentList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> getCallLogAppointmentList(@RequestParam Map<String, Object> params,HttpServletRequest request) {
 
-		 String[] statusIdList = request.getParameterValues("status");
-		 params.put("statusIdList",statusIdList);
-      List<EgovMap> result = orderCallListService.getCallLogAppointmentList(params);
-      return ResponseEntity.ok(result);
-  }
-
-  @RequestMapping(value = "/confirmBlastCallLogAppointment.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> confirmBlastCallLogAppointment(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-    ReturnMessage message = new ReturnMessage();
-
-    String[] idValue = params.get("ids").toString().split(",");
-
-    params.put("idValue", idValue);
-
-    message = orderCallListService.blastCallLogAppointmentList(params);
-
-    return ResponseEntity.ok(message);
-  }
 }

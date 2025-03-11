@@ -39,5 +39,5 @@ public interface EcommApiMapper {
 
   List<EgovMap> getCustomerCat(Map<String, Object> param);
 
-  int isProductUnderBlackArea(Map<String, Object> param);
+  /*int isProductUnderBlackArea(Map<String, Object> param);*/
 }
