@@ -1167,10 +1167,14 @@ WHERE 1=1
 
   <select id="selectPlanMaster" parameterType="Map" resultType="int">
     SELECT COUNT(-1) CNT
-    FROM FCM0104D
-    WHERE COST_CENTR = #{costCenter}
-    AND GL_ACC_CODE = #{glAccCode}
-    AND BUDGET_CODE= #{budgetCode}
+    FROM FCM0104D A
+    JOIN FCM0101M B ON B.COST_CENTR = A.COST_CENTR AND
+                    B.BUDGET_CODE = A .BUDGET_CODE AND
+                    B.GL_ACC_CODE = A.GL_ACC_CODE
+    WHERE B.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+        AND A.COST_CENTR = #{costCenter}
+        AND A.GL_ACC_CODE = #{glAccCode}
+        AND A.BUDGET_CODE= #{budgetCode}
   </select>
 
   <select id="selectCostCenterName" parameterType="Map" resultType="String">
