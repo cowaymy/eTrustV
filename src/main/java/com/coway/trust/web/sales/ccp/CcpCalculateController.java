@@ -256,9 +256,9 @@ public class CcpCalculateController {
 	@RequestMapping(value = "/ccpCalCCpViewPop.do")
 	public String ccpCalCCpViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
-		LOGGER.info("############################################################");
+		LOGGER.info("azimah ke ni############################################################");
 		LOGGER.info("############ CalCcpViewPop Params Confirm : " + params.toString());
-		LOGGER.info("############################################################");
+		LOGGER.info("azimah ke ni????############################################################");
 
 		//Log Service
 		EgovMap prgMap = null;
@@ -927,10 +927,11 @@ public class CcpCalculateController {
     	//ccpId
     	EgovMap ccpInfoMap = null;
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByOrderId(params);
+    	LOGGER.info("Check Ezy CCP");
 
     	//eResubmit
     	EgovMap ccpEresubmitMap = null;
-    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmitView(params);
     	LOGGER.info("Check 4");
 
     	EgovMap tempMap1 = null;
