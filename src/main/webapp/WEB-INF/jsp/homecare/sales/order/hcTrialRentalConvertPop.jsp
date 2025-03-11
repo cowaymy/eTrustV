@@ -375,7 +375,7 @@
 
                     switch(selVal) {
                         case '66' : //RENTAL
-                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            //fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
@@ -399,7 +399,7 @@
                             break;
 
                         case '7759' : //TRIALRENTAL
-                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            //fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
@@ -477,7 +477,7 @@
                                 fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
 
-                            fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                            //fn_tabOnOffSet('PAY_CHA', 'SHOW');
                             $("#corpCustType").val('').prop("disabled", true);
                             $("#agreementType").val('').prop("disabled", true);
                             appSubType = '370';
