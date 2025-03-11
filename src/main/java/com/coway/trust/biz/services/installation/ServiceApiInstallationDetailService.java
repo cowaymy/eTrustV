@@ -4,21 +4,10 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 
-import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-/**
- * @ClassName : ServiceApiInstallationDetailService.java
- * @Description : Mobile Installation Data Save
- *
- *
- * @History
- * Date Author Description
- * ------------- ----------- -------------
- * 2019. 09. 17. Jun First creation
- */
 public interface ServiceApiInstallationDetailService {
   ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult) throws Exception;
 
