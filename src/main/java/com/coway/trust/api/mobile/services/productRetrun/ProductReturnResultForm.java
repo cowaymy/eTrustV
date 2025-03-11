@@ -13,126 +13,77 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "ProductReturnResultForm", description = "공통코드 Form")
 public class ProductReturnResultForm {
-  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
+  @ApiModelProperty(value = "USER ID")
   private String userId;
 
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "SERVICE NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "결과 등록 메모")
+  @ApiModelProperty(value = "RESULT REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "결과 등록시, Owner Code")
+  @ApiModelProperty(value = "OWNER CODE")
   private String ownerCode;
 
-  @ApiModelProperty(value = "결과 등록시, Cust Name")
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "결과 등록시, NrIc 또는 Mobile No")
+  @ApiModelProperty(value = "RESULT MOBILE NUMBER")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "결과 등록시, Email_No")
+  @ApiModelProperty(value = "RESULT EMAIL ADDRESS")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "결과 등록시, Acceptance Name")
+  @ApiModelProperty(value = "RESULT ACCEPTANCE NAME")
   private String resultAcceptanceName;
 
-  @ApiModelProperty(value = "base64 Data")
+  @ApiModelProperty(value = "SIGNATURE")
   private String signData;
 
-  @ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
+  @ApiModelProperty(value = "TRANSACTION ID")
   private String transactionId;
 
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
-  @ApiModelProperty(value = "signRegDate Data")
+  @ApiModelProperty(value = "SIGNATURE DATE")
   private String signRegDate;
 
-  @ApiModelProperty(value = "signRegTime Data")
+  @ApiModelProperty(value = "SIGNATURE TIME")
   private String signRegTime;
 
+  @ApiModelProperty(value = "CANCELLATION CODE")
   private String ccCode;
 
+  @ApiModelProperty(value = "RESULT CODE")
   private String resultCode;
 
+  @ApiModelProperty(value = "SERIAL REQUIRE CHECK INDICATOR")
   private String serialRequireChkYn;
 
+  @ApiModelProperty(value = "RETURN FAIL CODE REMARK")
   private String retnCodeFailRemark;
 
+  @ApiModelProperty(value = "PARTNER CODE")
   private String partnerCode;
 
+  @ApiModelProperty(value = "PARTNER CODE NAME")
   private String partnerCodeName;
 
-  public String getSerialRequireChkYn() {
-    return serialRequireChkYn;
-  }
+  @ApiModelProperty(value = "SCAN SERIAL")
+  private String scanSerial;
 
-  public void setSerialRequireChkYn( String serialRequireChkYn ) {
-    this.serialRequireChkYn = serialRequireChkYn;
-  }
-
-  public String getCcCode() {
-    return ccCode;
-  }
-
-  public void setCcCode( String ccCode ) {
-    this.ccCode = ccCode;
-  }
-
-  public String getResultCode() {
-    return resultCode;
-  }
-
-  public void setResultCode( String resultCode ) {
-    this.resultCode = resultCode;
-  }
-
-  public String getSignRegDate() {
-    return signRegDate;
-  }
-
-  public void setSignRegDate( String signRegDate ) {
-    this.signRegDate = signRegDate;
-  }
-
-  public String getSignRegTime() {
-    return signRegTime;
-  }
-
-  public void setSignRegTime( String signRegTime ) {
-    this.signRegTime = signRegTime;
-  }
-
-  public String getCheckInDate() {
-    return checkInDate;
-  }
-
-  public void setCheckInDate( String checkInDate ) {
-    this.checkInDate = checkInDate;
-  }
-
-  public String getCheckInTime() {
-    return checkInTime;
-  }
-
-  public void setCheckInTime( String checkInTime ) {
-    this.checkInTime = checkInTime;
-  }
-
-  public String getCheckInGps() {
-    return checkInGps;
-  }
-
-  public void setCheckInGps( String checkInGps ) {
-    this.checkInGps = checkInGps;
-  }
+  @ApiModelProperty(value = "FRAME SERIAL NUMBER")
+  private String fraSerialNo;
 
   public String getUserId() {
     return userId;
@@ -222,24 +173,68 @@ public class ProductReturnResultForm {
     this.transactionId = transactionId;
   }
 
-  private String scanSerial;
-
-  public String getScanSerial() {
-    return scanSerial;
+  public String getCheckInDate() {
+    return checkInDate;
   }
 
-  public void setScanSerial( String scanSerial ) {
-    this.scanSerial = scanSerial;
+  public void setCheckInDate( String checkInDate ) {
+    this.checkInDate = checkInDate;
   }
 
-  private String fraSerialNo;
-
-  public String getFraSerialNo() {
-    return fraSerialNo;
+  public String getCheckInTime() {
+    return checkInTime;
   }
 
-  public void setFraSerialNo( String fraSerialNo ) {
-    this.fraSerialNo = fraSerialNo;
+  public void setCheckInTime( String checkInTime ) {
+    this.checkInTime = checkInTime;
+  }
+
+  public String getCheckInGps() {
+    return checkInGps;
+  }
+
+  public void setCheckInGps( String checkInGps ) {
+    this.checkInGps = checkInGps;
+  }
+
+  public String getSignRegDate() {
+    return signRegDate;
+  }
+
+  public void setSignRegDate( String signRegDate ) {
+    this.signRegDate = signRegDate;
+  }
+
+  public String getSignRegTime() {
+    return signRegTime;
+  }
+
+  public void setSignRegTime( String signRegTime ) {
+    this.signRegTime = signRegTime;
+  }
+
+  public String getCcCode() {
+    return ccCode;
+  }
+
+  public void setCcCode( String ccCode ) {
+    this.ccCode = ccCode;
+  }
+
+  public String getResultCode() {
+    return resultCode;
+  }
+
+  public void setResultCode( String resultCode ) {
+    this.resultCode = resultCode;
+  }
+
+  public String getSerialRequireChkYn() {
+    return serialRequireChkYn;
+  }
+
+  public void setSerialRequireChkYn( String serialRequireChkYn ) {
+    this.serialRequireChkYn = serialRequireChkYn;
   }
 
   public String getRetnCodeFailRemark() {
@@ -264,6 +259,22 @@ public class ProductReturnResultForm {
 
   public void setPartnerCodeName( String partnerCodeName ) {
     this.partnerCodeName = partnerCodeName;
+  }
+
+  public String getScanSerial() {
+    return scanSerial;
+  }
+
+  public void setScanSerial( String scanSerial ) {
+    this.scanSerial = scanSerial;
+  }
+
+  public String getFraSerialNo() {
+    return fraSerialNo;
+  }
+
+  public void setFraSerialNo( String fraSerialNo ) {
+    this.fraSerialNo = fraSerialNo;
   }
 
   public static List<Map<String, Object>> createMaps( ProductReturnResultForm productReturnResultForm ) {
