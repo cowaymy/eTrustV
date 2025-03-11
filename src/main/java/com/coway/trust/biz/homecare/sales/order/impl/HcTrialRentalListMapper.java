@@ -91,4 +91,6 @@ public interface HcTrialRentalListMapper {
   int updateTrialRentalConvertHistory(Map<String, Object> params);
 
   int updateOldTrialRentalConvertHistory(Map<String, Object> params);
+
+  Map<String, Object> createTrialBillCN(Map<String, Object> param);
 }

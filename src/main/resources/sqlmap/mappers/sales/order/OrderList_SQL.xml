@@ -420,7 +420,7 @@
                                                              AND BB.CODE = 'FRM')
             --> -- Mattress, Frame
 
-                  AND v1.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67)
+                  AND v1.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67,7759)
            </if>
            <if test = 'memID != null and memID != ""'>
            AND V1.SALESMAN_MEM_ID = #{memID}
@@ -451,7 +451,7 @@
              WHERE
              A.SALES_ORD_NO = #{ordNo}
              <if test='isSelectAll == null or isSelectAll == ""'>
-             AND A.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67)
+             AND A.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67,7759)
              </if>
              <if test='arrAppType != null and arrAppType != ""'>
                  AND A.APP_TYPE_ID IN

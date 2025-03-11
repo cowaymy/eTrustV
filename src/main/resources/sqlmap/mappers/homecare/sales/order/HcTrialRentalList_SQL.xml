@@ -787,4 +787,10 @@
         WHERE SO_ID = #{salesOrdId} AND CONVERT_STUS_ID = 1 AND SYSDATE - INTERVAL '10' MINUTE > CRT_DT
    </update>
 
+   <resultMap id="resultTrialBillCNMap" type="egovMap" />
+	<select id="createTrialBillCN" statementType="CALLABLE" parameterType="Map">
+	  {
+	       call SP_GEN_BILL_TRL_REN_CVRT_CN(#{salesOrdId})
+	  }
+	</select>
 </mapper>

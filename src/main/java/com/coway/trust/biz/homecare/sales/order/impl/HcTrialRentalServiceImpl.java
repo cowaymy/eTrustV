@@ -446,7 +446,7 @@ public class HcTrialRentalServiceImpl extends EgovAbstractServiceImpl implements
 		  EgovMap trialRentalInfo = hcTrialRentalListMapper.getTrialRentalBasicInfo(params);
 
 		  if(trialRentalInfo != null && trialRentalInfo.size() > 0){
-			  int orderNumber = Integer.parseInt(orderVO.getSalesOrdNoFirst());
+			  int orderNumber = CommonUtils.intNvl(orderVO.getSalesOrdNoFirst());
 
 			  int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
 			  int srvPacId = CommonUtils.intNvl(salesOrderMVO.getSrvPacId());
@@ -496,22 +496,16 @@ public class HcTrialRentalServiceImpl extends EgovAbstractServiceImpl implements
 		      hcTrialRentalListMapper.updateSAL0002D(salesOrderDVO);
 		      hcTrialRentalListMapper.updateSAL0003D(salesOrderContractVO);
 
-		      Map<String, Object> inSal0095d = new HashMap<>();
-		      inSal0095d.put("salesOrdId", salesOrdId);
-		      inSal0095d.put("srvPacId", srvPacId);
-		      inSal0095d.put("custCntId", salesOrderMVO.getCustCntId());
-		      inSal0095d.put("userId", sessionVO.getUserId());
-		      hcTrialRentalListMapper.insertSAL0095D(inSal0095d);
+		      Map<String, Object> inMap = new HashMap<>();
+		      inMap.put("salesOrdId", salesOrdId);
+		      inMap.put("srvPacId", srvPacId);
+		      inMap.put("custCntId", salesOrderMVO.getCustCntId());
+		      inMap.put("userId", sessionVO.getUserId());
 
-		      Map<String, Object> inSal0088d = new HashMap<>();
-		      inSal0088d.put("salesOrdId", salesOrdId);
-		      inSal0088d.put("userId", sessionVO.getUserId());
-		      hcTrialRentalListMapper.insertSAL0088D(inSal0088d);
-
-		      Map<String, Object> inSal0070d = new HashMap<>();
-		      inSal0070d.put("salesOrdId", salesOrdId);
-		      inSal0070d.put("userId", sessionVO.getUserId());
-		      hcTrialRentalListMapper.insertSAL0070D(inSal0070d);
+		      hcTrialRentalListMapper.insertSAL0095D(inMap);
+		      hcTrialRentalListMapper.insertSAL0088D(inMap);
+		      hcTrialRentalListMapper.insertSAL0070D(inMap);
+		      hcTrialRentalListMapper.createTrialBillCN(inMap);
 
 		      inTrialRentalConvertHistory.clear();
 		      inTrialRentalConvertHistory.put("convertId", trialRentalConvertHistorySeq);
