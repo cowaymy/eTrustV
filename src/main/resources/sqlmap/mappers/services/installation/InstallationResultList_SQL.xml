@@ -2648,8 +2648,8 @@
          , Limit1.SO_EXCHG_OLD_CUST_ID SO_EXCHG_OLD_CUST_ID
          , Limit1.SO_EXCHG_NW_CUST_ID SO_EXCHG_NW_CUST_ID
          , Limit1.SO_EXCHG_FORM_NO SO_EXCHG_FORM_NO
-         , Limit1.SO_EXCHG_OLD_SRV_TYPE
-         , Limit1.SO_EXCHG_NW_SRV_TYPE
+         <!-- , Limit1.SO_EXCHG_OLD_SRV_TYPE
+         , Limit1.SO_EXCHG_NW_SRV_TYPE -->
     FROM ( SELECT Extent3.SO_EXCHG_ID SO_EXCHG_ID
                 , Extent3.SO_ID SO_ID
                 , Extent3.SO_EXCHG_TYPE_ID SO_EXCHG_TYPE_ID
@@ -2688,8 +2688,8 @@
                 , Extent3.SO_EXCHG_OLD_CUST_ID SO_EXCHG_OLD_CUST_ID
                 , Extent3.SO_EXCHG_NW_CUST_ID SO_EXCHG_NW_CUST_ID
                 , Extent3.SO_EXCHG_FORM_NO SO_EXCHG_FORM_NO
-                , Extent3.SO_EXCHG_OLD_SRV_TYPE
-                , Extent3.SO_EXCHG_NW_SRV_TYPE
+                <!-- , Extent3.SO_EXCHG_OLD_SRV_TYPE
+                , Extent3.SO_EXCHG_NW_SRV_TYPE -->
            FROM SAL0046D Extent1
            JOIN CCR0006D Extent2 ON Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID
            JOIN SAL0004D Extent3 ON Extent3.SO_EXCHG_ID = Extent2.DOC_ID

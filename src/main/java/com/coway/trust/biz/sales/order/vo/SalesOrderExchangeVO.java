@@ -55,8 +55,8 @@ public class SalesOrderExchangeVO implements Serializable {
 	private int PTRStusId;
 	private String PTRNo;
 	private int soExchgAtchGrpId;
-	private String soExchgOldSrvType;
-	private String soExchgNwSrvType;
+	//private String soExchgOldSrvType;
+	//private String soExchgNwSrvType;
 
   public int getSoExchgId() {
 		return soExchgId;
@@ -304,16 +304,16 @@ public class SalesOrderExchangeVO implements Serializable {
 	public void setSoExchgAtchGrpId(int soExchgAtchGrpId) {
 	  this.soExchgAtchGrpId = soExchgAtchGrpId;
 	}
-  public String getSoExchgOldSrvType() {
-    return soExchgOldSrvType;
-  }
-  public void setSoExchgOldSrvType(String soExchgOldSrvType) {
-    this.soExchgOldSrvType = soExchgOldSrvType;
-  }
-  public String getSoExchgNwSrvType() {
-    return soExchgNwSrvType;
-  }
-  public void setSoExchgNwSrvType(String soExchgNwSrvType) {
-    this.soExchgNwSrvType = soExchgNwSrvType;
-  }
+  //public String getSoExchgOldSrvType() {
+  //  return soExchgOldSrvType;
+  //}
+  //public void setSoExchgOldSrvType(String soExchgOldSrvType) {
+  //  this.soExchgOldSrvType = soExchgOldSrvType;
+  //}
+  //public String getSoExchgNwSrvType() {
+  //  return soExchgNwSrvType;
+  //}
+  //public void setSoExchgNwSrvType(String soExchgNwSrvType) {
+  //  this.soExchgNwSrvType = soExchgNwSrvType;
+  //}
 }

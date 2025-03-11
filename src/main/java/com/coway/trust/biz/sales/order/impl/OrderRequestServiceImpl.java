@@ -149,7 +149,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderExchangeVO.setSoExchgOldCallEntryId(0);
       salesOrderExchangeVO.setSoExchgOldDefRentAmt(BigDecimal.ZERO);
       salesOrderExchangeVO.setSoExchgOldCustId(0);
-      salesOrderExchangeVO.setSoExchgOldSrvType((String) params.get("hiddenSrvType")); // OLD SERVICE TYPE
+      //salesOrderExchangeVO.setSoExchgOldSrvType((String) params.get("hiddenSrvType")); // OLD SERVICE TYPE
 
       // DATA FOR NEW EXCHANGE PRODUCT
       salesOrderExchangeVO.setSoExchgNwAppTypeId((int) params.get("appTypeId")); // NEW APPLICATION TYPE - SAME AS PREVIOUS
@@ -165,7 +165,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       salesOrderExchangeVO.setSoExchgNwCallEntryId(0);
       salesOrderExchangeVO.setSoExchgNwDefRentAmt(new BigDecimal((String) params.get("ordRentalFees")));
       salesOrderExchangeVO.setSoExchgNwCustId(0);
-      salesOrderExchangeVO.setSoExchgNwSrvType((String) params.get("reqSrvType")); // NEW SERVICE TYPE
+      //salesOrderExchangeVO.setSoExchgNwSrvType((String) params.get("reqSrvType")); // NEW SERVICE TYPE
     } else if (SalesConstants.ORDER_REQ_TYPE_CD_AEXC.equals(ordReqType)) {
       salesOrderExchangeVO.setSoExchgTypeId(282);
       salesOrderExchangeVO.setSoExchgStusId(SalesConstants.STATUS_COMPLETED);
@@ -1653,48 +1653,48 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         callEntryId = CommonUtils.intNvl(callEntryMap2.get("callEntryId")); // STORE CALL ENTRY ID IF RECORD EXIST
       }
 
-      params.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
-      params.put("updUserId", sessionVO.getUserId());
-      params.put("srvType", orderExchangeMasterVO.getSoExchgNwSrvType());
+      //params.put("salesOrderId", CommonUtils.intNvl(params.get("salesOrdId")));
+      //params.put("updUserId", sessionVO.getUserId());
+      //params.put("srvType", orderExchangeMasterVO.getSoExchgNwSrvType());
       // Update - SAL0045D
-      orderRequestMapper.updateInstallSrvType(params);
+      //orderRequestMapper.updateInstallSrvType(params);
 
       // UPDATE OLD REBATE TO INACTIVE
-      EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(params);
-      if (getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0) {
-        Map<String, Object> ssRebate = new HashMap();
-        ssRebate.put("stusId", 8);
-        ssRebate.put("ordId", getSSGstRebateInfo.get("ordId"));
-        ssRebate.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
-        ssRebate.put("updUserId", sessionVO.getUserId());
-        hsManualMapper.updateSSRebateStatus(ssRebate);
-      }
+      //EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(params);
+      //if (getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0) {
+      //  Map<String, Object> ssRebate = new HashMap();
+      //  ssRebate.put("stusId", 8);
+      //  ssRebate.put("ordId", getSSGstRebateInfo.get("ordId"));
+      //  ssRebate.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
+      //  ssRebate.put("updUserId", sessionVO.getUserId());
+      //  hsManualMapper.updateSSRebateStatus(ssRebate);
+      //}
 
       // UPDATE OLD PV REBATE TO INACTIVE
-      EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(params);
-      if (getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0) {
-        Map<String, Object> pvRebate = new HashMap();
-        pvRebate.put("stusId", 8);
-        pvRebate.put("ordId", getPvSSRebateInfo.get("ordId"));
-        pvRebate.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
-        pvRebate.put("updUserId", sessionVO.getUserId());
-        hsManualMapper.updatePvSSRebateStatus(pvRebate);
-      }
+      //EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(params);
+      //if (getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0) {
+      //  Map<String, Object> pvRebate = new HashMap();
+      //  pvRebate.put("stusId", 8);
+      //  pvRebate.put("ordId", getPvSSRebateInfo.get("ordId"));
+      //  pvRebate.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
+      //  pvRebate.put("updUserId", sessionVO.getUserId());
+      //  hsManualMapper.updatePvSSRebateStatus(pvRebate);
+      //}
 
       // INSERT Self Service Rebate IF TYPE = BEFORE INSTALL , APP TYPE = RENTAL , SERVICE TYPE = SS
-      if(orderExchangeMasterVO.getSoCurStusId() == 24 &&
-          orderExchangeMasterVO.getSoExchgNwAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL &&
-          orderExchangeMasterVO.getSoExchgNwSrvType() != null &&
-          orderExchangeMasterVO.getSoExchgNwSrvType().equals("SS")){
-        EgovMap rebate = new EgovMap();
-        rebate.put("srvCntrctPacId", params.get("hiddenSrvPacId"));
-        EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(rebate);
+      //if(orderExchangeMasterVO.getSoCurStusId() == 24 &&
+      //    orderExchangeMasterVO.getSoExchgNwAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL &&
+      //    orderExchangeMasterVO.getSoExchgNwSrvType() != null &&
+      //    orderExchangeMasterVO.getSoExchgNwSrvType().equals("SS")){
+      //  EgovMap rebate = new EgovMap();
+      //  rebate.put("srvCntrctPacId", params.get("hiddenSrvPacId"));
+      //  EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(rebate);
 
         // Rebate - PAY0286D
-        insertSelfServiceRebate(salesOrderMVO , sessionVO , srvPackageResult);
+      //  insertSelfServiceRebate(salesOrderMVO , sessionVO , srvPackageResult);
         // PV Rebate - PAY0367D
-        insertPvSelfServiceRebate(salesOrderMVO , salesOrderDVO , sessionVO , srvPackageResult);
-      }
+       // insertPvSelfServiceRebate(salesOrderMVO , salesOrderDVO , sessionVO , srvPackageResult);
+      //}
 
     } else { // AFTER INSTALL
       EgovMap lastInstallMap = orderRequestMapper.selecLastInstall(params); // GET LAST INSTALL INFO (COMPLETE)
@@ -2849,58 +2849,58 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return true;
     }
 
-  private void insertSelfServiceRebate(SalesOrderMVO salesOrderMVO, SessionVO sessionVO, EgovMap srvPackageResult) {
-    Map<String, Object> params = new HashMap<String, Object>();
+  //private void insertSelfServiceRebate(SalesOrderMVO salesOrderMVO, SessionVO sessionVO, EgovMap srvPackageResult) {
+  //  Map<String, Object> params = new HashMap<String, Object>();
 
-    if (!srvPackageResult.isEmpty()) {
-      params.put("ordId", salesOrderMVO.getSalesOrdId());
-      params.put("rebateType", 0);
-      params.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
-      params.put("rebateStartInstallment", 1); //
-      params.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
-      params.put("rem", salesOrderMVO.getMthRentAmt());
-      params.put("crtUserId", sessionVO.getUserId());
-      params.put("updUserId", sessionVO.getUserId());
-      params.put("stusId", 1);
-      params.put("cntrctId", 0);
+  //  if (!srvPackageResult.isEmpty()) {
+  //    params.put("ordId", salesOrderMVO.getSalesOrdId());
+  //    params.put("rebateType", 0);
+  //    params.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
+  //    params.put("rebateStartInstallment", 1); //
+  //    params.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+  //    params.put("rem", salesOrderMVO.getMthRentAmt());
+  //    params.put("crtUserId", sessionVO.getUserId());
+  //    params.put("updUserId", sessionVO.getUserId());
+  //    params.put("stusId", 1);
+  //    params.put("cntrctId", 0);
 
-      orderRegisterMapper.insertSSRebate(params);
-    }
-  }
+  //    orderRegisterMapper.insertSSRebate(params);
+  //  }
+  //}
 
-  private void insertPvSelfServiceRebate(SalesOrderMVO salesOrderMVO, SalesOrderDVO salesOrderDVO, SessionVO sessionVO,
-      EgovMap srvPackageResult) {
-    Map<String, Object> params = new HashMap<String, Object>();
+  //private void insertPvSelfServiceRebate(SalesOrderMVO salesOrderMVO, SalesOrderDVO salesOrderDVO, SessionVO sessionVO,
+  //    EgovMap srvPackageResult) {
+  //  Map<String, Object> params = new HashMap<String, Object>();
 
-    params.put("promoId", Integer.toString(salesOrderMVO.getPromoId()));
-    params.put("stkId", salesOrderDVO.getItmStkId());
-    params.put("srvPacId", salesOrderMVO.getSrvPacId());
-    params.put("orderAppType", salesOrderMVO.getAppTypeId());
+  //  params.put("promoId", Integer.toString(salesOrderMVO.getPromoId()));
+  //  params.put("stkId", salesOrderDVO.getItmStkId());
+  //  params.put("srvPacId", salesOrderMVO.getSrvPacId());
+  //  params.put("orderAppType", salesOrderMVO.getAppTypeId());
 
-    EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
+  //  EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
 
-    if (!priceInfo.isEmpty() && !srvPackageResult.isEmpty()) {
+  //  if (!priceInfo.isEmpty() && !srvPackageResult.isEmpty()) {
 
-      int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
-      int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
-      int pvRebate = totPv - totPvSs;
+  //    int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
+  //    int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
+  //    int pvRebate = totPv - totPvSs;
 
-      params.put("ordId", salesOrderMVO.getSalesOrdId());
-      params.put("pvRebateType", 0);
-      params.put("pvRebatePerInstallment", pvRebate); //
-      params.put("pvRebateStartInstallment", 1); //
-      params.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
-      params.put("rem", salesOrderMVO.getTotPv());
-      params.put("crtUserId", sessionVO.getUserId());
-      params.put("updUserId", sessionVO.getUserId());
-      params.put("stusId", 1);
-      params.put("cntrctId", 0);
+  //    params.put("ordId", salesOrderMVO.getSalesOrdId());
+  //    params.put("pvRebateType", 0);
+  //    params.put("pvRebatePerInstallment", pvRebate); //
+  //    params.put("pvRebateStartInstallment", 1); //
+  //    params.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+  //    params.put("rem", salesOrderMVO.getTotPv());
+  //    params.put("crtUserId", sessionVO.getUserId());
+  //    params.put("updUserId", sessionVO.getUserId());
+  //    params.put("stusId", 1);
+  //    params.put("cntrctId", 0);
 
-      hsManualMapper.insertPvSSRebate(params);
-    }
-  }
+  //    hsManualMapper.insertPvSSRebate(params);
+  //  }
+  //}
 
-  public void updateHSConfigurationSrvType(Map<String, Object> params) {
-    orderRequestMapper.updateHSConfigurationSrvType(params);
-  }
+  //public void updateHSConfigurationSrvType(Map<String, Object> params) {
+  //  orderRequestMapper.updateHSConfigurationSrvType(params);
+  //}
 }

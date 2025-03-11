@@ -8,7 +8,6 @@
   var ORD_STUS_ID = "${orderDetail.basicInfo.ordStusId}";
   var ORD_STUS_CODE = "${orderDetail.basicInfo.ordStusCode}";
   var CUST_ID = "${orderDetail.basicInfo.custId}";
-  var CUST_NAME = "${orderDetail.basicInfo.custName}";
   var CUST_TYPE_ID = "${orderDetail.basicInfo.custTypeId}";
   var APP_TYPE_ID = "${orderDetail.basicInfo.appTypeId}";
   var APP_TYPE_DESC = "${orderDetail.basicInfo.appTypeDesc}";
@@ -31,10 +30,6 @@
   var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
   var custStatusId = "${orderDetail.basicInfo.custStatusId}";
   var salesOrdIdOld = "${orderDetail.basicInfo.salesOrdIdOld}";
-  var SRV_TYPE = "${orderDetail.orderCfgInfo.srvType}";
-
-  var preSrvType = "";
-  var totPvSs = "";
 
   var myFileCaches = {};
   var atchFileGrpId = 0;
@@ -80,8 +75,6 @@
 			fn_changeTab(TAB_NM);
 		}
     }
-
-    fn_resetPreSrvType();
 
     // j_date
     var dateToday = new Date();
@@ -130,8 +123,7 @@
 
     $('#btnReqPrdExch').click(function() {
       if (fn_validReqPexc())
-        //fn_doSaveReqPexc();
-    	  Common.popupDiv("/sales/order/cnfmProductExchangeDetailPop.do");
+        fn_doSaveReqPexc();
     });
 
     $('#btnReqSchmConv').click(function() {
@@ -152,7 +144,7 @@
           $('#cmbPromotion option').remove();
           return;
         }
-        fn_resetPreSrvType();
+
         $('#btnCurrentPromo').prop("checked", false).prop("disabled", true);
 
         //          $('#ordCampgn option').remove();
@@ -598,18 +590,6 @@
         callPrgm : "ORD_REQUEST_BILLGRP"
       }, null, true);
     });
-    $('[name="reqSrvType"]').click(function() {
-    	$("#srvTypeLbl").find("span").remove();
-    	if($('input:radio[name="reqSrvType"]:checked').val() == 'SS'){
-    		$("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-    		$('#ordPvSs').val(totPvSs);
-    		$("#selfSrvPvLbl").show();
-    	}else{
-    		$('#ordPvSs').val('');
-    		$("#selfSrvPvLbl").hide();
-    	}
-    });
-
   });
 
   function fn_excludeGstAmt() {
@@ -1368,18 +1348,12 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
 
-                                totPvSs = parseFloat(promoPriceInfo.promoItmPvSs).toFixed(2);
-                 				console.log('totPvSs : ' + totPvSs);
-                 				fn_checkSrvType(promoPriceInfo.srvType);
-                 				console.log('srvType : ' + promoPriceInfo.srvType);
-
                                 data = { ordPrice : promoPriceInfo.orderPricePromo,
                                              ordPv : promoPriceInfo.orderPVPromo,
                                              ordPvGST : promoPriceInfo.orderPVPromoGST,
                                              ordRentalFees : promoPriceInfo.orderRentalFeesPromo,
                                              promoDiscPeriodTp : promoPriceInfo.promoDiscPeriodTp,
-                                             promoDiscPeriod : promoPriceInfo.promoDiscPeriod,
-                                             srvType : promoPriceInfo.srvType
+                                             promoDiscPeriod : promoPriceInfo.promoDiscPeriod
                                 }
                               } else {
                                 Common.alert('<spring:message code="sal.msg.unableFindPromo" />'
@@ -2355,14 +2329,13 @@ console.log("result.lastbillmth;"+result.lastbillmth);
   function fn_doSaveReqPexc() {
     $('#cmbOrderProduct').prop("disabled", false); //UNABLE THE FIELD
     $('#cmbPromotion').prop("disabled", false); //UNABLE THE FIELD
-    $('[name="reqSrvType"]').prop("disabled", false);
     Common.ajax("POST",
                         "/sales/order/requestProdExch.do",
                         $('#frmReqPrdExc').serializeJSON(),
                         function(result) {
                           Common.alert('<spring:message code="sal.alert.msg.prodExchSum" />'
                                               + DEFAULT_DELIMITER + "<b>"
-                                              + result.message + "</b>", fn_selfClosePexc());
+                                              + result.message + "</b>", fn_selfClose);
 
                         }, function(jqXHR, textStatus, errorThrown) {
                             try {
@@ -2374,7 +2347,6 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                         });
     $('#cmbOrderProduct').prop("disabled", true);
     $('#cmbPromotion').prop("disabled", true);
-    $('[name="reqSrvType"]').prop("disabled", true);
   }
 
   $(function(){
@@ -3039,13 +3011,6 @@ console.log("result.lastbillmth;"+result.lastbillmth);
     $('#btnCloseReq').click();
   }
 
-  function fn_selfClosePexc() {
-	$('#btnCloseReq').click();
-	$('#btnCnfmProductExchangeClose').click();
-  }
-
-
-
   function fn_reloadPage() {
     Common.popupDiv("/sales/order/orderRequestPop.do", {
       salesOrderId : ORD_ID,
@@ -3649,39 +3614,6 @@ console.log("result.lastbillmth;"+result.lastbillmth);
 		    }
 	   });
   }
-
-  function fn_checkSrvType(val){
-	  $("#srvTypeLbl").find("span").remove();
-	  preSrvType = val;
-	  if(preSrvType == "HS"){
-		  $('[name="reqSrvType"]').prop("disabled", true);
-		  $('#reqSrvTypeHS').prop("checked", true);
-		  $("#selfSrvPvLbl").hide();
-	  }else if(preSrvType == "SS"){
-		  $('[name="reqSrvType"]').prop("disabled", true);
-		  $('#reqSrvTypeSS').prop("checked", true);
-		  $("#srvTypeLbl").append("<span><spring:message code='sales.text.serviceTypeDiscountMessage'/></span>");
-		  $('#ordPvSs').val(totPvSs);
-		  $("#selfSrvPvLbl").show();
-
-	  }else if(preSrvType == "BOTH"){
-		  $('[name="reqSrvType"]').prop("disabled", false);
-		  $('#reqSrvTypeHS').prop("checked", true);
-		  $("#selfSrvPvLbl").hide();
-	  }else{
-		  $('[name="reqSrvType"]').prop("disabled", true);
-		  $('#reqSrvTypeHS').prop("checked", true);
-		  $("#selfSrvPvLbl").hide();
-	  }
-  }
-
-  function fn_resetPreSrvType(){
-	  $('[name="reqSrvType"]').prop("disabled", true);
-      $("#srvTypeLbl").find("span").remove();
-      $('[name="reqSrvType"]').prop("checked", false);
-      $("#selfSrvPvLbl").hide();
-      $('#reqSrvTypeHS').prop("checked", true);
-  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -3932,8 +3864,6 @@ console.log("result.lastbillmth;"+result.lastbillmth);
         <!-- search_table start -->
         <form id="frmReqPrdExc" action="#" method="post">
           <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" /> <input id="hiddenFreeASID" name="hiddenFreeASID" type="hidden" value="" /> <input id="hiddenPriceID" name="hiddenPriceID" type="hidden" value="" /> <input id="hiddenCurrentProductMasterStockID" name="hiddenCurrentProductMasterStockID" type="hidden" value="${orderDetail.basicInfo.masterStkId}" /> <input id="hiddenCurrentProductID" name="hiddenCurrentProductID" type="hidden" value="${orderDetail.basicInfo.stockId}" /> <input id="hiddenCurrentPromotionID" name="hiddenCurrentPromotionID" type="hidden" value="${orderDetail.basicInfo.ordPromoId}" /> <input id="hiddenCurrentPromotion" name="hiddenCurrentPromotion" type="hidden" value="${orderDetail.basicInfo.ordPromoDesc}" />
-          <input name="hiddenSrvType" type="hidden" value="${orderDetail.orderCfgInfo.srvType}" />
-          <input name="hiddenSrvPacId" type="hidden" value="${orderDetail.basicInfo.srvPacId}" />
           <article class="acodi_wrap">
             <dl>
               <dt class="click_add_on on">
@@ -3981,10 +3911,10 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row"><spring:message code='sales.srvType'/><span class="must">*</span></th>
-    					<td><input id="reqSrvTypeHS" name="reqSrvType" type="radio" value="HS" /><span><spring:message code='sales.text.heartService'/></span>
-        					<input id="reqSrvTypeSS" name="reqSrvType" type="radio" value="SS" /><span><spring:message code='sales.text.selfService'/></span>
-    					</td>
+                      <th scope="row"><spring:message code="sal.title.text.pv" /></th>
+                      <td>
+                        <input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
+                      </td>
                       <th scope="row"><spring:message code="sal.text.dscntPeriodFinalRenFee" /></th>
                       <td>
                         <p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
@@ -3992,21 +3922,6 @@ console.log("result.lastbillmth;"+result.lastbillmth);
                         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width: 90px;" class="readonly" readonly /></p>
                       </td>
                     </tr>
-                    <tr>
-                    	<th></th>
-    					<td><label id="srvTypeLbl"></label></td>
-						<th scope="row"><spring:message code="sal.title.text.pv" /></th>
-                      	<td>
-                        <input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
-                      	</td>
-					</tr>
-					<tr id = "selfSrvPvLbl">
-						<th></th>
-    					<td></td>
-    					<th scope="row">SS <spring:message code="sal.title.text.pv" /><span class="must">*</span></th>
-    					<td><input id="ordPvSs" name="ordPvSs" type="text" title="" placeholder="Self Service Point Value (SS PV)" class="w100p readonly" readonly />
-    					</td>
-					</tr>
                     <tr>
                       <th scope="row"><spring:message code="sal.text.applyCurrPromo" /></th>
                       <td colspan="3">

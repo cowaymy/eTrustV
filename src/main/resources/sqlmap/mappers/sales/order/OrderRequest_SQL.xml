@@ -515,8 +515,8 @@
     , SO_EXCHG_NW_CUST_ID
     , SO_EXCHG_FORM_NO
     , ATCH_FILE_GRP_ID
-    , SO_EXCHG_OLD_SRV_TYPE
-    , SO_EXCHG_NW_SRV_TYPE
+    <!-- , SO_EXCHG_OLD_SRV_TYPE
+    , SO_EXCHG_NW_SRV_TYPE -->
     )
     VALUES
     ( #{soExchgId}
@@ -558,8 +558,8 @@
     , #{soExchgNwCustId}
     , #{soExchgFormNo}
     , #{soExchgAtchGrpId}
-    , #{soExchgOldSrvType}
-    , #{soExchgNwSrvType}
+    <!-- , #{soExchgOldSrvType}
+    , #{soExchgNwSrvType} -->
     )
   </insert>
 

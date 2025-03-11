@@ -348,9 +348,9 @@
                Extent19.DEFECT_DESC AS PEX_DEFECT_PART_SMALL,
                Extent19.DEFECT_RMK AS PEX_DEFECT_PART_LARGE,
                Extent20.DEFECT_DESC AS PEX_PROB_SYMP_LARGE,
-               Extent21.DEFECT_DESC AS PEX_PROB_SYMP_SMALL,
-               CASE WHEN Extent1.SO_EXCHG_OLD_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_OLD_SRV_TYPE,
-               CASE WHEN Extent1.SO_EXCHG_NW_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_NW_SRV_TYPE
+               Extent21.DEFECT_DESC AS PEX_PROB_SYMP_SMALL
+              <!--  ,CASE WHEN Extent1.SO_EXCHG_OLD_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_OLD_SRV_TYPE
+               ,CASE WHEN Extent1.SO_EXCHG_NW_SRV_TYPE = 'SS' THEN 'Self Service' ELSE 'Heart Service' END AS SO_EXCHG_NW_SRV_TYPE -->
     FROM SAL0004D Extent1
     JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.SO_ID
     JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent2.CUST_ID

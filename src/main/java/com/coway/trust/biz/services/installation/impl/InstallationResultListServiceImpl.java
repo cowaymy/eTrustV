@@ -2639,90 +2639,90 @@ private boolean insertInstallation(int statusId, String ApptypeID, Map<String, O
         installationResultListMapper.updateSal0004d_2(isExchange);
         // installationResultListMapper.updateLog0038d_2(isExchange);
 
-        Map<String, Object> params = new HashMap();
-        params.put("salesOrderId", salesOrderM.get("salesOrdId"));
-        params.put("entryId", installResult.get("entryId"));
-        params.put("srvCntrctPacId", salesOrderM.get("srvPacId"));
+        //Map<String, Object> params = new HashMap();
+        //params.put("salesOrderId", salesOrderM.get("salesOrdId"));
+        //params.put("entryId", installResult.get("entryId"));
+        //params.put("srvCntrctPacId", salesOrderM.get("srvPacId"));
 
-        EgovMap exchangeInfo = installationResultListMapper.selectExchange(params);
-        logger.debug("exchangeInfo - soCurStusId : {}", exchangeInfo.get("soCurStusId").toString());
-        if(exchangeInfo.get("soCurStusId").toString().equals("25")){ // AFTER INSTALL
-          params.put("stkId", exchangeInfo.get("soExchgNwStkId"));
-          params.put("promoId", exchangeInfo.get("soExchgNwPromoId"));
-          params.put("srvType", exchangeInfo.get("soExchgNwSrvType"));
-          params.put("updUserId", installResult.get("creator"));
+        //EgovMap exchangeInfo = installationResultListMapper.selectExchange(params);
+        //logger.debug("exchangeInfo - soCurStusId : {}", exchangeInfo.get("soCurStusId").toString());
+        //if(exchangeInfo.get("soCurStusId").toString().equals("25")){ // AFTER INSTALL
+        //  params.put("stkId", exchangeInfo.get("soExchgNwStkId"));
+        //  params.put("promoId", exchangeInfo.get("soExchgNwPromoId"));
+        //  params.put("srvType", exchangeInfo.get("soExchgNwSrvType"));
+        //  params.put("updUserId", installResult.get("creator"));
           // Update - SAL0045D
-          orderRequestMapper.updateInstallSrvType(params);
+        //  orderRequestMapper.updateInstallSrvType(params);
           // Update - SAL0090D
-          orderRequestMapper.updateHSConfigurationSrvType(params);
+        //  orderRequestMapper.updateHSConfigurationSrvType(params);
 
        // UPDATE OLD REBATE TO INACTIVE
-          EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(params);
-          if (getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0) {
-            Map<String, Object> ssRebate = new HashMap();
-            ssRebate.put("stusId", 8);
-            ssRebate.put("ordId", getSSGstRebateInfo.get("ordId"));
-            ssRebate.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
-            ssRebate.put("updUserId", installResult.get("creator"));
-            hsManualMapper.updateSSRebateStatus(ssRebate);
-          }
+        //  EgovMap getSSGstRebateInfo = hsManualMapper.getSSGstRebate(params);
+        //  if (getSSGstRebateInfo != null && getSSGstRebateInfo.size() > 0) {
+        //    Map<String, Object> ssRebate = new HashMap();
+        //    ssRebate.put("stusId", 8);
+        //    ssRebate.put("ordId", getSSGstRebateInfo.get("ordId"));
+        //    ssRebate.put("gstRebateId", getSSGstRebateInfo.get("gstRebateId"));
+        //    ssRebate.put("updUserId", installResult.get("creator"));
+        //    hsManualMapper.updateSSRebateStatus(ssRebate);
+        //  }
 
           // UPDATE OLD PV REBATE TO INACTIVE
-          EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(params);
-          if (getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0) {
-            Map<String, Object> pvRebate = new HashMap();
-            pvRebate.put("stusId", 8);
-            pvRebate.put("ordId", getPvSSRebateInfo.get("ordId"));
-            pvRebate.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
-            pvRebate.put("updUserId", installResult.get("creator"));
-            hsManualMapper.updatePvSSRebateStatus(pvRebate);
-          }
+        //  EgovMap getPvSSRebateInfo = hsManualMapper.getPvSSRebate(params);
+        //  if (getPvSSRebateInfo != null && getPvSSRebateInfo.size() > 0) {
+        //    Map<String, Object> pvRebate = new HashMap();
+        //    pvRebate.put("stusId", 8);
+        //    pvRebate.put("ordId", getPvSSRebateInfo.get("ordId"));
+        //    pvRebate.put("pvRebateId", getPvSSRebateInfo.get("pvRebateId"));
+        //    pvRebate.put("updUserId", installResult.get("creator"));
+        //    hsManualMapper.updatePvSSRebateStatus(pvRebate);
+        //  }
 
           // INSERT Self Service Rebate IF TYPE = AFTER INSTALL , APP TYPE = RENTAL , SERVICE TYPE = SS
-          if (exchangeInfo.get("soExchgNwSrvType") != null && exchangeInfo.get("soExchgNwSrvType").toString().equals("SS")
-              && ("66".equals(ApptypeID) || "7759".equals(ApptypeID))) {
-            EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
-            Map<String, Object> ssRebateParams = new HashMap();
-            if (!srvPackageResult.isEmpty()) {
-              ssRebateParams.put("ordId", exchangeInfo.get("soId"));
-              ssRebateParams.put("rebateType", 0);
-              ssRebateParams.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
-              ssRebateParams.put("rebateStartInstallment", 1); //
-              ssRebateParams.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
-              ssRebateParams.put("rem", exchangeInfo.get("soExchgNwRentAmt"));
-              ssRebateParams.put("crtUserId", installResult.get("creator"));
-              ssRebateParams.put("updUserId", installResult.get("creator"));
-              ssRebateParams.put("stusId", 1);
-              ssRebateParams.put("cntrctId", 0);
+        //  if (exchangeInfo.get("soExchgNwSrvType") != null && exchangeInfo.get("soExchgNwSrvType").toString().equals("SS")
+        //      && ("66".equals(ApptypeID) || "7759".equals(ApptypeID))) {
+        //    EgovMap srvPackageResult = orderRegisterMapper.selectServiceContractPackage(params);
+        //    Map<String, Object> ssRebateParams = new HashMap();
+        //    if (!srvPackageResult.isEmpty()) {
+        //      ssRebateParams.put("ordId", exchangeInfo.get("soId"));
+        //      ssRebateParams.put("rebateType", 0);
+        //      ssRebateParams.put("rebateAmtPerInstallment", 5); // default RM5 for Self Service Discount Rebate
+        //     ssRebateParams.put("rebateStartInstallment", 1); //
+        //      ssRebateParams.put("rebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+        //      ssRebateParams.put("rem", exchangeInfo.get("soExchgNwRentAmt"));
+        //      ssRebateParams.put("crtUserId", installResult.get("creator"));
+        //      ssRebateParams.put("updUserId", installResult.get("creator"));
+        //      ssRebateParams.put("stusId", 1);
+        //     ssRebateParams.put("cntrctId", 0);
 
-              orderRegisterMapper.insertSSRebate(ssRebateParams);
-            }
+        //      orderRegisterMapper.insertSSRebate(ssRebateParams);
+        //    }
 
-            EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
+        //    EgovMap priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params);
 
-            if (!priceInfo.isEmpty() && !srvPackageResult.isEmpty()) {
-              Map<String, Object> pvRebateParams = new HashMap();
-              int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
-              int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
-              int pvRebate = totPv - totPvSs;
+        //    if (!priceInfo.isEmpty() && !srvPackageResult.isEmpty()) {
+        //      Map<String, Object> pvRebateParams = new HashMap();
+        //      int totPv = Integer.parseInt(priceInfo.get("promoItmPv").toString());
+        //      int totPvSs = Integer.parseInt(priceInfo.get("promoItmPvSs").toString());
+        //      int pvRebate = totPv - totPvSs;
 
-              pvRebateParams.put("ordId", exchangeInfo.get("soId"));
-              pvRebateParams.put("pvRebateType", 0);
-              pvRebateParams.put("pvRebatePerInstallment", pvRebate); //
-              pvRebateParams.put("pvRebateStartInstallment", 1); //
-              pvRebateParams.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
-              pvRebateParams.put("rem", totPv);
-              pvRebateParams.put("crtUserId", installResult.get("creator"));
-              pvRebateParams.put("updUserId", installResult.get("creator"));
-              pvRebateParams.put("stusId", 1);
-              pvRebateParams.put("cntrctId", 0);
+        //      pvRebateParams.put("ordId", exchangeInfo.get("soId"));
+        //      pvRebateParams.put("pvRebateType", 0);
+        //      pvRebateParams.put("pvRebatePerInstallment", pvRebate); //
+        //      pvRebateParams.put("pvRebateStartInstallment", 1); //
+        //      pvRebateParams.put("pvRebateEndInstallment", srvPackageResult.get("srvCntrctPacDur"));
+        //      pvRebateParams.put("rem", totPv);
+        //      pvRebateParams.put("crtUserId", installResult.get("creator"));
+        //      pvRebateParams.put("updUserId", installResult.get("creator"));
+        //      pvRebateParams.put("stusId", 1);
+        //      pvRebateParams.put("cntrctId", 0);
 
-              hsManualMapper.insertPvSSRebate(pvRebateParams);
-            }
+        //      hsManualMapper.insertPvSSRebate(pvRebateParams);
+        //    }
 
-          }
+        //  }
 
-        }
+        //}
 
         //UPDATE SVC0125D IF INSTALLATION COMPLETE
         EgovMap svc0125DStus = new EgovMap();
