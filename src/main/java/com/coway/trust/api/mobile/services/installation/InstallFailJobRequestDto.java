@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class InstallFailJobRequestDto {
   @ApiModelProperty(value = "결과값")
   private String result;
+
   private String status;
 
   public String getResult() {
@@ -37,8 +38,8 @@ public class InstallFailJobRequestDto {
 
   public static InstallFailJobRequestDto create( Map<String, Object> rtnResultMap ) {
     InstallFailJobRequestDto dto = new InstallFailJobRequestDto();
-    dto.setResult( CommonUtils.nvl(rtnResultMap.get( "result" )) );
-    dto.setStatus( CommonUtils.nvl(rtnResultMap.get( "status" )) );
+    dto.setResult( CommonUtils.nvl( rtnResultMap.get( "result" ) ) );
+    dto.setStatus( CommonUtils.nvl( rtnResultMap.get( "status" ) ) );
     return dto;
   }
 }
