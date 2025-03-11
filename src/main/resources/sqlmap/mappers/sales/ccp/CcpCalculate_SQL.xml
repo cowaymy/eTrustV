@@ -51,7 +51,7 @@ WITH S291D AS
 ( SELECT remarks, ORDER_NO FROM
                         (SELECT REMARKS, ORDER_NO, RANK() OVER(PARTITION BY ORDER_NO ORDER BY UPLOAD_BATCH_ID DESC) RN FROM SAL0291D)
   WHERE RN = 1
-),
+<!-- ),
 LatestSal0304D AS (
     SELECT *
     FROM (
@@ -64,7 +64,7 @@ LatestSal0304D AS (
             ROW_NUMBER() OVER (PARTITION BY sales_ord_id ORDER BY UPD_DT DESC) AS rn
         FROM sal0304d
     ) T
-    WHERE T.rn = 1
+    WHERE T.rn = 1 -->
 )
             SELECT Filter1.CCP_ID   ,
                    Filter1.CCP_SCHEME_TYPE_ID   ,
@@ -193,7 +193,7 @@ LatestSal0304D AS (
                       <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
                       LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
                       <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
-                      LEFT JOIN LatestSal0304D  extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
+                      LEFT JOIN SAL0304D extent17 on extent17.sales_ord_id = extent3.sales_ord_id and extent17.ccp_id = extent1.ccp_id
                       <!-- ## RENTAL  ONLY ## -->
                       WHERE Extent3.APP_TYPE_ID IN (66,7759) <!--EXCLUDE AUXILIARY -->
 
@@ -992,10 +992,10 @@ SELECT Extent1.CCP_ID   ,
                    CCP_EXPERIANR = #{experianRisk},
                    CCP_AGM_REQ = #{agmReq},
                    CCP_TEMPLATE = #{cowayTemplate},
-	               CUST_IS_PAYER = #{custIsPayerValue},
-	               THE_PAYER = #{thePayerValue},
-	               FAIL_VER_RSN = #{failVeriReasonValue},
-	               ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                   CUST_IS_PAYER = #{custIsPayerValue},
+                   THE_PAYER = #{thePayerValue},
+                   FAIL_VER_RSN = #{failVeriReasonValue},
+                   ATCH_FILE_GRP_ID = #{atchFileGrpId}
             WHERE
                    CCP_ID = #{saveCcpId}
 </update>
@@ -2345,9 +2345,9 @@ WHERE ROWNUM = 1
     <result property="year" column="year"/>
     <collection property="logs" ofType="egovMap" javaType="ArrayList">
         <result property="log_content" column="log_content"/>
-	    <result property="crt_dt" column="crt_dt"/>
-	    <result property="user_name" column="user_name"/>
-	    <result property="status" column="log_status" />
+        <result property="crt_dt" column="crt_dt"/>
+        <result property="user_name" column="user_name"/>
+        <result property="status" column="log_status" />
     </collection>
 </resultMap>
 <select id="ccpTicketDetails" parameterType="Map" resultMap="ccpTicket">
@@ -2397,18 +2397,18 @@ WHERE ROWNUM = 1
 
 <select id="orgDetails" parameterType="Map" resultType="egovMap">
     SELECT
-	    DECODE(A.MEM_LVL, 4, B.MEM_CODE,
-	                                    3, A.DEPT_CODE,
-					                    2, A.GRP_CODE,
-					                    1, A.ORG_CODE)
-	    CODE,
-	    B.NAME
-	FROM ORG1002V A
-	JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
-	WHERE A.MEM_LVL <![CDATA[<>]]>  0
-	START WITH A.MEM_ID = #{memId} AND HIST_MONTH = #{month} AND HIST_YEAR = #{year}
-	CONNECT BY PRIOR A.MEM_UP_ID = A.MEM_ID AND PRIOR A.HIST_MONTH = A.HIST_MONTH AND PRIOR A.HIST_YEAR = A.HIST_YEAR
-	ORDER BY A.MEM_LVL
+        DECODE(A.MEM_LVL, 4, B.MEM_CODE,
+                                        3, A.DEPT_CODE,
+                                        2, A.GRP_CODE,
+                                        1, A.ORG_CODE)
+        CODE,
+        B.NAME
+    FROM ORG1002V A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    WHERE A.MEM_LVL <![CDATA[<>]]>  0
+    START WITH A.MEM_ID = #{memId} AND HIST_MONTH = #{month} AND HIST_YEAR = #{year}
+    CONNECT BY PRIOR A.MEM_UP_ID = A.MEM_ID AND PRIOR A.HIST_MONTH = A.HIST_MONTH AND PRIOR A.HIST_YEAR = A.HIST_YEAR
+    ORDER BY A.MEM_LVL
 </select>
 
 <update id="updateCCPTicket" parameterType="Map">
@@ -2441,18 +2441,18 @@ WHERE ROWNUM = 1
             C.CODE_NAME SCORE_GRP,
             A.SCORE_GRP SCORE_GRP_CODE
         FROM (
-		    SELECT SCORE_GRP FROM (
-		        SELECT
-		            SCORE_GRP
-		        FROM SAL0425D
-		        WHERE SCORE_PROV =  #{scoreProv}
-		        AND #{score} BETWEEN START_SCORE AND END_SCORE
-		        AND HOME_CAT = #{homeCat}
-		        AND STUS = 1
-		        ORDER BY SCORE_RANGE_ID DESC
-		    ) WHERE ROWNUM = 1
+            SELECT SCORE_GRP FROM (
+                SELECT
+                    SCORE_GRP
+                FROM SAL0425D
+                WHERE SCORE_PROV =  #{scoreProv}
+                AND #{score} BETWEEN START_SCORE AND END_SCORE
+                AND HOME_CAT = #{homeCat}
+                AND STUS = 1
+                ORDER BY SCORE_RANGE_ID DESC
+            ) WHERE ROWNUM = 1
         ) A
-		LEFT JOIN SYS0013M C ON C.CODE = A.SCORE_GRP AND C.CODE_MASTER_ID = 607
+        LEFT JOIN SYS0013M C ON C.CODE = A.SCORE_GRP AND C.CODE_MASTER_ID = 607
 </select>
 
 <select id="getUnitAndProdEntitle" parameterType="Map" resultType="egovMap">
