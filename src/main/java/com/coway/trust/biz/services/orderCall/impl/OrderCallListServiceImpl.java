@@ -866,6 +866,13 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				for(int i=0; i<appointmentList.size();i++){
 					EgovMap appointmentDtl = appointmentList.get(i);
 
+					//Call Log is not active status
+					if (!CommonUtils.nvl(appointmentDtl.get("clStusCodeId")).equals("1")) {
+				      message.setMessage("Call log is not under active status anymore for Order No: " + CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
+				      message.setCode("99");
+				      return message;
+					}
+
 					//Check RDC Stock before add
 					EgovMap orderParam = new EgovMap();
 					orderParam.put("salesOrdNo", CommonUtils.nvl(appointmentDtl.get("salesOrdNo")));
@@ -877,7 +884,6 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 					}
 
 					EgovMap rdcStock = orderCallListMapper.selectRdcStock(orderParam);
-
 
 					if (rdcStock == null || Integer.parseInt(CommonUtils.nvl2(rdcStock.get("availQty"),"0")) <= 0) {
 							/*Failed due to no stock*/

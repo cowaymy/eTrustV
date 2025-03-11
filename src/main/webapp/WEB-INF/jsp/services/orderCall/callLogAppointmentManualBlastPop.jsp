@@ -31,7 +31,12 @@
 			width : 100
 		}, {
 			dataField : "name",
-			headerText : "Status",
+			headerText : "WA Status",
+			editable : false,
+			width : 100
+		},{
+			dataField : "clName",
+			headerText : "Call Log Status",
 			editable : false,
 			width : 100
 		}, {
@@ -155,7 +160,7 @@
 							</div>
 							<!-- date_set end -->
 						</td>
-						<th>Status
+						<th>WA Status
 						</th>
 						<td><select class="multy_select w100p" id="status" name="status" multiple="multiple">
 								<option value="1">Active</option>
@@ -165,6 +170,16 @@
 								<option value="21">Failed</option>
 								<option value="134">Incorrect</option>
 						</select></td>
+					</tr>
+					<tr>
+						<th>Order No</th>
+						<td>	<p>
+									<input type="text" title="Order Number" id="orderNo"
+										name="orderNo" />
+								</p>
+						</td>
+						<th></th>
+						<td></td>
 					</tr>
 				</tbody>
 			</table>
