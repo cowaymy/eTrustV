@@ -137,6 +137,12 @@
 	                                    <if test='trialStartDt != null and  trialStartDt !="" || trialEndDt != null and trialEndDt != ""'>
 	                                    AND INS.INSTALL_DT BETWEEN TO_DATE(#{trialStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{trialEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 	                                    </if>
+                                        <if test='ordDt == null || ordDt == ""'>
+                                          AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                                        </if>
+                                        <if test='ordDt != null and ordDt != ""'>
+                                          AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                                        </if>
 	                                    <if test='memId != null and memId != ""'>
 	                                    AND V.MEM_ID = #{memId}
 	                                    </if>
@@ -178,6 +184,12 @@
                                    </if>
                                    <if test='trialStartDt != null and  trialStartDt !="" || trialEndDt != null and trialEndDt != ""'>
                                    AND INS.INSTALL_DT BETWEEN TO_DATE(#{trialStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{trialEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                                   </if>
+                                   <if test='ordDt == null || ordDt == ""'>
+                                     AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                                   </if>
+                                   <if test='ordDt != null and ordDt != ""'>
+                                     AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
                                    </if>
                                    <if test='memId != null and memId != ""'>
                                    AND V.MEM_ID = #{memId}
@@ -232,8 +244,14 @@
 
                             AND V1.APP_TYPE_ID = '7759'
 
-                           <if test='trialStartDt != null and  trialStartDt !="" || trialEndDt != null and trialEndDt != ""'>
+                        <if test='trialStartDt != null and  trialStartDt !="" || trialEndDt != null and trialEndDt != ""'>
                              AND INS.INSTALL_DT BETWEEN TO_DATE(#{trialStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{trialEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                        </if>
+                        <if test='ordDt == null || ordDt == ""'>
+                          AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                        </if>
+                        <if test='ordDt != null and ordDt != ""'>
+                          AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
                         </if>
 			           	<if test='pdpaMonth != null and pdpaMonth != 0'>
 			             	 AND V1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})

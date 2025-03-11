@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -151,6 +152,12 @@ public class HcTrialRentalListController {
 		//if(arrRentStus      	!= null && !CommonUtils.containsEmpty(arrRentStus))        	params.put("arrRentStus", arrRentStus);
 		if(arrProd        != null && !CommonUtils.containsEmpty(arrProd))         params.put("arrProd", arrProd);
 		//if(arrDscCodeId2        != null && !CommonUtils.containsEmpty(arrDscCodeId2))         params.put("arrDscCodeId2", arrDscCodeId2);
+
+		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
+    	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
+
+    	params.put("ordStartDt", CommonUtils.changeFormat(String.valueOf(params.get("ordStartDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
+    	params.put("ordEndDt", CommonUtils.changeFormat(String.valueOf(params.get("ordEndDt")), SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2));
 
 		if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
 		    params.put("memType", sessionVO.getUserTypeId());

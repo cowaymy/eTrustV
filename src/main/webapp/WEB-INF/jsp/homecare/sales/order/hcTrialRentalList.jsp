@@ -239,9 +239,9 @@
         && FormUtil.isEmpty($('#listPromoCode').val())
         ) {
 
-            if(FormUtil.isEmpty($('#listTrialStartDt').val()) || FormUtil.isEmpty($('#listTrialEndDt').val())) {
+            if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
                 isValid = false;
-                msg += '* <spring:message code="sal.alert.msg.selTrialDt" /><br/>';
+                msg += '* <spring:message code="sal.alert.msg.selOrdDt" /><br/>';
             }
         }
 
@@ -516,18 +516,16 @@
                         <td><input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" /></td>
                         <th scope="row"></th>
                         <td></td>
-                        <th scope="row"><spring:message code='sales.trialDt' /></th>
+                        <th scope="row"><spring:message code='sales.ordDt' /></th>
                         <td>
                             <div class="date_set w100p">
                                 <!-- date_set start -->
                                 <p>
-                               <%--      <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /> --%>
-                                        <input id="listTrialStartDt" name="trialStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                        <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                                 <span>To</span>
                                 <p>
-                             <%--        <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /> --%>
-                                    <input id="listTrialEndDt" name="trialEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                        <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                             </div>
                             <!-- date_set end -->
@@ -571,6 +569,26 @@
                         <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" /></td>
                         <th scope="row">Dept Code</th>
                         <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"><spring:message code='sales.trialDt' /></th>
+                        <td>
+                            <div class="date_set w100p">
+                                <!-- date_set start -->
+                                <p>
+                                        <input id="listTrialStartDt" name="trialStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                </p>
+                                <span>To</span>
+                                <p>
+                                    <input id="listTrialEndDt" name="trialEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                </p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
                     </tr>
                 </tbody>
             </table>
