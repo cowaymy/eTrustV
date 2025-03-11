@@ -3581,9 +3581,9 @@ public static int calculateTaskId() {
     //[Ticket No: MY-1484] Add by Fannie - 24022025, for enhancement mobile Auto Debit Authorization (e-Notification) PDF
     boolean isAutoDebitAuthorization = false;
 
-    /*if(CommonUtils.isNotEmpty(params.get("isAutoDebitAuthorization").toString())){
+    if(CommonUtils.isNotEmpty(params.get("isAutoDebitAuthorization"))){
     	isAutoDebitAuthorization = true;
-    }*/
+    }
 
     String isEInvoice = params.get("isEInvoice") != null ? params.get("isEInvoice").toString() : "" ;
 
