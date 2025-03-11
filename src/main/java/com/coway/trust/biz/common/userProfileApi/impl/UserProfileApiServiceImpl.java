@@ -86,15 +86,19 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
 
   @Override
   public boolean updateParticular(Map<String, Object> params) throws Exception {
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN 1");
     if (null == params) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN  " + params.get( "userName" ));
     if (CommonUtils.isEmpty(params.get( "userName" ))) {
       throw new ApplicationException(AppConstants.FAIL, "User Name value does not exist.");
     }
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN 3");
     if (CommonUtils.isEmpty(params.get( "data" ))) {
       throw new ApplicationException(AppConstants.FAIL, "Data value does not exist.");
     }
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN 4");
     int count = userProfileApiMapper.updateParticular(params);
     System.out.println(">>>>>>>>>>>>>>>>> " + count);
 
