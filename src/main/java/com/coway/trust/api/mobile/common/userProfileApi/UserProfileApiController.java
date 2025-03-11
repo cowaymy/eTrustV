@@ -59,6 +59,7 @@ public class UserProfileApiController {
   @ApiOperation(value = "updateParticular", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/updateParticular", method = RequestMethod.POST)
   public ResponseEntity<Boolean> updateParticular(@ModelAttribute Map<String, Object> params) throws Exception {
+    System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN");
     return ResponseEntity.ok(userProfileApiService.updateParticular(params));
   }
 }
