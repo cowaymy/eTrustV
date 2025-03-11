@@ -1,6 +1,5 @@
 package com.coway.trust.api.mobile.services.productRetrun;
 
-import com.coway.trust.api.mobile.services.heartService.HeartServiceJobDto;
 import com.coway.trust.util.BeanConverter;
 import java.math.BigDecimal;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -9,125 +8,124 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "ProductRetrunJobDto", description = "공통코드 Dto")
 public class ProductRetrunJobDto {
-
-  @ApiModelProperty(value = "주문번호")
+  @ApiModelProperty(value = "SALES ORDER NO")
   private String salesOrderNo;
 
-  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  @ApiModelProperty(value = "PRODUCT RETURN NO")
   private String serviceNo;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "CUSTOMER NAME")
   private String custName;
 
-  @ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+  @ApiModelProperty(value = "AS / HS / INST / PR TYPE")
   private String jobType;
 
-  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
+  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE STATUS")
   private String jobStatus;
 
-  @ApiModelProperty(value = "작업 예정날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "APPOINTMENT DATE")
   private String appointmentDate;
 
-  @ApiModelProperty(value = "작업 예정시간(HHMM)")
+  @ApiModelProperty(value = "APPOINTMENT TIME")
   private String appointmentTime;
 
-  @ApiModelProperty(value = "오전/오후/저녁")
+  @ApiModelProperty(value = "JOB SESSION")
   private String jobSession;
 
-  @ApiModelProperty(value = "체크인 날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "CHECK IN DATE")
   private String checkInDate;
 
-  @ApiModelProperty(value = "체크인 시간(HHMM)")
+  @ApiModelProperty(value = "CHECK IN TIME")
   private String checkInTime;
 
-  @ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "CHECK IN GPS")
   private String checkInGps;
 
-  @ApiModelProperty(value = "일반/법인 고객 구분")
+  @ApiModelProperty(value = "CUSTOMER TYPE")
   private String customerType;
 
-  @ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
+  @ApiModelProperty(value = "CUSTOMER ID")
   private String customerId;
 
-  @ApiModelProperty(value = "작업 영역(State)_170906 추가")
+  @ApiModelProperty(value = "SERIVCE STATE")
   private String serviceState;
 
-  @ApiModelProperty(value = "작업예정일(년)_170908 추가")
+  @ApiModelProperty(value = "YEAR")
   private String planYear;
 
-  @ApiModelProperty(value = "작업예정일(월)_170908 추가")
+  @ApiModelProperty(value = "MONTH")
   private String planMonth;
 
-  @ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
+  @ApiModelProperty(value = "CUSTOMER GPS")
   private String customerGps;
 
-  @ApiModelProperty(value = "설치주소(Magic Address 체계?)")
+  @ApiModelProperty(value = "INSTALL ADDRESS")
   private String installAddress;
 
-  @ApiModelProperty(value = "우편번호")
+  @ApiModelProperty(value = "POST CODE")
   private String postcode;
 
-  @ApiModelProperty(value = "핸드폰 번호")
+  @ApiModelProperty(value = "MOBILE NUMBER")
   private String handphoneTel;
 
-  @ApiModelProperty(value = "집전화 번호")
+  @ApiModelProperty(value = "RESIDENT CONTACT NO")
   private String homeTel;
 
-  @ApiModelProperty(value = "회사 번호")
+  @ApiModelProperty(value = "OFFICE CONTACT NO")
   private String officeTel;
 
-  @ApiModelProperty(value = "메일 주소")
+  @ApiModelProperty(value = "EMAIL ADDRESS")
   private String mailAddress;
 
-  @ApiModelProperty(value = "고객 VA 번호_170914 추가")
+  @ApiModelProperty(value = "VA ACCOUNT")
   private String customerVaNo;
 
-  @ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+  @ApiModelProperty(value = "CUSTOMER JOM PAY REF NO")
   private String customerJomPayRefNo;
 
-  @ApiModelProperty(value = "제품 사진 url")
+  @ApiModelProperty(value = "IMAGE URL")
   private String imageUrl;
 
-  @ApiModelProperty(value = "제품명")
+  @ApiModelProperty(value = "PRODUCT NAME")
   private String productName;
 
-  @ApiModelProperty(value = "제품코드")
+  @ApiModelProperty(value = "PRODUCT CODE")
   private String productCode;
 
-  @ApiModelProperty(value = "application Type (Rental…)")
+  @ApiModelProperty(value = "APPLICATION TYPE")
   private String appType;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "INSTRUCTION")
   private String instruction;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "INSTALLATION INSTRUCTION")
   private String instructionIns;
 
-  @ApiModelProperty(value = "YYYYMMDD")
+  @ApiModelProperty(value = "INSTALLATION DATE")
   private String installationDate;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "INSTALLED BY")
   private String installedBy;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "PREVIOUS OUTSTANDING")
   private String prevOutstanding;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "PENALTY CHARGES")
   private String penaltyCharges;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "UNBILLED AMOUNT")
   private String unbilledAmount;
 
-  @ApiModelProperty(value = "outstanding 정보")
+  @ApiModelProperty(value = "OUTSTANDING")
   private String outstanding;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "DSC CODE")
   private String dscCode;
 
-  @ApiModelProperty(value = "sirim 코드")
+  @ApiModelProperty(value = "SIRIM NO")
   private String sirimNo;
 
-  @ApiModelProperty(value = "serial 코드")
+  @ApiModelProperty(value = "SERIAL NO")
   private String serialNo;
 
   @ApiModelProperty(value = "HP NAME")
@@ -148,137 +146,116 @@ public class ProductRetrunJobDto {
   @ApiModelProperty(value = "HM TEL NUMBER")
   private String hmTel;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "CANCELLATION CODE")
   private String ccCode;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "RESULT CODE")
   private String resultCode;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "REMARK")
   private String resultRemark;
 
-  @ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+  @ApiModelProperty(value = "OWNER CODE")
   private String ownerCode;
 
-  @ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+  @ApiModelProperty(value = "OWNER CODE NAME")
   private String ownerCodeNm;
 
-  @ApiModelProperty(value = "고객명")
+  @ApiModelProperty(value = "RESULT CUSTOMER NAME")
   private String resultCustName;
 
-  @ApiModelProperty(value = "nric 번호")
+  @ApiModelProperty(value = "RESULT MOBILE NO")
   private String resultIcMobileNo;
 
-  @ApiModelProperty(value = "고객메일주소")
+  @ApiModelProperty(value = "RESULT EMAIL NO")
   private String resultReportEmailNo;
 
-  @ApiModelProperty(value = "신규 요건(default : 고객명)")
+  @ApiModelProperty(value = "RESULT ACCEPTANCE NAME")
   private String resultAcceptanceName;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "RENTAL COLLECTION CODE")
   private String rcCode;
 
-  @ApiModelProperty(value = "실패 사유 코드")
+  @ApiModelProperty(value = "FAIL REASON CODE")
   private String failReasonCode;
 
-  @ApiModelProperty(value = "실패 사유명")
+  @ApiModelProperty(value = "FAIL REASON NAME")
   private String failReasonName;
 
-  @ApiModelProperty(value = "설치자")
+  @ApiModelProperty(value = "SETTLE BY")
   private String settledBy;
 
-  @ApiModelProperty(value = "설치날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "SATTLE DATE")
   private String settledDate;
 
-  @ApiModelProperty(value = "설치시간")
+  @ApiModelProperty(value = "SATTLE TIME")
   private String settledTime;
 
-  @ApiModelProperty(value = "Return 완료 날짜(YYYYMMDD)")
+  @ApiModelProperty(value = "COMPLETE RETURN DATE")
   private String completeRetDate;
 
-  @ApiModelProperty(value = "Return 완료 시간(HHMM)")
+  @ApiModelProperty(value = "COMPLETE RETURN TIME")
   private String completeRetTime;
 
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "LAST PAYMENT DATE")
   private String lastPaymentDate;
 
-  @ApiModelProperty(value = "YYYYMMDD")
+  @ApiModelProperty(value = "NEXT CALL DATE")
   private String nextCallDate;
 
-  @ApiModelProperty(value = "HHMM")
+  @ApiModelProperty(value = "NECT CALL TIME")
   private String nextCallTime;
 
-  @ApiModelProperty(value = "fraYn")
+  @ApiModelProperty(value = "FRAME INDICATOR")
   private String fraYn;
 
-  @ApiModelProperty(value = "fraOrdNo")
+  @ApiModelProperty(value = "FRAME ORDER NO")
   private String fraOrdNo;
 
-  @ApiModelProperty(value = "fraProductCode")
+  @ApiModelProperty(value = "FRAME PRODUCT CODE")
   private String fraProductCode;
 
-  @ApiModelProperty(value = "fraProductName")
+  @ApiModelProperty(value = "FRAME PRODUCT NAME")
   private String fraProductName;
 
+  @ApiModelProperty(value = "RETURN FAIL CODE REMARK")
   private String retnCodeFailRemark;
 
+  @ApiModelProperty(value = "SERIAL CHECK")
   private String serialChk;
 
+  @ApiModelProperty(value = "LATITUDE")
   private BigDecimal latitude;
 
+  @ApiModelProperty(value = "LONGTITUDE")
   private BigDecimal longitude;
 
+  @ApiModelProperty(value = "SALES PROMOTION")
   private String salesPromotion;
 
+  @ApiModelProperty(value = "PARTNER CODE")
   private String partnerCode;
 
+  @ApiModelProperty(value = "PARTNER CODE NAME")
   private String partnerCodeName;
 
+  @ApiModelProperty(value = "PRODUCT CATEGORY")
   private String prodCat;
 
-  public String getSerialChk() {
-    return serialChk;
-  }
-
-  public void setSerialChk(String serialChk) {
-    this.serialChk = serialChk;
-  }
-
+  @ApiModelProperty(value = "FRAME SERIAL CHECK")
   private String fraSerialChk;
 
-  public String getFraSerialChk() {
-    return fraSerialChk;
-  }
-
-  public void setFraSerialChk(String fraSerialChk) {
-    this.fraSerialChk = fraSerialChk;
-  }
-
+  @ApiModelProperty(value = "SERAIL NO")
   private String selSerialNo;
 
-  public String getSelSerialNo() {
-    return selSerialNo;
-  }
-
-  public void setSelSerialNo(String selSerialNo) {
-    this.selSerialNo = selSerialNo;
-  }
-
+  @ApiModelProperty(value = "FRAME SERIAL NO")
   private String selFraSerialNo;
-
-  public String getSelFraSerialNo() {
-    return selFraSerialNo;
-  }
-
-  public void setSelFraSerialNo(String selFraSerialNo) {
-    this.selFraSerialNo = selFraSerialNo;
-  }
 
   public String getSalesOrderNo() {
     return salesOrderNo;
   }
 
-  public void setSalesOrderNo(String salesOrderNo) {
+  public void setSalesOrderNo( String salesOrderNo ) {
     this.salesOrderNo = salesOrderNo;
   }
 
@@ -286,7 +263,7 @@ public class ProductRetrunJobDto {
     return serviceNo;
   }
 
-  public void setServiceNo(String serviceNo) {
+  public void setServiceNo( String serviceNo ) {
     this.serviceNo = serviceNo;
   }
 
@@ -294,7 +271,7 @@ public class ProductRetrunJobDto {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName( String custName ) {
     this.custName = custName;
   }
 
@@ -302,7 +279,7 @@ public class ProductRetrunJobDto {
     return jobType;
   }
 
-  public void setJobType(String jobType) {
+  public void setJobType( String jobType ) {
     this.jobType = jobType;
   }
 
@@ -310,7 +287,7 @@ public class ProductRetrunJobDto {
     return jobStatus;
   }
 
-  public void setJobStatus(String jobStatus) {
+  public void setJobStatus( String jobStatus ) {
     this.jobStatus = jobStatus;
   }
 
@@ -318,7 +295,7 @@ public class ProductRetrunJobDto {
     return appointmentDate;
   }
 
-  public void setAppointmentDate(String appointmentDate) {
+  public void setAppointmentDate( String appointmentDate ) {
     this.appointmentDate = appointmentDate;
   }
 
@@ -326,7 +303,7 @@ public class ProductRetrunJobDto {
     return appointmentTime;
   }
 
-  public void setAppointmentTime(String appointmentTime) {
+  public void setAppointmentTime( String appointmentTime ) {
     this.appointmentTime = appointmentTime;
   }
 
@@ -334,7 +311,7 @@ public class ProductRetrunJobDto {
     return jobSession;
   }
 
-  public void setJobSession(String jobSession) {
+  public void setJobSession( String jobSession ) {
     this.jobSession = jobSession;
   }
 
@@ -342,7 +319,7 @@ public class ProductRetrunJobDto {
     return checkInDate;
   }
 
-  public void setCheckInDate(String checkInDate) {
+  public void setCheckInDate( String checkInDate ) {
     this.checkInDate = checkInDate;
   }
 
@@ -350,7 +327,7 @@ public class ProductRetrunJobDto {
     return checkInTime;
   }
 
-  public void setCheckInTime(String checkInTime) {
+  public void setCheckInTime( String checkInTime ) {
     this.checkInTime = checkInTime;
   }
 
@@ -358,7 +335,7 @@ public class ProductRetrunJobDto {
     return checkInGps;
   }
 
-  public void setCheckInGps(String checkInGps) {
+  public void setCheckInGps( String checkInGps ) {
     this.checkInGps = checkInGps;
   }
 
@@ -366,7 +343,7 @@ public class ProductRetrunJobDto {
     return customerType;
   }
 
-  public void setCustomerType(String customerType) {
+  public void setCustomerType( String customerType ) {
     this.customerType = customerType;
   }
 
@@ -374,7 +351,7 @@ public class ProductRetrunJobDto {
     return customerId;
   }
 
-  public void setCustomerId(String customerId) {
+  public void setCustomerId( String customerId ) {
     this.customerId = customerId;
   }
 
@@ -382,7 +359,7 @@ public class ProductRetrunJobDto {
     return serviceState;
   }
 
-  public void setServiceState(String serviceState) {
+  public void setServiceState( String serviceState ) {
     this.serviceState = serviceState;
   }
 
@@ -390,7 +367,7 @@ public class ProductRetrunJobDto {
     return planYear;
   }
 
-  public void setPlanYear(String planYear) {
+  public void setPlanYear( String planYear ) {
     this.planYear = planYear;
   }
 
@@ -398,7 +375,7 @@ public class ProductRetrunJobDto {
     return planMonth;
   }
 
-  public void setPlanMonth(String planMonth) {
+  public void setPlanMonth( String planMonth ) {
     this.planMonth = planMonth;
   }
 
@@ -406,7 +383,7 @@ public class ProductRetrunJobDto {
     return customerGps;
   }
 
-  public void setCustomerGps(String customerGps) {
+  public void setCustomerGps( String customerGps ) {
     this.customerGps = customerGps;
   }
 
@@ -414,7 +391,7 @@ public class ProductRetrunJobDto {
     return installAddress;
   }
 
-  public void setInstallAddress(String installAddress) {
+  public void setInstallAddress( String installAddress ) {
     this.installAddress = installAddress;
   }
 
@@ -422,7 +399,7 @@ public class ProductRetrunJobDto {
     return postcode;
   }
 
-  public void setPostcode(String postcode) {
+  public void setPostcode( String postcode ) {
     this.postcode = postcode;
   }
 
@@ -430,7 +407,7 @@ public class ProductRetrunJobDto {
     return handphoneTel;
   }
 
-  public void setHandphoneTel(String handphoneTel) {
+  public void setHandphoneTel( String handphoneTel ) {
     this.handphoneTel = handphoneTel;
   }
 
@@ -438,7 +415,7 @@ public class ProductRetrunJobDto {
     return homeTel;
   }
 
-  public void setHomeTel(String homeTel) {
+  public void setHomeTel( String homeTel ) {
     this.homeTel = homeTel;
   }
 
@@ -446,7 +423,7 @@ public class ProductRetrunJobDto {
     return officeTel;
   }
 
-  public void setOfficeTel(String officeTel) {
+  public void setOfficeTel( String officeTel ) {
     this.officeTel = officeTel;
   }
 
@@ -454,7 +431,7 @@ public class ProductRetrunJobDto {
     return mailAddress;
   }
 
-  public void setMailAddress(String mailAddress) {
+  public void setMailAddress( String mailAddress ) {
     this.mailAddress = mailAddress;
   }
 
@@ -462,7 +439,7 @@ public class ProductRetrunJobDto {
     return customerVaNo;
   }
 
-  public void setCustomerVaNo(String customerVaNo) {
+  public void setCustomerVaNo( String customerVaNo ) {
     this.customerVaNo = customerVaNo;
   }
 
@@ -470,7 +447,7 @@ public class ProductRetrunJobDto {
     return customerJomPayRefNo;
   }
 
-  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+  public void setCustomerJomPayRefNo( String customerJomPayRefNo ) {
     this.customerJomPayRefNo = customerJomPayRefNo;
   }
 
@@ -478,7 +455,7 @@ public class ProductRetrunJobDto {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void setImageUrl( String imageUrl ) {
     this.imageUrl = imageUrl;
   }
 
@@ -486,7 +463,7 @@ public class ProductRetrunJobDto {
     return productName;
   }
 
-  public void setProductName(String productName) {
+  public void setProductName( String productName ) {
     this.productName = productName;
   }
 
@@ -494,7 +471,7 @@ public class ProductRetrunJobDto {
     return productCode;
   }
 
-  public void setProductCode(String productCode) {
+  public void setProductCode( String productCode ) {
     this.productCode = productCode;
   }
 
@@ -502,7 +479,7 @@ public class ProductRetrunJobDto {
     return appType;
   }
 
-  public void setAppType(String appType) {
+  public void setAppType( String appType ) {
     this.appType = appType;
   }
 
@@ -510,15 +487,23 @@ public class ProductRetrunJobDto {
     return instruction;
   }
 
-  public void setInstruction(String instruction) {
+  public void setInstruction( String instruction ) {
     this.instruction = instruction;
+  }
+
+  public String getInstructionIns() {
+    return instructionIns;
+  }
+
+  public void setInstructionIns( String instructionIns ) {
+    this.instructionIns = instructionIns;
   }
 
   public String getInstallationDate() {
     return installationDate;
   }
 
-  public void setInstallationDate(String installationDate) {
+  public void setInstallationDate( String installationDate ) {
     this.installationDate = installationDate;
   }
 
@@ -526,7 +511,7 @@ public class ProductRetrunJobDto {
     return installedBy;
   }
 
-  public void setInstalledBy(String installedBy) {
+  public void setInstalledBy( String installedBy ) {
     this.installedBy = installedBy;
   }
 
@@ -534,7 +519,7 @@ public class ProductRetrunJobDto {
     return prevOutstanding;
   }
 
-  public void setPrevOutstanding(String prevOutstanding) {
+  public void setPrevOutstanding( String prevOutstanding ) {
     this.prevOutstanding = prevOutstanding;
   }
 
@@ -542,7 +527,7 @@ public class ProductRetrunJobDto {
     return penaltyCharges;
   }
 
-  public void setPenaltyCharges(String penaltyCharges) {
+  public void setPenaltyCharges( String penaltyCharges ) {
     this.penaltyCharges = penaltyCharges;
   }
 
@@ -550,7 +535,7 @@ public class ProductRetrunJobDto {
     return unbilledAmount;
   }
 
-  public void setUnbilledAmount(String unbilledAmount) {
+  public void setUnbilledAmount( String unbilledAmount ) {
     this.unbilledAmount = unbilledAmount;
   }
 
@@ -558,7 +543,7 @@ public class ProductRetrunJobDto {
     return outstanding;
   }
 
-  public void setOutstanding(String outstanding) {
+  public void setOutstanding( String outstanding ) {
     this.outstanding = outstanding;
   }
 
@@ -566,7 +551,7 @@ public class ProductRetrunJobDto {
     return dscCode;
   }
 
-  public void setDscCode(String dscCode) {
+  public void setDscCode( String dscCode ) {
     this.dscCode = dscCode;
   }
 
@@ -574,7 +559,7 @@ public class ProductRetrunJobDto {
     return sirimNo;
   }
 
-  public void setSirimNo(String sirimNo) {
+  public void setSirimNo( String sirimNo ) {
     this.sirimNo = sirimNo;
   }
 
@@ -582,7 +567,7 @@ public class ProductRetrunJobDto {
     return serialNo;
   }
 
-  public void setSerialNo(String serialNo) {
+  public void setSerialNo( String serialNo ) {
     this.serialNo = serialNo;
   }
 
@@ -590,7 +575,7 @@ public class ProductRetrunJobDto {
     return hpName;
   }
 
-  public void setHpName(String hpName) {
+  public void setHpName( String hpName ) {
     this.hpName = hpName;
   }
 
@@ -598,7 +583,7 @@ public class ProductRetrunJobDto {
     return hpTel;
   }
 
-  public void setHpTel(String hpTel) {
+  public void setHpTel( String hpTel ) {
     this.hpTel = hpTel;
   }
 
@@ -606,7 +591,7 @@ public class ProductRetrunJobDto {
     return smName;
   }
 
-  public void setSmName(String smName) {
+  public void setSmName( String smName ) {
     this.smName = smName;
   }
 
@@ -614,7 +599,7 @@ public class ProductRetrunJobDto {
     return smTel;
   }
 
-  public void setSmTel(String smTel) {
+  public void setSmTel( String smTel ) {
     this.smTel = smTel;
   }
 
@@ -622,7 +607,7 @@ public class ProductRetrunJobDto {
     return hmName;
   }
 
-  public void setHmName(String hmName) {
+  public void setHmName( String hmName ) {
     this.hmName = hmName;
   }
 
@@ -630,7 +615,7 @@ public class ProductRetrunJobDto {
     return hmTel;
   }
 
-  public void setHmTel(String hmTel) {
+  public void setHmTel( String hmTel ) {
     this.hmTel = hmTel;
   }
 
@@ -638,7 +623,7 @@ public class ProductRetrunJobDto {
     return ccCode;
   }
 
-  public void setCcCode(String ccCode) {
+  public void setCcCode( String ccCode ) {
     this.ccCode = ccCode;
   }
 
@@ -646,7 +631,7 @@ public class ProductRetrunJobDto {
     return resultCode;
   }
 
-  public void setResultCode(String resultCode) {
+  public void setResultCode( String resultCode ) {
     this.resultCode = resultCode;
   }
 
@@ -654,7 +639,7 @@ public class ProductRetrunJobDto {
     return resultRemark;
   }
 
-  public void setResultRemark(String resultRemark) {
+  public void setResultRemark( String resultRemark ) {
     this.resultRemark = resultRemark;
   }
 
@@ -662,7 +647,7 @@ public class ProductRetrunJobDto {
     return ownerCode;
   }
 
-  public void setOwnerCode(String ownerCode) {
+  public void setOwnerCode( String ownerCode ) {
     this.ownerCode = ownerCode;
   }
 
@@ -670,7 +655,7 @@ public class ProductRetrunJobDto {
     return ownerCodeNm;
   }
 
-  public void setOwnerCodeNm(String ownerCodeNm) {
+  public void setOwnerCodeNm( String ownerCodeNm ) {
     this.ownerCodeNm = ownerCodeNm;
   }
 
@@ -678,7 +663,7 @@ public class ProductRetrunJobDto {
     return resultCustName;
   }
 
-  public void setResultCustName(String resultCustName) {
+  public void setResultCustName( String resultCustName ) {
     this.resultCustName = resultCustName;
   }
 
@@ -686,7 +671,7 @@ public class ProductRetrunJobDto {
     return resultIcMobileNo;
   }
 
-  public void setResultIcMobileNo(String resultIcMobileNo) {
+  public void setResultIcMobileNo( String resultIcMobileNo ) {
     this.resultIcMobileNo = resultIcMobileNo;
   }
 
@@ -694,7 +679,7 @@ public class ProductRetrunJobDto {
     return resultReportEmailNo;
   }
 
-  public void setResultReportEmailNo(String resultReportEmailNo) {
+  public void setResultReportEmailNo( String resultReportEmailNo ) {
     this.resultReportEmailNo = resultReportEmailNo;
   }
 
@@ -702,7 +687,7 @@ public class ProductRetrunJobDto {
     return resultAcceptanceName;
   }
 
-  public void setResultAcceptanceName(String resultAcceptanceName) {
+  public void setResultAcceptanceName( String resultAcceptanceName ) {
     this.resultAcceptanceName = resultAcceptanceName;
   }
 
@@ -710,7 +695,7 @@ public class ProductRetrunJobDto {
     return rcCode;
   }
 
-  public void setRcCode(String rcCode) {
+  public void setRcCode( String rcCode ) {
     this.rcCode = rcCode;
   }
 
@@ -718,7 +703,7 @@ public class ProductRetrunJobDto {
     return failReasonCode;
   }
 
-  public void setFailReasonCode(String failReasonCode) {
+  public void setFailReasonCode( String failReasonCode ) {
     this.failReasonCode = failReasonCode;
   }
 
@@ -726,7 +711,7 @@ public class ProductRetrunJobDto {
     return failReasonName;
   }
 
-  public void setFailReasonName(String failReasonName) {
+  public void setFailReasonName( String failReasonName ) {
     this.failReasonName = failReasonName;
   }
 
@@ -734,7 +719,7 @@ public class ProductRetrunJobDto {
     return settledBy;
   }
 
-  public void setSettledBy(String settledBy) {
+  public void setSettledBy( String settledBy ) {
     this.settledBy = settledBy;
   }
 
@@ -742,7 +727,7 @@ public class ProductRetrunJobDto {
     return settledDate;
   }
 
-  public void setSettledDate(String settledDate) {
+  public void setSettledDate( String settledDate ) {
     this.settledDate = settledDate;
   }
 
@@ -750,7 +735,7 @@ public class ProductRetrunJobDto {
     return settledTime;
   }
 
-  public void setSettledTime(String settledTime) {
+  public void setSettledTime( String settledTime ) {
     this.settledTime = settledTime;
   }
 
@@ -758,7 +743,7 @@ public class ProductRetrunJobDto {
     return completeRetDate;
   }
 
-  public void setCompleteRetDate(String completeRetDate) {
+  public void setCompleteRetDate( String completeRetDate ) {
     this.completeRetDate = completeRetDate;
   }
 
@@ -766,7 +751,7 @@ public class ProductRetrunJobDto {
     return completeRetTime;
   }
 
-  public void setCompleteRetTime(String completeRetTime) {
+  public void setCompleteRetTime( String completeRetTime ) {
     this.completeRetTime = completeRetTime;
   }
 
@@ -774,7 +759,7 @@ public class ProductRetrunJobDto {
     return lastPaymentDate;
   }
 
-  public void setLastPaymentDate(String lastPaymentDate) {
+  public void setLastPaymentDate( String lastPaymentDate ) {
     this.lastPaymentDate = lastPaymentDate;
   }
 
@@ -782,7 +767,7 @@ public class ProductRetrunJobDto {
     return nextCallDate;
   }
 
-  public void setNextCallDate(String nextCallDate) {
+  public void setNextCallDate( String nextCallDate ) {
     this.nextCallDate = nextCallDate;
   }
 
@@ -790,7 +775,7 @@ public class ProductRetrunJobDto {
     return nextCallTime;
   }
 
-  public void setNextCallTime(String nextCallTime) {
+  public void setNextCallTime( String nextCallTime ) {
     this.nextCallTime = nextCallTime;
   }
 
@@ -798,7 +783,7 @@ public class ProductRetrunJobDto {
     return fraYn;
   }
 
-  public void setFraYn(String fraYn) {
+  public void setFraYn( String fraYn ) {
     this.fraYn = fraYn;
   }
 
@@ -806,7 +791,7 @@ public class ProductRetrunJobDto {
     return fraOrdNo;
   }
 
-  public void setFraOrdNo(String fraOrdNo) {
+  public void setFraOrdNo( String fraOrdNo ) {
     this.fraOrdNo = fraOrdNo;
   }
 
@@ -814,7 +799,7 @@ public class ProductRetrunJobDto {
     return fraProductCode;
   }
 
-  public void setFraProductCode(String fraProductCode) {
+  public void setFraProductCode( String fraProductCode ) {
     this.fraProductCode = fraProductCode;
   }
 
@@ -822,7 +807,7 @@ public class ProductRetrunJobDto {
     return fraProductName;
   }
 
-  public void setFraProductName(String fraProductName) {
+  public void setFraProductName( String fraProductName ) {
     this.fraProductName = fraProductName;
   }
 
@@ -830,15 +815,23 @@ public class ProductRetrunJobDto {
     return retnCodeFailRemark;
   }
 
-  public void setRetnCodeFailRemark(String retnCodeFailRemark) {
+  public void setRetnCodeFailRemark( String retnCodeFailRemark ) {
     this.retnCodeFailRemark = retnCodeFailRemark;
+  }
+
+  public String getSerialChk() {
+    return serialChk;
+  }
+
+  public void setSerialChk( String serialChk ) {
+    this.serialChk = serialChk;
   }
 
   public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigDecimal latitude) {
+  public void setLatitude( BigDecimal latitude ) {
     this.latitude = latitude;
   }
 
@@ -846,7 +839,7 @@ public class ProductRetrunJobDto {
     return longitude;
   }
 
-  public void setLongitude(BigDecimal longitude) {
+  public void setLongitude( BigDecimal longitude ) {
     this.longitude = longitude;
   }
 
@@ -854,16 +847,8 @@ public class ProductRetrunJobDto {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(String salesPromotion) {
+  public void setSalesPromotion( String salesPromotion ) {
     this.salesPromotion = salesPromotion;
-  }
-
-  public String getInstructionIns() {
-    return instructionIns;
-  }
-
-  public void setInstructionIns(String instructionIns) {
-    this.instructionIns = instructionIns;
   }
 
   public String getPartnerCode() {
@@ -890,8 +875,32 @@ public class ProductRetrunJobDto {
     this.prodCat = prodCat;
   }
 
-  public static ProductRetrunJobDto create(EgovMap egvoMap) {
-    return BeanConverter.toBean(egvoMap, ProductRetrunJobDto.class);
+  public String getFraSerialChk() {
+    return fraSerialChk;
   }
 
+  public void setFraSerialChk( String fraSerialChk ) {
+    this.fraSerialChk = fraSerialChk;
+  }
+
+  public String getSelSerialNo() {
+    return selSerialNo;
+  }
+
+  public void setSelSerialNo( String selSerialNo ) {
+    this.selSerialNo = selSerialNo;
+  }
+
+  public String getSelFraSerialNo() {
+    return selFraSerialNo;
+  }
+
+  public void setSelFraSerialNo( String selFraSerialNo ) {
+    this.selFraSerialNo = selFraSerialNo;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static ProductRetrunJobDto create( EgovMap egvoMap ) {
+    return BeanConverter.toBean( egvoMap, ProductRetrunJobDto.class );
+  }
 }
