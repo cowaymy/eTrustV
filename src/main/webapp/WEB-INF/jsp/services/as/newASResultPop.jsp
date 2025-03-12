@@ -1360,8 +1360,8 @@
 			}
 
 		 if ($('#PROD_CAT').val() == "7760"){
-				/* $("#pairCodeLbl").append('<span class="must">*</span>');
-				$('#partnerCode').removeAttr("disabled").removeClass("readonly"); */
+				/* $("#pairCodeLbl").append('<span class="must">*</span>');*/
+				$('#partnerCode').removeAttr("disabled").removeClass("readonly"); 
 				$("#m15").show();
 				$("#psiRcd").attr("disabled", false);
 				$("#m30").show();
