@@ -1,9 +1,12 @@
 package com.coway.trust.biz.common.userProfileApi;
 
+import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiDto;
 import com.coway.trust.api.mobile.common.userProfileApi.UserProfileApiForm;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
  * @ClassName : UserProfileApiService.java
@@ -25,6 +28,6 @@ public interface UserProfileApiService {
 
   UserProfileApiDto selectProfileImg(UserProfileApiForm param) throws Exception;
 
-  boolean updateParticular(Map<String, Object> params) throws Exception;
+  List<EgovMap> updateParticular(Map<String, Object> params) throws Exception;
 
 }
