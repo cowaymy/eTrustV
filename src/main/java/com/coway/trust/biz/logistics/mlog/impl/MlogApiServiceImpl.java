@@ -447,8 +447,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
     // Barcode Save Procedure call
     Map<String, Object> receiveMapBarcode = new HashMap();
-    receiveMapBarcode.put("reqstNo", "");
-    receiveMapBarcode.put("delvryNo", deliSeq);
+    receiveMapBarcode.put("reqstNo", insMap.get("reqstno").toString());
+//    receiveMapBarcode.put("delvryNo", deliSeq);
     receiveMapBarcode.put("userId", userLoc);
     receiveMapBarcode.put("ioType", "O");
 
