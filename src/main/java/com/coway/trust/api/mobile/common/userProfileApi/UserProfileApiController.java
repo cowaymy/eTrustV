@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
@@ -64,5 +65,13 @@ public class UserProfileApiController {
   @RequestMapping(value = "/updateParticular", method = RequestMethod.POST)
   public ResponseEntity<List<EgovMap>> updateParticular(@RequestBody Map<String, Object> params) throws Exception {
     return ResponseEntity.ok(userProfileApiService.updateParticular(params));
+  }
+
+  @ApiOperation(value = "getBankList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getBankList", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getBankCde() throws Exception {
+    List<EgovMap> getBankList = userProfileApiService.getBankList();
+
+    return ResponseEntity.ok(getBankList);
   }
 }
