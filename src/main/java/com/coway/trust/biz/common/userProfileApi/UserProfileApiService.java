@@ -30,4 +30,6 @@ public interface UserProfileApiService {
 
   List<EgovMap> updateParticular(Map<String, Object> params) throws Exception;
 
+  List<EgovMap> getBankList() throws Exception;
+
 }
