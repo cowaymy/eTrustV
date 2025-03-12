@@ -2444,12 +2444,7 @@
                           A.IO_TYPE
               FROM LOG0099D A
               WHERE 1=1
-			<if test="delvryNo !=null and delvryNo !=''">
-			  DELVRY_NO = #{delvryNo}
-			</if>
-			<if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
-			  REQST_NO = #{reqstNo}
-			</if>
+			AND A.DELVRY_NO = #{reqstNo} or A.REQST_NO = #{reqstNo}
               <if test="zIoType !=null and zIoType !=''">
                 AND A.IO_TYPE = #{zIoType}
               </if>
