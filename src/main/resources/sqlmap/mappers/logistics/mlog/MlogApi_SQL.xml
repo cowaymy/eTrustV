@@ -2444,28 +2444,12 @@
                           A.IO_TYPE
               FROM LOG0099D A
               WHERE 1=1
-
-              <if test="arrReqstNo != null ">
-                AND ( A.DELVRY_NO IN
-
-                  <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
-                    #{item}
-                  </foreach>
-
-                OR
-
-                A.REQST_NO in
-                  <foreach item="item" collection="arrReqstNo" index="index" open="(" separator="," close=")">
-                    #{item}
-                  </foreach>
-                )
-
-              </if>
-
-              <if test="arrReqstNo == null ">
-                AND A.DELVRY_NO = ''
-              </if>
-
+			<if test="delvryNo !=null and delvryNo !=''">
+			  DELVRY_NO = #{delvryNo}
+			</if>
+			<if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
+			  REQST_NO = #{reqstNo}
+			</if>
               <if test="zIoType !=null and zIoType !=''">
                 AND A.IO_TYPE = #{zIoType}
               </if>
