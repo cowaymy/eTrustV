@@ -77,6 +77,14 @@
       ) WHERE LATEST = 1
   </select>
 
+  <select id="getBankList" parameterType="Map" resultType="egovMap">
+    SELECT BANK_ID AS CODE_ID,
+               NAME AS CODE_NAME
+    FROM SYS0004M
+    WHERE STUS_CODE_ID = '1'
+    ORDER BY NAME
+  </select>
+
   <update id="updateParticular" parameterType="Map">
     INSERT INTO ORG0057D ( SEQ
                                       , CHG_TYP
@@ -93,7 +101,7 @@
                   , (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userName} AND STUS = 1)
                   , (SELECT BRNCH FROM ORG0001D WHERE MEM_CODE = #{userName} AND STUS = 1)
                   , #{data}
-                  , null
+                  , #{fileGrpId}
                   , (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userName} AND USER_STUS_ID = 1)
                   , (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userName} AND USER_STUS_ID = 1)
 
