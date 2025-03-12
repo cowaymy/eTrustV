@@ -1978,9 +1978,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             ccleMap.put("updUserId", cancCallResultVO.getCallCrtUserId());
 
             /*Whatsapp Appointment Project*/
-//            if(CommonUtils.nvl(ccleMap.get("waStusCodeId")).equals("44")){
-//                ccleMap.put("waStusCodeId", "10");
-//            }
+            if(CommonUtils.nvl(ccleMap.get("waStusCodeId")).equals("44")){
+                ccleMap.put("waStusCodeId", "10");
+            }
 
             orderRequestMapper.updateCallEntry2(ccleMap);
           } else {
