@@ -115,4 +115,8 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
     return returnPrm;
   }
 
+  public List<EgovMap> getBankList() {
+    return userProfileApiMapper.getBankList();
+  }
+
 }
