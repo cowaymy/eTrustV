@@ -174,15 +174,16 @@ public class ReportUtils {
 		ReportUtils.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper.exportAutoDebitAuthorizationPDF(clientDoc, response, true, downFileName, params), response, clientDoc, downFileName);
 	}
 
+	//comment out for fannie to go live
 	//MY-3820 - [MY-3697's subtask] Create Self Bill Report - Raw Data
-	public static void viewDataEXCELEInvoice(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName,
+	/*public static void viewDataEXCELEInvoice(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName,
 			Map<String, Object> params) {
 		ReportUtils
 				.exportFile(
 						(clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
 								.exportExcelDataOnlyEInvoice(clientDoc, response, true, downFileName, params),
 						response, clientDoc, downFileName);
-	}
+	}*/
 
 	public static CrystalReportViewer getCrystalReportViewer(Object reportSource) throws ReportSDKExceptionBase {
 		CrystalReportViewer crystalReportViewer = new CrystalReportViewer();

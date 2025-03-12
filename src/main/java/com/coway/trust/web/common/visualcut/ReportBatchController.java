@@ -3378,7 +3378,9 @@ public void batchAutoDebitAuthorization(){
 	LOGGER.info("[END] batchAutoDebitAuthorization...");
 }
 
-// New report for e-Invoice Self Bill - HP
+// Comment out for Fannie to go live
+
+/*// New report for e-Invoice Self Bill - HP
 @RequestMapping(value = "/eInvoiceSelfBillHP.do")
 //@Scheduled(cron = "0 0 6 16 * ?")//6:00 a.m. 16th of the month
 public void eInvoiceSelfBillHP() {
@@ -3386,14 +3388,10 @@ public void eInvoiceSelfBillHP() {
     int taskIDConf = this.calculateTaskId();
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillHP.rpt");// visualcut
-                                                                             // rpt
-                                                                             // file
-    																			   //name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TASKID", taskIDConf);
     params.put("V_TEMP", "TEMP");// parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-    		"e-Invoice Self Bill" + File.separator + "SelfBillHP_" + CommonUtils.getNowDate() + ".xls");
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "e-Invoice Self Bill" + File.separator + "SelfBillHP_" + CommonUtils.getNowDate() + ".xls");
     params.put("isEInvoice", "1");
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] eInvoiceSelfBillHP...");
@@ -3407,14 +3405,10 @@ public void eInvoiceSelfBillCD() {
 	int taskIDConf = this.calculateTaskId();
 	Map<String, Object> params = new HashMap<>();
 	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillCD.rpt");// visualcut
-	// rpt
-	// file
-	//name.
 	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 	params.put("V_TASKID", taskIDConf);
 	params.put("V_TEMP", "TEMP");// parameter
-	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-			"e-Invoice Self Bill" + File.separator + "SelfBillCD_" + CommonUtils.getNowDate() + ".xls");
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME, "e-Invoice Self Bill" + File.separator + "SelfBillCD_" + CommonUtils.getNowDate() + ".xls");
 	params.put("isEInvoice", "1");
 	this.viewProcedure(null, null, params);
 	LOGGER.info("[END] eInvoiceSelfBillCD...");
@@ -3428,14 +3422,10 @@ public void eInvoiceSelfBillHT() {
 	int taskIDConf = this.calculateTaskId();
 	Map<String, Object> params = new HashMap<>();
 	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillHT.rpt");// visualcut
-	// rpt
-	// file
-	//name.
 	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 	params.put("V_TASKID", taskIDConf);
 	params.put("V_TEMP", "TEMP");// parameter
-	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-			"e-Invoice Self Bill" + File.separator + "SelfBillHT_" + CommonUtils.getNowDate() + ".xls");
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME, "e-Invoice Self Bill" + File.separator + "SelfBillHT_" + CommonUtils.getNowDate() + ".xls");
 	params.put("isEInvoice", "1");
 	this.viewProcedure(null, null, params);
 	LOGGER.info("[END] eInvoiceSelfBillHT...");
@@ -3449,18 +3439,15 @@ public void eInvoiceSelfBillVendor() {
 	int taskIDConf = this.calculateTaskId();
 	Map<String, Object> params = new HashMap<>();
 	params.put(REPORT_FILE_NAME, "/visualcut/eInvoiceSelfBillVendor.rpt");// visualcut
-	// rpt
-	// file
-	//name.
 	params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 	params.put("V_TASKID", taskIDConf);
 	params.put("V_TEMP", "TEMP");// parameter
-	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-			"e-Invoice Self Bill" + File.separator + "SelfBillVendor_" + CommonUtils.getNowDate() + ".xls");
+	params.put(AppConstants.REPORT_DOWN_FILE_NAME, "e-Invoice Self Bill" + File.separator + "SelfBillVendor_" + CommonUtils.getNowDate() + ".xls");
 	params.put("isEInvoice", "1");
 	this.viewProcedure(null, null, params);
 	LOGGER.info("[END] eInvoiceSelfBillVendor...");
 }
+*/
 
 public static int calculateTaskId() {
   // Get current date
@@ -3585,7 +3572,8 @@ public static int calculateTaskId() {
     	isAutoDebitAuthorization = true;
     }
 
-    String isEInvoice = params.get("isEInvoice") != null ? params.get("isEInvoice").toString() : "" ;
+    //comment out for fannie to go live
+    //String isEInvoice = params.get("isEInvoice") != null ? params.get("isEInvoice").toString() : "" ;
 
     switch (viewType) {
       case CSV:
@@ -3600,6 +3588,10 @@ public static int calculateTaskId() {
     	  }
         break;
       case EXCEL:
+          ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
+          break;
+         //comment out for fannie to go live
+      /*case EXCEL:
 
     	  if(!isEInvoice.equals("")){
     		  ReportUtils.viewDataEXCELEInvoice(response, clientDoc, downFileName, params);
@@ -3607,7 +3599,7 @@ public static int calculateTaskId() {
     	  else{
     		  ReportUtils.viewDataEXCEL(response, clientDoc, downFileName, params);
     	  }
-        break;
+        break;*/
       case EXCEL_FULL:
         ReportUtils.viewEXCEL(response, clientDoc, downFileName);
         break;

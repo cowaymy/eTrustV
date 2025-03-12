@@ -1303,8 +1303,9 @@ public class CRJavaHelper {
 			}
 		}
 
+	  //comment out for fannie to go live
 	  //MY-3820 - [MY-3697's subtask] Create Self Bill Report - Raw Data
-	  public static void exportExcelDataOnlyEInvoice(ReportClientDocument clientDoc, HttpServletResponse response,
+	  /*public static void exportExcelDataOnlyEInvoice(ReportClientDocument clientDoc, HttpServletResponse response,
 				boolean attachment, String downFileName, Map<String, Object> params)
 				throws ReportSDKExceptionBase, IOException {
 			ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
@@ -1370,5 +1371,5 @@ public class CRJavaHelper {
 					is.close();
 				}
 			}
-		}
+		}*/
 }
