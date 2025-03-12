@@ -1,5 +1,6 @@
 package com.coway.trust.biz.common.userProfileApi.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
@@ -29,4 +30,5 @@ public interface UserProfileApiMapper {
 
   int updateParticular(Map<String, Object> params);
 
+  List<EgovMap> getBankList();
 }
