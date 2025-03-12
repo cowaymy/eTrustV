@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.common.userProfileApi;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -7,13 +8,16 @@ import javax.annotation.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.services.serviceMileage.ServiceMileageForm;
 import com.coway.trust.biz.common.userProfileApi.UserProfileApiService;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -58,7 +62,7 @@ public class UserProfileApiController {
 
   @ApiOperation(value = "updateParticular", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/updateParticular", method = RequestMethod.POST)
-  public ResponseEntity<Boolean> updateParticular(@ModelAttribute Map<String, Object> params) throws Exception {
+  public ResponseEntity<List<EgovMap>> updateParticular(@RequestBody Map<String, Object> params) throws Exception {
     System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN");
     return ResponseEntity.ok(userProfileApiService.updateParticular(params));
   }
