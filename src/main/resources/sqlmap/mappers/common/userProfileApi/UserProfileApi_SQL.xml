@@ -85,8 +85,8 @@
                                       , MEM_BR
                                       , CHG_DATA
                                       , FILE_GRP_ID
-                                      , CRT_USR_ID
-                                      , UPD_USR_ID
+                                      , CRT_BY
+                                      , UPD_BY
     ) VALUES ( ORG0057D_SEQ.NEXTVAL
                   , #{changeType}
                   , '1'
