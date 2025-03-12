@@ -1,5 +1,7 @@
 package com.coway.trust.biz.common.userProfileApi.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -85,7 +87,7 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
   }
 
   @Override
-  public boolean updateParticular(Map<String, Object> params) throws Exception {
+  public List<EgovMap> updateParticular(Map<String, Object> params) throws Exception {
     System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>IN 1");
     if (null == params) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
@@ -102,11 +104,17 @@ public class UserProfileApiServiceImpl extends EgovAbstractServiceImpl implement
     int count = userProfileApiMapper.updateParticular(params);
     System.out.println(">>>>>>>>>>>>>>>>> " + count);
 
+    EgovMap returnParam = new EgovMap();
     if (count > 0) {
-      return true;
+      returnParam.put("status", true);
     } else {
-      return false;
+      returnParam.put("status", false);
     }
+
+    List<EgovMap> returnPrm = new ArrayList<>();
+    returnPrm.add(returnParam);
+
+    return returnPrm;
   }
 
 }
