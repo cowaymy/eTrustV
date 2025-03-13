@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.supplement.impl.SupplementUpdateMapper">
+
+  <select id="selectSupplementList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_DEL_STUS AS SUP_REF_DEL_STUS,
+               Extent9.CODE_NAME AS SUP_DEL_STUS,
+               CASE WHEN Extent1.SUP_RTN_RFND = 'N' THEN 'No' ELSE 'Yes' END AS IS_REFUND,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DATE ,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mm:ss') AS SUP_DEL_DATE ,
+               Extent2.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent4.MEM_CODE AS SALESMAN_ID,
+               Extent4.NAME AS SALESMAN_NAME,
+               Extent1.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') AS REF_CREATE_DATE ,
+               Extent6.USER_NAME AS REF_UPDATE_BY,
+               TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') AS REF_UPDATE_DATE ,
+               CASE WHEN Extent1.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               NVL(Extent12.SALES_ORD_NO,'-') SALES_ORD_NO
+    FROM SUP0001M Extent1
+    LEFT JOIN SYS0005M Extent2 ON Extent2.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    JOIN ORG0001D Extent4 ON Extent4.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.UPD_USR_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG
+                                            AND Extent8.CODE_MASTER_ID = '584'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS
+                                            AND Extent9.CODE_MASTER_ID = '585'
+    LEFT JOIN ORG1001V Extent10 ON Extent1.MEM_ID = Extent10.MEM_ID
+    LEFT JOIN SAL0027D Extent11 ON Extent1.CUST_ID = Extent11.CUST_ID AND Extent1.CUST_CNTC_ID = Extent11.CUST_CNTC_ID
+    LEFT JOIN SAL0001D Extent12 ON Extent1.SALES_ORD_ID_GIFT = Extent12.SALES_ORD_ID
+    WHERE 1=1
+    AND Extent1.DEL_FLG = 'N'
+
+    <if test=" null != supRefNo and '' != supRefNo">
+      AND Extent1.SUP_REF_NO = #{supRefNo}
+    </if>
+
+    <if test=" null != sofNo and '' != sofNo">
+      AND Extent1.SUP_SUBM_SOF = #{sofNo}
+    </if>
+
+    <if test="supSubmRefStatArray != null and supSubmRefStatArray != '' ">
+       AND Extent1.SUP_REF_STUS IN
+     <foreach item="item" collection="supSubmRefStatArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="supSubmBrArray != null and supSubmBrArray != '' ">
+       AND Extent1.MEM_BRNCH_ID IN
+     <foreach item="item" collection="supSubmBrArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="delStatArray != null and delStatArray != '' ">
+       AND Extent1.SUP_REF_DEL_STUS IN
+     <foreach item="item" collection="delStatArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="sDate != null and sDate != '' ">
+      <![CDATA[
+        AND Extent1.SUP_REF_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+      ]]>
+    </if>
+
+    <if test="eDate != null and eDate != '' ">
+      <![CDATA[
+        AND Extent1.SUP_REF_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+      ]]>
+    </if>
+
+    <if test="supRefStgArray != null and supRefStgArray != '' ">
+       AND Extent1.SUP_REF_STG IN
+     <foreach item="item" collection="supRefStgArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test=" null != parcelTrackNo and '' != parcelTrackNo">
+      AND Extent1.SUP_REF_PCL_TRKNO = #{parcelTrackNo}
+    </if>
+
+    <if test=" null != SupConsgNo and '' != SupConsgNo">
+      AND Extent1.SUP_REF_RTN_CSIGNO = #{SupConsgNo}
+    </if>
+
+    <if test=" null != salesmanCd and '' != salesmanCd">
+      AND Extent10.MEM_CODE = #{salesmanCd}
+    </if>
+
+    <if test=" null != orgCode and '' != orgCode">
+      AND Extent10.ORG_CODE = #{orgCode}
+    </if>
+
+    <if test=" null != grpCode and '' != grpCode">
+      AND Extent10.GRP_CODE = #{grpCode}
+    </if>
+
+    <if test=" null != deptCode and '' != deptCode">
+      AND Extent10.DEPT_CODE = #{deptCode}
+    </if>
+
+    <if test=" null != custName and '' != custName">
+      AND Extent3.NAME = #{custName}
+    </if>
+
+    <if test=" null != nricCompanyNo and '' != nricCompanyNo">
+      AND Extent3.NRIC = #{nricCompanyNo}
+    </if>
+
+    <if test=" null != custContactNo and '' != custContactNo">
+      AND Extent11.TEL_M1 = #{custContactNo}
+    </if>
+
+    <if test=" null != custEmail and '' != custEmail">
+      AND Extent3.EMAIL = #{custEmail}
+    </if>
+
+    <if test=" null != isRefund and '' != isRefund">
+      AND Extent1.SUP_RTN_RFND = #{isRefund}
+    </if>
+
+    <if test="supplementType != '' and supplementType != null">
+      AND Extent1.SUP_TYP = #{supplementType}
+    </if>
+
+    <if test="salesOrdNo != '' and salesOrdNo != null ">
+      AND Extent12.SALES_ORD_NO = #{salesOrdNo}
+    </if>
+  </select>
+
+  <select id="selectSupRefStus"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STUS_CODE_ID CODE_ID
+             , Extent1.CODE CODE
+             , Extent1.NAME CODE_NAME
+    FROM SYS0038M Extent1
+    WHERE Extent1.STUS_CODE_ID IN ( 1,4, 10 )
+  </select>
+
+  <select id="selectSupRefStg"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+               CODE AS CODE,
+               CODE_NAME AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '584'
+    ORDER BY CODE
+  </select>
+
+  <select id="selectSupDelStus"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+               CODE AS CODE,
+               CODE_NAME AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '585'
+    ORDER BY CODE
+  </select>
+
+
+  <select id="checkDuplicatedTrackNo"  parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT SUP_REF_PCL_TRKNO from SUP0001M WHERE SUP_REF_PCL_TRKNO = #{inputParcelTrackNo} AND DEL_FLG = 'N'
+  </select>
+
+    <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
+    SELECT T.DOC_SUB_ID
+             , T.DOC_SO_ID
+             , T.DOC_TYPE_ID
+             , T.CODE_NAME
+             , T.DOC_SUB_DT
+             , T.DOC_COPY_QTY
+    FROM ( SELECT T1.DOC_SUB_ID DOC_SUB_ID
+                        , T1.DOC_TYPE_ID DOC_TYPE_ID
+                        , T1.DOC_SO_ID DOC_SO_ID
+                        , T2.CODE_NAME CODE_NAME
+                        , DECODE(T1.DOC_SUB_DT, NULL, '01/01/1900'
+                        , TO_CHAR(T1.DOC_SUB_DT, 'DD/MM/YYYY')) DOC_SUB_DT
+                        , NVL(T1.DOC_COPY_QTY, 0) DOC_COPY_QTY
+               FROM ORG0010D T1
+               JOIN SYS0013M T2 ON T2.CODE_ID = T1.DOC_TYPE_ID
+               WHERE 1 = T1.STUS_ID
+                   AND T1.DOC_SO_ID = #{supRefId}
+    ) T ORDER BY T.CODE_NAME ASC
+  </select>
+
+  <select id="selectPaymentMasterList" parameterType="Map" resultType="egovMap">
+  SELECT PAY_ID
+           , OR_NO
+           , SALES_ORD_ID
+           , BILL_ID
+           , TR_NO
+           , TYPE_ID
+           , PAY_DATA
+           , BANK_CHG_ACC_ID
+           , COLL_MEM_ID
+           , BRNCH_ID
+           , BANK_ACC_ID
+           , STUS_CODE_ID
+           , UPD_USER_ID
+           , UPD_DT
+           , SYNC_HECK
+           , CUST_ID_3PARTY
+           , TOT_AMT
+           , MTCH_ID
+           , CRT_USER_ID
+           , CRT_DT
+           , IS_ALLOW_REV_MULTI
+           , IS_GL_POST_CLM
+           , GL_POST_CLM_DT
+           , TRX_ID
+           , CODE_DESC
+           , SUP_REF_NO AS SALES_ORD_NO
+           , NAME
+           , CODE
+           , NAME1 AS NAME1
+           , ACC_CODE
+           , ACC_DESC
+           , NAME2 AS NAME2
+           , NAME3 AS NAME3
+           , USER_NAME
+           , REV_RECEIPT_NO
+           , PAY_ITM_APPV_NO
+    FROM ( SELECT T1.PAY_ID
+                        , T1.OR_NO
+                        , T1.SALES_ORD_ID
+                        , T1.BILL_ID
+                        , T1.TR_NO
+                        , T1.TYPE_ID
+                        , TO_CHAR(T1.PAY_DATA, 'DD/MM/YYYY') PAY_DATA
+                        , T1.BANK_CHG_ACC_ID
+                        , T1.COLL_MEM_ID
+                        , T1.BRNCH_ID
+                        , T1.BANK_ACC_ID
+                        , T1.STUS_CODE_ID
+                        , T1.UPD_USER_ID
+                        , T1.UPD_DT
+                        , T1.SYNC_HECK
+                        , T1.CUST_ID_3PARTY
+                        , T1.TOT_AMT
+                        , T1.MTCH_ID
+                        , T1.CRT_USER_ID
+                        , T1.CRT_DT
+                        , T1.IS_ALLOW_REV_MULTI
+                        , T1.IS_GL_POST_CLM
+                        , T1.GL_POST_CLM_DT
+                        , T1.TRX_ID
+                        , T2.CODE_DESC
+                        , T3.SUP_REF_NO
+                        , T4.NAME
+                        , T5.CODE
+                        , T5.NAME AS NAME1
+                        , T6.ACC_CODE
+                        , T6.ACC_DESC
+                        , T7.NAME AS NAME2
+                        , T8.NAME AS NAME3
+                        , T9.USER_NAME
+                        , '' AS C1
+                        , DECODE(T10.PAY_ID, NULL, '', T10.OR_NO) AS REV_RECEIPT_NO
+                        , DECODE(T11.PAY_ITM_APPV_NO,NULL,'',T11.PAY_ITM_APPV_NO) AS PAY_ITM_APPV_NO
+               FROM PAY0064D T1
+               LEFT OUTER JOIN SYS0013M T2 ON T2.CODE_ID = T1.TYPE_ID
+               LEFT OUTER JOIN SUP0001M T3 ON T3.SUP_REF_ID = T1.SALES_ORD_ID
+               LEFT OUTER JOIN ORG0001D T4 ON T4.MEM_ID = T1.COLL_MEM_ID
+               LEFT OUTER JOIN SYS0005M T5 ON T5.BRNCH_ID = T1.BRNCH_ID
+               LEFT OUTER JOIN SYS0001M T6 ON T6.ACC_ID = T1.BANK_ACC_ID
+               LEFT OUTER JOIN SYS0038M T7 ON T7.STUS_CODE_ID = T1.STUS_CODE_ID
+               LEFT OUTER JOIN ORG0001D T8 ON T8.MEM_ID = T1.UPD_USER_ID
+               LEFT OUTER JOIN SYS0047M T9 ON T9.USER_ID = T1.CRT_USER_ID
+               LEFT OUTER JOIN PAY0064D T10 ON T10.PAY_ID = T1.MTCH_ID AND 101 = T1.TYPE_ID
+               LEFT JOIN PAY0065D T11 ON T11.PAY_ID = T1.PAY_ID
+               JOIN PAY0007D T12 ON T12.BILL_ID = T1.BILL_ID
+               WHERE (T1.SVC_CNTRCT_ID = 0 OR T1.SVC_CNTRCT_ID IS NULL)
+                    AND T12.BILL_NO = (SELECT SUP_REF_NO FROM SUP0001M WHERE SUP_REF_ID = #{supRefId})
+    ) ORDER BY PAY_ID DESC
+  </select>
+
+  <select id="selectOrderBasicLedgerInfo" parameterType="Map" resultType="egovMap">
+
+      SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
+               Extent16.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.PV_YEAR AS PV_YEAR,
+               Extent1.PV_MONTH AS PV_MONTH,
+               Extent1.TOT_PV AS TOT_PV,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
+               Extent3.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent3.NRIC AS CUST_NRIC,
+               Extent3.GENDER AS CUST_GENDER,
+               Extent17.EMAIL AS CUST_EMAIL,
+               Extent17.TEL_M1 AS CUST_MOBILE_NO,
+               Extent17.TEL_O AS CUST_OFFICE_NO,
+               Extent17.TEL_R AS CUST_RESIDENT_NO,
+               Extent17.TELF AS CUST_FAX_NO,
+               TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
+               TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+               Extent10.CODE_NAME AS CUST_STATUS,
+               Extent11.CODE_NAME AS RACE_NAME,
+               Extent12.CODE_NAME AS CUST_TYPE_NAME,
+               Extent4.NAME AS NATION_NAME,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
+               Extent14.AREA AS AREA,
+               Extent14.POSTCODE AS POSTCODE,
+               Extent14.STATE AS STATE,
+               Extent14.COUNTRY AS COUNTRY,
+               Extent14.CITY AS CITY,
+               Extent15.DEPT_CODE AS DEPT_CODE,
+               Extent15.GRP_CODE AS GRP_CODE,
+               Extent15.ORG_CODE AS ORG_CODE,
+               Extent6.MEM_CODE AS SALESMAN_CODE,
+               Extent6.NAME AS SALESMAN_NAME,
+               Extent6.MEM_CODE AS SALESMAN_NRIC,
+               Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
+               Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT
+    FROM SUP0001M Extent1
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    LEFT JOIN org0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '584'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '585'
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
+    LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
+    LEFT JOIN SAL0023D Extent13 ON Extent13.CUST_ID = Extent1.CUST_ID AND Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID
+    LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
+    LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_ID = #{supRefId}
+        AND ROWNUM <![CDATA[<=]]> 1
+
+  </select>
+
+  <update id="updateRefStgStatus" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STG = '4'
+                                   , SUP_REF_PCL_TRKNO = #{inputParcelTrackNo}
+                                   , SUP_REF_DEL_STUS = 0
+    WHERE SUP_REF_ID = #{supRefId}
+        AND DEL_FLG = 'N'
+  </update>
+
+  <update id="rollbackRefStgStatus" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STG = '3'
+                                   , SUP_REF_PCL_TRKNO = ''
+                                   , SUP_REF_DEL_STUS = null
+    WHERE SUP_REF_ID = #{supRefId}
+        AND DEL_FLG = 'N'
+  </update>
+
+  <select id="getStoSup"  parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT *
+      FROM (SELECT REQST_NO
+                FROM LOG0047M
+                WHERE NVL(REQST_DEL, 'N') <> 'Y'
+                    AND REF_DOC_NO = #{supRefNo}
+                ORDER BY REQST_NO DESC)
+      WHERE ROWNUM = 1
+    ]]>
+  </select>
+
+  <select id="SP_STO_PRE_SUPP" parameterType="Map"  statementType="CALLABLE" >
+    {
+      CALL SP_STO_PRC_SUPP (#{P_STO},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+    }
+  </select>
+
+  <select id="selectSubmBrch" resultType="egovMap">
+    SELECT S5.BRNCH_ID CODE_ID,
+               S5.CODE || '-' || S5.NAME CODE_NAME,
+               S5.NAME ,
+               S5.CODE ,
+               S28.WH_LOC_ID ,
+               S28.WH_LOC_CODE ,
+               S28.WH_LOC_DESC ,
+               S28.WH_LOC_GB ,
+               ( SELECT CODE_NAME
+                  FROM SYS0013M
+                  WHERE CODE_MASTER_ID = 339
+                      AND CODE = S28.WH_LOC_GB) LOCGB
+    FROM SYS0005M S5
+           , SYS0028M S28
+    WHERE S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+        AND S28.WH_LOC_STK_GRAD = 'A'
+        AND S28.WH_LOC_GB IN ('02' , '05' , '08')
+    ORDER BY S5.CODE
+  </select>
+
+  <select id="selectWhBrnchList" resultType="egovMap">
+    SELECT S5.BRNCH_ID CODE_ID,
+               S5.CODE || '-' || S5.NAME CODE_NAME,
+               S5.NAME ,
+               S5.CODE ,
+               S28.WH_LOC_ID ,
+               S28.WH_LOC_CODE ,
+               S28.WH_LOC_DESC ,
+               S28.WH_LOC_GB ,
+               ( SELECT CODE_NAME
+                 FROM SYS0013M
+                 WHERE CODE_MASTER_ID = 339
+                     AND CODE = S28.WH_LOC_GB) LOCGB
+    FROM SYS0005M S5,
+             SYS0028M S28
+    WHERE S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+        AND S28.WH_LOC_STK_GRAD = 'A'
+        AND S28.WH_LOC_GB IN ('02' , '05' , '08')
+    ORDER BY S5.CODE
+  </select>
+
+  <select id="getSupplementDetailList"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_STK_ID AS ITEM_CODE,
+               Extent2.STK_DESC AS ITEM_DESC,
+               Extent1.SUP_ITM_QTY AS QUANTITY,
+               Extent1.SUP_ITM_UNTPRC AS UNIT_PRICE,
+               Extent1.SUP_TOT_AMT AS TOTAL_AMOUNT
+    FROM SUP0002D Extent1
+    JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.SUP_STK_ID
+    JOIN SUP0001M Extent3 ON Extent1.SUP_REF_ID = Extent3.SUP_REF_ID
+    WHERE Extent3.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="getDelRcdLst" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(A.SUP_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS DEL_DT,
+               UPPER(B.CODE_NAME) AS DEL_STUS,
+               UPPER(A.SUP_DEL_LOC) AS DEL_LOC,
+               UPPER(A.SUP_DEL_RMK) AS RMK
+    FROM SUP0005D A
+    LEFT JOIN SYS0013M B ON B.CODE_MASTER_ID = '585' AND B.CODE = A.SUP_DEL_SEQ
+
+    <choose>
+      <when test=" null != trkNo and '' != trkNo">
+         JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_PCL_TRKNO = A.SUP_REF_PCL_TRKNO
+      </when>
+      <otherwise>
+         JOIN SUP0001M C ON C.SUP_REF_ID = A.SUP_REF_ID AND C.SUP_REF_RTN_CSIGNO = A.SUP_REF_PCL_TRKNO
+      </otherwise>
+    </choose>
+
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
+        <if test="trkNo != null and trkNo != '' ">
+          AND A.SUP_REF_PCL_TRKNO = #{trkNo}
+        </if>
+
+        <if test="rtnTrkNo != null and rtnTrkNo != '' ">
+          AND A.SUP_REF_PCL_TRKNO = #{rtnTrkNo}
+        </if>
+    ORDER BY A.SUP_DEL_DT DESC
+  </select>
+
+  <select id="getRtnItmRcdLst" parameterType="Map" resultType="egovMap">
+    SELECT D.STK_ID AS ITEM_CODE,
+               D.STK_DESC AS ITEM_DESC,
+               F.SUP_ITM_QTY AS QUANTITY,
+               C.SUP_RTN_GDS AS TTL_GOOD_COND,
+               C.SUP_RTN_BAD_GDS AS TTL_DEFECT_COND,
+               C.SUP_RTN_MISS_GDS AS TTL_MIA_COND
+    FROM SUP0007M A
+    JOIN SUP0008M B ON A.SUP_REQ_CANC_ID = B.SUP_REQ_CANC_ID AND B.DEL_FLG = 'N'
+    JOIN SUP0009D C ON B.SUP_RTN_ID = C.SUP_RTN_ID AND C.DEL_FLG = 'N'
+    JOIN SYS0026M D ON C.SUP_STK_ID = D.STK_ID
+    JOIN SUP0001M E ON A.SUP_REF_ID = E.SUP_REF_ID
+    JOIN SUP0002D F ON E.SUP_REF_ID = F.SUP_REF_ID AND F.SUP_STK_ID = C.SUP_STK_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
+        <if test="rtnTrkNo != null and rtnTrkNo != '' ">
+          AND A.SUP_REQ_CANC_RTN_TRKNO = #{rtnTrkNo}
+        </if>
+  </select>
+
+  <select id="selectOrderBasicInfo"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_REF_ID AS SUP_REF_ID,
+               Extent1.SUP_REF_NO AS SUP_REF_NO,
+               Extent1.SUP_SUBM_SOF AS SOF_NO,
+               Extent1.SUP_REF_DEL_STUS AS SUP_REF_DEL_STUS_ID,
+               Extent9.CODE_NAME AS SUP_REF_DEL_STUS,
+               TO_CHAR(Extent1.SUP_TTL_AMT, 'FM9999999990.00') AS SUP_TTL_AMT,
+               Extent7.NAME AS SUP_REF_STUS,
+               Extent1.SUP_REF_STUS AS SUP_REF_STUS_ID,
+               Extent8.CODE_NAME AS SUP_REF_STG,
+               Extent1.SUP_REF_STG AS SUP_REF_STG_ID,
+               TO_CHAR(Extent1.SUP_REF_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DATE,
+               Extent16.NAME AS SUBM_BRCH,
+               Extent1.SUP_REF_PCL_TRKNO AS PARCEL_TRACK_NO,
+               Extent1.PV_YEAR AS PV_YEAR,
+               Extent1.PV_MONTH AS PV_MONTH,
+               Extent1.TOT_PV AS TOT_PV,
+               Extent1.SUP_REF_RTN_CSIGNO AS SUP_CONSG_NO,
+               Extent5.USER_NAME AS REF_CREATE_BY,
+               TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY hh:mi:ss AM') AS REF_CREATE_DATE,
+               TO_CHAR(Extent1.SUP_REF_DEL_DT, 'DD-MM-YYYY hh:mi:ss AM') AS SUP_REF_DEL_DT,
+               Extent3.CUST_ID AS CUST_ID,
+               Extent3.NAME AS CUST_NAME,
+               Extent3.NRIC AS CUST_NRIC,
+               Extent3.GENDER AS CUST_GENDER,
+               Extent17.NAME AS CUST_EMAIL_NM,
+               Extent17.EMAIL AS CUST_EMAIL,
+               Extent17.TEL_M1 AS CUST_MOBILE_NO,
+               Extent17.TEL_O AS CUST_OFFICE_NO,
+               Extent17.TEL_R AS CUST_RESIDENT_NO,
+               Extent17.TELF AS CUST_FAX_NO,
+               TO_CHAR(Extent3.VISA_EXPR, 'DD-MM-YYYY') AS VISA_EXPR,
+               TO_CHAR(Extent3.PAS_SPORT_EXPR, 'DD-MM-YYYY') AS PAS_SPORT_EXPR,
+               Extent10.CODE_NAME AS CUST_STATUS,
+               Extent11.CODE_NAME AS RACE_NAME,
+               Extent12.CODE_NAME AS CUST_TYPE_NAME,
+               Extent4.NAME AS NATION_NAME,
+               Extent13.ADDR_DTL AS ADDRESS_LINE_1,
+               Extent13.STREET AS ADDRESS_LINE_2,
+               Extent14.AREA AS AREA,
+               Extent14.POSTCODE AS POSTCODE,
+               Extent14.STATE AS STATE,
+               Extent14.COUNTRY AS COUNTRY,
+               Extent14.CITY AS CITY,
+               Extent15.DEPT_CODE AS DEPT_CODE,
+               Extent15.GRP_CODE AS GRP_CODE,
+               Extent15.ORG_CODE AS ORG_CODE,
+               Extent6.MEM_CODE AS SALESMAN_CODE,
+               Extent6.NAME AS SALESMAN_NAME,
+               Extent6.MEM_CODE AS SALESMAN_NRIC,
+               Extent6.TEL_MOBILE AS SALESMAN_MOBILE,
+               Extent6.TEL_OFFICE AS SALESMAN_OFFICE,
+               Extent6.TEL_HUSE AS SALESMAN_RESIDENT,
+               Extent18.ADDR_DTL AS BILL_ADDRESS_LINE_1,
+               Extent18.STREET AS BILL_ADDRESS_LINE_2,
+               Extent19.AREA AS BILL_AREA,
+               Extent19.POSTCODE AS BILL_POSTCODE,
+               Extent19.STATE AS BILL_STATE,
+               Extent19.COUNTRY AS BILL_COUNTRY,
+               Extent19.CITY AS BILL_CITY ,
+               Extent1.FL_ATT_ID AS ATCH_FILE_GRP_ID,
+               Extent1.SUP_RTN_RFND AS IS_REFUND,
+               Extent1.SUP_REF_RMK AS RMK,
+               CASE WHEN Extent1.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               NVL(Extent20.SALES_ORD_NO,'-') SALES_ORD_NO
+    FROM SUP0001M Extent1
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN SYS0015M Extent4 ON Extent4.CNTY_ID = Extent3.NATION
+    JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USR_ID
+    LEFT JOIN ORG0001D Extent6 ON Extent6.MEM_ID = Extent1.MEM_ID
+    JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.SUP_REF_STUS
+    LEFT JOIN SYS0013M Extent8 ON Extent8.CODE = Extent1.SUP_REF_STG AND Extent8.CODE_MASTER_ID = '584'
+    LEFT JOIN SYS0013M Extent9 ON Extent9.CODE = Extent1.SUP_REF_DEL_STUS AND Extent9.CODE_MASTER_ID = '585'
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent3.IS_EXST_CUST AND Extent10.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0013M Extent11 ON Extent11.CODE_ID = Extent3.RACE_ID
+    LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent3.TYPE_ID
+    LEFT JOIN SAL0023D Extent13 ON Extent13.CUST_ADD_ID = Extent1.CUST_DEL_ADDR_ID AND Extent1.CUST_ID = EXTENT13.CUST_ID
+    LEFT JOIN SYS0064M Extent14 ON Extent14.AREA_ID = Extent13.AREA_ID
+    LEFT JOIN ORG1001V Extent15 ON Extent15.MEM_ID = Extent1.MEM_ID
+    LEFT JOIN SYS0005M Extent16 ON Extent16.BRNCH_ID = Extent1.MEM_BRNCH_ID
+    LEFT JOIN SAL0027D Extent17 ON Extent17.CUST_ID = Extent1.CUST_ID AND Extent17.CUST_CNTC_ID = Extent1.CUST_CNTC_ID
+    LEFT JOIN SAL0023D Extent18 ON Extent18.CUST_ID = Extent1.CUST_ID AND Extent18.CUST_ADD_ID = Extent1.CUST_BILL_ADDR_ID
+    LEFT JOIN SYS0064M Extent19 ON Extent19.AREA_ID = Extent18.AREA_ID
+    LEFT JOIN SAL0001D Extent20 ON Extent1.SALES_ORD_ID_GIFT = Extent20.SALES_ORD_ID
+    WHERE 1=1
+        AND Extent1.DEL_FLG = 'N'
+        AND Extent1.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="selectCancDelInfo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REQ_CANC_NO AS CANC_NO,
+               B.SUP_RTN_NO AS RTN_NO,
+               A.SUP_REQ_CANC_RTN_TRKNO AS RTN_TCK_NO,
+               B.SUP_RTN_STAT AS RTN_STAT_ID,
+               D.NAME AS RTN_STAT,
+               CASE WHEN B.SUP_RTN_STAT = 4 THEN TO_CHAR(B.UPD_DT, 'DD-MM-YYYY hh:mi:ss AM') ELSE '' END AS RTN_DT
+    FROM SUP0007M A
+    LEFT JOIN SUP0008M B ON A.SUP_REQ_CANC_ID = B.SUP_REQ_CANC_ID AND B.DEL_FLG = 'N'
+    JOIN SUP0001M C ON A.SUP_REF_ID = C.SUP_REF_ID
+    JOIN SYS0038M D ON B.SUP_RTN_STAT = D.STUS_CODE_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_ID = #{supRefId}
+  </select>
+
+  <select id="selectPosJsonList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.POS_ID ,
+               Extent1.POS_NO ,
+               Extent1.POS_CUST_NAME ,
+               TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT,
+               Extent1.POS_TYPE_ID   ,
+               Extent1.POS_MODULE_TYPE_ID  ,
+               TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
+               Extent1.STUS_ID,
+               EXTENT11.NAME STUS_DESC ,
+               Extent1.POS_WH_ID  ,
+               Extent1.POS_MEM_ID  ,
+               Extent1.POS_CRT_USER_ID  ,
+               Extent2.CODE_NAME  ,
+               Extent3.CODE_NAME CODE_NAME1 ,
+               Extent6.USER_NAME  ,
+               CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+               CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+               CASE
+                   WHEN Extent1.POS_MODULE_TYPE_ID =6795 THEN Extent12.USER_FULL_NAME
+                   WHEN (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME
+                   ELSE 'CASH'
+               END NAME ,
+               CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
+               extent10.MEMO_ADJ_REF_NO,
+               Extent1.BRNCH_ID,
+               Extent9.CODE BRNCH_DESC,
+               UPPER(Extent1.POS_REM) REV_RMK
+    FROM SAL0057D Extent1
+    JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+    JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+    LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+    LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+    JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+    LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+    LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
+    LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+    LEFT JOIN SYS0038M EXTENT11 ON EXTENT1.STUS_ID = EXTENT11.STUS_CODE_ID
+    LEFT JOIN SYS0047M Extent12 ON Extent1.POS_CUST_NAME =  Extent12.USER_NAME
+
+    <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
+      LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
+    </if>
+
+    WHERE  1=1
+
+    <if test=" null != posModuleTypeId and '' != posModuleTypeId">
+      AND Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+    </if>
+
+    <if test=" null != systemArray and systemArray.length > 0">
+       AND Extent1.POS_TYPE_ID IN
+       <foreach collection="systemArray" item="item" open="(" separator="," close=")">
+         #{item}
+       </foreach>
+    </if>
+
+    <if test=" null != statusArray and statusArray.length > 0">
+        AND Extent1.STUS_ID IN
+        <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+
+    <if test="posNo != nul and posNo != '' ">
+        AND UPPER(Extent1.POS_NO) = UPPER(#{posNo})
+    </if>
+
+    <if test="sDate != null and sDate != '' ">
+      <![CDATA[
+        AND Extent1.POS_DT >= TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+       ]]>
+    </if>
+
+    <if test="eDate != null and eDate != '' ">
+       <![CDATA[
+          AND Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+    </if>
+
+    <if test="brnchId != null and brnchId != '' ">
+       AND Extent1.BRNCH_ID = #{brnchId}
+    </if>
+
+    <if test=" null != salesmanId and '' != salesmanId">
+      AND Extent1.POS_MEM_ID = #{salesmanId}
+    </if>
+
+    <if test=" null != posCustName and '' != posCustName">
+      AND  Extent1.POS_CUST_NAME  = #{posCustName}
+    </if>
+
+    <if test="deducMem != null and deducMem != '' ">
+      AND Extent1.POS_MODULE_TYPE_ID = 2391
+      AND UPPER(Extent8.MEM_CODE) = UPPER(#{deducMem})
+    </if>
+
+    <if test="deducMemNric != null and deducMemNric != '' ">
+      AND Extent1.POS_MODULE_TYPE_ID = 2391
+      AND UPPER(Extent8.NRIC) = UPPER(#{deducMemNric})
+    </if>
+
+    ORDER BY Extent1.POS_NO DESC
+  </select>
+
+  <update id="revertStgStus" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STG = '3' ,
+                                     SUP_REF_PCL_TRKNO = ''
+    WHERE SUP_REF_ID = #{supRefId} AND DEL_FLG = 'N'
+  </update>
+
+  <update id="updOrdDelStat" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_DEL_STUS = #{latestEnumStatus},
+                                     <if test=" null != latestConsignmentNoteDate and '' != latestConsignmentNoteDate">
+                                       SUP_REF_DEL_DT = TO_DATE(#{latestConsignmentNoteDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                                     </if>
+                                     <if test=" null != ordRefStat and '' != ordRefStat">
+                                       SUP_REF_STUS = #{ordRefStat},
+                                     </if>
+                                     <if test=" null != ordRefStg and '' != ordRefStg">
+                                        SUP_REF_STG = #{ordRefStg},
+                                     </if>
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_REF_NO = #{ordNo}
+               AND SUP_REF_PCL_TRKNO = #{consNo}
+               AND DEL_FLG = 'N'
+  </update>
+
+  <update id="updOrdDelDhlStat" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_DEL_STUS = #{latestEnumStatus},
+                                     <if test=" null != latestConsignmentNoteDate and '' != latestConsignmentNoteDate">
+                                       SUP_REF_DEL_DT = TO_DATE(#{latestConsignmentNoteDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                                     </if>
+                                     <if test=" null != ordRefStat and '' != ordRefStat">
+                                       SUP_REF_STUS = #{ordRefStat},
+                                     </if>
+                                     <if test=" null != ordRefStg and '' != ordRefStg">
+                                        SUP_REF_STG = #{ordRefStg},
+                                     </if>
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE SUP_REF_PCL_TRKNO = #{consNo}
+               AND DEL_FLG = 'N'
+  </update>
+
+  <select id="getCustEmailDtl"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_NO AS SUP_REF_NO,
+               B.NAME  AS CUST_NAME,
+               UPPER(C.ADDR_DTL) AS ADDR_LN1,
+               UPPER(C.STREET) AS ADDR_LN2,
+               UPPER(D.AREA) AS AREA,
+               UPPER(D.POSTCODE) AS POSTCODE,
+               UPPER(D.CITY) AS CITY,
+               UPPER(D.STATE) AS STATE,
+               UPPER(D.COUNTRY) AS COUNTRY,
+               TO_CHAR(A.SUP_REF_DEL_DT, 'DD/MM/YYYY hh:mm:ss AM') AS DEL_DT,
+               B.EMAIL AS CUST_EMAIL
+    FROM SUP0001M A
+    JOIN SAL0027D B ON B.CUST_ID = A.CUST_ID AND B.CUST_CNTC_ID = A.CUST_CNTC_ID
+    JOIN SAL0023D C ON C.CUST_ID = A.CUST_ID AND C.CUST_ADD_ID = A.CUST_DEL_ADDR_ID
+    LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
+    WHERE 1=1
+
+     <if test=" null != ordNo and '' != ordNo">
+       AND A.SUP_REF_NO = #{ordNo}
+     </if>
+
+     <if test=" null != consNo and '' != consNo">
+       AND A.SUP_REF_PCL_TRKNO = #{consNo}
+     </if>
+
+  </select>
+
+  <select id="getOrdInfo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO
+    FROM SUP0001M A
+    WHERE 1=1
+
+     <if test=" null != ordNo and '' != ordNo">
+       AND A.SUP_REF_NO = #{ordNo}
+     </if>
+
+     <if test=" null != consNo and '' != consNo">
+       AND A.SUP_REF_PCL_TRKNO = #{consNo}
+     </if>
+
+  </select>
+
+  <update id="updateDelLstDtl" parameterType="Map">
+    UPDATE SUP0005D SET DEL_FLG = 'Y',
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND SUP_REF_ID = ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+    </if>
+
+    <if test=" null != consNo and '' != consNo">
+      AND SUP_REF_PCL_TRKNO = #{consNo}
+    </if>
+  </update>
+
+  <insert id="insertDelLstDtl" parameterType="Map">
+    INSERT INTO SUP0005D ( SUP_DEL_ID
+                                      , SUP_REF_ID
+                                      , SUP_REF_PCL_TRKNO
+                                      , SUP_DEL_SEQ
+                                      , SUP_DEL_DT
+                                      , SUP_DEL_LOC
+                                      , SUP_DEL_RMK
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( SUP0005D_SUP_DEL_SEQ_ID.NEXTVAL
+                     <choose>
+                       <when test=" null != ordNo and '' != ordNo">
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_NO = #{ordNo} )
+                       </when>
+                       <otherwise>
+                         , ( SELECT SUP_REF_ID FROM SUP0001M WHERE SUP_REF_PCL_TRKNO = #{consNo} )
+                       </otherwise>
+                     </choose>
+
+                    , #{consNo}
+                    , #{enumStatus}
+                    , TO_DATE(#{dateScan}, 'YYYY-MM-DD HH24:MI:SS')
+                    , #{location}
+                    , #{statusDetail}
+                    , #{userId}
+                    , #{userId}
+    )
+  </insert>
+
+  <select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
+    <![CDATA[
+      {
+        CALL SP_GEN_SUPP_ORD_LDGR ( #{supRefId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
+       }
+    ]]>
+  </select>
+
+  <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+    <![CDATA[
+      {
+        CALL SP_GET_SUPP_ORD_OTSTND_INFO ( #{supRefId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
+      }
+    ]]>
+  </select>
+
+  <select id="getCustOrdDelInfoPdo" parameterType="Map" resultType="egovMap">
+    SELECT '5395801' AS PICK_UP_ACC_NO,
+               A.SUP_REF_NO AS SHIPM_ORD_ID,
+               'PDO' AS SHIPM_SERV_CDE,
+               UPPER(B.NAME) AS CONGS_NM,
+               UPPER(C.ADDR_DTL) AS ADDRS_LN1,
+               UPPER(C.STREET) AS ADDRS_LN2,
+               UPPER(D.CITY) AS CITY,
+               UPPER(D.STATE) AS STATE,
+               D.POSTCODE AS POST_CDE,
+               D.ISO AS COUNTRY,
+               B.TEL_M1 AS PHONE_NO,
+               B.EMAIL AS EMAIL_ADDR,
+               '100' AS SHIPM_WEIGHT,
+               'MYR' AS CUR_CDE,
+               A.SUP_REF_NO AS SHIPM_DESC,
+               E.ITM_LIST AS REMARKS,
+               'COWAY (MALAYSIA) SDN BHD' AS SHIPM_COMP,
+               UPPER('COWAY (MALAYSIA) SDN BHD') AS SHIPM_NM,
+               UPPER('3, JALAN KELULI 1, TAMAN PERINDUSTR') AS SHIPM_ADDRS_LN1,
+               UPPER('') AS SHIPM_ADDRS_LN2,
+               UPPER('SHAH ALAM, SELANGOR') AS SHIPM_CITY,
+               UPPER('SEL') AS SHIPM_STATE,
+               '40000' AS SHIPM_POST_CDE,
+               D.ISO AS SHIPM_COUNTRY,
+               '601162762865' AS SHIPM_PHONE_NO,
+               'grace.lee@cjcentury.com' AS SHIPM_EMAIL_ADDR,
+               '' AS HANDOVER_MTD,
+               '' AS RTN_MODE
+    FROM SUP0001M A
+    JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
+    JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
+    JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
+    JOIN (SELECT A.SUP_REF_ID,
+                        LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY|| ' BOX(S)', ' ' || CHR(38) || ' ') WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+            FROM SUP0001M A
+            JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
+            LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
+            WHERE A.DEL_FLG = 'N'
+                AND A.SUP_REF_STG = '3'
+                AND A.SUP_REF_STUS = '1'
+            GROUP BY A.SUP_REF_ID) E ON A.SUP_REF_ID = E.SUP_REF_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_STG = '3'
+        AND A.SUP_REF_STUS = '1'
+  </select>
+
+  <select id="getCustOrdDelInfoPdr" parameterType="Map" resultType="egovMap">
+    SELECT '5395801' AS PICK_UP_ACC_NO,
+               'COWAY (MALAYSIA) SDN BHD' AS COMPANY,
+               A.SUP_REF_NO || '_R' AS SHIPM_ORD_ID,
+               'PDR' AS SHIPM_SERV_CDE,
+               UPPER('COWAY (MALAYSIA) SDN BHD') AS CONGS_NM,
+               UPPER('3, JALAN KELULI 1, TAMAN PERINDUSTR') AS ADDRS_LN1,
+               UPPER('') AS ADDRS_LN2,
+               UPPER('SHAH ALAM, SELANGOR') AS CITY,
+               UPPER('SEL') AS STATE,
+               '40000' AS POST_CDE,
+               D.ISO AS COUNTRY,
+               '601162762865' AS PHONE_NO,
+               'grace.lee@cjcentury.com' AS EMAIL_ADDR,
+               '100' AS SHIPM_WEIGHT,
+               'MYR' AS CUR_CDE,
+               A.SUP_REF_NO AS SHIPM_DESC,
+               E.ITM_LIST AS REMARKS,
+               UPPER(B.NAME) AS SHIPM_COMP,
+               UPPER(B.NAME) AS SHIPM_NM,
+               UPPER(C.ADDR_DTL) AS SHIPM_ADDRS_LN1,
+               UPPER(C.STREET) AS SHIPM_ADDRS_LN2,
+               UPPER(D.CITY) AS SHIPM_CITY,
+               UPPER(D.STATE) AS SHIPM_STATE,
+               D.POSTCODE AS SHIPM_POST_CDE,
+               D.ISO AS SHIPM_COUNTRY,
+               B.TEL_M1 AS SHIPM_PHONE_NO,
+               B.EMAIL AS SHIPM_EMAIL_ADDR,
+               '1' AS HANDOVER_MTD,
+               '01' AS RTN_MODE
+    FROM SUP0001M A
+    JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID AND A.CUST_CNTC_ID = B.CUST_CNTC_ID
+    JOIN SAL0023D C ON A.CUST_ID = C.CUST_ID AND A.CUST_DEL_ADDR_ID = C.CUST_ADD_ID
+    JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
+    JOIN (SELECT A.SUP_REF_ID,
+                       LISTAGG(C.STK_DESC|| ' - ' || B.SUP_ITM_QTY|| ' BOX(S)', ' ' || CHR(38) || ' ') WITHIN GROUP (ORDER BY A.SUP_REF_ID) AS ITM_LIST
+            FROM SUP0001M A
+            JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
+            LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
+            WHERE A.DEL_FLG = 'N'
+                AND A.SUP_REF_STG = '5'
+                AND A.SUP_REF_STUS = '10'
+            GROUP BY A.SUP_REF_ID) E ON A.SUP_REF_ID = E.SUP_REF_ID
+    WHERE A.DEL_FLG = 'N'
+        AND A.SUP_REF_STG = '5'
+        AND A.SUP_REF_STUS = '10'
+  </select>
+
+  <select id="getOrdInfoPdo"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               B.NAME AS CUST_NAME,
+               B.EMAIL AS CUST_EMAIL
+    FROM SUP0001M A
+    JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+    WHERE A.DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND A.SUP_REF_NO = #{ordNo}
+    </if>
+  </select>
+
+  <select id="getOrdInfoPdr"  parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_ID AS SUP_REF_ID,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               B.SUP_REQ_CANC_ID AS CAN_REQ_ID,
+               C.NAME AS CUST_NAME,
+               C.EMAIL AS CUST_EMAIL
+    FROM SUP0001M A
+    JOIN SUP0007M B ON A.SUP_REF_ID = B.SUP_REF_ID AND B.DEL_FLG = 'N'
+    JOIN SAL0029D C ON A.CUST_ID = C.CUST_ID
+    WHERE A.DEL_FLG = 'N'
+
+    <if test=" null != ordNo and '' != ordNo">
+      AND A.SUP_REF_NO = #{ordNo}
+    </if>
+  </select>
+
+  <select id="getWhLocId" parameterType="String" resultType="Integer">
+    SELECT WH_LOC_ID
+    FROM SYS0028M
+    WHERE WH_LOC_CODE = #{params}
+        AND WH_LOC_STUS_ID = 1
+  </select>
+
+  <select id="SP_LOGISTIC_REQUEST_SUPP" parameterType="Map"  statementType="CALLABLE" >
+    {
+       call SP_LOGISTIC_REQUEST_SUPP( #{S_NO},#{RE_TYPE},#{P_LOC},#{P_TYPE},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+    }
+  </select>
+
+  <select id="selectSupplementDailyOrderReportList" parameterType="Map" resultType="egovMap">
+    SELECT A.SUP_REF_NO AS SUP_REF_NO,
+               UPPER(B.NAME) AS SUP_REF_STUS,
+               UPPER(C.CODE_NAME) AS SUP_REF_STG,
+               UPPER(D.NAME) AS CUST_NAME,
+               TO_CHAR(A.SUP_REF_DT, 'DD-MM-YYYY') AS SUP_REF_DT,
+               TO_CHAR(F.PAY_DATA, 'DD-MM-YYYY') AS PAY_DT,
+               F.OR_NO AS OR_NO,
+               H.STK_CODE AS STK_CDE,
+               UPPER(H.STK_DESC) AS STK_DESC,
+               G.SUP_ITM_QTY AS SUP_ITM_QTY,
+               UPPER(I.ADDR_DTL) AS ADDR_DTL ,
+               UPPER(I.STREET) AS STREET,
+               UPPER(J.AREA) AS AREA,
+               UPPER(J.CITY) AS CITY,
+               UPPER(J.STATE) AS STATE,
+               J.POSTCODE AS POSTCODE
+    FROM SUP0001M A
+    LEFT JOIN SYS0038M B ON A.SUP_REF_STUS = B.STUS_CODE_ID
+    LEFT JOIN SYS0013M C ON A.SUP_REF_STG = C.CODE AND C.CODE_MASTER_ID = 584
+    LEFT JOIN SAL0029D D ON A.CUST_ID = D.CUST_ID
+    LEFT JOIN PAY0007D E ON A.SUP_REF_NO = E.BILL_NO
+    LEFT JOIN PAY0064D F ON E.BILL_ID = F.BILL_ID
+    LEFT JOIN SUP0002D G ON A.SUP_REF_ID = G.SUP_REF_ID
+    LEFT JOIN SYS0026M H ON G.SUP_STK_ID = H.STK_ID
+    LEFT JOIN SAL0023D I ON A.CUST_DEL_ADDR_ID = I.CUST_ADD_ID
+    LEFT JOIN SYS0064M J ON I.AREA_ID = J.AREA_ID
+    WHERE F.TYPE_ID = 577
+
+   <if test=" 'MGT' == ind ">
+      AND A.SUP_REF_STG IN (4,5,6,99)
+    </if>
+
+    <if test=" 'CAN' == ind ">
+      AND A.SUP_REF_STG IN (5,6,99)
+      AND A.SUP_REF_STUS = 10
+    </if>
+
+    <if test='paymentStartDt != null and paymentStartDt != "" and paymentEndDt != null and paymentEndDt != ""'>
+      AND F.PAY_DATA BETWEEN TO_DATE(#{paymentStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{paymentEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    ORDER BY F.PAY_DATA DESC
+  </select>
+
+  <select id="getSofListingInfo" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(A.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') AS SUP_REF_CRT_DT,
+               A.SUP_REF_NO AS SUP_REF_NO,
+               A.SUP_SUBM_SOF AS SOF_NO,
+               B.CODE AS BR,
+               UPPER(C.NAME) AS CUST_NAME,
+               D.MEM_CODE AS SALESMAN_ID,
+               UPPER(D.NAME) AS SALESMAN_NAME,
+               UPPER(F.STK_CODE || ' - ' || F.STK_DESC) AS SUP_REF_ITM,
+               G.USER_NAME AS REF_CREATE_BY,
+               UPPER(H.CODE_NAME) AS IS_COMPANY
+    FROM SUP0001M A
+    LEFT JOIN SYS0005M B ON A.MEM_BRNCH_ID = B.BRNCH_ID
+    LEFT JOIN SAL0029D C ON A.CUST_ID = C.CUST_ID
+    LEFT JOIN ORG0001D D ON A.MEM_ID = D.MEM_ID
+    LEFT JOIN SUP0002D E ON A.SUP_REF_ID = E.SUP_REF_ID
+    LEFT JOIN SYS0026M F ON E.SUP_STK_ID = F.STK_ID
+    LEFT JOIN SYS0047M G ON A.CRT_USR_ID = G.USER_ID
+    LEFT JOIN SYS0013M H ON H.CODE_MASTER_ID = '8' AND C.TYPE_ID = H.CODE_ID
+
+    WHERE 1=1
+        AND A.DEL_FLG = 'N'
+
+    <if test='dpOrderDateFr != null and dpOrderDateFr != "" and dpOrderDateTo != null and dpOrderDateTo != ""'>
+      AND A.CRT_DT BETWEEN TO_DATE(#{dpOrderDateFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpOrderDateTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test='txtOrderNoFr != null and txtOrderNoFr != "" and txtOrderNoTo != null and txtOrderNoTo != ""'>
+      AND <![CDATA[REGEXP_REPLACE(A.SUP_REF_NO, '[^0-9]', '')]]> BETWEEN TO_CHAR(#{txtOrderNoFr})  AND TO_CHAR(#{txtOrderNoTo})
+    </if>
+
+    <if test=" null != txtCustName and '' != txtCustName">
+      AND C.NAME = #{txtCustName}
+    </if>
+
+    <if test=" null != cmbKeyBranch and '' != cmbKeyBranch">
+      AND A.MEM_BRNCH_ID = #{cmbKeyBranch}
+    </if>
+
+    <if test=" null != keyInUser and '' != keyInUser">
+      AND G.USER_NAME = #{keyInUser}
+    </if>
+
+    <if test="cmbSort != null and cmbSort != '' ">
+      <choose>
+        <when test="cmbSort == 2">
+           ORDER BY A.MEM_BRNCH_ID
+        </when>
+        <when test="cmbSort == 3">
+           ORDER BY A.CRT_DT
+        </when>
+        <when test="cmbSort == 4">
+          ORDER BY A.SUP_REF_NO
+        </when>
+        <when test="cmbSort == 5">
+          ORDER BY C.NAME
+        </when>
+      </choose>
+    </if>
+
+  </select>
+</mapper>

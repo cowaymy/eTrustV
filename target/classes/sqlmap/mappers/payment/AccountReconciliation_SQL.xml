@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.reconciliation.service.impl.AccountReconciliationMapper">
+
+    <select id="selectOrderIDByOrderNo" parameterType="Map" resultType="String">
+       SELECT
+            Extent1.SALES_ORD_ID SALES_ORD_ID
+        FROM SAL0001D Extent1
+        WHERE  Extent1.SALES_ORD_NO = #{ordNo}
+        AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+
+    <select id="selectJournalMasterList" parameterType="Map" resultType="egovMap">
+        SELECT
+		       Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		       Project1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		       Project1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		       Project1.ACC_CODE ACC_CODE  ,
+		       Project1.ACC_DESC ACC_DESC  ,
+		       Project1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		       Project1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Project1.NAME NAME  ,
+		       TO_CHAR(Project1.C1 , 'DD-MM-YYYY hh:mi:ss A.M.') AS CRT_DT,
+		       Project1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       Project1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ
+		  FROM ( SELECT Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                Project1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		                Project1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		                Project1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		                Project1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		                Project1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ  ,
+		                Project1.C1 C1  ,
+		                Project1.ACC_CODE ACC_CODE  ,
+		                Project1.ACC_DESC ACC_DESC  ,
+		                Project1.USER_NAME USER_NAME  ,
+		                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+		                Project1.NAME NAME  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.F_BANK_JRNL_ID DESC  ) ROW_NUMBER
+		         FROM ( SELECT Extent1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                       Extent1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		                       Extent1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		                       Extent1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		                       Extent1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		                       Extent1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ  ,
+		                       TO_DATE(Extent1.F_BANK_JRNL_CRT_DT) C1  ,
+		                       Extent2.ACC_CODE ACC_CODE  ,
+		                       Extent2.ACC_DESC ACC_DESC  ,
+		                       Extent3.USER_NAME USER_NAME  ,
+		                       Extent4.STUS_CODE_ID STUS_CODE_ID  ,
+		                       Extent4.NAME NAME
+		                FROM PAY0079D Extent1
+		                       LEFT JOIN SYS0001M Extent2   ON Extent1.F_BANK_JRNL_ACC_ID = Extent2.ACC_ID
+		                       LEFT JOIN SYS0047M Extent3   ON Extent1.F_BANK_JRNL_CRT_USER_ID = Extent3.USER_ID
+		                       LEFT JOIN SYS0038M Extent4   ON Extent1.F_BANK_JRNL_STUS_ID = Extent4.STUS_CODE_ID
+		                 WHERE 1=1
+		                          <if test="refNo != ''">
+		                          AND Extent1.F_BANK_JRNL_REF_NO LIKE '%' || #{refNo} || '%' ESCAPE '~'
+		                          </if>
+		                          <if test="statusId != null">
+		                              AND Extent4.STUS_CODE_ID IN
+                                                    <foreach collection="statusId" item="item" open="(" close=")" separator="," >
+                                                        #{item}
+                                                    </foreach>
+                                 </if>
+                                 <if test="uploadBy != ''">
+		                          AND Extent3.USER_NAME LIKE '%' || #{uploadBy} || '%' ESCAPE '~'
+		                          </if>
+		                          <if test="accountId != ''">
+		                          AND Extent1.F_BANK_JRNL_ACC_ID = #{accountId}
+		                          </if>
+		                          <if test="fromUploadDate != null and toUploadDate != null and fromUploadDate != '' and toUploadDate != ''" >
+		                          AND TO_DATE(Extent1.F_BANK_JRNL_CRT_DT) <![CDATA[>= ]]> TO_DATE(#{fromUploadDate}, 'DD/MM/YYYY')
+		                          AND TO_DATE(Extent1.F_BANK_JRNL_CRT_DT) <![CDATA[<= ]]> TO_DATE(#{toUploadDate}, 'DD/MM/YYYY') +1
+		                          </if>
+		                          ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.F_BANK_JRNL_ID DESC
+    </select>
+
+    <select id="selectJournalMasterView" parameterType="Map" resultType="egovMap">
+        SELECT
+		       Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		       Project1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		       Project1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		       Project1.ACC_CODE ACC_CODE  ,
+		       Project1.ACC_DESC ACC_DESC  ,
+		       Project1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		       Project1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Project1.NAME NAME  ,
+		       TO_CHAR(Project1.F_BANK_JRNL_CRT_DT , 'DD-MM-YYYY') AS F_BANK_JRNL_CRT_DT,
+		       Project1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       TO_CHAR(Project1.F_BANK_JRNL_ADJ , 'FM9999,999,999,990.00') F_BANK_JRNL_ADJ
+		  FROM ( SELECT Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                Project1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		                Project1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		                Project1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		                Project1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		                Project1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ  ,
+		                Project1.F_BANK_JRNL_CRT_DT F_BANK_JRNL_CRT_DT  ,
+		                Project1.ACC_CODE ACC_CODE  ,
+		                Project1.ACC_DESC ACC_DESC  ,
+		                Project1.USER_NAME USER_NAME  ,
+		                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+		                Project1.NAME NAME  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.F_BANK_JRNL_ID DESC  ) ROW_NUMBER
+		         FROM ( SELECT Extent1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                       Extent1.F_BANK_JRNL_REF_NO F_BANK_JRNL_REF_NO  ,
+		                       Extent1.F_BANK_JRNL_ACC_ID F_BANK_JRNL_ACC_ID  ,
+		                       Extent1.F_BANK_JRNL_REM F_BANK_JRNL_REM  ,
+		                       Extent1.F_BANK_JRNL_CRT_USER_ID F_BANK_JRNL_CRT_USER_ID  ,
+		                       Extent1.F_BANK_JRNL_ADJ F_BANK_JRNL_ADJ  ,
+		                       TO_DATE(Extent1.F_BANK_JRNL_CRT_DT) F_BANK_JRNL_CRT_DT  ,
+		                       Extent2.ACC_CODE ACC_CODE  ,
+		                       Extent2.ACC_DESC ACC_DESC  ,
+		                       Extent3.USER_NAME USER_NAME  ,
+		                       Extent4.STUS_CODE_ID STUS_CODE_ID  ,
+		                       Extent4.NAME NAME
+		                FROM PAY0079D Extent1
+		                       LEFT JOIN SYS0001M Extent2   ON Extent1.F_BANK_JRNL_ACC_ID = Extent2.ACC_ID
+		                       LEFT JOIN SYS0047M Extent3   ON Extent1.F_BANK_JRNL_CRT_USER_ID = Extent3.USER_ID
+		                       LEFT JOIN SYS0038M Extent4   ON Extent1.F_BANK_JRNL_STUS_ID = Extent4.STUS_CODE_ID
+		                 WHERE  Extent1.F_BANK_JRNL_ID = #{journalId}
+		                  ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.F_BANK_JRNL_ID DESC
+    </select>
+
+    <select id="selectJournalDetailList" parameterType="Map" resultType="egovMap">
+        SELECT
+		       Project1.F_TRNSC_ID F_TRNSC_ID  ,
+		       Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		       TO_CHAR(Project1.F_TRNSC_DT , 'DD-MM-YYYY') AS F_TRNSC_DT,
+		       Project1.F_TRNSC_REF1 F_TRNSC_REF1  ,
+		       Project1.F_TRNSC_REF2 F_TRNSC_REF2  ,
+		       Project1.F_TRNSC_REF3 F_TRNSC_REF3  ,
+		       Project1.F_TRNSC_REF4 F_TRNSC_REF4  ,
+		       Project1.F_TRNSC_REF5 F_TRNSC_REF5  ,
+		       Project1.F_TRNSC_REF6 F_TRNSC_REF6  ,
+		       Project1.F_TRNSC_REM F_TRNSC_REM  ,
+		       Project1.F_TRNSC_REF_RUNNG_NO F_TRNSC_REF_RUNNG_NO  ,
+		       Project1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
+		       Project1.F_TRNSC_REF_EFT F_TRNSC_REF_EFT  ,
+		       Project1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO  ,
+		       Project1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
+		       Project1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
+		       Project1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
+		       Project1.IS_MATCH IS_MATCH  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       Project1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT
+		  FROM ( SELECT Project1.F_TRNSC_ID F_TRNSC_ID  ,
+		                Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                Project1.F_TRNSC_REF1 F_TRNSC_REF1  ,
+		                Project1.F_TRNSC_REF2 F_TRNSC_REF2  ,
+		                Project1.F_TRNSC_REF3 F_TRNSC_REF3  ,
+		                Project1.F_TRNSC_REF4 F_TRNSC_REF4  ,
+		                Project1.F_TRNSC_REF5 F_TRNSC_REF5  ,
+		                Project1.F_TRNSC_REF6 F_TRNSC_REF6  ,
+		                Project1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
+		                Project1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
+		                Project1.F_TRNSC_REM F_TRNSC_REM  ,
+		                Project1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
+		                Project1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT  ,
+		                Project1.F_TRNSC_REF_RUNNG_NO F_TRNSC_REF_RUNNG_NO  ,
+		                Project1.F_TRNSC_REF_EFT F_TRNSC_REF_EFT  ,
+		                Project1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
+		                Project1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO  ,
+		                Project1.F_TRNSC_DT F_TRNSC_DT  ,
+		                Project1.IS_MATCH IS_MATCH  ,
+		                Project1.USER_NAME USER_NAME  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.F_TRNSC_ID ASC  ) ROW_NUMBER
+		         FROM ( SELECT Extent1.F_TRNSC_ID F_TRNSC_ID  ,
+		                       Extent1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		                       Extent1.F_TRNSC_REF1 F_TRNSC_REF1  ,
+		                       Extent1.F_TRNSC_REF2 F_TRNSC_REF2  ,
+		                       Extent1.F_TRNSC_REF3 F_TRNSC_REF3  ,
+		                       Extent1.F_TRNSC_REF4 F_TRNSC_REF4  ,
+		                       Extent1.F_TRNSC_REF5 F_TRNSC_REF5  ,
+		                       Extent1.F_TRNSC_REF6 F_TRNSC_REF6  ,
+		                       Extent1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
+		                       Extent1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
+		                       Extent1.F_TRNSC_REM F_TRNSC_REM  ,
+		                       Extent1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
+		                       Extent1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT  ,
+		                       Extent1.F_TRNSC_REF_RUNNG_NO F_TRNSC_REF_RUNNG_NO  ,
+		                       Extent1.F_TRNSC_REF_EFT F_TRNSC_REF_EFT  ,
+		                       Extent1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
+		                       Extent1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO  ,
+		                       TO_DATE(Extent1.F_TRNSC_DT) F_TRNSC_DT  ,
+		                       CASE
+		                            WHEN ( 1 = Extent1.F_TRNSC_IS_MTCH ) THEN 'O'
+		                       ELSE 'X'
+		                          END IS_MATCH  ,
+		                       Extent2.USER_NAME USER_NAME
+		                FROM PAY0081D Extent1
+		                       LEFT JOIN SYS0047M Extent2   ON Extent1.F_TRNSC_UPD_USER_ID = Extent2.USER_ID
+		                 WHERE  Extent1.F_BANK_JRNL_ID = #{journalId}
+		                 ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.F_TRNSC_ID ASC
+    </select>
+
+    <select id="selectGrossTotal" parameterType="Map" resultType="String">
+        SELECT
+		    TO_CHAR(GroupBy1.F_TRNSC_CRDIT_AMT , 'FM9999,999,999,990.00') GROSS_TOTAL
+		  FROM (
+		  SELECT
+		    SUM(NVL(Extent1.F_TRNSC_CRDIT_AMT,0.00)) AS F_TRNSC_CRDIT_AMT
+		    FROM PAY0081D Extent1
+		    WHERE  Extent1.F_BANK_JRNL_ID = #{journalId}
+		 )GroupBy1
+    </select>
+
+    <select id="selectCRCStatementGrossTotal" parameterType="Map" resultType="String">
+        SELECT
+		       TO_CHAR(GroupBy1.CRC_TRNSC_AMT_TOTAL , 'FM9999,999,999,990.00')CRC_TRNSC_AMT_TOTAL
+		  FROM (
+		          SELECT
+		            SUM(NVL(Extent1.CRC_TRNSC_AMT,0.00)) AS CRC_TRNSC_AMT_TOTAL
+		            FROM PAY0076D Extent1
+		            WHERE  Extent1.CRC_STATE_ID = #{journalId}
+		        )GroupBy1
+    </select>
+
+    <insert id="insAccGLRoutes" parameterType="Map">
+        INSERT INTO PAY0009D
+		(
+		ID,
+		GL_POSTNG_DT,
+		GL_FISCAL_DT,
+		GL_BATCH_NO,
+		GL_BATCH_TYPE_DESC,
+		GL_BATCH_TOT,
+		GL_RECIPT_NO,
+		GL_RECIPT_TYPE_ID,
+		GL_RECIPT_BRNCH_ID,
+		GL_RECIPT_SETL_ACC_ID,
+		GL_RECIPT_ACC_ID,
+		GL_RECIPT_ITM_ID,
+		GL_RECIPT_ITM_MODE_ID,
+		GL_REVRS_RECIPT_ITM_ID,
+		GL_RECIPT_ITM_AMT,
+		GL_RECIPT_ITM_CHRG,
+		GL_RECIPT_ITM_RCL_STUS,
+		GL_JRNL_NO,
+		GL_AUDIT_REF,
+		GL_CNVR_STUS,
+		GL_CNVR_DT
+		) VALUES (
+		PAY0009D_SEQ.NEXTVAL,
+		SYSDATE,
+		SYSDATE,
+		#{glBatchNo},
+		#{glBatchTypeDesc},
+		#{glBatchTotal},
+		#{glReceiptNo},
+		#{glReceiptTypeId},
+		#{glReceiptBranchId},
+		#{glReceiptSettleAccId},
+		#{glReceiptAccountId},
+		#{glReceiptItemId},
+		#{glReceiptItemModeId},
+		#{glReverseReceiptItemId},
+		#{glReceiptItemAmount},
+		#{glReceiptItemCharges},
+		#{glReceiptItemRCLStatus},
+		#{glJournalNo},
+		#{glAuditReference},
+		#{glConversionStatus},
+		''
+		)
+    </insert>
+
+    <select id="selectReconJournalTransactions" parameterType="Map" resultType="egovMap">
+        SELECT
+		       Extent1.F_TRNSC_ID F_TRNSC_ID  ,
+		       Extent1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
+		       Extent1.F_TRNSC_DT F_TRNSC_DT  ,
+		       Extent1.F_TRNSC_REF1 F_TRNSC_REF1  ,
+		       Extent1.F_TRNSC_REF2 F_TRNSC_REF2  ,
+		       Extent1.F_TRNSC_REF3 F_TRNSC_REF3  ,
+		       Extent1.F_TRNSC_REF4 F_TRNSC_REF4  ,
+		       Extent1.F_TRNSC_REF5 F_TRNSC_REF5  ,
+		       Extent1.F_TRNSC_REF6 F_TRNSC_REF6  ,
+		       Extent1.F_TRNSC_DEBT_AMT F_TRNSC_DEBT_AMT  ,
+		       Extent1.F_TRNSC_CRDIT_AMT F_TRNSC_CRDIT_AMT  ,
+		       Extent1.F_TRNSC_IS_MTCH F_TRNSC_IS_MTCH  ,
+		       Extent1.F_TRNSC_REM F_TRNSC_REM  ,
+		       Extent1.F_TRNSC_INSTCT F_TRNSC_INSTCT  ,
+		       Extent1.F_TRNSC_UPD_USER_ID F_TRNSC_UPD_USER_ID  ,
+		       Extent1.F_TRNSC_UPD_DT F_TRNSC_UPD_DT  ,
+		       Extent1.F_TRNSC_REF_RUNNG_NO F_TRNSC_REF_RUNNG_NO  ,
+		       Extent1.F_TRNSC_REF_EFT F_TRNSC_REF_EFT  ,
+		       Extent1.F_TRNSC_REF_CHQ_NO F_TRNSC_REF_CHQ_NO  ,
+		       Extent1.F_TRNSC_REF_VA_NO F_TRNSC_REF_VA_NO
+		  FROM PAY0081D Extent1
+		 WHERE  Extent1.F_TRNSC_ID = #{fTrnscId}
+    </select>
+
+    <update id="updJournalTrans" parameterType="Map">
+        UPDATE PAY0081D
+		   SET F_TRNSC_IS_MTCH = #{fTransactionIsMatch},
+		       F_TRNSC_INSTCT = #{fTransactionInstruction},
+		       F_TRNSC_UPD_USER_ID = #{fTransactionUpdateBy},
+		       F_TRNSC_UPD_DT = SYSDATE
+		WHERE  F_TRNSC_ID = #{fTransactionId}
+    </update>
+
+    <resultMap id="outStandMap" type="egovMap"></resultMap>
+    <select id="selectOutStandingView" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_SELT_ORD_OUT_STAN_VIEW(#{orderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStandMap})
+        }
+    </select>
+
+    <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
+        SELECT S.*, NVL(X.TOTAL_AS, 0) TOTAL_AS
+        FROM (
+                SELECT
+                DISTINCT
+                A.AS_ID AS AS_ID  ,
+                A.AS_NO AS AS_NO  ,
+                A.AS_SO_ID AS AS_SO_ID  ,
+                A.AS_REQST_DT AS AS_REQST_DT ,
+                A.AS_STUS_ID AS AS_STUS_ID  ,
+                A.AS_TYPE_ID AS AS_TYPE_ID  ,
+                B.CODE AS AS_TYPE_CODE  ,
+                C.CODE AS AS_STUS_CODE  ,
+                D.SALES_ORD_NO AS SALES_ORD_NO  ,
+                E.CODE AS APP_TYPE_CODE  ,
+                F.NAME AS CUST_NAME  ,
+                F.NRIC AS CUST_NRIC  ,
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_RESULT_ID ELSE 0 END) AS AS_RESULT_ID  ,
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_RESULT_NO ELSE '-' END) AS AS_RESULT_NO  ,
+                (CASE WHEN H.USER_ID IS NOT NULL THEN H.USER_NAME ELSE '-' END) AS USER_NAME  ,
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_TOT_AMT ELSE 0 END) AS AS_TOT_AMT
+            FROM
+                SVC0001D A
+                JOIN SYS0013M B   ON A.AS_TYPE_ID = B.CODE_ID
+                JOIN SYS0038M C   ON A.AS_STUS_ID = C.STUS_CODE_ID
+                JOIN SAL0001D D   ON A.AS_SO_ID = D.SALES_ORD_ID
+                JOIN SYS0013M E   ON D.APP_TYPE_ID = E.CODE_ID
+                JOIN SAL0029D F   ON D.CUST_ID = F.CUST_ID
+                LEFT JOIN SVC0004D G   ON A.AS_ID = G.AS_ENTRY_ID AND G.AS_RESULT_TYPE_ID = 457 AND G.AS_RESULT_IS_CURR = 1
+                LEFT JOIN SYS0047M H   ON A.AS_CRT_USER_ID = H.USER_ID
+                ) S
+                LEFT JOIN (SELECT AS_ENTRY_ID,
+                            SUM(AS_LG_AMT) TOTAL_AS
+                     FROM PAY0006D M
+                     JOIN SVC0004D N ON M.AS_RESULT_NO = N.AS_RESULT_NO
+                     GROUP BY AS_ENTRY_ID) X ON X.AS_ENTRY_ID = S.AS_ID
+            WHERE
+        S.AS_STUS_ID <![CDATA[<>]]>  8
+                AND S.AS_SO_ID = #{orderId}
+        ORDER BY AS_ID
+    </select>
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRentalChannelMapper">
+
+
+ <select id="getLoadRejectReasonList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+						SELECT  RESN_ID  code_Id ,
+						        CODE||'-'||RESN_DESC  code_Name ,
+						        CODE
+						 FROM  SYS0032M
+						WHERE  RESN_TYPE_ID = #{RESN_TYPE_ID}
+						  AND  STUS_CODE_ID ='1'
+						UNION
+						SELECT RESN_ID  code_Id ,
+						       CODE||'-'||RESN_DESC  code_Name ,
+						       CODE
+						 FROM SYS0032M
+						WHERE   RESN_ID = #{RESN_ID}
+            ]]>
+  </select>
+
+
+
+   <insert id="SAL0074D_update" parameterType="Map" >
+            UPDATE SAL0074D
+			   SET MODE_ID           = #{modeID},
+			         CUST_CRC_ID     = #{custCRCID},
+			         BANK_ID            = #{bankID} ,
+			         CUST_ACC_ID     = #{custAccID},
+			         DD_APPLY_DT     = to_date( #{ddApplyDate} ,'dd/mm/yyyy') ,
+			         DD_SUBMIT_DT   = to_date( #{ddSubmitDate} ,'dd/mm/yyyy') ,
+			         DD_START_DT    = to_date( #{ddStartDate} ,'dd/mm/yyyy') ,
+			         DD_REJCT_DT     = to_date( #{ddRejectDate} ,'dd/mm/yyyy') ,
+			         UPD_USER_ID     = #{updator} ,
+			         UPD_DT             = sysdate,
+			         STUS_CODE_ID   = #{statusCodeID},
+			         IS_3RD_PARTY    = #{is3rdParty},
+			         CUST_ID            = #{customerID},
+			         EDIT_TYPE_ID     = #{editTypeID},
+			         NRIC_OLD           = #{nRICOld},
+			         FAIL_RESN_ID      = #{failReasonID},
+			         ISSU_NRIC          = #{issuedNRIC},
+			         AEON_CNVR         = decode(#{aeonConvert},'true' ,1,0),
+			         LAST_APPLY_USER =#{updator},
+			         PAY_TRM              = #{payTerm},
+			         GRACE_PERIOD      = 0
+			         
+		   WHERE  1=1
+		      AND  SVC_CNTRCT_ID = #{serviceContractID}
+			  AND  SALES_ORD_ID   = #{salesOrderID}
+   </insert>
+
+
+
+   <insert id="SAL0077D_update" parameterType="Map" >
+        UPDATE SAL0077D
+		   SET SRV_CNTRCT_UPD_DT = SYSDATE,
+		       SRV_CNTRCT_UPD_USER_ID = #{updator}
+		 WHERE  ( SRV_CNTRCT_ID = #{serviceContractID})
+
+   </insert>
+
+	<select id="paymentServiceContract" parameterType="Map" resultType="egovMap">
+           <![CDATA[
+                  SELECT Extent1.SRV_CNTRCT_ID   ,
+				       Extent1.SRV_CNTRCT_REF_NO   ,
+				       Extent1.SRV_CNTRCT_QUOT_ID   ,
+				       Extent1.SRV_CNTRCT_ORD_ID   ,
+				       Extent1.SRV_CNTRCT_STUS_ID   ,
+				       Extent1.SRV_CNTRCT_PCKG_ID   ,
+				       Extent1.SRV_CNTRCT_REM   ,
+				       Extent1.SRV_CNTRCT_NET_MONTH   ,
+				       Extent1.SRV_CNTRCT_NET_YEAR   ,
+				       Extent1.SRV_CNTRCT_RENTAL   ,
+				       Extent1.SRV_CNTRCT_EXP_FILTER   ,
+				       Extent1.SRV_CNTRCT_BRNCH_ID   ,
+				       Extent1.SRV_CNTRCT_SALESMAN   ,
+				       Extent1.SRV_CNTRCT_CRT_DT   ,
+				       Extent1.SRV_CNTRCT_CRT_USER_ID   ,
+				       Extent1.SRV_CNTRCT_UPD_DT   ,
+				       Extent1.SRV_CNTRCT_UPD_USER_ID   ,
+				       Extent1.SRV_CNTRCT_PROMO_ID   ,
+				       Extent1.SRV_CNTRCT_FORM_NO
+			   FROM SAL0077D Extent1
+			 WHERE Extent1.SRV_CNTRCT_ID = #{serviceContractID}
+			     AND ROWNUM <= 1
+           ]]>
+	</select>
+
+    <select id="paymentRentPaySet" parameterType="Map" resultType="egovMap">
+           <![CDATA[
+                  SELECT Extent1.RENT_PAY_ID   ,
+					         Extent1.SALES_ORD_ID   ,
+					         Extent1.MODE_ID   ,
+					         Extent1.CUST_CRC_ID   ,
+					         Extent1.BANK_ID   ,
+					         Extent1.CUST_ACC_ID   ,
+					         Extent1.DD_APPLY_DT   ,
+					         Extent1.DD_SUBMIT_DT   ,
+					         Extent1.DD_START_DT   ,
+					         Extent1.DD_REJCT_DT   ,
+					         Extent1.UPD_USER_ID   ,
+					         Extent1.UPD_DT   ,
+					         Extent1.STUS_CODE_ID   ,
+					         Extent1.IS_3RD_PARTY   ,
+					         Extent1.CUST_ID   ,
+					         Extent1.EDIT_TYPE_ID   ,
+					         Extent1.NRIC_OLD   ,
+					         Extent1.FAIL_RESN_ID   ,
+					         Extent1.ISSU_NRIC   ,
+					         Extent1.AEON_CNVR   ,
+					         Extent1.REM   ,
+					         Extent1.LAST_APPLY_USER   ,
+					         Extent1.PAY_TRM   ,
+					         Extent1.SVC_CNTRCT_ID
+				    FROM SAL0074D Extent1
+				  WHERE Extent1.SALES_ORD_ID = #{salesOrderID}
+					  AND Extent1.SVC_CNTRCT_ID = #{serviceContractID}
+					  AND ROWNUM <= 1
+           ]]>
+    </select>
+
+      <insert id="insertDeductSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{updator},
+                   SYSDATE,
+                   #{updator},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE SVC_CNTRCT_ID = #{serviceContractID}
+              AND  SALES_ORD_ID   = #{salesOrderID}
+      </insert>
+
+      <select id="crtSeqSAL0236D" resultType="Integer">
+        SELECT SAL0236D_DEDUCTION_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="updatePaymentChannelvRescue" parameterType="Map">
+            UPDATE SAL0074D
+               SET MODE_ID  = #{modeId},
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID     = #{updator} ,
+                   UPD_DT             = sysdate,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
+           WHERE  1=1
+              AND  SVC_CNTRCT_ID = #{serviceContractID}
+              AND  SALES_ORD_ID   = #{salesOrderID}
+    </update>
+</mapper>

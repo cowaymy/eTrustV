@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialChange.impl.SerialChangeMapper">
+
+  <resultMap id="BARCODECHANGERETURNDATA" type="egovMap" />
+  <select id="updateBarcodeChange"  statementType="CALLABLE" parameterType="Map">
+      /* [com.coway.trust.biz.logistics.serialChange.impl.SerialChangeMapper.updateBarcodeChange] KR_HAN */
+           { call SP_SVC_BARCODE_CHANGE
+                   (#{pSerialNo}, NVL(#{pBeforeSerialNo},'-'), #{pSalesOrdId}, #{pItmCode}, #{pRefDocNo}, #{pCallGbn}, #{pMobileYn}, #{pUserId}
+					, #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+					, #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+                    )
+           }
+  </select>
+
+</mapper>

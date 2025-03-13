@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.BranchListMapper">
+  <!--
+      CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+       <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+        resultMap="clobMap" 을 사용해야 함.
+  -->
+  <resultMap id="clobMap" type="EgovMap">
+    <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
+  </resultMap>
+
+  <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.BRNCH_ID BRNCH_ID  ,
+               Project1.C1 C1  ,
+               Project1.C2 C2  ,
+               Project1.C3 C3  ,
+               Project1.C4 C4  ,
+               Project1.CODE CODE  ,
+               Project1.C6 C6  ,
+               Project1.C7 C7  ,
+               Project1.NAME NAME  ,
+               Project1.C9 C9  ,
+               Project1.REGN_ID REGN_ID  ,
+               Project1.C11 C11  ,
+               Project1.C12 C12  ,
+               Project1.STUS_ID STUS_ID  ,
+               Project1.CODE1 CODE1  ,
+               Project1.NAME1 NAME1  ,
+               Project1.C14 C14  ,
+               Project1.C15 C15  ,
+               Project1.C16 C16  ,
+               Project1.TYPE_ID TYPE_ID  ,
+               Project1.CODE_NAME CODE_NAME  ,
+               Project1.C17 C17  ,
+               Project1.C18 C18  ,
+               Project1.C19 C19  ,
+               Project1.C20 C20  ,
+               Project1.STATE STATE,
+               Project1.POST_CODE POST_CODE,
+               Project1.COUNTRY
+    FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                          Extent1.CODE CODE  ,
+                          Extent1.NAME NAME  ,
+                          Extent1.TYPE_ID TYPE_ID  ,
+                          Extent1.STUS_ID STUS_ID  ,
+                          Extent1.REGN_ID REGN_ID  ,
+                          Extent2.CODE CODE1  ,
+                          Extent2.NAME NAME1  ,
+                          Extent3.CODE_NAME CODE_NAME  ,
+                          CASE
+                               WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                          ELSE ''
+                             END C1  ,
+                          CASE
+                               WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
+                          ELSE ''
+                             END C2  ,
+                          CASE
+                               WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
+                          ELSE ''
+                             END C3  ,
+                          CASE
+                               WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                          ELSE ''
+                             END C4  ,
+                          CASE
+                               WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
+                          ELSE ''
+                             END C6  ,
+                          CASE
+                               WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
+                          ELSE 0
+                             END C7  ,
+                          CASE
+                               WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
+                          ELSE 0
+                             END C9  ,
+                          CASE
+                               WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
+                          ELSE ''
+                             END C11  ,
+                          CASE
+                               WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
+                          ELSE 0
+                             END C12  ,
+                          CASE
+                               WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
+                          ELSE''
+                             END C14  ,
+                          CASE
+                               WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
+                          ELSE ''
+                             END C15  ,
+                          CASE
+                               WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
+                          ELSE ''
+                             END C16  ,
+                          CASE
+                               WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
+                          ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+                             END C17  ,
+                          CASE
+                               WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
+                          ELSE 0
+                             END C18  ,
+                          CASE
+                               WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
+                          ELSE ''
+                             END C19 ,
+                          CASE
+                            WHEN (EXTENT1.COST_CENTR IS NOT NULL ) THEN EXTENT1.COST_CENTR
+                          ELSE ''
+                            END C20,
+                             Extent10.POSTCODE POST_CODE,
+                             Extent10.STATE STATE,
+                             Extent10.COUNTRY COUNTRY
+              FROM SYS0005M Extent1
+              JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+              JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
+              /* LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
+              LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_CODE_ID
+              LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREA_ID
+              LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID */
+              LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.REGN_ID
+              LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
+              INNER JOIN SYS0064M Extent10   ON Extent10.AREA_ID = Extent1.AREA_ID
+              WHERE  1=1
+
+              <if test="branchTypeList != null and branchTypeList != ''">
+                AND Extent1.TYPE_ID IN
+                <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+              </if>
+
+              <if test="regionList != null and regionList != ''">
+                AND Extent1.REGN_ID IN
+                <foreach item="item" collection="regionList" index="index" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+              </if>
+
+              <if test="branchCd != null and branchCd != ''">
+                AND EXTENT1.CODE LIKE '%'|| #{branchCd} || '%'
+              </if>
+
+              <if test="branchNm != null and branchNm != ''">
+                AND EXTENT1.NAME LIKE '%'|| #{branchNm} || '%'
+              </if>
+
+              <if test="cmbStatusType != null and cmbStatusType != ''">
+                AND EXTENT1.STUS_ID = #{cmbStatusType}
+              </if>
+
+              <if test="countryCd != null and countryCd != ''">
+                AND EXTENT10.COUNTRY=  #{countryCd}
+              </if>
+
+              <if test="area != null and area != ''">
+                AND EXTENT1.AREA_ID =  #{area}
+              </if>
+
+              <if test="postCode != null and postCode != ''">
+                AND EXTENT10.POSTCODE =  #{postCode}
+              </if>
+
+              <if test="state != null and state != ''">
+                AND EXTENT10.STATE =  #{state}
+              </if>
+    ) Project1 ORDER BY Project1.CODE ASC
+  </select>
+
+  <select id="getBranchDetailPop" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT Limit1.BRNCH_ID BRNCH_ID ,
+                  Limit1.C1 C1 ,
+                  Limit1.C2 C2 ,
+                  Limit1.C3 C3 ,
+                  Limit1.CODE CODE ,
+                  Limit1.C6 C6 ,
+                  Limit1.C7 C7 ,
+                  Limit1.NAME NAME ,
+                  Limit1.C9 C9 ,
+                  Limit1.REGN_ID REGN_ID ,
+                  Limit1.C11 C11 ,
+                  Limit1.C12 C12 ,
+                  Limit1.STUS_ID STUS_ID ,
+                  Limit1.CODE1 CODE1 ,
+                  Limit1.NAME1 NAME1 ,
+                  Limit1.C14 C14 ,
+                  Limit1.C15 C15 ,
+                  Limit1.C16 C16 ,
+                  Limit1.TYPE_ID TYPE_ID ,
+                  Limit1.CODE_NAME CODE_NAME ,
+                  Limit1.C17 C17 ,
+                  Limit1.C18 C18 ,
+                  Limit1.C19 C19 ,
+                  Limit1.COST_CENTR,
+                  Limit1.LONGTITUDE,
+                  Limit1.LATITUDE
+       FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                             Extent1.CODE CODE  ,
+                             Extent1.NAME NAME  ,
+                             Extent1.TYPE_ID TYPE_ID  ,
+                             Extent1.STUS_ID STUS_ID  ,
+                             Extent1.REGN_ID REGN_ID  ,
+                             Extent1.COST_CENTR,
+                             Extent1.LONGTITUDE,
+                             Extent1.LATITUDE,
+                             Extent2.CODE CODE1  ,
+                             Extent2.NAME NAME1  ,
+                             Extent3.CODE_NAME CODE_NAME  ,
+                             CASE
+                                  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                             ELSE ''
+                                END C1  ,
+                             CASE
+                                  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN Extent1.ADDR_DTL
+                             ELSE ''
+                                END C2  ,
+                             CASE
+                                  WHEN ( Extent1.STREET IS NOT NULL ) THEN Extent1.STREET
+                             ELSE ''
+                                END C3  ,
+                             CASE
+                                  WHEN ( Extent1.AREA_ID IS NOT NULL ) THEN Extent1.AREA_ID
+                             ELSE ''
+                                END C4  ,
+                             CASE
+                                  WHEN ( Extent1.CNTC IS NOT NULL ) THEN Extent1.CNTC
+                             ELSE ''
+                                END C6  ,
+                             CASE
+                                  WHEN ( Extent1.CNTY_ID IS NOT NULL ) THEN Extent1.CNTY_ID
+                             ELSE 0
+                                END C7  ,
+                             CASE
+                                  WHEN ( Extent1.POST_CODE_ID IS NOT NULL ) THEN Extent1.POST_CODE_ID
+                             ELSE 0
+                                END C9  ,
+                             CASE
+                                  WHEN ( Extent8.CODE_ID IS NOT NULL ) THEN Extent8.CODE_NAME
+                             ELSE ''
+                                END C11  ,
+                             CASE
+                                  WHEN ( Extent1.STATE_CODE_ID IS NOT NULL ) THEN Extent1.STATE_CODE_ID
+                             ELSE 0
+                                END C12  ,
+                             CASE
+                                  WHEN ( Extent1.TEL1 IS NOT NULL ) THEN Extent1.TEL1
+                             ELSE''
+                                END C14  ,
+                             CASE
+                                  WHEN ( Extent1.TEL2 IS NOT NULL ) THEN Extent1.TEL2
+                             ELSE ''
+                                END C15  ,
+                             CASE
+                                  WHEN ( Extent1.FAX IS NOT NULL ) THEN Extent1.FAX
+                             ELSE ''
+                                END C16  ,
+                             CASE
+                                  WHEN ( Extent1.UPD_DT IS NOT NULL ) THEN (Extent1.UPD_DT)
+                             ELSE  to_date('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')
+                                END C17  ,
+                             CASE
+                                  WHEN ( Extent1.UPD_USER_ID IS NOT NULL ) THEN Extent1.UPD_USER_ID
+                             ELSE 0
+                                END C18  ,
+                             CASE
+                                  WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
+                             ELSE ''
+                                END C19
+                  FROM SYS0005M Extent1
+                  JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                  JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
+               -- LEFT JOIN SYS0015M Extent4   ON Extent4.CNTY_ID = Extent1.CNTY_ID
+                  LEFT JOIN SYS0035M Extent5   ON Extent5.STATE_ID = Extent1.STATE_CODE_ID
+                  LEFT JOIN SYS0039M Extent6   ON Extent6.AREA_ID = Extent1.AREA_ID
+                  LEFT JOIN SYS0030C Extent7   ON Extent7.POST_CODE_ID = Extent1.POST_CODE_ID
+                  LEFT JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent1.REGN_ID
+                  LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
+                  WHERE  Extent1.BRNCH_ID = #{brnchId}
+                       AND ROWNUM <= 1 ) Limit1
+    ]]>
+  </select>
+
+  <select id="getBranchType" parameterType="Map" resultType="egovMap">
+    SELECT CODE_ID branch_id,
+               CODE,
+               CODE_NAME C1,
+               DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+    FROM SYS0013M
+    WHERE DISAB = 0 AND CODE_MASTER_ID = 45
+    ORDER BY CODE_NAME
+  </select>
+
+  <select id="getStateList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.STATE_ID CODE_ID ,
+               Project1.CODE CODE ,
+               Project1.NAME CODE_NAME ,
+               Project1.CNTY_ID CNTY_ID ,
+               Project1.STUS_CODE_ID STUS_CODE_ID ,
+               Project1.CRT_DT CRT_DT ,
+               Project1.CRT_USER_ID CRT_USER_ID ,
+               Project1.UPD_DT UPD_DT ,
+               Project1.UPD_USER_ID UPD_USER_ID
+    FROM ( SELECT Extent1.STATE_ID STATE_ID ,
+                        Extent1.CODE CODE ,
+                        Extent1.NAME NAME ,
+                        Extent1.CNTY_ID CNTY_ID ,
+                        Extent1.STUS_CODE_ID STUS_CODE_ID ,
+                        Extent1.CRT_DT CRT_DT ,
+                        Extent1.CRT_USER_ID CRT_USER_ID ,
+                        Extent1.UPD_DT UPD_DT ,
+                        Extent1.UPD_USER_ID UPD_USER_ID
+             FROM SYS0035M Extent1
+             WHERE ( Extent1.CNTY_ID = 1 )
+                 AND ( 1 = Extent1.STUS_CODE_ID ) ) Project1
+    ORDER BY Project1.NAME ASC
+  </select>
+
+  <select id="getAreaList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.AREA_ID CODE_ID ,
+               Project1.AREA_NAME CODE_NAME ,
+               Project1.AREA_STATE_ID AREA_STATE_ID ,
+               Project1.AREA_IDCM AREA_IDCM ,
+               Project1.AREA_STUS_ID AREA_STUS_ID ,
+               Project1.CRT_DT CRT_DT ,
+               Project1.UPD_DT UPD_DT ,
+               Project1.UPD_USER_ID UPD_USER_ID
+    FROM ( SELECT Extent1.AREA_ID AREA_ID ,
+                          Extent1.AREA_NAME AREA_NAME ,
+                          Extent1.AREA_STATE_ID AREA_STATE_ID ,
+                          Extent1.AREA_IDCM AREA_IDCM ,
+                          Extent1.AREA_STUS_ID AREA_STUS_ID ,
+                          Extent1.CRT_DT CRT_DT ,
+                          Extent1.UPD_DT UPD_DT ,
+                          Extent1.UPD_USER_ID UPD_USER_ID
+               FROM SYS0039M Extent1
+               WHERE ( 1 = Extent1.AREA_STUS_ID )
+                   AND ( Extent1.AREA_STATE_ID = #{groupCode} ) ) Project1
+    ORDER BY Project1.AREA_NAME ASC
+  </select>
+
+  <select id="getPostcodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.POST_CODE_ID CODE_ID  ,
+               Project1.POST_CODE CODE_NAME  ,
+               Project1.AREA_ID AREA_ID  ,
+               Project1.POST_CODE_IDCM POST_CODE_IDCM  ,
+               Project1.STUS_CODE_ID STUS_CODE_ID  ,
+               Project1.CRT_DT CRT_DT  ,
+               Project1.CRT_USER_ID CRT_USER_ID  ,
+               Project1.UPD_DT UPD_DT  ,
+               Project1.UPD_USER_ID UPD_USER_ID
+    FROM ( SELECT Extent1.POST_CODE_ID POST_CODE_ID  ,
+                          Extent1.POST_CODE POST_CODE  ,
+                          Extent1.AREA_ID AREA_ID  ,
+                          Extent1.POST_CODE_IDCM POST_CODE_IDCM  ,
+                          Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                          Extent1.CRT_DT CRT_DT  ,
+                          Extent1.CRT_USER_ID CRT_USER_ID  ,
+                          Extent1.UPD_DT UPD_DT  ,
+                          Extent1.UPD_USER_ID UPD_USER_ID
+              FROM SYS0030C Extent1
+              WHERE ( 1 = Extent1.STUS_CODE_ID )
+                  AND ( Extent1.AREA_ID = #{groupCode} ) ) Project1
+    ORDER BY Project1.POST_CODE ASC
+  </select>
+
+  <insert id="branchListUpdate" parameterType="Map" >
+    UPDATE SYS0005M SET CODE = #{branchCd}
+                                  , NAME = #{branchName}
+                                  , AREA_ID = #{areaId}
+                                  , ADDR_DTL = #{addrDtl}
+                                  , STREET = #{streetDtl}
+                                  , TEL1 = #{txtTel1}
+                                  , TEL2 = #{txtTel2}
+                                  , FAX = #{txtFax}
+                                  , CNTC = #{contact}
+                                  , TYPE_ID = #{branchType}
+                                  , UPD_USER_ID = #{user_id}
+                                  , UPD_DT = sysdate
+                                  , REGN_ID = #{cmRegion}
+                                  , END_TO_DT = to_date(#{closingDate},'dd/mm/yyyy' )
+                                  , COST_CENTR = #{costCenter}
+                                  , LONGTITUDE = #{txtLongtitude}
+                                  , LATITUDE = #{txtLatitude}
+    WHERE BRNCH_ID = #{branchNo}
+   </insert>
+
+  <insert id="branchListInsert" parameterType="Map" >
+    INSERT INTO SYS0005M ( BRNCH_ID
+                                      , CODE
+                                      , NAME
+                                      , TEL1
+                                      , TEL2
+                                      , FAX
+                                      , CNTC
+                                      , TYPE_ID
+                                      , UPD_USER_ID
+                                      , UPD_DT
+                                      , REGN_ID
+                                      , IS_SYNC
+                                      , STUS_ID
+                                      , AREA_ID
+                                      , ADDR_DTL
+                                      , STREET
+                                      , START_FROM_DT
+                                      , COST_CENTR
+                                      , LONGTITUDE
+                                      , LATITUDE
+    ) VALUES ( SYS0005M_BRNCH_ID_SEQ.NEXTVAL
+                 , #{branchCd}
+                 , #{branchName}
+                 , #{txtTel1}
+                 , #{txtTel2}
+                 , #{txtFax}
+                 , #{contact}
+                 , #{selectbranchType}
+                 , #{user_id}
+                 , SYSDATE
+                 , #{cmRegion}
+                 , 1
+                 , 1
+                 , #{areaId}
+                 , #{addrDtl}
+                 , #{streetDtl}
+                 , TO_DATE (#{dtStartFromDt}, 'dd/mm/yyyy' )
+                 , #{costCenter}
+                 , #{txtLongtitude}
+                 , #{txtLatitude}
+    )
+  </insert>
+
+   <select id="getBranchAddrDetail" parameterType="Map" resultType="egovMap">
+    SELECT * FROM SYS0064M WHERE AREA_ID = #{c1}
+  </select>
+
+  <select id="selectBranchCdInfo" parameterType="Map" resultType="egovMap">
+    SELECT ( SELECT CODE
+                 FROM SYS0013M
+                 WHERE DISAB = 0
+                     AND CODE_MASTER_ID = 45
+                     AND CODE_ID = #{branchCd})
+               || '-' || NUM <!-- LPAD(NVL(NUM,'01'),2,0) --> AS BRACH_CD
+    FROM (SELECT MAX ( CASE WHEN LENGTH(CODE) <![CDATA[>=]]> 6 THEN SUBSTR( CODE, 5)
+                                          WHEN LENGTH(CODE) = 5 THEN SUBSTR( CODE, 4) END ) +1   NUM
+              FROM SYS0005M
+              WHERE BRNCH_ID IN ( SELECT MAX(BRNCH_ID) AS BRNCH_ID
+                                               FROM SYS0005M
+                                               WHERE 1 = 1
+                                                   AND CODE LIKE ( SELECT CODE
+                                                                            FROM SYS0013M
+                                                                            WHERE DISAB = 0
+                                                                                AND CODE_MASTER_ID = 45
+                                                                                AND CODE_ID = #{branchCd} ) || '%'))
+  </select>
+</mapper>

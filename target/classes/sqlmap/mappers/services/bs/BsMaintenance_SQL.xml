@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.bs.impl.HsMaintenanceMapper">
+
+    <select id="selectCurrMonthHsList" parameterType="Map" resultType="egovMap">
+        WITH entry_info_max AS (
+		    SELECT
+		        sales_ord_id,
+		        install_entry_id,
+		        install_result_id
+		    FROM
+		        (SELECT
+		                sales_ord_id,
+		                install_entry_id,
+		                install_result_id,
+		                RANK() OVER(PARTITION BY
+		                    sales_ord_id
+		                    ORDER BY
+		                        install_entry_id
+		                    DESC
+		                ) rank
+		            FROM
+		                sal0046d
+		            WHERE
+		                stus_code_id = 4
+		        )
+		    WHERE
+		        rank = 1
+		),entry_info_min AS (
+		    SELECT
+		        sales_ord_id,
+		        install_entry_id,
+		        install_result_id
+		    FROM
+		        (SELECT
+		                sales_ord_id,
+		                install_entry_id,
+		                install_result_id,
+		                RANK() OVER(PARTITION BY
+		                    sales_ord_id
+		                    ORDER BY
+		                        install_entry_id
+		                    ASC
+		                ) rank
+		            FROM
+		                sal0046d
+		            WHERE
+		                stus_code_id = 4
+		        )
+		    WHERE
+		        rank = 1
+		) SELECT DISTINCT
+		    project2.no no,
+		    project2.hs_date hs_date,
+		    project2.stus_code_id stus_code_id,
+		    project2.code code,
+		    project2.sales_ord_no sales_ord_no,
+		    project2.assign_cody c5,
+		    project2.mem_id,
+		    project2.name name,
+		    project2.cust_id,
+		    project2.cody_status_nm,
+		    project2.brnch_id AS brnch_id,
+		    project2.schdul_id schdul_id,
+		    project2.sales_ord_id,
+		    project2.branch_cd,
+		    project2.cody_mangr_user_id,
+		    project2.result AS result,
+		    project2.dept_code,
+		    project2.crt_user_id,
+		    project2.serial_require_chk_yn,
+		    project2.install_dt,
+		    project2.state,
+		    project2.area,
+		    project2.addr_dtl ||', '|| project2.street ||', '|| project2.area ||', '|| project2.postcode ||' '|| project2.city ||', '|| project2.state addr_dtl
+		FROM
+		    (
+		        SELECT DISTINCT
+		            hs.no AS no,
+		            hs.stus_code_id AS stus_code_id,
+		            hs.month
+		             || '/'
+		             || hs.year AS hs_date,
+		            hs.month,
+		            hs.year,
+		            st.code,
+		            hr.no AS result,
+		            so.sales_ord_no,
+		            ap.code AS apptype,
+		            cu.name,
+		            cd.mem_code AS assign_cody,
+		            cd.mem_id,
+		            mg.state,
+		            mg.area,
+		            mg.city,
+                    mg.postcode,
+		            cu.cust_id AS cust_id,
+		            stus.code AS cody_status_nm,
+		            br.brnch_id AS brnch_id,
+		            hs.schdul_id schdul_id,
+		            so.sales_ord_id,
+		            mg.cody_brnch_code AS branch_cd,
+		            mg.cody_mangr_user_id,
+		            og.dept_code,
+		                CASE
+		                    WHEN hs.crt_user_id = '1111' THEN ''
+		                    ELSE usr.user_name
+		                END
+		            AS crt_user_id,
+		            loc.serial_require_chk_yn,
+		            ad.addr_dtl,
+                    ad.street,
+		            DECODE(
+		                ir2.install_dt,
+		                NULL,
+		                '01/01/1900',
+		                TO_CHAR(
+		                    ir2.install_dt,
+		                    'DD/MM/YYYY'
+		                )
+		            ) install_dt
+		        FROM
+		            svc0008d hs JOIN sal0001d so ON so.sales_ord_id = hs.sales_ord_id AND so.bndl_id IS NULL
+		            INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
+		            INNER JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
+		            INNER JOIN sys0064m mg ON mg.area_id = ad.area_id
+		            LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
+		            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
+		            INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
+		            INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
+		            LEFT JOIN org0001d cd ON cd.mem_id = hs.cody_id
+		            LEFT JOIN sys0005m br ON br.brnch_id = cd.brnch
+		            LEFT JOIN sys0038m stus ON stus.stus_code_id = cd.stus
+		            LEFT JOIN org1001v og ON og.mem_id = cd.mem_id
+		            LEFT JOIN sys0047m usr ON hs.crt_user_id = usr.user_id
+		            LEFT JOIN sys0028m loc ON loc.wh_loc_code = cd.mem_code
+		            LEFT JOIN entry_info_max eimax ON eimax.sales_ord_id = so.sales_ord_id
+		            LEFT JOIN sal0047d ir2 ON
+		                ir2.entry_id = eimax.install_entry_id
+		            AND
+		                ir2.result_id = eimax.install_result_id
+		            AND
+		                ir2.stus_code_id = 4
+		            LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
+		        WHERE
+		           hs.year = EXTRACT(YEAR FROM SYSDATE)
+		           and hs.month = EXTRACT(MONTH FROM SYSDATE)
+
+
+		            <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                      AND HS.NO = #{txtHsOrderNo}
+                    </if>
+
+                    <choose>
+                      <when test="txtHsOrderNo != ''">
+                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                          AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                        </if>
+                      </when>
+                      <otherwise>
+                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                         AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                        </if>
+                      </otherwise>
+                    </choose>
+
+                    <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+	                  AND CD.MEM_CODE = #{txtAssigncodyCode}
+	                </if>
+
+	                <if test="myInstallMonth != null and myInstallMonth != ''">
+                  AND SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                </if>
+
+                <if test="myInstallMonth != null and myInstallMonth != ''">
+                  AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                </if>
+
+                <if test="cmbStatusType != null and cmbStatusType != ''">
+                  AND HS.STUS_CODE_ID = #{cmbStatusType}
+                </if>
+
+                <if test="txtCustomer != null and txtCustomer != ''">
+                  AND SO.CUST_ID  = #{txtCustomer}
+                </if>
+
+                <if test="cmdBranchCode != null and cmdBranchCode != ''">
+                  AND ( br.BRNCH_id = #{cmdBranchCode})
+                </if>
+
+                <if test="cmdCdManager != null and cmdCdManager != ''">
+                  AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
+                </if>
+
+                <if test="deptCode != null and deptCode != ''">
+                  AND OG.DEPT_CODE = #{deptCode}
+                </if>
+
+                <if test="grpCode != null and grpCode != ''">
+                  AND OG.GRP_CODE = #{grpCode}
+                </if>
+
+                 <if test="orgCode != null and orgCode != ''">
+                  AND OG.ORG_CODE = #{orgCode}
+                </if>
+
+                <if test="userType == '3'.toString()">
+                  AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                </if>
+
+                <if test="txtCodyStatus != null and txtCodyStatus != ''">
+                  AND STUS.CODE = #{txtCodyStatus}
+                </if>
+
+                 <if test="myInstallArea != null and myInstallArea != ''">
+                  AND MG.AREA = #{myInstallArea}
+                </if>
+
+                <if test="myInstallState != null and myInstallState != ''">
+                  AND MG.STATE = #{myInstallState}
+                </if>
+
+                <![CDATA[ AND ROWNUM <= 20000 ]]>
+		    ) project2
+
+    </select>
+
+    <insert id="updateAssignCodyBulk" parameterType="Map" >
+                       UPDATE SVC0008D
+                           SET CODY_ID =#{codyId},
+                               UPD_USER_ID =#{updator} ,
+                               UPD_DT =SYSDATE
+                           WHERE SCHDUL_ID in (#{schdulId})
+                           <foreach item="schdulId" collection="schdulIdList" index="index" open="(" separator="," close=")">
+				                #{schdulId}
+				           </foreach>
+     </insert>
+
+</mapper>

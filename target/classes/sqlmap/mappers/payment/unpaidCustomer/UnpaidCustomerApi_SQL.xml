@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.UnpaidCustomerApiMapper">
+
+    <select id="selectUnpaidCustomerList" parameterType="Map" resultType="egovMap">
+		SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.UnpaidCustomerApiMapper.selectUnpaidCustomerList] 20191106 - KR HAN */
+					A.MEM_CODE MEM_CODE
+					,A.SALES_ORD_NO SALES_ORD_NO
+					,A.OUT_AMT OUT_AMT
+					,A.CUST_ID CUST_ID
+					,B.NAME CUST_NAME
+					FROM
+					(
+						SELECT
+						            M.MEM_CODE
+						            ,S.SALES_ORD_NO
+						            ,X.OUT_AMT
+						            ,S.CUST_ID
+						FROM    SAL0001D S
+							            JOIN SAL0090D G ON G.SRV_SO_ID = S.SALES_ORD_ID
+							            JOIN ORG0001D M ON M.MEM_ID = G.SRV_CODY_ID
+										LEFT JOIN (SELECT
+										                            RENT_SO_ID
+										                            ,SUM(RENT_AMT) OUT_AMT
+										                FROM    PAY0022D
+										                <!-- WHERE  RENT_AMT > 0 -->
+										                GROUP BY RENT_SO_ID
+										                ) X ON X.RENT_SO_ID = S.SALES_ORD_ID
+						WHERE   S.APP_TYPE_ID = 66
+						AND       G.SRV_STUS_ID = 1
+						UNION ALL
+						SELECT
+						            M.MEM_CODE
+						            ,S.SALES_ORD_NO
+						            ,X.OUT_AMT
+						            ,S.CUST_ID
+						FROM    SAL0001D S
+									JOIN SAL0090D G ON G.SRV_SO_ID = S.SALES_ORD_ID
+									JOIN ORG0001D M ON M.MEM_ID = G.SRV_CODY_ID
+									LEFT JOIN (SELECT
+									                             TRADE_SO_ID
+									                             ,SUM(TRADE_AMT) OUT_AMT
+										           FROM      PAY0035D
+										           <!-- WHERE TRADE_AMT >0 -->
+									               GROUP BY TRADE_SO_ID
+									               ) X ON X.TRADE_SO_ID = S.SALES_ORD_ID
+						WHERE S.APP_TYPE_ID IN (67,68)   AND G.SRV_STUS_ID = 1
+						AND x.OUT_AMT > 0
+					) A
+					JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+
+        <where>
+            AND A.OUT_AMT > 0
+			<if test='searchType eq "1"'>
+			    AND A.SALES_ORD_NO = #{searchKeyword}
+			</if>
+			<if test='searchType eq "2" or searchType eq "3" '>
+			    AND B.NRIC = #{searchKeyword}
+			</if>
+		</where>
+    </select>
+
+
+    <select id="selectUnpaidCustomerDetailList" parameterType="Map" resultType="egovMap">
+        SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.UnpaidCustomerApiMapper.selectUnpaidCustomerDetailList] 20191107 - KR HAN */
+					A.MEM_CODE MEM_CODE
+					,A.SALES_ORD_NO    SALES_ORD_NO
+					,A.OUT_AMT OUT_AMT
+					,A.RENT_DOC_TYPE_ID    RENT_DOC_TYPE_ID
+					,TO_CHAR(A.RENT_DT_TM , 'DD/MM/YYYY')   RENT_DT_TM
+					,B.CODE_NAME   RENT_DOC_TYPE_NAME
+		FROM
+		(
+			SELECT
+						M.MEM_CODE
+						,S.SALES_ORD_NO
+						,X.OUT_AMT
+						,X.rent_doc_type_id
+						,X.RENT_DT_TM RENT_DT_TM
+			FROM     SAL0001D S
+							JOIN SAL0090D G ON G.SRV_SO_ID = S.SALES_ORD_ID
+							JOIN ORG0001D M ON M.MEM_ID = G.SRV_CODY_ID
+							LEFT JOIN (SELECT RENT_SO_ID
+							                  ,RENT_AMT OUT_AMT
+							                  ,rent_doc_type_id
+							                  ,rent_dt_tm
+							           FROM PAY0022D <!-- WHERE RENT_AMT > 0 -->
+							           ) X ON X.RENT_SO_ID = S.SALES_ORD_ID
+			WHERE S.APP_TYPE_ID = 66  AND G.SRV_STUS_ID = 1
+
+			UNION ALL
+
+			SELECT
+						M.MEM_CODE
+						,S.SALES_ORD_NO
+						,X.OUT_AMT
+						,X.TRADE_DOC_TYPE_ID
+						,X.TRADE_DT_TM RENT_DT_TM
+			FROM SAL0001D S
+						JOIN SAL0090D G ON G.SRV_SO_ID = S.SALES_ORD_ID
+						JOIN ORG0001D M ON M.MEM_ID = G.SRV_CODY_ID
+						LEFT JOIN (SELECT TRADE_SO_ID
+						                  ,TRADE_AMT OUT_AMT
+						                  ,trade_doc_type_id
+						                  ,trade_dt_tm
+						           FROM PAY0035D <!-- WHERE TRADE_AMT >0 -->
+						           ) X ON X.TRADE_SO_ID = S.SALES_ORD_ID
+			WHERE S.APP_TYPE_ID IN (67,68)   AND G.SRV_STUS_ID = 1
+		) A JOIN SYS0013M B
+		        ON A.RENT_DOC_TYPE_ID = B.CODE_ID
+		WHERE A.SALES_ORD_NO = #{salesOrdNo}
+
+		ORDER BY A.RENT_DT_TM DESC
+    </select>
+
+
+</mapper>

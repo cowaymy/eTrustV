@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderSummaryMapper">
+
+   <select id="selectOrderSummary" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.order.service.impl.OrderSummaryMapper.selectOrderSummary] 20191002 - KR OHK */
+         SELECT T.ORD_ID
+                  , T.CUST_VA_NO
+                  , T.ORD_NO
+                  , T.CUST_NAME
+                  , T.JOM_PAY_REF
+                  , T.CORP_TYPE_ID
+                  , T.CUST_TYPE
+                  , T.CUST_ID
+                  , T.ORD_STUS_CODE
+                  , T.ORD_DT
+                  , T.INST_AREA
+                  , T.INST_STATE
+                  , T.STK_CODE
+                  , T.APP_TYPE_CODE
+                  , T.RENT_PAY_MODE_DESC
+                  , T.RENTAL_STUS
+                  , T.NOR_RNT_FEE
+                  , T.CURR_MTH_CHRG
+                  , T.CURR_NO_MONTH_OF_RENTAL_BILL
+                  , T.RENT_CURR_OTSTND
+                  , T.RPF_BILL_AMT
+                  , T.RPF_PAY_AMT
+                  , T.RPF_ADJ_AMT
+                  , T.ORD_UNBILL_AMT
+                  , T.RENTAL_BILL_NO
+                  , T.ORD_LAST_PAY_DT
+                  , (NVL(T.WEB_RENT_LEDGER_1,0) + NVL(T.WEB_RENT_LEDGER_2,0) ) AS WEB_RENT_LEDGER
+                  , T.CUST_BILL_GRP_NO
+                  , T.SRV_CNTRCT_NO
+                  , T.APP_TYPE_DESC
+                  , T.ORG_CODE
+                  , T.GRP_CODE
+                  , T.DEPT_CODE
+                  , T.ORD_MEM_CODE
+                  , T.ORD_MEM_NAME
+                  , T.ORD_PROMO_CODE
+                  , T.ORD_PROMO_DESC
+                  , T.ORD_PV_MONTH || '/' ||T.ORD_PV_YEAR  NET_SALE_MONTH
+           FROM (SELECT A.ORD_ID
+                             , A.CUST_VA_NO
+                             , A.ORD_NO
+                             , A.CUST_NAME
+                             , A.JOM_PAY_REF
+                             , A.CORP_TYPE_ID
+                             , A.CUST_TYPE
+                             , A.CUST_ID
+                             , A.ORD_STUS_CODE
+                             , A.ORD_DT
+
+
+
+                             , '( ' || A.STOCK_CODE || ' ) ' || A.STOCK_DESC STK_CODE
+                             , CASE WHEN A.APP_TYPE_CODE IN ('OUT','INS','EDU') OR pay52.ACC_DEBT_SRV_CNTRCT_ID IS NULL THEN NULL
+                                       WHEN pay52.ACC_DEBT_SRV_CNTRCT_ID = 0 THEN 'Sales'
+                                       ELSE 'Service' END AS APP_TYPE_CODE
+
+
+                             , A.RENTAL_STUS
+                             , DECODE(A.APP_TYPE_CODE, 'REN', A.NOR_RNT_FEE, NULL) AS NOR_RNT_FEE
+
+                             , pay53.ACC_DEBT_SUB_CURR_CHRG        AS CURR_MTH_CHRG
+                             , pay53.ACC_DEBT_SUB_PAY_SCHDUL_NO AS CURR_NO_MONTH_OF_RENTAL_BILL
+                             , pay53.ACC_DEBT_SUB_TOT_OTSTND     AS RENT_CURR_OTSTND
+                             , DECODE(A.APP_TYPE_CODE, 'REN', pay53.ACC_DEBT_SUB_RPF_CHRG, A.ORD_AMT)          AS RPF_BILL_AMT
+                             , pay53.ACC_DEBT_SUB_RPF_COLCT        AS RPF_PAY_AMT
+                             , pay53.ACC_DEBT_SUB_RPF_ADJ            AS RPF_ADJ_AMT
+                             , pay53.ACC_DEBT_SUB_RENTAL_BILL_NO AS RENTAL_BILL_NO
+
+                             , PYM.CODE AS RENT_PAY_MODE_DESC
+                             , pay52.ACC_DEBT_SRV_CNTRCT_NO AS SRV_CNTRCT_NO
+
+                             , NVL(sys64.AREA, ' ') AS INST_AREA
+                             , NVL(sys64.STATE, ' ') AS INST_STATE
+
+                             , (SELECT UN_BILL_AMT FROM REP0010S WHERE ORD_ID = A.ORD_ID AND SRV_CNTRCT_ID = pay52.ACC_DEBT_SRV_CNTRCT_ID) AS  ORD_UNBILL_AMT
+                             , (SELECT TO_CHAR(MAX(RENT_DT_TM),'DD/MM/YYYY') FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID) AS  ORD_LAST_PAY_DT
+                            , (
+                                SELECT SUM(RENT_AMT) AS AMT FROM PAY0022D WHERE RENT_SO_ID=A.ORD_ID GROUP BY RENT_SO_ID
+                                UNION
+                                SELECT SUM(SRV_LDGR_AMT) AS AMT FROM PAY0023D WHERE SRV_SALES_ORD_ID=A.ORD_ID AND SRV_LDGR_CNTRCT_ID   <![CDATA[ <> ]]>   0 GROUP BY SRV_SALES_ORD_ID
+                                ) AS  WEB_RENT_LEDGER_1
+
+                             , (
+                                 SELECT SUM(TRADE_AMT) AS AMT FROM PAY0035D WHERE TRADE_SO_ID=A.ORD_ID GROUP BY TRADE_SO_ID
+                                ) AS  WEB_RENT_LEDGER_2
+
+                             /*
+
+                             , E.INST_AREA
+                             , E.INST_STATE
+
+                             , E.CURR_MTH_CHRG
+                             , E.CURR_NO_MONTH_OF_RENTAL_BILL
+                             , E.RENT_CURR_OTSTND
+                             , E.RPF_BILL_AMT
+                             , E.RPF_PAY_AMT
+                             , E.RPF_ADJ_AMT
+                             , E.RENTAL_BILL_NO
+
+                             , E.ORD_PAY_MODE AS RENT_PAY_MODE_DESC
+                             , E.UN_BILL_AMT AS ORD_UNBILL_AMT
+                             , E.ORD_LAST_PAY_DT
+                             , E.WEB_RENT_LDGR_CURR_OTSTND AS WEB_RENT_LEDGER
+
+                             , E.SRV_CNTRCT_NO
+                             */
+
+                             , DECODE(A.APP_TYPE_CODE, 'REN', A.CUST_BILL_GRP_NO, NULL) AS CUST_BILL_GRP_NO
+
+                             , A.APP_TYPE_DESC
+                             , A.ORD_ORG_CODE AS ORG_CODE
+                             , A.ORD_GRP_CODE AS GRP_CODE
+                             , A.ORD_DEPT_CODE AS DEPT_CODE
+
+                             , A.ORD_MEM_CODE
+                             , A.ORD_MEM_NAME
+
+                             , A.ORD_PROMO_CODE
+                             , A.ORD_PROMO_DESC
+
+                             , A.ORD_PV_YEAR
+                             , A.ORD_PV_MONTH
+
+                        FROM (
+                                          SELECT
+                                                        SOM.SALES_ORD_ID ORD_ID,
+                                                        SOM.SALES_ORD_NO ORD_NO,
+                                                        NVL(RS.STUS_CODE_ID,' ') RENTAL_STUS,
+                                                        SOM.STUS_CODE_ID ORD_STUS_ID,
+                                                        S.CODE ORD_STUS_CODE,
+                                                        S.NAME ORD_STUS_NAME,
+                                                        SOM.SALES_DT ORD_DT,
+                                                        NVL(SOM.INST_PRIOD,0) INSTLMT_PRIOD,
+                                                        SOM.TOT_AMT AS ORD_AMT,
+                                                        (
+                                                            CASE
+                                                                WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.MTH_RENT_AMT,0)
+                                                                ELSE 0
+                                                            END
+                                                        ) ORD_MTH_RENTAL,
+                                                        NVL(SOM.TOT_PV,0) ORD_PV,
+                                                        NVL(SOM.PV_MONTH,0) ORD_PV_MONTH,
+                                                        NVL(SOM.PV_YEAR,0) ORD_PV_YEAR,
+                                                        NVL(SOM.REF_NO,' ') ORD_REF_NO,
+                                                        NVL(SOM.CUST_PO_NO,' ') ORD_PO_NO,
+                                                        NVL(SOM.DEPT_CODE,' ') ORD_DEPT_CODE,
+                                                        NVL(SOM.GRP_CODE,' ') ORD_GRP_CODE,
+                                                        NVL(SOM.ORG_CODE,' ') ORD_ORG_CODE,
+                                                        SOM.CRT_DT ORD_CRT_DT,
+                                                        SOM.APP_TYPE_ID,
+                                                        T.CODE APP_TYPE_CODE,
+                                                        T.CODE_NAME APP_TYPE_DESC,
+                                                        SOD.ITM_PRC_ID,
+                                                        STK.STK_ID STOCK_ID,
+                                                        STK.STK_CODE STOCK_CODE,
+                                                        STK.STK_DESC STOCK_DESC,
+                                                        STK.MASTER_STK_ID,
+                                                        C.CUST_ID CUST_ID,
+                                                        C.CORP_TYPE_ID,
+                                                        (
+                                                            CASE
+                                                                WHEN C.TYPE_ID <![CDATA[ <> ]]> 964
+                                                                     AND C.CORP_TYPE_ID <![CDATA[ > ]]> 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
+                                                                || ' ('
+                                                                || NVL(CORPTYPE.CODE_NAME,' ')
+                                                                || ')' )
+                                                                ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+                                                            END
+                                                        ) CUST_TYPE,
+                                                        C.NAME CUST_NAME,
+                                                        C.NRIC CUST_NRIC,
+                                                        (
+                                                            CASE
+                                                                WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
+                                                                ELSE TO_DATE('19000101','YYYYMMDD')
+                                                            END
+                                                        ) AS CUST_DOB,
+                                                        NVL(C.EMAIL,' ') CUST_EMAIL,
+                                                        NVL(C.CUST_VA_NO,' ') CUST_VA_NO,
+                                                        C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
+                                                        C.VISA_EXPR CUST_VISA_EXPR,
+                                                        NVL(SOM.PROMO_ID,0) ORD_PROMO_ID,
+                                                        NVL(PM.PROMO_CODE,' ') ORD_PROMO_CODE,
+                                                        NVL(PM.PROMO_DESC,' ') ORD_PROMO_DESC,
+                                                        NVL(MEM.MEM_ID,0) ORD_MEM_ID,
+                                                        NVL(MEM.MEM_CODE,' ') ORD_MEM_CODE,
+                                                        NVL(MEM.NAME,' ') ORD_MEM_NAME,
+                                                        NVL(MEM.NRIC,' ') ORD_MEM_NRIC,
+                                                        NVL(MEM.MEM_TYPE,0) ORD_MEM_TYPE_ID,
+                                                        NVL(SOM.BRNCH_ID,0) KEYIN_BRNCH_ID,
+                                                        NVL(SOM.REM,' ') ORD_REM,
+                                                        (
+                                                            CASE
+                                                                WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.REN_CHK_ID,0)
+                                                                ELSE 0
+                                                            END
+                                                        ) RENT_CHK_ID,
+                                                        NVL(SOM.SALES_HM_ID,0) ORD_HM_ID,
+                                                        NVL(SOM.SALES_SM_ID,0) ORD_SM_ID,
+                                                        NVL(SOM.SALES_GM_ID,0) ORD_GM_ID,
+                                                        NVL(SOM.CUST_ADD_ID,0) ORD_ADDR_ID,
+                                                        NVL(SOM.CUST_CNT_ID,0) ORD_CNTC_ID,
+                                                        NVL(SOM.CUST_CARE_CNT_ID,0) CUST_CARE_CNT_ID,
+                                                        SOM.UPD_DT UPD_DT,
+                                                        CBM.CUST_BILL_PAY_REF_NO1 JOM_PAY_REF,
+                                                        STK.STK_CTGRY_ID,
+                                                        C.TYPE_ID CUST_TYPE_ID,
+                                                        NVL(SOM.CUST_BILL_ID,0) CUST_BILL_ID,
+                                                        SOM.EMP_CHK,
+                                                        SOM.EX_TRADE,
+                                                        SOM.GST_CHK,
+                                                        SOM.CNVR_SCHEME_ID,
+                                                        SOM.PROMO_DISC_PERIOD_TP,
+                                                        SOM.PROMO_DISC_PERIOD,
+                                                        SOM.NOR_AMT,
+                                                        SOM.NOR_RNT_FEE,
+                                                        SOM.DISC_RNT_FEE,
+                                                        SOM.SRV_PAC_ID,
+                                                        SOM.ADV_BILL,
+                                                        FLOOR(MONTHS_BETWEEN(SYSDATE,C.CRT_DT) ) CRT_DUR,
+                                                        NVL(CBM.CUST_BILL_GRP_NO,' ') CUST_BILL_GRP_NO,
+                                                        SOM.PCKAGE_BINDING_NO AS PCKAGE_BINDING_NO
+                                                    FROM
+                                                               SAL0001D SOM
+                                                        JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+                                                        LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID <![CDATA[ <> ]]> 964 AND C.CORP_TYPE_ID <![CDATA[ > ]]> 0
+                                                        LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
+
+                                                        JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+                                                        JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
+                                                        JOIN SYS0013M T ON T.CODE_ID = SOM.APP_TYPE_ID
+                                                        JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+                                                        LEFT JOIN SAL0024D CBM ON SOM.CUST_BILL_ID = CBM.CUST_BILL_ID
+
+                                                        LEFT JOIN SAL0071D RS ON RS.SALES_ORD_ID = SOM.SALES_ORD_ID AND SOM.APP_TYPE_ID = 66
+                                                        LEFT JOIN SAL0017D PM ON PM.PROMO_ID = SOM.PROMO_ID AND NVL(SOM.PROMO_ID,0) <![CDATA[ <> ]]> 0
+                                                        LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = SOM.MEM_ID AND NVL(SOM.MEM_ID,0) <![CDATA[ <> ]]> 0
+
+                                          WHERE 1 =1
+                                              <if test="ordNo != null and ordNo != ''">
+                                                AND SOM.SALES_ORD_NO = #{ordNo}
+                                              </if>
+                                              <if test="custIc != null and custIc != ''">
+                                                AND C.NRIC = #{custIc}
+                                              </if>
+                                              <if test="groupNo != null and groupNo != ''">
+                                                AND CBM.CUST_BILL_GRP_NO = #{groupNo}
+                                              </if>
+                                              <if test='(ordNo == null or ordNo == "") and (custIc == null or custIc == "") and (groupNo == null or groupNo == "")'>
+                                                  <if test="orgCode != null and orgCode != ''">
+                                                    AND SOM.ORG_CODE = #{orgCode}
+                                                  </if>
+                                                  <if test="grpCode != null and grpCode != ''">
+                                                    AND SOM.GRP_CODE = #{grpCode}
+                                                  </if>
+                                                  <if test="deptCode != null and deptCode != ''">
+                                                    AND SOM.DEPT_CODE = #{deptCode}
+                                                  </if>
+                                                  <if test="memCode != null and memCode != ''" >
+                                                    AND MEM.MEM_CODE = #{memCode}
+                                                  </if>
+                                                  <if test="custId != null and custId != ''">
+                                                    AND C.CUST_ID = #{custId}
+                                                  </if>
+                                                  <if test="custName != null and custName != ''">
+                                                    AND C.NAME  LIKE '%'|| #{custName} || '%'
+                                                  </if>
+                                                  <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
+                                                    AND SOM.APP_TYPE_ID IN
+                                                      <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
+                                                        #{item}
+                                                      </foreach>
+                                                  </if>
+                                                  <if test='createStDate != null and createStDate != "" and createEnDate != null and createEnDate != ""'>
+                                                     AND SOM.SALES_DT <![CDATA[>=]]>TO_DATE(#{createStDate}, 'DD/MM/YYYY')
+                                                     AND SOM.SALES_DT <![CDATA[<]]>TO_DATE(#{createEnDate}, 'DD/MM/YYYY') +1
+                                                  </if>
+                                                  <if test="cmbProduct != null and cmbProduct != ''">
+                                                    AND STK.STK_ID = #{cmbProduct}
+                                                  </if>
+                                                  <if test="netSalesMonth != null and netSalesMonth != ''">
+                                                    AND SOM.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                                                    AND SOM.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                                                  </if>
+                                                  <if test="salesmanCode != null and salesmanCode != ''">
+                                                    AND MEM.MEM_CODE = #{salesmanCode}
+                                                  </if>
+
+                                                  <if test="cmbCondition == 1 ">
+                                                    AND SOM.STUS_CODE_ID = 1
+                                                  </if>
+                                                  <if test="cmbCondition == 2 ">
+                                                    AND SOM.STUS_CODE_ID = 10
+                                                  </if>
+                                                  <if test="cmbCondition == 3 ">
+                                                    AND SOM.STUS_CODE_ID = 4
+                                                    AND SOM.PV_YEAR <![CDATA[>]]> 0
+                                                    AND SOM.PV_MONTH <![CDATA[>]]> 0
+                                                  </if>
+                                                  <if test="cmbCondition == 4 ">
+                                                    AND SOM.STUS_CODE_ID = 4
+                                                    AND SOM.PV_YEAR = 0
+                                                    AND SOM.PV_MONTH = 0
+                                                  </if>
+
+                                                  <if test="promoCode != null and promoCode != ''">
+                                                    AND PM.PROMO_CODE = #{promoCode}
+                                                  </if>
+                                              </if>
+                              ) A
+                             --LEFT OUTER JOIN REP0010S E ON E.ORD_ID = A.ORD_ID
+
+
+                             LEFT OUTER JOIN PAY0052S pay52 ON pay52.ACC_DEBT_ORD_ID = A.ORD_ID
+                             LEFT OUTER JOIN PAY0053S pay53 ON pay53.ACC_DEBT_ORD_ID = A.ORD_ID AND pay52.ACC_DEBT_SRV_CNTRCT_ID = pay53.ACC_DEBT_SRV_CNTRCT_ID
+
+
+                             LEFT OUTER JOIN SAL0074D sal74 ON sal74.SALES_ORD_ID = A.ORD_ID AND sal74.SVC_CNTRCT_ID = pay52.ACC_DEBT_SRV_CNTRCT_ID
+                             LEFT OUTER JOIN SYS0013M PYM   ON PYM.CODE_ID = sal74.MODE_ID
+
+
+                             LEFT OUTER JOIN SAL0045D INS   ON INS.SALES_ORD_ID = A.ORD_ID
+                             LEFT OUTER JOIN SAL0023D IADD   ON IADD.CUST_ADD_ID = INS.ADD_ID
+                             LEFT OUTER JOIN SYS0064M sys64  ON sys64.AREA_ID = IADD.AREA_ID AND sys64.STATUS_ID = 1
+
+                             <if test="cmbCondition == 5 or cmbCondition == 6">
+                             LEFT OUTER JOIN SAL0046D K ON K.SALES_ORD_ID = A.ORD_ID AND K.INSTALL_ENTRY_ID = FN_GET_SAL0046D_MAX_ID (A.ORD_ID, '3')
+                             </if>
+                        WHERE 1 =1
+                          <if test='(ordNo == null or ordNo == "") and (custIc == null or custIc == "") and (groupNo == null or groupNo == "")'>
+                              <if test="cmbCondition == 1 ">
+                                AND A.ORD_STUS_ID = 1
+                              </if>
+                              <if test="cmbCondition == 2 ">
+                                AND A.ORD_STUS_ID = 10
+                              </if>
+                              <if test="cmbCondition == 3 ">
+                                AND A.ORD_STUS_ID = 4
+                                AND A.ORD_PV_YEAR <![CDATA[>]]> 0
+                                AND A.ORD_PV_MONTH <![CDATA[>]]> 0
+                              </if>
+                              <if test="cmbCondition == 4 ">
+                                AND A.ORD_STUS_ID = 4
+                                AND A.ORD_PV_YEAR = 0
+                                AND A.ORD_PV_MONTH = 0
+                              </if>
+                              <if test="cmbCondition == 5 ">
+                                AND K.STUS_CODE_ID = 21
+                                AND A.ORD_STUS_ID != 10
+                              </if>
+                              <if test="cmbCondition == 6 ">
+                                AND K.STUS_CODE_ID = 1
+                                AND A.ORD_STUS_ID != 10
+                              </if>
+                            </if>
+
+                   ) T
+           ORDER BY T.ORD_ID DESC
+    </select>
+
+</mapper>

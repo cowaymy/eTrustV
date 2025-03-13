@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.LoginMonitoringMapper">
+
+<select id="selectLoginMonitoringList" parameterType="Map" resultType="egovMap">
+SELECT a.system_id ,
+           (SELECT a.code_name
+               FROM sys0013m a
+             WHERE a.code_master_id = 336
+                 AND a.code = a.system_id) AS system_nm ,
+           a.login_type,
+           TO_CHAR(a.login_dtm,'HH24:MI:SS MM-DD-YYYY') AS login_dtm,
+           a.user_id,
+           a.user_nm,
+           a.ip_addr ,
+           a.os,
+           a.browser,
+           a.system_id || a.login_dtm || a.user_id AS row_id
+   FROM SYS0077M a
+  WHERE 1=1
+      AND a.system_id = #{systemId}
+      AND login_dtm BETWEEN TO_DATE(REPLACE('0000'||#{frDate},'/',''),'MIHH24DDMMYYYY') AND TO_DATE(REPLACE('5923'||#{toDate},'/',''),'MIHH24DDMMYYYY') /* Essential Param*/
+      <if test="userId != null and userId !=''">
+      AND (a.user_id LIKE #{userId} || '%' OR UPPER(a.user_nm) LIKE UPPER(#{userId}) || '%')
+      </if>
+      <if test="ipAddr != null and ipAddr !=''">
+      AND a.ip_addr LIKE #{ipAddr} || '%'
+      </if>
+     ORDER BY a.login_dtm
+</select>
+
+<select id="selectCommonCodeSystemList"  parameterType="Map" resultType="egovMap">
+    SELECT code
+             , code_name as value
+      FROM SYS0013M
+     WHERE CODE_MASTER_ID = 336
+</select>
+
+</mapper>

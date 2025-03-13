@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.bs.impl.BsResultAnalysisMapper">
+
+    <select id="selectAnalysisList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        select
+            a.BS_RATE_ROW_ID,
+            CASE WHEN l.MEM_LVL <> 1 THEN '' ELSE A.ORG_CODE END AS ORG_CODE,
+            CASE WHEN ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END ) = '0' THEN '' ELSE ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END) END AS GRP_CODE,
+            CASE WHEN ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) = '0' THEN '' ELSE ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) END AS DEPT_CODE,
+            CASE WHEN a.MEM_CODE = '0' then '' else a.MEM_CODE END AS MEM_CODE,
+            a.TARGET_TOTAL,
+            a.TOT_BS,
+            a.ACT,
+            a.FAIL,
+            a.CANCL,
+            a.CMPLT,
+            a.CMPLT_OWN,
+            a.CMPLT_OTR,
+            a.BS_TRGET_WEEK1,
+            a.BS_SUCCES_CNT_WEEK1,
+            a.BS_SUCCES_RATE_WEEK1,
+            a.BS_SUCCES_BALNC_WEEK1,
+            a.BS_TRGET_WEEK2,
+            a.BS_SUCCES_CNT_WEEK2,
+            a.BS_SUCCES_RATE_WEEK2,
+            a.BS_SUCCES_BALNC_WEEK2,
+            a.BS_TRGET_WEEK3,
+            a.BS_SUCCES_CNT_WEEK3,
+            a.BS_SUCCES_RATE_WEEK3,
+            a.BS_SUCCES_BALNC_WEEK3,
+            a.BS_TRGET_WEEK4,
+            a.BS_SUCCES_CNT_WEEK4,
+            a.BS_SUCCES_RATE_WEEK4,
+            a.BS_SUCCES_BALNC_WEEK4
+        ]]>
+        from REP0008S a
+        LEFT join (
+            select
+                c.MEM_LVL,
+                c.ORG_CODE LAST_ORG_CODE
+            from SYS0047M a
+            inner join ORG0001D b
+                on b.MEM_CODE = a.HR_CODE
+            LEFT join ORG1001V c
+                on c.MEM_ID = b.MEM_ID
+            <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' and roleId != '179'
+                        and roleId != '360' and roleId != '200' and roleId != '253' and roleId != '252' and roleId != '365' and roleId != '367' ">
+                /* 1 */
+                where a.USER_ID = #{userId}
+            </if>
+            <if test = "roleId == '128' or roleId == '129' or roleId == '130' or roleId == '137' or roleId == '179'
+                        or roleId == '360' or roleId == '200' or roleId == '253' or roleId == '252' or roleId == '365' or roleId == '367' ">
+                /* 2 */
+                where c.MEM_LVL = '1'
+            </if>
+        ) l
+            on l.LAST_ORG_CODE = a.ORG_CODE
+        where
+            1=1
+            AND ORG_CODE = #{orgCode}
+        <if test = "grpCode != null and grpCode != ''">
+            AND GRP_CODE = UPPER(#{grpCode})
+        </if>
+        <if test = "deptCode != null and deptCode != ''">
+            AND DEPT_CODE = #{deptCode}
+        </if>
+        <if test = "memCode != null and memCode != ''">
+            AND MEM_CODE = #{memCode}
+        </if>
+        ORDER BY BS_RATE_ROW_ID
+    </select>
+
+    <select id="getUserInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            b.ROLE_ID,
+            c.MEM_CODE,
+            c.ORG_CODE AS LAST_ORG_CODE,
+            c.GRP_CODE AS LAST_GRP_CODE,
+            c.DEPT_CODE
+        FROM SYS0047M a
+        INNER JOIN SYS0045M b
+            ON b.USER_ID = a.USER_ID
+        LEFT JOIN ORG1001V c
+            ON c.MEM_CODE = a.USER_NAME
+        WHERE
+            a.USER_ID = #{userId}
+    </select>
+
+    <select id="selResultAnalysisByMember" parameterType="Map" resultType="egovMap">
+        SELECT
+            m.SCHDUL_ID as BSID,
+            m.NO as BSNo,
+            m.MONTH as BSMonth,
+            m.YEAR as BSYear,
+            m.STUS_CODE_ID as BSStatusID,
+            s.CODE as BSStatusCode,
+            o.SALES_ORD_ID as OrderID,
+            o.SALES_ORD_NO as OrderNo,
+            t.CODE as OrderAppType,
+            NVL(rm.RESULT_ID, 0) BSRID,
+            NVL(rm.NO, 0) as BSRNo,
+            NVL(CAST(mem.MEM_TYPE as int), 0) MemTypeID,
+            NVL(m.CODY_ID, 0) BSMemID,
+            NVL(mem.MEM_CODE, 0) MemCode,
+            NVL(CAST(mem.STUS as int), 0) MemStatusID,
+            '01/01/1900' as FirstInstallDate,
+            '' as InstallState,
+            '' as InstallArea,
+            NVL(mem2.MEM_CODE, '') ActionMemCode,
+            c.NAME as BSCustName,
+            c.NRIC as BSCustIC
+        FROM SVC0008D m
+        JOIN ORG0001D mem
+            ON mem.MEM_ID = m.TARGET_CODY_ID
+            AND mem.MEM_CODE = #{memCode}
+        JOIN SYS0038M s
+            ON s.STUS_CODE_ID = m.STUS_CODE_ID
+        JOIN SAL0001D o
+            ON o.SALES_ORD_ID = m.SALES_ORD_ID
+        JOIN SAL0029D c
+            ON c.CUST_ID = o.CUST_ID
+        JOIN SYS0013M t
+            ON t.CODE_ID = o.APP_TYPE_ID
+        LEFT JOIN SVC0006D rm
+            ON rm.SCHDUL_ID = m.SCHDUL_ID
+            AND rm.TYPE_ID = '306'
+            AND rm.RESULT_IS_CURR = 1
+        JOIN ORG0001D mem2
+            ON mem2.MEM_ID = rm.CODY_ID
+        WHERE m.MONTH = TO_CHAR(SYSDATE, 'MM')
+            AND m.YEAR = TO_CHAR(SYSDATE, 'YYYY')
+    </select>
+
+</mapper>

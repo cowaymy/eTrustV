@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.WebCrawlMapper">
+
+
+
+    <select id="selectWebCrawlList" parameterType="Map" resultType="egovMap">
+		select webcrawl_no , title , url,c.NAME status,remark,  webcrawl_crt_dt , TO_CHAR(webcrawl_udp_dt,'dd/mm/yy hh:mm:ssAM ') || '(' || B.USER_NAME || ')' webcrawl_udp_user from MSC0055D A
+		left join sys0047m B on B.user_id = A.webcrawl_udp_user_id
+		left join sys0038m C on c.stus_code_id = a.status
+		WHERE 1=1
+        <if test="status != null and status != ''">
+            <!-- AND webcrawl_udp_dt = TO_DATE(#{date},'DDMMYYYY') -->
+                AND  A.status IN
+                <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+        </if>
+        order by webcrawl_no
+        </select>
+
+    <update id="updateLinkStatus" parameterType="Map">
+        UPDATE MSC0055D
+        SET
+        <if test="status == 'Active' ">
+            STATUS = 1,
+        </if>
+        <if test="status == 'In Progress' ">
+            STATUS = 60,
+        </if>
+        <if test="status == 'Closed' ">
+            STATUS = 36,
+        </if>
+        <if test="status == 'Cancelled' ">
+            STATUS = 10,
+        </if>
+        <if test="remark != '' and remark != null ">
+            REMARK = #{remark},
+        </if>
+        WEBCRAWL_UDP_USER_ID = #{updator},
+        WEBCRAWL_UDP_DT = sysdate
+        WHERE
+        webcrawl_no = #{webcrawlNo}
+    </update>
+
+</mapper>

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.test.impl.TestMapper">
+
+    <select id="getClaimNo" parameterType="Map" resultType="egovMap">
+        /* staffClaimMapper.selectNextClmNo */
+        SELECT    'J4'
+            || TO_CHAR (SYSDATE, 'yymm')
+            || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+        FROM FCM0019M
+        WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')  AND CLM_TYPE = 'J4'
+    </select>
+
+    <select id="selectNextClmSeq" parameterType="String" resultType="int">
+        /* staffClaimMapper.selectNextClmSeq */
+        SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0020D WHERE CLM_NO = #{clmNo}
+    </select>
+
+    <select id="getCostCenter" parameterType="Map" resultType="egovMap">
+        select COST_CENTER_TEXT as COSTCTR from FCM0008M where COST_CENTER = #{costCenter}
+    </select>
+
+    <insert id="insertClaimMaster" parameterType="Map">
+        INSERT INTO FCM0019M
+        (
+            CLM_NO,
+            CLM_TYPE,
+            COST_CENTR,
+            COST_CENTR_NAME,
+            MEM_ACC_ID,
+            /*BANK_CODE,
+            BANK_ACC_NO,*/
+            CLM_MONTH,
+            TOT_AMT,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CLM_FLG
+        )
+        VALUES
+        (
+            #{clmNo},
+            #{clmType},
+            #{costCenter},
+            #{costCenterNm},
+            #{memAccId},
+            /* BANK,
+            BANK_ACC_NO */
+            TO_CHAR(TO_DATE(#{clmMth}, 'MM/YYYY'), 'YYYYMM'),
+            '0',
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            #{clmFlg}
+        )
+    </insert>
+
+    <insert id="insertStaffClaimExpItem" parameterType="Map">
+        /* staffClaimMapper.insertStaffClaimExpItem */
+        <!-- CMM0042C_ITEM_SEQ.nextval -->
+        INSERT INTO FCM0020D
+        (
+            CLM_NO
+            ,CLM_SEQ
+            ,INVC_DT
+            ,INVC_TYPE
+            ,INVC_NO
+            ,SUPPLIR
+            ,GST_RGIST_NO
+            ,INVC_REM
+            ,EXP_TYPE
+            ,EXP_TYPE_NAME
+            ,GL_ACC_CODE
+            ,GL_ACC_CODE_NAME
+            ,BUDGET_CODE
+            ,BUDGET_CODE_NAME
+            ,TAX_CODE
+            ,NET_AMT
+            ,TAX_AMT
+            ,TAX_NON_CLM_AMT
+            ,TOT_AMT
+            ,ATCH_FILE_GRP_ID
+            ,EXP_DESC
+            ,CLAM_UN
+            ,EXP_GRP
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+            ,CLM_FLG
+        )
+        values
+        (
+            #{clmNo}
+            ,#{clmSeq}
+            ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+            ,#{invcType}
+            ,#{invcNo}
+            ,#{supplirName}
+            ,#{gstRgistNo}
+            ,#{invcRem}
+            ,#{expType}
+            ,#{expTypeName}
+            ,#{glAccCode}
+            ,#{glAccCodeName}
+            ,#{budgetCode}
+            ,#{budgetCodeName}
+            ,#{taxCode}
+            ,#{gstBeforAmt}
+            ,#{gstAmt}
+            ,#{taxNonClmAmt}
+            ,#{totAmt}
+            ,#{atchFileGrpId}
+            ,#{expDesc}
+            ,#{clamUn}
+            ,#{expGrp}
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+            ,#{clmFlg}
+        )
+    </insert>
+
+    <insert id="insertStaffClaimExpMileage" parameterType="Map">
+/* staffClaimMapper.insertStaffClaimExpMileage */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0021D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,CAR_MILAG_DT
+        ,LOC_FROM
+        ,LOC_TO
+        ,CAR_MILAG
+        ,CAR_MILAG_AMT
+        ,TOLL_AMT
+        ,PARKING_AMT
+        ,PURPOSE
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+        ,CLM_FLG
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,TO_DATE(#{carMilagDt}, 'YYYY/MM/DD')
+       ,#{locFrom}
+       ,#{locTo}
+       ,#{carMilag}
+       ,#{carMilagAmt}
+       ,#{tollAmt}
+       ,#{parkingAmt}
+       ,#{purpose}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+       ,#{clmFlg}
+    )
+</insert>
+
+    <update id="updateMasterClaim" parameterType="Map">
+        MERGE INTO FCM0019M A
+            USING (
+                SELECT
+                    CLM_NO,
+                    SUM(TOT_AMT) TOT_AMT
+                FROM FCM0020D
+                WHERE CLM_NO = #{claimNo}
+                    AND CLM_FLG = 'N'
+                GROUP BY CLM_NO
+            ) B
+        ON (A.CLM_NO = B.CLM_NO)
+        WHEN MATCHED THEN UPDATE SET
+            A.TOT_AMT = B.TOT_AMT
+    </update>
+
+    <select id="getAttachGrpList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ATCH_FILE_GRP_ID || '-' || C.ATCH_FILE_ID AS ATCHINFO
+        FROM FCM0020D A
+        INNER JOIN SYS0070M B
+            ON A.ATCH_FILE_GRP_ID = B.ATCH_FILE_GRP_ID
+        INNER JOIN SYS0071D C
+            ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+        WHERE A.CLM_NO = #{claimNo}
+        GROUP BY A.ATCH_FILE_GRP_ID || '-' || C.ATCH_FILE_ID
+    </select>
+
+    <update id="deleteFileMaster" parameterType="Map">
+        DELETE FROM SYS0070M WHERE ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </update>
+
+    <update id="deleteFileDtls" parameterType="Map">
+        DELETE FROM SYS0071D WHERE ATCH_FILE_ID = #{atchFileId}
+    </update>
+
+    <update id="deleteMasterClaim" parameterType="Map">
+        <!-- deleteMasterClaim -->
+        UPDATE FCM0019M
+        SET CLM_FLG = 'Y'
+        WHERE CLM_NO = #{claimNo}
+    </update>
+
+    <update id="deleteDtlsClaim" parameterType="Map">
+        UPDATE FCM0020D
+        SET CLM_FLG = 'Y'
+        WHERE CLM_NO = #{claimNo}
+    </update>
+
+    <update id="deleteNCDtls" parameterType="Map">
+        UPDATE FCM0020D
+        SET CLM_FLG = 'Y'
+        WHERE CLM_NO = #{claimNo}
+            AND CLAM_UN = #{clamUn}
+    </update>
+
+    <update id="deleteCMDtls" parameterType="Map">
+        UPDATE FCM0021D
+        SET CLM_FLG = 'Y'
+        WHERE CLM_NO = #{claimNo}
+    </update>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <select id="getSummary" parameterType="Map"  resultType="egovMap">
+        SELECT
+            B.INVC_NO,
+            B.CLAM_UN,
+            NVL(TO_CHAR(B.INVC_DT, 'DD/MM/YYYY'), '') AS INVC_DT,
+            NVL(B.SUPPLIR, '-') AS SUPPLIR_NAME,
+            NVL(B.GST_RGIST_NO, '-') AS GST_RGIST_NO,
+            NVL(B.INVC_TYPE, '-') AS INVC_TYPE_NAME,
+            'MYR' AS CUR,
+            SUM(B.NET_AMT) AS GST_BEFOR_AMT,
+            SUM(B.TAX_AMT) AS GST_AMT,
+            SUM(B.TAX_NON_CLM_AMT) AS TAX_NON_CLM_AMT,
+            SUM(B.TOT_AMT) AS TOT_AMT,
+            B.ATCH_FILE_GRP_ID,
+            CASE WHEN B.INVC_DT IS NULL THEN 'CM' ELSE 'NC' END AS CLAIM_TYPE
+        FROM FCM0020D B
+        LEFT JOIN FCM0007C C
+            ON B.TAX_CODE = C.TAX_CODE
+        WHERE B.CLM_NO = #{claimNo}
+        <![CDATA[
+            AND B.CLM_FLG <> 'Y'
+        ]]>
+        GROUP BY
+            B.INVC_NO,
+            B.CLAM_UN,
+            NVL(TO_CHAR(B.INVC_DT, 'DD/MM/YYYY'), ''),
+            NVL(B.SUPPLIR, '-'),
+            NVL(B.GST_RGIST_NO, '-'),
+            NVL(B.INVC_TYPE, '-'),
+            B.ATCH_FILE_GRP_ID,
+            CASE WHEN B.INVC_DT IS NULL THEN 'CM' ELSE 'NC' END
+        ORDER BY
+            B.CLAM_UN
+    </select>
+
+    <select id="getTotAmt" parameterType="Map" resultType="egovMap">
+        /* staffClaimMapper.getTotAmt */
+        SELECT TOT_AMT FROM FCM0019M where CLM_NO = #{claimNo}
+    </select>
+
+    <select id="selectStaffClaimInfo" parameterType="Map" resultType="egovMap">
+        /* staffClaimMapper.selectStaffClaimInfo */
+        SELECT T1.CLM_SEQ,
+                T3.COST_CENTR,
+                T3.COST_CENTR_NAME,
+                T3.MEM_ACC_ID,
+                T4.MEM_ACC_NAME,
+                T3.BANK_CODE,
+                T4.BANK_NAME,
+                T3.BANK_ACC_NO,
+                TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+                T3.TOT_AMT AS ALL_TOT_AMT,
+                T1.EXP_GRP,
+                T3.APPV_PRCSS_NO,
+                T1.EXP_TYPE,
+                T1.EXP_TYPE_NAME,
+                T1.GL_ACC_CODE,
+                T1.GL_ACC_CODE_NAME,
+                T1.BUDGET_CODE,
+                T1.BUDGET_CODE_NAME,
+                T5.MEM_ACC_ID AS SUPPLIR,
+                T1.SUPPLIR AS SUPPLIR_NAME,
+                T1.INVC_TYPE,
+                T1.INVC_NO,
+                TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+                T1.GST_RGIST_NO,
+                T1.TAX_CODE,
+                'MYR' AS CUR,
+                T1.NET_AMT AS GST_BEFOR_AMT,
+                T1.TAX_AMT AS GST_AMT,
+                T1.TAX_NON_CLM_AMT,
+                T1.TOT_AMT,
+                T1.ATCH_FILE_GRP_ID,
+                REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
+            FROM   FCM0020D T1
+            LEFT JOIN FCM0019M T3
+                ON T1.CLM_NO = T3.CLM_NO
+            LEFT JOIN FCM0006M T4
+                ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+            LEFT JOIN FCM0006M T5
+                ON T1.SUPPLIR = T4.MEM_ACC_NAME
+            WHERE T1.CLM_NO = #{clmNo}
+            AND T1.CLM_FLG = 'N'
+        <if test="clmSeq != null and clmSeq != ''">
+            AND T1.CLM_SEQ = #{clmSeq}
+        </if>
+        <if test="clmSeq == null or clmSeq == ''">
+            AND T1.CLAM_UN = #{clamUn}
+            AND ROWNUM = 1
+        </if>
+    </select>
+
+    <select id="selectStaffClaimItemGrp" parameterType="Map" resultType="egovMap">
+        /* staffClaimMapper.selectStaffClaimItemGrp */
+        SELECT T1.CLM_SEQ,
+            T1.EXP_TYPE,
+            T1.EXP_TYPE_NAME,
+            T1.GL_ACC_CODE,
+            T1.GL_ACC_CODE_NAME,
+            T1.BUDGET_CODE,
+            T1.BUDGET_CODE_NAME,
+            T1.TAX_CODE,
+            T2.TAX_NAME,
+            T2.TAX_RATE,
+            'MYR' AS CUR,
+            T1.NET_AMT AS GST_BEFOR_AMT,
+            T1.TAX_AMT AS GST_AMT,
+            T1.TAX_NON_CLM_AMT,
+            T1.TOT_AMT,
+            T1.CLAM_UN,
+            T1.ATCH_FILE_GRP_ID,
+            TO_CHAR(T3.CAR_MILAG_DT, 'YYYY/MM/DD') CAR_MILAG_DT,
+            <!-- T3.CAR_MILAG_DT, -->
+            T3.LOC_FROM,
+            T3.LOC_TO,
+            T3.CAR_MILAG,
+            T3.CAR_MILAG_AMT,
+            T3.TOLL_AMT,
+            T3.PARKING_AMT,
+            T3.PURPOSE,
+            T1.EXP_GRP,
+            REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
+        FROM   FCM0020D T1
+        LEFT JOIN FCM0007C T2
+            ON T1.TAX_CODE = T2.TAX_CODE
+        LEFT JOIN FCM0021D T3
+            ON T1.CLM_NO = T3.CLM_NO
+            AND T1.CLM_SEQ = T3.CLM_SEQ
+            AND T3.CLM_FLG = 'N'
+        WHERE  T1.CLM_NO = #{clmNo}
+            AND CLAM_UN = #{clamUn}
+            AND T1.CLM_FLG = 'N'
+    </select>
+
+    <select id="selectAttachList" parameterType="String" resultType="egovMap">
+        /* staffClaimMapper.selectAttachList */
+        SELECT
+            T1.ATCH_FILE_GRP_ID,
+            T1.ATCH_FILE_ID,
+            T2.ATCH_FILE_NAME,
+            T2.FILE_UNQ_KEY,
+            T2.FILE_KEY_SEQ
+        FROM SYS0070M T1
+        LEFT JOIN SYS0071D T2
+            ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+        WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+        ORDER BY T1.ATCH_FILE_ID
+    </select>
+
+    <select id="checkCM" parameterType="String" resultType="egovMap">
+        SELECT
+            DISTINCT(CLAM_UN) CLAM_UN
+        FROM FCM0020D
+        WHERE CLM_NO = #{claimNo}
+        AND EXP_TYPE = 'J4001'
+        AND EXP_GRP = '1'
+    </select>
+
+    <select id="selectStaffClaimItems" parameterType="String" resultType="egovMap">
+        /* staffClaimMapper.selectStaffClaimItems */
+        <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+        SELECT T1.CLM_SEQ,
+            T3.COST_CENTR,
+            T3.COST_CENTR_NAME,
+            T3.MEM_ACC_ID,
+            T1.EXP_TYPE,
+            T1.EXP_TYPE_NAME,
+            T1.GL_ACC_CODE,
+            T1.GL_ACC_CODE_NAME,
+            T1.BUDGET_CODE,
+            T1.BUDGET_CODE_NAME,
+            T4.MEM_ACC_ID AS SUPPLIR,
+            T1.SUPPLIR AS SUPPLIR_NAME,
+            T1.INVC_TYPE,
+            ( CASE T1.INVC_TYPE
+                WHEN 'F' THEN 'Full Tax invoice'
+                WHEN 'S' THEN 'Simplified Tax invoice'
+            END ) AS INVC_TYPE_NAME,
+            T1.INVC_NO,
+            TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+            T1.GST_RGIST_NO,
+            T1.TAX_CODE,
+            T2.TAX_NAME,
+            'MYR'       AS CUR,
+            T1.NET_AMT AS GST_BEFOR_AMT,
+            T1.TAX_AMT AS GST_AMT,
+            T1.TAX_NON_CLM_AMT,
+            T1.TOT_AMT,
+            T1.ATCH_FILE_GRP_ID,
+            REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+            T1.CLAM_UN,
+            T1.EXP_GRP,
+            T3.TOT_AMT  AS ALL_TOT_AMT,
+            T3.APPV_PRCSS_NO
+        FROM   FCM0020D T1
+        LEFT JOIN FCM0007C T2
+            ON T1.TAX_CODE = T2.TAX_CODE
+        LEFT JOIN FCM0019M T3
+            ON T1.CLM_NO = T3.CLM_NO
+            AND T3.CLM_FLG = 'N'
+        LEFT JOIN FCM0006M T4
+            ON T1.SUPPLIR = T4.MEM_ACC_NAME
+        WHERE T1.CLM_NO = #{clmNo}
+            AND T1.CLM_FLG = 'N'
+        ORDER  BY T1.CLM_SEQ
+    </select>
+
+    <!-- *********************************** NOTIFICATION *********************************** -->
+
+    <select id="selectNtfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            NTF_ID,
+            NTF_TYPE_DESC,
+            NTF_KEY,
+            NTF_REM,
+            NTF_FLAG
+        FROM SYS0092M
+        WHERE NTF_USER_ID = #{userId}
+        <if test="ntfFlag != null and ntfFlag != '' ">
+            AND NTF_FLAG = #{ntfFlag}
+        </if>
+        <if test="createDate != null and createDate != ''">
+        <![CDATA[
+             AND CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+        <![CDATA[
+             AND CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        ORDER BY CRT_DT DESC
+    </select>
+
+    <update id="updateNtfStus" parameterType="Map">
+        <!-- deleteMasterClaim -->
+        UPDATE SYS0092M
+        SET NTF_FLAG = #{ntfFlag}
+        WHERE NTF_ID = #{ntfId}
+        AND NTF_KEY = #{ntfKey}
+    </update>
+
+    <select id="verifyUserAccount" parameterType="Map" resultType="egovMap">
+        SELECT
+            USER_ID
+        FROM SYS0047M
+        WHERE USER_NAME = #{userName}
+        AND USER_EMAIL = #{email}
+    </select>
+
+    <insert id="insertOtpRecord" parameterType="Map">
+        MERGE INTO SYS0112M D
+        USING (
+            SELECT
+              #{userId} USER_ID
+              , #{userName} USER_NAME
+              , #{email} USER_EMAIL
+              , #{otpNumber} OTP_NUMBER
+              , 0 IS_KEYED
+              , SYSDATE CRT_DT
+              , SYSDATE UPD_DT
+            FROM DUAL
+        ) S ON (S.USER_ID = D.USER_ID)
+        WHEN MATCHED THEN UPDATE SET
+                               D.USER_NAME  = S.USER_NAME
+                             , D.USER_EMAIL = S.USER_EMAIL
+                             , D.OTP_NUMBER = S.OTP_NUMBER
+                             , D.IS_KEYED   = S.IS_KEYED
+                             , D.CRT_DT    = S.CRT_DT
+                             , D.UPD_DT    = S.UPD_DT
+        WHEN NOT MATCHED THEN INSERT (USER_ID   , USER_NAME  , USER_EMAIL , OTP_NUMBER  , IS_KEYED , CRT_DT  , UPD_DT  )
+                              VALUES (#{userId} , #{userName}, #{email}   , #{otpNumber}, 0        , SYSDATE , SYSDATE )
+    </insert>
+
+    <update id="updateOtpRecord" parameterType="Map">
+        UPDATE SYS0112M SET
+            IS_KEYED = 1, UPD_DT = SYSDATE
+        WHERE USER_NAME = #{userName} AND USER_EMAIL = #{email} AND OTP_NUMBER = #{otpNumber}
+    </update>
+
+    <select id="verifyOTPNumber" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM SYS0112M
+        WHERE USER_NAME = #{userName}
+        AND USER_EMAIL = #{email}
+        AND OTP_NUMBER = #{otpNumber}
+    </select>
+
+</mapper>

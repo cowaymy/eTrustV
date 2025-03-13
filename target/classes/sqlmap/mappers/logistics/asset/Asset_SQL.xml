@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.asset.impl.AssetMngMapper">
+    
+       <!--  <resultMap id="assetClobMap" type="EgovMap">
+        <result property="assetrem" column="assetrem" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="department" column="department" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="department" column="CODE_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="department" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="department" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="codeName" column="CODE_NAME" jdbcType="CLOB" javaType="java.lang.String"/>
+        </resultMap>
+        <resultMap id="assetCopy" type="EgovMap">
+        <result property="assetRem" column="ASSET_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="assetDRem" column="ASSET_D_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        <result property="assetDItmRem" column="ASSET_D_ITM_REM" jdbcType="CLOB" javaType="java.lang.String"/> 
+        </resultMap>
+         -->
+    <select id="selectAssetList" parameterType="Map" resultType="EgovMap">
+            select 
+                 E1.ASSET_ID assetId,
+                 E1.BRAND_ID brandId,
+                 l49.name, 
+                 E1.CTGRY_ID ctgryId,
+                 s13c.code_name codeName,
+                 E1.COLOR_ID colorId,
+                 s13r.code_name codeName1,
+                 TO_CHAR(E1.CRT_DT, 'DD/MM/YYYY')  crtDt,
+                 E1.CRT_USER_ID crtUserId,
+                 (select USER_NAME from SYS0047M where user_id = e1.CRT_USER_ID) userName ,
+                 E1.CURR_BRNCH_ID currBrnchId,
+                 E1.CURR_DEPT_ID CURR_DEPT_ID,
+                 E1.CURR_USER_ID CURR_USER_ID,
+                 E1.IMEI_NO imeiNo,
+                 E1.MAC_ADDR macAddr,
+                 E1.NAME NAME1,
+                 E1.PURCHS_AMT purchsAmt,
+                 TO_CHAR(E1.PURCHS_DT, 'DD/MM/YYYY') purchsDt,     
+                 E1.REF_NO refNo,
+                 E1.ASSET_REM assetRem,
+                 E1.SERIAL_NO serialNo,
+                 E1.STUS_ID stusId,
+                 s38.name name2,
+                 E1.TYPE_ID typeId,
+                 s13t.code_name codeName2,
+                 TO_CHAR(E1.UPD_DT, 'DD/MM/YYYY') updDt,
+                 E1.UPD_USER_ID updUserId,  
+                 (select USER_NAME from SYS0047M where user_id = e1.UPD_USER_ID) userName1 ,                                                                             
+                 E1.WRANTY_NO wrantyNo,
+                 E1.DEALER_ID dealerId,
+                 s30.DEALER_NAME dealerName,                          
+                 E1.INVC_NO invcNo,                                
+                 CASE WHEN (s05m.BRNCH_ID IS NOT NULL) THEN s05m.CODE 
+                      ELSE NULL 
+                 END
+                    branch , 
+                 CASE
+                    WHEN (s40.DEPT_ID IS NOT NULL) THEN s40.DEPT_NAME
+                    ELSE NULL
+                 END
+                    department,
+                 CASE
+                    WHEN (s47.USER_ID IS NOT NULL) THEN s47.USER_NAME
+                    ELSE NULL
+                 END
+                    userName2       
+               FROM LOG0050M E1 , SYS0038M s38 , LOG0049M l49
+             , (select * from sys0013m where code_master_id = 108) s13c
+             , (select * from sys0013m where code_master_id = 111) s13t
+             , (select * from sys0013m where code_master_id = 112) s13r
+             , SYS0005M s05m , SAL0030D s30 , SYS0040M s40 , SYS0047M s47
+        <!-- WHERE 1 = E1.STUS_ID -->
+          WHERE 1 = 1
+          and e1.stus_id  = s38.STUS_CODE_ID
+          and e1.brand_id = l49.brand_id
+          and e1.ctgry_id = s13c.code_id
+          and e1.type_id  = s13t.code_id
+          and e1.COLOR_ID = s13r.code_id
+          and E1.CURR_BRNCH_ID = s05m.BRNCH_ID(+)
+          and E1.DEALER_ID = s30.DEALER_ID(+)
+          and E1.CURR_DEPT_ID = s40.DEPT_ID(+) 
+          and E1.CURR_USER_ID = s47.USER_ID(+)
+         <if test="searchassetid != null and searchassetid !=''">
+                     AND E1.ASSET_ID = #{searchassetid}
+         </if>
+         <if test="searchstatus != null and searchstatus != ''">
+                     AND E1.STUS_ID in 
+            <foreach item="item" collection="searchstatus" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+         </if>     
+           <if test="searchtype != null and searchtype != ''">
+                     AND E1.TYPE_ID in 
+            <foreach item="item" collection="searchtype" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+         </if>   
+         <if test="searchdepartment != null and searchdepartment != ''">
+                     AND E1.CURR_DEPT_ID in 
+            <foreach item="item" collection="searchdepartment" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+         </if>    
+         <if test="searchbrand != null and searchbrand !=''">
+                     AND l49.name = #{searchbrand}
+         </if>
+         <if test="searchcolor != null and searchcolor !=''">
+                     AND E1.COLOR_ID = #{searchcolor}
+         </if>
+          <if test="searchmodelname != null and searchmodelname !=''">
+                     AND E1.NAME = #{searchmodelname}
+         </if>
+      <if test="searchpurchasedate1 != null and searchpurchasedate1 != ''" > 
+	       AND E1.PURCHS_DT  <![CDATA[ >= ]]>TO_DATE(#{searchpurchasedate1},'DD-MM-YYYY') 
+	  </if>
+	   <if test="searchpurchasedate2 != null and searchpurchasedate2 != ''" >
+	      AND E1.PURCHS_DT    <![CDATA[<=  ]]> TO_DATE(#{searchpurchasedate2},'DD-MM-YYYY') 
+       </if> 
+         <if test="searchrefno != null and searchrefno !=''">
+                     AND E1.REF_NO = #{searchrefno}
+         </if>
+            <if test="searchbranchid != null and searchbranchid !=''">
+                     AND E1.CURR_BRNCH_ID = #{searchbranchid}
+         </if>
+            <if test="searchdeptid != null and searchdeptid !=''">
+                     AND E1.CURR_DEPT_ID = #{searchdeptid}
+         </if>
+         <if test="searchinvoiceno != null and searchinvoiceno !=''">
+                     AND E1.INVC_NO = #{searchinvoiceno}
+         </if>
+         <if test="searchdealer != null and searchdealer !=''">
+                     AND E1.DEALER_ID = #{searchdealer}
+         </if>
+          <if test="searchserialno != null and searchserialno !=''">
+                     AND E1.SERIAL_NO = #{searchserialno}
+         </if>
+         <if test="searchwarrantyno != null and searchwarrantyno !=''">
+                     AND E1.WRANTY_NO = #{searchwarrantyno}
+         </if>
+         <if test="searchimeino != null and searchimeino !=''">
+                     AND E1.IMEI_NO = #{searchimeino}
+         </if>
+          <if test="searchmacaddress != null and searchmacaddress !=''">
+                     AND E1.MAC_ADDR = #{searchmacaddress}
+         </if>
+          <if test="searchcreator != null and searchcreator !=''">
+                     AND E1.CURR_USER_ID = #{searchcreator}
+         </if>
+       <if test="searchcreatedate1 != null and searchcreatedate1 != ''" > 
+          AND E1.CRT_DT <![CDATA[  >=  ]]> TO_DATE(#{searchcreatedate1},'DD-MM-YYYY')
+        </if>
+        <if test="searchcreatedate2 != null and searchcreatedate2 != ''" > 
+          AND E1.CRT_DT <![CDATA[  <=  ]]>  TO_DATE(#{searchcreatedate2},'DD-MM-YYYY') 
+        </if>  
+          order by asset_id desc
+    </select>
+    
+    <select id="selectDetailList" parameterType="Map" resultType="EgovMap">
+      SELECT           
+                 Project1.ASSET_D_ID  ASSET_D_ID, 
+                 Project1.ASSET_ID  ASSET_ID, 
+                 Project1.BRAND_ID  BRAND_ID, 
+                 Project1.NAME1  NAME, 
+                 Project1.NAME  NAME1, 
+                 Project1.ASSET_D_REM  ASSET_D_REM, 
+                 Project1.STUS_ID  STUS_ID, 
+                 Project1.NAME2  NAME2, 
+                 Project1.TYPE_ID  TYPE_ID, 
+                 Project1.CODE_NAME  CODE_NAME, 
+                 Project1.UPD_DT  UPD_DT, 
+                 Project1.UPD_USER_ID  UPD_USER_ID, 
+                 Project1.USER_NAME  USER_NAME,
+                 Project1.NAME3  NAME3,
+                 Project1.VALU  VALU,
+                 Project1.ASSET_D_ITM_REM  ASSET_D_ITM_REM,
+                 Project1.ASSET_D_ITM_ID  ASSET_D_ITM_ID
+                 FROM ( SELECT 
+                     Extent1.ASSET_D_ID  ASSET_D_ID, 
+                     Extent1.STUS_ID  STUS_ID, 
+                     Extent1.ASSET_ID  ASSET_ID, 
+                     Extent1.TYPE_ID  TYPE_ID, 
+                     Extent1.BRAND_ID  BRAND_ID, 
+                     Extent1.UPD_USER_ID  UPD_USER_ID, 
+                     Extent1.UPD_DT  UPD_DT, 
+                     Extent1.NAME  NAME, 
+                     Extent1.ASSET_D_REM  ASSET_D_REM, 
+                     Extent2.CODE_NAME  CODE_NAME, 
+                     Extent3.NAME  NAME1, 
+                     Extent4.NAME  NAME2, 
+                     (select user_name from SYS0047M where USER_ID = Extent1.UPD_USER_ID) USER_NAME,
+                     Extent6.NAME AS NAME3,
+                     Extent6.VALU AS VALU,
+                     Extent6.ASSET_D_ITM_REM,
+                     Extent6.ASSET_D_ITM_ID
+                     FROM  LOG0051D  Extent1
+                     INNER JOIN SYS0013M  Extent2 ON Extent2.CODE_ID = Extent1.TYPE_ID
+                     INNER JOIN LOG0049M  Extent3 ON Extent3.BRAND_ID = Extent1.BRAND_ID
+                     INNER JOIN SYS0038M  Extent4 ON Extent4.STUS_CODE_ID = Extent1.STUS_ID
+                     INNER JOIN LOG0052D  Extent6 ON Extent6.ASSET_D_ID = Extent1.ASSET_D_ID
+                    WHERE  ( 1 = Extent1.STUS_ID )
+                    AND ( Extent1.ASSET_ID = #{assetid} )
+                    AND ( 0 = Extent6.DISAB ) ) Project1
+            ORDER BY Project1.ASSET_D_ID ASC,
+             Project1.ASSET_D_ID ASC
+    </select> 
+    
+    <select id="selectDealerList" parameterType="Map" resultType="EgovMap">
+          SELECT 
+               DEALER_ID CODE_ID  ,
+               DEALER_NRIC DEALER_NRIC  ,
+               DEALER_NAME CODE_NAME  ,
+               DEALER_EMAIL DEALER_EMAIL  ,
+               DEALER_STUS_ID DEALER_STUS_ID  ,
+               DEALER_BRNCH_ID DEALER_BRNCH_ID  ,
+               CRT_DT CRT_DT  ,
+               CRT_USER_ID CRT_USER_ID  ,
+               UPD_DT UPD_DT  ,
+               UPD_USER_ID UPD_USER_ID  ,
+               USER_ID USER_ID  ,
+               CUST_ID CUST_ID  ,
+               SBO_CODE SBO_CODE  
+          FROM SAL0030D 
+         WHERE DEALER_STUS_ID = #{groupCode}
+          ORDER BY DEALER_NAME ASC
+    </select>
+    
+    <select id="selectBrandList" parameterType="Map" resultType="EgovMap">
+         SELECT 
+               BRAND_ID CODE_ID  ,
+               Name CODE_NAME  ,
+               DISAB DISAB  ,
+               CRT_USER_ID CRT_USER_ID  ,
+               CRT_DT CRT_DT  ,
+               UPD_USER_ID UPD_USER_ID  ,
+               UPD_DT UPD_DT  
+          FROM LOG0049M 
+          WHERE  0 = DISAB
+          ORDER BY Name ASC
+    </select>
+    
+    <!-- type리스트  -->
+  <select id="selectTypeList" parameterType="Map" resultType="EgovMap">
+            SELECT     
+                 Project1.CODE_ID  CODE_ID, 
+                 Project1.CODE_MASTER_ID  CODE_MASTER_ID, 
+                 Project1.CODE_NAME  CODE_NAME, 
+                 Project1.CODE  CODE, 
+                 <!-- Project1.CODE_DESC  CODE_DESC, --> 
+                 Project1.DISAB  DISAB, 
+                 Project1.CRT_DT  CRT_DT, 
+                 Project1.CRT_USER_ID  CRT_USER_ID, 
+                 Project1.UPD_DT AS UPD_DT, 
+                 Project1.UPD_USER_ID  UPD_USER_ID, 
+                 Project1.OLD_CODE_ID  OLD_CODE_ID
+                 FROM ( SELECT 
+                     Extent2.CODE_ID  CODE_ID, 
+                     Extent2.CODE_MASTER_ID  CODE_MASTER_ID, 
+                     Extent2.CODE  CODE, 
+                     Extent2.CODE_NAME  CODE_NAME, 
+                     <!-- Extent2.CODE_DESC  CODE_DESC,  -->
+                     Extent2.DISAB  DISAB, 
+                     Extent2.CRT_DT  CRT_DT, 
+                     Extent2.CRT_USER_ID  CRT_USER_ID, 
+                     Extent2.UPD_DT  UPD_DT, 
+                     Extent2.UPD_USER_ID  UPD_USER_ID, 
+                     Extent2.OLD_CODE_ID  OLD_CODE_ID
+                     FROM SYS0014M Extent1
+                     INNER JOIN SYS0013M Extent2 ON (Extent2.CODE_ID = Extent1.CODE_ID) AND (0 = Extent2.DISAB)
+                     WHERE (0 = Extent1.DISAB) AND (Extent1.PARENT_CODE_ID = #{groupCode}) AND (Extent1.HRCHY_TYPE_ID = #{hrchytypeid})
+                 ) Project1
+                 ORDER BY Project1.CODE_NAME ASC
+    </select> 
+    
+    
+   <!-- Department리스트  -->
+    <select id="selectDepartmentList" parameterType="Map" resultType="EgovMap">   
+        SELECT 
+            DEPT_ID CODE_ID ,
+            DEPT_NAME CODE_NAME  
+            FROM SYS0040M 
+             WHERE  ( 1 = DEPT_STUS_ID )
+            AND ( 'tUser' = DEPT_TBL_USE )
+            AND ( 'fUserDepartmentID' = DEPT_FILD_USE )
+    </select> 
+   
+     <!-- Asset 마스터 인서트 -->
+    <insert id="insertMasterAsset" parameterType="Map">
+         INSERT INTO LOG0050M(
+            ASSET_ID
+          , STUS_ID
+          , CTGRY_ID 
+          , TYPE_ID  
+          , COLOR_ID
+          , BRAND_ID
+          , CURR_BRNCH_ID
+          , CURR_DEPT_ID
+          , CURR_USER_ID
+          , PURCHS_DT
+          , PURCHS_AMT
+          , IMEI_NO
+          , WRANTY_NO
+          , SERIAL_NO
+          , REF_NO
+          , ASSET_REM
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT
+          , NAME
+          , MAC_ADDR
+          , INVC_NO
+          , DEALER_ID
+         )  
+        VALUES (
+         #{inassetid}
+        ,#{masterstatus}
+        ,#{mastercategory} 
+        ,#{mastertype}
+        ,#{mastercolor}
+        ,#{masterbrand}
+        ,#{masterbreanch}
+        ,#{curr_dept_id}
+        ,#{curr_user_id}    
+        <!-- ,#{masterpurchasedate} -->
+        ,TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY')
+        ,#{masterpurchaseamount}      
+        ,#{masterimeino}
+        ,#{masterwarrantyno}  
+        ,#{masterserialno}  
+        ,#{masterrefno}
+        ,#{masterremark}
+        ,#{loginId}      
+        ,SYSDATE
+        ,#{loginId}
+        ,SYSDATE 
+        ,#{mastermodelname}
+        ,#{mastermacaddress}
+        ,#{masterinvoiceno}
+        ,#{masterdealer}
+        )
+    </insert>
+    <!-- Asset 디테일 인서트 -->
+    <insert id="insertDetailAsset" parameterType="Map">
+         INSERT INTO LOG0051D(
+            ASSET_D_ID
+          , STUS_ID
+          , ASSET_ID
+          , TYPE_ID
+          , BRAND_ID
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT
+          , NAME
+          ,ASSET_D_REM
+         )  
+        VALUES (
+         #{detailassetid}
+        ,#{detailstatus}
+        ,#{inassetid}
+        ,#{typeid} 
+        ,#{brandid}
+        ,#{crtuser_id}
+        ,SYSDATE
+        ,#{upuser_id}
+        ,SYSDATE
+        ,#{name1}    
+        ,#{assetDRem} 
+        )
+    </insert>
+    
+      <insert id="addAssetItm" parameterType="Map">
+      INSERT INTO LOG0052D
+      (
+        ASSET_D_ITM_ID,
+        DISAB,
+        ASSET_D_ID,
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT      
+      )
+        VALUES (
+        #{insAseetItemDid}
+        ,0
+        ,#{detailassetid} 
+        ,#{additemname}
+        ,#{additemvalue}
+        ,#{additemremark}
+        ,#{add_crtuser_id}
+        ,SYSDATE
+        ,#{add_upuser_id}
+        ,SYSDATE
+        )
+     </insert>    
+ 
+     <update id="updateItm" parameterType="Map">
+           UPDATE LOG0052D
+                    SET      
+                        NAME                   =#{name3},
+                        VALU            =#{valu},                               
+                        ASSET_D_ITM_REM              =#{assetDItmRem},
+                        UPD_USER_ID     =#{upuser_id},
+                        UPD_DT                =SYSDATE                                           
+                    WHERE  ASSET_D_ITM_ID        =#{assetDItmId}
+    </update> 
+    
+    <update id="updateAssetDetail" parameterType="Map">
+           UPDATE LOG0051D
+                    SET      
+                        TYPE_ID                   =#{codeName},
+                        BRAND_ID            =#{name}, 
+                        NAME=               #{name1}, 
+                        ASSET_D_REM =    #{assetDRem},                           
+                        UPD_USER_ID              =#{upuser_id},
+                        UPD_DT                      =SYSDATE                                       
+                    WHERE  ASSET_D_ID        =#{assetDId}
+    </update> 
+     
+    <update id="motifyAssetMng" parameterType="Map">
+           UPDATE LOG0050M
+                    SET      
+                        NAME                   =#{mastermodelname},
+                        COLOR_ID            =#{mastercolor},                               
+                        INVC_NO              =#{masterinvoiceno},                              
+                        DEALER_ID            =#{masterdealer},                             
+                        PURCHS_DT           =TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'),                             
+                        BRAND_ID             =#{masterbrand},                               
+                        PURCHS_AMT          =#{masterpurchaseamount},                                                    
+                        REF_NO                 =#{masterrefno},                            
+                        SERIAL_NO             =#{masterserialno},                                                                           
+                        WRANTY_NO           =#{masterwarrantyno},           
+                        MAC_ADDR              =#{mastermacaddress},                                                  
+                        IMEI_NO                 =#{masterimeino},                               
+                        ASSET_REM             =#{masterremark},
+                        UPD_USER_ID          =#{upd_user_id},
+                        UPD_DT                   = SYSDATE                            
+                    WHERE  ASSET_ID        =#{masterassetid}
+    </update>  
+    
+    
+   <update id="RemoveAssetDetail" parameterType="Map">
+           UPDATE LOG0051D
+                    SET      
+				            STUS_ID			     = 8    				       
+				          , UPD_USER_ID      =#{upd_user_id}
+				          , UPD_DT              = SYSDATE
+                    WHERE  ASSET_D_ID        =#{multyassetid}
+    </update>  
+    
+    <update id="RemoveAssetItem" parameterType="Map">
+           UPDATE LOG0052D
+                    SET      
+                            DISAB              = 1                           
+                          , UPD_USER_ID      =#{upd_user_id}
+                          , UPD_DT              = SYSDATE
+                    WHERE  ASSET_D_ITM_ID        =#{itemassetdid}
+    </update>   
+    
+    
+     <delete id="deleteAssetMng" parameterType="Map">
+        DELETE FROM LOG0050M 
+        WHERE ASSET_ID = #{masterassetid} 
+    </delete> 
+    
+    
+    
+    <select id="AssetCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_ID),0) + 1 from LOG0050M
+    </select>
+    <select id="AssetdetailCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_D_ID),0) + 1 from LOG0051D
+    </select>
+        <select id="AssetItemCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ASSET_D_ITM_ID),0) + 1 from LOG0052D
+    </select>
+    <select id="AssetCardIdSeq" parameterType="Map" resultType="Integer">
+         SELECT NVL(MAX(CARD_ID),0) + 1 FROM LOG0057M
+    </select>
+
+    <select id="selectAssetM" parameterType="Map" resultType="EgovMap">
+        SELECT 
+            ASSET_ID,
+            STUS_ID,
+            CTGRY_ID,
+            TYPE_ID,
+            COLOR_ID,
+            BRAND_ID,
+            CURR_BRNCH_ID,
+            CURR_DEPT_ID,
+            CURR_USER_ID,
+            PURCHS_DT,
+            PURCHS_AMT,
+            IMEI_NO,
+            WRANTY_NO,
+            SERIAL_NO,
+            REF_NO,
+            ASSET_REM,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT,
+            NAME,
+            MAC_ADDR,
+            INVC_NO,
+            DEALER_ID
+        FROM LOG0050M
+          WHERE ASSET_ID=#{assetid}
+    </select>
+    
+    <select id="selectAssetD" parameterType="Map" resultType="EgovMap">
+        SELECT
+                l51d.ASSET_D_ID,
+                l51d.STUS_ID,
+                l51d.ASSET_ID,
+                l51d.TYPE_ID,
+                l51d.BRAND_ID,
+                l51d.CRT_USER_ID,
+                l51d.CRT_DT,
+                l51d.UPD_USER_ID,
+                l51d.UPD_DT,
+                l51d.NAME,
+                l51d.ASSET_D_REM
+        FROM LOG0051D l51d, LOG0050M l50m
+         WHERE l51d.ASSET_ID  = l50m.ASSET_ID
+            AND  l50m.ASSET_ID = #{assetid}
+            AND  l51d.STUS_ID=1
+    </select>
+ 
+    <select id="selectAssetDItem" parameterType="Map" resultType="EgovMap">
+        SELECT
+                l52d.ASSET_D_ITM_ID,
+                l52d.DISAB,
+                l52d.ASSET_D_ID,
+                l52d.NAME,
+                l52d.VALU,
+                l52d.ASSET_D_ITM_REM,
+                l52d.CRT_USER_ID,
+                l52d.CRT_DT,
+                l52d.UPD_USER_ID,
+                l52d.UPD_DT
+            FROM LOG0052D l52d, LOG0051D l51d, LOG0050M l50m
+             WHERE l51d.ASSET_D_ID = l52d.ASSET_D_ID
+                    AND l51d.ASSET_ID =  l50m.ASSET_ID
+                    AND l50m.ASSET_ID = #{assetid}
+                    AND l51d.STUS_ID = 1
+                    AND l52d.DISAB = 0
+    </select>
+    
+  <insert id="insertCopyAssetM"  parameterType="Map">
+       INSERT INTO LOG0050M
+            (
+                ASSET_ID,
+                STUS_ID,
+                CTGRY_ID,
+                TYPE_ID,
+                COLOR_ID,
+                BRAND_ID,
+                CURR_BRNCH_ID,
+                CURR_DEPT_ID,
+                CURR_USER_ID,
+                PURCHS_DT,
+                PURCHS_AMT,
+                IMEI_NO,
+                WRANTY_NO,
+                SERIAL_NO,
+                REF_NO,
+                ASSET_REM,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT,
+                NAME,
+                MAC_ADDR,
+                INVC_NO,
+                DEALER_ID
+            )
+         SELECT 
+            #{newAssetId},
+            STUS_ID,
+            CTGRY_ID,
+            TYPE_ID,
+            COLOR_ID,
+            BRAND_ID,
+            42,
+            38,
+            0,
+            PURCHS_DT,
+            PURCHS_AMT,
+            IMEI_NO,
+            WRANTY_NO,
+            SERIAL_NO,
+            REF_NO,
+            ASSET_REM,
+            #{loginId},
+            SYSDATE,
+            #{loginId},
+            SYSDATE,
+            NAME,
+            MAC_ADDR,
+            INVC_NO,
+            DEALER_ID
+        FROM LOG0050M
+          WHERE ASSET_ID=#{assetid}
+    </insert>
+    
+    <insert id="insertCopyAssetCard" parameterType="Map">
+     INSERT INTO LOG0057M
+                 (
+                  CARD_ID,
+                  CARD_TYPE_ID,
+                  CARD_DOC_NO,
+                  ASSET_ID,
+                  QTY,
+                  BRNCH_ID,
+                  DEPT_ID,
+                  CRT_USER_ID,
+                  CRT_DT
+                 )
+                 VALUES
+                 (
+                  #{newAssetCardId},
+                  1226,
+                  LPAD(#{newAssetId}, 10 ,0),
+                  #{newAssetId},
+                  1,
+                  42,
+                  38,
+                  #{loginId},
+                   SYSDATE
+                    )
+    </insert>
+    
+    <insert id="insertCopyAssetD" parameterType="Map">
+    INSERT INTO LOG0051D
+            (
+            ASSET_D_ID,
+            STUS_ID,
+            ASSET_ID,
+            TYPE_ID,
+            BRAND_ID,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT,
+            NAME,
+            ASSET_D_REM
+             )
+            SELECT
+                #{newAssetDId},
+                STUS_ID,
+                #{newAssetId},
+                TYPE_ID,
+                BRAND_ID,
+                #{loginId},
+                SYSDATE,
+                #{loginId},
+                SYSDATE,
+                NAME,
+                ASSET_D_REM
+             FROM LOG0051D
+               WHERE ASSET_ID =#{assetid}
+                  AND ASSET_D_ID =#{assetDId}
+    </insert>
+     <insert id="insertCopyAssetDItmId" parameterType="Map">
+      INSERT INTO LOG0052D
+      (
+        ASSET_D_ITM_ID,
+        DISAB,
+        ASSET_D_ID,
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT      
+      )
+        SELECT
+        #{newAssetDItmId},
+        0,
+        #{newAssetDId},
+        NAME,
+        VALU,
+        ASSET_D_ITM_REM,
+        #{loginId},
+        SYSDATE,
+        #{loginId},
+        SYSDATE
+        FROM LOG0052D
+        WHERE ASSET_D_ID=#{assetDId}
+        AND   ASSET_D_ITM_ID=#{assetDItmId}
+     </insert>  
+    
+    
+    <select id="assetCardList"  parameterType="Map" resultType="EgovMap">
+    SELECT Project1.CARD_ID CARD_ID  ,
+       Project1.ASSET_ID ASSET_ID  ,
+       Project1.BRNCH_ID BRNCH_ID  ,
+       Project1.C1 C1  ,
+       Project1.CARD_DOC_NO CARD_DOC_NO  ,
+       Project1.CODE_NAME CODE_NAME  ,
+       Project1.CARD_TYPE_ID CARD_TYPE_ID  ,
+       Project1.CRT_DT CRT_DT  ,
+       Project1.CRT_USER_ID CRT_USER_ID  ,
+       Project1.USER_NAME USER_NAME  ,
+       Project1.DEPT_ID DEPT_ID  ,
+       Project1.C2 C2  ,
+       Project1.QTY QTY  
+  FROM ( SELECT Extent1.CARD_ID CARD_ID  ,
+                Extent1.CARD_TYPE_ID CARD_TYPE_ID  ,
+                Extent1.CARD_DOC_NO CARD_DOC_NO  ,
+                Extent1.ASSET_ID ASSET_ID  ,
+                Extent1.QTY QTY  ,
+                Extent1.BRNCH_ID BRNCH_ID  ,
+                Extent1.DEPT_ID DEPT_ID  ,
+                Extent1.CRT_USER_ID CRT_USER_ID  ,
+               TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+                Extent2.CODE_NAME CODE_NAME  ,
+                Extent3.USER_NAME USER_NAME  ,
+                CASE 
+                     WHEN ( Extent4.BRNCH_ID IS NOT NULL ) THEN Extent4.CODE
+                ELSE  ''
+                   END C1  ,
+                CASE 
+                     WHEN ( Extent5.DEPT_ID IS NOT NULL ) THEN Extent5.DEPT_NAME
+                ELSE  ''
+                   END C2  
+         FROM LOG0057M Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.CARD_TYPE_ID
+                JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                LEFT JOIN SYS0005M Extent4   ON Extent4.BRNCH_ID = Extent1.BRNCH_ID
+                LEFT JOIN SYS0040M Extent5   ON Extent5.DEPT_ID = Extent1.DEPT_ID
+          WHERE  Extent1.ASSET_ID = #{masterassetid}
+          ) Project1
+  ORDER BY Project1.CARD_ID DESC
+    
+    </select>
+    <insert  id ="insertAssetCardFrom" parameterType="Map">
+     INSERT INTO LOG0057M
+	           SELECT
+	           (SELECT MAX(CARD_ID)+1 FROM LOG0057M),
+	                    <if test="cardTypeId eq 'TR'.toString() ">
+                        1277,
+                        'TR'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'RT'.toString() ">
+                        1230,
+                        'RT'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'OB'.toString() ">
+                        1228,
+                        'OB'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'LS'.toString() ">
+                        1229,
+                        'LS'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+                        <if test="cardTypeId eq 'DE'.toString() ">
+                        1238,
+                        'DE'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+                        </if>
+	           ASSET_ID,
+	           -1,
+	           CURR_BRNCH_ID,
+	           CURR_DEPT_ID,
+	           #{loginId},
+	           SYSDATE
+           FROM  LOG0050M
+             WHERE ASSET_ID=#{masterassetid}
+    </insert> 
+    <insert  id ="insertAssetCardTo" parameterType="Map">
+     INSERT INTO LOG0057M
+           SELECT
+		           (SELECT MAX(CARD_ID)+1 FROM LOG0057M),
+		                <if test="cardTypeId eq 'TR'.toString() ">
+		                1277,
+		                'TR'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+		                </if>
+		                <if test="cardTypeId eq 'RT'.toString() ">
+		                1230,
+		                'RT'||TO_CHAR(SYSDATE,'DDMMYYYY'),
+		                </if>
+		           ASSET_ID,
+		           1,
+		           #{trnsbranchid},
+		           <choose>
+		                <when test="transdepartment !=null">
+				           #{transdepartment},
+		                </when>
+		                <otherwise>
+		                0,
+		                </otherwise>
+		           </choose>
+		           #{loginId},
+		           SYSDATE
+           FROM  LOG0050M
+            WHERE ASSET_ID=#{masterassetid}
+    </insert> 
+    <update id="updateAssetCard" parameterType="Map">
+        UPDATE LOG0050M
+			         SET CURR_BRNCH_ID = #{trnsbranchid},
+			          <if test="transdepartment !=null">
+			          CURR_DEPT_ID=#{transdepartment},
+			          </if>
+			          <if test="status !=null and status !=''">
+			          STUS_ID=#{status},
+			          </if>
+			          <if test="statusremark !=null and statusremark !=''">
+			          ASSET_REM=#{statusremark},
+			          </if>
+			             UPD_DT = SYSDATE
+			        WHERE   ASSET_ID =#{masterassetid}
+    
+    </update>
+</mapper>

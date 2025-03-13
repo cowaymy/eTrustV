@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.ServiceMileageApiServiceMapper">
+
+  <select id="getMileageClaimNo" parameterType="Map" resultType="egovMap">
+    SELECT MIL_CLM_NO
+    FROM SVC0137M
+    WHERE TO_CHAR(CLM_DT, 'YYYYMMDD') = #{checkInDate}
+        AND MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userName})
+  </select>
+
+  <select id="getMasterMileageClaimNo" parameterType="Map" resultType="integer">
+    SELECT SVC0137M_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertMasterClaimRecord" parameterType="Map">
+   INSERT INTO SVC0137M( MIL_CLM_NO
+                                     , MEM_ID
+                                     , CLM_DT
+                                     , CRT_BY
+                                     , UPD_BY
+                                     , CRT_DT
+                                     , UPD_DT
+   ) VALUES (  TO_NUMBER(#{MIL_CLM_NO})
+                  , TO_NUMBER(#{userID_ORG01})
+                  , TO_DATE(#{checkInDate}, 'YYYYMMDD')
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
+                  , SYSDATE
+                  , SYSDATE
+    )
+  </insert>
+
+  <insert id="updateExistingSubMileageClaim" parameterType="Map">
+    UPDATE SVC0138D SET DISB = 1
+    WHERE MIL_CLM_NO = #{MIL_CLM_NO}
+        AND SVC_NO = #{serviceNo}
+        AND MEM_ID = #{userID_ORG01}
+        AND TO_CHAR(CLM_DT, 'YYYYMMDD') = #{checkInDate}
+  </insert>
+
+  <insert id="insertSubMileageClaim" parameterType="Map">
+    INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
+                                      , MIL_CLM_NO
+                                      , SALES_ORD_ID
+                                      , SVC_NO
+                                      , MEM_ID
+                                      , CLM_DT
+                                      , LONGTITUDE
+                                      , LATITUDE
+                                      , CRT_BY
+                                      , UPD_BY
+                                      <if test="crtDt != null and crtDt != ''">
+                                        , CRT_DT
+                                        , UPD_DT
+                                      </if>
+
+    ) VALUES ( SVC0138D_SEQ.NEXTVAL
+                  , TO_NUMBER(#{MIL_CLM_NO})
+                  , (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+                  , #{serviceNo}
+                  , TO_NUMBER(#{userID_ORG01})
+                  , TO_DATE(#{checkInDate}, 'YYYYMMDD')
+                  , TO_NUMBER(#{longtitude})
+                  , TO_NUMBER(#{latitude})
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
+                  <if test="crtDt != null and crtDt != ''">
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                  </if>
+    )
+  </insert>
+
+  <select id="getBranchLocation" parameterType="Map" resultType="egovMap">
+     SELECT BRNCH_ID,
+                CODE,
+                LONGTITUDE,
+                LATITUDE
+     FROM SYS0005M
+     WHERE BRNCH_ID = (SELECT BRNCH
+                                    FROM ORG0001D
+                                    WHERE MEM_ID = #{userID_ORG01})
+  </select>
+
+  <insert id="insertSubDSCMileageClaim" parameterType="Map">
+    INSERT INTO SVC0138D ( MIL_CLM_SUB_NO
+                                      , MIL_CLM_NO
+                                      , SALES_ORD_ID
+                                      , SVC_NO
+                                      , MEM_ID
+                                      , CLM_DT
+                                      , LONGTITUDE
+                                      , LATITUDE
+                                      , MIL_REMARK
+                                      , CRT_BY
+                                      , UPD_BY
+                                      <if test="crtDt != null and crtDt != ''">
+                                        , CRT_DT
+                                        , UPD_DT
+                                      </if>
+    ) VALUES ( SVC0138D_SEQ.NEXTVAL
+                  , TO_NUMBER(#{MIL_CLM_NO})
+                  , '0'
+                  , 'S'
+                  , TO_NUMBER(#{userID_ORG01})
+                  , TO_DATE(#{checkInDate}, 'YYYYMMDD')
+                  , TO_NUMBER(#{dscLongtitude})
+                  , TO_NUMBER(#{dscLatitude})
+                  , #{branchID} || ' - ' || #{branchCode}
+                  , TO_NUMBER(#{userID_SYS47})
+                  , TO_NUMBER(#{userID_SYS47})
+                  <if test="crtDt != null and crtDt != ''">
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                    , TO_DATE(#{crtDt}, 'DD-Mon-YYYY HH24:MI:SS')
+                  </if>
+    )
+  </insert>
+</mapper>

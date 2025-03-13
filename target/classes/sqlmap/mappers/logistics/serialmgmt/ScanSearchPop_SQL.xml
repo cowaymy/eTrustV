@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.ScanSearchPopMapper">
+    <select id="scanSearchDataList" parameterType="Map" resultType="EgovMap">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.ScanSearchPopMapper.scanSearchDataList] - KR JUN */
+        SELECT A.SERIAL_NO
+			     , A.ITM_CODE
+			     , A.FROM_LOC_ID
+			     , A.TO_LOC_ID
+			     , A.TRNSC_TYPE
+			     , B.STK_DESC
+			     , C.CODE_NAME AS STK_TYPE_NM
+			     , F.WH_LOC_DESC AS FROM_WH_LOC_DESC
+			     , T.WH_LOC_DESC AS TO_WH_LOC_DESC
+		   FROM LOG0099D A
+		   LEFT OUTER JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
+           LEFT OUTER JOIN SYS0013M C ON B.STK_TYPE_ID = C.CODE_ID
+           LEFT OUTER JOIN SYS0028M F ON A.FROM_LOC_ID = F.WH_LOC_ID
+           LEFT OUTER JOIN SYS0028M T ON A.TO_LOC_ID = T.WH_LOC_ID
+        WHERE (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
+          AND (   A.DELVRY_NO = #{searchDeliveryNo}
+               OR A.REQST_NO = #{searchRequestNo}
+              )
+	        <if test="searchDeliveryItem !=null and searchDeliveryItem != ''">
+	            AND A.DELVRY_NO_ITM = #{searchDeliveryItem}
+	        </if>
+            <if test="searchRequestItem !=null and searchRequestItem != ''">
+                AND A.REQST_NO_ITM = #{searchRequestItem}
+            </if>
+            <if test="searchStatus !=null and searchStatus != ''">
+                AND A.IO_TYPE = #{searchStatus}
+            </if>
+            <if test="searchSerialNo !=null and searchSerialNo != ''">
+                AND A.SERIAL_NO = #{searchSerialNo}
+            </if>
+            <if test="searchTrnscType == 'AD'">
+                AND A.FROM_LOC_ID = #{searchFromLoc}
+            </if>
+        ORDER BY A.SERIAL_NO DESC
+    </select>
+</mapper>

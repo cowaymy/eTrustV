@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.refund.service.impl.RefundMapper">
+
+    <select id="selectRefundList" parameterType="Map" resultType="egovMap">
+SELECT A.ORD_ID                          ORD_ID,
+       A.ORD_NO                          ORD_NO,
+       A.WOR_NO                          WOR_NO,
+       A.TRX_DT                                TRX_DT,
+       A.CUST_NAME                       CUST_NAME,
+       SUM(A.AMT)                        AMT,
+       A.APP_TYPE                        APP_TYPE,
+       A.CANCL_DT                        CANCL_DT,
+       A.CANCL_MODE_CODE                 CANCL_MODE_CODE,
+       A.PAY_MODE_CODE                   PAY_MODE_CODE,
+       A.PAY_MODE                        PAY_MODE,
+       A.ISSUEBANKCODE                   ISSUE_BANK_CODE,
+       A.ISSUEBANK                       ISSUE_BANK,
+       A.BANK_ACC_ID                     BANK_ACC_ID,
+        (case a.pay_mode when 'Credit Card' then (case when SUBSTR(a.WOR_NO,1,3) = 'EOR' or SUBSTR(a.WOR_NO,1,3) = 'AOR' or SUBSTR(a.WOR_NO,1,3) = 'ADR' then '2710/204'|| ' - ' || a.issuebank else (acct.ACC_CODE || ' - ' || a.issuebank) end)else (acct.ACC_CODE || ' - ' || a.issuebank) end ) bank_acc_name,
+       <!--  A.BANK_ACC_NAME                   BANK_ACC_NAME,-->
+       A.BANKACCNO                       BANK_ACC_NO,
+       A.CC_HOLDER_NAME                  CC_HOLDER_NAME,
+       <![CDATA[
+       CASE WHEN(SUBSTR(A.WOR_NO,1,3) = 'EOR' AND ACCT.ACC_CODE = '2710/204') THEN (
+         CASE
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL  AND LENGTH(A.CC_NO) <> 16 THEN ''
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, 1, 4) || '-' || SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, 5, 2) || '**-****-' || SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, -4)
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NULL THEN CUSTCRC.CUST_CRC_TOKEN
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) <> 16 THEN ''
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN CUSTCRC.CUST_CRC_TOKEN
+           ELSE ''
+         END
+       )
+       WHEN CUSTTKN.CUST_CRC_TOKEN is not null then SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, 1, 4) || '-' || SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, 5, 2) || '**-****-' || SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, -4)
+       ELSE ''
+       END CUST_ORI_CRC_NO,
+       CASE WHEN(SUBSTR(A.WOR_NO,1,3) = 'EOR' AND ACCT.ACC_CODE = '2710/204') THEN (
+         CASE
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL  AND LENGTH(A.CC_NO) <> 16 THEN A.CC_NO
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN CUSTCRC.CUST_CRC_TOKEN || ' - A'||SUBSTR(A.CC_NO, 1, 4) || '-' || SUBSTR(A.CC_NO, 5, 4) || '-' || SUBSTR(A.CC_NO, 9, 4) || '-' || SUBSTR(A.CC_NO, -4)
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NULL THEN CUSTCRC.CUST_CRC_TOKEN
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) <> 16 THEN A.CC_NO
+           WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN 'B'||SUBSTR(A.CC_NO, 1, 4) || '-' || SUBSTR(A.CC_NO, 5, 4) || '-' || SUBSTR(A.CC_NO, 9, 4) || '-' || SUBSTR(A.CC_NO, -4)
+           ELSE ''
+         END
+       )
+       ELSE A.CC_NO
+       END CC_NO,
+       ]]>
+       A.APPROVENO                       APPROVE_NO,
+       A.REQUEST_STAGE                   REQUEST_STAGE,
+       A.CANCELREASON                    CANCEL_REASON,
+       A.CANCELREASONDESC                CANCEL_REASON_DESC,
+       A.REJECTID                        REJECT_ID,
+       A.PAY_TYPE                        PAY_TYPE,
+       A.PAYBRANCHCODE                   PAY_BRANCH_CODE,
+       A.INSTALL_STUS                    INSTALL_STUS,
+       A.OCRREMARK                       OCR_REMARK,
+       /*A.MAILADDRESS                     MAIL_ADDRESS,*/
+       A.MAIL_ADD1                            MAIL_ADD1,
+       A.MAIL_ADD2                            MAIL_ADD2,
+       A.MAIL_ADD3                            MAIL_ADD3,
+       A.AREA                                    MAIL_AREA,
+       A.POSTCODE                            MAIL_POSTCODE,
+       A.CITY                                    MAIL_CITY,
+       A.STATE                                  MAIL_STATE,
+       A.COUNTRY                            MAIL_COUNTRY,
+       A.INSTADDRESS                     INST_ADDRESS,
+       A.MOBILE_NO                       MOBILE_NO,
+       A.OFFICE_NO                       OFFICE_NO,
+       A.HOUSENO                         HOUSE_NO,
+       A.ORD_REM                         ORD_REM,
+       ( CASE
+           WHEN A.ATTACH = ' ' THEN 'No'
+           ELSE 'Yes'
+         END )                           ATTACH,
+       NVL(BANK.BANK_ID, 0)              ISSUEBANKID_PAYT_CHANNEL,
+       NVL(BANK.NAME, ' ')               ISSUEBANK_PAYT_CHANNEL,
+       NVL(CUSTACC.CUST_ACC_NO, ' ')     BANKACCNO_PAYT_CHANNEL,
+       NVL(CUSTCRC.CUST_CRC_OWNER, ' ')  CCHOLDERNAME_PAYT_CHANNEL,
+       NVL(CUSTCRC.CUST_ORI_CRC_NO, ' ') CCNO_PAYT_CHANNEL
+FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
+               SOM.SALES_ORD_NO                         ORD_NO,
+               PM.OR_NO                                 WOR_NO,
+               PT.TRX_DT                                  TRX_DT,
+               NVL(CR.SO_REQ_ATTACH, ' ')               ATTACH,
+               C.NAME                                   CUST_NAME,
+               TRUNC(PD.PAY_ITM_AMT, 2)                 AMT,
+               CD.CODE_NAME                             APP_TYPE,
+               CR.SO_REQ_UPD_DT                         CANCL_DT,
+               <!-- CR.SO_REQ_ACTUAL_CANCL_DT                CANCL_DT, -->
+               CR.SO_REQ_RESN_ID                        CANCL_MODE_CODE,
+               PDD.CODE_ID                               PAY_MODE_CODE,
+               PDD.CODE_NAME                            PAY_MODE,
+               NVL(B.CODE, ' ')                         ISSUEBANKCODE,
+               NVL(B.NAME, ' ')                         ISSUEBANK,
+               PD.PAY_ITM_BANK_ACC_ID          BANK_ACC_ID,
+               (SELECT ACC_DESC
+                FROM   SYS0001M
+                WHERE  ACC_ID = PD.PAY_ITM_BANK_ACC_ID) BANK_ACC_NAME,
+               ( CASE
+                   WHEN ACC.CUST_ACC_NO IS NULL THEN ' '
+                   ELSE ACC.CUST_ACC_NO
+                 END )                                  BANKACCNO,
+               NVL(PD.PAY_ITM_CC_HOLDER_NAME, ' ')      CC_HOLDER_NAME,
+               ( CASE
+                   WHEN PD.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
+                   ELSE PD.PAY_ITM_ORI_CC_NO
+                 END )                                  CC_NO,
+               NVL(PD.PAY_ITM_APPV_NO, ' ')             APPROVENO,
+               S.NAME                                   REQUEST_STAGE,
+               R.CODE                                   CANCELREASON,
+               R.RESN_DESC                              CANCELREASONDESC,
+               NVL(U1.USER_NAME, ' ')                   REJECTID,
+               PMT.CODE_NAME                            PAY_TYPE,
+               PMB.CODE                                 PAYBRANCHCODE,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN CCPS.NAME
+                   ELSE ' '
+                 END )                                  CCP_STUS,
+               ( CASE
+                   WHEN CR.SO_REQ_CUR_STUS_ID = 25 THEN 'COM'
+                   ELSE NVL(IES.CODE, ' ')
+                 END )                                  INSTALL_STUS,
+               CR.SO_REQ_REM                            OCRREMARK,
+               /*( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
+                                                  || ' '
+                                                  || NVL(CA1.STREET, '')
+                                                  || ' '
+                                                  || NVL(A.AREA, '')
+                                                  || ' '
+                                                  || NVL(A.POSTCODE, '')
+                                                  || ' '
+                                                  || NVL(A.CITY, '')
+                                                  || ' '
+                                                  || NVL(A.STATE, '')
+                                                  || ' '
+                                                  || NVL(A.COUNTRY, '')
+                   ELSE NVL(CA2.ADDR_DTL, '')
+                        || ' '
+                        || NVL(CA2.STREET, '')
+                        || ' '
+                        || NVL(B.AREA, '')
+                        || ' '
+                        || NVL(B.POSTCODE, '')
+                        || ' '
+                        || NVL(B.CITY, '')
+                        || ' '
+                        || NVL(B.STATE, '')
+                        || ' '
+                        || NVL(B.COUNTRY, '')
+                 END )                                  MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
+               NVL(CA3.ADDR_DTL, '')
+               || ' '
+               || NVL(CA3.STREET, '')
+               || ' '
+               || NVL(C.AREA, '')
+               || ' '
+               || NVL(C.POSTCODE, '')
+               || ' '
+               || NVL(C.CITY, '')
+               || ' '
+               || NVL(C.STATE, '')
+               || ' '
+               || NVL(C.COUNTRY, '')                    INSTADDRESS,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_M1, ' ')
+                   ELSE NVL(CP2.TEL_M1, ' ')
+                 END )                                  MOBILE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_O, ' ')
+                   ELSE NVL(CP2.TEL_O, ' ')
+                 END )                                  OFFICE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_R, ' ')
+                   ELSE NVL(CP2.TEL_R, ' ')
+                 END )                                  HOUSENO,
+               SOM.REM                                  ORD_REM
+        FROM   SAL0020D CR
+               JOIN SAL0001D SOM
+                 ON SOM.SALES_ORD_ID = CR.SO_REQ_SO_ID
+               JOIN SAL0045D I
+                 ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+               JOIN SAL0029D C
+                 ON C.CUST_ID = SOM.CUST_ID
+               JOIN SYS0013M CD
+                 ON CD.CODE_ID = SOM.APP_TYPE_ID
+               JOIN PAY0064D PM
+                 ON PM.SALES_ORD_ID = CR.SO_REQ_SO_ID
+               JOIN PAY0069D PT
+                 ON PT.TRX_ID = PM.TRX_ID
+               JOIN PAY0065D PD
+                 ON PD.PAY_ID = PM.PAY_ID
+               JOIN SYS0013M PMT
+                 ON PMT.CODE_ID = PM.TYPE_ID
+               JOIN SYS0005M PMB
+                 ON PMB.BRNCH_ID = PM.BRNCH_ID
+               JOIN SYS0013M PDD
+                 ON PDD.CODE_ID = PD.PAY_ITM_MODE_ID
+               JOIN SYS0038M S
+                 ON S.STUS_CODE_ID = CR.SO_REQ_CUR_STUS_ID
+               JOIN SYS0032M R
+                 ON R.RESN_ID = CR.SO_REQ_RESN_ID
+               LEFT JOIN SYS0047M U1
+                      ON U1.USER_ID = CR.SO_REQ_UPD_USER_ID
+               LEFT JOIN SAL0024D BM
+                      ON BM.CUST_BILL_ID = SOM.CUST_BILL_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA1
+                      ON CA1.CUST_ADD_ID = BM.CUST_BILL_ADD_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0027D CP1
+                      ON CP1.CUST_CNTC_ID = BM.CUST_BILL_CNT_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA2
+                      ON CA2.CUST_ADD_ID = SOM.CUST_ADD_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0027D CP2
+                      ON CP2.CUST_CNTC_ID = SOM.CUST_CNT_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0023D CA3
+                      ON CA3.CUST_ADD_ID = I.ADD_ID
+               LEFT JOIN SYS0004M B
+                      ON B.BANK_ID = PD.PAY_ITM_ISSU_BANK_ID
+               LEFT JOIN SAL0074D RPS
+                      ON RPS.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0022D ACC
+                      ON ACC.CUST_ACC_ID = RPS.CUST_ACC_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0102D CCP
+                      ON CCP.CCP_SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND SOM.APP_TYPE_ID = 66
+                         AND CCP.CCP_ID = FN_GET_SAL0102D_MAX_ID(SOM.SALES_ORD_ID, '1')
+               LEFT JOIN SYS0038M CCPS
+                      ON CCPS.STUS_CODE_ID = CCP.CCP_STUS_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0046D IE
+                      ON IE.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND IE.INSTALL_ENTRY_ID = FN_GET_SAL0046D_MAX_ID(SOM.SALES_ORD_ID, '3')
+               LEFT JOIN SYS0038M IES
+                      ON IES.STUS_CODE_ID = IE.STUS_CODE_ID
+               LEFT OUTER JOIN SYS0064M A
+                            ON A.AREA_ID = CA1.AREA_ID
+                               AND A.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M B
+                            ON B.AREA_ID = CA2.AREA_ID
+                               AND B.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M C
+                            ON C.AREA_ID = CA3.AREA_ID
+                               AND C.STATUS_ID = 1
+               JOIN (select * from SAL0020D CR1
+                       where CR1.SO_REQ_ID = (SELECT MAX(aa.SO_REQ_ID)
+                                                          from SAL0020D aa
+                                                          where
+                                                          aa.SO_REQ_SO_ID = CR1.SO_REQ_SO_ID))CR1
+                                                          on (CR1.SO_REQ_ID = CR.SO_REQ_ID)
+        WHERE  CR.SO_REQ_STUS_ID = 32
+               AND NOT EXISTS (SELECT B.MTCH_ID,
+                                      SUM(B.TOT_AMT)
+                               FROM   PAY0064D B
+                               WHERE  PM.PAY_ID = B.MTCH_ID
+                               GROUP  BY B.MTCH_ID
+                               HAVING SUM(B.TOT_AMT) <![CDATA[ <> ]]> PM.TOT_AMT)
+               <!-- AND ( ( TRUNC(CR.SO_REQ_UPD_DT) = TRUNC(SYSDATE)
+                       AND CR.SO_REQ_RESN_ID IN ( 1798, 1997 ) )
+                      OR ( TRUNC(CR.SO_REQ_UPD_DT) = TRUNC(SYSDATE - 1)
+                           AND CR.SO_REQ_RESN_ID IN ( 1996, 1998 ) ) ) -->
+        UNION ALL
+        SELECT SOM.SALES_ORD_ID                         ORD_ID,
+               SOM.SALES_ORD_NO                         ORD_NO,
+               PM.OR_NO                                 WOR_NO,
+               PT.TRX_DT                                TRX_DT,
+               NVL(CR.SO_REQ_ATTACH, ' ')               ATTACH,
+               C.NAME                                   CUST_NAME,
+               TRUNC(PD.PAY_ITM_AMT, 2)                 AMT,
+               CD.CODE_NAME                             APP_TYPE,
+               TERM.TRMNAT_CRT_DT                       CANCL_DT,
+               CR.SO_REQ_RESN_ID                        CANCL_MODE_CODE,
+               PDD.CODE_ID                               PAY_MODE_CODE,
+               PDD.CODE_NAME                            PAY_MODE,
+               COALESCE(B.CODE, ' ')                    ISSUEBANKCODE,
+               COALESCE(B.NAME, ' ')                    ISSUEBANK,
+               PD.PAY_ITM_BANK_ACC_ID              BANK_ACC_ID,
+               (SELECT ACC_DESC
+                FROM   SYS0001M
+                WHERE  ACC_ID = PD.PAY_ITM_BANK_ACC_ID) BANK_ACC_NAME,
+               ( CASE
+                   WHEN ACC.CUST_ACC_NO IS NULL THEN ' '
+                   ELSE ACC.CUST_ACC_NO
+                 END )                                  BANKACCNO,
+               COALESCE(PD.PAY_ITM_CC_HOLDER_NAME, ' ') CC_HOLDER_NAME,
+               ( CASE
+                   WHEN PD.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
+                   ELSE PD.PAY_ITM_ORI_CC_NO
+                 END )                                  CC_NO,
+               COALESCE(PD.PAY_ITM_APPV_NO, ' ')        APPROVENO,
+               S.NAME                                   REQUEST_STAGE,
+               RC.CODE                                  CANCELREASON,
+               RC.RESN_DESC                             CANCELREASONDESC,
+               COALESCE(U1.USER_NAME, ' ')              REJECTID,
+               PMT.CODE_NAME                            PAY_TYPE,
+               PMB.CODE                                 PAYBRANCHCODE,
+               NVL(SC.NAME, ' ')                        CCP_STUS,
+               COALESCE(IES.CODE, ' ')                  INSTALL_STUS,
+               CON.CNFM_REM                             OCRREMARK,
+               /*( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
+                                                  || ' '
+                                                  || NVL(CA1.STREET, '')
+                                                  || ' '
+                                                  || NVL(A.AREA, '')
+                                                  || ' '
+                                                  || NVL(A.POSTCODE, '')
+                                                  || ' '
+                                                  || NVL(A.CITY, '')
+                                                  || ' '
+                                                  || NVL(A.STATE, '')
+                                                  || ' '
+                                                  || NVL(A.COUNTRY, '')
+                   ELSE NVL(CA2.ADDR_DTL, '')
+                        || ' '
+                        || NVL(CA2.STREET, '')
+                        || ' '
+                        || NVL(B.AREA, '')
+                        || ' '
+                        || NVL(B.POSTCODE, '')
+                        || ' '
+                        || NVL(B.CITY, '')
+                        || ' '
+                        || NVL(B.STATE, '')
+                        || ' '
+                        || NVL(B.COUNTRY, '')
+                 END )                                  MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
+               NVL(CA3.ADDR_DTL, '')
+               || ' '
+               || NVL(CA3.STREET, '')
+               || ' '
+               || NVL(C.AREA, '')
+               || ' '
+               || NVL(C.POSTCODE, '')
+               || ' '
+               || NVL(C.CITY, '')
+               || ' '
+               || NVL(C.STATE, '')
+               || ' '
+               || NVL(C.COUNTRY, '')                    INSTADDRESS,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_M1, ' ')
+                   ELSE NVL(CP2.TEL_M1, ' ')
+                 END )                                  MOBILE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_O, ' ')
+                   ELSE NVL(CP2.TEL_O, ' ')
+                 END )                                  OFFICE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_R, ' ')
+                   ELSE NVL(CP2.TEL_R, ' ')
+                 END )                                  HOUSENO,
+               TERM.TRMNAT_REM                          ORD_REM
+        FROM   SAL0086D TERM
+               JOIN SAL0079D CON
+                 ON CON.CNFM_ORD_ID = TERM.TRMNAT_ORD_ID
+               JOIN SYS0038M S
+                 ON S.STUS_CODE_ID = CON.CNFM_STUS_ID
+               JOIN SAL0001D SOM
+                 ON SOM.SALES_ORD_ID = TERM.TRMNAT_ORD_ID
+               JOIN SAL0020D CR
+                 ON CR.SO_REQ_SO_ID = SOM.SALES_ORD_ID
+               JOIN SYS0013M CD
+                 ON CD.CODE_ID = SOM.APP_TYPE_ID
+               JOIN SAL0045D I
+                 ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+               JOIN SAL0029D C
+                 ON C.CUST_ID = SOM.CUST_ID
+               JOIN PAY0064D PM
+                 ON PM.SALES_ORD_ID = TERM.TRMNAT_ORD_ID
+               JOIN PAY0069D PT
+                 ON PT.TRX_ID = PM.TRX_ID
+               JOIN SYS0005M PMB
+                 ON PMB.BRNCH_ID = PM.BRNCH_ID
+               JOIN SYS0013M PMT
+                 ON PMT.CODE_ID = PM.TYPE_ID
+               JOIN PAY0065D PD
+                 ON PD.PAY_ID = PM.PAY_ID
+               JOIN SYS0013M PDD
+                 ON PDD.CODE_ID = PD.PAY_ITM_MODE_ID
+               JOIN SYS0032M RC
+                 ON RC.RESN_ID = TERM.TRMNAT_RESN_ID
+               LEFT JOIN SYS0047M U1
+                      ON U1.USER_ID = TERM.TRMNAT_CRT_USER_ID
+               JOIN SYS0038M SC
+                 ON SC.STUS_CODE_ID = TERM.TRMNAT_STUS_ID
+               LEFT JOIN SAL0024D BM
+                      ON BM.CUST_BILL_ID = SOM.CUST_BILL_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA1
+                      ON CA1.CUST_ADD_ID = BM.CUST_BILL_ADD_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0027D CP1
+                      ON CP1.CUST_CNTC_ID = BM.CUST_BILL_CNT_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA2
+                      ON CA2.CUST_ADD_ID = SOM.CUST_ADD_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0027D CP2
+                      ON CP2.CUST_CNTC_ID = SOM.CUST_CNT_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0023D CA3
+                      ON CA3.CUST_ADD_ID = I.ADD_ID
+               LEFT JOIN SYS0004M B
+                      ON B.BANK_ID = PD.PAY_ITM_ISSU_BANK_ID
+               LEFT JOIN SAL0074D RPS
+                      ON RPS.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND SOM.APP_TYPE_ID = 66
+                         AND RPS.SVC_CNTRCT_ID <![CDATA[ > ]]> 0
+               LEFT JOIN SAL0022D ACC
+                      ON ACC.CUST_ACC_ID = RPS.CUST_ACC_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0046D IE
+                      ON IE.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND IE.INSTALL_ENTRY_ID IN FN_GET_SAL0046D_MAX_ID(SOM.SALES_ORD_ID, '3')
+               LEFT JOIN SYS0038M IES
+                      ON IES.STUS_CODE_ID = IE.STUS_CODE_ID
+               LEFT OUTER JOIN SYS0064M A
+                            ON A.AREA_ID = CA1.AREA_ID
+                               AND A.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M B
+                            ON B.AREA_ID = CA2.AREA_ID
+                               AND B.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M C
+                            ON C.AREA_ID = CA3.AREA_ID
+                               AND C.STATUS_ID = 1
+        WHERE  PM.TYPE_ID = 1308
+               AND NOT EXISTS (SELECT B.MTCH_ID,
+                                      SUM(B.TOT_AMT)
+                               FROM   PAY0064D B
+                               WHERE  PM.PAY_ID = B.MTCH_ID
+                               GROUP  BY B.MTCH_ID
+                               HAVING SUM(B.TOT_AMT) <![CDATA[ <> ]]> PM.TOT_AMT)
+               <!-- AND ( TRUNC(TERM.TRMNAT_CRT_DT) = TRUNC(SYSDATE - 1)
+                     AND TERM.TRMNAT_RESN_ID = 2127 )  -->
+               AND TERM.TRMNAT_RESN_ID = 2127
+        UNION ALL
+        SELECT SOM.SALES_ORD_ID                     ORD_ID,
+               SOM.SALES_ORD_NO                     ORD_NO,
+               ' '                                  WOR_NO,
+               NULL                             TRX_DT,
+               ' '                                  ATTACH,
+               C.NAME                               CUST_NAME,
+               TRUNC(( SUM(TL.TRADE_AMT) * -1 ), 2) AMT,
+               CD.CODE_NAME                         APP_TYPE,
+               SOE.SO_EXCHG_CRT_DT                  CANCL_DT,
+               0                                   CANCL_MODE_CODE,
+               0                                   PAY_MODE_CODE,
+               ' '                                  PAY_MODE,
+               ' '                                  ISSUEBANKCODE,
+               ' '                                  ISSUEBANK,
+               0                                  BANK_ACC_ID,
+               ' '                                  BANK_ACC_NAME,
+               ' '                                  BANKACCNO,
+               ' '                                  CC_HOLDER_NAME,
+               ' '                                  CC_NO,
+               ' '                                  APPROVENO,
+               SC.NAME                              REQUEST_STAGE,
+               RC.CODE                              CANCELREASON,
+               RC.RESN_DESC                         CANCELREASONDESC,
+               COALESCE(U1.USER_NAME, ' ')          REJECTID,
+               ' '                                  PAY_TYPE,
+               ' '                                  PAYBRANCHCODE,
+               NVL(SC.NAME, ' ')                    CCP_STUS,
+               COALESCE(IES.CODE, ' ')              INSTALL_STUS,
+               COALESCE(SOE.SO_EXCHG_REM, ' ')      OCRREMARK,
+               /*( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADDR_DTL, '')
+                                                  || ' '
+                                                  || NVL(CA1.STREET, '')
+                                                  || ' '
+                                                  || NVL(A.AREA, '')
+                                                  || ' '
+                                                  || NVL(A.POSTCODE, '')
+                                                  || ' '
+                                                  || NVL(A.CITY, '')
+                                                  || ' '
+                                                  || NVL(A.STATE, '')
+                                                  || ' '
+                                                  || NVL(A.COUNTRY, '')
+                   ELSE NVL(CA2.ADDR_DTL, '')
+                        || ' '
+                        || NVL(CA2.STREET, '')
+                        || ' '
+                        || NVL(B.AREA, '')
+                        || ' '
+                        || NVL(B.POSTCODE, '')
+                        || ' '
+                        || NVL(B.CITY, '')
+                        || ' '
+                        || NVL(B.STATE, '')
+                        || ' '
+                        || NVL(B.COUNTRY, '')
+                 END )                              MAILADDRESS,*/
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD1 IS NULL THEN CA1.ADDR_DTL ELSE NVL(CA1.ADD1, '') END) ELSE
+                   (CASE WHEN CA2.ADD1 IS NULL THEN CA2.ADDR_DTL ELSE NVL(CA2.ADD1, '') END) END MAIL_ADD1,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (CASE WHEN CA1.ADD2 IS NULL THEN CA1.STREET ELSE NVL(CA1.ADD2, '') END) ELSE
+                   (CASE WHEN CA2.ADD2 IS NULL THEN CA2.STREET ELSE NVL(CA2.ADD2, '') END) END MAIL_ADD2,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CA1.ADD3, '')
+                   ELSE NVL(CA2.ADD3, '') END MAIL_ADD3,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '') || ' ' || NVL(A.POSTCODE, '') || ' ' || NVL(A.CITY, '') || ' ' || NVL(A.STATE, '') || ' ' || NVL(A.COUNTRY, ''))
+                   ELSE (NVL(B.AREA, '') || ' ' || NVL(B.POSTCODE, '') || ' ' || NVL(B.CITY, '') || ' ' || NVL(B.STATE, '') || ' ' || NVL(B.COUNTRY, '')) END MAIL_ADD4,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.AREA, '')) ELSE (NVL(B.AREA, '')) END AREA,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.POSTCODE, '')) ELSE (NVL(B.POSTCODE, '')) END POSTCODE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.CITY, '')) ELSE (NVL(B.CITY, '')) END CITY,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.STATE, '')) ELSE (NVL(B.STATE, '')) END STATE,
+               CASE WHEN SOM.APP_TYPE_ID = 66 THEN (NVL(A.COUNTRY, '')) ELSE (NVL(B.COUNTRY, '')) END COUNTRY,
+               NVL(CA3.ADDR_DTL, '')
+               || ' '
+               || NVL(CA3.STREET, '')
+               || ' '
+               || NVL(C.AREA, '')
+               || ' '
+               || NVL(C.POSTCODE, '')
+               || ' '
+               || NVL(C.CITY, '')
+               || ' '
+               || NVL(C.STATE, '')
+               || ' '
+               || NVL(C.COUNTRY, '')                INSTADDRESS,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_M1, ' ')
+                   ELSE NVL(CP2.TEL_M1, ' ')
+                 END )                              MOBILE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_O, ' ')
+                   ELSE NVL(CP2.TEL_O, ' ')
+                 END )                              OFFICE_NO,
+               ( CASE
+                   WHEN SOM.APP_TYPE_ID = 66 THEN NVL(CP1.TEL_R, ' ')
+                   ELSE NVL(CP2.TEL_R, ' ')
+                 END )                              HOUSENO,
+               COALESCE(SOM.REM, ' ')               ORD_REM
+        FROM   SAL0004D SOE
+               JOIN SYS0038M SC
+                 ON SC.STUS_CODE_ID = SOE.SO_EXCHG_STUS_ID
+               JOIN SAL0001D SOM
+                 ON SOM.SALES_ORD_ID = SOE.SO_ID
+               JOIN SYS0013M CD
+                 ON CD.CODE_ID = SOM.APP_TYPE_ID
+               JOIN SAL0029D C
+                 ON C.CUST_ID = SOM.CUST_ID
+               JOIN PAY0035D TL
+                 ON TRADE_SO_ID = SOM.SALES_ORD_ID
+               JOIN SAL0045D I
+                 ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+               JOIN SYS0032M RC
+                 ON RC.RESN_ID = SOE.SO_EXCHG_RESN_ID
+               LEFT JOIN SYS0047M U1
+                      ON U1.USER_ID = SOE.SO_EXCHG_CRT_USER_ID
+               LEFT JOIN SAL0024D BM
+                      ON BM.CUST_BILL_ID = SOM.CUST_BILL_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA1
+                      ON CA1.CUST_ADD_ID = BM.CUST_BILL_ADD_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0027D CP1
+                      ON CP1.CUST_CNTC_ID = BM.CUST_BILL_CNT_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0023D CA2
+                      ON CA2.CUST_ADD_ID = SOM.CUST_ADD_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0027D CP2
+                      ON CP2.CUST_CNTC_ID = SOM.CUST_CNT_ID
+                         AND SOM.APP_TYPE_ID <![CDATA[ <> ]]> 66
+               LEFT JOIN SAL0023D CA3
+                      ON CA3.CUST_ADD_ID = I.ADD_ID
+               LEFT JOIN SAL0074D RPS
+                      ON RPS.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND SOM.APP_TYPE_ID = 66
+                         AND RPS.SVC_CNTRCT_ID <![CDATA[ > ]]> 0
+               LEFT JOIN SAL0022D ACC
+                      ON ACC.CUST_ACC_ID = RPS.CUST_ACC_ID
+                         AND SOM.APP_TYPE_ID = 66
+               LEFT JOIN SAL0046D IE
+                      ON IE.SALES_ORD_ID = SOM.SALES_ORD_ID
+                         AND IE.INSTALL_ENTRY_ID IN FN_GET_SAL0046D_MAX_ID(SOM.SALES_ORD_ID, '3')
+               LEFT JOIN SYS0038M IES
+                      ON IES.STUS_CODE_ID = IE.STUS_CODE_ID
+               LEFT OUTER JOIN SYS0064M A
+                            ON A.AREA_ID = CA1.AREA_ID
+                               AND A.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M B
+                            ON B.AREA_ID = CA2.AREA_ID
+                               AND B.STATUS_ID = 1
+               LEFT OUTER JOIN SYS0064M C
+                            ON C.AREA_ID = CA3.AREA_ID
+                               AND C.STATUS_ID = 1
+        WHERE  SOE.SO_EXCHG_TYPE_ID = 283
+               AND SOE.SO_EXCHG_STUS_ID = 4
+               AND ( SOE.SO_CUR_STUS_ID = 23
+                      OR SOE.SO_CUR_STUS_ID = 24 )
+               AND SOE.SO_EXCHG_OLD_APP_TYPE_ID IN ( 67, 68 )
+               AND SOM.PV_MONTH <![CDATA[ > ]]> 0
+               AND SOM.PV_YEAR <![CDATA[ > ]]> 0
+               <!-- AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ > ]]> TO_DATE('10/01/2014', 'MM/DD/YYYY')
+               AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ < ]]> TRUNC(SYSDATE)  -->
+        GROUP  BY SOM.SALES_ORD_ID,
+                  SOM.SALES_ORD_NO,
+                  C.NAME,
+                  CD.CODE_NAME,
+                  SOE.SO_EXCHG_CRT_DT,
+                  SC.NAME,
+                  RC.CODE,
+                  RC.RESN_DESC,
+                  U1.USER_NAME,
+                  IES.CODE,
+                  SOE.SO_EXCHG_REM,
+                  SOM.APP_TYPE_ID,
+                  CA1.ADD1,
+                  CA1.ADD2,
+                  CA1.ADD3,
+                  CA1.ADDR_DTL,
+                  CA1.STREET,
+                  A.AREA,
+                  A.POSTCODE,
+                  A.CITY,
+                  A.STATE,
+                  A.COUNTRY,
+                  CA2.ADD1,
+                  CA2.ADD2,
+                  CA2.ADD3,
+                  CA2.ADDR_DTL,
+                  CA2.STREET,
+                  B.AREA,
+                  B.POSTCODE,
+                  B.CITY,
+                  B.STATE,
+                  B.COUNTRY,
+                  CA3.ADDR_DTL,
+                  CA3.STREET,
+                  C.AREA,
+                  C.POSTCODE,
+                  C.CITY,
+                  C.STATE,
+                  C.COUNTRY,
+                  CP1.TEL_M1,
+                  CP1.TEL_O,
+                  CP1.TEL_R,
+                  CP2.TEL_M1,
+                  CP2.TEL_O,
+                  CP2.TEL_R,
+                  SOM.REM
+        HAVING TRUNC(SUM(TL.TRADE_AMT), 2) <![CDATA[ < ]]> 0) A
+       LEFT JOIN SAL0074D RPS
+              ON RPS.SALES_ORD_ID = A.ORD_ID
+                 AND RPS.STUS_CODE_ID = 1
+       LEFT JOIN SYS0004M BANK
+              ON BANK.BANK_ID = RPS.BANK_ID
+       LEFT JOIN SAL0022D CUSTACC
+              ON CUSTACC.CUST_ACC_ID = RPS.CUST_ACC_ID
+       LEFT JOIN SAL0028D CUSTCRC
+              ON CUSTCRC.CUST_CRC_ID = RPS.CUST_CRC_ID
+               left join SYS0001M acct on acct.ACC_id = a.bank_acc_id
+       LEFT JOIN (
+         SELECT *
+         FROM SAL0028D A
+         INNER JOIN (
+           SELECT MAX(CUST_CRC_ID) CUST_CRC_ID
+           FROM SAL0028D
+           WHERE CUST_CRC_TOKEN IS NOT NULL
+           GROUP BY CUST_CRC_TOKEN
+         ) B
+           ON A.CUST_CRC_ID = B.CUST_CRC_ID
+       ) CUSTTKN
+              ON A.CC_NO = CUSTTKN.CUST_CRC_TOKEN
+WHERE  A.WOR_NO NOT LIKE 'ROR%'
+       AND A.ORD_ID NOT IN (SELECT SALES_ORD_ID FROM   PAY0045D)
+       <if test="startDt != null and startDt != ''">
+            <![CDATA[
+            AND TRUNC(A.CANCL_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
+            ]]>
+       </if>
+       <if test="endDt != null and endDt != ''">
+            <![CDATA[
+            AND TRUNC(A.CANCL_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
+            ]]>
+       </if>
+       <if test="custName != null and custName != ''">
+            AND A.CUST_NAME LIKE '%' || #{custName} || '%'
+       </if>
+       <if test="salesOrdNo != null and salesOrdNo != ''">
+            AND A.ORD_NO = #{salesOrdNo}
+        </if>
+        <if test="payMode != null and payMode != ''">
+		    AND A.PAY_MODE_CODE IN
+		<foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	    </if>
+	    <if test="cancelMode != null and cancelMode != ''">
+		    AND A.CANCL_MODE_CODE IN
+		<foreach item="item" collection="cancelMode" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		</if>
+GROUP  BY A.ORD_ID,
+          A.ORD_NO,
+          A.WOR_NO,
+          A.TRX_DT,
+          A.CUST_NAME,
+          A.APP_TYPE,
+          A.CANCL_DT,
+          A.CANCL_MODE_CODE,
+          A.PAY_MODE_CODE,
+          A.PAY_MODE,
+          A.ISSUEBANKCODE,
+          A.ISSUEBANK,
+          A.BANK_ACC_ID,
+          A.BANK_ACC_NAME,
+          A.BANKACCNO,
+          A.CC_HOLDER_NAME,
+          <![CDATA[
+          CASE WHEN(SUBSTR(A.WOR_NO,1,3) = 'EOR' AND ACCT.ACC_CODE = '2710/204') THEN (
+            CASE
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL  AND LENGTH(A.CC_NO) <> 16 THEN ''
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, 1, 4) || '-' || SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, 5, 2) || '**-****-' || SUBSTR(CUSTCRC.CUST_ORI_CRC_NO, -4)
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NULL THEN CUSTCRC.CUST_CRC_TOKEN
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) <> 16 THEN ''
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN CUSTCRC.CUST_CRC_TOKEN
+              ELSE ''
+            END
+          )
+          WHEN CUSTTKN.CUST_CRC_TOKEN is not null then SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, 1, 4) || '-' || SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, 5, 2) || '**-****-' || SUBSTR(CUSTTKN.CUST_ORI_CRC_NO, -4)
+          ELSE ''
+          END,
+          CASE WHEN(SUBSTR(A.WOR_NO,1,3) = 'EOR' AND ACCT.ACC_CODE = '2710/204') THEN (
+            CASE
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL  AND LENGTH(A.CC_NO) <> 16 THEN A.CC_NO
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN CUSTCRC.CUST_CRC_TOKEN || ' - A'||SUBSTR(A.CC_NO, 1, 4) || '-' || SUBSTR(A.CC_NO, 5, 4) || '-' || SUBSTR(A.CC_NO, 9, 4) || '-' || SUBSTR(A.CC_NO, -4)
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NOT NULL AND A.CC_NO IS NULL THEN CUSTCRC.CUST_CRC_TOKEN
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) <> 16 THEN A.CC_NO
+              WHEN CUSTCRC.CUST_CRC_TOKEN IS NULL AND A.CC_NO IS NOT NULL AND LENGTH(A.CC_NO) = 16 THEN 'B'||SUBSTR(A.CC_NO, 1, 4) || '-' || SUBSTR(A.CC_NO, 5, 4) || '-' || SUBSTR(A.CC_NO, 9, 4) || '-' || SUBSTR(A.CC_NO, -4)
+              ELSE ''
+            END
+          )
+          ELSE A.CC_NO
+          END,
+          ]]>
+          A.APPROVENO,
+          A.REQUEST_STAGE,
+          A.CANCELREASON,
+          A.CANCELREASONDESC,
+          A.REJECTID,
+          A.INSTALL_STUS,
+          A.OCRREMARK,
+          /*A.MAILADDRESS,*/
+          A.MAIL_ADD1,
+          A.MAIL_ADD2,
+          A.MAIL_ADD3,
+          A.AREA,
+          A.POSTCODE,
+          A.CITY,
+          A.STATE,
+          A.COUNTRY,
+          A.INSTADDRESS,
+          A.PAY_TYPE,
+          A.PAYBRANCHCODE,
+          A.MOBILE_NO,
+          A.HOUSENO,
+          A.OFFICE_NO,
+          A.ORD_REM,
+          A.ATTACH,
+          BANK.BANK_ID,
+          BANK.NAME,
+          CUSTACC.CUST_ACC_NO,
+          CUSTCRC.CUST_CRC_OWNER,
+          CUSTCRC.CUST_ORI_CRC_NO,
+           acct.ACC_CODE
+ORDER  BY A.ORD_ID
+    </select>
+
+    <!-- Batch Refund Same Query -->
+    <select id="selectRefundInfo" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.BATCH_ID BATCH_ID  ,
+       Limit1.BATCH_STUS_ID BATCH_STUS_ID  ,
+       Limit1.NAME NAME  ,
+       Limit1.CNFM_USER_ID CNFM_USER_ID  ,
+       Limit1.C1 C1  ,
+       (CASE Limit1.CNFM_DT
+                WHEN '01/01/1900 00:00' THEN '-'
+                ELSE Limit1.CNFM_DT END) AS CNFM_DT  ,
+       Limit1.CNFM_STUS_ID CNFM_STUS_ID  ,
+       Limit1.NAME1 NAME1  ,
+       Limit1.CNVR_USER_ID CNVR_USER_ID  ,
+       Limit1.C2 C2  ,
+       (CASE Limit1.CNVR_DT
+                WHEN '01/01/1900 00:00' THEN '-'
+                ELSE Limit1.CNVR_DT END) AS CNVR_DT  ,
+       Limit1.CRT_DT CRT_DT  ,
+       Limit1.CRT_USER_ID CRT_USER_ID  ,
+       Limit1.USER_NAME USER_NAME  ,
+       Limit1.REFUND_MODE_ID REFUND_MODE_ID  ,
+       Limit1.CODE_NAME CODE_NAME  ,
+       Limit1.UPD_DT UPD_DT  ,
+       Limit1.USERNAME1 USERNAME1  ,
+       Limit1.UPD_USER_ID UPD_USER_ID  ,
+       Limit1.BATCH_REFUND_TYPE BATCH_REFUND_TYPE  ,
+       Limit1.BATCH_REFUND_CUST_TYPE BATCH_REFUND_CUST_TYPE
+  FROM ( SELECT Extent1.BATCH_ID BATCH_ID  ,
+                Extent1.REFUND_MODE_ID REFUND_MODE_ID  ,
+                Extent1.BATCH_STUS_ID BATCH_STUS_ID  ,
+                Extent1.CNFM_STUS_ID CNFM_STUS_ID  ,
+                Extent1.CRT_USER_ID CRT_USER_ID  ,
+                TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY HH24:MI') AS CRT_DT  ,
+                Extent1.UPD_USER_ID UPD_USER_ID  ,
+                TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY HH24:MI') AS UPD_DT  ,
+                TO_CHAR(Extent1.CNFM_DT, 'DD/MM/YYYY HH24:MI') AS CNFM_DT  ,
+                TO_CHAR(Extent1.CNVR_DT, 'DD/MM/YYYY HH24:MI') AS CNVR_DT  ,
+                Extent1.CNFM_USER_ID CNFM_USER_ID  ,
+                Extent1.CNVR_USER_ID CNVR_USER_ID  ,
+                Extent1.BATCH_REFUND_TYPE BATCH_REFUND_TYPE  ,
+                Extent1.BATCH_REFUND_CUST_TYPE BATCH_REFUND_CUST_TYPE  ,
+                Extent2.CODE_NAME CODE_NAME  ,
+                Extent3.NAME NAME  ,
+                Extent4.USER_NAME USER_NAME  ,
+                Extent5.USER_NAME USERNAME1  ,
+                Extent7.NAME NAME1  ,
+                CASE
+                     WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+                ELSE ' '
+                   END C1  ,
+                CASE
+                     WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                ELSE ' '
+                   END C2
+         FROM PAY0046D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.REFUND_MODE_ID
+                JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.BATCH_STUS_ID
+                JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+                JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CNFM_USER_ID
+                JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.CNFM_STUS_ID
+                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.CNVR_USER_ID
+          WHERE  Extent1.BATCH_ID = #{batchId} AND ROWNUM <![CDATA[ <= ]]> 1 ) Limit1
+    </select>
+
+    <!-- Batch Refund Same Query -->
+    <select id="selectRefundItem" parameterType="Map" resultType="egovMap">
+    SELECT Project1.DET_ID DET_ID  ,
+       Project1.SALES_ORD_NO SALES_ORD_NO  ,
+       Project1.SALES_CUST_ID SALES_CUST_ID  ,
+       Project1.DISABLED DISABLED  ,
+       Project1.BATCH_ID BATCH_ID  ,
+       Project1.WOR_NO WOR_NO  ,
+       Project1.AMT AMT  ,
+       Project1.PAY_MODE PAY_MODE  ,
+       Project1.PAY_TYPE_ID PAY_TYPE_ID  ,
+       Project1.PAY_ITM_ID PAY_ITM_ID  ,
+       Project1.ACC_CODE ACC_CODE  ,
+       (Project1.ACC_CODE || ' - ' || Project1.ACC_DESC) AS BANK_ACC  ,
+       Project1.ACC_DESC ACC_DESC  ,
+       Project1.NAME NAME  ,
+       Project1.REF_NO REF_NO  ,
+       Project1.CHQ_NO CHQ_NO  ,
+       Project1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+       Project1.CC_NO CC_NO  ,
+       Project1.REFUND_REM REFUND_REM  ,
+       Project1.REF_DT_DAY REF_DT_DAY  ,
+       Project1.REF_DT_MONTH REF_DT_MONTH  ,
+       Project1.REF_DT_YEAR REF_DT_YEAR  ,
+       Project1.VALID_REM VALID_REM  ,
+       Project1.VALID_STUS_ID VALID_STUS_ID
+  FROM ( SELECT Extent1.DET_ID DET_ID  ,
+                Extent1.BATCH_ID BATCH_ID  ,
+                Extent1.DISAB DISABLED  ,
+                Extent1.VALID_STUS_ID VALID_STUS_ID  ,
+                Extent1.VALID_REM VALID_REM  ,
+                Extent1.WOR_NO WOR_NO  ,
+                Extent1.AMT AMT  ,
+                Extent1.PAY_MODE PAY_MODE  ,
+                Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+                Extent1.REF_NO REF_NO  ,
+                Extent1.CHQ_NO CHQ_NO  ,
+                Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+                Extent1.CC_NO CC_NO  ,
+                Extent1.REFUND_REM REFUND_REM  ,
+                Extent1.REF_DT_MONTH REF_DT_MONTH  ,
+                Extent1.REF_DT_DAY REF_DT_DAY  ,
+                Extent1.REF_DT_YEAR REF_DT_YEAR  ,
+                Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+                Extent3.CUST_ID SALES_CUST_ID,
+                Extent4.ACC_CODE ACC_CODE  ,
+                Extent4.ACC_DESC ACC_DESC  ,
+                Extent5.NAME NAME
+         FROM PAY0045D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+                LEFT JOIN SYS0001M Extent4   ON Extent4.ACC_ID = Extent1.BANK_ACC_ID
+                LEFT JOIN SYS0004M Extent5   ON Extent5.BANK_ID = Extent1.ISS_BANK_ID
+          WHERE  ( 0 = Extent1.DISAB )
+                   AND ( 1 <![CDATA[ <> ]]> Extent1.VALID_STUS_ID )
+                   AND ( Extent1.BATCH_ID = #{batchId} ) ) Project1
+  ORDER BY Project1.DET_ID ASC
+    </select>
+
+    <update id="updateRefundM" parameterType="Map">
+         UPDATE PAY0046D
+         SET
+         REFUND_MODE_ID = #{refModeCode},
+         UPD_USER_ID = #{updator},
+         UPD_DT = SYSDATE,
+         WHERE  BATCH_ID = #{batchId}
+    </update>
+
+    <update id="updateRefundD" parameterType="Map">
+         UPDATE PAY0045D
+         SET
+         BANK_ACC_ID = #{bankAccCode},
+         UPD_USER_ID = #{updator},
+         UPD_DT = SYSDATE
+         WHERE  DET_ID = #{detId}
+    </update>
+
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE ,
+              CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0 AND CODE_MASTER_ID = 395
+    </select>
+
+    <select id="selectBankCode" resultType="egovMap">
+    SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 ORDER BY NAME
+    </select>
+
+
+</mapper>

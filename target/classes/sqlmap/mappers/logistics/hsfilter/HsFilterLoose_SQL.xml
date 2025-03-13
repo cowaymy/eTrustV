@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.hsfilter.impl.HsFilterLooseMapper">
+
+
+
+
+<select id="selectHSFilterLooseList" parameterType="Map"  resultType="EgovMap">
+
+		  SELECT
+             A.HS_LOSE_ITEM_CODE
+            ,A.HS_LOSE_ITEM_TYPE_ID
+            ,A.HS_LOSE_ITEM_CTGRY_ID
+            ,B.STK_DESC AS HS_LOSE_ITEM_DESC
+            ,(SELECT CODE_DESC  FROM SYS0013M  WHERE CODE_MASTER_ID  =11 AND CODE_ID  = HS_LOSE_ITEM_CTGRY_ID) AS HS_LOSE_ITEM_CTGRY_DESC
+            ,(SELECT CODE_DESC FROM SYS0013M  WHERE CODE_MASTER_ID   =15 AND CODE_ID   =HS_LOSE_ITEM_TYPE_ID)AS  HS_LOSE_ITEM_TYPE_DESC
+            ,A.HS_LOSE_ITEM_UOM
+            ,A.HS_LOSE_ITEM_DELIVER_QTY
+            ,A.HS_LOSE_ITEM_OPR_YN
+            ,A.CRT_USER_ID
+            ,A.CRT_DT
+            ,A.UPD_USER_ID
+            ,A.UPD_DT
+         FROM LOG0107M  A, SYS0026M B
+        WHERE A.HS_LOSE_ITEM_CODE = B.STK_CODE
+	 <if test="cateList != null and cateList != ''">
+	      AND HS_LOSE_ITEM_CTGRY_ID in
+	      <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+	    </if>
+	    <if test="typeList != null and typeList != ''">
+	      AND HS_LOSE_ITEM_TYPE_ID in
+	      <foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+	    </if>
+	    <if test="stkCd !=null and stkCd != ''">
+	      AND HS_LOSE_ITEM_CODE  like '%'|| #{stkCd} || '%'
+	    </if>
+
+
+</select>
+
+
+
+
+<select id="selectHSFilterLooseMiscList" parameterType="Map"  resultType="EgovMap">
+
+          SELECT
+             A.HS_LOSE_ITEM_CODE
+            ,A.HS_LOSE_ITEM_TYPE_ID
+            ,A.HS_LOSE_ITEM_CTGRY_ID
+            ,B.STK_DESC AS HS_LOSE_ITEM_DESC
+            ,(SELECT CODE_DESC  FROM SYS0013M  WHERE  CODE_ID  = HS_LOSE_ITEM_CTGRY_ID) AS HS_LOSE_ITEM_CTGRY_DESC
+            ,(SELECT CODE_DESC FROM SYS0013M  WHERE   CODE_ID   =HS_LOSE_ITEM_TYPE_ID)AS  HS_LOSE_ITEM_TYPE_DESC
+            ,A.HS_LOSE_RCD_CODE  as HS_LOSE_RCD
+            ,(SELECT WH_LOC_DESC  FROM sys0028m WHERE  WH_LOC_CODE =HS_LOSE_RCD_CODE ) HS_LOSE_RCD_DESC
+            ,A.HS_LOSE_ITEM_UOM
+            ,A.HS_LOSE_ITEM_DELIVER_QTY
+            ,A.HS_LOSE_ITEM_OPR_YN
+            ,A.CRT_USER_ID
+            ,A.CRT_DT
+            ,A.UPD_USER_ID
+            ,A.UPD_DT
+         FROM LOG0109M  A, SYS0026M B
+        WHERE A.HS_LOSE_ITEM_CODE = B.STK_CODE
+     <if test="cateList != null and cateList != ''">
+          AND HS_LOSE_ITEM_CTGRY_ID in
+          <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+        <if test="typeList != null and typeList != ''">
+          AND HS_LOSE_ITEM_TYPE_ID in
+          <foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+        <if test="stkCd !=null and stkCd != ''">
+          AND HS_LOSE_ITEM_CODE  like '%'|| #{stkCd} || '%'
+        </if>
+
+
+        <if test="cdbList != null and cdbList != ''">
+          AND HS_LOSE_CDB_ID in
+          <foreach item="item" collection="cdbList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+
+
+</select>
+
+
+
+
+<select id="selectMiscBranchList" parameterType="Map" resultType="egovMap">
+      select BRNCH_ID code,code || '-' || NAME CODE_NAME
+       from sys0005m where TYPE_ID in (42) ORDER BY CODE_NAME
+</select>
+
+<select id="selectMappingLocationType" parameterType="Map" resultType="egovMap">
+
+         SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+         <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+        </if>
+          and code in  (1,2,5)
+
+</select>
+
+
+    <select id="selectMappingCdbLocationList" parameterType="Map" resultType="egovMap">
+
+		SELECT
+		    WH_LOC_ID CODE_ID,
+		    WH_LOC_CODE CODE ,
+		    WH_LOC_CODE || ' - ' || WH_LOC_DESC CODE_NAME
+		FROM
+		    SYS0028M S28M
+		WHERE
+		    1 = 1
+		    AND S28M.WH_LOC_STUS_ID = 1
+		    AND S28M.WH_LOC_STK_GRAD = 'A'
+
+            <if test='searchlocgb.equals("02")'>
+		      AND WH_LOC_CODE LIKE 'C%'
+            </if>
+		   <if test="searchlocgb != null and searchlocgb !=''">
+              AND S28M.WH_LOC_GB IN
+              <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+
+         <if test="searchBranch != null and searchBranch !=''">
+          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3,WH_LOC_BRNCH_ID4,WH_LOC_BRNCH_ID5)
+        </if>
+
+		ORDER BY
+		    WH_LOC_GB ,
+		    CODE_NAME
+    </select>
+
+
+
+
+<select id="selectHSFilterMappingList" parameterType="Map"  resultType="EgovMap">
+		 SELECT
+		          R.HS_LOSE_ITEM_DESC
+		         ,R.HS_LOSE_ITEM_CODE
+		         ,R.HS_LOSE_ITEM_CTGRY_ID
+		         ,R.HS_LOSE_ITEM_TYPE_ID
+		         ,R.HS_LOSE_ITEM_FCAST_QTY
+		         ,R.HS_LOSE_ITEM_REORD_QTY
+		           ,HS_LOSE_LOCL_CODE
+		         ,(SELECT WH_LOC_DESC  FROM sys0028m  WHERE WH_LOC_CODE  =HS_LOSE_LOCL_CODE) AS HS_LOSE_LOCL_DESC
+		        , HS_LOSE_ITEM_CTGRY_DESC
+                ,HS_LOSE_ITEM_TYPE_DESC
+		FROM (
+		   SELECT  HS_LOSE_ITEM_DESC
+		         ,HS_LOSE_ITEM_CODE
+		         ,HS_LOSE_ITEM_CTGRY_ID
+		         ,HS_LOSE_ITEM_TYPE_ID
+		         ,(SELECT CODE_DESC  FROM SYS0013M  WHERE CODE_MASTER_ID  =11 AND CODE_ID  = A.HS_LOSE_ITEM_CTGRY_ID) AS HS_LOSE_ITEM_CTGRY_DESC
+                 ,(SELECT CODE_DESC FROM SYS0013M  WHERE CODE_MASTER_ID   =15 AND CODE_ID   =A.HS_LOSE_ITEM_TYPE_ID)AS  HS_LOSE_ITEM_TYPE_DESC
+                 ,HS_LOSE_ITEM_FCAST_QTY
+		         ,HS_LOSE_ITEM_REORD_QTY
+		         ,HS_LOSE_LOCL_CODE
+		  FROM log0108m A
+		   WHERE  1=1
+<!--               AND HS_LOSE_LOCL_CODE LIKE 'C%' -->
+
+            <if test="searchYYYY != null and searchYYYY != ''">
+              AND  A.HS_LOSE_YYYY=#{searchYYYY}
+            </if>
+
+            <if test="searchMM != null and searchMM != ''">
+              AND  A.HS_LOSE_MM=#{searchMM}
+            </if>
+           <if test="searchLocList != null and searchLocList !=''">
+              AND A.HS_LOSE_LOCL_CODE IN
+              <foreach item="item" collection="searchLocList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+
+              <if test="searchBranch != null and searchBranch != ''">
+              AND  A.BRNCH_ID=#{searchBranch}
+            </if>
+               <if test="searchCDC != null and searchCDC != ''">
+              AND  A.HS_LOSE_CDC_CODE=#{searchCDC}
+            </if>
+
+
+         <if test="searchCtgryList != null and searchCtgryList !=''">
+              AND A.HS_LOSE_ITEM_CTGRY_ID IN
+              <foreach item="item" collection="searchCtgryList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+          </if>
+
+
+          <if test="searchTypeList != null and searchTypeList !=''">
+              AND A.HS_LOSE_ITEM_TYPE_ID IN
+              <foreach item="item" collection="searchTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+
+            <if test="searchMatName != null and searchMatName != ''">
+                    AND A.HS_LOSE_ITEM_DESC   LIKE '%' || UPPER(#{searchMatName}) || '%')
+             </if>
+
+             <if test="searchMatCode != null and searchMatCode != ''">
+                    AND A.HS_LOSE_ITEM_CODE = #{searchMatCode}
+             </if>
+
+
+		 UNION
+		  SELECT B.STK_DESC AS  HS_LOSE_ITEM_DESC
+		         ,HS_LOSE_ITEM_CODE
+		         ,HS_LOSE_ITEM_CTGRY_ID
+		         ,HS_LOSE_ITEM_TYPE_ID
+		         ,(SELECT CODE_DESC  FROM SYS0013M  WHERE  CODE_ID  = A.HS_LOSE_ITEM_CTGRY_ID) AS HS_LOSE_ITEM_CTGRY_DESC
+                 ,(SELECT CODE_DESC FROM SYS0013M  WHERE  CODE_ID   =A.HS_LOSE_ITEM_TYPE_ID)AS  HS_LOSE_ITEM_TYPE_DESC
+                 , HS_LOSE_ITEM_DELIVER_QTY HS_LOSE_ITEM_FCAST_QTY
+		         , HS_LOSE_ITEM_DELIVER_QTY HS_LOSE_ITEM_REORD_QTY
+		         , HS_LOSE_RCD_CODE
+		  FROM  log0109m A , SYS0026M B
+            WHERE A.HS_LOSE_ITEM_CODE  = B.STK_CODE
+<!--               AND HS_LOSE_RCD_CODE LIKE 'C%' -->
+
+        <if test="searchLocList != null and searchLocList !=''">
+              AND A.HS_LOSE_RCD_CODE IN
+              <foreach item="item" collection="searchLocList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+
+
+         <if test="searchCtgryList != null and searchCtgryList !=''">
+              AND A.HS_LOSE_ITEM_CTGRY_ID IN
+              <foreach item="item" collection="searchCtgryList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+          </if>
+
+
+          <if test="searchTypeList != null and searchTypeList !=''">
+              AND A.HS_LOSE_ITEM_TYPE_ID IN
+              <foreach item="item" collection="searchTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+
+            <if test="searchMatName != null and searchMatName != ''">
+                    AND B.STK_DESC   LIKE '%' || UPPER(#{searchMatName}) || '%')
+             </if>
+
+             <if test="searchMatCode != null and searchMatCode != ''">
+                    AND A.HS_LOSE_ITEM_CODE = #{searchMatCode}
+             </if>
+
+
+              <if test="searchBranch != null and searchBranch != ''">
+              AND  A.HS_LOSE_CDB_ID=#{searchBranch}
+            </if>
+               <if test="searchCDC != null and searchCDC != ''">
+              AND  A.HS_LOSE_CDC_CODE=#{searchCDC}
+            </if>
+
+		)R
+</select>
+
+ <update id="updateMergeLOG0107M" parameterType="Map">
+  MERGE INTO LOG0107M C
+            USING
+            (
+                  SELECT
+                         #{hsLoseItemCode} as HS_LOSE_ITEM_CODE
+                        ,#{hsLoseItemUom}  as HS_LOSE_ITEM_UOM
+                        ,#{hsLoseItemDeliverQty} as HS_LOSE_ITEM_DELIVER_QTY
+                        ,#{hsLoseItemOprYn} HS_LOSE_ITEM_OPR_YN
+                       ,#{userId} as  USER_ID
+                   FROM DUAL
+            ) N
+            ON (  C.HS_LOSE_ITEM_CODE = N.HS_LOSE_ITEM_CODE)
+            WHEN MATCHED THEN
+            UPDATE
+            SET  C.HS_LOSE_ITEM_UOM = N.HS_LOSE_ITEM_UOM
+	              , C.HS_LOSE_ITEM_DELIVER_QTY = N.HS_LOSE_ITEM_DELIVER_QTY
+	              , C.HS_LOSE_ITEM_OPR_YN = N.HS_LOSE_ITEM_OPR_YN
+	              , C.UPD_USER_ID  = N.USER_ID
+	              , C.UPD_DT         = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT (
+			             HS_LOSE_ITEM_CODE
+			            ,HS_LOSE_ITEM_TYPE_ID
+			            ,HS_LOSE_ITEM_CTGRY_ID
+			            ,HS_LOSE_ITEM_UOM
+			            ,HS_LOSE_ITEM_DELIVER_QTY
+			            ,HS_LOSE_ITEM_OPR_YN
+			            ,CRT_USER_ID
+			            ,CRT_DT
+                   )
+             VALUES (
+                          N.HS_LOSE_ITEM_CODE
+                         ,(SELECT STK_CTGRY_ID  FROM SYS0026M  WHERE STK_CODE = N.HS_LOSE_ITEM_CODE )
+                         ,(SELECT STK_TYPE_ID  FROM SYS0026M  WHERE STK_CODE = N.HS_LOSE_ITEM_CODE )
+                        , N.HS_LOSE_ITEM_UOM
+                        , N.HS_LOSE_ITEM_DELIVER_QTY
+                        , N.HS_LOSE_ITEM_OPR_YN
+                        , N.USER_ID
+                        , SYSDATE
+                   )
+</update>
+
+
+
+
+
+ <update id="updateMergeLOG0109M" parameterType="Map">
+  MERGE INTO LOG0109M C
+            USING
+            (
+                  SELECT
+                         #{hsLoseRcd} as HS_LOSE_RCD_CODE
+                        ,#{hsLoseItemCode} as HS_LOSE_ITEM_CODE
+                        ,#{hsLoseItemUom}  as HS_LOSE_ITEM_UOM
+                        ,#{hsLoseItemDeliverQty} as HS_LOSE_ITEM_DELIVER_QTY
+                        ,#{hsLoseItemOprYn} HS_LOSE_ITEM_OPR_YN
+                         ,#{userId} as  USER_ID
+                   FROM DUAL
+            ) N
+            ON (  C.HS_LOSE_ITEM_CODE = N.HS_LOSE_ITEM_CODE  AND C.HS_LOSE_RCD_CODE =N.HS_LOSE_RCD_CODE )
+            WHEN MATCHED THEN
+            UPDATE
+            SET   C.HS_LOSE_ITEM_UOM = N.HS_LOSE_ITEM_UOM
+                  , C.HS_LOSE_ITEM_DELIVER_QTY = N.HS_LOSE_ITEM_DELIVER_QTY
+                  , C.HS_LOSE_ITEM_OPR_YN = N.HS_LOSE_ITEM_OPR_YN
+                  , C.UPD_USER_ID  = N.USER_ID
+                  , C.UPD_DT         = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT (
+                          HS_LOSE_RCD_CODE
+                        , HS_LOSE_ITEM_CODE
+                        ,HS_LOSE_ITEM_TYPE_ID
+                        ,HS_LOSE_ITEM_CTGRY_ID
+                        ,HS_LOSE_ITEM_UOM
+                        ,HS_LOSE_ITEM_DELIVER_QTY
+                        ,HS_LOSE_ITEM_OPR_YN
+                        ,HS_LOSE_CDB_ID
+                        ,HS_LOSE_CDC_CODE
+                        , HS_LOSE_RCD_ID
+                        ,CRT_USER_ID
+                        ,CRT_DT
+                   )
+             VALUES (
+                          N.HS_LOSE_RCD_CODE
+                         , N.HS_LOSE_ITEM_CODE
+                         ,(SELECT STK_CTGRY_ID  FROM SYS0026M  WHERE STK_CODE = N.HS_LOSE_ITEM_CODE )
+                         ,(SELECT STK_TYPE_ID  FROM SYS0026M  WHERE STK_CODE = N.HS_LOSE_ITEM_CODE )
+                        , N.HS_LOSE_ITEM_UOM
+                        , N.HS_LOSE_ITEM_DELIVER_QTY
+                        , N.HS_LOSE_ITEM_OPR_YN
+                        , (SELECT WH_LOC_BRNCH_ID  FROM sys0028m  WHERE WH_LOC_CODE  =N.HS_LOSE_RCD_CODE)
+                        ,(SELECT CDC_CODE  FROM sys0028m  WHERE WH_LOC_CODE  =N.HS_LOSE_RCD_CODE)
+                        ,(SELECT WH_LOC_ID  FROM sys0028m  WHERE WH_LOC_CODE  =N.HS_LOSE_RCD_CODE)
+                        , N.USER_ID
+                        , SYSDATE
+                   )
+</update>
+
+</mapper>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.HpAwardHistoryMapper">
+    <insert id="insertHpAwardHistoryMaster">
+        INSERT INTO ORG0048M
+		VALUES(
+		    ORG0048M_BATCH_ID.NEXTVAL,
+		    120,
+		    #{userId},
+		    SYSDATE,
+		    #{userId},
+            SYSDATE
+		)
+    </insert>
+
+    <insert id="insertHpAwardHistoryDetails">
+		INSERT INTO ORG0049D
+		SELECT
+			    ORG0048M_BATCH_ID.CURRVAL,
+			    ORG0049D_ID.NEXTVAL,
+			    1,
+			    #{incentiveCode},
+			    #{hpCode},
+			    #{destination},
+			    #{remark},
+			    #{month},
+			    #{year},
+			    #{userId},
+			    SYSDATE,
+			    #{userId},
+			    SYSDATE
+		FROM DUAL
+    </insert>
+
+    <select id="selectHpAwardHistoryListing" resultType="egovMap">
+		SELECT
+			      A.BATCH_ID BATCH_NO
+			    , B.NAME AS BATCH_STATUS
+			    , (SELECT COUNT(BATCH_ID) FROM ORG0049D WHERE ORG0049D.BATCH_ID = A.BATCH_ID AND ORG0049D.STUS_CODE_ID NOT IN (8)) TOTAL
+			    , A.CRT_DT BATCH_UPLOAD_DATE
+			    , C.USER_NAME CREATOR
+			    , CASE WHEN A.STUS_CODE_ID = 5 THEN D.USER_NAME END APPROVER
+			    , CASE WHEN A.STUS_CODE_ID = 5 THEN A.UPD_DT END APPROVAL_DATE
+		FROM ORG0048M A
+		LEFT JOIN SYS0038M B ON A.STUS_CODE_ID = B.STUS_CODE_ID
+		LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+		LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+		WHERE 1=1
+	    <if test="batchNo !=null and batchNo !=''">
+		   AND A.BATCH_ID = #{batchNo}
+	    </if>
+	    <if test="start !=null and start !=''">
+	       AND A.CRT_DT <![CDATA[ >= ]]>  to_date(#{start} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="end !=null and end !=''">
+           AND A.CRT_DT <![CDATA[ <= ]]> to_date(#{end} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+        <if test="creator !=null and creator !=''">
+           AND C.USER_NAME = #{creator}
+        </if>
+        <if test="hpAwardStus !=null and hpAwardStus !=''">
+           AND A.STUS_CODE_ID = #{hpAwardStus}
+        </if>
+		ORDER BY 1 DESC
+    </select>
+
+    <resultMap type="egovMap" id="hpAwardDetails">
+        <result property="batch_id" column="batch_id" />
+        <result property="creator" column="creator" />
+        <result property="crt_dt" column="crt_dt" />
+        <result property="updator" column="updator" />
+        <result property="upd_dt" column="upd_dt" />
+        <result property="status" column="status" />
+        <collection property="details" ofType="egovMap" javaType="ArrayList">
+            <result property="batch_id" column="batch_id" />
+            <result property="detail_id" column="detail_id" />
+            <result property="stus_code_id" column="stus_code_id" />
+            <result property="incentive_code" column="incentive_code" />
+            <result property="hp_code" column="hp_code" />
+            <result property="description" column="description" />
+            <result property="destination" column="destination" />
+            <result property="remark" column="remark" />
+            <result property="month" column="month" />
+            <result property="year" column="year" />
+        </collection>
+    </resultMap>
+
+    <select id="selectHpAwardHistoryDetails" resultType="Map" resultMap="hpAwardDetails">
+        SELECT
+			      #{batchNo} BATCH_ID
+			    , NVL(A.DETAIL_ID,0) DETAIL_ID
+			    , A.STUS_CODE_ID
+			    , A.INCENTIVE_CODE
+			    , A.HP_CODE
+                , NVL(F.INCENTIVE_DESCRIPTION,' ') DESCRIPTION
+			    , NVL(A.DESTINATION, ' ') DESTINATION
+			    , NVL(A.REMARK,' ') REMARK
+			    , NVL(A.MONTH,0) MONTH
+			    , NVL(A.YEAR, 0) YEAR
+			    , C.USER_NAME CREATOR
+                , TO_CHAR(B.CRT_DT,'YYYY-MM-DD HH:MI:SS') CRT_DT
+                , D.USER_NAME UPDATOR
+                , TO_CHAR(B.UPD_DT,'YYYY-MM-DD HH:MI:SS') UPD_DT
+                , E.NAME STATUS
+        FROM ORG0048M B
+        LEFT JOIN ORG0049D A ON A.BATCH_ID = B.BATCH_ID AND A.STUS_CODE_ID NOT IN (8)
+        JOIN SYS0047M C ON B.CRT_USER_ID = C.USER_ID
+        LEFT JOIN SYS0047M D ON B.UPD_USER_ID = D.USER_ID
+        JOIN SYS0038M E ON B.STUS_CODE_ID = E.STUS_CODE_ID
+        LEFT JOIN ORG0050D F ON F.INCENTIVE_CODE = A.INCENTIVE_CODE AND F.STUS_CODE_ID = 1
+		WHERE B.BATCH_ID = #{batchNo}
+    </select>
+
+    <update id="updateHpAwardHistoryStatus" parameterType="Map">
+        UPDATE ORG0048M
+        SET STUS_CODE_ID = #{status},
+               UPD_USER_ID = #{userId},
+               UPD_DT = SYSDATE
+        WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <update id="updateHpAwardHistoryDetails" parameterType="Map">
+		MERGE INTO ORG0049D A
+		USING(
+			    SELECT
+			        BATCH_ID,
+			        DETAIL_ID,
+			        STUS_CODE_ID,
+			        INCENTIVE_CODE,
+			        HP_CODE,
+			        DESTINATION,
+			        REMARK,
+			        MONTH,
+			        YEAR
+			    FROM ORG0049D
+			    WHERE DETAIL_ID = #{detailId} AND BATCH_ID = #{batchId}
+		) SRC ON (A.DETAIL_ID = SRC.DETAIL_ID AND A.BATCH_ID = SRC.BATCH_ID)
+        WHEN MATCHED THEN UPDATE
+        SET
+		           A.INCENTIVE_CODE = #{incentiveCode},
+		           A.HP_CODE = #{hpCode},
+		           A.STUS_CODE_ID = #{stusCodeId},
+		           A.DESTINATION = #{destination},
+		           A.REMARK = #{remark},
+		           A.MONTH = #{month},
+		           A.YEAR = #{year},
+		           A.UPD_USER_ID = #{userId},
+		           A.UPD_DT = SYSDATE
+    </update>
+
+    <insert id="updateNewHpAwardHistoryDetails" parameterType="Map">
+        INSERT INTO ORG0049D (BATCH_ID, DETAIL_ID, STUS_CODE_ID, INCENTIVE_CODE, HP_CODE, DESTINATION, REMARK, MONTH, YEAR, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        VALUES(
+                    #{batchId},
+                    ORG0049D_ID.NEXTVAL,
+                    #{stusCodeId},
+                    #{incentiveCode},
+                    #{hpCode},
+                    #{destination},
+                    #{remark},
+                    #{month},
+                    #{year},
+                    #{userId},
+                    SYSDATE,
+                    #{userId},
+                    SYSDATE
+          )
+    </insert>
+
+    <update id="updateIncentiveCode" parameterType="Map">
+          UPDATE ORG0050D
+          SET
+                INCENTIVE_CODE = #{incentiveCode},
+                INCENTIVE_DESCRIPTION = #{incentiveDescription},
+                STUS_CODE_ID = #{stusCodeId},
+                UPD_USER_ID = #{userId},
+                UPD_DT = SYSDATE
+          WHERE ID = #{id}
+    </update>
+
+    <insert id="updateNewIncentiveCode" parameterType="Map">
+        INSERT INTO ORG0050D
+        SELECT
+	            ORG0050D_ID.nextval,
+	            #{stusCodeId},
+	            #{incentiveCode},
+	            #{incentiveDescription},
+	            #{userId},
+	            SYSDATE,
+	            #{userId},
+	            SYSDATE
+         FROM DUAL
+    </insert>
+
+    <select id="selectIncentiveCode" resultType="egovMap">
+         SELECT * FROM ORG0050D WHERE STUS_CODE_ID = 1 ORDER BY INCENTIVE_CODE
+    </select>
+
+    <select id="chkIncentiveCodeDup" resultType="egovMap">
+         SELECT COUNT(*) CHK_DUP FROM ORG0050D WHERE INCENTIVE_CODE = #{incentiveCode} and STUS_CODE_ID = 1
+    </select>
+
+    <select id="selectEachHpAwardHistory" resultType="egovMap">
+	    SELECT
+			    TO_CHAR(TO_DATE(A.MONTH,'MM'),'MONTH') MONTH,
+			    A.YEAR,
+			    C.INCENTIVE_DESCRIPTION DESCRIPTION,
+			    A.DESTINATION,
+                A.REMARK
+		FROM ORG0049D A
+		JOIN ORG0048M B ON A.BATCH_ID = B.BATCH_ID AND B.STUS_CODE_ID = 5
+		JOIN ORG0050D C ON A.INCENTIVE_CODE = C.INCENTIVE_CODE AND C.STUS_CODE_ID = 1
+		WHERE A.HP_CODE = #{memCode}
+		AND A.STUS_CODE_ID NOT IN (8)
+		ORDER BY A.YEAR , A.MONTH
+    </select>
+
+    <select id="selectYearList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT (TO_CHAR(SYSDATE,'RRRR')-5) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'RRRR')-5) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 10
+      ]]>
+    </select>
+
+     <select id="selectMonthList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT LEVEL CODE_ID, LEVEL CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 12
+      ]]>
+    </select>
+
+    <select id="selectHpAwardHistoryReport" parameterType="Map" resultType="egovMap">
+            SELECT * FROM
+            (
+                SELECT
+                        TO_CHAR(TO_DATE(A.MONTH,'MM'),'MONTH') MONTH,
+                        A.YEAR,
+                        A.MONTH MONTH2,
+                        A.HP_CODE AS MEM_CODE,
+                        F.FULL_NAME AS MEM_NAME,
+                        CASE WHEN E.MEM_ID IS NOT NULL THEN E.ORG_CODE ELSE D.ORG_CODE END ORG_CODE,
+                        CASE WHEN E.MEM_ID IS NOT NULL THEN E.GRP_CODE ELSE D.GRP_CODE END GRP_CODE,
+                        CASE WHEN E.MEM_ID IS NOT NULL THEN E.DEPT_CODE ELSE D.DEPT_CODE END DEPT_CODE,
+                        C.INCENTIVE_CODE,
+                        C.INCENTIVE_DESCRIPTION DESCRIPTION,
+                        A.DESTINATION,
+                        A.REMARK
+                 FROM ORG0049D A
+                 JOIN ORG0048M B ON A.BATCH_ID = B.BATCH_ID
+                 JOIN ORG0050D C ON A.INCENTIVE_CODE = C.INCENTIVE_CODE
+                 JOIN ORG1001V D ON A.HP_CODE = D.MEM_CODE
+                 LEFT JOIN ORG1002V E ON A.HP_CODE = E.MEM_CODE AND A.YEAR = E.HIST_YEAR AND A.MONTH = E.HIST_MONTH
+                 JOIN ORG0001D F ON A.HP_CODE = F.MEM_CODE
+                 WHERE A.STUS_CODE_ID = 1 AND B.STUS_CODE_ID = 5
+             )
+             WHERE 1=1
+                <if test="orgCode != null and orgCode != ''" >
+                   <if test="memLvl == 1 or memLvl == null or memLvl == ''">
+                      AND  ORG_CODE = #{orgCode}
+                   </if>
+               </if>
+
+               <if test="grpCode != null and grpCode != ''">
+                    <if test="memLvl == 1 or memLvl ==2 or memLvl == null or memLvl == ''">
+                       AND GRP_CODE = #{grpCode}
+                    </if>
+               </if>
+
+               <if test="deptCode != null and deptCode != ''">
+                    <if test="memLvl != 4 or memLvl == null or memLvl == ''">
+                       AND DEPT_CODE = #{deptCode}
+                    </if>
+               </if>
+
+             <if test="memCode !=null and memCode !=''">
+                AND MEM_CODE = #{memCode}
+             </if>
+             <if test="year !=null and year !=''">
+                AND YEAR = #{year}
+             </if>
+             <if test="monthList != null and monthList != '' ">
+                AND MONTH2 IN
+                <foreach item="item" collection="monthList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+             </if>
+             <if test="incentiveCodeList != null and incentiveCodeList != '' ">
+                AND INCENTIVE_CODE IN
+                <foreach item="item" collection="incentiveCodeList" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+             </if>
+             ORDER BY YEAR, MONTH2, MEM_CODE
+    </select>
+</mapper>

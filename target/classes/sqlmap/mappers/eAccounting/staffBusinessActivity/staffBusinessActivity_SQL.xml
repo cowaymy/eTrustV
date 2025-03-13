@@ -1,0 +1,1327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.staffBusinessActivity.impl.staffBusinessActivityMapper">
+
+    <select id="selectAdvanceList" parameterType="Map" resultType="egovMap">
+        SELECT
+            POST_DATE,
+            CLM_NO,
+            ADV_TYPE,
+            PAYEE,
+            PAYEE_NAME,
+            COST_CENTER,
+            COST_CENTER_NM,
+            AMT,
+            APPV_PRCSS_NO,
+            APPV_DT,
+            RQST_DT,
+            APPV_PRCSS_STUS,
+            CASE WHEN APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                 WHEN APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                 WHEN APPV_PRCSS_STUS = 'R' THEN 'Submitted'
+                 WHEN APPV_PRCSS_STUS = 'P' THEN 'Pending'
+                 ELSE 'Draft'
+            END AS APPV_PRCSS_STUS_DESC,
+            REPAY_STUS,
+            CASE WHEN REPAY_STUS = '1' THEN 'Not due'
+                 WHEN REPAY_STUS = '2' THEN 'Due but not repaid yet'
+                 WHEN REPAY_STUS = '3' THEN 'Repaid'
+                 WHEN REPAY_STUS = '4' THEN 'Pending Approval'
+                 WHEN REPAY_STUS = '5' THEN 'Draft'
+                 WHEN REPAY_STUS = '99' THEN ''
+            END AS REPAY_STUS_DESC,
+		    ADV_OCC,
+		    ADV_OCC_DESC
+		    ,IS_RESUBMIT_ALLOW
+        FROM (
+            SELECT
+                A.CRT_DT POST_DATE,
+                A.CLM_NO,
+                A.ADV_TYPE,
+                A.MEM_ACC_ID PAYEE,
+                F.MEM_ACC_NAME PAYEE_NAME,
+                A.COST_CENTER,
+                A.COST_CENTER_NM,
+               (SELECT SUM(APPV_AMT) FROM FCM0015D WHERE APPV_PRCSS_NO = B.APPV_PRCSS_NO) AS AMT,
+                B.APPV_PRCSS_NO,
+                B.APPV_PRCSS_DT APPV_DT,
+                A.ADV_REFD_DT RQST_DT,
+                NVL(B.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
+                CASE WHEN A.ADV_TYPE = '3' THEN (
+                    CASE WHEN A.APPV_PRCSS_NO IS NOT NULL THEN (
+                        <![CDATA[
+                        CASE WHEN (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NULL AND SYSDATE <= A.ADV_REFD_DT) OR
+                                  /*(B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND C.APPV_PRCSS_NO IS NULL AND SYSDATE <= A.ADV_REFD_DT) OR*/
+                                  (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND D.APPV_PRCSS_STUS = 'J' AND SYSDATE <= A.ADV_REFD_DT)
+                                  /*THEN 'Not due'*/
+                                  THEN '1'
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'A') OR
+                                  (B.APPV_PRCSS_STUS = 'A' AND A.ADV_REFD_NO = 'MANUAL')
+                                  /*THEN 'Repaid'*/
+                                  THEN '3'
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NULL AND SYSDATE >= A.ADV_REFD_DT) OR
+                                  /*(B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND C.APPV_PRCSS_NO IS NULL AND SYSDATE >= A.ADV_REFD_DT) OR*/
+                                  (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND D.APPV_PRCSS_STUS = 'J' AND SYSDATE >= A.ADV_REFD_DT)
+                                  /*THEN 'Due but not repaid yet'*/
+                                  THEN '2'
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'R') OR
+                                  (B.APPV_PRCSS_STUS = 'A' AND D.APPV_PRCSS_STUS = 'P')
+                                  /*THEN 'Pending Approval'*/
+                                  THEN '4'
+                             WHEN (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND C.APPV_PRCSS_NO IS NULL AND SYSDATE <= A.ADV_REFD_DT) OR
+                                  (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NOT NULL AND C.APPV_PRCSS_NO IS NULL AND SYSDATE >= A.ADV_REFD_DT)
+                                  /*THEN 'Draft'*/
+                                  THEN '5'
+                             WHEN B.APPV_PRCSS_STUS = 'R' OR B.APPV_PRCSS_STUS = 'P' OR B.APPV_PRCSS_STUS = 'J'
+                                  THEN '99'
+                        END
+                        ]]>
+                    )
+                    WHEN A.APPV_PRCSS_NO IS NULL AND A.ADV_REFD_NO = 'MANUAL' THEN '3'
+                    END
+                )
+                ELSE '99'
+                END as REPAY_STUS,
+	            A.ADV_OCC,
+	            E.CODE_DESC ADV_OCC_DESC
+	            , NVL(B.IS_RESUBMIT_ALLOWED, 0) AS IS_RESUBMIT_ALLOW
+            FROM FCM0027M A
+            LEFT JOIN FCM0004M B
+                ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            LEFT JOIN FCM0027M C
+                ON A.ADV_REFD_NO = C.CLM_NO
+            LEFT JOIN FCM0004M D
+                ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+            LEFT JOIN SYS0013M E ON E.CODE_ID = A.ADV_OCC
+            LEFT JOIN FCM0006M F ON F.MEM_ACC_ID = A.MEM_ACC_ID
+            WHERE 1=1
+            <if test="advType != null and advType != ''">
+                AND A.ADV_TYPE IN
+                <foreach item="item" collection="advType" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="listCostCenter != null and listCostCenter != ''">
+                AND A.COST_CENTER = #{listCostCenter}
+            </if>
+            <if test="memAccCode != null and memAccCode != ''">
+                AND A.MEM_ACC_ID = #{memAccCode}
+            </if>
+            <if test="reqStartDt != null and reqStartDt != ''">
+                <![CDATA[
+                    AND A.CRT_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+                ]]>
+            </if>
+            <if test="reqEndDt != null and reqEndDt != ''">
+                <![CDATA[
+                    AND A.CRT_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
+                ]]>
+            </if>
+            <if test="clmNoStart != null and clmNoStart != ''">
+                <![CDATA[
+                    AND A.CLM_NO >= #{clmNoStart}
+                ]]>
+            </if>
+            <if test="clmNoEnd != null and clmNoEnd != ''">
+                <![CDATA[
+                    AND A.CLM_NO <= #{clmNoEnd}
+                ]]>
+            </if>
+            <if test="appStartDt != null and appStartDt != ''">
+                <![CDATA[
+                    AND B.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+                ]]>
+            </if>
+            <if test="appEndDt != null and appEndDt != ''">
+                <![CDATA[
+                    AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+                ]]>
+            </if>
+            <if test="loginUserId != null and loginUserId != ''">
+                AND A.CRT_USER_ID = #{loginUserId}
+            </if>
+        )
+        WHERE 1 = 1
+        <if test="refundStus != null and refundStus != ''">
+            AND REPAY_STUS IN
+            <foreach item="item" collection="refundStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+            AND APPV_PRCSS_STUS IN
+            <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY POST_DATE DESC
+    </select>
+
+    <select id="getAdvConfig" parameterType="Map" resultType="egovMap">
+        SELECT
+        <!-- <if test="advType == 1">  -->
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_PERIOD'), '0') S_PERIOD,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_CAR_MILE_RATE'), '0') S_CAR_MILE_RATE,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_CAR_MILE_PRCT'), '0') S_CAR_MILE_PRCT,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_TRN_1'), '0') S_TRN_1,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_TRN_2'), '0') S_TRN_2,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_TR_DT'), '0') S_TR_DT,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_MIN_AMT'), '0') S_MIN_AMT,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_MAX_REPAY_DAY_1'), '0') S_MAX_REPAY_DAY_1,
+            NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'E-ACCOUNTING' AND DISB = '0' AND PARAM_CODE = 'S_MAX_REPAY_DAY_2'), '0') S_MAX_REPAY_DAY_2
+        <!-- </if>  -->
+        FROM DUAL
+    </select>
+
+    <select id="getRqstInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_CODE RQST_CODE,
+            B.NAME RQST_NAME
+        FROM SYS0047M A
+        INNER JOIN ORG0001D B
+            ON A.HR_CODE = B.MEM_CODE
+        WHERE A.USER_ID = #{userId}
+    </select>
+
+    <select id="getAdvClmInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.CLM_NO,
+            A.ADV_TYPE,
+            CASE WHEN A.ADV_TYPE = '1' THEN 'Staff Travel Expenses Request'
+                 WHEN A.ADV_TYPE = '2' THEN 'Staff Travel Expenses Repayment'
+                 WHEN A.ADV_TYPE = '3' THEN 'Staff / Company Events Request'
+                 WHEN A.ADV_TYPE = '4' THEN 'Staff / Company Events Repayment'
+            END AS ADV_TYPE_DESC,
+            A.COST_CENTER,
+            A.COST_CENTER_NM,
+            A.MEM_ACC_ID PAYEE,
+            E.MEM_ACC_NAME PAYEE_NAME,
+            A.BANK_CODE,
+            F.NAME BANK_NAME,
+            A.BANK_ACC_NO,
+            NVL(A.TOT_AMT, 0) TOT_AMT,
+            TO_CHAR(A.ADV_PRD_FR, 'DD/MM/YYYY') ADV_PRD_FR,
+            TO_CHAR(A.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
+            A.ADV_LOC_FR,
+            A.ADV_LOC_TO,
+            TO_CHAR(A.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
+            A.ADV_REM,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') ENTRY_DT,
+            A.CRT_USER_ID,
+            D.USER_NAME CRT_USER_NAME,
+            A.ADV_OCC OTH_EXP,
+            G.CODE_DESC OTH_NM,
+            <if test="advType == 3">
+                <!-- (SELECT EXP_TYPE FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_EXP,
+                (SELECT EXP_TYPE_NM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_NM,
+                (SELECT REM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_REM,
+                NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT, -->
+                NVL(H.TOT_AMT, 0) REQ_ADV_TOT_AMT,
+            </if>
+            <if test="advType == 4">
+                <!-- (SELECT EXP_TYPE FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_EXP,
+                (SELECT EXP_TYPE_NM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_NM,
+                (SELECT REM FROM FCM0028D WHERE CLM_NO = A.CLM_NO) as OTH_REM,
+                NVL((SELECT AMT FROM FCM0028D WHERE CLM_NO = A.CLM_NO), 0) as OTH_AMT,
+                NVL((SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.CLM_NO),(SELECT PREV_CLM_NO FROM FCM0027M WHERE CLM_NO = A.CLM_NO))ADV_REQ_CLM_NO, -->
+                A.MAIN_REQ_NO ADV_REQ_CLM_NO,
+                A.ADV_REFD_MODE,
+                A.ADV_REFD_REF,
+                <!-- NVL(H.TOT_AMT,0) REQ_ADV_TOT_AMT, -->
+                (SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = A.MAIN_REQ_NO) REQ_ADV_TOT_AMT,
+            </if>
+            A.FILE_ATCH_GRP_ID,
+            C.ATCH_FILE_ID,
+            C.ATCH_FILE_NAME,
+            A.APPV_PRCSS_NO
+        FROM FCM0027M A
+        LEFT JOIN (SELECT ATCH_FILE_GRP_ID,ATCH_FILE_ID FROM (SELECT A.*,  RANK() OVER (PARTITION BY ATCH_FILE_GRP_ID ORDER BY ATCH_FILE_ID DESC) row_num FROM SYS0070M A) WHERE row_num=1) B
+            ON A.FILE_ATCH_GRP_ID = B.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D C
+            ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+        LEFT JOIN SYS0047M D
+            ON A.CRT_USER_ID = D.USER_ID
+        LEFT JOIN FCM0006M E
+            ON A.MEM_ACC_ID = E.MEM_ACC_ID
+        LEFT JOIN SYS0004M F
+            ON A.BANK_CODE = F.BANK_ID
+        LEFT JOIN SYS0013M G ON G.CODE_ID = A.ADV_OCC
+        <if test="advType == 3">
+        LEFT JOIN FCM0027M H ON H.ADV_REFD_NO = A.CLM_NO
+        </if>
+        <if test="advType == 4">
+        LEFT JOIN FCM0027M H ON H.ADV_REFD_NO = A.CLM_NO
+        </if>
+        WHERE A.CLM_NO = #{clmNo}
+    </select>
+
+    <select id="selectAdvOccasions" parameterType="Map" resultType="egovMap">
+       SELECT CODE_ID CODE, CODE_DESC CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 485
+    </select>
+
+
+    <select id="selectAdvOccasions2" parameterType="Map" resultType="egovMap">
+        SELECT B.CODE_ID CODE, B.CODE_DESC CODE_NAME
+        FROM FCM0027M A
+        JOIN SYS0013M B ON B.CODE_ID = A.ADV_OCC
+        WHERE CODE_MASTER_ID = 485
+        AND A.APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <select id="selectNextClmNo" parameterType="Map" resultType="String">
+        SELECT
+            <if test='clmType == "REQ"'>
+                'R3' ||
+            </if>
+            <if test='clmType == "REF"'>
+                'A2' ||
+            </if>
+            TO_CHAR (SYSDATE, 'yymm') ||
+            MAX(CLM_NO) AS CLM_NO
+        FROM (
+            SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+            FROM FCM0027M
+            WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+            <if test='clmType == "REQ"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'R3'
+            </if>
+            <if test='clmType == "REF"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'A2'
+            </if>
+        )
+    </select>
+
+    <select id="selectNextClmSeq" parameterType="String" resultType="int">
+	    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0028D WHERE CLM_NO = #{clmNo}
+	</select>
+
+	<select id="selectClamUn" parameterType="Map" resultType="egovMap">
+
+		SELECT #{clmType} || NVL (TO_CHAR (MAX (SUBSTR (CLAM_UN, 3, 7) + 1), 'FM0000000'), '0000001') AS CLAM_UN
+		FROM   FCM0022M
+		WHERE  CLM_TYPE = #{clmType}
+	</select>
+
+	<update id="updateClamUn" parameterType="Map">
+
+	   UPDATE FCM0022M SET CLAM_UN = #{clamUn} WHERE CLM_TYPE = #{clmType}
+	</update>
+
+    <insert id="insertRequest" parameterType="Map">
+        INSERT INTO FCM0027M (
+            CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            ADV_REFD_DT,
+            FILE_ATCH_GRP_ID,
+            ADV_REM,
+            <if test="reqAdvType == 1">
+                ADV_LOC_FR,
+                ADV_LOC_TO,
+            </if>
+            CRT_DT,
+            CRT_USER_ID,
+            <if test="reqAdvType == 3">
+                TOT_AMT,
+                ADV_OCC,
+            </if>
+            <if test="reqAdvType == 4">
+                TOT_AMT,
+                ADV_REFD_MODE,
+                ADV_REFD_REF,
+            </if>
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{clmNo},
+            #{reqAdvType},
+            #{costCenterCode},
+            (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCenterCode}),
+            #{payeeCode},
+            #{bankId},
+            #{bankAccNo},
+            #{glAccNo},
+            TO_DATE(#{eventStartDt}, 'DD/MM/YYYY'),
+            TO_DATE(#{eventEndDt}, 'DD/MM/YYYY'),
+            TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
+            #{atchFileGrpId},
+            #{busActReqRem},
+            <if test="reqAdvType == 1">
+                #{locationFrom},
+                #{locationTo},
+            </if>
+            SYSDATE,
+            #{userId},
+            <if test="reqAdvType == 3">
+                REGEXP_REPLACE(#{reqTotAmt}, '[^0-9.]+', NULL),
+                #{advOcc},
+            </if>
+            <if test="reqAdvType == 4">
+                REGEXP_REPLACE(#{refTotExp}, '[^0-9.]+', NULL),
+                #{refMode},
+                #{refBankRef},
+            </if>
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <insert id="insertTrvDetail" parameterType="Map">
+        INSERT INTO FCM0028D (
+            CLM_NO,
+            CLM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            EXP_TYPE,
+            EXP_TYPE_NM,
+            AMT,
+            CRT_DT,
+            CRT_USER_ID,
+            <if test="advType == 3">
+                GL_ACC_NO,
+                NET_AMT,
+                INVC_CUR,
+            </if>
+            <if test="advType == 4">
+                REM,
+                GL_ACC_NO,
+                GL_ACC_NM,
+                BGT_CODE,
+                BGT_NM,
+                CLAM_UN,
+                TAX_CODE,
+                INVC_CUR,
+                NET_AMT,
+                SUPPLIER,
+            </if>
+            UPD_DT,
+            UPD_USER_ID
+        ) values (
+            #{clmNo},
+            #{clmSeq},
+            #{invcNo},
+            TO_DATE(TO_CHAR(TO_DATE(#{invcDt}, 'YYYY/MM/DD'), 'DD/MM/YYYY'), 'DD/MM/YYYY'),
+            #{expType},
+            #{expTypeNm},
+            REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+            SYSDATE,
+            #{userId},
+            <if test="advType == 3">
+                #{glAccNo},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+                #{cur},
+            </if>
+            <if test="advType == 4">
+                #{expDesc},
+                #{glAccCode},
+                #{glAccCodeName},
+                #{budgetCode},
+                #{budgetCodeName},
+                #{clamUn},
+                'VB',
+                #{cur},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+                #{supplierName},
+            </if>
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <update id="editDraftRequestM" parameterType="Map">
+        UPDATE FCM0027M
+        SET
+            COST_CENTER = #{costCenterCode},
+            COST_CENTER_NM = (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCenterCode}),
+            MEM_ACC_ID = #{payeeCode},
+            BANK_CODE = #{bankId},
+            BANK_ACC_NO = #{bankAccNo},
+            <if test="advType == 3">
+                ADV_REM = #{busActReqRem},
+                TOT_AMT = REGEXP_REPLACE(#{reqTotAmt}, '[^0-9.]+', NULL),
+                ADV_PRD_FR = TO_DATE(#{eventStartDt}, 'DD/MM/YYYY'),
+                ADV_PRD_TO = TO_DATE(#{eventEndDt}, 'DD/MM/YYYY'),
+                ADV_OCC = #{advOcc},
+            </if>
+            <if test="advType == 4">
+                ADV_REFD_MODE = #{refMode},
+                ADV_REFD_REF = #{refBankRef},
+                ADV_REM = #{trvRepayRem},
+                ADV_PRD_FR = TO_DATE(#{refEventStartDt}, 'DD/MM/YYYY'),
+                ADV_PRD_TO = TO_DATE(#{refEventEndDt}, 'DD/MM/YYYY'),
+                TOT_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+            </if>
+            ADV_REFD_DT = TO_DATE(#{refdDate}, 'DD/MM/YYYY'),
+            UPD_DT = SYSDATE
+        WHERE CLM_NO = #{clmNo}
+    </update>
+
+    <update id="editDraftRequestD" parameterType="Map">
+        MERGE INTO FCM0028D TRGT
+        <if test="advType == 3">
+        USING (
+            SELECT #{clmNo} CLM_NO,
+                   #{expType} EXP_TYPE
+            FROM DUAL
+        ) SRC
+        ON (TRGT.CLM_NO = SRC.CLM_NO)
+        WHEN MATCHED THEN
+            UPDATE SET
+                INVC_NO = #{invcNo},
+                INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
+                EXP_TYPE = #{expType},
+                EXP_TYPE_NM = #{expTypeNm},
+                AMT = REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+                UPD_DT = SYSDATE
+        WHEN NOT MATCHED THEN
+            INSERT (
+                CLM_NO,
+                CLM_SEQ,
+                INVC_NO,
+                INVC_DT,
+                EXP_TYPE,
+                EXP_TYPE_NM,
+                MILEAGE,
+                AMT,
+                CRT_DT,
+                CRT_USER_ID,
+                UPD_DT,
+                UPD_USER_ID,
+                CLAM_UN,
+                TAX_CODE,
+                INVC_CUR,
+                TAX_AMT,
+                NET_AMT
+            ) values (
+                #{clmNo},
+                (SELECT MAX(CLM_SEQ) + 1 FROM FCM0028D WHERE CLM_NO = #{clmNo}),
+                #{invcNo},
+                TO_DATE(#{invcDt}, 'DD/MM/YYYY'),
+                #{expType},
+                #{expTypeNm},
+                #{mileage},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL),
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{userId},
+                #{clamUn},
+                #{taxCode},
+                #{cur},
+                #{taxAmt},
+                REGEXP_REPLACE(#{dAmt}, '[^0-9.]+', NULL)
+            )
+        </if>
+        <if test="advType == 4">
+        USING (
+            SELECT #{clmNo} CLM_NO,
+                   #{expType} EXP_TYPE,
+                   #{clamUn} CLAM_UN
+            FROM DUAL
+        ) SRC
+        ON (TRGT.CLM_NO = SRC.CLM_NO  AND TRGT.CLAM_UN = SRC.CLAM_UN)
+        WHEN MATCHED THEN
+            UPDATE SET
+                INVC_NO = #{invcNo},
+                INVC_DT = TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
+                EXP_TYPE = #{expType},
+                EXP_TYPE_NM = #{expTypeNm},
+                GL_ACC_NO = #{glAccCode},
+                GL_ACC_NM = (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
+                BGT_CODE = #{budgetCode},
+                BGT_NM = (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
+                AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+                REM = #{expDesc},
+                UPD_DT = SYSDATE,
+                TAX_CODE = 'VB',
+                NET_AMT = REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+                SUPPLIER = #{supplierName}
+         WHEN NOT MATCHED THEN
+            INSERT (
+                CLM_NO,
+                CLM_SEQ,
+                INVC_NO,
+                INVC_DT,
+                EXP_TYPE,
+                EXP_TYPE_NM,
+                GL_ACC_NO,
+                GL_ACC_NM,
+                BGT_CODE,
+                BGT_NM,
+                SUPPLIER,
+                AMT,
+                REM,
+                CRT_DT,
+                CRT_USER_ID,
+                UPD_DT,
+                UPD_USER_ID,
+                CLAM_UN,
+                TAX_CODE,
+                INVC_CUR,
+                TAX_AMT,
+                NET_AMT
+            ) values (
+                #{clmNo},
+                (SELECT MAX(CLM_SEQ) + 1 FROM FCM0028D WHERE CLM_NO = #{clmNo}),
+                #{invcNo},
+                TO_DATE(#{invcDt}, 'YYYY/MM/DD'),
+                #{expType},
+                #{expTypeNm},
+                #{glAccCode},
+                (SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{glAccCode}),
+                #{budgetCode},
+                (SELECT BUDGET_CODE_TEXT FROM FCM0010M WHERE BUDGET_CODE = #{budgetCode}),
+                #{supplierName},
+                REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+                #{expDesc},
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{userId},
+                #{clamUn},
+                'VB',
+                #{cur},
+                #{taxAmt},
+                REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL)
+            )
+        </if>
+    </update>
+
+    <update id="updateTotal" parameterType="Map">
+        UPDATE FCM0027M
+        SET TOT_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo})
+        <!-- NET_AMT = (SELECT SUM(AMT) FROM FCM0028D WHERE CLM_NO = #{clmNo}) -->
+        WHERE CLM_NO = #{clmNo}
+    </update>
+
+    <insert id="insertAppvDetails" parameterType="Map">
+        INSERT INTO FCM0015D (
+            APPV_PRCSS_NO,
+            APPV_ITM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            MEM_ACC_ID,
+            PAY_DUE_DT,
+            EXP_TYPE,
+            EXP_TYPE_NAME,
+            COST_CENTR,
+            COST_CENTR_NAME,
+            GL_ACC_CODE,
+            GL_ACC_CODE_NAME,
+            BUDGET_CODE,
+            BUDGET_CODE_NAME,
+            TAX_CODE,
+            NET_AMT,
+            APPV_AMT,
+            EXP_DESC,
+            ATCH_FILE_GRP_ID,
+            CLAM_UN,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            BIL_PERIOD_F,
+            BIL_PERIOD_T,
+            INVC_CUR
+        ) VALUES (
+            #{appvPrcssNo},
+            (SELECT NVL(MAX(APPV_ITM_SEQ) + 1, 1) AS APPV_ITM_SEQ FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo}),
+            #{invcNo},
+            NVL(TO_DATE(TO_CHAR(TO_DATE(#{invcDt}, 'YYYY/MM/DD'), 'DD/MM/YYYY'), 'DD/MM/YYYY'), NULL),
+            #{memAccId},
+            SYSDATE,
+            #{expType},
+            #{expTypeNm},
+            #{costCenter},
+            (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCenter}),
+            #{glAccNo},
+            #{glAccNm},
+            #{budgetCode},
+            #{budgetCodeName},
+            'VB',
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
+            REGEXP_REPLACE(#{amt}, '[^0-9.]+', NULL),
+            #{expDesc},
+            #{atchFileGrpId},
+            #{clamUn},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            TO_DATE(#{billPeriodFr}, 'DD/MM/YYYY'),
+            TO_DATE(#{billPeriodTo}, 'DD/MM/YYYY'),
+            'MYR'
+        )
+
+    </insert>
+
+    <update id="updateAdvanceReqInfo" parameterType="Map">
+        UPDATE FCM0027M
+        SET APPV_PRCSS_NO = #{appvPrcssNo}
+        WHERE CLM_NO = #{clmNo}
+    </update>
+
+    <select id="getRefDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ADV_TYPE,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') ENTRY_DT,
+            A.COST_CENTER,
+            A.COST_CENTER_NM,
+            A.MEM_ACC_ID PAYEE_CODE,
+            B.NAME PAYEE_NAME,
+            A.TOT_AMT,
+            TO_CHAR(A.ADV_PRD_FR, 'DD/MM/YYYY') ADV_PRD_FR,
+            TO_CHAR(A.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
+            E.NAME BANK_NAME,
+            B.BANK_ACC_NO,
+            F.EXP_TYPE,
+            F.EXP_TYPE_NM,
+            TO_CHAR(A.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
+            C.USER_NAME CRT_USER_NM
+        FROM FCM0027M A
+        INNER JOIN ORG0001D B
+            ON A.MEM_ACC_ID = B.MEM_CODE
+        INNER JOIN SYS0047M C
+            ON A.CRT_USER_ID = C.USER_ID
+        LEFT JOIN ORG0001D D
+            ON C.HR_CODE = D.MEM_CODE
+        LEFT JOIN SYS0004M E
+            ON B.BANK = E.BANK_ID
+        LEFT JOIN FCM0028D F ON A.CLM_NO = F.CLM_NO
+        WHERE A.CLM_NO = #{claimNo}
+    </select>
+
+    <update id="updateAdvRequest" parameterType="Map">
+        UPDATE FCM0027M SET
+        ADV_REFD_NO = #{clmNo}
+        WHERE CLM_NO = #{advReqClmNo}
+    </update>
+
+    <select id="getAdvType" parameterType="Map" resultType="egovMap">
+        SELECT ADV_TYPE
+        FROM FCM0027M
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <select id="selectAppvInfoAndItems" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.APPV_PRCSS_NO,
+            A.APPV_PRCSS_STUS,
+            A.APPV_REQ_KEY_NO CLM_NO,
+            E.CODE_NAME CLM_TYPE,
+            C.ADV_TYPE,
+            CASE
+                 WHEN C.ADV_TYPE = '3' THEN 'Staff Business Activity Request'
+                 WHEN C.ADV_TYPE = '4' THEN 'Staff Business Activity Repayment'
+                 WHEN C.ADV_TYPE = '5' THEN 'Vendor Advance Request'
+                 WHEN C.ADV_TYPE = '6' THEN 'Vendor Advance Repayment'
+            END ADV_TYPE_DESC,
+            TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,
+            A.REQST_USER_ID,
+            A.APPV_LINE_CNT,
+            A.APPV_LINE_PRCSS_CNT,
+            TO_CHAR(J.INVC_DT, 'DD/MM/YYYY') INVC_DT,
+            J.INVC_NO,
+            C.MEM_ACC_ID,
+            D.MEM_ACC_NAME,
+            C.COST_CENTER COST_CENTR,
+            C.COST_CENTER_NM COST_CENTR_NAME,
+            F.NAME BANK,
+            C.BANK_ACC_NO,
+            C.ADV_REFD_DT PAY_DUE_DT,
+            TO_CHAR(C.ADV_PRD_FR, 'DD/MM/YYYY') ADV_PRD_FR,
+            TO_CHAR(C.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
+            (C.ADV_PRD_TO - C.ADV_PRD_FR) + 1 DATEDIFF,
+            C.ADV_LOC_FR,
+            C.ADV_LOC_TO,
+            J.REM EXP_DESC,
+            TO_CHAR(C.ADV_REFD_DT, 'DD/MM/YYYY') ADV_REFD_DT,
+            J.AMT REPAY_AMT,
+<!--            I.CLM_NO ADV_REFD_CLM_NO, -->
+            C.MAIN_REQ_NO ADV_REFD_CLM_NO,
+<!--            TO_CHAR(I.ADV_PRD_FR, 'DD/MM/YYYY') REF_TRV_PRD_FR, -->
+<!--            TO_CHAR(I.ADV_PRD_TO, 'DD/MM/YYYY') REF_TRV_PRD_TO, -->
+            (SELECT TO_CHAR(ADV_PRD_FR, 'DD/MM/YYYY') FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO) REF_TRV_PRD_FR,
+            (SELECT TO_CHAR(ADV_PRD_TO, 'DD/MM/YYYY') FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO) REF_TRV_PRD_TO,
+            C.FILE_ATCH_GRP_ID ATCH_FILE_GRP_ID,
+            H.ATCH_FILE_ID,
+            H.ATCH_FILE_NAME,
+            J.CLM_SEQ APPV_ITM_SEQ,
+            J.GL_ACC_NO GL_ACC_CODE,
+            J.GL_ACC_NM GL_ACC_CODE_NAME,
+            J.BGT_CODE BUDGET_CODE,
+            J.BGT_NM BUDGET_CODE_NAME,
+            'VB - Purchase(0%):Out of scope' TAX_CODE,
+            C.TOT_AMT,
+            J.NET_AMT,
+            NVL(J.INVC_CUR, 'MYR') CUR,
+            NVL(J.CLAM_UN, J.CLM_NO) CLM_UN,
+            REGEXP_REPLACE(C.ADV_REM , '(^[[:space:]]+)|([[:space:]]+$)', NULL) REM,
+            C.ADV_OCC,
+<!--            I.TOT_AMT ADV_AMT, -->
+            NVL((SELECT TOT_AMT FROM FCM0027M WHERE CLM_NO = C.MAIN_REQ_NO),0) ADV_AMT,
+            C.ADV_REFD_MODE REFUND_MODE,
+            C.ADV_REFD_REF BANK_REF,
+            J.INVC_CUR CURRENCY,
+            J.SUPPLIER
+        FROM FCM0004M A
+        <!-- LEFT JOIN FCM0015D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO -->
+        LEFT JOIN FCM0027M C
+            ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+        LEFT JOIN FCM0006M D
+            ON C.MEM_ACC_ID = D.MEM_ACC_ID
+        LEFT JOIN SYS0013M E
+            ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = E.CODE AND E.CODE_MASTER_ID = 343 AND E.DISAB = 0
+        LEFT JOIN SYS0004M F
+            ON C.BANK_CODE = F.BANK_ID
+        LEFT JOIN (SELECT ATCH_FILE_GRP_ID,ATCH_FILE_ID FROM (SELECT A.*,  RANK() OVER (PARTITION BY ATCH_FILE_GRP_ID ORDER BY ATCH_FILE_ID DESC) row_num FROM SYS0070M A) WHERE row_num=1) G
+            ON C.FILE_ATCH_GRP_ID = G.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D H
+            ON G.ATCH_FILE_ID = H.ATCH_FILE_ID
+        <!-- LEFT JOIN FCM0027M I
+                ON A.APPV_REQ_KEY_NO = I.ADV_REFD_NO -->
+        LEFT JOIN FCM0028D J
+                ON J.CLM_NO = C.CLM_NO
+        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+        ORDER BY J.CLAM_UN
+    </select>
+
+    <insert id="insertRefund" parameterType="Map">
+        INSERT INTO FCM0027M (
+            CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            TOT_AMT,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            ADV_REFD_DT,
+            FILE_ATCH_GRP_ID,
+            ADV_REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            ADV_OCC,
+            ADV_REFD_MODE,
+            ADV_REFD_REF,
+            MAIN_REQ_NO
+        ) SELECT
+            #{clmNo},
+            #{refAdvType},
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            #{glAccNo},
+            #{dAmt},
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            TO_DATE(#{refAdvRepayDate}, 'DD/MM/YYYY'),
+            #{refAtchFileGrpId},
+            #{trvRepayRem},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            #{expType},
+            #{refMode},
+            #{refBankRef},
+            #{advReqClmNo}
+        FROM FCM0027M
+        WHERE CLM_NO = #{advReqClmNo}
+    </insert>
+    <select id="getRefDtlsGrid" parameterType="String" resultType="egovMap">
+
+		SELECT T1.CLM_SEQ,
+               T3.COST_CENTER,
+               T3.COST_CENTER_NM,
+               T3.MEM_ACC_ID,
+               T1.EXP_TYPE,
+               T1.EXP_TYPE_NM,
+               T1.GL_ACC_NO GL_ACC_CODE,
+               T1.GL_ACC_NM GL_ACC_CODE_NAME,
+               T1.BGT_CODE BUDGET_CODE,
+               T1.BGT_NM BUDGET_CODE_NAME,
+               T1.INVC_NO,
+               TO_CHAR(T1.INVC_DT, 'YYYY/MM/DD') AS INVC_DT,
+               T1.TAX_CODE,
+               T2.INDUSTRY_CODE||'('||T2.TAX_NAME||')' AS TAX_NAME,
+               'MYR' AS CUR,
+               T1.NET_AMT AS TOT_AMT,
+               T1.TAX_AMT AS GST_AMT,
+               REGEXP_REPLACE(T1.REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+               T1.CLAM_UN,
+               T3.TOT_AMT AS ALL_TOT_AMT,
+               T3.APPV_PRCSS_NO,
+               T1.SUPPLIER SUPPLIER_NAME,
+               TO_CHAR(T3.CRT_DT, 'DD/MM/YYYY') ENTRY_DT
+        FROM   FCM0028D T1
+               LEFT JOIN FCM0007C T2 ON T1.TAX_CODE = T2.TAX_CODE
+               LEFT JOIN FCM0027M T3 ON T1.CLM_NO = T3.CLM_NO
+        WHERE  T1.CLM_NO = #{clmNo}
+        ORDER  BY T1.CLM_SEQ
+	</select>
+
+	<select id="selectAdvInfoAndItems" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(SYSDATE, 'YYYYMMDD') RGST_DT,           /* RGST_DT */
+            TO_CHAR(SYSDATE, 'HH24MISS') RGST_TM,            /* RGST_TM */
+            A.APPV_REQ_KEY_NO CLM_NO,                            /* CLAM_NO */
+            SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,     /* BLART */
+            F.ADV_TYPE,                                                     /* ADVANCE_TYPE */
+            CASE WHEN F.ADV_TYPE = '3' THEN 'STAFF ADVANCE BUSINESS REQUEST'
+                    WHEN F.ADV_TYPE = '4' THEN 'STAFF ADVANCE BUSINESS REPAYMENT'
+            END AS ADV_TYPE_NAME,
+            CASE WHEN F.ADV_TYPE = 4
+                THEN E.TOT_AMT
+                ELSE 0
+            END EXP_AMT,
+            TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT, /* REQDATE */
+            A.REQST_USER_ID,                                             /* REQPERNM */
+            TO_CHAR(B.ADV_REFD_DT, 'DD/MM/YYYY') PAY_DUE_DT,/* DUEDATE */
+            B.COST_CENTER_NM COST_CENTR_NAME,             /* REQDEPTNM */
+            E.COST_CENTER DIM_1,                                      /* DIMENSION1 */
+            D.MEM_ACC_ID,                                                 /* ACCOUNT */
+            B.ADV_REM EXP_DESC,                                              /* LINEMEMO */
+            E.APPV_ITM_SEQ,                                             /* LINEID */
+            CASE WHEN (F.ADV_TYPE = '2' OR F.ADV_TYPE = '4') THEN (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.APPV_REQ_KEY_NO)
+            END AS ADV_CLAM_NO,                                     /* ADV_CLAM_NO */
+            E.TOT_AMT NET_AMT,                                       /* GRAND_AMT */
+            B.TOT_AMT,                                                    /* TAMT */
+            E.GL_ACC_NO GL_CODE,                                   /* GL_CODE */
+            E.TAX_CODE,                                                   /* VATCODE */
+            A.APPV_PRCSS_STUS,
+            TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
+            TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,   /* DOCDATE */
+            (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+            E.INVC_CUR CURRENCY,
+            E.BGT_CODE
+        FROM FCM0004M A
+        LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE AND C.CODE_MASTER_ID = 343 AND C.DISAB = 0
+        LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
+        LEFT JOIN (
+            SELECT J.APPV_PRCSS_NO, SUM(I.AMT) AS TOT_AMT, I.INVC_DT, I.CLM_SEQ APPV_ITM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.BGT_CODE
+            FROM FCM0028D I
+            LEFT JOIN FCM0027M J ON J.CLM_NO = I.CLM_NO
+            GROUP BY I.CLM_NO, J.APPV_PRCSS_NO, I.INVC_DT, I.CLM_SEQ, J.ADV_REM, I.GL_ACC_NO, I.TAX_CODE, J.COST_CENTER, I.INVC_CUR, I.BGT_CODE
+        ) E
+        ON A.APPV_PRCSS_NO = E.APPV_PRCSS_NO
+        LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo} ORDER BY E.APPV_ITM_SEQ
+    </select>
+
+    <insert id="insertBusinessActAdvInterface" parameterType="Map">
+	    INSERT INTO ITF0701M (
+	        IF_KEY,
+	        SEQ,
+	        IF_TYPE,
+	        TRAN_STATUS_CD,
+	        RGST_DT,
+	        RGST_TM,
+	        RGST_ID,
+	        CLAM_NO,
+	        ADVANCE_TYPE,
+	        BLART,
+	        DOCDATE,
+	        DUEDATE,
+	        REQDATE,
+	        REQPERNM,
+	        REQDEPTNM,
+	        ACCOUNT,
+	        LINEID,
+	        LINEMEMO,
+	        ADV_CLAM_NO,
+	        ACCTCODE,
+	        GRAND_AMT,
+	        EXPENSE_AMT,
+	        BALANCE_AMT,
+	        VATAMT,
+	        VAT_NON,
+	        TAMT,
+	        VATCODE,
+	        DIMENSION1,
+	        DIMENSION2,
+	        STATUS,
+	        WAERS
+	    ) VALUES (
+	        #{ifKey},
+	        '1',
+	        '701',
+	        '10',
+	        #{rgstDt},
+	        #{rgstTm},
+	        #{userId},
+	        #{clmNo},
+	        #{advType},
+	        #{clmType},
+	        TO_CHAR(TO_DATE(#{docDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+	        TO_CHAR(TO_DATE(#{dueDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+	        TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYMMDD'),
+	        #{reqstUserId},
+	        #{costCentrName},
+	        #{memAccId},
+	        #{appvItmSeq},
+	        #{expDesc},
+	        #{advClamNo},
+	        #{glCode},
+	        REGEXP_REPLACE(#{grandAmt}, '[^0-9.]+', NULL),
+	        REGEXP_REPLACE(#{expAmt}, '[^0-9.]+', NULL),
+	        NVL(#{balAmt},0),
+	        #{taxAmt},
+	        #{nonTaxAmt},
+	        REGEXP_REPLACE(#{totAmt}, '[^0-9.]+', NULL),
+	        'VB',
+	        #{dim1},
+	        #{dim2},
+	        #{appvPrcssStus},
+	        #{currency}
+	    )
+    </insert>
+
+    <select id="selectSettlementInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+	        TO_CHAR(SYSDATE, 'YYYYMMDD') RGST_DT,              /* RGST_DT */
+	        TO_CHAR(SYSDATE, 'HH24MISS') RGST_TM,               /* RGST_TM */
+	        A.APPV_REQ_KEY_NO CLM_NO,                               /* CLAM_NO */
+	        SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,        /* BLART */
+	        F.ADV_TYPE,                                                        /* ADVANCE_TYPE */
+	        CASE WHEN F.ADV_TYPE = '1' THEN 'STAFF TRAVEL ADVANCE REQUEST'
+	             WHEN F.ADV_TYPE = '2' THEN 'STAFF TRAVEL ADVANCE REPAYMENT'
+	             WHEN F.ADV_TYPE = '3' THEN 'STAFF/COMPANY EVENT REQUEST'
+	             WHEN F.ADV_TYPE = '4' THEN 'STAFF/COMPANY EVENT REPAYMENT'
+	        END AS ADV_TYPE_NAME,
+	        TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,     /* REQDATE */
+	        A.REQST_USER_ID,                                               /* REQPERNM */
+	        TO_CHAR(B.ADV_REFD_DT, 'DD/MM/YYYY') PAY_DUE_DT,/* DUEDATE */
+	        B.COST_CENTER_NM COST_CENTR_NAME, /* REQDEPTNM */
+	        D.MEM_ACC_ID,                                     /* ACCOUNT */
+	        B.ADV_REM EXP_DESC,                           /* LINEMEMO */
+	        (SELECT MAX(CLM_SEQ)+1 FROM FCM0028D WHERE CLM_NO = B.CLM_NO) APPV_ITM_SEQ,/* LINEID */
+	        CASE WHEN (F.ADV_TYPE = '2' OR F.ADV_TYPE = '4') THEN (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.APPV_REQ_KEY_NO)
+	        END AS ADV_CLAM_NO,                         /* ADV_CLAM_NO */
+	        B.TOT_AMT,                                         /* TAMT */
+	        A.APPV_PRCSS_STUS,
+	        TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
+	        TO_CHAR(A.APPV_PRCSS_DT,'DD/MM/YYYY') INVC_DT, /* DOCDATE */
+	        --TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
+	        (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+	        G.INVC_CUR CURRENCY
+	    FROM FCM0004M A
+	    LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+	    LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE AND C.CODE_MASTER_ID = 343 AND C.DISAB = 0
+	    LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
+	    LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+	    LEFT JOIN
+        (SELECT * FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND ROWNUM = 1) G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+	    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <select id="selectBalanceInfo" parameterType="Map" resultType="egovMap">
+          SELECT x.*,
+              <if test="flg == 0">
+		      NVL(x.TOT_AMT - x.REQ_AMT, 0) AS BAL_AMT
+		      </if>
+		      <if test="flg == 1">
+		      NVL(x.REQ_AMT - x.TOT_AMT, 0) AS BAL_AMT
+		      </if>
+		      FROM
+		        (SELECT
+		        TO_CHAR(SYSDATE, 'YYYYMMDD') RGST_DT,           /* RGST_DT */
+		        TO_CHAR(SYSDATE, 'HH24MISS') RGST_TM,           /* RGST_TM */
+		        A.APPV_REQ_KEY_NO CLM_NO,                       /* CLAM_NO */
+		        SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) CLM_TYPE,       /* BLART */
+		        F.ADV_TYPE,                                     /* ADVANCE_TYPE */
+		        CASE WHEN F.ADV_TYPE = '1' THEN 'STAFF TRAVEL ADVANCE REQUEST'
+		             WHEN F.ADV_TYPE = '2' THEN 'STAFF TRAVEL ADVANCE REPAYMENT'
+		             WHEN F.ADV_TYPE = '3' THEN 'STAFF/COMPANY EVENT REQUEST'
+		             WHEN F.ADV_TYPE = '4' THEN 'STAFF/COMPANY EVENT REPAYMENT'
+		        END AS ADV_TYPE_NAME,
+		        TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,     /* REQDATE */
+		        A.REQST_USER_ID,                                /* REQPERNM */
+		        TO_CHAR(B.ADV_REFD_DT, 'DD/MM/YYYY') PAY_DUE_DT,/* DUEDATE */
+		        B.COST_CENTER_NM COST_CENTR_NAME,/* REQDEPTNM */
+		        D.MEM_ACC_ID,                                   /* ACCOUNT */
+		        B.ADV_REM EXP_DESC,                         /* LINEMEMO */
+		        (SELECT MAX(CLM_SEQ)+2 FROM FCM0028D WHERE CLM_NO = B.CLM_NO) APPV_ITM_SEQ,/* LINEID */
+		        CASE WHEN (F.ADV_TYPE = '2' OR F.ADV_TYPE = '4') THEN (SELECT CLM_NO FROM FCM0027M WHERE ADV_REFD_NO = A.APPV_REQ_KEY_NO)
+		        END AS ADV_CLAM_NO,                       /* ADV_CLAM_NO */
+		        B.TOT_AMT,                                      /* TAMT */
+		        A.APPV_PRCSS_STUS,
+		        TO_CHAR(A.APPV_PRCSS_DT, 'DD/MM/YYYY') APPV_PRCSS_DT,
+		        TO_CHAR( a.appv_prcss_dt, 'DD/MM/YYYY') INVC_DT,        /* DOCDATE */
+		        (SELECT TOT_AMT FROM FCM0027M WHERE ADV_REFD_NO = B.CLM_NO) REQ_AMT,
+		        G.INVC_CUR CURRENCY
+		    FROM FCM0004M A
+		    LEFT JOIN FCM0027M B ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+		    LEFT JOIN SYS0013M C ON SUBSTR(A.APPV_REQ_KEY_NO, 1, 2) = C.CODE AND C.CODE_MASTER_ID = 343 AND C.DISAB = 0
+		    LEFT JOIN FCM0006M D ON B.MEM_ACC_ID = D.MEM_ACC_ID
+		    LEFT JOIN FCM0027M F ON A.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+		    LEFT JOIN
+		    (SELECT * FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND ROWNUM = 1) G ON G.APPV_PRCSS_NO = F.APPV_PRCSS_NO
+		    WHERE A.APPV_PRCSS_NO = #{appvPrcssNo})x
+    </select>
+
+    <select id="selectNextReqNo" resultType="String">
+
+         SELECT
+         <if test="reqType == 'R3'">
+        'R3' ||
+        TO_CHAR (SYSDATE, 'yymm') ||
+        MAX(CLM_NO) AS CLM_NO
+        </if>
+         <if test="reqType == 'A2'">
+        'A2' ||
+        TO_CHAR (SYSDATE, 'yymm') ||
+        MAX(CLM_NO) AS CLM_NO
+        </if>
+    FROM (
+        SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+        FROM FCM0027M
+        WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+        <if test='reqType == "R3"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'R3'
+            </if>
+            <if test='reqType == "A2"'>
+                AND SUBSTR (CLM_NO, 1, 2) = 'A2'
+            </if>
+    )
+    </select>
+
+    <select id="getAttachmenDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            ATCH_FILE_GRP_ID,
+            MAX(ATCH_FILE_ID) ATCH_FILE_ID
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = (
+            SELECT
+                FILE_ATCH_GRP_ID
+            FROM FCM0027M
+            WHERE CLM_NO = #{clmNo}
+        )
+        group by ATCH_FILE_GRP_ID
+    </select>
+
+    <select id="getFileAtchGrpId" resultType="int">
+        SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getFileAtchId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSYS0070M_ER" parameterType="Map">
+        INSERT INTO SYS0070M
+        SELECT
+            #{newFileAtchGrpId},
+            #{newFileAtchId},
+            CHENAL_TYPE,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            SYSDATE
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{exFileAtchGrpId}
+        AND ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertSYS0071D_ER" parameterType="Map">
+        INSERT INTO SYS0071D
+        SELECT
+            #{newFileAtchId},
+            ATCH_FILE_NAME,
+            FILE_SUB_PATH,
+            PHYSICL_FILE_NAME,
+            FILE_EXTSN,
+            FILE_SIZE,
+            FILE_PASSWORD,
+            FILE_UNQ_KEY,
+            FILE_KEY_SEQ
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertRejectM" parameterType="Map">
+        INSERT INTO FCM0027M (
+            CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            TOT_AMT,
+            ADV_REFD_DT,
+            FILE_ATCH_GRP_ID,
+            ADV_REM,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            ADV_OCC,
+            ADV_REFD_MODE,
+            ADV_REFD_REF,
+            PREV_CLM_NO,
+            MAIN_REQ_NO
+        )
+        SELECT
+            #{newClmNo} CLM_NO,
+            ADV_TYPE,
+            COST_CENTER,
+            COST_CENTER_NM,
+            MEM_ACC_ID,
+            BANK_CODE,
+            BANK_ACC_NO,
+            GL_ACC_NO,
+            TOT_AMT,
+            ADV_REFD_DT,
+            #{newFileAtchGrpId},
+            ADV_REM,
+            ADV_PRD_FR,
+            ADV_PRD_TO,
+            SYSDATE,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            ADV_OCC,
+            ADV_REFD_MODE,
+            ADV_REFD_REF,
+            CLM_NO,
+            MAIN_REQ_NO
+        FROM FCM0027M
+        WHERE CLM_NO = #{clmNo}
+    </insert>
+
+    <insert id="insertRejectD" parameterType="Map">
+        INSERT INTO FCM0028D (
+            CLM_NO,
+            CLM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            EXP_TYPE,
+            EXP_TYPE_NM,
+            GL_ACC_NO,
+            GL_ACC_NM,
+            BGT_CODE,
+            BGT_NM,
+            SUPPLIER,
+            MILEAGE,
+            AMT,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CLAM_UN,
+            TAX_CODE,
+            INVC_CUR,
+            TAX_AMT,
+            NET_AMT
+        )
+        SELECT
+            #{newClmNo} CLM_NO,
+            CLM_SEQ,
+            INVC_NO,
+            INVC_DT,
+            EXP_TYPE,
+            EXP_TYPE_NM,
+            GL_ACC_NO,
+            GL_ACC_NM,
+            BGT_CODE,
+            BGT_NM,
+            SUPPLIER,
+            MILEAGE,
+            AMT,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CLAM_UN,
+            TAX_CODE,
+            INVC_CUR,
+            TAX_AMT,
+            NET_AMT
+        FROM FCM0028D
+        WHERE CLM_NO = #{clmNo}
+    </insert>
+
+    <select id="holiday_SYS81" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(HOLIDAY, 'YYYYMMDD') HOLIDAY
+        FROM (
+            SELECT
+                HOLIDAY
+            FROM SYS0081M
+            WHERE (UPPER(STATE) = 'KUALA LUMPUR'
+                OR STATE IS NULL)
+                AND TO_CHAR(HOLIDAY, 'YYYY') = SUBSTR('20220111', 1, 4)
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0101', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0201', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0831', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '0916', 'YYYYMMDD') FROM DUAL
+            UNION
+            SELECT TO_DATE(SUBSTR('20220111', 1, 4) || '1225', 'YYYYMMDD') FROM DUAL
+        )
+    </select>
+
+    <select id="selectAttachList" parameterType="String" resultType="egovMap">
+
+         SELECT T1.ATCH_FILE_GRP_ID
+                ,T1.ATCH_FILE_ID
+                ,T2.ATCH_FILE_NAME
+                ,T2.FILE_SUB_PATH
+                ,T2.PHYSICL_FILE_NAME
+                ,T2.FILE_EXTSN
+                ,T2.FILE_SIZE
+         FROM SYS0070M T1
+         LEFT JOIN SYS0071D T2
+         ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+         WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+         ORDER BY T1.ATCH_FILE_ID
+    </select>
+
+    <delete id="deleteDraftRequestD">
+        DELETE FROM FCM0028D
+        WHERE CLM_NO=#{clmNo} AND CLAM_UN=#{clamUn}
+    </delete>
+
+    <update id="manualStaffBusinessAdvReqSettlement" parameterType="Map">
+        UPDATE FCM0027M
+        SET ADV_REFD_NO = 'MANUAL',
+            ADV_REFD_DT = SYSDATE,
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE CLM_NO = #{clmNo}
+    </update>
+
+    <select id="selectBank" resultType="egovMap">
+
+        SELECT BANK_ID BANK_ID, NAME BANK_NAME
+        FROM SYS0004M
+        WHERE IS_SAP = 1
+        ORDER BY CODE
+
+    </select>
+</mapper>

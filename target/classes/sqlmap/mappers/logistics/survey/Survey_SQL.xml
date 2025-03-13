@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.survey.impl.SurveyMapper">
+
+<select id="verifyStatus" parameterType="Map" resultType="int">
+    SELECT COUNT(*) AS VALID
+    FROM MSC0022D
+        WHERE 1 = 1
+        AND USER_ID = #{userId}
+        AND SURVEY_TYPE_ID = #{surveyTypeId}
+        AND DISAB = 0
+</select>
+
+<select id="isSurveyRequired" parameterType="Map" resultType="egovMap">
+    SELECT SURVEY_TYPE_ID
+    FROM MSC0047M
+        WHERE STUS_CODE_ID = 1
+        AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(SURVEY_START_DT,'DD/MM/YYYY') AND TO_DATE(SURVEY_END_DT,'DD/MM/YYYY')
+        --AND TO_DATE(SURVEY_START_DT,'DD/MM/YYYY') >= TO_DATE(SYSDATE,'DD/MM/YYYY')
+        <choose>
+            <when test="userTypeId == 1">
+                AND IS_HP = 1 AND ROLE_ID IN (0,#{roleType})
+            </when>
+           <when test="userTypeId == 2">
+                AND IS_CD = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+           <when test="userTypeId == 3">
+                AND IS_CT = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+           <when test="userTypeId == 7">
+                AND IS_HT = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+          <otherwise>
+              AND IS_STAFF = 1 AND ROLE_ID IN (0,#{roleType})
+          </otherwise>
+        </choose>
+        <if test="inWeb != null and inWeb != '' ">
+            AND IN_WEB = #{inWeb}
+         </if>
+</select>
+
+<select id="getSurveyTitle" parameterType="Map" resultType="egovMap">
+SELECT
+        EXTENT1.SURVEY_TYPE_ID,
+        EXTENT1.SURVEY_TITLE,
+        EXTENT2.SURVEY_MESSAGE,
+        EXTENT2.SURVEY_SUB_GRP
+    FROM MSC0047M EXTENT1
+    JOIN MSC0048D EXTENT2 ON EXTENT1.SURVEY_TYPE_ID = EXTENT2.SURVEY_TYPE_ID
+    WHERE EXTENT1.SURVEY_TYPE_ID = #{surveyTypeId}
+    AND EXTENT1.STUS_CODE_ID = 1
+</select>
+
+<select id="getSurveyQues" parameterType="Map" resultType="egovMap">
+    SELECT  EXTENT1.QUES_ID,
+                EXTENT2.QUES,
+                EXTENT1.SURVEY_TYPE_ID,
+                EXTENT1.SEQ,
+                EXTENT1.DISAB,
+                CASE WHEN EXTENT1.QUES_IS_SCRE = 1 THEN 'CHECKBOX'
+                        WHEN EXTENT1.QUES_IS_REM = 1 AND EXTENT2.IS_CUST_ANS = 1 THEN 'DROPTEXT'
+                        WHEN EXTENT1.QUES_IS_REM = 1 AND EXTENT2.IS_CUST_ANS = 0 THEN 'TEXT'
+                        WHEN EXTENT1.QUES_IS_REM = 0 AND EXTENT2.IS_CUST_ANS = 1 THEN 'DROPDOWN'
+                ELSE 'CHECKBOX'
+                END INPUT_TYPE
+    FROM MSC0024D EXTENT1
+    JOIN MSC0025D EXTENT2 ON EXTENT1.QUES_ID = EXTENT2.QUES_ID
+        WHERE 1 = 1
+        AND EXTENT1.DISAB = 0
+        AND EXTENT1.SURVEY_TYPE_ID = #{surveyTypeId}
+        AND EXTENT1.SURVEY_QUES_GRP = #{surveyQuesGrp}
+        ORDER BY EXTENT1.SEQ
+</select>
+
+<select id="getSurveyTypeId" resultType="int">
+    SELECT CODE FROM SYS0094M WHERE IND = 'SURVEY'
+</select>
+
+<select id="getSurveyAns" parameterType="Map" resultType="egovMap">
+    SELECT ANS_ID CODE,
+               ANS_DESC CODE_NAME
+    FROM MSC0026D
+    WHERE STUS = 1
+        AND QUES_ID = #{quesId}
+        ORDER BY ANS_ID
+</select>
+
+<select id="selectSurveyMSeq" resultType="int">
+    SELECT MSC0022D_SURVEY_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertSurveyM" parameterType="Map">
+    INSERT INTO MSC0022D
+        (SURVEY_ID ,
+         SURVEY_TYPE_ID ,
+         USER_ID ,
+         CRT_DT ,
+         DISAB ,
+         REM )
+    VALUES
+        (#{surveyId},
+         #{surveyTypeId},
+         #{userId},
+         SYSDATE,
+         0,
+         #{rem})
+</insert>
+
+
+<insert id="insertSurveyD" parameterType="Map">
+      <selectKey keyProperty="surveyItmIdSeq" resultType="Integer" order="BEFORE">
+        SELECT MSC0023D_SURVEY_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+      INSERT INTO MSC0023D (
+            SURVEY_ITM_ID ,
+			SURVEY_ID ,
+			QUES_ID ,
+			QUES_IS_SCRE ,
+			QUES_IS_REM ,
+			SCRE ,
+			REM ,
+			QUES_ANS_ID ,
+			QUES_IS_CUST_ANS)
+      VALUES
+			(#{surveyItmIdSeq} ,
+			#{surveyId} ,
+			#{quesId} ,
+			#{quesIsScre} ,
+			#{quesIsRem} ,
+			#{scre} ,
+			#{rem} ,
+			#{quesAnsId} ,
+			#{quesIsCustAns})
+</insert>
+
+
+</mapper>

@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.contract.impl.ContractMapper">
+
+    <select id="selectContractTrackingList" resultType="egovMap">
+            SELECT
+                MAIN.CONT_TRACK_ID  CONT_TRACK_ID
+	            ,MAIN.CONT_TRACK_NO  CONT_TRACK_NO
+                ,MAIN.CONT_REF_NO  CONTRACT_REF_NO
+                ,MAIN.CONT_TYPE
+                ,MAIN.CONT_TYPE_OTHER
+                ,MAIN.CONT_NAME  CONTRACT_NAME
+                ,MAIN.CONT_DATE
+                ,TO_CHAR(MAIN.CRT_DT, 'DD/MM/YYYY') CRT_DT
+                ,MAIN.CRT_USER_ID
+                ,TO_CHAR(MAIN.UPD_DT, 'DD/MM/YYYY') UPD_DT
+                ,MAIN.UPD_USER_ID
+                ,TO_CHAR(MAIN.CONT_COMM_DT, 'DD/MM/YYYY') COMM_DT
+                ,TO_CHAR(MAIN.CONT_EXPIRY_DT, 'DD/MM/YYYY') EXP_DT
+                ,MAIN.RENEWAL_CYCLE RENEWAL_CYCLE
+                ,DET.DEPT_NAME CONTRACT_OWNER
+                ,DET.VEN_NAME VENDOR_NAME
+            FROM SAL0413M MAIN
+            LEFT JOIN SAL0414D DET ON DET.CONT_TRACK_ID = MAIN.CONT_TRACK_ID
+            LEFT JOIN SYS0013M CONTTYPE ON CONTTYPE.CODE_ID = MAIN.CONT_TYPE AND CONTTYPE.CODE_MASTER_ID = 600
+            LEFT JOIN SYS0047M CRTUSER ON CRTUSER.USER_ID = MAIN.CRT_USER_ID
+            WHERE MAIN.STATUS <![CDATA[ <> ]]> 8
+
+            <if test="sContractRefNo != null and sContractRefNo != '' ">
+	            AND UPPER(MAIN.CONT_REF_NO) LIKE UPPER(#{sContractRefNo}) || '%'
+	        </if>
+            <if test="sRunNo != null and sRunNo != '' ">
+	            AND UPPER(MAIN.CONT_TRACK_NO) LIKE UPPER(#{sRunNo}) || '%'
+	        </if>
+            <if test="_createdFrDt != null and _createdFrDt != '' and _createdEndDt != null and _createdEndDt != '' ">
+	            AND to_date(TO_CHAR(MAIN.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') between TO_DATE(#{_createdFrDt},'DD/MM/YYYY') and  TO_DATE(#{_createdEndDt},'DD/MM/YYYY')
+	        </if>
+            <if test="sCreatedBy != null and sCreatedBy != '' ">
+	            AND CRTUSER.USER_NAME = UPPER(#{sCreatedBy})
+	        </if>
+	        <if test='contractType != null and contractType != ""'>
+            AND CONTTYPE.CODE IN
+            <foreach item="item" collection="contractType" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+	        </if>
+	        <if test="sContractTerm != null and sContractTerm != '' ">
+                AND MAIN.CONT_TERM = #{sContractTerm}
+            </if>
+            <if test="_contComFrDt != null and _contComFrDt != '' and _contComeEndDt != null and _contComeEndDt != '' ">
+                AND to_date(TO_CHAR(MAIN.CONT_COMM_DT,'DD/MM/YYYY'),'DD/MM/YYYY') between TO_DATE(#{_contComFrDt},'DD/MM/YYYY') and  TO_DATE(#{_contComeEndDt},'DD/MM/YYYY')
+            </if>
+            <if test='contractStus != null and contractStus != ""'>
+            AND MAIN.CONT_STATUS IN
+            <foreach item="item" collection="contractStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            </if>
+            <if test="sOwnerDept != null and sOwnerDept != '' ">
+                AND UPPER(DET.DEPT_NAME) LIKE UPPER(#{sOwnerDept}) || '%'
+            </if>
+            <if test="sDeptEmal != null and sDeptEmal != '' ">
+                AND UPPER(DET.DEPT_EMAIL) LIKE UPPER(#{sDeptEmal}) || '%'
+            </if>
+            <if test="sDeptPic != null and sDeptPic != '' ">
+                AND UPPER(DET.PIC_NAME) LIKE UPPER(#{sDeptPic}) || '%'
+            </if>
+            <if test="sVendorName != null and sVendorName != '' ">
+                AND UPPER(DET.VEN_NAME) LIKE UPPER(#{sVendorName}) || '%'
+            </if>
+            <if test="sVendorNric != null and sVendorNric != '' ">
+                AND DET.VEN_NRIC LIKE #{sVendorNric} || '%'
+            </if>
+            <if test="sVendorEmail != null and sVendorEmail != '' ">
+                AND UPPER(DET.VEN_PIC_EMAIL) LIKE UPPER(#{sVendorEmail}) || '%'
+            </if>
+
+            ORDER BY MAIN.CONT_TRACK_ID
+
+    </select>
+
+    <select id="selectNextContractId" resultType="int">
+        SELECT SAL0413M_CONTRACT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+	<select id="selectNextContractNo" resultType="String">
+	    SELECT
+            'CO' ||
+            TO_CHAR (SYSDATE, 'yymm') ||
+            MAX(CONT_TRACK_NO) AS CLM_NO
+        FROM (
+            SELECT NVL (TO_CHAR (MAX (SUBSTR (CONT_TRACK_NO, 7, 4) + 1), 'FM0000'), '0001') AS CONT_TRACK_NO
+            FROM SAL0413M
+            WHERE SUBSTR (CONT_TRACK_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+        )
+	</select>
+
+    <insert id="insertVendorMain" parameterType="Map">
+	    MERGE INTO SAL0413M TARG
+		USING (
+		  SELECT
+		      #{contTrackId} CONT_TRACK_ID
+              ,#{contTrackNo} CONT_TRACK_NO
+              ,#{contractRefNo} CONT_REF_NO
+              ,#{contractType} CONT_TYPE
+              ,#{contractOtherRem} CONT_TYPE_OTHER
+              ,#{contractName} CONT_NAME
+              ,TO_DATE(#{_contractDt}, 'DD/MM/YYYY') CONT_DATE
+              ,#{atchFileGrpId} ATCH_FILE_GRP_ID
+			  ,#{contractTermY} CONT_TERM_YEAR
+			  ,#{contractTermM} CONT_TERM_MONTH
+              ,TO_DATE(#{_contractCommDt}, 'DD/MM/YYYY') CONT_COMM_DT
+              ,TO_DATE(#{_contractExpDt}, 'DD/MM/YYYY') CONT_EXPIRY_DT
+              <if test="contractStus != null and contractStus != '' ">
+              ,#{contractStus} CONT_STATUS
+              </if>
+              ,#{isOptToRenew} IS_OPT_RENEW
+              ,#{numRenewCycle} RENEWAL_CYCLE
+              ,SYSDATE CRT_DT
+              ,#{userId} CRT_USER_ID
+              ,SYSDATE UPD_DT
+              ,#{userId} UPD_USER_ID
+              , NVL(#{sContStatus},1) STATUS
+            FROM DUAL
+		) SOURC
+		ON (SOURC.CONT_TRACK_ID = TARG.CONT_TRACK_ID)
+		WHEN MATCHED THEN
+			UPDATE SET
+	            TARG.CONT_REF_NO = SOURC.CONT_REF_NO
+				,TARG.CONT_TYPE = SOURC.CONT_TYPE
+				,TARG.CONT_TYPE_OTHER = SOURC.CONT_TYPE_OTHER
+				,TARG.CONT_NAME = SOURC.CONT_NAME
+				,TARG.CONT_DATE = SOURC.CONT_DATE
+				,TARG.ATCH_FILE_GRP_ID = SOURC.ATCH_FILE_GRP_ID
+				,TARG.CONT_TERM_YEAR = SOURC.CONT_TERM_YEAR
+				,TARG.CONT_TERM_MONTH = SOURC.CONT_TERM_MONTH
+	            ,TARG.CONT_COMM_DT = SOURC.CONT_COMM_DT
+	            ,TARG.CONT_EXPIRY_DT = SOURC.CONT_EXPIRY_DT
+	            <if test="contractStus != null and contractStus != '' ">
+	            ,TARG.CONT_STATUS = SOURC.CONT_STATUS
+	            </if>
+	            ,TARG.IS_OPT_RENEW = SOURC.IS_OPT_RENEW
+	            ,TARG.RENEWAL_CYCLE = SOURC.RENEWAL_CYCLE
+				,TARG.UPD_DT = SOURC.UPD_DT
+				,TARG.UPD_USER_ID = SOURC.UPD_USER_ID
+				,TARG.STATUS = SOURC.STATUS
+		WHEN NOT MATCHED THEN
+	       INSERT
+            (
+                CONT_TRACK_ID
+                ,CONT_TRACK_NO
+                ,CONT_REF_NO
+                ,CONT_TYPE
+                ,CONT_TYPE_OTHER
+                ,CONT_NAME
+                ,CONT_DATE
+                ,ATCH_FILE_GRP_ID
+	           ,CONT_TERM_YEAR
+	           ,CONT_TERM_MONTH
+	           ,CONT_COMM_DT
+	           ,CONT_EXPIRY_DT
+	           <if test="contractStus != null and contractStus != '' ">
+	           ,CONT_STATUS
+	           </if>
+	           ,IS_OPT_RENEW
+	           ,RENEWAL_CYCLE
+                ,CRT_DT
+                ,CRT_USER_ID
+            )
+            VALUES
+            (
+                SOURC.CONT_TRACK_ID
+                ,SOURC.CONT_TRACK_NO
+                ,SOURC.CONT_REF_NO
+                ,SOURC.CONT_TYPE
+                ,SOURC.CONT_TYPE_OTHER
+                ,SOURC.CONT_NAME
+                ,SOURC.CONT_DATE
+                ,SOURC.ATCH_FILE_GRP_ID
+	            ,SOURC.CONT_TERM_YEAR
+	            ,SOURC.CONT_TERM_MONTH
+	            ,SOURC.CONT_COMM_DT
+	            ,SOURC.CONT_EXPIRY_DT
+	            <if test="contractStus != null and contractStus != '' ">
+	            ,SOURC.CONT_STATUS
+	            </if>
+	            ,SOURC.IS_OPT_RENEW
+	            ,SOURC.RENEWAL_CYCLE
+                ,SOURC.CRT_DT
+                ,SOURC.CRT_USER_ID
+            )
+
+            <!-- INSERT INTO SAL0413M
+            (
+                CONT_TRACK_ID
+                ,CONT_TRACK_NO
+				,CONT_REF_NO
+				,CONT_TYPE
+				,CONT_TYPE_OTHER
+				,CONT_NAME
+				,CONT_DATE
+				,CRT_DT
+				,CRT_USER_ID
+            )
+            VALUES
+            (
+                #{contTrackId}
+                ,#{contTrackNo}
+				,#{contractRefNo}
+				,#{contractType}
+				,#{contractOtherRem}
+				,#{contractName}
+				,TO_DATE(#{_contractDt}, 'DD/MM/YYYY')
+				,SYSDATE
+				,#{userId}
+            ) -->
+    </insert>
+
+    <insert id="insertVendorDetails" parameterType="Map">
+
+    MERGE INTO SAL0414D TARG
+	USING (
+	   SELECT
+	       #{contTrackId} CONT_TRACK_ID
+	       ,#{deptName} DEPT_NAME
+	       ,#{deptEmail} DEPT_EMAIL
+	       ,#{picName} PIC_NAME
+	       ,#{picEmail} PIC_EMAIL
+	       ,#{vendorName} VEN_NAME
+	       ,#{vendorNric} VEN_NRIC
+	       ,#{vendorType} VEN_TYPE
+	       ,#{vendorOtherRem} VEN_TYPE_OTHER
+	       ,#{vendorPicName} VEN_PIC_NAME
+	       ,#{vendorPicEmail} VEN_PIC_EMAIL
+	       ,#{vendorPicNo} VEN_PIC_NO
+	       ,SYSDATE CRT_DT
+	       ,#{userId} CRT_USER_ID
+	       ,SYSDATE UPD_DT
+           ,#{userId} UPD_USER_ID
+	   FROM DUAL
+	) SOURC
+	ON (SOURC.CONT_TRACK_ID = TARG.CONT_TRACK_ID)
+	WHEN MATCHED THEN
+	   UPDATE SET
+            TARG.DEPT_NAME = SOURC.DEPT_NAME
+			,TARG.DEPT_EMAIL = SOURC.DEPT_EMAIL
+			,TARG.PIC_NAME = SOURC.PIC_NAME
+			,TARG.PIC_EMAIL = SOURC.PIC_EMAIL
+			,TARG.VEN_NAME = SOURC.VEN_NAME
+			,TARG.VEN_NRIC = SOURC.VEN_NRIC
+			,TARG.VEN_TYPE = SOURC.VEN_TYPE
+			,TARG.VEN_TYPE_OTHER = SOURC.VEN_TYPE_OTHER
+			,TARG.VEN_PIC_NAME = SOURC.VEN_PIC_NAME
+			,TARG.VEN_PIC_EMAIL = SOURC.VEN_PIC_EMAIL
+			,TARG.VEN_PIC_NO = SOURC.VEN_PIC_NO
+			,TARG.UPD_DT = SOURC.UPD_DT
+			,TARG.UPD_USER_ID = SOURC.UPD_USER_ID
+	WHEN NOT MATCHED THEN
+	   INSERT
+       (
+           CONT_TRACK_ID
+           ,DEPT_NAME
+           ,DEPT_EMAIL
+           ,PIC_NAME
+           ,PIC_EMAIL
+           ,VEN_NAME
+           ,VEN_NRIC
+           ,VEN_TYPE
+           ,VEN_TYPE_OTHER
+           ,VEN_PIC_NAME
+           ,VEN_PIC_EMAIL
+           ,VEN_PIC_NO
+           ,CRT_DT
+           ,CRT_USER_ID
+       )
+       VALUES
+       (
+           SOURC.CONT_TRACK_ID
+	        ,SOURC.DEPT_NAME
+	        ,SOURC.DEPT_EMAIL
+	        ,SOURC.PIC_NAME
+	        ,SOURC.PIC_EMAIL
+	        ,SOURC.VEN_NAME
+	        ,SOURC.VEN_NRIC
+	        ,SOURC.VEN_TYPE
+	        ,SOURC.VEN_TYPE_OTHER
+	        ,SOURC.VEN_PIC_NAME
+	        ,SOURC.VEN_PIC_EMAIL
+	        ,SOURC.VEN_PIC_NO
+	        ,SOURC.CRT_DT
+	        ,SOURC.CRT_USER_ID
+       )
+
+            <!-- INSERT INTO SAL0414D
+            (
+                CONT_TRACK_ID
+				,ATCH_FILE_GRP_ID
+				,CONT_TERM
+				,CONT_COMM_DT
+				,CONT_EXPIRY_DT
+				,CONT_STATUS
+				,IS_OPT_RENEW
+				,RENEWAL_CYCLE
+				,DEPT_NAME
+				,DEPT_EMAIL
+				,PIC_NAME
+				,PIC_EMAIL
+				,VEN_NAME
+				,VEN_NRIC
+				,VEN_TYPE
+				,VEN_PIC_NAME
+				,VEN_PIC_EMAIL
+				,VEN_PIC_NO
+				,CRT_DT
+				,CRT_USER_ID
+            )
+            VALUES
+            (
+                #{contTrackId}
+				,#{atchFileGrpId}
+				,#{contractTerm}
+				,TO_DATE(#{_contractCommDt}, 'DD/MM/YYYY')
+				,TO_DATE(#{_contractExpDt}, 'DD/MM/YYYY')
+				,#{contractStus}
+				,#{isOptToRenew}
+				,#{numRenewCycle}
+				,#{deptName}
+				,#{deptEmail}
+				,#{picName}
+				,#{picEmail}
+				,#{vendorName}
+				,#{vendorNric}
+				,#{vendorType}
+				,#{vendorPicName}
+				,#{vendorPicEmail}
+				,#{vendorPicNo}
+                ,SYSDATE
+                ,#{userId}
+            ) -->
+    </insert>
+
+	<select id="selectNextContractSeq" parameterType="int" resultType="int">
+	    SELECT NVL(MAX(SEQ) + 1, 1) AS SEQ FROM SAL0415D WHERE CONT_TRACK_ID = #{contTrackId}
+	</select>
+
+    <insert id="insertContractCycleDetails" parameterType="Map">
+            INSERT INTO SAL0415D
+            (
+                CONT_TRACK_ID
+				,SEQ
+				,RENEWAL_COMM_DT
+				,RENEWAL_EXP_DT
+				,RENEWAL_TERM_YEAR
+				,RENEWAL_TERM_MONTH
+				,RENEWAL_CUTOFF_DT
+				<if test="contractRenewDt != null and contractRenewDt != '' ">
+				,CONT_RENEWAL_DT
+				</if>
+				,ATCH_FILE_GRP_ID
+                ,CRT_DT
+                ,CRT_USER_ID
+            )
+            VALUES
+            (
+                #{contTrackId}
+				,#{seq}
+				,TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
+				,TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
+				,#{contractTermY}
+				,#{contractTermM}
+				,TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
+				<if test="contractRenewDt != null and contractRenewDt != '' ">
+				,TO_DATE(#{contractRenewDt}, 'YYYY/MM/DD')
+				</if>
+				,#{atchFileGrpId}
+                ,SYSDATE
+                ,#{userId}
+            )
+    </insert>
+
+    <select id="selectContractTrackingViewDetails" resultType="egovMap">
+    SELECT
+
+        MAIN.CONT_TRACK_ID  CONT_TRACK_ID
+        ,MAIN.CONT_TRACK_NO  CONT_TRACK_NO
+        ,MAIN.CONT_REF_NO  CONTRACT_REF_NO
+        ,MAIN.CONT_TYPE
+        ,MAIN.CONT_TYPE_OTHER
+        ,MAIN.CONT_NAME  CONTRACT_NAME
+        ,TO_CHAR(MAIN.CONT_DATE,'DD/MM/YYYY') CONT_DATE
+        ,TO_CHAR(MAIN.CRT_DT,'DD/MM/YYYY') CRT_DT
+        ,CUSERN.USER_NAME
+        ,TO_CHAR(MAIN.UPD_DT,'DD/MM/YYYY') UPD_DT
+        ,MAIN.UPD_USER_ID
+        ,MAIN.ATCH_FILE_GRP_ID
+        ,MAIN.CONT_TERM_YEAR
+        ,MAIN.CONT_TERM_MONTH
+        ,TO_CHAR(MAIN.CONT_COMM_DT,'DD/MM/YYYY') COMM_DT
+        ,TO_CHAR(MAIN.CONT_EXPIRY_DT,'DD/MM/YYYY') EXP_DT
+        ,MAIN.CONT_STATUS
+        ,MAIN.IS_OPT_RENEW
+        ,MAIN.RENEWAL_CYCLE
+        ,DET.DEPT_NAME
+        ,DET.DEPT_EMAIL
+        ,DET.PIC_NAME
+        ,DET.PIC_EMAIL
+        ,DET.VEN_NAME
+        ,DET.VEN_NRIC
+        ,DET.VEN_TYPE
+        ,DET.VEN_TYPE_OTHER
+        ,DET.VEN_PIC_NAME
+        ,DET.VEN_PIC_EMAIL
+        ,DET.VEN_PIC_NO
+
+    FROM SAL0413M MAIN
+    LEFT JOIN SAL0414D DET ON DET.CONT_TRACK_ID = MAIN.CONT_TRACK_ID
+    LEFT JOIN SYS0047M CUSERN ON CUSERN.USER_ID = MAIN.CRT_USER_ID
+    WHERE MAIN.CONT_TRACK_ID = #{contTrackId}
+    </select>
+
+    <select id="selectContractCycleDetails" resultType="egovMap">
+    SELECT
+        CONT_TRACK_ID
+        ,SEQ
+        ,TO_CHAR(RENEWAL_COMM_DT,'DD/MM/YYYY') contract_Comm_Dt
+        ,TO_CHAR(RENEWAL_EXP_DT,'DD/MM/YYYY') contract_Comm_Exp_Dt
+        ,RENEWAL_TERM_YEAR contract_Term_y
+        ,RENEWAL_TERM_MONTH contract_Term_m
+        ,TO_CHAR(RENEWAL_CUTOFF_DT,'DD/MM/YYYY') notice_Period
+        ,TO_CHAR(CONT_RENEWAL_DT,'DD/MM/YYYY') contract_Renew_Dt
+        ,ATCH_FILE_GRP_ID
+        ,TO_CHAR(CRT_DT,'DD/MM/YYYY') CRT_DT
+        ,CRT_USER_ID
+        ,STUS status
+    FROM SAL0415D MAINCYCLE
+    WHERE CONT_TRACK_ID = #{contTrackId}
+    AND STUS <![CDATA[ <> ]]> 8
+    ORDER BY SEQ
+    </select>
+
+    <update id="updateContractCycleDetails" parameterType="Map">
+        update SAL0415D SET
+			RENEWAL_COMM_DT = TO_DATE(#{contractCommDt}, 'DD/MM/YYYY')
+			,RENEWAL_EXP_DT = TO_DATE(#{contractCommExpDt}, 'DD/MM/YYYY')
+			,RENEWAL_TERM_YEAR = #{contractTermY}
+			,RENEWAL_TERM_MONTH = #{contractTermM}
+			,RENEWAL_CUTOFF_DT = TO_DATE(#{noticePeriod}, 'DD/MM/YYYY')
+			<if test="contractRenewDt != null and contractRenewDt != '' ">
+			,CONT_RENEWAL_DT = TO_DATE(#{contractRenewDt}, 'YYYY/MM/DD')
+			</if>
+			,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+			,UPD_DT = SYSDATE
+			,UPD_USER_ID = #{userId}
+		WHERE CONT_TRACK_ID = #{contTrackId}
+		AND SEQ = #{seq}
+    </update>
+
+    <update id="removeContractCycleDetails" parameterType="Map">
+        update SAL0415D SET
+            STUS = #{status}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CONT_TRACK_ID = #{contTrackId}
+        AND SEQ = #{seq}
+    </update>
+
+    <update id="updateRenewalCycle" parameterType="Map">
+        update SAL0413M SET
+            RENEWAL_CYCLE = #{noOfCycle}
+        WHERE CONT_TRACK_ID = #{contTrackId}
+    </update>
+
+</mapper>

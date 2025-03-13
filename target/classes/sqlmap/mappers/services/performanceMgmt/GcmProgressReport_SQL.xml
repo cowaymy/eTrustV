@@ -1,0 +1,882 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper">
+
+    <select id="selectMemList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectMemList] 20191031 - KR OHK */
+         SELECT EMPLY_CODE CODE_ID
+                    ,'[' || A.EMPLY_CODE ||']' || B.NAME CODE_NAME
+           FROM CMM0006T A
+            LEFT OUTER JOIN ORG0001D B ON A.EMPLY_ID = B.MEM_ID
+         WHERE EMPLY_TYPE_CODE = 'CD'
+             AND EMPLY_LEV = #{emplyLev}
+             AND IS_EXCLUDE <![CDATA[<>]]> 1
+             AND EMPLY_STUS_ID = 1 -- ACTIVE
+           <if test="month == null or month == ''">
+             AND COMM_TASK_ID =  (TO_NUMBER(TO_CHAR(SYSDATE,'MM'))+TO_NUMBER(TO_CHAR(SYSDATE,'YYYY'))*12)-24157
+           </if>
+           <if test="month != null and month != ''">
+             AND COMM_TASK_ID =  (TO_NUMBER(TO_NUMBER(#{month}))+#{year}*12)-24157
+           </if>
+	       <if test="mangrCode != null and mangrCode != ''">
+	         AND MANGR_CODE = #{mangrCode}
+	       </if>
+          ORDER BY B.NAME
+    </select>
+
+    <select id="selectScmList"  parameterType="Map" resultType="egovMap">
+	/* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectScmList] 20191029 - KR OHK */
+    WITH T_CODY AS (
+		SELECT X.EMPLY_ID AS MEM_ID,
+		           X.EMPLY_CODE AS MEM_CODE,
+		           Y.NAME,
+		           X.EMPLY_LEV AS MEM_LVL,
+		           X.MANGR_ID AS MEM_UP_ID,
+		           X.EMPLY_STUS_ID,
+		           X.COMM_TASK_ID,
+		           (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+		   FROM CMM0006T X
+		    LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+		 WHERE 1=1
+		    AND EMPLY_TYPE_CODE = 'CD'
+		    AND IS_EXCLUDE <![CDATA[<>]]> 1
+		    AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+		)
+		SELECT MEM_CODE
+			      ,MEM_NAME
+			      ,NVL(JAN_VAL, 0) JAN_VAL
+			      ,NVL(FEB_VAL, 0) FEB_VAL
+			      ,NVL(MAR_VAL, 0) MAR_VAL
+			      ,NVL(APR_VAL, 0) APR_VAL
+			      ,NVL(MAY_VAL, 0) MAY_VAL
+			      ,NVL(JUN_VAL, 0) JUN_VAL
+			      ,NVL(JUL_VAL, 0) JUL_VAL
+			      ,NVL(AUG_VAL, 0) AUG_VAL
+			      ,NVL(SEP_VAL, 0) SEP_VAL
+			      ,NVL(OCT_VAL, 0) OCT_VAL
+			      ,NVL(NOV_VAL, 0) NOV_VAL
+			      ,NVL(DEC_VAL, 0) DEC_VAL
+		 FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME, COUNT(B.MEM_CODE) VAL
+		             FROM T_CODY  A
+		              LEFT OUTER JOIN T_CODY B
+		                ON  A.MEM_ID = B.MEM_UP_ID
+		               AND A.COMM_TASK_ID = B.COMM_TASK_ID
+		               AND B.MEM_LVL = 2      -- SCM
+		               AND B.EMPLY_STUS_ID = 1
+		        WHERE A.MEM_LVL = 1         -- GCM
+		        <if test='allYn == "N"'>
+		           AND A.EMPLY_STUS_ID = 1
+		        </if>
+		        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+		      )
+		      PIVOT
+		      (
+		         SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+		      )
+	   WHERE 1=1
+	    <if test="gcmCode != null and gcmCode != ''">
+		   AND MEM_CODE = #{gcmCode}
+		</if>
+		ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCmList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCmList] 20191029 - KR OHK */
+    WITH T_CODY AS (
+        SELECT X.EMPLY_ID AS MEM_ID,
+                   X.EMPLY_CODE AS MEM_CODE,
+                   Y.NAME,
+                   X.EMPLY_LEV AS MEM_LVL,
+                   X.MANGR_ID AS MEM_UP_ID,
+                   X.EMPLY_STUS_ID,
+                   X.COMM_TASK_ID,
+                   (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+           FROM CMM0006T X
+            LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+         WHERE 1=1
+            AND EMPLY_TYPE_CODE = 'CD'
+            AND IS_EXCLUDE <![CDATA[<>]]> 1
+            AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+        )
+        SELECT MEM_CODE
+                  ,MEM_NAME
+                  ,NVL(JAN_VAL, 0) JAN_VAL
+                  ,NVL(FEB_VAL, 0) FEB_VAL
+                  ,NVL(MAR_VAL, 0) MAR_VAL
+                  ,NVL(APR_VAL, 0) APR_VAL
+                  ,NVL(MAY_VAL, 0) MAY_VAL
+                  ,NVL(JUN_VAL, 0) JUN_VAL
+                  ,NVL(JUL_VAL, 0) JUL_VAL
+                  ,NVL(AUG_VAL, 0) AUG_VAL
+                  ,NVL(SEP_VAL, 0) SEP_VAL
+                  ,NVL(OCT_VAL, 0) OCT_VAL
+                  ,NVL(NOV_VAL, 0) NOV_VAL
+                  ,NVL(DEC_VAL, 0) DEC_VAL
+         FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME, COUNT(C.MEM_CODE) VAL
+			         FROM T_CODY  A
+			          LEFT OUTER JOIN T_CODY B
+			            ON  A.MEM_ID = B.MEM_UP_ID
+			           AND A.COMM_TASK_ID = B.COMM_TASK_ID
+			           AND B.MEM_LVL= 2      -- SCM
+			           AND B.EMPLY_STUS_ID = 1
+			          LEFT OUTER JOIN T_CODY C
+			            ON  B.MEM_ID = C.MEM_UP_ID
+			           AND B.COMM_TASK_ID = C.COMM_TASK_ID
+			           AND C.MEM_LVL= 3      -- CM
+			           AND C.EMPLY_STUS_ID = 1
+			        WHERE A.MEM_LVL= 1     -- GCM
+			        <if test='allYn == "N"'>
+	                   AND A.EMPLY_STUS_ID = 1
+	                </if>
+			        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+              )
+              PIVOT
+              (
+                 SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+              )
+        WHERE 1=1
+        <if test="gcmCode != null and gcmCode != ''">
+           AND MEM_CODE = #{gcmCode}
+        </if>
+        ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCodyList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCodyList] 20191029 - KR OHK */
+    WITH T_CODY AS (
+        SELECT X.EMPLY_ID AS MEM_ID,
+                   X.EMPLY_CODE AS MEM_CODE,
+                   Y.NAME,
+                   X.EMPLY_LEV AS MEM_LVL,
+                   X.MANGR_ID AS MEM_UP_ID,
+                   X.EMPLY_STUS_ID,
+                   X.COMM_TASK_ID,
+                   (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+           FROM CMM0006T X
+            LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+         WHERE 1=1
+            AND EMPLY_TYPE_CODE = 'CD'
+            AND IS_EXCLUDE <![CDATA[<>]]> 1
+            AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+        )
+        SELECT MEM_CODE
+                  ,MEM_NAME
+                  ,NVL(JAN_VAL, 0) JAN_VAL
+                  ,NVL(FEB_VAL, 0) FEB_VAL
+                  ,NVL(MAR_VAL, 0) MAR_VAL
+                  ,NVL(APR_VAL, 0) APR_VAL
+                  ,NVL(MAY_VAL, 0) MAY_VAL
+                  ,NVL(JUN_VAL, 0) JUN_VAL
+                  ,NVL(JUL_VAL, 0) JUL_VAL
+                  ,NVL(AUG_VAL, 0) AUG_VAL
+                  ,NVL(SEP_VAL, 0) SEP_VAL
+                  ,NVL(OCT_VAL, 0) OCT_VAL
+                  ,NVL(NOV_VAL, 0) NOV_VAL
+                  ,NVL(DEC_VAL, 0) DEC_VAL
+         FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME, COUNT(D.MEM_CODE) VAL
+			         FROM T_CODY  A
+			          LEFT OUTER JOIN T_CODY B
+			             ON A.MEM_ID = B.MEM_UP_ID
+			           AND A.COMM_TASK_ID = B.COMM_TASK_ID
+			           AND B.MEM_LVL= 2      -- SCM
+			           AND B.EMPLY_STUS_ID = 1
+			          LEFT OUTER JOIN T_CODY C
+			            ON  B.MEM_ID = C.MEM_UP_ID
+			           AND A.COMM_TASK_ID = C.COMM_TASK_ID
+			           AND C.MEM_LVL= 3      -- CM
+			           AND C.EMPLY_STUS_ID = 1
+			          LEFT OUTER JOIN T_CODY D
+			            ON C.MEM_ID = D.MEM_UP_ID
+			           AND A.COMM_TASK_ID = D.COMM_TASK_ID
+			           AND D.MEM_LVL= 4      -- CODY
+			           AND D.EMPLY_STUS_ID = 1
+			       WHERE A.MEM_LVL= 1      -- GCM
+			       <if test='allYn == "N"'>
+                       AND A.EMPLY_STUS_ID = 1
+                   </if>
+			        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+              )
+              PIVOT
+              (
+                 SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+              )
+        WHERE 1=1
+        <if test="gcmCode != null and gcmCode != ''">
+           AND MEM_CODE = #{gcmCode}
+        </if>
+        ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCodyRowDataList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCodyRowDataList] 20191029 - KR OHK */
+    WITH T_CODY AS (
+		SELECT A.COMM_TASK_ID
+			      ,TO_CHAR(ADD_MONTHS(TO_DATE('02/2013','MM/YYYY'), A.COMM_TASK_ID-1),'MM/YYYY') AS BATCH_MONTH
+			      ,A.DEPT_CODE
+			      ,A.MANGR_ID MEM_UP_ID
+			      ,A.EMPLY_ID MEM_ID
+			      ,A.EMPLY_CODE MEM_CODE
+			      ,B.NAME MEM_NAME
+			      ,A.WORKING_MONTH
+			      ,A.JOIN_DT
+			      ,A.EMPLY_LEV MEM_LVL
+			      ,A.EMPLY_STUS_ID
+		  FROM CMM0006T A
+		   LEFT OUTER JOIN ORG0001D B ON A.EMPLY_ID = B.MEM_ID
+		 WHERE 1 = 1
+		    AND A.EMPLY_TYPE_CODE = 'CD'
+		    AND A.IS_EXCLUDE <![CDATA[<>]]> 1
+		    AND A.EMPLY_STUS_ID = 1
+		    AND A.COMM_TASK_ID = (TO_NUMBER(#{month})+#{year}*12)-24157
+            )
+			SELECT *
+			  FROM (SELECT A.BATCH_MONTH
+							      ,DECODE(B.MEM_LVL, 3, D.MEM_CODE, C.MEM_CODE) GCM_CODE
+							      ,DECODE(B.MEM_LVL, 3, D.MEM_NAME, C.MEM_NAME) GCM_NAME
+							      ,DECODE(B.MEM_LVL, 2, B.MEM_CODE, C.MEM_CODE) SCM_CODE
+							      ,DECODE(B.MEM_LVL, 2, B.MEM_NAME, C.MEM_NAME) SCM_NAME
+							      ,DECODE(B.MEM_LVL, 3, B.MEM_CODE, NULL) CM_CODE
+							      ,DECODE(B.MEM_LVL, 3, B.MEM_NAME, NULL) CM_NAME
+							      ,A.MEM_CODE CODY_CODE, A.MEM_NAME CODY_NAME
+							      ,A.WORKING_MONTH
+							      ,A.JOIN_DT
+						  FROM T_CODY   A
+						      LEFT OUTER JOIN T_CODY B
+						           ON  B.MEM_ID = A.MEM_UP_ID
+						           AND B.COMM_TASK_ID = A.COMM_TASK_ID
+						           AND B.MEM_LVL IN ('2', '3')   -- CM
+						           AND B.EMPLY_STUS_ID = 1
+						      LEFT OUTER JOIN T_CODY C
+						           ON  C.MEM_ID = B.MEM_UP_ID
+						           AND C.COMM_TASK_ID = A.COMM_TASK_ID
+						           AND C.MEM_LVL IN ('1','2')     -- SCM
+						           AND C.EMPLY_STUS_ID = 1
+						      LEFT OUTER JOIN T_CODY D
+						           ON  D.MEM_ID = C.MEM_UP_ID
+						           AND D.COMM_TASK_ID = A.COMM_TASK_ID
+						           AND D.MEM_LVL= 1      -- GCM
+						           AND D.EMPLY_STUS_ID = 1
+						WHERE A.MEM_LVL = '4'  --  CODY
+					  )	 T
+			WHERE 1 = 1
+			<if test="(gcmCode != null and gcmCode != '') and(scmCode == null or scmCode == '') and (cmCode == null or cmCode == '')">
+			   AND T.GCM_CODE = #{gcmCode}
+            </if>
+			<if test="(scmCode != null and scmCode != '') and (cmCode == null or cmCode == '')">
+               AND T.SCM_CODE = #{scmCode}
+            </if>
+            <if test="cmCode != null and cmCode != ''">
+			   AND T.CM_CODE = #{cmCode}
+			</if>
+    </select>
+
+    <select id="selectHearServiceList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectHearServiceList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+		      ,MEM_NAME
+		      ,NVL(JAN_VAL, 0) JAN_VAL
+		      ,NVL(FEB_VAL, 0) FEB_VAL
+		      ,NVL(MAR_VAL, 0) MAR_VAL
+		      ,NVL(APR_VAL, 0) APR_VAL
+		      ,NVL(MAY_VAL, 0) MAY_VAL
+		      ,NVL(JUN_VAL, 0) JUN_VAL
+		      ,NVL(JUL_VAL, 0) JUL_VAL
+		      ,NVL(AUG_VAL, 0) AUG_VAL
+		      ,NVL(SEP_VAL, 0) SEP_VAL
+		      ,NVL(OCT_VAL, 0) OCT_VAL
+		      ,NVL(NOV_VAL, 0) NOV_VAL
+		      ,NVL(DEC_VAL, 0) DEC_VAL
+	 FROM (SELECT A.MEM_CODE
+			             ,C.NAME MEM_NAME
+			             ,A.MONTH_VAL
+			             ,SUM(B.V4) AS VAL  -- Heart Service
+		         FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+			                  FROM CMM0006T
+			                WHERE 1=1
+			                    AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+			                    AND EMPLY_TYPE_CODE = 'CD'
+			                    AND EMPLY_LEV = 1 -- GCM
+			                    AND IS_EXCLUDE <![CDATA[<>]]>  1
+			             ) A
+	              LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+	              LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+	           GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+	       )
+	       PIVOT
+	       (
+	           SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+	       )
+    WHERE 1=1
+    <if test="gcmCode != null and gcmCode != ''">
+       AND MEM_CODE = #{gcmCode}
+    </if>
+	ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectRentalCollectionList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectRentalCollectionList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(ROUND(B.V6,2)) AS VAL  -- Rental Collection
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+       AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectSalesNetList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectSalesNetList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(B.V8) AS VAL  -- Sales Net
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+     ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectSalesProdList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectSalesProdList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(ROUND(B.V10,2)) AS VAL  -- Sales Productivity
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectRejoinList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectRejoinList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(ROUND(B.V31,2)) AS VAL  -- Rejoin
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectMBOSalesList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectMBOSalesList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(B.V46) AS VAL  -- MBO_Sales
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectMBOSVMList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectMBOSVMList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(B.V48) AS VAL  -- MBO_SVM
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectRetentionList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectRetentionList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(B.V12) AS VAL  -- Retention
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCFFList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCFFList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(ROUND(B.V32,2)) AS VAL  -- CFF_Overall
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectGcmPEList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectGcmPEList] 20191030 - KR OHK */
+    SELECT MEM_CODE
+              ,MEM_NAME
+              ,NVL(JAN_VAL, 0) JAN_VAL
+              ,NVL(FEB_VAL, 0) FEB_VAL
+              ,NVL(MAR_VAL, 0) MAR_VAL
+              ,NVL(APR_VAL, 0) APR_VAL
+              ,NVL(MAY_VAL, 0) MAY_VAL
+              ,NVL(JUN_VAL, 0) JUN_VAL
+              ,NVL(JUL_VAL, 0) JUL_VAL
+              ,NVL(AUG_VAL, 0) AUG_VAL
+              ,NVL(SEP_VAL, 0) SEP_VAL
+              ,NVL(OCT_VAL, 0) OCT_VAL
+              ,NVL(NOV_VAL, 0) NOV_VAL
+              ,NVL(DEC_VAL, 0) DEC_VAL
+     FROM (SELECT A.MEM_CODE
+                         ,C.NAME MEM_NAME
+                         ,A.MONTH_VAL
+                         ,SUM(B.V3+B.V5+B.V7+B.V9+B.V45+B.V47-B.V13-B.V33) AS VAL  -- PE = (V3)HAPPYCALL_MARK + (V5)BS_MARK + (v7)RC_MARK + (V9)NS_MARK + (V45)GROUP SALES QUANTITY + (V47)NET VAL - DROP_MARK - CFF_Mark
+                 FROM ( SELECT COMM_TASK_ID, EMPLY_ID, EMPLY_CODE AS MEM_CODE, (COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+                              FROM CMM0006T
+                            WHERE 1=1
+                                AND COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+                                AND EMPLY_TYPE_CODE = 'CD'
+                                AND EMPLY_LEV = 1 -- GCM
+                                AND IS_EXCLUDE <![CDATA[<>]]>  1
+                         ) A
+                  LEFT OUTER JOIN CMM0028D B ON B.TASK_ID = A.COMM_TASK_ID AND B.EMPLY_ID = A.EMPLY_ID
+                  LEFT OUTER JOIN ORG0001D C ON C.MEM_ID = A.EMPLY_ID
+               GROUP BY A.MONTH_VAL, A.EMPLY_ID, A.MEM_CODE, C.NAME
+           )
+           PIVOT
+           (
+                SUM(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+           )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+    ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectScmPEAList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectScmPEAList] 20191030 - KR OHK */
+    WITH T_CODY AS (
+		SELECT  X.EMPLY_ID AS MEM_ID,
+			        X.EMPLY_CODE AS MEM_CODE,
+			        Y.NAME,
+			        X.EMPLY_LEV AS MEM_LVL,
+			        X.MANGR_ID AS MEM_UP_ID,
+			        X.EMPLY_STUS_ID,
+			        X.COMM_TASK_ID,
+			        (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+	  	  FROM CMM0006T X
+		   LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+		WHERE 1=1
+		    AND EMPLY_TYPE_CODE = 'CD'
+		    AND IS_EXCLUDE <![CDATA[<>]]> 1
+		    AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+		)
+		SELECT MEM_CODE
+			      ,MEM_NAME
+			      ,NVL(JAN_VAL, 0) JAN_VAL
+			      ,NVL(FEB_VAL, 0) FEB_VAL
+			      ,NVL(MAR_VAL, 0) MAR_VAL
+			      ,NVL(APR_VAL, 0) APR_VAL
+			      ,NVL(MAY_VAL, 0) MAY_VAL
+			      ,NVL(JUN_VAL, 0) JUN_VAL
+			      ,NVL(JUL_VAL, 0) JUL_VAL
+			      ,NVL(AUG_VAL, 0) AUG_VAL
+			      ,NVL(SEP_VAL, 0) SEP_VAL
+			      ,NVL(OCT_VAL, 0) OCT_VAL
+			      ,NVL(NOV_VAL, 0) NOV_VAL
+			      ,NVL(DEC_VAL, 0) DEC_VAL
+		 FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME
+		                     ,ROUND(AVG(X.V3+X.V5+X.V7+X.V9+X.V45+X.V47-X.V13-X.V33),2) VAL
+			         FROM T_CODY  A
+			          LEFT OUTER JOIN T_CODY B
+			            ON  A.MEM_ID = B.MEM_UP_ID
+			           AND A.COMM_TASK_ID = B.COMM_TASK_ID
+			           AND B.MEM_LVL = 2      -- SCM
+			           --AND B.EMPLY_STUS_ID = 1
+			          LEFT OUTER JOIN CMM0028D X ON X.TASK_ID = A.COMM_TASK_ID AND X.EMPLY_ID = B.MEM_ID
+			       WHERE A.MEM_LVL= 1     -- GCM
+			        GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+		      )
+		      PIVOT
+		      (
+		         AVG(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+		      )
+       WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+           AND MEM_CODE = #{gcmCode}
+     </if>
+		ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCmPEAList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCmPEAList] 20191030 - KR OHK */
+    WITH T_CODY AS (
+        SELECT  X.EMPLY_ID AS MEM_ID,
+                    X.EMPLY_CODE AS MEM_CODE,
+                    Y.NAME,
+                    X.EMPLY_LEV AS MEM_LVL,
+                    X.MANGR_ID AS MEM_UP_ID,
+                    X.EMPLY_STUS_ID,
+                    X.COMM_TASK_ID,
+                    (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+          FROM CMM0006T X
+           LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+        WHERE 1=1
+            AND EMPLY_TYPE_CODE = 'CD'
+            AND IS_EXCLUDE <![CDATA[<>]]> 1
+            AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+        )
+        SELECT MEM_CODE
+	              ,MEM_NAME
+	              ,NVL(JAN_VAL, 0) JAN_VAL
+	              ,NVL(FEB_VAL, 0) FEB_VAL
+	              ,NVL(MAR_VAL, 0) MAR_VAL
+	              ,NVL(APR_VAL, 0) APR_VAL
+	              ,NVL(MAY_VAL, 0) MAY_VAL
+	              ,NVL(JUN_VAL, 0) JUN_VAL
+	              ,NVL(JUL_VAL, 0) JUL_VAL
+	              ,NVL(AUG_VAL, 0) AUG_VAL
+	              ,NVL(SEP_VAL, 0) SEP_VAL
+	              ,NVL(OCT_VAL, 0) OCT_VAL
+	              ,NVL(NOV_VAL, 0) NOV_VAL
+	              ,NVL(DEC_VAL, 0) DEC_VAL
+         FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME
+                            ,ROUND(AVG(X.V3+X.V5+X.V7+X.V9+X.V45+X.V47-X.V13-X.V33),2) VAL
+	                 FROM T_CODY  A
+	                  LEFT OUTER JOIN T_CODY B
+	                    ON  A.MEM_ID = B.MEM_UP_ID
+	                   AND A.COMM_TASK_ID = B.COMM_TASK_ID
+	                   AND B.MEM_LVL = 2      -- SCM
+	                   --AND B.EMPLY_STUS_ID = 1
+	                  LEFT OUTER JOIN T_CODY C
+			            ON  B.MEM_ID = C.MEM_UP_ID
+			           AND A.COMM_TASK_ID = C.COMM_TASK_ID
+			           AND C.MEM_LVL= 3      -- CM
+			           --AND C.EMPLY_STUS_ID = 1
+			          LEFT OUTER JOIN CMM0028D X ON X.TASK_ID = A.COMM_TASK_ID AND X.EMPLY_ID = C.MEM_ID
+	               WHERE A.MEM_LVL= 1     -- GCM
+	                GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+              )
+              PIVOT
+              (
+                 AVG(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+              )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+        ORDER BY MEM_NAME
+    </select>
+
+    <select id="selectCodyPEAList"  parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.services.performanceMgmt.impl.GcmProgressReportMapper.selectCodyPEAList] 20191030 - KR OHK */
+    WITH T_CODY AS (
+       SELECT  X.EMPLY_ID AS MEM_ID,
+                    X.EMPLY_CODE AS MEM_CODE,
+                    Y.NAME,
+                    X.EMPLY_LEV AS MEM_LVL,
+                    X.MANGR_ID AS MEM_UP_ID,
+                    X.EMPLY_STUS_ID,
+                    X.COMM_TASK_ID,
+                    (X.COMM_TASK_ID + 24157 - (#{year}*12)) AS MONTH_VAL
+          FROM CMM0006T X
+           LEFT OUTER JOIN ORG0001D Y ON X.EMPLY_ID = Y.MEM_ID
+        WHERE 1=1
+            AND EMPLY_TYPE_CODE = 'CD'
+            AND IS_EXCLUDE <![CDATA[<>]]> 1
+            AND X.COMM_TASK_ID BETWEEN (1+#{year}*12)-24157 AND (12+#{year}*12)-24157
+        )
+        SELECT MEM_CODE
+	              ,MEM_NAME
+	              ,NVL(JAN_VAL, 0) JAN_VAL
+	              ,NVL(FEB_VAL, 0) FEB_VAL
+	              ,NVL(MAR_VAL, 0) MAR_VAL
+	              ,NVL(APR_VAL, 0) APR_VAL
+	              ,NVL(MAY_VAL, 0) MAY_VAL
+	              ,NVL(JUN_VAL, 0) JUN_VAL
+	              ,NVL(JUL_VAL, 0) JUL_VAL
+	              ,NVL(AUG_VAL, 0) AUG_VAL
+	              ,NVL(SEP_VAL, 0) SEP_VAL
+	              ,NVL(OCT_VAL, 0) OCT_VAL
+	              ,NVL(NOV_VAL, 0) NOV_VAL
+	              ,NVL(DEC_VAL, 0) DEC_VAL
+         FROM (SELECT A.MONTH_VAL, A.MEM_CODE, A.NAME MEM_NAME
+                             ,ROUND(AVG(X.V3+X.V5+X.V7+X.V9+X.V45+X.V47-X.V13-X.V33),2) VAL
+	                 FROM T_CODY  A
+	                  LEFT OUTER JOIN T_CODY B
+	                    ON  A.MEM_ID = B.MEM_UP_ID
+	                   AND A.COMM_TASK_ID = B.COMM_TASK_ID
+	                   AND B.MEM_LVL = 2      -- SCM
+	                   --AND B.EMPLY_STUS_ID = 1
+	                  LEFT OUTER JOIN T_CODY C
+	                    ON  B.MEM_ID = C.MEM_UP_ID
+	                   AND A.COMM_TASK_ID = C.COMM_TASK_ID
+	                   AND C.MEM_LVL= 3      -- CM
+	                   --AND C.EMPLY_STUS_ID = 1
+	                  LEFT OUTER JOIN T_CODY D
+			            ON C.MEM_ID = D.MEM_UP_ID
+			           AND A.COMM_TASK_ID = D.COMM_TASK_ID
+			           AND D.MEM_LVL= 4      -- CODY
+			           --AND D.EMPLY_STUS_ID = 1
+	                  LEFT OUTER JOIN CMM0028D X ON X.TASK_ID = A.COMM_TASK_ID AND X.EMPLY_ID = D.MEM_ID
+                   WHERE A.MEM_LVL= 1     -- GCM
+                   GROUP BY A.MONTH_VAL, A.MEM_CODE, A.NAME
+              )
+              PIVOT
+              (
+                 AVG(VAL) VAL FOR MONTH_VAL IN ('1' AS "JAN", '2' AS "FEB", '3' AS "MAR", '4' AS "APR" ,'5' AS "MAY", '6' AS "JUN", '7' AS "JUL", '8' AS "AUG", '9' AS "SEP", '10' AS "OCT", '11' AS "NOV", '12' AS "DEC")
+              )
+     WHERE 1=1
+     <if test="gcmCode != null and gcmCode != ''">
+        AND MEM_CODE = #{gcmCode}
+     </if>
+      ORDER BY MEM_NAME
+    </select>
+</mapper>

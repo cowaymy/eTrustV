@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="defaultFetchSize" value="50"/>
+    </settings>
+
+    <typeAliases>
+
+        <!-- 공통 -->
+        <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+		<typeAlias alias="loginVO" type="com.coway.trust.cmmn.model.LoginVO"/>
+		<typeAlias alias="loginSubAuthVO" type="com.coway.trust.cmmn.model.LoginSubAuthVO"/>
+		<typeAlias alias="sessionVO" type="com.coway.trust.cmmn.model.SessionVO"/>
+		<typeAlias alias="pageAuthVO" type="com.coway.trust.cmmn.model.PageAuthVO"/>
+		<typeAlias alias="searchVO" type="com.coway.trust.biz.sample.SampleDefaultVO"/>
+		<typeAlias alias="fileGroupVO" type="com.coway.trust.biz.common.FileGroupVO"/>
+		<typeAlias alias="fileVO" type="com.coway.trust.biz.common.FileVO"/>
+		<typeAlias alias="sampleVO" type="com.coway.trust.biz.sample.SampleVO"/>
+		<typeAlias alias="string" type="java.lang.String"/>
+		<typeAlias alias="int" type="java.lang.Integer"/>
+		<typeAlias alias="loginHistory" type="com.coway.trust.biz.login.LoginHistory"/>
+		<typeAlias alias="customerLoginVO" type="com.coway.trust.cmmn.model.CustomerLoginVO"/>
+		<!-- 업무 A -->
+
+		<!-- 업무 B -->
+
+		<!-- Reconciliation Search -->
+		<typeAlias alias="reconciliationSearchVO" type="com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO"/>
+		<typeAlias alias="reconciliationListVO" type="com.coway.trust.biz.payment.reconciliation.service.ReconciliationListVO"/>
+
+		<!-- RentalCollectionByBS Search -->
+        <typeAlias alias="rentalCollectionByBSSearchVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO"/>
+        <typeAlias alias="rentalCollectionByBSListVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByBSListVO"/>
+        <typeAlias alias="rentalCollectionByOrganizationVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByOrganizationVO"/>
+
+
+		<!-- Sales PST -->
+		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>
+		<!-- Sales Customer -->
+        <typeAlias alias="customerVO" type="com.coway.trust.biz.sales.customer.CustomerVO"/>
+        <!-- Sales Order -->
+        <typeAlias alias="accClaimAdtVO" type="com.coway.trust.biz.sales.order.vo.AccClaimAdtVO"/>
+        <typeAlias alias="callEntryVO" type="com.coway.trust.biz.sales.order.vo.CallEntryVO"/>
+        <typeAlias alias="callResultVO" type="com.coway.trust.biz.sales.order.vo.CallResultVO"/>
+        <typeAlias alias="ccpDecisionMVO" type="com.coway.trust.biz.sales.order.vo.CcpDecisionMVO"/>
+        <typeAlias alias="custBillMasterVO" type="com.coway.trust.biz.sales.order.vo.CustBillMasterVO"/>
+        <typeAlias alias="docSubmissionVO" type="com.coway.trust.biz.sales.order.vo.DocSubmissionVO"/>
+        <typeAlias alias="eStatementReqVO" type="com.coway.trust.biz.sales.order.vo.EStatementReqVO"/>
+        <typeAlias alias="gSTEURCertificateVO" type="com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO"/>
+        <typeAlias alias="installEntryVO" type="com.coway.trust.biz.sales.order.vo.InstallEntryVO"/>
+        <typeAlias alias="installResultVO" type="com.coway.trust.biz.sales.order.vo.InstallResultVO"/>
+        <typeAlias alias="installationVO" type="com.coway.trust.biz.sales.order.vo.InstallationVO"/>
+        <typeAlias alias="rentPaySetVO" type="com.coway.trust.biz.sales.order.vo.RentPaySetVO"/>
+        <typeAlias alias="rentalSchemeVO" type="com.coway.trust.biz.sales.order.vo.RentalSchemeVO"/>
+        <typeAlias alias="salesOrderContractVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderContractVO"/>
+        <typeAlias alias="salesOrderDVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderDVO"/>
+        <typeAlias alias="salesOrderLogVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderLogVO"/>
+        <typeAlias alias="salesOrderMVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderMVO"/>
+        <typeAlias alias="srvConfigFilterVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigFilterVO"/>
+        <typeAlias alias="srvConfigPeriodVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO"/>
+        <typeAlias alias="srvConfigSettingVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO"/>
+        <typeAlias alias="srvConfigurationVO" type="com.coway.trust.biz.sales.order.vo.SrvConfigurationVO"/>
+        <typeAlias alias="srvMembershipSalesVO" type="com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO"/>
+        <typeAlias alias="asEntryVO" type="com.coway.trust.biz.sales.order.vo.ASEntryVO"/>
+        <!-- Sales OrderCancellation -->
+        <typeAlias alias="orderCancelVO" type="com.coway.trust.biz.sales.order.OrderCancelVO"/>
+        <!-- Sales OrderCancellation -->
+        <typeAlias alias="orderInvestVO" type="com.coway.trust.biz.sales.order.OrderInvestVO"/>
+        <!-- Sales Promotion -->
+        <typeAlias alias="salesPromoMVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoMVO"/>
+        <typeAlias alias="salesPromoDVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoDVO"/>
+        <typeAlias alias="salesPromoFreeGiftVO" type="com.coway.trust.biz.sales.promotion.vo.SalesPromoFreeGiftVO"/>
+        <!-- Sales Edit -->
+        <typeAlias alias="custBillMasterHistoryVO" type="com.coway.trust.biz.sales.order.vo.CustBillMasterHistoryVO"/>
+        <typeAlias alias="custAccVO" type="com.coway.trust.biz.sales.order.vo.CustAccVO"/>
+        <typeAlias alias="custCrcVO" type="com.coway.trust.biz.sales.order.vo.CustCrcVO"/>
+        <typeAlias alias="referralVO" type="com.coway.trust.biz.sales.order.vo.ReferralVO"/>
+        <!-- Order Request -->
+        <typeAlias alias="salesReqCancelVO" type="com.coway.trust.biz.sales.order.vo.SalesReqCancelVO"/>
+        <typeAlias alias="salesOrderExchangeVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeVO"/>
+        <typeAlias alias="invStkMovementVO" type="com.coway.trust.biz.sales.order.vo.InvStkMovementVO"/>
+        <typeAlias alias="stkReturnEntryVO" type="com.coway.trust.biz.sales.order.vo.StkReturnEntryVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvConfigVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvConfigVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvFilterVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvFilterVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvPeriodVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvPeriodVO"/>
+        <typeAlias alias="salesOrderExchangeBUSrvSettingVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderExchangeBUSrvSettingVO"/>
+        <typeAlias alias="salesOrderSchemeConversionVO" type="com.coway.trust.biz.sales.order.vo.SalesOrderSchemeConversionVO"/>
+        <typeAlias alias="discountEntryVO" type="com.coway.trust.biz.sales.order.vo.DiscountEntryVO"/>
+        <typeAlias alias="accTradeLedgerVO" type="com.coway.trust.biz.sales.order.vo.AccTradeLedgerVO"/>
+        <typeAlias alias="accTRXVO" type="com.coway.trust.biz.sales.order.vo.AccTRXVO"/>
+        <typeAlias alias="accOrderBillVO" type="com.coway.trust.biz.sales.order.vo.AccOrderBillVO"/>
+        <typeAlias alias="accTaxInvoiceOutrightVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutrightVO"/>
+        <typeAlias alias="accTaxInvoiceOutright_SubVO" type="com.coway.trust.biz.sales.order.vo.AccTaxInvoiceOutright_SubVO"/>
+
+        <!-- Pre-Order -->
+        <typeAlias alias="preOrderVO" type="com.coway.trust.biz.sales.order.vo.PreOrderVO"/>
+
+        <!-- Enrollment Result Update -->
+        <typeAlias alias="EnrollmentUpdateMVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateMVO" />
+        <typeAlias alias="EnrollmentUpdateDVO" type="com.coway.trust.biz.payment.autodebit.service.EnrollmentUpdateDVO" />
+
+        <!-- SearchPayment -->
+        <typeAlias alias="PayDHistoryVO" type="com.coway.trust.biz.payment.payment.service.PayDHistoryVO" />
+
+        <!--Pos Status Update  -->
+        <typeAlias alias="posMasterVO" type="com.coway.trust.biz.sales.pos.vo.PosMasterVO" />
+        <typeAlias alias="posDetailVO" type="com.coway.trust.biz.sales.pos.vo.PosDetailVO"/>
+        <typeAlias alias="posMemberVO" type="com.coway.trust.biz.sales.pos.vo.PosMemberVO"/>
+
+        <!-- SMS  -->
+        <typeAlias alias="smsVO" type="com.coway.trust.cmmn.model.SmsVO"/>
+
+        <!-- Supplement Submission -->
+        <typeAlias alias="supplementMasterVO" type="com.coway.trust.biz.sales.order.vo.SupplementMasterVO" />
+        <typeAlias alias="supplementDetailVO" type="com.coway.trust.biz.sales.order.vo.SupplementDetailVO"/>
+
+        <!-- Added for On-Loan module, by Hui Ding, 20-02-2020 -->
+        <!-- On-Loan -->
+<!--         <typeAlias alias="loanOrderDVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderDVO"/> -->
+<!--         <typeAlias alias="loanOrderMVO" type="com.coway.trust.biz.services.onLoan.vo.LoanOrderMVO"/> -->
+
+    </typeAliases>
+
+
+    <plugins>
+        <plugin interceptor="com.coway.trust.config.mybatis.ExcecutorInterceptor"></plugin>
+        <plugin interceptor="com.coway.trust.config.mybatis.ResultsetInterceptor"></plugin>
+<!--         <plugin interceptor="com.coway.trust.config.mybatis.SqlDebugLogInterceptor"></plugin> -->
+    </plugins>
+</configuration>

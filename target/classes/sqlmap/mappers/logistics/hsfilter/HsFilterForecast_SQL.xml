@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.hsfilter.impl.HsFilterForecastMapper">
+
+
+
+
+<select id="selectHSFilterForecastyList" parameterType="Map"  resultType="EgovMap">
+<![CDATA[
+		SELECT
+		             HS_LOSE_YYYY
+		            ,HS_LOSE_MM
+		            ,HS_LOSE_LOCL_CODE
+		            ,HS_LOSE_LOCL_DESC
+		            ,HS_LOSE_ITEM_CODE
+		            ,HS_LOSE_ITEM_DESC
+		            ,HS_LOSE_ITEM_FCAST_QTY
+		            ,HS_LOSE_ITEM_REORD_QTY
+		            ,HS_LOSE_ITEM_TYPE_ID
+                    ,HS_LOSE_ITEM_CTGRY_ID
+                    ,(SELECT CODE_DESC  FROM SYS0013M  WHERE CODE_MASTER_ID  =11 AND CODE_ID  = HS_LOSE_ITEM_CTGRY_ID) AS HS_LOSE_ITEM_CTGRY_Desc
+                    ,(SELECT CODE_DESC FROM SYS0013M  WHERE CODE_MASTER_ID   =15 AND CODE_ID   =HS_LOSE_ITEM_TYPE_ID)AS  HS_LOSE_ITEM_TYPE_Desc
+       FROM (
+		       SELECT   A.HS_LOSE_YYYY
+				            ,A.HS_LOSE_MM
+				            ,A.HS_LOSE_LOCL_CODE
+				            ,A.HS_LOSE_LOCL_DESC
+				            ,A.HS_LOSE_ITEM_CODE
+				            ,A.HS_LOSE_ITEM_DESC
+				            ,A.HS_LOSE_ITEM_FCAST_QTY
+				            ,A.HS_LOSE_ITEM_REORD_QTY
+				            ,A.HS_LOSE_ITEM_TYPE_ID
+				            ,A.HS_LOSE_ITEM_CTGRY_ID
+		       FROM   LOG0108M A
+            WHERE 1=1
+		      AND  A.HS_LOSE_YYYY=#{yyyy}
+		      AND  A.HS_LOSE_MM=#{mm}
+
+	]]>	          <if test="searchCDC != null and searchCDC != ''">
+                    AND A.HS_LOSE_CDC_CODE = #{searchCDC}
+                    </if>
+                 <if test="searchBranchCb != null and searchBranchCb != ''">
+                        AND A.HS_LOSE_LOCL_CODE = #{searchBranchCb}
+                 </if>
+
+		)
+
+</select>
+</mapper>

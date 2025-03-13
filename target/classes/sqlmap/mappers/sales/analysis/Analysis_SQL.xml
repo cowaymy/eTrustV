@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.analysis.impl.AnalysisMapper">
+
+    <select id="maintanceSession" resultType="egovMap">
+        SELECT TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') CURR_TIME FROM DUAL
+    </select>
+
+    <select id="selectPltvProductCodeList" resultType="egovMap">
+        SELECT STK_ID
+                 , C1
+                 , CODE_NAME
+                 , PROD_GROUP
+         FROM
+        (
+            SELECT DISTINCT T1.STK_ID
+                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                     , T3.CODE_NAME
+                     , NVL(T4.IND, '') PROD_GROUP
+            FROM SYS0026M T1
+                JOIN SYS0013M T3 ON T3.CODE_ID = T1.STK_CTGRY_ID
+                LEFT JOIN SYS0094M T4 ON T4.CODE = T3.CODE
+            WHERE
+               T1.STK_TYPE_ID = 61
+               AND T1.STUS_CODE_ID = 1
+               AND T1.STK_CTGRY_ID NOT IN (924, 59, 7241)
+               <if test='stkCtgryId != null and stkCtgryId != ""'>
+                AND T1.STK_CTGRY_ID = #{stkCtgryId}
+               </if>
+
+            <if test='stkCtgryId == null or stkCtgryId == "" or stkCtgryId == 9999'>
+            UNION
+            (
+             SELECT 16451646 STK_ID, '800001-800002 - PRIME MATTRESS KING'         C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 16471648 STK_ID, '800003-800004 - PRIME MATTRESS QUEEN'        C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 16491650 STK_ID, '800005-800006 - PRIME MATTRESS SUPER SINGLE' C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 20002001 STK_ID, '800011-800012 - PRIME II MATTRESS KING'      C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 20022003 STK_ID, '800013-800014 - PRIME II MATTRESS QUEEN'     C1, 'Mattress Set/Mattress Only' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL
+<!--              SELECT 21862188 STK_ID, '200001-200003 - COWAY AIRCOND 1.0HP'     C1, 'Aircond' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL UNION
+             SELECT 21892187 STK_ID, '200002-200004 - COWAY AIRCOND 1.5HP'     C1, 'Aircond' CODE_NAME, 'HOMECARE' PROD_GROUP FROM DUAL -->
+            )
+            </if>
+        )
+        ORDER BY PROD_GROUP DESC, CODE_NAME ASC, STK_ID ASC
+    </select>
+
+    <select id="selectPltvProductCategoryList" resultType="egovMap">
+         SELECT
+            DISTINCT STK_CTGRY_ID CODE_ID , CODE_NAME
+          FROM sys0026m S26
+          JOIN SYS0013M S13 ON S13.CODE_ID = S26.STK_CTGRY_ID
+          WHERE STK_TYPE_ID = 61 AND stus_code_id = 1
+          AND STK_CTGRY_ID NOT IN (924,59)
+          UNION
+          SELECT 9999 CODE_ID, 'Mattress Set/Mattress Only' CODE_NAME
+          FROM DUAL
+    </select>
+
+    <select id="selectMaxAccYm" resultType="String">
+        SELECT TO_CHAR( TO_DATE( MAX(ACC_YM), 'YYYYMM'), 'MON-YYYY') AS
+            MAX_ACC_YM FROM PAY0319T
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.common.service.impl.CommonPopupPaymentMapper">
+
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+
+        <select id="selectCommonSearchInvoicePop" parameterType="Map" resultType="egovMap">
+        SELECT
+            TAX_INVC_ID  ,
+            TAX_INVC_TYPE  ,
+            TAX_INVC_REF_NO  ,
+            TAX_INVC_GRP_NO  ,
+            TAX_INVC_SVC_NO  ,
+            TAX_INVC_REF_DT  ,
+            MONTH  ,
+            YEAR  ,
+            TAX_INVC_CUST_NAME  ,
+            TAX_INVC_AMT_DUE
+        FROM
+                (
+                        SELECT DISTINCT
+                        M.TAX_INVC_ID AS TAX_INVC_ID  ,
+                        M.TAX_INVC_TYPE AS TAX_INVC_TYPE  ,
+                        M.TAX_INVC_REF_NO AS TAX_INVC_REF_NO  ,
+                        D.INVC_ITM_ORD_NO AS TAX_INVC_GRP_NO  ,
+                        M.TAX_INVC_SVC_NO AS TAX_INVC_SVC_NO  ,
+                        M.TAX_INVC_REF_DT AS TAX_INVC_REF_DT  ,
+                        TO_NUMBER(TO_CHAR(M.TAX_INVC_REF_DT,'MM')) AS MONTH  ,
+                        TO_NUMBER(TO_CHAR(M.TAX_INVC_REF_DT,'YYYY')) AS YEAR  ,
+                        M.TAX_INVC_CUST_NAME AS TAX_INVC_CUST_NAME  ,
+                        M.TAX_INVC_AMT_DUE AS TAX_INVC_AMT_DUE
+
+                FROM PAY0031D M
+                JOIN PAY0032D D ON D.TAX_INVC_ID = M.TAX_INVC_ID
+                UNION ALL
+                SELECT
+                        TAX_INVC_ID,
+                        2,
+                        TAX_INVC_REF_NO,
+                        TAX_INVC_GRP_NO,
+                        '' TAX_INVC_SVC_NO  ,
+                        TAX_INVC_REF_DT,
+                        TAX_INVC_MONTH,
+                        TAX_INVC_YEAR,
+                        TAX_INVC_CUST_NAME,
+                        TAX_INVC_AMT_DUE
+                FROM PAY0029D
+                UNION ALL
+                SELECT
+                        Extent3.TAX_INVC_ID TAX_INVC_ID  ,
+                        1 AS TAX_INVC_TYPE  ,
+                        Extent3.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                        Extent4.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                        '' ,
+                        Extent3.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                        TO_NUMBER(TO_CHAR(Extent3.TAX_INVC_REF_DT,'MM')) AS MONTH  ,
+                        TO_NUMBER(TO_CHAR(Extent3.TAX_INVC_REF_DT,'YYYY')) AS YEAR  ,
+                        Extent3.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                        Extent3.TAX_INVC_AMT_DUE TAX_INVC_AMT_DUE
+                FROM
+                        PAY0033D Extent3
+                        LEFT JOIN PAY0034D Extent4   ON Extent3.TAX_INVC_ID = Extent4.TAX_INVC_ID
+                )
+        WHERE
+                TAX_INVC_TYPE = #{invoiceType}
+                 <if test="invoiceNo != null and invoiceNo != '' ">
+                 AND TAX_INVC_REF_NO = #{invoiceNo}
+                </if>
+                <if test="serviceNo != null and serviceNo != '' ">
+                AND TAX_INVC_SVC_NO = #{serviceNo}
+                </if>
+                <if test="orderNo != null and orderNo != '' ">
+                AND TAX_INVC_GRP_NO = #{orderNo}
+                </if>
+                <if test="month != null and month != '' ">
+                AND MONTH = #{month}
+                </if>
+                <if test="year != null and year != '' ">
+                AND YEAR = #{year}
+                </if>
+                <if test="customerName != null and customerName != '' ">
+                AND TAX_INVC_CUST_NAME LIKE '%' || UPPER(#{customerName}) ||'%'
+                </if>
+    </select>
+
+	<select id="selectCommonContractSearchPop" parameterType="Map" resultType="egovMap">
+        SELECT
+		       Project1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+		       Project1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+		       Project1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+		       Project1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+		       Project1.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+		       Project1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Project1.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+		       Project1.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+		       Project1.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+		       Project1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+		       Project1.CODE CODE  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       Project1.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+		       Project1.CUST_ID CUST_ID  ,
+		       Project1.NAME NAME  ,
+		       Project1.NRIC NRIC  ,
+		       Project1.SALES_ORD_ID SALES_ORD_ID,
+		       Project1.CUST_BILL_ID  CUST_BILL_ID
+		  FROM ( SELECT Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+		                Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+		                Extent1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+		                Extent1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+		                Extent1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+		                Extent1.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+		                Extent2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+		                Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+		                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+		                Extent3.CUST_BILL_ID CUST_BILL_ID  ,
+		                Extent4.CUST_ID CUST_ID  ,
+		                Extent4.NAME NAME  ,
+		                Extent4.NRIC NRIC  ,
+		                Extent5.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+		                Extent6.USER_NAME USER_NAME  ,
+		                Extent7.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+		                Extent7.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+		                Extent8.CODE CODE
+		         FROM SAL0077D Extent1
+		                JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+		                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
+		                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+		                JOIN SAL0081D Extent5   ON Extent5.SRV_CNTRCT_PAC_ID = Extent1.SRV_CNTRCT_PCKG_ID
+		                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.SRV_CNTRCT_CRT_USER_ID
+		                JOIN SAL0088D Extent7   ON Extent7.SRV_PRD_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+		                JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+		          WHERE  1=1
+				          <if test="contractStatusType != null and contractStatusType != '' ">
+		                        AND Extent2.CNTRCT_RENTAL_STUS IN
+			                    <foreach item="item" collection="contractStatusType" index="index" open="(" separator="," close=")">
+			                     #{item}
+			                    </foreach>
+		                   </if>
+				          <if test="contractRefNo != null and contractRefNo != '' ">
+				          AND  Extent1.SRV_CNTRCT_REF_NO = #{contractRefNo}
+				          </if>
+				          <!-- <if test="invoiceNo != null and invoiceNo != '' ">
+		                  AND  Extent1.SRV_CNTRCT_REF_NO = #{invoiceNo}
+		                  </if> -->
+		                  <if test="salesDate != null and salesDate != '' ">
+		                  AND TO_CHAR(Extent1.SRV_CNTRCT_CRT_DT, 'DD/MM/YYYY') = #{salesDate}
+		                  </if>
+		                  <if test="orderNo != null and orderNo != '' ">
+		                  AND   Extent3.SALES_ORD_NO = #{orderNo}
+		                  </if>
+		                  <if test="custId != null and custId != '' ">
+		                  AND  Extent4.CUST_ID = #{custId}
+		                  </if>
+		                  <if test="custName != null and custName != '' ">
+		                  AND  Extent6.USER_NAME =  '%' || UPPER(#{custName}) ||'%'
+		                  </if>
+		                  <if test="custNric != null and custNric != '' ">
+		                  AND  Extent4.NRIC = #{custNric}
+		                  </if>
+				          ) Project1
+				  ORDER BY Project1.SRV_CNTRCT_ID ASC
+    </select>
+
+    <select id="selectCommonQuotationSearchPop" parameterType="Map" resultType="egovMap">
+        <include refid="pagingStart" />
+        SELECT
+            QUOT_ID,QTY_FILTER_CHRG,QUOT_NO,PAC_ID,PAC_CODE,PAC_DESC,
+			ORD_ID,ORD_NO,PAC_AMT,FILTER_AMT,TOT_AMT,DUR,REM,VALID_DT,
+			CRT_DT,CRT_USER_ID,QUOT_STUS_ID,QUOT_STUS_CODE,UPD_DT,UPD_USER_ID,
+			CNT_ID,CNT_NAME,CNT_NRIC,CNT_TEL_MOB,CNT_TEL_OFF,CNT_TEL_FAX,
+			CNT_TEL_RES,CNT_EMAIL,CNT_GENDER,CNT_RACE,PAC_PROMO_ID,
+			PAC_PROMO_CODE,PAC_PROMO_DESC,PROMO_ID,PROMO_CODE,PROMO_DESC,
+			BS_FREQ,MEM_ID,MEM_CODE,MEM_NAME,VALID_STUS,VALID_STUS_ID,CNVR_MEM_ID,CNVR_MEM_NO,
+			STK_ID,STK_CODE,STK_DESC,CUST_NAME,CUST_IC,TOT_CNT,REF_NO
+        FROM
+            SAL1005V
+        WHERE
+            1=1
+            <if test="quoNo != null and quoNo != '' ">
+                AND  QUOT_NO = #{quoNo}
+            </if>
+            <if test="status != null and status != '' ">
+	             AND VALID_STUS_ID = #{status}
+	        </if>
+	        <if test="ordNo != null and ordNo != '' ">
+                AND  ORD_NO = #{ordNo}
+            </if>
+            <if test="creator != null and creator != '' ">
+                AND  CRT_USER_ID = #{creator}
+            </if>
+             <if test="createDateFr != null and createDateFr != '' and createDateTo != null and createDateTo != '' ">
+                AND CRT_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{createDateFr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND CRT_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDateTo},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>
+        ORDER BY QUOT_ID
+        <include refid="pagingEnd" />
+    </select>
+
+    <select id="countCommonQuotationSearchPop" parameterType="Map" resultType="int">
+         SELECT
+           COUNT(1) AS CNT
+        FROM
+            SAL1005V
+        WHERE
+            1=1
+            <if test="quoNo != null and quoNo != '' ">
+                AND  QUOT_NO = #{quoNo}
+            </if>
+            <if test="status != null and status != '' ">
+                 AND VALID_STUS_ID = #{status}
+            </if>
+            <if test="ordNo != null and ordNo != '' ">
+                AND  ORD_NO = #{ordNo}
+            </if>
+            <if test="creator != null and creator != '' ">
+                AND  CRT_USER_ID = #{creator}
+            </if>
+             <if test="createDateFr != null and createDateFr != '' and createDateTo != null and createDateTo != '' ">
+                AND CRT_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{createDateFr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND CRT_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDateTo},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>
+    </select>
+
+</mapper>

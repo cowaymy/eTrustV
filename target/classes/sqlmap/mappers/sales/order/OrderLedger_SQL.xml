@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderLedgerMapper">
+
+    <select id="selectOrderLedgerView" parameterType="Map" resultType="egovMap">
+	      SELECT ORD_ID   ,
+	                ORD_NO   ,
+	                RENTAL_STUS   ,
+	                ORD_STUS_ID   ,
+	                ORD_STUS_CODE   ,
+	                ORD_STUS_NAME   ,
+	                ORD_DT   ,
+	                INSTLMT_PRIOD   ,
+	                ORD_AMT   ,
+	                ORD_MTH_RENTAL   ,
+	                ORD_PV   ,
+	                ORD_PV_MONTH   ,
+	                ORD_PV_YEAR   ,
+	                ORD_REF_NO   ,
+	                ORD_PO_NO   ,
+	                ORD_DEPT_CODE   ,
+	                ORD_GRP_CODE   ,
+	                ORD_ORG_CODE   ,
+	                ORD_CRT_USER_ID   ,
+	                ORD_CRT_DT   ,
+	                APP_TYPE_ID   ,
+	                APP_TYPE_CODE   ,
+	                APP_TYPE_DESC   ,
+	                STOCK_ID   ,
+	                STOCK_CODE   ,
+	                STOCK_DESC   ,
+	                CUST_ID   ,
+	                CUST_TYPE   ,
+	                CUST_NAME   ,
+	                CUST_NRIC   ,
+	                CUST_DOB   ,
+	                CUST_NATION   ,
+	                CUST_GENDER   ,
+	                CUST_RACE   ,
+	                CUST_EMAIL   ,
+	                CUST_VA_NO   ,
+	                CUST_PASSPORT_EXPR   ,
+	                CUST_VISA_EXPR   ,
+	                ORD_PROMO_ID   ,
+	                ORD_PROMO_CODE   ,
+	                ORD_PROMO_DESC   ,
+	                ORD_MEM_ID   ,
+	                ORD_MEM_CODE   ,
+	                ORD_MEM_NAME   ,
+	                ORD_MEM_NRIC   ,
+	                ORD_MEM_TYPE_ID   ,
+	                ORD_MEM_TYPE_CODE   ,
+	                ORD_MEM_TYPE_NAME   ,
+	                COOL_OFF_PRIOD   ,
+	                KEYIN_BRNCH_ID   ,
+	                KEYIN_BRNCH_CODE   ,
+	                KEYIN_BRNCH_NAME   ,
+	                ORD_REM   ,
+	                RENT_CHK_ID   ,
+	                ORD_HM_ID   ,
+	                ORD_SM_ID   ,
+	                ORD_GM_ID   ,
+	                ORD_ADDR_ID   ,
+	                ORD_CNTC_ID   ,
+	                ORD_PROMO_RELATED_NO   ,
+	                UPD_DT   ,
+	                UPD_USER_ID   ,
+	                  <!--  Added for hide AUX order jom pay ref By Gaspar -->
+                    CASE WHEN APP_TYPE_ID = 5764 THEN NULL ELSE JOM_PAY_REF END AS JOM_PAY_REF,
+	                STK_CTGRY_ID   ,
+	                STK_CTGRY_NAME   ,
+	                CUST_TYPE_ID   ,
+	                CUST_BILL_ID   ,
+	                OBLIGT_YEAR
+	       FROM SAL1006V
+	     WHERE ORD_ID = #{ordId}
+	         AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectInsInfo" parameterType="Map" resultType="egovMap">
+	      SELECT  ORD_ID ,
+                   INST_ADDR_DTL ,
+                   INST_STREET,
+                   INST_COUNTRY  ,
+                   INST_CITY,
+                   INST_STATE ,
+                   INST_AREA ,
+                   INST_POSTCODE ,
+                   INST_CNT_NAME ,
+                   INST_CNT_NRIC ,
+                   INST_CNT_EMAIL ,
+                   INST_CNT_TEL_M ,
+                   INST_CNT_TEL_O ,
+                   INST_CNT_TEL_R ,
+                   INST_CNT_TEL_F ,
+                   INST_CNT_GENDER ,
+                   FIRST_INSTALL_NO ,
+                   FIRST_INSTALL_CT_CODE ,
+                   FIRST_INSTALL_CT_NAME ,
+                   CASE WHEN FIRST_INSTALL_DT IS NOT NULL THEN FIRST_INSTALL_DT
+                           ELSE '-' END FIRST_INSTALL_DT,
+                   FIRST_INSTALL_REM ,
+                   FIRST_INSTALL_SIRIM_NO ,
+                   FIRST_INSTALL_SERIAL_NO ,
+                   LAST_INSTALL_NO ,
+                   LAST_INSTALL_CT_CODE ,
+                   LAST_INSTALL_CT_NAME ,
+                   LAST_INSTALL_DT ,
+                   LAST_INSTALL_REM ,
+                   LAST_INSTALL_SIRIM_NO ,
+                   LAST_INSTALL_SERIAL_NO ,
+                   DSC_ID ,
+                   DSC_CODE ,
+                   DSC_NAME ,
+                   INSTCT ,
+                   PREFER_INST_DT ,
+                   PREFER_INST_TM ,
+                   INSTALL_ADDR_ID ,
+                   INSTALL_CNTC_ID ,
+                   INST_CNT_DEPT ,
+                   INST_CNT_POST ,
+                   VRIFY_REM
+              FROM SAL1010V
+             WHERE  ORD_ID = #{ordId}
+	           AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectMailInfo" parameterType="Map" resultType="egovMap">
+	      SELECT ORD_ID   ,
+	                ADDR_DTL,
+			        STREET,
+			        MAIL_CNTY ,
+			        MAIL_CITY,
+			        MAIL_STATE,
+			        MAIL_AREA,
+			        MAIL_POST_CODE,
+	                MAIL_CNT_NAME   ,
+	                MAIL_CNT_NRIC   ,
+	                MAIL_CNT_EMAIL   ,
+	                MAIL_CNT_TEL_M   ,
+	                MAIL_CNT_TEL_O   ,
+	                MAIL_CNT_TEL_R   ,
+	                MAIL_CNT_TEL_F   ,
+	                MAIL_CNT_GENDER   ,
+	                BILL_GRP_NO   ,
+	                BILL_STATE_EMAIL   ,
+	                BILL_STATE   ,
+	                BILL_SMS   ,
+	                BILL_POST   ,
+	                MAIL_CNTC_ID   ,
+	                MAIL_ADDR_ID   ,
+	                MAIL_CNT_DEPT   ,
+	                MAIL_CNT_POST
+	         FROM SAL1011V
+	       WHERE ORD_ID = #{ordId}
+		       AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectSalesInfo" parameterType="Map" resultType="egovMap">
+	      SELECT SALES_ORD_ID   ,
+			       SALES_ORD_NO   ,
+			       REF_NO   ,
+			       SALES_DT   ,
+			       CUST_ID   ,
+			       CUST_CNT_ID   ,
+			       CUST_ADD_ID   ,
+			       MEM_ID   ,
+			       BRNCH_ID   ,
+			       APP_TYPE_ID   ,
+			       TOT_AMT   ,
+			       PROMO_ID   ,
+			       BINDING_NO   ,
+			       CC_PROMO_ID   ,
+			       TOT_PV   ,
+			       REM   ,
+			       PV_MONTH   ,
+			       PV_YEAR   ,
+			       STUS_CODE_ID   ,
+			       UPD_DT   ,
+			       UPD_USER_ID   ,
+			       SYNC_CHK   ,
+			       CUST_PO_NO   ,
+			       REN_CHK_ID   ,
+			       INST_PRIOD   ,
+			       DO_NO   ,
+			       DEPT_CODE   ,
+			       GRP_CODE   ,
+			       ORG_CODE   ,
+			       SALES_ORD_ID_OLD   ,
+			       EDIT_TYPE_ID   ,
+			       CUST_BILL_ID   ,
+			       MTH_RENT_AMT   ,
+			       LOK   ,
+			       AEON_STUS_ID   ,
+			       COMM_DT   ,
+			       CRT_USER_ID   ,
+			       CRT_DT   ,
+			       PAY_COM_DT   ,
+			       DEF_RENT_AMT   ,
+			       REF_DOC_ID   ,
+			       SALES_HM_ID   ,
+			       SALES_SM_ID   ,
+			       SALES_GM_ID   ,
+			       ADV_BILL   ,
+			       CNVR_SCHEME_ID   ,
+			       CUST_CARE_CNT_ID
+			  FROM SAL0001D
+			 WHERE  SALES_ORD_ID = #{ordId}
+	           AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectAgreInfo" parameterType="Map" resultType="egovMap">
+	      SELECT A.GOV_AG_ID   ,
+	                B.GOV_AG_BATCH_NO   ,
+	                C.GOV_AG_PRGRS_NAME   ,GOV_AG_ITM_SALES_ORD_ID,
+	                D.NAME   ,
+	                E.CODE   ,
+	                CASE WHEN  B.GOV_AG_END_DT IS NOT NULL  THEN TO_CHAR(B.GOV_AG_END_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END GOV_AG_END_DT  ,
+	                CASE WHEN  B.GOV_AG_START_DT IS NOT NULL  THEN TO_CHAR(B.GOV_AG_START_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END GOV_AG_START_DT
+	         FROM SAL0034D A
+	                JOIN SAL0033D B   ON B.GOV_AG_ID = A.GOV_AG_ID
+	                JOIN SAL0037C C   ON C.GOV_AG_PRGRS_ID = B.GOV_AG_PRGRS_ID
+	                JOIN SYS0038M D   ON D.STUS_CODE_ID = B.GOV_AG_STUS_ID
+	                JOIN SYS0013M E   ON E.CODE_ID = B.GOV_AG_TYPE_ID
+	          WHERE  A.GOV_AG_ITM_SALES_ORD_ID = #{ordId}
+	         ORDER BY A.GOV_AG_ID DESC
+    </select>
+
+   <resultMap id="orderLdgr" type="egovMap" ></resultMap>
+	<select id="getOderLdgr"  statementType="CALLABLE"   parameterType="Map">
+		<![CDATA[
+		{
+		      call SP_GEN_ORD_LDGR ( #{ordId} , #{CutOffDate} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr})
+		}
+		]]>
+	</select>
+
+    <resultMap id="orderLdgr2" type="egovMap" ></resultMap>
+	<select id="getOderLdgr2"  statementType="CALLABLE"   parameterType="Map">
+		<![CDATA[
+		{
+		      call SP_GEN_ORD_LDGR_2 ( #{ordId} ,#{CutOffDate}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=orderLdgr2})
+		}
+		]]>
+	</select>
+
+	<resultMap id="outStndInfo" type="egovMap" ></resultMap>
+	<select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+		<![CDATA[
+		{
+		      call SP_GET_ORD_OTSTND_INFO ( #{ordId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfo})
+		}
+		]]>
+	</select>
+
+	<select id="selectPaymentDetailView" parameterType="Map" resultType="egovMap">
+          SELECT A.PAY_ITM_ID   ,
+                       A.PAY_ID   ,
+                       A.PAY_ITM_MODE_ID   ,
+                       C.CODE ITM_MODE_CODE   ,
+                       B.OR_NO   ,
+                       A.PAY_ITM_REF_NO   ,
+                       A.PAY_ITM_CC_NO   ,
+                       A.PAY_ITM_ORI_CC_NO   ,
+                       A.PAY_ITM_ENCRYPT_CC_NO   ,
+                       A.PAY_ITM_CC_TYPE_ID   ,
+                       D.CODE_NAME ITM_CC_TYPE_NAME   ,
+                       A.PAY_ITM_CC_HOLDER_NAME   ,
+                       A.PAY_ITM_CC_EXPR_DT,
+                       A.PAY_ITM_CHQ_NO   ,
+                       A.PAY_ITM_ISSU_BANK_ID   ,
+                       CASE WHEN ( E.BANK_ID IS NOT NULL ) THEN E.CODE ELSE ' ' END ITM_ISSU_BANK_CODE  ,
+                       E.NAME ITM_ISSU_BANK_NAME  ,
+                       A.PAY_ITM_AMT   ,
+                       DECODE(PAY_ITM_IS_ONLINE, 1, 'On', 0, 'Off','N/A')PAY_ITM_IS_ONLINE,
+                       A.PAY_ITM_BANK_ACC_ID   ,
+                       CASE WHEN ( F.ACC_ID IS NOT NULL ) THEN F.ACC_CODE ELSE ' ' END ITM_BANK_ACC_CODE  ,
+                       F.ACC_DESC   ,
+                       TO_CHAR(A.PAY_ITM_REF_DT , 'dd/mm/yyyy') PAY_ITM_REF_DT  ,
+                       A.PAY_ITM_APPV_NO   ,
+                       A.PAY_ITM_REM   ,
+                       A.PAY_ITM_STUS_ID   ,
+                       G.NAME ITM_STUS_NAME  ,
+                       A.PAY_ITM_IS_LOK   ,
+                       A.PAY_ITM_BANK_CHRG_AMT   ,
+                       A.PAY_ITM_IS_THRD_PARTY   ,
+                       A.PAY_ITM_THRD_PARTY_IC   ,
+                       A.PAY_ITM_MID   ,
+                       A.PAY_ITM_GRP_ID   ,
+                       A.PAY_ITM_REF_ITM_ID   ,
+                       A.ETC3
+                  FROM PAY0065D A
+                         JOIN PAY0064D B   ON B.PAY_ID = A.PAY_ID
+                         LEFT JOIN SYS0013M C   ON C.CODE_ID = A.PAY_ITM_MODE_ID
+                         LEFT JOIN SYS0013M D   ON D.CODE_ID = A.PAY_ITM_CC_TYPE_ID
+                         LEFT JOIN SYS0004M E   ON E.BANK_ID = A.PAY_ITM_ISSU_BANK_ID
+                         LEFT JOIN SYS0001M F   ON F.ACC_ID = A.PAY_ITM_BANK_ACC_ID
+                         LEFT JOIN SYS0038M G   ON G.STUS_CODE_ID = A.PAY_ITM_STUS_ID
+                 WHERE   B.OR_NO = #{docNo}
+                     AND  C.CODE = #{payMode}
+    </select>
+
+	<select id="selectPaymentDetailViewCndn" parameterType="Map" resultType="egovMap">
+          SELECT 1 C1  ,
+		       A.ADJ_ENTRY_NOTE_NO DOC_NO  ,
+		       CASE
+		            WHEN ( B.RESN_ID IS NOT NULL ) THEN B.CODE || ' - ' || B.RESN_DESC
+		       ELSE ' '
+		          END PAY_ITM_REM
+		  FROM PAY0002D A
+		         LEFT JOIN SYS0032M B   ON B.RESN_ID = A.ADJ_ENTRY_RESN_ID
+		 WHERE  A.ADJ_ENTRY_NOTE_NO = #{docNo}
+    </select>
+
+	<select id="selectPayInfo" parameterType="Map" resultType="egovMap">
+		SELECT PAY_ID PAY_ID  ,
+		       OR_NO OR_NO  ,
+		       SALES_ORD_ID SALES_ORD_ID
+		  FROM PAY0064D
+		 WHERE  OR_NO = #{docNo}
+		 AND ROWNUM <![CDATA[<= ]]>1
+    </select>
+
+</mapper>

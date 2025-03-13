@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.PreOrderMapper">
+
+    <select id="selectPreOrderList" parameterType="Map" resultType="egovMap">
+		SELECT T2.CODE_NAME AS CHANNEL
+             , T1.SOF_NO
+             , T3.CODE_NAME AS APP_TYPE
+             , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
+             , TO_CHAR(T1.REQST_DT, 'HH:MI:SS AM') AS REQUEST_TM
+             , T4.STK_ID AS STK_ID
+             , T4.STK_DESC AS PRODUCT
+             , T5.NAME AS CUST_NM
+             , T6.CODE_NAME AS CUST_TYPE
+             , T5.NRIC
+             , T7.USER_NAME CRT_NAME
+             , CASE
+                WHEN ( t16.mem_type =  2) THEN 'Cody'
+                WHEN ( t16.mem_type =  1) THEN 'HP'
+               ELSE ''
+                END SALES_USER_ID
+             , TO_CHAR(T1.UPD_DT, 'DD/MM/YYYY HH:MI:SS AM') || ' (' || T10.USER_NAME || ')' LAST_UPD
+             , T8.NAME AS STUS_NAME
+             , T1.STUS_ID
+             , T1.PRE_ORD_ID
+             , T18.REM1
+             , T18.REM2
+             , T9.Org_Code
+             , T9.Grp_Code
+             , T9.Dept_Code
+             , T11.SALES_ORD_NO
+             , T13.AREA
+             , T13.SO_BRNCH_CODE
+             , T12.AREA_ID
+             , T11.PV_MONTH
+             , T11.PV_YEAR
+             , T14.PROMO_CODE
+             , T14.PROMO_DESC
+             , T1.MEM_CODE HP_NAME
+             , DECODE(DOC.DOC_SO_ID,NULL,'N','Y') DOC_SUBMIT
+             , BRNCH.CODE SUBMIT_BRANCH
+             , BRNCH.NAME BRANCH_LOCATION
+             , TO_CHAR(T1.UPD_DT,'YYYYMMDDHH24MISS') UPD_DT
+             , T17.CODE || ' - ' || T17.NAME BRANCH_NAME
+             , T13.STATE
+             , RGN.CODE_NAME REGION_NAME
+             , CASE
+                WHEN ( SYC.BLCK_AREA_GRP_ID = T13.BLCK_AREA_GRP_ID ) THEN 'Yes'
+               ELSE 'No'
+                END INST_STATUS
+          FROM SAL0213M T1
+         JOIN SYS0013M T2 ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
+         JOIN SYS0013M T3 ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
+         JOIN SYS0026M T4 ON T4.STK_ID = T1.ITM_STK_ID AND GET_HOMECARE_FLAG_YN(t4.stk_ctgry_id) = 0
+                <!-- AND T4.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB WHERE AA.CODE = BB.CODE AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')         /* StkCategoryID_Homecare */ -->
+         LEFT JOIN SAL0302D T18 ON T18.PRE_ORD_ID = T1.PRE_ORD_ID
+         <!-- and T18.FAIL_REM_ID = (SELECT MAX(FAIL_REM_ID) FROM SAL0302D WHERE PRE_ORD_ID = T18.PRE_ORD_ID) -->
+         AND T18.FAIL_REM_ID = (
+                 SELECT sub.FAIL_REM_ID FROM
+            (
+                SELECT
+                    FAIL_REM_ID,
+                    ROW_NUMBER()
+                    OVER(PARTITION BY pre_ord_id
+                         ORDER BY
+                             FAIL_REM_ID DESC
+                    ) AS row_num
+                FROM
+                    SAL0302D
+                WHERE
+                    PRE_ORD_ID = T1.PRE_ORD_ID
+            ) sub
+        WHERE
+            sub.row_num = 1
+         )
+         JOIN SAL0029D T5 ON T5.CUST_ID = T1.CUST_ID
+         LEFT JOIN SYS0013M T6 ON T6.CODE_ID = T5.TYPE_ID AND T6.CODE_MASTER_ID = 8
+         LEFT JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+         LEFT JOIN SYS0038M T8 ON T8.STUS_CODE_ID = T1.STUS_ID
+         LEFT JOIN ORG0001D T16 ON T16.MEM_CODE = T1.MEM_CODE
+         LEFT JOIN ORG1001V T9 ON T9.MEM_ID = T16.MEM_ID
+         LEFT JOIN SYS0047M T10 ON T10.USER_ID = T1.UPD_USER_ID
+         LEFT JOIN SAL0001D  T11 ON T1.SALES_ORD_ID = T11.SALES_ORD_ID
+         LEFT JOIN SAL0023D T12 ON T12.CUST_ADD_ID = T1.INST_ADD_ID
+         LEFT JOIN SYS0064M T13 ON T13.AREA_ID = T12.AREA_ID
+         LEFT JOIN SAL0017D T14 ON T14.PROMO_ID = T1.PROMO_ID
+         LEFT JOIN ORG0010D DOC ON DOC.DOC_SO_ID = T11.SALES_ORD_ID AND DOC.DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1
+         LEFT JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
+         LEFT JOIN SYS0005M T17 ON T17.BRNCH_ID = T16.BRNCH
+         LEFT JOIN SYS0013M RGN   ON RGN.CODE_ID = T17.REGN_ID
+         LEFT JOIN SYS0121D SYC ON SYC.BLCK_AREA_GRP_ID = T13.BLCK_AREA_GRP_ID AND SYC.CAT_CODE_ID = T4.STK_CTGRY_ID
+
+		 WHERE 1=1
+         <if test='_memCode != null and _memCode != ""'>
+		   AND T1.MEM_CODE = #{_memCode}
+		 </if>
+         <if test='arrAppType != null and arrAppType != ""'>
+           AND T1.APP_TYPE_ID IN
+	         <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+	           #{item}
+	         </foreach>
+         </if>
+         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
+		   AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{_reqstEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+         </if>
+         <if test='pdpaMonth != null and pdpaMonth != 0'>
+		   AND T1.REQST_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+         </if>
+         <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
+           AND T1.STUS_ID IN
+             <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">
+               #{item, jdbcType=VARCHAR}
+             </foreach>
+         </if>
+         <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+           AND T1.KEYIN_BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='_nric != null and _nric != ""'>
+		   AND T5.NRIC = #{_nric}
+         </if>
+         <if test='_sofNo != null and _sofNo != ""'>
+		   AND T1.SOF_NO = #{_sofNo}
+         </if>
+         <if test='arrCustType != null and arrCustType != ""'>
+           AND T5.TYPE_ID IN
+             <foreach item="item" collection="arrCustType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='_name != null and _name != ""'>
+		   AND T5.NAME LIKE #{_name}||'%'
+         </if>
+         <if test="orgCode != '' ">
+           AND T9.ORG_CODE = #{orgCode}
+	     </if>
+         <if test="grpCode != '' ">
+           AND T9.GRP_CODE = #{grpCode}
+         </if>
+         <if test="deptCode != '' ">
+           AND T9.DEPT_CODE = #{deptCode}
+         </if>
+         <if test="_ordNo != '' ">
+           AND T11.SALES_ORD_NO = #{_ordNo}
+         </if>
+         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
+           AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
+         </if>
+         <if test='ordProudctList != null and ordProudctList != ""'>
+           AND T4.STK_ID  = #{ordProudctList}
+         </if>
+         <if test='memType != null and memType != ""'>
+            AND T7.USER_TYPE_ID = #{memType}
+         </if>
+         <if test='entryPoint != null and entryPoint != ""'>
+            AND T1.CHNNL = #{entryPoint}
+         </if>
+         <if test='promoCode != null and promoCode != ""'>
+             AND T14.PROMO_CODE = #{promoCode}
+         </if>
+         ORDER BY T1.PRE_ORD_ID ASC
+    </select>
+
+    <select id="selectPreOrderInfo" parameterType="Map" resultType="egovMap">
+		SELECT T1.PRE_ORD_ID
+		     , T1.REQST_DT
+		     , T1.CHNNL
+		     , T1.STUS_ID
+		     , T1.SOF_NO
+		     , T1.CUST_PO_NO
+		     , T1.APP_TYPE_ID
+		     , T1.SRV_PAC_ID
+		     , T1.INST_PRIOD
+		     , T1.CUST_ID
+		     , T1.EMP_CHK
+		     , T1.GST_CHK
+		     , T1.EURC_CUST_RGS_NO
+		     , T1.ATCH_FILE_GRP_ID
+		     , T1.CUST_CNTC_ID
+		     , T1.KEYIN_BRNCH_ID
+		     , T1.INST_ADD_ID
+		     , T1.DSC_BRNCH_ID
+		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY') AS PRE_DT
+		     , TO_CHAR(T1.CRT_DT, 'mm') AS MONTH
+		     , EXTRACT(YEAR FROM T1.CRT_DT) AS YEAR
+		     , T1.PRE_TM
+		     <!-- , REPLACE(T1.INSTCT, CHR(10), '\n') AS INSTCT -->
+		     , REPLACE(REPLACE(T1.INSTCT, CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
+		     , T1.EX_TRADE
+		     , T1.ITM_STK_ID
+		     , T1.CPNT_ID
+		     , T1.PROMO_ID
+		     , T1.MTH_RENT_AMT
+		     , T1.PROMO_DISC_PERIOD_TP
+		     , T1.PROMO_DISC_PERIOD
+		     , T1.TOT_AMT
+		     , T1.NOR_AMT
+		     , T1.NOR_RNT_FEE
+		     , T1.DISC_RNT_FEE
+		     , T1.TOT_PV
+		     , T1.TOT_PV_SS
+             , T1.TOT_PV_GST
+		     , T1.PRC_ID
+		     , T1.MEM_CODE
+		     , T1.ADV_BILL
+		     , T1.CUST_CRC_ID
+		     , T1.BANK_ID
+		     , T1.CUST_ACC_ID
+		     , T1.IS_3RD_PARTY
+		     , T1.RENT_PAY_CUST_ID
+		     , T1.RENT_PAY_MODE_ID
+		     , T1.CUST_BILL_ID
+		     , T1.CUST_BILL_CUST_ID
+		     , T1.CUST_BILL_CNT_ID
+		     , T1.CUST_BILL_ADD_ID
+		     , T1.CUST_BILL_REM
+		     , T1.CUST_BILL_EMAIL
+		     , T1.CUST_BILL_IS_SMS
+		     , T1.CUST_BILL_IS_POST
+		     , T1.CUST_BILL_EMAIL_ADD
+		     , T1.CUST_BILL_IS_WEB_PORTAL
+		     , T1.CUST_BILL_WEB_PORTAL_URL
+		     , T1.CUST_BILL_IS_SMS2
+		     , T1.CUST_BILL_CUST_CARE_CNT_ID
+		     , T1.REM1
+		     , T1.REM2
+		     , T1.CRT_USER_ID
+		     , T1.CRT_DT
+		     , T1.UPD_USER_ID
+		     , TO_CHAR(T1.UPD_DT,'YYYYMMDDHH24MISS') UPD_DT
+		     , T1.CORP_CUST_TYPE
+		     , T1.AGREEMENT_TYPE
+		     , T1.SALES_ORD_ID_OLD
+		     , T1.RELATED_NO
+		     , T2.STK_CTGRY_ID
+		     , (SELECT sys3.IND FROM SYS0026M SYS1, SYS0013M SYS2,SYS0094M SYS3
+                   WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND sys2.cODE_MASTER_ID
+                   = 11 AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T3.ITM_STK_ID)
+                   BUS_TYPE
+             ,  T1.EX_TRADE_PR IS_EXTRADE_PR
+             , T1.VOUCHER_CODE
+             , T1.SRV_TYPE
+             , T1.MAIN_PWP_ORD_ID
+             , T1.MAIN_PWP_ORD_NO
+             , T1.TNB_ACC_NO
+             , T1.MAIN_REBATE_ORD_ID
+             , T1.MAIN_REBATE_ORD_NO
+             , T1.CW_STORE_ID
+          FROM SAL0213M T1
+          JOIN SYS0026M T2 ON T2.STK_ID = T1.ITM_STK_ID
+          LEFT JOIN (
+          select a.sales_ord_id,b.ITM_STK_ID from sal0001d a left join sal0002d b  on b.sales_ord_id = a.sales_ord_id-- where a.sales_ord_id = T1.sales_ord_id_old
+          ) T3 on t1.sales_ord_id_old = t3.sales_ord_id
+		 WHERE T1.PRE_ORD_ID = #{preOrdId}
+    </select>
+
+    <select id="selectExistSofNo" parameterType="Map" resultType="int">
+        SELECT SUM(CNT) AS CNT
+          FROM
+             ( SELECT COUNT(1) CNT
+                 FROM SAL0213M
+                WHERE SOF_NO = #{sofNo}
+                  AND STUS_ID NOT IN (10, 98)
+                  AND '1' = #{selType}
+                UNION ALL
+               SELECT COUNT(1) CNT
+                 FROM SAL0001D
+                WHERE REF_NO = #{sofNo}
+                  AND STUS_CODE_ID != 8
+                  AND ('1' = #{selType} OR '2' = #{selType})
+             )
+    </select>
+
+    <insert id="insertPreOrder" parameterType="preOrderVO">
+      <selectKey keyProperty="preOrdId" resultType="Integer" order="BEFORE">
+        SELECT SAL0213M_PRE_ORD_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+		INSERT
+		  INTO SAL0213M
+		     ( PRE_ORD_ID
+		     , REQST_DT
+		     , CHNNL
+		     , STUS_ID
+		     , SOF_NO
+		     , CUST_PO_NO
+		     , APP_TYPE_ID
+		     , SRV_PAC_ID
+		     , INST_PRIOD
+		     , CUST_ID
+		     , EMP_CHK
+		     , GST_CHK
+		     , EURC_CUST_RGS_NO
+		     , ATCH_FILE_GRP_ID
+		     , CUST_CNTC_ID
+		     , KEYIN_BRNCH_ID
+		     , INST_ADD_ID
+		     , DSC_BRNCH_ID
+		     , PRE_DT
+		     , PRE_TM
+		     , INSTCT
+		     , EX_TRADE
+		     , ITM_STK_ID
+		     , PROMO_ID
+		     , MTH_RENT_AMT
+		     , PROMO_DISC_PERIOD_TP
+		     , PROMO_DISC_PERIOD
+		     , TOT_AMT
+		     , NOR_AMT
+		     , NOR_RNT_FEE
+		     , DISC_RNT_FEE
+		     , TOT_PV
+		     , PRC_ID
+		     , MEM_CODE
+		     , ADV_BILL
+		     , CUST_CRC_ID
+		     , BANK_ID
+		     , CUST_ACC_ID
+		     , IS_3RD_PARTY
+		     , RENT_PAY_CUST_ID
+		     , RENT_PAY_MODE_ID
+		     , CUST_BILL_ID
+		     , CUST_BILL_CUST_ID
+		     , CUST_BILL_CNT_ID
+		     , CUST_BILL_ADD_ID
+		     , CUST_BILL_REM
+		     , CUST_BILL_EMAIL
+		     , CUST_BILL_IS_SMS
+		     , CUST_BILL_IS_POST
+		     , CUST_BILL_EMAIL_ADD
+		     , CUST_BILL_IS_WEB_PORTAL
+		     , CUST_BILL_WEB_PORTAL_URL
+		     , CUST_BILL_IS_SMS2
+		     , CUST_BILL_CUST_CARE_CNT_ID
+		     , REM1
+		     , REM2
+		     , CRT_USER_ID
+		     , CRT_DT
+		     , UPD_USER_ID
+		     , UPD_DT
+		     , TOT_PV_GST
+		     , CPNT_ID
+		     , CORP_CUST_TYPE
+		     , AGREEMENT_TYPE
+		     , BNDL_ID
+		     , SALES_ORD_ID_OLD
+		     , RELATED_NO
+		     , EX_TRADE_PR
+		     , VOUCHER_CODE
+		     , SRV_TYPE
+		     , MAIN_PWP_ORD_ID
+		     , MAIN_PWP_ORD_NO
+		     , TOT_PV_SS
+		     , TNB_ACC_NO
+		     , MAIN_REBATE_ORD_ID
+		     , MAIN_REBATE_ORD_NO
+		     , CW_STORE_ID
+		     )
+		VALUES
+		     ( #{preOrdId}
+		     , SYSDATE
+		     , #{chnnl}
+		     , #{stusId}
+		     , #{sofNo}
+		     , #{custPoNo}
+		     , #{appTypeId}
+		     , #{srvPacId}
+		     , #{instPriod}
+		     , #{custId}
+		     , #{empChk}
+		     , #{gstChk}
+		     , #{eurcCustRgsNo}
+		     , #{atchFileGrpId}
+		     , #{custCntcId}
+		     , #{keyinBrnchId}
+		     , #{instAddId}
+		     , #{dscBrnchId}
+		     , TO_DATE(#{preDt}, 'DD/MM/YYYY')
+		     , #{preTm}
+		     , #{instct}
+		     , #{exTrade}
+		     , #{itmStkId}
+		     , #{promoId}
+		     , #{mthRentAmt}
+		     , #{promoDiscPeriodTp}
+		     , #{promoDiscPeriod}
+		     , #{totAmt}
+		     , #{norAmt}
+		     , #{norRntFee}
+		     , #{discRntFee}
+		     , #{totPv}
+		     , #{prcId}
+		     , #{memCode}
+		     , #{advBill}
+		     , #{custCrcId}
+		     , #{bankId}
+		     , #{custAccId}
+		     , #{is3rdParty}
+		     , #{rentPayCustId}
+             , #{rentPayModeId}
+             , #{custBillId}
+		     , #{custBillCustId}
+		     , #{custBillCntId}
+		     , #{custBillAddId}
+		     , #{custBillRem}
+		     , #{custBillEmail}
+		     , #{custBillIsSms}
+		     , #{custBillIsPost}
+		     , #{custBillEmailAdd}
+		     , #{custBillIsWebPortal}
+		     , #{custBillWebPortalUrl}
+		     , #{custBillIsSms2}
+		     , #{custBillCustCareCntId}
+		     , #{rem1}
+		     , #{rem2}
+		     , #{crtUserId}
+		     , SYSDATE
+		     , #{updUserId}
+		     , SYSDATE
+		     , #{totPvGst}
+		     , #{itmCompId}
+		     , #{corpCustType}
+             , #{agreementType}
+             , #{bndlId}
+             , #{salesOrdIdOld}
+             , #{relatedNo}
+             , #{isExtradePR}
+             , #{voucherCode}
+             , #{srvType}
+             , #{pwpOrderId}
+             , #{pwpOrderNo}
+             , #{totPvSs}
+             , #{tnbAccNo}
+             , #{rebateOrderId}
+             , #{rebateOrderNo}
+             , #{cwStoreId}
+		     )
+    </insert>
+
+    <update id="updatePreOrder" parameterType="preOrderVO">
+        UPDATE SAL0213M
+           SET CUST_PO_NO                 = #{custPoNo}
+             , APP_TYPE_ID                = #{appTypeId}
+             , SRV_PAC_ID                 = #{srvPacId}
+             , INST_PRIOD                 = #{instPriod}
+             , CUST_ID                    = #{custId}
+             , EMP_CHK                    = #{empChk}
+             , GST_CHK                    = #{gstChk}
+             , EURC_CUST_RGS_NO           = #{eurcCustRgsNo}
+             , ATCH_FILE_GRP_ID           = #{atchFileGrpId}
+             , CUST_CNTC_ID               = #{custCntcId}
+             , KEYIN_BRNCH_ID             = #{keyinBrnchId}
+             , INST_ADD_ID                = #{instAddId}
+             , DSC_BRNCH_ID               = #{dscBrnchId}
+             , PRE_DT                     = TO_DATE(#{preDt}, 'DD/MM/YYYY')
+             , PRE_TM                     = #{preTm}
+             , INSTCT                     = #{instct}
+             , EX_TRADE                   = #{exTrade}
+             , ITM_STK_ID                 = #{itmStkId}
+             , PROMO_ID                   = #{promoId}
+             , MTH_RENT_AMT               = #{mthRentAmt}
+             , PROMO_DISC_PERIOD_TP       = #{promoDiscPeriodTp}
+             , PROMO_DISC_PERIOD          = #{promoDiscPeriod}
+             , TOT_AMT                    = #{totAmt}
+             , NOR_AMT                    = #{norAmt}
+             , NOR_RNT_FEE                = #{norRntFee}
+             , DISC_RNT_FEE               = #{discRntFee}
+             , TOT_PV                     = #{totPv}
+             , TOT_PV_SS                  = #{totPvSs}
+             , TOT_PV_GST                 = #{totPvGst}
+             , PRC_ID                     = #{prcId}
+             , MEM_CODE                   = #{memCode}
+             , ADV_BILL                   = #{advBill}
+             , CUST_CRC_ID                = #{custCrcId}
+             , BANK_ID                    = #{bankId}
+             , CUST_ACC_ID                = #{custAccId}
+             , IS_3RD_PARTY               = #{is3rdParty}
+             , RENT_PAY_CUST_ID           = #{rentPayCustId}
+             , RENT_PAY_MODE_ID           = #{rentPayModeId}
+             , CUST_BILL_ID               = #{custBillId}
+             , CUST_BILL_CUST_ID          = #{custBillCustId}
+             , CUST_BILL_CNT_ID           = #{custBillCntId}
+             , CUST_BILL_ADD_ID           = #{custBillAddId}
+             , CUST_BILL_REM              = #{custBillRem}
+             , CUST_BILL_EMAIL            = #{custBillEmail}
+             , CUST_BILL_IS_SMS           = #{custBillIsSms}
+             , CUST_BILL_IS_POST          = #{custBillIsPost}
+             , CUST_BILL_EMAIL_ADD        = #{custBillEmailAdd}
+             , CUST_BILL_IS_WEB_PORTAL    = #{custBillIsWebPortal}
+             , CUST_BILL_WEB_PORTAL_URL   = #{custBillWebPortalUrl}
+             , CUST_BILL_IS_SMS2          = #{custBillIsSms2}
+             , CUST_BILL_CUST_CARE_CNT_ID = #{custBillCustCareCntId}
+             , SRV_TYPE                   = #{srvType}
+             <!-- , REM1                       = #{rem1}
+             , REM2                       = #{rem2} -->
+             , UPD_USER_ID                = #{updUserId}
+             , UPD_DT                     = SYSDATE
+             , STUS_ID = #{stusId}
+             , CPNT_ID = #{itmCompId}
+             , CORP_CUST_TYPE = #{corpCustType}
+             , AGREEMENT_TYPE = #{agreementType}
+             , SALES_ORD_ID_OLD = #{salesOrdIdOld}
+             , RELATED_NO = #{relatedNo}
+             , EX_TRADE_PR = #{isExtradePR}
+             , VOUCHER_CODE = #{voucherCode}
+             , MAIN_PWP_ORD_ID = #{pwpOrderId}
+             , MAIN_PWP_ORD_NO = #{pwpOrderNo}
+             , TNB_ACC_NO = #{tnbAccNo}
+             , CW_STORE_ID = #{cwStoreId}
+         WHERE PRE_ORD_ID                 = #{preOrdId}
+    </update>
+
+    <update id="updatePreOrderStatus" parameterType="preOrderVO">
+        UPDATE SAL0213M
+           SET STUS_ID                    = 4
+             , SALES_ORD_ID             = #{salesOrdId}
+             , UPD_USER_ID                = #{updUserId}
+             , UPD_DT                     = SYSDATE
+             , ADV_BILL                   = #{advBill}
+         WHERE PRE_ORD_ID                 = #{preOrdId}
+    </update>
+
+    <update id="updatePreOrderFailStatus" parameterType="Map">
+        UPDATE SAL0213M
+           SET STUS_ID                = #{stusId}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+         WHERE PRE_ORD_ID        = #{preOrdId}
+    </update>
+
+    <insert id="InsertPreOrderFailStatus" parameterType="Map">
+         INSERT INTO SAL0302D (
+             FAIL_REM_ID
+             ,PRE_ORD_ID
+             , STUS_ID
+             , REM1
+             , REM2
+             , UPD_USER_ID
+             , UPD_DT
+             , CRT_USER_ID
+             , CRT_DT
+        )VALUES (
+	        SAL0302D_FAILED_REMARK_ID_SEQ.NEXTVAL
+	        ,#{preOrdId}
+	        ,#{stusId}
+	        ,#{failCode}
+	        ,#{remark}
+	        ,#{updUserId}
+	        ,SYSDATE
+	        ,#{crtUserId}
+	        ,SYSDATE
+        )
+    </insert>
+
+    <select id="selectPreOrderFailStatus" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+    SELECT
+	    T2.NAME AS STUS
+	    , REM1
+	    , REM2
+	    , T3.USER_NAME AS CRT_USER_ID
+	    , CRT_DT
+	    ,CASE WHEN TO_CHAR(CRT_DT, 'HH12') < 12 THEN  TO_CHAR(CRT_DT, 'HH12:MI AM')
+         ELSE TO_CHAR(CRT_DT, 'HH12:MI PM') END AS CRT_TIME
+    from SAL0302D T1
+	    join sys0038m T2 on T1.STUS_ID = T2.STUS_CODE_ID
+	    join sys0047m T3 on T1.CRT_USER_ID = T3.USER_ID
+    where PRE_ORD_ID = #{preOrdId}
+    ORDER BY CRT_DT DESC
+     ]]>
+    </select>
+
+    <select id="selectExistingMember" parameterType="Map" resultType="int">
+		SELECT COUNT(1) AS CNT
+		  FROM ORG0001D
+		 WHERE STUS = 1
+		   AND SUBSTR(REPLACE(NRIC,'-',''), 0, 12) = #{nric}
+    </select>
+
+    <select id="selectAttachList" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+                   ,T2.FILE_KEY_SEQ
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T2.FILE_KEY_SEQ, T1.UPD_DT
+    </select>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <select id="selRcdTms" parameterType="Map" resultType="int">
+      SELECT COUNT(*) COUNT
+        FROM SAL0213M
+      WHERE PRE_ORD_ID = #{preOrdId}
+       AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = #{rcdTms}
+    </select>
+
+    <update id="updRcdTms" parameterType="Map">
+        UPDATE SAL0213M
+        SET
+            UPD_USER_ID          = #{updUserId}
+            , UPD_DT                = SYSDATE
+        WHERE PRE_ORD_ID     = #{preOrdId}
+    </update>
+
+    <select id="selPreOrdId" parameterType="Map" resultType="int">
+      SELECT COUNT(*) COUNT
+        FROM SAL0001D
+      WHERE PRE_ORD_ID = #{preOrdId}
+    </select>
+
+    <update id="updateKeyinSOF" parameterType="Map">
+        UPDATE SAL0213M
+           SET
+               SOF_NO = #{ordRefNo}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+         WHERE 1 = 1
+        <choose>
+            <when test='modBndlId != null and modBndlId !=0 and modBndlId != ""'>
+                AND BNDL_ID = #{modBndlId}
+            </when>
+            <otherwise>
+                AND SALES_ORD_ID = #{salesOrdId}
+            </otherwise>
+        </choose>
+    </update>
+
+
+    <select id="checkExtradeSchedule" parameterType="Map" resultType="egovMap">
+       SELECT * FROM
+          (SELECT
+                CODE IND
+              , CODE_NAME DAY
+              FROM SYS0094M WHERE IND ='EXTRADE'
+          )
+       PIVOT (MAX(DAY) FOR IND IN ('startDate' AS start_Date, 'endDate' AS end_Date))
+    </select>
+
+      <select id="chkExtradeScheduleEpapan" parameterType="Map" resultType="int">
+      SELECT COUNT(1)  from (
+           SELECT * FROM
+              (SELECT
+                    CODE IND
+                  , CODE_NAME DAY
+                  FROM SYS0094M WHERE IND ='EXTRADE'
+              )
+           PIVOT (MAX(DAY) FOR IND IN ('startDate' AS start_Date, 'endDate' AS end_Date))
+     )where to_char(sysdate, 'yyyymmdd') between to_char(sysdate,'yyyymm')||start_Date and   to_char(sysdate,'yyyymm')||end_Date
+    </select>
+
+    <select id="selectExistingSalesVoucherCode" parameterType="preOrderVO" resultType="String">
+    	SELECT VOUCHER_CODE FROM SAL0213M WHERE PRE_ORD_ID = #{preOrdId}
+    </select>
+
+    <update id="updatePwp" parameterType="Map">
+        UPDATE SAL0213M
+           SET MAIN_PWP_ORD_ID = #{mainOrdId}
+             , MAIN_PWP_ORD_NO = #{mainOrdNo}
+             , UPD_USER_ID = #{userId}
+             , UPD_DT = SYSDATE
+         WHERE PRE_ORD_ID = #{preOrdId}
+    </update>
+
+    <update id="updateRebate" parameterType="Map">
+        UPDATE SAL0213M
+           SET MAIN_REBATE_ORD_ID = #{mainOrdId}
+             , MAIN_REBATE_ORD_NO = #{mainOrdNo}
+             , UPD_USER_ID = #{userId}
+             , UPD_DT = SYSDATE
+         WHERE PRE_ORD_ID = #{preOrdId}
+    </update>
+</mapper>

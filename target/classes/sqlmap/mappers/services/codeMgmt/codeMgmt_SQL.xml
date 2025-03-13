@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.codeMgmt.impl.codeMgmtMapper">
+
+<update id="updateProductSetting" parameterType="Map">
+UPDATE SYS0026M
+SET
+    STK_LCH_DT = #{prdLaunchDt},
+    STK_AS_COMM = #{ctComm},
+    STK_AS_COST_PRICE = #{asCost},
+    UPD_DT = SYSDATE,
+    UPD_USER_ID = #{updator}
+WHERE STK_CODE = #{productCode}
+</update>
+
+<select id="getTypeCode" parameterType="String" resultType="egovMap">
+SELECT CODE FROM SVC0141M WHERE CODE_CTG_ID = #{codeCtgry}
+</select>
+
+<select id="getDefectId" parameterType="String" resultType="egovMap">
+SELECT SYS0100M_DEFECT_ID_SEQ.NEXTVAL AS DEFECT_ID FROM DUAL
+</select>
+
+<select id="getDefectIdParent" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT DEFECT_GRP
+FROM SYS0100M
+WHERE DEFECT_CODE = #{svcLargeCode}
+AND DEFECT_STATUS = 1
+<if test='productCtgry != null and productCtgry != ""'>
+AND PROD_CAT ＝ (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry})
+</if>
+</select>
+
+<select id="chkProductAvail" parameterType="Map" resultType="egovMap">
+SELECT
+   COUNT(*) AS COUNT
+FROM SYS0026M
+WHERE STK_CODE = #{prodCode} AND STUS_CODE_ID = 1
+</select>
+
+<select id="chkDupReasons" parameterType="Map" resultType="egovMap">
+SELECT
+   COUNT(*) AS COUNT
+FROM SYS0032M
+WHERE RESN_TYPE_ID = #{reasonCodeId} AND CODE = #{svcCode} AND STUS_CODE_ID = '1'
+</select>
+
+<select id="chkDupDefectCode" parameterType="Map" resultType="egovMap">
+SELECT
+   COUNT(*) AS COUNT
+FROM SYS0100M
+WHERE DEFECT_TYP = #{defectType} AND DEFECT_CODE = #{svcCode}
+</select>
+
+<insert id="addASReasons" parameterType="Map">
+    INSERT INTO SYS0032M
+    VALUES (
+        SYS0032M_RESN_ID_SEQ.NEXTVAL,
+        #{svcCode},
+        #{svcCodeDesc},
+        #{defectCode},
+        #{updator},
+        SYSDATE,
+        '1',
+        #{creator},
+        SYSDATE,
+        TO_DATE('1900/01/01', 'YYYY/MM/DD'),
+        TO_DATE('9999/12/31', 'YYYY/MM/DD')
+    )
+</insert>
+
+<insert id="addSVC0142D" parameterType="Map">
+    INSERT INTO SVC0142D (CODE_ID,CODE_CTG_ID,CODE_NAME,CODE_DESC,STUS,CRT_USER_ID,CRT_DT,CODE)
+    VALUES (
+        SVC0142D_CODE_ID_SEQ.NEXTVAL,
+        #{codeCtgry},
+        #{svcCodeDesc},
+        #{svcCodeRmk},
+        '1',
+        #{creator},
+        SYSDATE,
+        #{defectCode}
+    )
+</insert>
+
+<insert id="addDefectCodes" parameterType="Map">
+    INSERT INTO SYS0100M
+    VALUES (
+        <choose>
+        <when test='productCtgry != null and productCtgry != ""'>
+         (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
+        </when>
+        <otherwise>
+        '*',
+        </otherwise>
+        </choose>
+        #{defectCode},
+        #{defectId},
+        #{defectId},
+        #{svcCode},
+        #{svcCodeDesc},
+        #{svcCodeRmk},
+        '1',
+        TO_DATE('1900/01/01','YYYY/MM/DD'),
+        TO_DATE('9999/12/31','YYYY/MM/DD'),
+        #{creator},
+        SYSDATE,
+        #{updator},
+        SYSDATE,
+        '',
+        '',
+        '',
+        '',
+        0
+    )
+</insert>
+
+<insert id="addDefectCodesSmall" parameterType="Map">
+    INSERT INTO SYS0100M
+    VALUES (
+    <choose>
+        <when test='productCtgry != null and productCtgry != ""'>
+         (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =  #{productCtgry}),
+        </when>
+        <otherwise>
+        '*',
+        </otherwise>
+        </choose>
+        #{defectCode},
+        #{defectGrp},
+        #{defectId},
+        #{svcCode},
+        #{svcCodeDesc},
+        #{svcCodeRmk},
+        '1',
+        TO_DATE('1900/01/01','YYYY/MM/DD'),
+        TO_DATE('9999/12/31','YYYY/MM/DD'),
+        #{creator},
+        SYSDATE,
+        #{updator},
+        SYSDATE,
+        '',
+        '',
+        '',
+        '',
+        0
+    )
+</insert>
+
+<select id="selectCodeMgmtList" parameterType="Map" resultType="egovMap">
+	SELECT DISTINCT
+	    CASE WHEN A.DEFECT_TYP IN ('HDD','HDC','HDT','HSC') THEN 'HC'
+	         WHEN A.DEFECT_TYP IN ('DD','DC','DT','SC') THEN 'HA'
+	         ELSE '-' END AS BUSI_CAT,
+	    A.PROD_CAT,
+	    B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+	    B.CODE_NAME CODE_CAT,
+	    A.DEFECT_TYP,
+	    G.DEFECT_ID AS DEFECT_GRP,
+	    G.DEFECT_CODE AS SVC_LARGE_CODE,
+        G.DEFECT_CODE AS DEFECT_GRP_CODE,
+	    A.DEFECT_ID,
+	    A.DEFECT_CODE,
+	    A.DEFECT_DESC CODE_DESC,
+	    NVL(A.DEFECT_RMK, '-') CODE_REMARK,
+	    A.DEFECT_STATUS AS STUS_ID,
+	    CASE WHEN A.DEFECT_STATUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+	    '-' AS PROD_CODE,
+	    '1900/01/01' AS PROD_LAUNCH_DT,
+	    0 AS CT_COMM,
+	    0 AS AS_COST,
+
+	    A.EFF_DT,
+	    A.EXP_DT,
+	    C.USER_NAME CRT_USER,
+	    A.CRT_DT,
+	    D.USER_NAME AS UPD_USER,
+	    A.UPD_DT
+	FROM SYS0100M A
+	LEFT JOIN SVC0141M B ON A.DEFECT_TYP = B.CODE
+	LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
+	LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
+	LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
+    LEFT JOIN SYS0026M F ON F.STK_CTGRY_ID = E.CODE_ID
+    JOIN SYS0100M G ON G.DEFECT_ID = A.DEFECT_GRP
+
+	WHERE 1=1
+	<if test='arrCodeCat != null and arrCodeCat != ""'>
+        AND B.CODE_CTG_ID IN
+        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</if>
+	<if test='arrProdCat != null and arrProdCat != ""'>
+        AND F.STK_CTGRY_ID IN
+        <foreach item="item" collection="arrProdCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='arrCodeStus != null and arrCodeStus != ""'>
+        AND A.DEFECT_STATUS IN
+       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND A.DEFECT_CODE = #{defCode}
+    </if>
+    <if test='defName != null and defName != ""'>
+        AND A.DEFECT_DESC = #{defName}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND A.DEFECT_ID = #{defectId}
+    </if>
+    <if test='codeCatName != null and codeCatName != ""'>
+        AND A.DEFECT_TYP = #{codeCatName}
+    </if>
+    <if test='prodCode != null and prodCode != ""'>
+        AND 1=0
+    </if>
+	UNION
+
+	SELECT DISTINCT
+	    '-' AS BUSI_CAT,
+	    '-' AS PROD_CAT,
+	    B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+	    B.CODE_NAME CODE_CAT,
+	     '-' AS DEFECT_TYP,
+	    A.RESN_TYPE_ID AS DEFECT_GRP,
+	    '-' AS SVC_LARGE_CODE,
+	    '0' AS DEFECT_GRP_CODE,
+	    A.RESN_ID AS DEFECT_ID,
+	    A.CODE AS DEFECT_CODE,
+	    A.RESN_DESC AS CODE_DESC,
+	    '-' AS CODE_REMARK,
+	    A.STUS_CODE_ID AS STUS_ID,
+	    CASE WHEN A.STUS_CODE_ID = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+	    '-' AS PROD_CODE,
+	    '1900/01/01' AS PROD_LAUNCH_DT,
+	    0 AS CT_COMM,
+	    0 AS AS_COST,
+
+	    A.EFF_DT,
+	    A.EXP_DT,
+	    C.USER_NAME CRT_USER,
+	    A.CRT_DT,
+	    D.USER_NAME AS UPD_USER,
+	    A.UPD_DT
+	FROM SYS0032M A
+	JOIN SVC0141M B ON TO_CHAR(A.RESN_TYPE_ID) = B.CODE
+	LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+	LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+	WHERE 1=1
+	<if test='arrCodeCat != null and arrCodeCat != ""'>
+        AND B.CODE_CTG_ID IN
+        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='arrCodeStus != null and arrCodeStus != ""'>
+        AND A.STUS_CODE_ID IN
+       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND A.CODE = #{defCode}
+    </if>
+    <if test='defName != null and defName != ""'>
+        AND A.RESN_DESC = #{defName}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND A.RESN_ID = #{defectId}
+    </if>
+    <if test='prodCode != null and prodCode != ""'>
+        AND 1=0
+    </if>
+    UNION
+
+    SELECT DISTINCT
+        '-' AS BUSI_CAT,
+        '-' AS PROD_CAT,
+        A.CODE_CTG_ID CODE_CAT_ID,
+        A.CODE CODE_CAT_NAME,
+        A.CODE_NAME CODE_CAT,
+        '-' AS DEFECT_TYP,
+        0 AS DEFECT_GRP,
+        '-' AS SVC_LARGE_CODE,
+        '-' AS DEFECT_GRP_CODE,
+        B.CODE_ID AS DEFECT_ID,
+        B.CODE AS DEFECT_CODE,
+        B.CODE_NAME AS CODE_DESC,
+        B.CODE_DESC AS CODE_REMARK,
+        B.STUS AS STUS_ID,
+        CASE WHEN B.STUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+        '-' AS PROD_CODE,
+        '1900/01/01' AS PROD_LAUNCH_DT,
+        0 AS CT_COMM,
+        0 AS AS_COST,
+
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EFF_DT,
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EXP_DT,
+        C.USER_NAME CRT_USER,
+        A.CRT_DT,
+        D.USER_NAME AS UPD_USER,
+        A.UPD_DT
+    FROM SVC0141M A
+    JOIN SVC0142D B ON A.CODE_CTG_ID = B.CODE_CTG_ID
+    LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+    WHERE 1=1
+    <if test='arrCodeCat != null and arrCodeCat != ""'>
+        AND A.CODE_CTG_ID IN
+        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='arrCodeStus != null and arrCodeStus != ""'>
+        AND B.STUS IN
+       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND B.CODE = #{defCode}
+    </if>
+
+    <if test='defName != null and defName != ""'>
+        AND B.CODE_NAME = #{defName}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND B.CODE_ID = #{defectId}
+    </if>
+    <if test='prodCode != null and prodCode != ""'>
+        AND 1=0
+    </if>
+	UNION
+
+	SELECT DISTINCT
+	    CASE WHEN B.CODE IN ('MAT','FRM','MC','ACO','ACI') THEN 'HC'
+	            ELSE 'HA' END AS BUSI_CAT,
+	    C.CODE AS PROD_CAT,
+	    B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+        B.CODE_NAME CODE_CAT,
+	    '-' AS DEFECT_TYP,
+	    0 AS DEFECT_GRP,
+	    '-' AS SVC_LARGE_CODE,
+	    '-' AS DEFECT_GRP_CODE,
+	    0 AS DEFECT_ID,
+	    '-' AS DEFECT_CODE,
+	    '-' AS CODE_DESC,
+	    '-' AS CODE_REMARK,
+	    A.STUS_CODE_ID AS STUS_ID,
+	    CASE WHEN A.STUS_CODE_ID = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        A.STK_ID,
+	    A.STK_CODE AS PROD_CODE,
+	    A.STK_LCH_DT AS PROD_LAUNCH_DT,
+	    A.STK_AS_COMM AS CT_COMM,
+	    A.STK_AS_COST_PRICE AS AS_COST,
+
+	    TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EFF_DT,
+	    TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EXP_DT,
+	    '' CRT_USR,
+	    TO_DATE('1900/01/01', 'YYYY/MM/DD') AS CRT_DT,
+	    D.USER_NAME AS UPD_USER,
+	    A.UPD_DT
+	FROM SYS0026M A
+	LEFT JOIN SVC0141M B ON B.CODE_CTG_ID = 19
+	LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+	LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+	WHERE 1=1
+	<if test='arrCodeCat != null and arrCodeCat != ""'>
+        AND B.CODE_CTG_ID IN
+        <foreach item="item" collection="arrCodeCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='arrProdCat != null and arrProdCat != ""'>
+        AND A.STK_CTGRY_ID IN
+        <foreach item="item" collection="arrProdCat" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='arrCodeStus != null and arrCodeStus != ""'>
+        AND A.STUS_CODE_ID IN
+       <foreach item="item" collection="arrCodeStus" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    <if test='prodCode != null and prodCode != ""'>
+        AND A.STK_CODE = #{prodCode}
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND B.CODE = #{defCode}
+    </if>
+    <if test='defName != null and defName != ""'>
+        AND B.CODE_NAME = #{defName}
+    </if>
+    <if test='stkId != null and stkId != ""'>
+        AND A.STK_ID = #{stkId}
+    </if>
+</select>
+
+<update id="updateCodeStusSYS100" parameterType="Map">
+	UPDATE SYS0100M
+	SET
+	    DEFECT_STATUS = #{updStus},
+	    UPD_DT = SYSDATE,
+	    UPD_USR = #{updator}
+	WHERE DEFECT_TYP = #{codeCatName} AND DEFECT_ID = #{defectId}
+</update>
+
+<update id="updateCodeStusSYS32" parameterType="Map">
+    UPDATE SYS0032M
+    SET
+        STUS_CODE_ID = #{updStus},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = #{updator}
+    WHERE RESN_TYPE_ID = #{codeCatName} AND RESN_ID = #{defectId}
+</update>
+
+<update id="updateCodeStusSVC142" parameterType="Map">
+    UPDATE SVC0142D
+    SET
+        STUS = #{updStus},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = #{updator}
+    WHERE CODE_CTG_ID = #{codeCatId} AND CODE_ID = #{defectId}
+</update>
+
+<select id="selectCodeMgmtInfo" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT
+        CASE WHEN A.DEFECT_TYP IN ('HDD','HDC','HDT','HSC') THEN '6666'
+             WHEN A.DEFECT_TYP IN ('DD','DC','DT','SC') THEN '6665'
+             ELSE '-' END AS BUSI_CAT,
+        B.SRV_TYPE AS TYPE_ID,
+        F.STK_CTGRY_ID AS PROD_CAT_ID,
+        A.PROD_CAT,
+        B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+        B.CODE_NAME CODE_CAT,
+        A.DEFECT_TYP,
+        A.DEFECT_GRP,
+        G.DEFECT_CODE AS SVC_LARGE_CODE,
+        A.DEFECT_ID,
+        A.DEFECT_CODE,
+        A.DEFECT_DESC CODE_DESC,
+        NVL(A.DEFECT_RMK, '-') CODE_REMARK,
+        A.DEFECT_STATUS AS STUS_ID,
+        CASE WHEN A.DEFECT_STATUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+        '-' AS PROD_CODE,
+        '1900/01/01' AS PROD_LAUNCH_DT,
+        0 AS CT_COMM,
+        0 AS AS_COST,
+
+        A.EFF_DT,
+        A.EXP_DT,
+        C.USER_NAME CRT_USER,
+        A.CRT_DT,
+        D.USER_NAME AS UPD_USER,
+        A.UPD_DT
+    FROM SYS0100M A
+    LEFT JOIN SVC0141M B ON A.DEFECT_TYP = B.CODE
+    LEFT JOIN SYS0047M C ON A.CRT_USR = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USR = D.USER_ID
+    LEFT JOIN SYS0013M E ON A.PROD_CAT = E.CODE AND E.CODE_MASTER_ID = 11
+    LEFT JOIN SYS0026M F ON F.STK_CTGRY_ID = E.CODE_ID
+    LEFT JOIN SYS0100M G ON A.DEFECT_GRP = G.DEFECT_ID
+
+    WHERE 1=1
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID = #{codeCatId}
+    </if>
+    <if test='svcLargeCode != null and svcLargeCode != ""'>
+        AND G.DEFECT_CODE = #{svcLargeCode}
+    </if>
+    <if test='prodCat != "-" and prodCat != "*"'>
+        AND F.STK_CTGRY_ID = #{prodCat}
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND A.DEFECT_CODE = #{defCode}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND A.DEFECT_ID = #{defectId}
+    </if>
+    <if test='codeCatName != null and codeCatName != ""'>
+        AND A.DEFECT_TYP = #{codeCatName}
+    </if>
+    UNION
+
+    SELECT DISTINCT
+        '-' AS BUSI_CAT,
+        B.SRV_TYPE AS TYPE_ID,
+        0 AS PROD_CAT_ID,
+        '-' AS PROD_CAT,
+        B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+        B.CODE_NAME CODE_CAT,
+         '-' AS DEFECT_TYP,
+        A.RESN_TYPE_ID AS DEFECT_GRP,
+        '-' AS SVC_LARGE_CODE,
+        A.RESN_ID AS DEFECT_ID,
+        A.CODE AS DEFECT_CODE,
+        A.RESN_DESC AS CODE_DESC,
+        '-' AS CODE_REMARK,
+        A.STUS_CODE_ID AS STUS_ID,
+        CASE WHEN A.STUS_CODE_ID = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+        '-' AS PROD_CODE,
+        '1900/01/01' AS PROD_LAUNCH_DT,
+        0 AS CT_COMM,
+        0 AS AS_COST,
+
+        A.EFF_DT,
+        A.EXP_DT,
+        C.USER_NAME CRT_USER,
+        A.CRT_DT,
+        D.USER_NAME AS UPD_USER,
+        A.UPD_DT
+    FROM SYS0032M A
+    JOIN SVC0141M B ON TO_CHAR(A.RESN_TYPE_ID) = B.CODE
+    LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+    WHERE 1=1
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID =  #{codeCatId}
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND A.CODE = #{defCode}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND A.RESN_ID = #{defectId}
+    </if>
+    UNION
+
+    SELECT DISTINCT
+        '-' AS BUSI_CAT,
+        A.SRV_TYPE AS TYPE_ID,
+        0 AS PROD_CAT_ID,
+        '-' AS PROD_CAT,
+        A.CODE_CTG_ID CODE_CAT_ID,
+        A.CODE CODE_CAT_NAME,
+        A.CODE_NAME CODE_CAT,
+        '-' AS DEFECT_TYP,
+        0 AS DEFECT_GRP,
+        '-' AS SVC_LARGE_CODE,
+        B.CODE_ID AS DEFECT_ID,
+        B.CODE AS DEFECT_CODE,
+        B.CODE_NAME AS CODE_DESC,
+        B.CODE_DESC AS CODE_REMARK,
+        B.STUS AS STUS_ID,
+        CASE WHEN B.STUS = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        0 AS STK_ID,
+        '-' AS PROD_CODE,
+        '1900/01/01' AS PROD_LAUNCH_DT,
+        0 AS CT_COMM,
+        0 AS AS_COST,
+
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EFF_DT,
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EXP_DT,
+        C.USER_NAME CRT_USER,
+        A.CRT_DT,
+        D.USER_NAME AS UPD_USER,
+        A.UPD_DT
+    FROM SVC0141M A
+    JOIN SVC0142D B ON A.CODE_CTG_ID = B.CODE_CTG_ID
+    LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+    WHERE 1=1
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND A.CODE_CTG_ID = #{codeCatId}
+    </if>
+    <if test='defCode != null and defCode != ""'>
+        AND B.CODE = #{defCode}
+    </if>
+    <if test='defectId != null and defectId != ""'>
+        AND B.CODE_ID = #{defectId}
+    </if>
+    UNION
+
+    SELECT DISTINCT
+        CASE WHEN B.CODE IN ('MAT','FRM','MC','ACO','ACI') THEN '6666'
+                ELSE '6665' END AS BUSI_CAT,
+        B.SRV_TYPE AS TYPE_ID,
+        A.STK_CTGRY_ID AS PROD_CAT_ID,
+        C.CODE AS PROD_CAT,
+        B.CODE_CTG_ID CODE_CAT_ID,
+        B.CODE CODE_CAT_NAME,
+        B.CODE_NAME CODE_CAT,
+        '-' AS DEFECT_TYP,
+        0 AS DEFECT_GRP,
+        '-' AS SVC_LARGE_CODE,
+        0 AS DEFECT_ID,
+        '-' AS DEFECT_CODE,
+        '-' AS CODE_DESC,
+        '-' AS CODE_REMARK,
+        A.STUS_CODE_ID AS STUS_ID,
+        CASE WHEN A.STUS_CODE_ID = 1 THEN 'ACT' ELSE 'DEACT' END AS STATUS,
+
+        A.STK_ID,
+        A.STK_CODE AS PROD_CODE,
+        A.STK_LCH_DT AS PROD_LAUNCH_DT,
+        A.STK_AS_COMM AS CT_COMM,
+        A.STK_AS_COST_PRICE AS AS_COST,
+
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EFF_DT,
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS EXP_DT,
+        '' CRT_USR,
+        TO_DATE('1900/01/01', 'YYYY/MM/DD') AS CRT_DT,
+        D.USER_NAME AS UPD_USER,
+        A.UPD_DT
+    FROM SYS0026M A
+    LEFT JOIN SVC0141M B ON B.CODE_CTG_ID = 19
+    JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+
+    WHERE 1=1
+    <if test='codeCatId != null and codeCatId != ""'>
+        AND B.CODE_CTG_ID = #{codeCatId}
+    </if>
+    <if test='prodCat != "-" and prodCat != "*"'>
+        AND A.STK_CTGRY_ID = #{prodCat}
+    </if>
+    <if test='prodCode != "-"'>
+        AND A.STK_CODE = #{prodCode}
+    </if>
+    <if test='stkId != null and stkId != ""'>
+        AND A.STK_ID = #{stkId}
+    </if>
+</select>
+
+<insert id="updateASReasons" parameterType="Map">
+    UPDATE SYS0032M
+    SET
+        CODE = #{svcCode},
+        RESN_DESC = #{svcCodeDesc},
+        UPD_USER_ID = #{updator},
+        UPD_DT = SYSDATE
+    WHERE
+        RESN_ID = #{hidDefectId}
+</insert>
+
+<insert id="updateSVC0142D" parameterType="Map">
+    UPDATE SVC0142D
+    SET
+        CODE = #{svcCode},
+        CODE_NAME = #{svcCodeDesc},
+        CODE_DESC = #{svcCodeRmk},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID =  #{updator}
+    WHERE
+        CODE_ID = #{hidDefectId} AND CODE_CTG_ID = #{codeCtgry}
+</insert>
+
+<insert id="updateDefectCodes" parameterType="Map">
+    UPDATE SYS0100M
+    SET
+        PROD_CAT = NVL((SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 11 AND CODE_ID =   #{productCtgry}),'*'),
+        DEFECT_TYP ＝ (SELECT CODE FROM SVC0141M WHERE CODE_CTG_ID =  #{codeCtgry}),
+        DEFECT_CODE = #{svcCode},
+        DEFECT_DESC = #{svcCodeDesc},
+        DEFECT_RMK = #{svcCodeRmk},
+        UPD_DT = SYSDATE,
+        UPD_USR = #{updator}
+    WHERE
+        DEFECT_ID = #{hidDefectId} AND DEFECT_TYP = #{hidCodeCatName}
+</insert>
+
+<select id="selectCodeCatList" parameterType="Map" resultType="egovMap">
+	SELECT
+	    CODE_CTG_ID CODE_ID ,
+	    CODE ,
+	    CODE_NAME
+	FROM SVC0141M
+	WHERE STUS = 1
+	<if test="groupCode != null and groupCode !=''">
+	   AND SRV_TYPE = #{groupCode}
+	</if>
+</select>
+
+
+</mapper>

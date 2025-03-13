@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.requestRefundApi.impl.RequestRefundApiMapper">
+
+
+
+<select id="selectCancelReasonList" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.selectCancelReasonList] 20191022 - KR JAEMAJEM */
+SELECT  RESN_ID                                                                 AS CODE_ID
+    ,   RESN_DESC                                                               AS CODE_NAME
+FROM    SYS0032M
+WHERE   RESN_TYPE_ID = 5692
+]]>
+</select>
+
+
+
+<select id="selectCustomerIssueBankList" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.selectCustomerIssueBankList] 20191022 - KR JAEMAJEM */
+SELECT  BANK_ID                                                                 AS CODE_ID
+    ,   NAME                                                                    AS CODE_NAME
+FROM    SYS0004M
+WHERE   STUS_CODE_ID = 1
+]]>
+</select>
+
+
+
+<insert id="insertPAY0298D" parameterType="Map">
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.insertPAY0298D] 20191022 - KR JAEMAJEM */
+INSERT
+INTO    PAY0298D                                                                --Mobile Request Refund
+(
+        REF_REQ_ID                                                              --mobile request refund seq : pk
+    ,   ORD_NO                                                                  --Customer Order Number
+    ,   CUST_NAME                                                               --Order Customer Name
+    ,   WOR_NO                                                                  --WOR Number
+    ,   AMT                                                                     --Amount
+    ,   REF_RESN                                                                --Refund Reason
+    ,   REF_ATTCH_IMG                                                           --Attachment Group ID : SYS0070M
+    ,   REF_STUS_ID                                                             --Refund Status
+    ,   ISSU_BANK_ID                                                            --Customer Issue Bank ID
+    ,   CUST_ACC_NO                                                             --Customer Bank Account Number
+    --Remarks
+    ,   MOB_TICKET_NO                                                           --
+    ,   CRT_USER_ID                                                             --Create User Id
+    ,   CRT_DT                                                                  --Create Date
+    ,   UPD_USER_ID                                                             --Update User Id
+    ,   UPD_DT                                                                  --Update Date
+)VALUES(
+        #{refReqId}                                                             --mobile request refund seq : pk
+    ,   #{ordNo}                                                                --Customer Order Number
+    ,   #{custName}                                                             --Order Customer Name
+    ,   #{worNo}                                                                --WOR Number
+    ,   #{amt}                                                                  --Amount
+    ,   #{refResn}                                                              --Refund Reason
+    ,   #{refAttchImg}                                                          --Attachment Group ID : SYS0070M
+    ,   1                                                                       --Refund Status
+    ,   #{issuBankId}                                                           --Customer Issue Bank ID
+    ,   #{custAccNo}                                                            --Customer Bank Account Number
+    --Remarks
+    ,   #{mobTicketNo}                                                          --
+    ,   #{crtUserId}                                                            --Create User Id
+    ,   SYSDATE                                                                 --Create Date
+    ,   #{updUserId}                                                            --Update User Id
+    ,   SYSDATE                                                                 --Update Date
+)
+</insert>
+</mapper>

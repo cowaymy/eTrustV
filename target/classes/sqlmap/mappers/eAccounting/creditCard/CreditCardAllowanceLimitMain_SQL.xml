@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.creditCard.impl.CreditCardAllowancePlanMapper">
+    <select id="getCreditCardHolderList" parameterType="Map" resultType="egovMap">
+		SELECT f0016m.CRDIT_CARD_SEQ, f0016m.CRDIT_CARD_USER_NAME,
+		(SUBSTR(f0016m.CRDIT_CARD_NO, 1, 4)|| '********' || SUBSTR(f0016m.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO,
+		f0016m.COST_CENTR, f0016m.COST_CENTR_NAME, f0016m.APPV_CRDIT_LIMIT,
+		(CASE f0016m.CRDIT_CARD_STUS
+			                   WHEN 'A' THEN 'Active'
+			                   WHEN 'R' THEN 'Removed'
+			                 END ) AS CRDIT_CARD_STUS,
+		o0001d.NAME AS PERSON_IN_CHARGE_NAME,
+		NVL((SELECT PLAN_LIMIT_AMT FROM FCM0038D WHERE CREDIT_CARD_SEQ = f0016m.CRDIT_CARD_SEQ AND STUS_CODE_ID = 1
+        AND SYSDATE BETWEEN TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY') AND TO_DATE(TO_CHAR(END_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')),0) AS PLAN_LIMIT_AMT
+		FROM FCM0016M f0016m
+		LEFT JOIN ORG0001D o0001d
+		ON o0001d.MEM_CODE = f0016m.CHRG_USER_ID
+		WHERE 1=1
+		<if test="crditCardMemCode != null and crditCardMemCode != ''">
+		    AND f0016m.CRDIT_CARD_USER_ID LIKE '%' || UPPER(#{crditCardMemCode}) || '%'
+		</if>
+		<if test="crditCardUserName != null and crditCardUserName != ''">
+		    AND f0016m.CRDIT_CARD_USER_NAME LIKE '%' || UPPER(#{crditCardUserName}) || '%'
+		</if>
+		<if test="crditCardNumber != null and crditCardNumber != ''">
+		    AND f0016m.CRDIT_CARD_NO LIKE '%' || #{crditCardNumber} || '%'
+		</if>
+		<if test="picMemCode != null and picMemCode != ''">
+			AND f0016m.CHRG_USER_ID LIKE '%' || UPPER(#{picMemCode}) || '%'
+		</if>
+		<if test="crditCardStus != null and crditCardStus != ''">
+			    AND f0016m.CRDIT_CARD_STUS IN
+				<foreach item="item" collection="crditCardStus" index="index" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</if>
+		ORDER BY f0016m.CRDIT_CARD_USER_NAME
+    </select>
+
+    <select id="getCreditCardHolderDetail" parameterType = "Map" resultType="egovMap">
+    	SELECT f0016m.*,o0001d.NAME AS PIC_NAME
+    	FROM FCM0016M f0016m
+    	LEFT JOIN ORG0001D o0001d
+		ON o0001d.MEM_CODE = f0016m.CHRG_USER_ID
+    	WHERE f0016m.CRDIT_CARD_SEQ = #{creditCardSeq}
+    </select>
+
+    <select id="getAllowanceLimitDetailPlan" parameterType="Map" resultType="egovMap">
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE, REMARKS
+		FROM FCM0038D
+		WHERE 1=1
+		AND ALLOWANCE_PLAN_ID = #{allowancePlanId}
+		AND CREDIT_CARD_SEQ = #{creditCardSeq}
+   	</select>
+
+   	 <select id="getAllowanceLimitDetailPlanBefore" parameterType="Map" resultType="egovMap">
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE
+		FROM (
+		SELECT *
+		FROM FCM0038D
+		WHERE 1=1
+		AND TO_DATE(#{startDate},'DD/MM/YYYY')  <![CDATA[ > ]]> TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+		AND CREDIT_CARD_SEQ = #{creditCardSeq}
+		AND STUS_CODE_ID = 1
+		ORDER BY START_DATE DESC
+		)
+		WHERE ROWNUM = 1
+   	</select>
+
+   	<select id="getAllowanceLimitDetailPlanAfter" parameterType="Map" resultType="egovMap">
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE
+		FROM (
+		SELECT *
+		FROM FCM0038D
+		WHERE 1=1
+		AND TO_DATE(#{startDate},'DD/MM/YYYY')  <![CDATA[ < ]]> TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+		AND CREDIT_CARD_SEQ = #{creditCardSeq}
+		AND STUS_CODE_ID = 1
+		ORDER BY START_DATE ASC
+		)
+		WHERE ROWNUM = 1
+   	</select>
+
+    <select id="getAllowanceLimitDetailPlanList" parameterType="Map" resultType="egovMap">
+		SELECT f0038d.*, s0038m.NAME AS STATUS
+		FROM FCM0038D f0038d
+		INNER JOIN SYS0038M s0038m
+		ON f0038d.STUS_CODE_ID = s0038m.STUS_CODE_ID
+		WHERE 1=1
+		AND f0038d.CREDIT_CARD_SEQ = #{creditCardSeq}
+		AND f0038d.STUS_CODE_ID = 1
+		ORDER BY f0038d.START_DATE DESC
+   	</select>
+
+   	 <select id="checkInBetweenAllowanceLimitDetailExist" parameterType="Map" resultType="egovMap">
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE
+		FROM (
+			SELECT *
+			FROM FCM0038D
+			WHERE 1=1
+			AND TO_DATE(#{startDate},'DD/MM/YYYY') >= TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+			AND TO_DATE(#{startDate},'DD/MM/YYYY')  <![CDATA[ <= ]]> TO_DATE(TO_CHAR(END_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+			AND CREDIT_CARD_SEQ = #{creditCardSeq}
+			AND STUS_CODE_ID = 1
+			ORDER BY START_DATE DESC
+		)
+   	</select>
+
+   	 <select id="checkUpcomingAllowanceLimitDetailExist" parameterType="Map" resultType="egovMap">
+		SELECT ALLOWANCE_PLAN_ID, STUS_CODE_ID, PLAN_LIMIT_AMT, TO_CHAR(START_DATE,'DD/MM/YYYY') AS START_DATE, TO_CHAR(END_DATE,'DD/MM/YYYY HH24:MI:SS') AS END_DATE
+		FROM (
+			SELECT *
+			FROM FCM0038D
+			WHERE 1=1
+			AND TO_DATE(#{startDate},'DD/MM/YYYY')  <![CDATA[ < ]]> TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+			AND CREDIT_CARD_SEQ = #{creditCardSeq}
+			AND STUS_CODE_ID = 1
+			ORDER BY START_DATE ASC
+		)
+   	</select>
+
+   	<select id="checkIfAllowanceLimitDetailStartDateExist" parameterType="Map" resultType="egovMap">
+		SELECT * FROM FCM0038D
+		WHERE 1=1
+		AND TO_DATE(#{startDate},'DD/MM/YYYY') = TO_DATE(TO_CHAR(START_DATE,'DD/MM/YYYY'),'DD/MM/YYYY')
+		AND CREDIT_CARD_SEQ = #{creditCardSeq}
+		AND STUS_CODE_ID = 1
+		ORDER BY START_DATE ASC
+   	</select>
+
+   	<update id="updateAllowanceLimitDetail" parameterType="Map">
+		UPDATE FCM0038D
+		SET STUS_CODE_ID = #{stusCodeId},
+		PLAN_LIMIT_AMT = #{planLimitAmt},
+		START_DATE = TO_DATE(#{startDate},'DD/MM/YYYY'),
+		END_DATE = TO_DATE(#{endDate},'DD/MM/YYYY HH24:MI:SS'),
+		REMARKS = #{remarks},
+		UPD_BY = #{updatedBy},
+		UPD_DT = SYSDATE
+		WHERE ALLOWANCE_PLAN_ID = #{allowancePlanId}
+   	</update>
+
+   	<update id="updateAllowanceLimitDetailAmount" parameterType="Map">
+		UPDATE FCM0038D
+		SET PLAN_LIMIT_AMT = #{planLimitAmt},
+		REMARKS = #{remarks},
+		UPD_BY = #{updatedBy},
+		UPD_DT = SYSDATE
+		WHERE ALLOWANCE_PLAN_ID = #{allowancePlanId}
+   	</update>
+
+   	<update id="removeAllowanceLimitDetail" parameterType="Map">
+		UPDATE FCM0038D
+		SET STUS_CODE_ID = 8,
+		REMARKS = #{remarks},
+		UPD_BY = #{updatedBy},
+		UPD_DT = SYSDATE
+		WHERE ALLOWANCE_PLAN_ID = #{allowancePlanId}
+   	</update>
+
+   	<insert id="insertAllowanceLimitDetail" parameterType="Map">
+   		INSERT INTO FCM0038D (ALLOWANCE_PLAN_ID,STUS_CODE_ID,PLAN_LIMIT_AMT,START_DATE,END_DATE,CRT_DT,CRT_BY,CREDIT_CARD_SEQ,REMARKS)
+   		VALUES (FCM0038D_PLAN_ID_SEQ.NEXTVAL, 1, #{planLimitAmt}, TO_DATE(#{startDate},'DD/MM/YYYY'), TO_DATE(#{endDate},'DD/MM/YYYY HH24:MI:SS'), SYSDATE, #{createdBy}, #{creditCardSeq},#{remarks})
+   	</insert>
+</mapper>

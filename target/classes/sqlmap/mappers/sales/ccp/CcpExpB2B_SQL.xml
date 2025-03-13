@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpExpB2BMapper">
+
+
+<select id="selectEXPERIANB2BList" parameterType="Map" resultType="egovMap">
+				SELECT
+				    Extent1.BATCH_ID,
+				    Extent1.FILE_NAME,
+				    Extent1.ROW_CNT,
+				    Extent2.COMPLE,
+				    Extent2.ACT,
+				    Extent2.ZERO,
+				    Extent2.GT501,
+				    Extent2.LT500,
+				    TO_CHAR(Extent1.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') UPD_DT,
+				    Extent2.CODE STUS,
+				    Extent1.UPD_USER_ID
+				FROM SAL0312D Extent1 JOIN ( SELECT
+				                                Project1.BATCH_ID,
+				                                SUM(Project1.COMPL) COMPLE,
+				                                SUM(Project1.ACT) ACT,
+				                                SUM(Project1.ZERO) ZERO,
+				                                SUM(Project1.GT501) GT501,
+				                                SUM(Project1.LT500) LT500
+				                            FROM(   SELECT
+				                                        T1.BATCH_ID,
+				                                        <![CDATA[
+				                                        CASE WHEN(T2.PRCSS = 1 OR T2.PRCSS = 2) THEN 1 ELSE 0 END COMPL,
+				                                        CASE WHEN(T2.PRCSS = 0) THEN 1 ELSE 0 END ACT,
+				                                        CASE WHEN(T2.EXPERIAN_SCRE = 0) THEN 1 ELSE 0 END ZERO,
+				                                        CASE WHEN(T2.EXPERIAN_SCRE > 500) THEN 1 ELSE 0 END GT501,
+				                                        CASE WHEN(T2.EXPERIAN_SCRE <= 500 AND T2.EXPERIAN_SCRE > 0) THEN 1 ELSE 0 END LT500
+				                                    FROM
+				                                        SAL0312D T1 JOIN SAL0313D T2 ON T2.BATCH_ID = T1.BATCH_ID
+				                                        JOIN SAL0001D T3 ON T2.ORD_NO = T3.SALES_ORD_NO
+				                                        JOIN SAL0102D T4 ON T4.CCP_SALES_ORD_ID = T3.SALES_ORD_ID) Project1
+				                             GROUP BY Project1.BATCH_ID) Extent2 ON Extent1.BATCH_ID = Extent2.BATCH_ID
+				                             ]]>
+                JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS
+				WHERE 1= 1
+				<if test=" null != sDate and '' != sDate">
+				                     AND Extent1.UPD_DT >= TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+				                </if>
+				                <if test="null != eDate and '' != eDate">
+				                     AND Extent1.UPD_DT <![CDATA[ <= ]]> TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+				                </if>
+				ORDER BY Extent1.BATCH_ID DESC
+</select>
+
+<select id="getExpDetailList"  parameterType="Map" resultType="egovMap">
+		 SELECT
+                T1.BATCH_ID,
+                T1.ORD_NO,
+                T1.CUST_IC,
+                T1.CUST_NAME,
+                T1.PRCSS,
+                T4.CODE_NAME PRC_NAME,
+                CASE WHEN (T1.PRCSS = 2) THEN T3.EXPERIAN_SCRE ELSE T1.EXPERIAN_SCRE END EXPERIAN_SCRE,
+                CASE WHEN (T1.PRCSSR = 2) THEN T3.EXPERIAN_RISK ELSE T1.EXPERIAN_RISK END EXPERIAN_RISK,
+                TO_CHAR(T1.EXPERIAN_DT , 'DD/MM/YYYY') EXPERIAN_DT,
+                T1.UPD_USER_ID,
+                T1.EXPERIAN_BANKRUPT,
+                NVL(T2.CODE_NAME , ' ') CODE_NAME
+            FROM
+            SAL0313D T1
+            LEFT JOIN SYS0013M T2 ON T2.CODE = T1.EXPERIAN_BANKRUPT AND T2.CODE_MASTER_ID = '380'
+            JOIN SAL0029D T3 ON T3.NRIC = T1.CUST_IC
+            LEFT JOIN SYS0013M T4 ON T4.CODE = T1.PRCSS AND T4.CODE_MASTER_ID = '397'
+            WHERE 1 = 1
+		 AND BATCH_ID = #{batchId}
+		  <if test=" null != ordNo and '' != ordNo">
+		      AND ORD_NO = #{ordNo}
+		 </if>
+</select>
+
+<resultMap id="resultRowMap" type="EgovMap">
+    <result property="resultRaw" column="RESULT_RAW" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+<select id="getResultRowForExpDisplay" parameterType="Map" resultMap="resultRowMap">
+  SELECT
+    BATCH_ID,
+    ORD_NO,
+    CUST_IC,
+    CUST_NAME,
+    PRCSS,
+    EXPERIAN_SCRE,
+    PRCSSR,
+    EXPERIAN_RISK,
+    BATCH_NO,
+    RESULT_RAW,
+    EXPERIAN_DT,
+    UPD_USER_ID,
+    EXPERIAN_BANKRUPT,
+    ORD_ID,
+    CUST_ID,
+    MEM_ID,
+    RPT_TYPE
+  FROM
+    SAL0313D
+  WHERE
+    1 = 1
+    <if test=" batchId != null and batchId != '' ">
+        AND BATCH_ID = #{batchId}
+    </if>
+    <if test="ordNo != null and ordNo != '' ">
+    AND ORD_NO = #{ordNo}
+    </if>
+    <!-- AND EXPERIAN_SCRE > 0 -->
+    <![CDATA[
+        AND  PRCSS <> 0
+        AND RESULT_RAW IS NOT NULL
+        AND  ROWNUM <= 1
+    ]]>
+</select>
+<!--
+<update id="savePromoB2BUpdate" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  B2B             = 0,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update>
+
+<update id="savePromoB2BUpdate2" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  B2B             = 1,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update>
+
+<update id="savePromoCHSUpdate" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  CHS             = 0,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update>
+
+
+<update id="savePromoCHSUpdate2" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  CHS             = 1,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update> -->
+</mapper>

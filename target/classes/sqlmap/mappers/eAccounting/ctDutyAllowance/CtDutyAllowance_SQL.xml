@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.ctDutyAllowance.impl.CtDutyAllowanceMapper">
+
+<select id="selectCtDutyAllowanceList" parameterType="Map" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectCtDutyAllowanceList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T.CLM_NO,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
+       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
+       T.REQST_DT,
+       'MYR' AS CUR,
+       T.TOT_AMT,
+       T.APPV_PRCSS_NO,
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT,
+       T.BRNCH_ID,
+       T.APPV_LINE_SEQ,
+       T.CUR_APPV_USER_ID,
+       T.REQST_USER_ID
+FROM   (
+        <!-- draft/request/approve-in-progress records -->
+        SELECT T1.CLM_NO,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.CLM_MONTH,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               T4.REQST_DT
+               <!-- Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T4.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, -->
+               ,NVL(T4.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS_CODE
+               ,T5.CODE_NAME APPV_PRCSS_STUS
+               ,T4.APPV_PRCSS_DT
+               ,T6.BRNCH_ID
+               ,T7.APPV_LINE_SEQ
+               ,NVL(T8.MEM_ID,0) AS CUR_APPV_USER_ID
+               ,T9.USER_NAME AS REQST_USER_ID
+        FROM   FCM0035M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T4
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO <!-- WHERE CLM_TYPE = 'J9'  -->
+               LEFT JOIN SYS0013M T5 ON T5.CODE = NVL(T4.APPV_PRCSS_STUS, 'T') AND T5.CODE_MASTER_ID = '508'
+               LEFT JOIN SYS0005M T6 ON T6.CODE = T1.DSC_CODE
+               LEFT JOIN FCM0005D T7
+                      ON T7.APPV_PRCSS_NO = T4.APPV_PRCSS_NO AND T7.APPV_STUS = 'R'
+               LEFT JOIN ORG0001D T8 ON T8.MEM_CODE = T7.APPV_LINE_USER_ID
+               JOIN SYS0047M T9 ON T9.HR_CODE = T1.MEM_ACC_ID
+               WHERE 1=1
+               AND T6.STUS_ID = 1
+          <if test="loginUserId != null ">
+            AND T1.CRT_USER_ID = #{loginUserId}
+          </if>
+          <if test="apprvUserId != null and apprvUserId != ''">
+            AND T8.MEM_ID = #{apprvUserId}
+          </if>
+
+    <if test="apprvUserId != null and apprvUserId != ''">
+          UNION
+          <!-- approve/reject records -->
+          SELECT T1.CLM_NO,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.CLM_MONTH,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               T4.REQST_DT
+               ,NVL(T4.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS_CODE
+               ,T5.CODE_NAME APPV_PRCSS_STUS
+               ,T4.APPV_PRCSS_DT
+               ,T6.BRNCH_ID
+               ,T7.APPV_LINE_SEQ
+               ,0 AS CUR_APPV_USER_ID
+               ,T9.USER_NAME AS REQST_USER_ID
+        FROM   FCM0035M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T4
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO <!-- WHERE CLM_TYPE = 'J9'  -->
+               LEFT JOIN SYS0013M T5 ON T5.CODE = NVL(T4.APPV_PRCSS_STUS, 'T') AND T5.CODE_MASTER_ID = '508'
+               LEFT JOIN SYS0005M T6 ON T6.CODE = T1.DSC_CODE
+               LEFT JOIN FCM0005D T7
+                      ON T7.APPV_PRCSS_NO = T4.APPV_PRCSS_NO AND T7.APPV_STUS in ('A','J')
+               LEFT JOIN ORG0001D T8 ON T8.MEM_CODE = T7.APPV_LINE_USER_ID
+               JOIN SYS0047M T9 ON T9.HR_CODE = T1.MEM_ACC_ID
+               WHERE 1=1
+            AND T8.MEM_ID = #{apprvUserId}
+          </if>
+            ) T
+       WHERE 1=1
+<if test="clmMonth != null and clmMonth != ''">
+<![CDATA[
+AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+]]>
+</if>
+<if test="memAccId != null and memAccId != ''">
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
+</if>
+<if test="clmNo != null and clmNo != ''">
+AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
+</if>
+<if test="appvPrcssStus != null and appvPrcssStus != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+<foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+#{item}
+</foreach>
+</if>
+<if test="cmbDscCode != null and cmbDscCode != ''">
+AND T.BRNCH_ID = #{cmbDscCode}
+</if>
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
+</select>
+
+<select id="selectTaxCodeCtDutyAllowanceFlag" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectTaxCodeCtDutyAllowanceFlag */
+    SELECT TAX_CODE ,
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
+    FROM FCM0007C
+    WHERE CT_CLM_FLAG = 'X'
+</select>
+
+<select id="selectNextClmNo" resultType="String">
+/* ctDutyAllowanceMapper.selectNextClmNo */
+	SELECT
+	DOC_NO_PREFIX
+	|| TO_CHAR (SYSDATE, 'yymm')
+	||
+	case when SUBSTR (DOC_NO, 1, 4) = TO_CHAR (SYSDATE, 'yymm') then
+    NVL (TO_CHAR (SUBSTR (DOC_NO, 5, 7) + 1, 'FM00000'), '00001')
+    else '00001'
+    end
+	FROM SYS0022C
+	WHERE DOC_NO_ID = #{docNoId} --AND SUBSTR (DOC_NO, 1, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+<update id="updateClmNo" parameterType="Map">
+    /* ctDutyAllowanceMapper.updateClmNo */
+       UPDATE SYS0022C SET DOC_NO = SUBSTR(#{clmNo},4) WHERE DOC_NO_ID = #{docNoId}
+    </update>
+
+<select id="selectNextSubClmNo" resultType="String">
+/* ctDutyAllowanceMapper.selectNextClmNo */
+    SELECT 'CTA' || TO_CHAR (FCM0036D_ID_SEQ.NEXTVAL, 'FM000000000') AS SUBSEQ FROM DUAL
+</select>
+
+<select id="selectNextClmSeq" parameterType="String" resultType="int">
+/* ctDutyAllowanceMapper.selectNextClmSeq */
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0036D WHERE CLM_NO = #{clmNo}
+</select>
+
+<insert id="insertCtDutyAllowanceExp" parameterType="Map">
+/* ctDutyAllowanceMapper.insertCtDutyAllowanceExp */
+   INSERT INTO FCM0035M
+   (
+        CLM_NO
+        ,CLM_TYPE
+        ,DSC_CODE
+        ,MEM_ACC_ID
+        ,CLM_MONTH
+        ,TOT_AMT
+        ,APPV_PRCSS_NO
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'CTA'
+       ,UPPER(#{dscCode})
+       ,UPPER(#{newMemAccId})
+       ,TO_CHAR(TO_DATE(#{newClaimMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,#{totAmt}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<insert id="insertCtDutyAllowanceExpItem" parameterType="Map">
+/* ctDutyAllowanceMapper.insertCtDutyAllowanceExpItem */
+<!-- FCM0036D_ID_SEQ.nextval -->
+   INSERT INTO FCM0036D
+   (
+        CLM_NO
+        ,SUB_CLM_NO
+        ,CLM_SEQ
+        ,STATUS
+        ,DUTY_DT
+        ,DUTY_TYPE
+        ,SALES_ORD_NO
+        ,SVC_TYPE
+        ,NET_AMT
+        ,ATCH_FILE_GRP_ID
+        ,REMARKS
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSubNo}
+       ,#{clmSeq}
+       ,'1'
+       ,TO_DATE(#{dutyAllDt}, 'DD/MM/YYYY')
+       ,#{dutyType}
+       ,#{salesOrderNo}
+       ,#{svcType}
+       ,#{totalAmt}
+       ,#{atchFileGrpId}
+       ,#{remark}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectCtDutyAllowanceItems" parameterType="String" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectCtDutyAllowanceItems */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+	SELECT
+        A.CLM_NO
+        ,A.CLM_TYPE
+        ,A.DSC_CODE
+        ,C.NAME DSC_NAME
+        ,A.MEM_ACC_ID
+        ,D.MEM_ACC_NAME
+        ,TO_CHAR(TO_DATE(A.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') CLM_MONTH
+        ,A.TOT_AMT
+        ,A.APPV_PRCSS_NO
+        ,NVL(E.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS
+        ,F.CODE_NAME APPV_PRCSS_STUS_NAME
+        ,TO_CHAR(A.REQST_DT,'DD/MM/YYYY') REQST_DT
+        ,B.SUB_CLM_NO CLM_SUB_NO
+        ,B.CLM_SEQ
+        ,TO_CHAR(B.DUTY_DT,'DD/MM/YYYY') DUTY_ALL_DT
+        ,B.DUTY_TYPE
+        ,G.CODE_NAME DUTY_TYPE_NAME
+        ,B.SALES_ORD_NO SALES_ORDER_NO
+        ,B.SVC_TYPE
+        ,H.CODE_NAME SVC_TYPE_NAME
+        ,B.NET_AMT TOTAL_AMT
+        ,CASE WHEN NVL(B.ATCH_FILE_GRP_ID,'') <![CDATA[<>]]> ''
+        THEN 'Yes'
+        ELSE 'No'
+        END IS_ATTACH
+        ,B.ATCH_FILE_GRP_ID ATCH_FILE_ID
+        ,B.REMARKS REMARK
+        ,TO_CHAR(A.CRT_DT,'DD/MM/YYYY') CRT_DT
+        ,A.CRT_USER_ID
+        ,TO_CHAR(A.UPD_DT,'DD/MM/YYYY') UPD_DT
+        ,A.UPD_USER_ID
+    FROM FCM0035M A
+    LEFT JOIN FCM0036D B ON B.CLM_NO = A.CLM_NO
+    LEFT JOIN SYS0005M C ON C.CODE = A.DSC_CODE
+    LEFT JOIN FCM0006M D ON D.MEM_ACC_ID = A.MEM_ACC_ID
+    LEFT JOIN FCM0004M E ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+    LEFT JOIN SYS0013M F ON F.CODE = NVL(E.APPV_PRCSS_STUS, 'T') AND F.CODE_MASTER_ID = '508'
+    LEFT JOIN SYS0013M G ON G.CODE = B.DUTY_TYPE AND G.CODE_MASTER_ID = '505'
+    LEFT JOIN SYS0013M H ON H.CODE = B.SVC_TYPE AND H.CODE_MASTER_ID = '506'
+    WHERE A.CLM_NO = #{clmNo}
+    ORDER BY B.CLM_SEQ
+</select>
+
+<select id="selectCtDutyAllowanceInfo" parameterType="Map" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectCtDutyAllowanceInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T4.MEM_ACC_NAME,
+       T3.BANK_CODE,
+       T4.BANK_NAME,
+       T3.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T3.TOT_AMT                                          AS ALL_TOT_AMT,
+       T1.EXP_GRP,
+       T3.APPV_PRCSS_NO,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T5.MEM_ACC_ID                                       AS SUPPLIR,
+       T1.SUPPLIR                                          AS SUPPLIR_NAME,
+       T1.INVC_TYPE,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'                                               AS CUR,
+       T1.NET_AMT                                          AS GST_BEFOR_AMT,
+       T1.TAX_AMT                                          AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       T1.EXP_DESC
+FROM   FCM0020D T1
+       LEFT JOIN FCM0019M T3
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4
+              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+       LEFT JOIN FCM0006M T5
+              ON T1.SUPPLIR = T4.MEM_ACC_NAME
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
+<select id="selectCtDutyAllowanceItemGrp" parameterType="Map" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectCtDutyAllowanceItemGrp */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
+       T1.TAX_AMT AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID,
+       T3.CAR_MILAG_DT,
+       T3.LOC_FROM,
+       T3.LOC_TO,
+       T3.CAR_MILAG,
+       T3.CAR_MILAG_AMT,
+       T3.TOLL_AMT,
+       T3.PARKING_AMT,
+       T3.PURPOSE,
+       T1.EXP_DESC
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0021D T3
+              ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ
+WHERE  T1.CLM_NO = #{clmNo}
+       AND CLAM_UN = #{clamUn}
+</select>
+
+<select id="selectAttachList" parameterType="String" resultType="egovMap">
+/* ctDutyAllowanceMapper.selectAttachList */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID
+</select>
+
+<update id="updateCtDutyAllowanceExp" parameterType="Map">
+/* ctDutyAllowanceMapper.updateCtDutyAllowanceExp */
+   UPDATE FCM0019M
+   SET COST_CENTR = UPPER(#{costCentr})
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,MEM_ACC_ID = UPPER(#{memAccId})
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,TOT_AMT = #{allTotAmt}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<update id="updateCtDutyAllowanceExpItem" parameterType="Map">
+/* ctDutyAllowanceMapper.updateCtDutyAllowanceExpItem */
+   UPDATE FCM0020D
+   SET INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,INVC_TYPE = #{invcType}
+       ,INVC_NO = #{invcNo}
+       ,SUPPLIR = #{supplirName}
+       ,GST_RGIST_NO = #{gstRgistNo}
+       ,INVC_REM = #{invcRem}
+       ,EXP_TYPE = #{expType}
+       ,EXP_TYPE_NAME = #{expTypeName}
+       ,GL_ACC_CODE = #{glAccCode}
+       ,GL_ACC_CODE_NAME = #{glAccCodeName}
+       ,BUDGET_CODE = #{budgetCode}
+       ,BUDGET_CODE_NAME = #{budgetCodeName}
+       ,TAX_CODE = #{taxCode}
+       ,NET_AMT = #{gstBeforAmt}
+       ,TAX_AMT = #{gstAmt}
+       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
+       ,TOT_AMT = #{totAmt}
+       ,EXP_DESC = #{expDesc}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+    AND CLM_SEQ = #{clmSeq}
+</update>
+
+<insert id="insertApproveLineDetail" parameterType="Map">
+/* webInvoiceMapper.insertApproveLineDetail */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0005D
+   (
+        APPV_PRCSS_NO
+       ,APPV_LINE_SEQ
+       ,APPV_LINE_USER_ID
+       ,APPV_DT
+       ,APPV_STUS
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{approveNo}
+       ,#{memCode}
+       ,#{appvDt}
+       <choose>
+       <when test="approveNo == 1">
+       ,'R'
+       </when>
+       <otherwise>
+       ,'T'
+       </otherwise>
+       </choose>
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<insert id="insertApproveItems" parameterType="Map">
+/* ctDutyAllowanceMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,NET_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{clmSeq}
+       ,#{invcNo}
+       ,NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), SYSDATE)
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{gstBeforAmt}
+       ,#{totAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,#{clamUn}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateAppvPrcssNo" parameterType="Map">
+/* ctDutyAllowanceMapper.updateAppvPrcssNo */
+   UPDATE FCM0035M
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<delete id="deleteCtDutyAllowanceExpItem" parameterType="Map">
+/* ctDutyAllowanceMapper.deleteCtDutyAllowanceExpItem */
+   DELETE FROM FCM0036D WHERE SUB_CLM_NO = #{clmSubNo} AND CLM_SEQ = #{clmSeq}
+</delete>
+
+<update id="updateCtDutyAllowanceExpTotAmt" parameterType="Map">
+/* ctDutyAllowanceMapper.updateCtDutyAllowanceExpTotAmt */
+   UPDATE FCM0035M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
+<update id="updateCtDutyAllowanceMain" parameterType="Map">
+/* ctDutyAllowanceMapper.updateAppvPrcssNo */
+   UPDATE FCM0035M
+   SET
+   <if test="newClaimMonth != null and newClaimMonth != ''">
+   CLM_MONTH = TO_CHAR(TO_DATE(#{newClaimMonth}, 'MM/YYYY'), 'YYYYMM')
+   </if>
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+     /*[com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper.selectSearchOrderNo]*/
+                SELECT
+                    Distinct1.C1 C1 ,
+                    Distinct1.ORD_ID ,
+                    Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
+                    Distinct1.ORD_STUS_CODE ,
+                    Distinct1.CUST_NAME ,
+                    Distinct1.CUST_NRIC ,
+                    Distinct1.APP_TYPE_CODE ,
+                    Distinct1.STOCK_CODE ,
+                    Distinct1.STOCK_DESC,
+                    Distinct1.ORD_PV_MONTH,
+                    Distinct1.ORD_PV_YEAR,
+                    Distinct1.APP_TYPE_ID
+                FROM ( SELECT DISTINCT Extent1.ORD_ID ORD_ID ,
+                                       Extent1.ORD_NO ORD_NO ,
+                                       Extent1.ORD_STUS_CODE  ,
+                                       Extent1.APP_TYPE_CODE  ,
+                                       Extent1.STOCK_CODE  ,
+                                       Extent1.STOCK_DESC  ,
+                                       Extent1.CUST_NAME  ,
+                                       Extent1.CUST_NRIC  , 1 C1,
+                                       Extent1.ORD_DT,
+                                       Extent1.ORD_PV_MONTH,
+                                       Extent1.ORD_PV_YEAR,
+                                       Extent1.APP_TYPE_ID
+                                       FROM (
+                                            SELECT vOrderBasicInfo.ORD_ID  ,
+                                            vOrderBasicInfo.ORD_NO ORD_NO ,
+                                            vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                                            vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                                            vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                                            vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                                            vOrderBasicInfo.ORD_DT ORD_DT ,
+                                            vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                                            vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                                            vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                                            vOrderBasicInfo.ORD_PV ORD_PV ,
+                                            vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                                            vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                                            vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                                            vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                                            vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                                            vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                                            vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                                            vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                                            vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                                            vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                                            vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                                            vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                                            vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                                            vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                                            vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                                            vOrderBasicInfo.CUST_ID CUST_ID ,
+                                            vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                                            vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                                            vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                                            vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                                            vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                                            vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                                            vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                                            vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                                            vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                                            vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                                            vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                                            vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                                            vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                                            vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                                            vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                                            vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                                            vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                                            vOrderBasicInfo.ORD_REM ORD_REM ,
+                                            vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                                            vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                                            vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                                            vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                                            vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                                            vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                                            vOrderBasicInfo.UPD_DT UPD_DT ,
+                                            vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                                            vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                                            vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                                            vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                                            vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                                            vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                                            vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                                       FROM SAL1006V vOrderBasicInfo ) Extent1
+                          <![CDATA[
+                          WHERE  ( 'IACT' <> Extent1.ORD_STUS_CODE )
+                           ]]>
+                            AND NOT EXISTS (SELECT 1
+                                              FROM SAL0001D Z
+                                             WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                               AND Z.BNDL_ID IS NOT NULL
+                                            )             -- homecare Remove(except)
+                           <if test=" '' != searchOrdNo and null != searchOrdNo">
+                                AND ( Extent1.ORD_NO = #{searchOrdNo})
+                           </if>
+                           <if test=" '' != searchOrdDate and null != searchOrdDate">
+                                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
+                           </if>
+                           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
+                                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
+                           </if>
+                           <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+                                AND ( UPPER(Extent1.CUST_NRIC) = UPPER(#{searchOrdCustNric}) )
+                                <!-- AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NRIC), UPPER(#{searchOrdCustNric})),10,0)) > 0 ) -->
+                           </if>
+                           <if test=" null != appType and appType.length > 0">
+                                AND Extent1.APP_TYPE_ID  IN
+                                <foreach collection="appType" item="item" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                           </if>
+
+                ) Distinct1
+
+     </select>
+
+     <select id="selectSearchInsOrderNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SOM.SALES_ORD_ID ORD_ID ,
+            SOM.SALES_ORD_NO ORD_NO,
+            TO_CHAR(SOM.SALES_DT, 'DD-MM-YYYY') ORD_DT,
+            S.CODE ORD_STUS_CODE ,
+            C.NAME CUST_NAME ,
+            C.NRIC CUST_NRIC ,
+            T.CODE APP_TYPE_CODE ,
+            STK.STK_CODE STOCK_CODE ,
+            STK.STK_DESC STOCK_DESC,
+            SOM.APP_TYPE_ID
+        FROM SAL0046D INS
+		INNER JOIN SAL0001D SOM ON INS.SALES_ORD_ID = SOM.SALES_ORD_ID
+		INNER JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+		INNER JOIN ORG0001D CTCODE ON CTCODE.MEM_ID = INS.CT_ID
+		INNER JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        INNER JOIN SYS0013M T ON T.CODE_ID = SOM.APP_TYPE_ID
+        INNER JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+        INNER JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
+		WHERE
+		( '8' <![CDATA[<>]]> SOM.STUS_CODE_ID )
+		<if test=" '' != searchCtCode and null != searchCtCode">
+		AND CTCODE.MEM_CODE = #{searchCtCode}
+		</if>
+		<if test=" '' != searchDutyDt and null != searchDutyDt">
+		AND INS.APPNT_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
+		</if>
+		<if test=" '' != searchOrdNo and null != searchOrdNo">
+		AND SOM.SALES_ORD_NO=#{searchOrdNo}
+		</if>
+		<if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+		AND C.NRIC = #{searchOrdCustNric}
+		</if>
+		<if test=" null != appType and appType.length > 0">
+             AND SOM.APP_TYPE_ID  IN
+             <foreach collection="appType" item="item" open="(" separator="," close=")">
+                 #{item}
+             </foreach>
+        </if>
+     </select>
+
+     <select id="selectSearchAsOrderNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SOM.SALES_ORD_ID ORD_ID ,
+            SOM.SALES_ORD_NO ORD_NO,
+            TO_CHAR(SOM.SALES_DT, 'DD-MM-YYYY') ORD_DT,
+            S.CODE ORD_STUS_CODE ,
+            C.NAME CUST_NAME ,
+            C.NRIC CUST_NRIC ,
+            T.CODE APP_TYPE_CODE ,
+            STK.STK_CODE STOCK_CODE ,
+            STK.STK_DESC STOCK_DESC,
+            SOM.APP_TYPE_ID
+        FROM SVC0001D ASRV
+		INNER JOIN SAL0001D SOM ON ASRV.AS_SO_ID = SOM.SALES_ORD_ID
+		INNER JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+		INNER JOIN ORG0001D CTCODE ON CTCODE.MEM_ID = ASRV.AS_MEM_ID
+		INNER JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        INNER JOIN SYS0013M T ON T.CODE_ID = SOM.APP_TYPE_ID
+        INNER JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+        INNER JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
+		WHERE
+		( '8' <![CDATA[<>]]> SOM.STUS_CODE_ID )
+		<if test=" '' != searchCtCode and null != searchCtCode">
+        AND CTCODE.MEM_CODE = #{searchCtCode}
+        </if>
+        <if test=" '' != searchDutyDt and null != searchDutyDt">
+        AND ASRV.AS_APPNT_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
+        </if>
+		<if test=" '' != searchOrdNo and null != searchOrdNo">
+        AND SOM.SALES_ORD_NO=#{searchOrdNo}
+        </if>
+        <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+        AND C.NRIC = #{searchOrdCustNric}
+        </if>
+        <if test=" null != appType and appType.length > 0">
+             AND SOM.APP_TYPE_ID  IN
+             <foreach collection="appType" item="item" open="(" separator="," close=")">
+                 #{item}
+             </foreach>
+        </if>
+     </select>
+
+     <select id="selectSearchPrOrderNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SOM.SALES_ORD_ID ORD_ID ,
+            SOM.SALES_ORD_NO ORD_NO,
+            TO_CHAR(SOM.SALES_DT, 'DD-MM-YYYY') ORD_DT,
+            S.CODE ORD_STUS_CODE ,
+            C.NAME CUST_NAME ,
+            C.NRIC CUST_NRIC ,
+            T.CODE APP_TYPE_CODE ,
+            STK.STK_CODE STOCK_CODE ,
+            STK.STK_DESC STOCK_DESC,
+            SOM.APP_TYPE_ID
+        FROM LOG0038D PR
+		INNER JOIN SAL0001D SOM ON PR.SALES_ORD_ID = SOM.SALES_ORD_ID
+		INNER JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+		INNER JOIN ORG0001D CTCODE ON CTCODE.MEM_ID = PR.CT_ID
+		INNER JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        INNER JOIN SYS0013M T ON T.CODE_ID = SOM.APP_TYPE_ID
+        INNER JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+        INNER JOIN SYS0026M STK ON STK.STK_ID = SOD.ITM_STK_ID
+        WHERE
+        ( '8' <![CDATA[<>]]> SOM.STUS_CODE_ID )
+        <if test=" '' != searchCtCode and null != searchCtCode">
+        AND CTCODE.MEM_CODE = #{searchCtCode}
+        </if>
+        <if test=" '' != searchDutyDt and null != searchDutyDt">
+        AND PR.APP_DT = TO_DATE(#{searchDutyDt}, 'DD-MM-YYYY')
+        </if>
+        <if test=" '' != searchOrdNo and null != searchOrdNo">
+        AND SOM.SALES_ORD_NO=#{searchOrdNo}
+        </if>
+        <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+        AND C.NRIC = #{searchOrdCustNric}
+        </if>
+        <if test=" null != appType and appType.length > 0">
+             AND SOM.APP_TYPE_ID  IN
+             <foreach collection="appType" item="item" open="(" separator="," close=")">
+                 #{item}
+             </foreach>
+        </if>
+     </select>
+
+    <select id="selectSupplier" parameterType="Map" resultType="egovMap">
+	/* CtDutyAllowanceMapper.selectSupplier */
+	    SELECT A.ACC_GRP,
+	                A.ACC_GRP_NAME,
+	                A.MEM_ACC_ID,
+	                A.MEM_ACC_NAME,
+	                A.GST_RGIST_NO,
+	                A.BANK_CODE,
+	                A.BANK_NAME,
+	                A.BANK_ACC_NO
+	                ,C.CODE DSC_CODE
+                    ,C.NAME DSC_NAME
+	    FROM FCM0006M A
+	    LEFT JOIN SYS0028M B ON A.MEM_ACC_ID = B.WH_LOC_CODE
+        LEFT JOIN SYS0005M C ON B.WH_LOC_BRNCH_ID = C.BRNCH_ID
+	    WHERE 1=1
+	    <if test="memAccId != null and memAccId != ''">
+	    AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId})
+	    </if>
+	    <if test="accGrp != null and accGrp != ''">
+	    AND A.ACC_GRP = #{accGrp}
+	    </if>
+	    <if test="memAccName != null and memAccName != ''">
+	    <![CDATA[
+	    AND UPPER(A.MEM_ACC_NAME) LIKE UPPER(#{memAccName}) || '%'
+	    ]]>
+	    </if>
+	    <if test="gstRgistNo != null and gstRgistNo != ''">
+	    AND A.GST_RGIST_NO = #{gstRgistNo}
+	    </if>
+	</select>
+
+    <select id="checkOnceAMonth" parameterType="Map" resultType="int">
+	/* CtDutyAllowanceMapper.checkOnceAMonth */
+	SELECT COUNT(*) FROM (SELECT E.CLM_TYPE, E.CLM_MONTH,
+	       E.MEM_ACC_ID
+	FROM   FCM0035M E
+	       JOIN FCM0004M A
+	         ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+	            AND E.CLM_NO = A.APPV_REQ_KEY_NO
+	            AND E.CLM_TYPE = SUBSTR(A.APPV_REQ_KEY_NO, 0, 2)
+	WHERE  A.APPV_PRCSS_STUS != 'J') T
+	WHERE T.CLM_TYPE = #{clmType}
+	AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+	AND T.MEM_ACC_ID = #{newMemAccId}
+	</select>
+
+    <select id="selectMemberViewByMemCode" parameterType="Map" resultType="egovMap">
+	      SELECT  T3.MEM_ID MEM_ID
+               , T3.MEM_CODE MEM_CODE
+               , T3.NAME NAME
+               , T3.NRIC NRIC
+               , T3.TEL_OFFICE TEL_OFFICE
+               , T3.TEL_HUSE TEL_HUSE
+               , T3.TEL_MOBILE TEL_MOBILE
+               , T4.DEPT_CODE DEPT_CODE
+               , T4.GRP_CODE GRP_CODE
+               , T4.ORG_CODE ORG_CODE
+               , T5.MEM_ID MEM_ID1
+               , T5.MEM_CODE MEM_CODE1
+               , T5.BRNCH BRANCH_CODE
+               , T5.NAME NAME1
+               , T5.TEL_MOBILE TEL_MOBILE1
+               , T7.MEM_ID MEM_ID2
+               , T7.MEM_CODE MEM_CODE2
+               , T7.NAME NAME2
+               , T7.TEL_MOBILE TEL_MOBILE2
+               , T9.MEM_ID MEM_ID3
+               , T9.MEM_CODE MEM_CODE3
+               , T9.NAME NAME3
+               , T9.TEL_MOBILE TEL_MOBILE3
+               , T8.SERIAL_REQUIRE_CHK_YN
+               , T8.WH_LOC_GB
+               , T8.WH_LOC_ID CT_WH_LOC_ID
+      FROM ORG0001D T3
+      JOIN ( SELECT V1.MEM_ID MEM_ID
+                         , V1.MEM_CODE MEM_CODE
+                         , V1.MEM_LVL MEM_LVL
+                         , V1.DEPT_CODE DEPT_CODE
+                         , V1.GRP_CODE GRP_CODE
+                         , V1.ORG_CODE ORG_CODE
+                         , V1.TOP_ORG_CODE TOP_ORG_CODE
+                         , V1.MEM_UP_ID MEM_UP_ID
+                         , V1.LVL3_UP_ID LVL3_UP_ID
+                         , V1.LVL2_UP_ID LVL2_UP_ID
+                         , V1.LVL1_UP_ID LVL1_UP_ID
+                         , V1.LVL0_UP_ID LVL0_UP_ID
+                FROM ORG1001V V1 ) T4 ON T4.MEM_ID = T3.MEM_ID
+      LEFT JOIN ORG0001D T5 ON T5.MEM_ID = T4.MEM_UP_ID
+      LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                                , V1.MEM_CODE MEM_CODE
+                                , V1.MEM_LVL MEM_LVL
+                                , V1.DEPT_CODE DEPT_CODE
+                                , V1.GRP_CODE GRP_CODE
+                                , V1.ORG_CODE ORG_CODE
+                                , V1.TOP_ORG_CODE TOP_ORG_CODE
+                                , V1.MEM_UP_ID MEM_UP_ID
+                                , V1.LVL3_UP_ID LVL3_UP_ID
+                                , V1.LVL2_UP_ID LVL2_UP_ID
+                                , V1.LVL1_UP_ID LVL1_UP_ID
+                                , V1.LVL0_UP_ID LVL0_UP_ID
+                       FROM ORG1001V V1 ) T6 ON T6.MEM_ID = T4.MEM_UP_ID
+      LEFT JOIN ORG0001D T7 ON T7.MEM_ID = T6.MEM_UP_ID
+      LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                                , V1.MEM_CODE MEM_CODE
+                                , V1.MEM_LVL MEM_LVL
+                                , V1.DEPT_CODE DEPT_CODE
+                                , V1.GRP_CODE GRP_CODE
+                                , V1.ORG_CODE ORG_CODE
+                                , V1.TOP_ORG_CODE TOP_ORG_CODE
+                                , V1.MEM_UP_ID MEM_UP_ID
+                                , V1.LVL3_UP_ID LVL3_UP_ID
+                                , V1.LVL2_UP_ID LVL2_UP_ID
+                                , V1.LVL1_UP_ID LVL1_UP_ID
+                                , V1.LVL0_UP_ID LVL0_UP_ID
+                       FROM ORG1001V V1 ) T8 ON T8.MEM_ID = T6.MEM_UP_ID
+      LEFT JOIN ORG0001D T9 ON T9.MEM_ID = T8.MEM_UP_ID
+      LEFT JOIN SYS0028M T8 ON T3.MEM_CODE = T8.WH_LOC_CODE
+      WHERE T3.MEM_CODE = #{memAccId} AND ROWNUM = 1
+	  </select>
+
+	  <select id="selectAppvInfoAndItems" parameterType="Map" resultType="egovMap">
+        /* CtDutyAllowanceMapper.selectAppvInfoAndItems */
+        SELECT
+	        T9.CNT
+	        ,T1.APPV_PRCSS_NO
+	        ,T1.APPV_PRCSS_STUS
+	        ,T1.APPV_REQ_KEY_NO AS CLM_NO
+	        ,'CT Duty Allowance' AS CLM_TYPE
+	        ,TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
+	        ,T1.REQST_USER_ID
+	        ,T2.DSC_CODE
+            ,T10.NAME DSC_NAME
+	        ,T1.APPV_LINE_CNT
+	        ,T1.APPV_LINE_PRCSS_CNT
+	        ,T3.CLM_SEQ AS APPV_ITM_SEQ
+	        ,T2.MEM_ACC_ID MEM_ACC_CODE
+	        ,T6.MEM_ACC_NAME
+	        ,'MYR' AS CUR
+	        ,NVL(NET_AMT,'0') AS NET_AMT
+	        ,T2.TOT_AMT AS APPV_AMT
+	        ,T2.TOT_AMT AS TOT_AMT
+	        ,T3.SUB_CLM_NO AS CLM_SUB_NO
+	        ,TO_CHAR(T3.DUTY_DT,'DD/MM/YYYY') AS DUTY_ALL_DT
+	        ,T7.CODE_NAME AS DUTY_TYPE_NAME
+	        ,T8.CODE_NAME AS SVC_TYPE_NAME
+	        ,T3.SALES_ORD_NO AS SALES_ORDER_NO
+	        ,T3.REMARKS AS REMARK
+	        ,S70.ATCH_FILE_NAME
+	        ,S70.ATCH_FILE_ID
+	        ,TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MON-YYYY') AS CLM_MONTH
+        FROM
+        FCM0004M T1
+        LEFT JOIN FCM0035M T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+        LEFT JOIN FCM0036D T3 ON T2.CLM_NO = T3.CLM_NO
+        LEFT JOIN (SELECT F1.ATCH_FILE_GRP_ID, F1.ATCH_FILE_ID,F2.ATCH_FILE_NAME
+        FROM SYS0070M F1
+        LEFT JOIN SYS0071D F2
+        ON F1.ATCH_FILE_ID = F2.ATCH_FILE_ID
+        ) S70 ON S70.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID
+        LEFT JOIN FCM0006M T6 ON T2.MEM_ACC_ID = T6.MEM_ACC_ID
+        LEFT JOIN SYS0013M T7 ON T7.CODE = T3.DUTY_TYPE AND T7.CODE_MASTER_ID = '505'
+    LEFT JOIN SYS0013M T8 ON T8.CODE = T3.SVC_TYPE AND T8.CODE_MASTER_ID = '506'
+    LEFT JOIN (
+    SELECT A1.APPV_PRCSS_NO,COUNT(*) AS CNT FROM FCM0035M A1
+        LEFT JOIN FCM0036D A2 ON A1.CLM_NO = A2.CLM_NO
+        WHERE A1.APPV_PRCSS_NO = #{appvPrcssNo}
+        GROUP BY A1.APPV_PRCSS_NO
+    ) T9 ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
+    LEFT JOIN SYS0005M T10 ON T10.CODE = T2.DSC_CODE
+    WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
+    ORDER BY APPV_ITM_SEQ
+    </select>
+
+    <select id="getBch" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID AS CODE_ID,
+               CODE || ' - ' || NAME AS CODE_NAME
+        FROM SYS0005M
+        WHERE 1 = 1
+        AND TYPE_ID IN (43)
+          <!-- <if test="cboBchTyp != null and cboBchTyp !='' ">
+            <![CDATA[ AND TYPE_ID = #{cboBchTyp} ]]>
+          </if> -->
+          <if test="groupCode != null and groupCode !='' ">
+          AND BRNCH_ID = #{groupCode}
+          </if>
+          AND STUS_ID = '1'
+        ORDER BY CODE
+    </select>
+
+</mapper>

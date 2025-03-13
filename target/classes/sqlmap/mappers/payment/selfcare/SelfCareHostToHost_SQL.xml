@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.selfcare.service.impl.SelfCareHostToHostMapper">
+	<select id="getSelfCareTransactionList" parameterType="Map" resultType="egovMap">
+        SELECT A.FILE_ID, A.FILE_NAME, A.PRCSS_STUS_ID, B.NAME AS PRCSS_STUS_DESC,
+		A.PRCSS_STUS_REMARK, A.BATCH_ID,
+        COUNT(C.ID) AS TOTAL,
+        SUM(CASE WHEN C.PRCSS_STUS_ID = 4 THEN 1 ELSE 0 END) AS TOTAL_SUCCESS,
+        SUM(CASE WHEN C.PRCSS_STUS_ID = 21 THEN 1 ELSE 0 END) AS TOTAL_FAIL,
+        SUM(CASE WHEN C.PRCSS_STUS_ID NOT IN (4,21,102) THEN 1 ELSE 0 END) AS TOTAL_INCOMPLETE,
+        SUM(CASE WHEN C.PRCSS_STUS_ID = 102 THEN 1 ELSE 0 END) AS TOTAL_PENDING,
+        TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CRT_DT
+		FROM PAY0355M A
+		JOIN SYS0038M B
+		ON A.PRCSS_STUS_ID = B.STUS_CODE_ID
+		JOIN PAY0354D C
+		ON A.FILE_ID = C.FILE_ID
+		WHERE 1=1
+		<if test="batchId != '' and batchId != null">
+			AND A.BATCH_ID = #{batchId}
+		</if>
+		<if test="fileId != '' and fileId != null">
+			AND A.FILE_ID = #{fileId}
+		</if>
+		<if test='createDateFrom != null and createDateTo != null'>
+			<if test='createDateFrom != "" and createDateTo != ""'>
+				<![CDATA[
+				AND A.CRT_DT BETWEEN TO_DATE(#{createDateFrom},'DD/MM/YYYY') AND TO_DATE(#{createDateTo},'DD/MM/YYYY') + 1
+				]]>
+			</if>
+		</if>
+	    <if test="statusIdList != null and statusIdList != ''">
+	      AND A.PRCSS_STUS_ID in
+	        <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	    </if>
+        GROUP BY A.FILE_ID, A.FILE_NAME, A.PRCSS_STUS_ID, B.NAME, A.PRCSS_STUS_REMARK,
+		A.BATCH_ID, TO_CHAR(A.CRT_DT,'DD/MM/YYYY')
+        ORDER BY A.FILE_ID DESC
+	</select>
+
+	<select id="getSelfCareTransactionDetails" parameterType="Map" resultType="egovMap">
+		SELECT
+			A.ID,
+			A.FILE_ID,
+			TO_CHAR(A.PAY_DATE,'DD/MM/YYYY') AS PAY_DATE,
+			A.TRANS_ID, A.AUTH_CODE, A.CC_NO,
+			A.PAY_METHOD,
+			A.SALES_ORD_NO,
+			A.PAY_TYPE_ID,
+            CASE WHEN PAY_TYPE_ID = 1 THEN 'Product Payment' ELSE CASE WHEN PAY_TYPE_ID = 2 THEN 'Membership Payment' ELSE 'BOTH' END END AS PAY_TYPE_DESC,
+			A.AMOUNT,
+			A.REMARKS,
+			A.PAY_STUS_ID, E.NAME AS PAY_STUS_DESC,
+			A.PRCSS_STUS_ID, F.NAME AS PRCSS_STUS_DESC,
+			B.PRCSS_STUS_ID AS MASTER_PRCSS_STUS_ID,
+			G.NAME AS MASTER_PRCSS_STUS_DESC,
+			A.PRCSS_STUS_REMARK,
+			A.BATCH_ID,
+			B.PRCSS_STUS_REMARK AS MASTER_PRCSS_STUS_REMARK,
+			B.FILE_NAME,
+			TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CRT_DT
+		FROM PAY0354D A
+		JOIN PAY0355M B
+		ON A.FILE_ID = B.FILE_ID
+		JOIN SYS0038M E
+		ON A.PAY_STUS_ID = E.STUS_CODE_ID
+		JOIN SYS0038M F
+		ON A.PRCSS_STUS_ID = F.STUS_CODE_ID
+		JOIN SYS0038M G
+		ON B.PRCSS_STUS_ID = G.STUS_CODE_ID
+		<if test="batchId != '' and batchId != null">
+			AND A.BATCH_ID = #{batchId}
+		</if>
+		<if test="fileId != '' and fileId != null">
+			AND A.FILE_ID = #{fileId}
+		</if>
+	    <if test="statusIdList != null and statusIdList != ''">
+	      AND A.PRCSS_STUS_ID in
+	        <foreach item="item" collection="statusIdList" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	    </if>
+		ORDER BY A.ID, A.BATCH_ID DESC
+	</select>
+
+	<select id="getSelfcareBatchDetailReport" parameterType="Map" resultType="egovMap">
+		SELECT A.ID,A.FILE_ID,TO_CHAR(A.PAY_DATE,'DD/MM/YYYY') AS PAY_DATE, B.USER_ISS_BANK, C.PAY_ITM_MODE_ID, E.CODE AS PAY_ITM_MODE_DESC,
+		A.PAY_METHOD, B.CARD_NO, B.APPROVAL_CODE, B.USER_REF_NO,
+		A.REMARKS, B.USER_AMT, A.SALES_ORD_NO,
+		D.OR_NO AS RECEIPT_NO, TO_CHAR(B.CRT_DT,'DD/MM/YYYY') AS KEY_IN_DT,
+        A.BATCH_ID,
+        CASE WHEN G.BANK_STATE_MAPPING_ID IS NULL THEN G.CRC_STATE_MAPPING_ID ELSE G.BANK_STATE_MAPPING_ID END AS TRX_ID,
+        SUM(B.USER_AMT) OVER(PARTITION BY B.USER_REF_NO,A.BATCH_ID) AS TOTAL_AMT
+		FROM PAY0354D A
+        JOIN SAL0001D F
+        ON F.SALES_ORD_NO = A.SALES_ORD_NO
+		JOIN PAY0043D B
+		ON A.TRANS_ID = B.USER_REF_NO AND A.BATCH_ID = B.BATCH_ID AND F.SALES_ORD_ID = B.SYS_ORD_ID
+		JOIN PAY0065D C
+		ON C.PAY_ITM_REF_NO = B.USER_REF_NO
+		JOIN PAY0064D D
+		ON C.PAY_ID = D.PAY_ID AND F.SALES_ORD_ID = D.SALES_ORD_ID
+		JOIN SYS0013M E
+		ON C.PAY_ITM_MODE_ID =  E.CODE_ID
+		LEFT JOIN PAY0252T G
+		ON D.PAY_ID = G.PAY_ID
+		WHERE 1=1
+		<if test="paymentModeList != null and paymentModeList != ''">
+	      AND C.PAY_ITM_MODE_ID IN
+	        <foreach item="item" collection="paymentModeList" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	    </if>
+		<if test="batchId != '' and batchId != null">
+			AND A.BATCH_ID = #{batchId}
+		</if>
+		<if test="reportFileId != '' and reportFileId != null">
+			AND A.FILE_ID = #{reportFileId}
+		</if>
+		<if test="detailId != '' and detailId != null">
+			AND A.ID = #{detailId}
+		</if>
+		<if test='dateFrom != null and dateTo != null'>
+			<if test='dateFrom != "" and dateTo != ""'>
+				<![CDATA[
+				AND B.CRT_DT BETWEEN TO_DATE(#{dateFrom},'DD/MM/YYYY') AND TO_DATE(#{dateTo},'DD/MM/YYYY') + 1
+				]]>
+			</if>
+		</if>
+	</select>
+</mapper>

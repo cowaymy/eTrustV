@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.sirim.impl.SirimReceiveMapper">
+
+
+<select id="receiveWarehouseList" parameterType="Map" resultType="EgovMap">
+SELECT Extent1.WH_LOC_ID CODE_ID  ,
+       Extent1.WH_LOC_CODE CODE  ,
+       Extent1.WH_LOC_DESC CODE_NAME
+  FROM SYS0028M Extent1
+ WHERE  ( 1 = Extent1.WH_LOC_STUS_ID )
+          AND ( 'A' = Extent1.WH_LOC_STK_GRAD )
+          AND ( 277 = Extent1.WH_LOC_TYPE_ID )
+          <!-- AND ( Extent1.WH_LOC_BRNCH_ID = #{groupCode} ) -->
+</select>
+
+
+
+
+<select id="selectReceiveList" parameterType="Map" resultType="EgovMap">
+<!--  SELECT Distinct1.TRNSIT_ID TRNSIT_ID  ,
+       Distinct1.TRNSIT_NO TRNSIT_NO  ,
+       TO_CHAR(TO_DATE(Distinct1.TRNSIT_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') TRNSIT_DT,
+       Distinct1.TRNSIT_FROM TRNSIT_FROM  ,
+       Distinct1.TRNSIT_TO TRNSIT_TO  ,
+       Distinct1.TRNSIT_CURIER TRNSIT_CURIER  ,
+       Distinct1.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+       Distinct1.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+       Distinct1.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+       Distinct1.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+       Distinct1.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+       TO_CHAR(TO_DATE(Distinct1.TRNSIT_CLOS_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') TRNSIT_CLOS_DT,
+       Distinct1.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+       Distinct1.TOT_CNT TOT_CNT
+  FROM ( SELECT DISTINCT Extent1.TRNSIT_ID TRNSIT_ID  ,
+                         Extent1.TRNSIT_NO TRNSIT_NO  ,
+                         Extent1.TRNSIT_DT TRNSIT_DT  ,
+                         Extent1.TRNSIT_FROM TRNSIT_FROM  ,
+                         Extent1.TRNSIT_TO TRNSIT_TO  ,
+                         Extent1.TRNSIT_CURIER TRNSIT_CURIER  ,
+                         Extent1.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                         Extent1.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                         Extent1.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                         Extent1.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                         Extent1.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                         Extent1.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                         Extent1.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                         Extent1.TOT_CNT TOT_CNT
+         FROM ( SELECT vSirimTransferInfo.TRNSIT_ID TRNSIT_ID  ,
+                       vSirimTransferInfo.TRNSIT_NO TRNSIT_NO  ,
+                       vSirimTransferInfo.TRNSIT_DT TRNSIT_DT  ,
+                       vSirimTransferInfo.TRNSIT_FROM TRNSIT_FROM  ,
+                       vSirimTransferInfo.TRNSIT_TO TRNSIT_TO  ,
+                       vSirimTransferInfo.TRNSIT_CURIER TRNSIT_CURIER  ,
+                       vSirimTransferInfo.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                       vSirimTransferInfo.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                       vSirimTransferInfo.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                       vSirimTransferInfo.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                       vSirimTransferInfo.TOT_CNT TOT_CNT
+              FROM LOG1003V vSirimTransferInfo ) Extent1
+                JOIN SYS0028M Extent2   ON ( Extent1.TRNSIT_TO = Extent2.CODE2 )
+                OR ( ( Extent1.TRNSIT_TO IS NULL )
+                AND ( Extent2.WH_LOC_CODE IS NULL ) )
+          WHERE 1 = 1
+          <if test="searchTransitNo != null and searchTransitNo !=''">
+               AND  ( Extent1.TRNSIT_NO = #{searchTransitNo})
+          </if>
+           <if test="searchWarehouse != null and searchWarehouse !=''">
+                AND ( Extent1.TRNSIT_TO = #{searchWarehouse} )
+          </if>
+          <if test="searchTransitStatus != null and searchTransitStatus !=''">
+                AND ( Extent1.TRNSIT_STUS_ID = #{searchTransitStatus})
+          </if>
+                       ) Distinct1
+          order by TRNSIT_ID ASC  -->
+
+SELECT Distinct1.TRNSIT_ID TRNSIT_ID  ,
+       Distinct1.TRNSIT_NO TRNSIT_NO  ,
+       TO_CHAR(TO_DATE(Distinct1.TRNSIT_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') TRNSIT_DT,
+       Distinct1.TRNSIT_FROM TRNSIT_FROM  ,
+       Distinct1.TRNSIT_TO TRNSIT_TO  ,
+       Distinct1.TRNSIT_CURIER TRNSIT_CURIER  ,
+       Distinct1.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+       Distinct1.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+       Distinct1.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+       Distinct1.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+       Distinct1.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+       TO_CHAR(TO_DATE(Distinct1.TRNSIT_CLOS_DT, 'YYYY-MM-DD'), 'DD-MM-YYYY') TRNSIT_CLOS_DT,
+       Distinct1.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+       Distinct1.TOT_CNT TOT_CNT
+  FROM ( SELECT DISTINCT Extent1.TRNSIT_ID TRNSIT_ID  ,
+                         Extent1.TRNSIT_NO TRNSIT_NO  ,
+                         Extent1.TRNSIT_DT TRNSIT_DT  ,
+                         Extent1.TRNSIT_FROM TRNSIT_FROM  ,
+                         Extent1.TRNSIT_TO TRNSIT_TO  ,
+                         Extent1.TRNSIT_CURIER TRNSIT_CURIER  ,
+                         Extent1.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                         Extent1.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                         Extent1.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                         Extent1.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                         Extent1.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                         Extent1.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                         Extent1.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                         Extent1.TOT_CNT TOT_CNT
+         FROM ( SELECT vSirimTransferInfo.TRNSIT_ID TRNSIT_ID  ,
+                       vSirimTransferInfo.TRNSIT_NO TRNSIT_NO  ,
+                       vSirimTransferInfo.TRNSIT_DT TRNSIT_DT  ,
+                       vSirimTransferInfo.TRNSIT_FROM TRNSIT_FROM  ,
+                       vSirimTransferInfo.TRNSIT_TO TRNSIT_TO  ,
+                       vSirimTransferInfo.TRNSIT_CURIER TRNSIT_CURIER  ,
+                       vSirimTransferInfo.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                       vSirimTransferInfo.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                       vSirimTransferInfo.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                       vSirimTransferInfo.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                       vSirimTransferInfo.TOT_CNT TOT_CNT,
+                       Extent2.WH_LOC_CODE LOC_CODE
+              FROM LOG1003V vSirimTransferInfo
+              JOIN SYS0028M Extent2   ON ( vSirimTransferInfo.TRNSIT_TO = Extent2.WH_LOC_CODE )
+                union
+                SELECT vSirimTransferInfo.TRNSIT_ID TRNSIT_ID  ,
+                       vSirimTransferInfo.TRNSIT_NO TRNSIT_NO  ,
+                       vSirimTransferInfo.TRNSIT_DT TRNSIT_DT  ,
+                       vSirimTransferInfo.TRNSIT_FROM TRNSIT_FROM  ,
+                       vSirimTransferInfo.TRNSIT_TO TRNSIT_TO  ,
+                       vSirimTransferInfo.TRNSIT_CURIER TRNSIT_CURIER  ,
+                       vSirimTransferInfo.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                       vSirimTransferInfo.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                       vSirimTransferInfo.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                       vSirimTransferInfo.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                       vSirimTransferInfo.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                       vSirimTransferInfo.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                       vSirimTransferInfo.TOT_CNT TOT_CNT,
+                       Extent2.WH_LOC_CODE LOC_CODE
+              FROM LOG1003V vSirimTransferInfo
+              JOIN SYS0028M Extent2   ON ( vSirimTransferInfo.TRNSIT_TO = Extent2.OLD_WH_LOC_CODE ) ) Extent1
+
+          WHERE 1 = 1
+          <if test="searchTransitNo != null and searchTransitNo !=''">
+               AND  ( Extent1.TRNSIT_NO = #{searchTransitNo})
+          </if>
+           <if test="searchWarehouse != null and searchWarehouse !=''">
+                AND ( Extent1.LOC_CODE = #{searchWarehouse} )
+          </if>
+          <if test="searchTransitStatus != null and searchTransitStatus !=''">
+                AND ( Extent1.TRNSIT_STUS_ID = #{searchTransitStatus})
+          </if>
+        ) Distinct1
+          order by TRNSIT_ID ASC
+</select>
+
+
+<select id="detailReceiveList" parameterType="Map" resultType="EgovMap">
+   SELECT Project1.SRM_TRANS_ITM_ID SRM_TRANS_ITM_ID  ,
+       Project1.SRM_NO SRM_NO  ,
+       Project1.CODE CODE  ,
+       Project1.SRM_RESULT_STUS_ID SRM_RESULT_STUS_ID  ,
+       Project1.SRM_TYPE_ID SRM_TYPE_ID  ,
+       Project1.CODE_DESC CODE_DESC  ,
+       Project1.USER_NAME USER_NAME  ,
+       TO_CHAR(Project1.SRM_TRANS_UPD_DT, 'DD-MM-YYYY') SRM_TRANS_UPD_DT,
+       TO_CHAR(Project1.TR_TRANS_CLOS_DT, 'DD-MM-YYYY') TR_TRANS_CLOS_DT
+  FROM ( SELECT Project1.SRM_TRANS_ITM_ID SRM_TRANS_ITM_ID  ,
+                Project1.SRM_TYPE_ID SRM_TYPE_ID  ,
+                Project1.SRM_NO SRM_NO  ,
+                Project1.SRM_RESULT_STUS_ID SRM_RESULT_STUS_ID  ,
+                Project1.SRM_TRANS_UPD_DT SRM_TRANS_UPD_DT  ,
+                Project1.TR_TRANS_CLOS_DT TR_TRANS_CLOS_DT  ,
+                Project1.CODE_DESC CODE_DESC  ,
+                Project1.CODE CODE  ,
+                Project1.USER_NAME USER_NAME  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.SRM_TRANS_ITM_ID ASC  ) ROW_NUMBER
+         FROM ( SELECT Extent1.SRM_TRANS_ITM_ID SRM_TRANS_ITM_ID  ,
+                       Extent1.SRM_TYPE_ID SRM_TYPE_ID  ,
+                       Extent1.SRM_NO SRM_NO  ,
+                       Extent1.SRM_RESULT_STUS_ID SRM_RESULT_STUS_ID  ,
+                       Extent1.SRM_TRANS_UPD_DT SRM_TRANS_UPD_DT  ,
+                       Extent1.TR_TRANS_CLOS_DT TR_TRANS_CLOS_DT  ,
+                       Extent2.CODE_DESC CODE_DESC  ,
+                       Extent3.CODE CODE  ,
+                       CASE
+                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
+                       ELSE '-'
+                          END USER_NAME
+                FROM LOG0036D Extent1
+                       JOIN SYS0013M Extent2   ON Extent1.SRM_TYPE_ID = Extent2.CODE_ID
+                       JOIN SYS0038M Extent3   ON Extent1.SRM_RESULT_STUS_ID = Extent3.STUS_CODE_ID
+                       LEFT JOIN SYS0047M Extent4   ON Extent1.SRM_TRANS_UPD_USER_ID = Extent4.USER_ID
+                 WHERE  ( Extent1.SRM_TRANSF_ID = #{trnsitId} )
+                     <if test="srmResultStusId != null and srmResultStusId !=''">
+                          AND Extent1.SRM_RESULT_STUS_ID = #{srmResultStusId}
+                     </if>
+                          AND ( 1 = Extent1.SRM_TRANS_STUS_ID ) ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.SRM_TRANS_ITM_ID ASC
+</select>
+
+<select id="getSirimReceiveInfo" parameterType="Map" resultType="EgovMap">
+SELECT Extent1.TRNSIT_ID TRNSIT_ID  ,
+       Extent1.TRNSIT_NO TRNSIT_NO  ,
+       Extent1.TRNSIT_DT TRNSIT_DT  ,
+       Extent1.TRNSIT_FROM TRNSIT_FROM  ,
+       Extent1.TRNSIT_TO TRNSIT_TO  ,
+       Extent1.TRNSIT_CURIER TRNSIT_CURIER  ,
+       Extent1.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+       Extent1.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+       Extent1.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+       Extent1.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+       Extent1.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+       Extent1.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+       Extent1.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+       Extent1.TOT_CNT TOT_CNT
+  FROM ( SELECT vSirimTransferInfo.TRNSIT_ID TRNSIT_ID  ,
+                vSirimTransferInfo.TRNSIT_NO TRNSIT_NO  ,
+                vSirimTransferInfo.TRNSIT_DT TRNSIT_DT  ,
+                vSirimTransferInfo.TRNSIT_FROM TRNSIT_FROM  ,
+                vSirimTransferInfo.TRNSIT_TO TRNSIT_TO  ,
+                vSirimTransferInfo.TRNSIT_CURIER TRNSIT_CURIER  ,
+                vSirimTransferInfo.TRNSIT_STUS_ID TRNSIT_STUS_ID  ,
+                vSirimTransferInfo.TRNSIT_STUS_CODE TRNSIT_STUS_CODE  ,
+                vSirimTransferInfo.TRNSIT_STUS_NAME TRNSIT_STUS_NAME  ,
+                vSirimTransferInfo.TRNSIT_CRT_USER_ID_ID TRNSIT_CRT_USER_ID_ID  ,
+                vSirimTransferInfo.TRNSIT_CRT_USER_ID_USER_NAME TRNSIT_CRT_USER_ID_USER_NAME  ,
+                vSirimTransferInfo.TRNSIT_CLOS_DT TRNSIT_CLOS_DT  ,
+                vSirimTransferInfo.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
+                vSirimTransferInfo.TOT_CNT TOT_CNT
+         FROM LOG1003V vSirimTransferInfo ) Extent1
+ WHERE  Extent1.TRNSIT_ID = 1280
+</select>
+
+<update id="SrmResultStatusUpdate" parameterType="Map">
+        UPDATE LOG0036D
+		   SET SRM_RESULT_STUS_ID = #{receiveStatus},
+		       SRM_TRANS_UPD_USER_ID =#{upuser_id} ,
+		       SRM_TRANS_UPD_DT =SYSDATE ,
+		       TR_TRANS_CLOS_DT =SYSDATE
+		      WHERE  ( SRM_TRANS_ITM_ID =#{srmTransItmId})
+</update>
+
+ <insert id="insertReceiveSirim" parameterType="Map">
+    INSERT INTO LOG0040D(
+    SIRIM_ID,
+    SIRIM_NO,
+    SIRIM_TYPE_ID,
+    SIRIM_LOC,
+    SIRIM_QTY,
+    SIRIM_DOC_NO,
+    SIRIM_REM,
+    SIRIM_CRT_DT,
+    SIRIM_CRT_USER_ID,
+    SIRIM_SYNC_CHK,
+    SIRIM_ENTRY_POINT,
+    SIRIM_AFT_WEB_SYS )
+  VALUES
+  (
+  (select max(SIRIM_ID)+1 from LOG0040D),
+  #{saveSirimNo},
+  #{addTypeSirim},
+  #{addSirimLoc},
+  #{addSirimQty},
+  #{getdocNo},
+  '',
+  (SYSDATE),
+  #{crtuser_id},
+  1,
+  1,
+  1
+  )
+</insert>
+
+ <select id="ReceiveCreateSeq" resultType="Integer">
+     SELECT NVL(MAX(SIRIM_ID),0) + 1 from LOG0040D
+</select>
+
+<select id="docNoCreateSeq" resultType="String">
+      select FN_GET_DOCNO('72') from dual
+</select>
+
+<select id="selectTransReceive" parameterType="Map"
+    resultType="Integer">
+
+    SELECT COUNT(*)
+
+    FROM LOG0036D A
+    WHERE 1=1
+
+      AND A.SRM_TRANSF_ID = #{TransitId}
+      AND A.SRM_RESULT_STUS_ID IN (44)
+
+  </select>
+
+  <update id="SrmTransStatusUpdate" parameterType="Map">
+        UPDATE LOG0035D
+           SET SRM_TRANSF_STUS_ID = 36,
+               SRM_TRANSF_UPD_DT = SYSDATE ,
+               SRM_TRANSF_UPD_USER_ID =#{userId} ,
+               SRM_TRANSF_CLOS_DT =SYSDATE
+              WHERE  ( SRM_TRANSF_ID =#{transitId})
+</update>
+
+
+</mapper>

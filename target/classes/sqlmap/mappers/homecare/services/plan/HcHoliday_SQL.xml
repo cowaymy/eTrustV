@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper">
+
+    <!-- Select Homecare Holiday List -->
+    <select id="selectHcHolidayList"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.selectHcHolidayList */
+        SELECT HOLIDAY_SEQ,
+                   TO_CHAR (HOLIDAY, 'YYYY-MM-DD') HOLIDAY,
+                   CASE WHEN HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
+                             ELSE 'State Holiday'
+                             END HOLIDAY_TYPE,
+                   STATE,
+                   HOLIDAY_DESC
+
+          FROM SYS0101M
+          <where>
+              <if test="type != null and type != ''">
+	              AND HOLIDAY_TYPE = #{type}
+	          </if>
+	          <if test="holidayDt != null and holidayDt != ''">
+	              AND HOLIDAY = TO_DATE(#{holidayDt},'DD/MM/YYYY')
+	          </if>
+	          <if test="stateList != null and stateList != '' ">
+	              AND STATE IN
+	              <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+	                  #{item}
+	              </foreach>
+	           </if>
+          </where>
+           ORDER BY HOLIDAY
+    </select>
+
+    <!-- Select DT Branch(HDC) Assign Holiday List -->
+    <select id="selectDTAssignList"  parameterType="Map" resultType="egovMap">
+
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.selectDTAssignList */
+        SELECT DISTINCT
+		    B.HOLIDAY_TYPE,
+		    B.STATE,
+		    TO_CHAR(B.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
+		    B.HOLIDAY_DESC,
+		    B.HOLIDAY_SEQ,
+		    B.DT_BRNCH_CODE,
+		    B.BRNCH_ID,
+		    CASE WHEN COUNT (CASE WHEN C.MEM_TYPE = #{memType} AND C.BRNCH_CODE = B.DT_BRNCH_CODE THEN 1 END) <![CDATA[>　 0 ]]>　THEN 'Complete'
+		        WHEN COUNT (CASE WHEN C.MEM_TYPE != #{memType} AND C.BRNCH_CODE = B.DT_BRNCH_CODE THEN 0 END) <![CDATA[　>= 0 ]]>　THEN 'Active' END ASSIGN_STATUS,
+		    COUNT (CASE WHEN C.MEM_TYPE = #{memType} AND C.BRNCH_CODE = B.DT_BRNCH_CODE THEN 1 END) AS REPLACEMENT_CT_PAX,
+		    B.APPL_CODE
+		FROM(
+		SELECT
+		    CASE WHEN A.HOLIDAY_TYPE = 'P' THEN 'Public Holiday' ELSE 'State Holiday' END HOLIDAY_TYPE,
+		    D.STATE,
+		    A.HOLIDAY,
+		    A.HOLIDAY_DESC,
+		    A.HOLIDAY_SEQ,
+		    C.CODE DT_BRNCH_CODE,
+		    C.BRNCH_ID,
+		    CASE WHEN E.APPL_CODE IS NULL THEN 'Holiday' ELSE 'Working' END APPL_CODE
+		FROM(
+		    SELECT
+		        A.HOLIDAY_TYPE,
+		        A.HOLIDAY,
+		        A.HOLIDAY_DESC,
+		        A.HOLIDAY_SEQ,
+		        B.CODE BRNCH_CODE
+		    FROM sys0101m A
+		    , (SELECT CODE FROM SYS0005M WHERE TYPE_ID = '5754' GROUP BY CODE) B
+		)A
+		JOIN sys0005m C on A.BRNCH_CODE = C.CODE
+		JOIN SYS0064M D ON C.AREA_ID = D.AREA_ID
+		LEFT JOIN SVC0055M E on  A.HOLIDAY = E.HOLIDAY AND A.HOLIDAY_SEQ = E.HOLIDAY_SEQ
+
+		<where>
+		    <choose>
+                <when test="type1 != null and type1 != ''">   <!-- 마우스 선택시 검색조건 -->
+                    AND A.HOLIDAY_TYPE = #{type1}
+                </when>
+                <when test="type != null and type != ''" >
+                    AND A.HOLIDAY_TYPE = #{type}
+                </when>
+            </choose>
+              <choose>
+               <when test="holidayDt != null and holidayDt != ''">
+                   AND A.HOLIDAY = TO_CHAR(TO_DATE (#{holidayDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+               </when>
+               <when test="holiday1 != null and holiday1 != ''">   <!-- 마우스 선택시 검색조건 -->
+                   AND A.HOLIDAY = TO_DATE(#{holiday1},'YYYY-MM-DD')
+               </when>
+           </choose>
+           <if test="holidayDesc1 !=null and holidayDesc1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
+                AND A.HOLIDAY_DESC =#{holidayDesc1}
+            </if>
+            <if test="holidaySeq1 !=null and holidaySeq1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
+                AND A.HOLIDAY_SEQ =#{holidaySeq1}
+            </if>
+		  </where>
+        )B
+        JOIN org0020d C ON B.HOLIDAY_SEQ = C.HOLIDAY_SEQ and B.HOLIDAY = C.HOLIDAY
+        GROUP BY B.HOLIDAY_TYPE,B.STATE,B.HOLIDAY,B.HOLIDAY_DESC,B.HOLIDAY_SEQ,B.DT_BRNCH_CODE,B.BRNCH_ID,B.APPL_CODE
+
+        ORDER BY DT_BRNCH_CODE
+
+    </select>
+
+    <select id="selectDTAssignList_bak"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.selectDTAssignList */
+        SELECT CASE WHEN B.HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
+                             ELSE 'State Holiday'
+                             END HOLIDAY_TYPE,
+                   B.STATE,
+                   B.HOLIDAY,
+                   B.HOLIDAY_DESC,
+                   B.HOLIDAY_SEQ,
+                   B.DT_BRNCH_CODE,
+                   B.BRNCH_ID,
+                   B.ASSIGN_STATUS,
+                   B.REPLACEMENT_CT_PAX,
+                   CASE WHEN B.APPL_CODE IS NULL THEN 'Holiday'
+                             ELSE DECODE (B.APPL_CODE, 'W', 'Working','Holiday')
+                             END APPL_CODE
+
+         FROM (SELECT A.HOLIDAY_TYPE,
+                              A.STATE,
+                              TO_CHAR(A.HOLIDAY,'YYYY-MM-DD') HOLIDAY,
+                              A.HOLIDAY_DESC,
+                              A.HOLIDAY_SEQ,
+                              A.DT_BRNCH_CODE,
+                              F.BRNCH_ID,
+                              CASE WHEN COUNT (D.CT_MEM_ID) = 0 THEN 'Active'
+                                      WHEN COUNT (D.CT_MEM_ID) > 0 THEN 'Complete'
+                                         END ASSIGN_STATUS,
+                              COUNT(CASE WHEN D.CT_MEM_ID IS NOT NULL THEN 1 END) AS REPLACEMENT_CT_PAX,
+                              C.APPL_CODE
+
+                    FROM( SELECT A.HOLIDAY_TYPE,
+                                         CASE WHEN A.HOLIDAY_TYPE = 'S'  THEN  A.STATE
+                                          ELSE F.STATE END STATE,
+                                         A.HOLIDAY,
+                                         A.HOLIDAY_DESC,
+                                         A.HOLIDAY_SEQ,
+                                         A.DT_BRNCH_CODE
+                               FROM (SELECT DISTINCT
+                                                    A.HOLIDAY_TYPE,
+                                                    A.STATE,
+                                                    A.HOLIDAY,
+                                                    A.HOLIDAY_DESC,
+                                                    A.HOLIDAY_SEQ,
+                                                    CASE WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE
+                                                             THEN B.DT_BRNCH_CODE
+                                                              ELSE E.CODE
+                                                              END DT_BRNCH_CODE
+                                           FROM SYS0101M A
+                                                   , (SELECT STATE, DT_BRNCH_CODE FROM SYS0064M GROUP BY STATE, DT_BRNCH_CODE) B
+                                                   , (SELECT CODE FROM SYS0005M WHERE TYPE_ID = #{hdcBranchType} GROUP BY CODE) E
+                                          WHERE A.STATE = B.STATE(+)
+                                         ) A ,
+                                         (SELECT A.AREA_ID, A.CODE, B.STATE
+                                             FROM (SELECT AREA_ID , CODE FROM SYS0005M WHERE TYPE_ID = #{hdcBranchType}) A
+                                                     , SYS0064M B
+                                            WHERE A.AREA_ID = B.AREA_ID (+)
+                                         ) F
+                               WHERE F.CODE(+) = A.DT_BRNCH_CODE
+                               ) A
+                             , SVC0055M C
+                             , ORG0020D D
+                             , SYS0005M F
+                    WHERE A.HOLIDAY              = D.HOLIDAY(+)
+                       AND A.HOLIDAY_TYPE      = D.HOLIDAY_TYPE(+)
+                       AND A.HOLIDAY_SEQ       = D.HOLIDAY_SEQ(+)
+                       AND A.DT_BRNCH_CODE  = D.BRNCH_CODE(+)
+                       AND A.HOLIDAY              = C.HOLIDAY(+)
+                       AND A.HOLIDAY_TYPE      = C.HOLIDAY_TYPE(+)
+                       AND A.HOLIDAY_SEQ       = C.HOLIDAY_SEQ(+)
+                       AND A.DT_BRNCH_CODE  = C.BRNCH_CODE(+)
+                       AND A.DT_BRNCH_CODE  = F.CODE
+
+               GROUP BY A.HOLIDAY_TYPE, A.STATE, A.HOLIDAY, A.HOLIDAY_DESC,
+                               A.HOLIDAY_SEQ, A.DT_BRNCH_CODE, F.BRNCH_ID, C.APPL_CODE
+               ORDER BY DT_BRNCH_CODE, HOLIDAY_TYPE, STATE, HOLIDAY, HOLIDAY_DESC
+          ) B
+
+        <where>
+	       <if test="stateTypeList != null and stateTypeList != '' ">
+	           AND B.ASSIGN_STATUS IN
+	           <foreach item="item" collection="stateTypeList" index="index" open="(" separator="," close=")">
+	               #{item}
+	           </foreach>
+           </if>
+           <choose>
+	           <when test="state1 !=null and state1 !='' ">
+	               AND B.STATE = #{state1}
+	           </when>
+	           <when test="stateList != null and stateList != '' ">
+                   AND B.STATE IN
+                   <foreach item="item" collection="stateList" index="index" open="(" separator="," close=")">
+	                   #{item}
+                   </foreach>
+                </when>
+            </choose>
+	        <choose>
+                <when test="type1 != null and type1 != ''">   <!-- 마우스 선택시 검색조건 -->
+                    AND B.HOLIDAY_TYPE = #{type1}
+                </when>
+                <when test="type != null and type != ''" >
+	                AND B.HOLIDAY_TYPE = #{type}
+                </when>
+            </choose>
+            <choose>
+                <when test="holidayDt != null and holidayDt != ''">
+	                AND B.HOLIDAY = TO_CHAR(TO_DATE (#{holidayDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                </when>
+                <when test="holiday1 != null and holiday1 != ''">   <!-- 마우스 선택시 검색조건 -->
+	                AND B.HOLIDAY = #{holiday1}
+                </when>
+            </choose>
+            <if test="branchList != null and branchList != '' ">
+                AND B.DT_BRNCH_CODE IN
+               <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="holidayDesc1 !=null and holidayDesc1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
+                AND B.HOLIDAY_DESC =#{holidayDesc1}
+            </if>
+            <if test="holidaySeq1 !=null and holidaySeq1 !=''  ">   <!-- 마우스 선택시 검색조건 -->
+                AND B.HOLIDAY_SEQ =#{holidaySeq1}
+            </if>
+        </where>
+    </select>
+
+
+
+    <!-- Check Duplication Holiday -->
+    <select id="selectAlreadyHoliday" parameterType="Map" resultType="int">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.selectAlreadyHoliday */
+        SELECT COUNT(HOLIDAY)
+          FROM SYS0101M
+         WHERE HOLIDAY_TYPE = 'P' AND  HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD')
+    </select>
+
+    <!-- Insert Homecare Holiday -->
+    <insert id="insertHcHoliday" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.selectAlreadyHoliday */
+        INSERT INTO SYS0101M(
+                   HOLIDAY
+                 , HOLIDAY_TYPE
+                 , HOLIDAY_SEQ
+                 , STATE
+                 , HOLIDAY_DESC
+                 , CRT_USER_ID
+                 , CRT_DT
+                 , UPD_USER_ID
+                 , UPD_DT
+
+        ) VALUES (
+                   TO_DATE(#{holiday},'YYYY-MM-DD')
+                 , #{holidayType}
+                 , SYS0101M_HOLIDAY_SEQ.NEXTVAL
+                 , #{state}
+                 , #{holidayDesc}
+                 , #{userId}
+                 , SYSDATE
+                 , #{userId}
+                 , SYSDATE
+        )
+    </insert>
+
+    <!-- update Homecare Holiday -->
+    <update id="updateHcHoliday" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.updateHcHoliday */
+        UPDATE SYS0101M SET
+                    HOLIDAY                  =  TO_DATE(#{holiday},'YYYY-MM-DD'),
+                    HOLIDAY_TYPE          = #{holidayType},
+                    STATE                      = #{state},
+                    HOLIDAY_DESC          = #{holidayDesc},
+                    UPD_USER_ID            = #{userId},
+                    UPD_DT                    = SYSDATE
+
+         WHERE HOLIDAY_SEQ = #{holidaySeq}
+    </update>
+
+    <!-- Delete Homecare Holiday -->
+    <delete id="deleteHcHoliday" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcHolidayMapper.deleteHcHoliday */
+        DELETE FROM SYS0101M
+        WHERE HOLIDAY         =  TO_DATE(#{holiday},'YYYY-MM-DD')
+           AND HOLIDAY_TYPE  = #{holidayType}
+           AND HOLIDAY_SEQ   = #{holidaySeq}
+    </delete>
+
+    <select id="selectDTLTInfo"  parameterType="Map" resultType="egovMap">
+        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{branchName} AND CT_MEM_ID=#{memId}
+    </select>
+
+    <insert id="insertDTLTAssign" parameterType="Map">
+        INSERT INTO ORG0020D(
+          HOLIDAY
+        , HOLIDAY_TYPE
+        , HOLIDAY_SEQ
+        , ASIGN_SEQ
+        , STATE
+        , BRNCH_CODE
+        , CT_MEM_ID
+        , MEM_TYPE
+        )
+        VALUES(
+          TO_DATE(#{holiday},'YYYY-MM-DD')
+          , #{holidayType}
+          , #{holidaySeq}
+          , ORG0020D_ASIGN_SEQ.NEXTVAL
+          , #{state}
+          , #{branchName}
+          , TO_NUMBER(#{memId})
+          , #{memType}
+          )
+    </insert>
+
+    <delete id="deleteDTLTAssign" parameterType="Map">
+        DELETE FROM ORG0020D
+        WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{branchName} AND CT_MEM_ID=#{memId}
+    </delete>
+
+</mapper>

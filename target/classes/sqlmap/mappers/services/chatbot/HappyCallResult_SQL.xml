@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.chatbot.impl.HappyCallResultMapper">
+
+    <select id="selectHappyCallType" resultType="egovMap">
+
+        SELECT  A.CTRL_TYPE AS CODE_ID,
+					B.CODE_DESC AS CODE_NAME
+		FROM CBT0001M A
+		JOIN SYS0013M B ON A.CTRL_TYPE = B.CODE_ID
+		ORDER BY A.CTRL_TYPE
+
+    </select>
+
+    <select id="selectHappyCallResultList" parameterType="Map" resultType="egovMap">
+
+        SELECT  <!-- HCM.TXN_ID AS TRANSACTION_ID, -->
+			        <!-- HCC.CTRL_TYPE AS CALL_TYPE_ID,
+			        DES.CODE_DESC AS CALL_TYPE_DESC, -->
+			        HCM.TXN_SURVYE_CODE AS CODY_CODE,
+			        HCM.TXN_SURVYE_NAME AS CODY_NAME,
+			        ORG.DEPT_CODE AS DEPT_CODE,
+			        ORG.GRP_CODE AS GRP_CODE,
+			        ORG.ORG_CODE AS ORG_CODE,
+			        CCRM.TOTAL_POINT AS TOTAL_MARK,
+                    <!--  NVL(CCRM.PCNT, '0%') AS PCNT,-->
+                    TRUNC(NVL(CCRM.PCNT, 0), 2) || '%' AS PCNT,
+                    CCRM.CNT
+        FROM CBT0004M HCM
+        <!-- JOIN CBT0005D HCR ON HCR.TXN_ID = HCM.TXN_ID -->
+		JOIN CBT0001M HCC ON HCC.CTRL_ID = HCM.CTRL_ID
+		<!-- JOIN SYS0013M DES ON DES.CODE_ID = HCC.CTRL_TYPE -->
+		LEFT JOIN ORG1001V ORG ON ORG.MEM_CODE = HCM.TXN_SURVYE_CODE
+		JOIN ORG0001D ORG1 ON ORG.MEM_ID = ORG1.MEM_ID
+		LEFT JOIN (
+                SELECT  --C.TXN_TYPE_ID AS CCR_TXN_TYPE_ID,
+                        C.TXN_SURVYE_CODE AS CCR_TXN_SURVYE_CODE,
+                        --D.CCR_HC_ID,
+                        SUM(D.TOTAL_POINT) AS TOTAL_POINT,
+                        SUM(D.CNT) AS CNT,
+                        SUM(D.MAX_MARK) AS MAX_MARK,
+                        ((SUM(D.TOTAL_POINT) / SUM((D.MAX_MARK))) * 100) AS PCNT
+                FROM CBT0004M C
+                LEFT JOIN (
+                    SELECT A.HC_ID CCR_HC_ID, SUM(A.HC_ITM_POINT) TOTAL_POINT, COUNT(A.HC_ID) CNT, SUM(E.MAX_POINT) MAX_MARK
+                    FROM CCR0002D A
+                    JOIN CBT0004M B ON A.HC_ID = B.HC_ID
+                    JOIN CBT0002M E ON E.SURV_ID = A.HC_DEF_ID
+                    WHERE 1=1
+                    <if test='periodMonth != null and periodMonth != ""'>
+                    AND b.txn_dt <![CDATA[>=]]> TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+                    AND b.txn_dt <![CDATA[<=]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+
+                    </if>
+                    GROUP BY A.HC_ID
+                ) D ON C.HC_ID = D.CCR_HC_ID
+            WHERE 1=1
+            AND CCR_HC_ID IS NOT NULL
+            AND c.txn_dt <![CDATA[>=]]> TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+            AND c.txn_dt <![CDATA[<=]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+            GROUP BY C.TXN_SURVYE_CODE
+                ) CCRM ON CCRM.CCR_TXN_SURVYE_CODE = HCM.TXN_SURVYE_CODE <!-- AND CCRM.CCR_HC_ID = HCM.HC_ID  -->
+        WHERE 1=1
+                    <!-- AND CCRM.CCR_HC_ID IS NOT NULL -->
+			        <!-- AND HCC.CTRL_TYPE = #{callTypeId} -->
+			        AND CCRM.CNT IS NOT NULL
+			        AND ORG1.MEM_TYPE = #{memTyp}
+			        <if test='agentCode != null and agentCode != ""'>
+			             AND HCM.TXN_SURVYE_CODE = #{agentCode}
+			        </if>
+			        <if test='periodMonth != null and periodMonth != ""'>
+                  AND hcm.txn_dt <![CDATA[ >= ]]>TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY')
+                  AND hcm.txn_dt <![CDATA[ <= ]]> last_day(TO_DATE('01/' || #{periodMonth}, 'DD/MM/YYYY'))
+			        </if>
+			        <if test='deptCode != null and deptCode != ""'>
+			             AND ORG.DEPT_CODE = #{deptCode}
+			        </if>
+			        <if test='grpCode != null and grpCode != ""'>
+			             AND ORG.GRP_CODE = #{grpCode}
+			        </if>
+			        <if test='orgCode != null and orgCode != ""'>
+			             AND ORG.ORG_CODE = #{orgCode}
+			        </if>
+			        <if test='isAc != null and isAc != ""'>
+			             AND ORG1.IS_AC = #{isAc}
+			        </if>
+        GROUP BY HCM.TXN_SURVYE_CODE,  ORG.DEPT_CODE, ORG.GRP_CODE, ORG.ORG_CODE, HCM.TXN_SURVYE_NAME, CCRM.TOTAL_POINT, CCRM.PCNT, CCRM.CNT
+        <!-- HCC.CTRL_TYPE,DES.CODE_DESC -->
+        ORDER BY HCM.TXN_SURVYE_CODE
+
+    </select>
+
+    <select id="selectHappyCallResultHistList" parameterType="Map" resultType="egovMap">
+
+        SELECT  SAL.SALES_ORD_ID AS SALES_ORD_ID,
+			        SAL.SALES_ORD_NO AS SALES_ORD_NO,
+			        SAL.REF_NO AS REF_NO,
+                    HCM.TXN_CUST_NAME AS CUST_NAME,
+                    DES2.CODE_DESC AS APP_TYPE_DESC,
+                    SAL.APP_TYPE_ID AS APP_TYPE_ID,
+                    HCC.CTRL_TYPE AS HC_TYPE_CODE,
+                    DES.CODE_DESC AS HC_TYPE_DESC,
+                    CUST.TYPE_ID AS CUST_TYPE_CODE,
+                    DES1.CODE_DESC AS CUST_TYPE_DESC,
+                    SALD.ITM_STK_ID AS STOCK_ID,
+                    STK.STK_CODE AS STOCK_CODE,
+                    STK.STK_DESC AS STOCK_DESC,
+                    HCM.TXN_SURVYE_CODE AS MEM_CODE,
+                    ORG1.FULL_NAME AS MEM_NAME,
+                    ORG.DEPT_CODE AS DEPT_CODE,
+                    ORG.GRP_CODE AS GRP_CODE,
+                    ORG.ORG_CODE AS ORG_CODE,
+                    TO_CHAR(HCR.STATISTICS_SENT, 'DD/MM/YYYY') AS STAT_SEND_DT,
+                    ((CCR.POINTS / CCR.MAX_POINTS) * 100) AS SATISFACTION,
+                    HCM.HC_ID AS HC_ID,
+                    CCR.POINTS AS POINTS,
+                    CCR.MAX_POINTS AS MAX_POINTS,
+                    RATE.RATINGS,
+                    COMM.ANSW AS COMM
+		FROM CBT0004M HCM
+		JOIN CBT0005D HCR ON HCR.TXN_ID = HCM.TXN_ID
+		JOIN CBT0001M HCC ON HCC.CTRL_ID = HCM.CTRL_ID
+		LEFT JOIN SYS0013M DES ON DES.CODE_ID = HCC.CTRL_TYPE
+		LEFT JOIN ORG1001V ORG ON ORG.MEM_CODE = HCM.TXN_SURVYE_CODE
+		JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = HCM.TXN_ORD_ID
+		JOIN SAL0002D SALD ON SALD.SALES_ORD_ID = SAL.SALES_ORD_ID
+		JOIN SYS0026M STK ON STK.STK_ID = SALD.ITM_STK_ID
+		JOIN SAL0029D CUST ON CUST.CUST_ID = SAL.CUST_ID
+		LEFT JOIN SYS0013M DES1 ON DES1.CODE_ID = CUST.TYPE_ID
+		JOIN ORG0001D ORG1 ON ORG.MEM_ID = ORG1.MEM_ID
+		LEFT JOIN SYS0013M DES2 ON DES2.CODE_ID = SAL.APP_TYPE_ID AND DES2.CODE_MASTER_ID = 10
+		LEFT JOIN
+        (SELECT A.HC_ID, SUM(A.HC_ITM_POINT) POINTS, SUM(E.MAX_POINT) MAX_POINTS FROM CCR0002D A JOIN CBT0002M E ON E.SURV_ID = A.HC_DEF_ID GROUP BY A.HC_ID) CCR ON CCR.HC_ID = HCM.HC_ID
+        LEFT JOIN
+        (  SELECT HC_ID, QUES_ID, ANSW FROM
+            (
+                    SELECT  TXN_ID, HC_ID, CAST(REGEXP_SUBSTR(COLUMN_VALUE, '[^":"]+', 1, 1) AS NUMBER DEFAULT 0 ON CONVERSION ERROR) AS QUES_ID, REGEXP_SUBSTR(COLUMN_VALUE, '[^":"]+', 1, 2) AS ANSW
+                    FROM (SELECT  AA.TXN_ID, BA.HC_ID, REGEXP_REPLACE(AA.RESPONSE, '"{|}"', '"') X
+                            FROM CBT0005D AA
+                            JOIN CBT0004M BA ON AA.TXN_ID = BA.TXN_ID
+                            WHERE 1=1
+                            AND AA.RESPONSE IS NOT NULL
+                            ) A,
+
+                    LATERAL(
+                        SELECT TRIM(regexp_substr(REPLACE(X,'","','$'),'[^$]+', 1, level)) COLUMN_VALUE FROM DUAL
+                        connect BY regexp_substr(REPLACE(X,'","','$'), '[^$]+', 1, level) is not null
+                    ) B
+            ) T
+            JOIN (
+                    SELECT DISTINCT SURV_ID, TMPL_TYPE
+                    FROM CBT0003D
+                    WHERE TMPL_TYPE IN ('7362') <!-- Get question that is comment type only-->
+            ) QA ON QA.SURV_ID = T.QUES_ID
+        ) COMM ON COMM.HC_ID = HCM.HC_ID
+        LEFT JOIN
+        (
+            SELECT TXN_ID,
+                   REPLACE(REPLACE(REGEXP_REPLACE(SUBSTR(RATINGS, 1, INSTR(RATINGS , ',', -1)-1), '\d*:',''),'yes', '5'),'no', '1') AS RATINGS
+            FROM(
+                SELECT TXN_ID, SUBSTR(REGEXP_REPLACE(RATINGS, '"', ''), 1, INSTR(REGEXP_REPLACE(RATINGS, '"', '') , ':', -1)-1) AS RATINGS
+                FROM (
+                    SELECT TXN_ID as TXN_ID, REGEXP_REPLACE(RESPONSE, '"{|}"', '"') AS RATINGS FROM CBT0005D
+                 )
+            )
+        ) RATE ON RATE.TXN_ID = HCR.TXN_ID
+		WHERE 1=1
+		AND HCM.TXN_STUS_ID = 121
+		AND HCR.RESPONSE IS NOT NULL
+		<!-- AND HCC.CTRL_TYPE = #{callTypeId} -->
+		AND ORG1.MEM_TYPE = #{memTyp}
+		<if test='selectedMemCode != null and selectedMemCode != ""'>
+		  AND HCM.TXN_SURVYE_CODE = #{selectedMemCode}
+		</if>
+		<if test='periodMonth != null and periodMonth != ""'>
+		  AND TO_CHAR(HCR.STATISTICS_SENT, 'MM/YYYY') = #{periodMonth}
+		</if>
+		<if test='selectedDeptCode != null and selectedDeptCode != ""'>
+		  AND ORG.DEPT_CODE = #{selectedDeptCode}
+		</if>
+        <if test='selectedGrpCode != null and selectedGrpCode != ""'>
+            AND ORG.GRP_CODE = #{selectedGrpCode}
+        </if>
+        <if test='selectedOrgCode != null and selectedOrgCode != ""'>
+            AND ORG.ORG_CODE = #{selectedOrgCode}
+        </if>
+		<!-- AND ORG1.IS_AC = 1 -->
+
+    </select>
+
+    <select id="getUserInfo" parameterType="Map" resultType="egovMap">
+        SELECT usr.USER_ID
+              , B.MEM_TYPE
+              , A.MEM_LVL
+              , B.MEM_CODE
+              , B.NAME
+              , C.ORG_CODE
+              , C.GRP_CODE
+              , C.DEPT_CODE
+              , B.BRNCH
+              , A.BRNCH_ID AS ORG_BRANCH
+              , B.MEM_ID
+              , D.CODE MEMBER_TYPE
+              , B.IS_AC
+        FROM SYS0047M usr, ORG0005D A, ORG0001D B, ORG1001V C, SYS0013M D
+        WHERE usr.USER_NAME = B.MEM_CODE
+        AND B.MEM_ID = A.MEM_ID
+        AND C.MEM_ID = B.MEM_ID
+        AND usr.USER_STUS_ID = 1
+        AND B.STUS = 1
+        AND A.ORG_STUS_CODE_ID = 1
+        AND B.MEM_TYPE = D.CODE_ID
+        AND D.CODE_MASTER_ID = 1
+        AND usr.USER_ID =  #{userId}
+    </select>
+
+
+
+</mapper>

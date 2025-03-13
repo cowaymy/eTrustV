@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.cardpayment.service.impl.CrcReconBankStateMapper">
+
+    <select id="selectMappingList" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(SubBank.F_TRNSC_DT, 'DD/MM/YYYY') AS F_TRNSC_DT,
+            SubCrc.CRC_STATE_ID,
+            SubCrc.CRC_TRNSC_MID,
+            SubCrc.NET_AMT,
+            SubBank.F_TRNSC_ID,
+            SubBank.CREDIT_AMT,
+            SubBank.DEBIT_AMT,
+            TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE,
+            (CASE WHEN NET_AMT > 0 AND  (NET_AMT -  CREDIT_AMT )  = 0  THEN  'true'
+                     WHEN NET_AMT <![CDATA[< ]]> 0 AND  (ABS(NET_AMT) - DEBIT_AMT) = 0 THEN 'true'
+                      ELSE  'false'  END) AS is_Amt_Same ,
+            CASE WHEN NET_AMT > 0 THEN NET_AMT -  CREDIT_AMT
+                    WHEN NET_AMT <![CDATA[< ]]> 0 THEN ABS(NET_AMT) -  DEBIT_AMT END as  variance
+        FROM(
+                SELECT
+                        B.CRC_STATE_ID,
+                        B.CRC_TRNSC_MID,
+                        D.CODE_ID,
+                        B.CRC_TRNSC_DT,
+                        (CASE WHEN SUM(B.CRC_TOT_NET_AMT) != 0 THEN SUM(B.CRC_TOT_NET_AMT) ELSE SUM(B.CRC_NET_AMT) END) AS NET_AMT
+                FROM PAY0075D A JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID
+                JOIN SYS0013M D ON C.ACC_CODE = D.CODE_NAME
+                WHERE 1=1
+                AND D.CODE_MASTER_ID = 384
+                AND KEYIN_STUS_ID = 4
+                AND B.BANK_MAPPING_STUS_ID = 1
+                GROUP BY
+                    B.CRC_STATE_ID,
+                    B.CRC_TRNSC_MID,
+                    D.CODE_ID,
+                    B.CRC_TRNSC_DT) SubCrc
+        JOIN
+                (
+                SELECT
+                        B.F_TRNSC_ID,
+                        B.F_TRNSC_REF4 AS MID,
+                        SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+                        SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
+                        B.F_TRNSC_DT,
+                        D.CODE_ID
+                FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+                JOIN SYS0013M D ON C.ACC_CODE = D.CODE
+                WHERE
+                    B.F_TRNSC_REM = 'CRC'
+                    AND B.CRC_MAPPING_STUS_ID = 1
+                    AND D.CODE_MASTER_ID = 384
+                GROUP BY
+                    B.F_TRNSC_ID,
+                    B.F_TRNSC_REF4,
+                    B.F_TRNSC_DT,
+                    D.CODE_ID ) SubBank
+        ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.CODE_ID = SubBank.CODE_ID  and SUBCRC.CRC_TRNSC_DT = SUBBANK.F_TRNSC_DT AND
+        ( (NET_AMT > 0 AND SubCrc.NET_AMT = SubBank.CREDIT_AMT) OR (NET_AMT <![CDATA[< ]]> 0 AND ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT))
+        WHERE 1=1
+        AND SubCrc.NET_AMT <![CDATA[<> ]]>  0
+		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+		      AND SubBank.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
+		</if>
+		<if test="bankAccount != null and bankAccount != '' ">
+		      AND SubBank.CODE_ID = #{bankAccount}
+		</if>
+		GROUP  BY
+         TO_CHAR (SubBank.F_TRNSC_DT, 'DD/MM/YYYY'),
+         SubCrc.CRC_STATE_ID,
+         SubCrc.CRC_TRNSC_MID,
+         SubCrc.NET_AMT,
+         SubBank.F_TRNSC_ID,
+         SubBank.CREDIT_AMT,
+         SubBank.DEBIT_AMT
+    </select>
+
+    <select id="selectUnMappedCrc" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.CRC_STATE_ID,
+		    TO_CHAR(B.CRC_TRNSC_DT, 'DD/MM/YYYY') AS CRC_TRNSC_DT,
+		    B.CRC_TRNSC_MID,
+		    E.CODE_ID,
+		    D.ACC_DESC,
+		    (CASE WHEN SUM(B.CRC_TOT_NET_AMT) != 0 THEN SUM(B.CRC_TOT_NET_AMT) ELSE SUM(B.CRC_NET_AMT) END) AS NET_AMT
+		FROM PAY0076D B
+		JOIN PAY0075D C
+		  ON B.CRC_STATE_ID = C.CRC_STATE_ID
+		LEFT JOIN SYS0001M D
+		  ON C.CRC_STATE_ACC_ID = D.ACC_ID
+		JOIN SYS0013M E
+		  ON D.ACC_CODE = E.CODE_NAME
+		WHERE 1=1
+		  AND KEYIN_STUS_ID = 4
+		  AND B.BANK_MAPPING_STUS_ID = 1
+		  AND E.CODE_MASTER_ID = 384
+		  AND B.CRC_STATE_ID NOT IN (
+		      SELECT
+		          SubCrc.CRC_STATE_ID
+		      FROM (
+		          /* CREDIT CARD STATEMENT */
+		          SELECT
+		              B.CRC_STATE_ID,
+		              B.CRC_TRNSC_MID,
+		              D.CODE_ID,
+		              B.CRC_TRNSC_DT,
+		              (CASE WHEN SUM(B.CRC_TOT_NET_AMT) != 0 THEN SUM(B.CRC_TOT_NET_AMT) ELSE SUM(B.CRC_NET_AMT) END) AS NET_AMT
+		          FROM PAY0075D A
+		          JOIN PAY0076D B
+		            ON A.CRC_STATE_ID = B.CRC_STATE_ID
+		          LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID
+		          JOIN SYS0013M D ON C.ACC_CODE = D.CODE_NAME
+		          WHERE 1=1
+		            AND D.CODE_MASTER_ID = 384
+		            AND KEYIN_STUS_ID = 4
+		            AND B.BANK_MAPPING_STUS_ID = 4
+<if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
+AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
+</if>
+		          GROUP BY
+		              B.CRC_STATE_ID,
+		              B.CRC_TRNSC_MID,
+		              D.CODE_ID,
+		              B.CRC_TRNSC_DT
+		      ) SubCrc
+		      JOIN (
+		          SELECT
+		              B.F_TRNSC_ID,
+		              B.F_TRNSC_REF4 AS MID,
+		              SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+		              SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
+		              B.F_TRNSC_DT,
+		              D.CODE_ID
+		          FROM PAY0079D A
+		          JOIN PAY0081D B
+		            ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+		          LEFT JOIN SYS0001M C
+		            ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+		          JOIN SYS0013M D
+		            ON C.ACC_CODE = D.CODE
+		          WHERE B.F_TRNSC_REM = 'CRC'
+		            AND B.CRC_MAPPING_STUS_ID = 4
+		            AND D.CODE_MASTER_ID = 384
+<if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
+AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
+</if>
+		          GROUP BY
+		              B.F_TRNSC_ID,
+		              B.F_TRNSC_REF4,
+		              B.F_TRNSC_DT,
+		              D.CODE_ID
+		      ) SubBank
+		      ON SubCrc.CRC_TRNSC_MID = SubBank.MID
+		      and SubCrc.CODE_ID = SubBank.CODE_ID
+		      AND SubCrc.NET_AMT <![CDATA[<> ]]> 0
+		      AND (SubCrc.NET_AMT = SubBank.CREDIT_AMT or ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT)
+		)
+		<if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
+		    AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo}, 'DD/MM/YYYY')
+		</if>
+		<if test="bankAccount != null and bankAccount != '' ">
+            AND E.CODE_ID = #{bankAccount}
+        </if>
+		GROUP BY B.CRC_STATE_ID,B.CRC_TRNSC_MID, B.CRC_TRNSC_DT, E.CODE_ID, D.ACC_DESC
+        ORDER BY B.CRC_TRNSC_DT DESC
+    </select>
+
+    <select id="selectUnMappedBank"  parameterType="Map" resultType="egovMap">
+        SELECT
+            B.F_TRNSC_ID,
+			TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY') AS F_TRNSC_DT,
+			B.F_TRNSC_REF4 AS MID,
+			D.ACC_DESC,
+			E.CODE_ID,
+			B.F_TRNSC_CRDIT_AMT AS CREDIT_AMT ,
+			B.F_TRNSC_DEBT_AMT  AS DEBT_AMT
+		FROM PAY0081D B
+		JOIN PAY0079D C
+		  ON B.F_BANK_JRNL_ID = C.F_BANK_JRNL_ID
+		LEFT JOIN SYS0001M D
+		  ON C.F_BANK_JRNL_ACC_ID = D.ACC_ID
+		JOIN SYS0013M E
+		  ON D.ACC_CODE = E.CODE
+		WHERE B.F_TRNSC_REM = 'CRC'
+		  AND B.CRC_MAPPING_STUS_ID = 1
+		  AND E.CODE_MASTER_ID = 384
+		  AND B.F_TRNSC_ID NOT IN(
+		      SELECT
+		          SubBank.F_TRNSC_ID
+			  FROM (
+			      /* CREDIT CARD STATEMENT */
+			      SELECT
+			          B.CRC_STATE_ID,
+			          B.CRC_TRNSC_MID,
+			          D.CODE_ID,
+			          B.CRC_TRNSC_DT,
+			          (CASE WHEN SUM(B.CRC_TOT_NET_AMT) != 0 THEN SUM(B.CRC_TOT_NET_AMT) ELSE SUM(B.CRC_NET_AMT) END) AS NET_AMT
+			      FROM PAY0075D A JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+			      LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID
+			      JOIN SYS0013M D ON C.ACC_CODE = D.CODE_NAME
+			      WHERE 1=1
+			        AND D.CODE_MASTER_ID = 384
+			        AND KEYIN_STUS_ID = 4
+			        AND B.BANK_MAPPING_STUS_ID = 4
+<if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
+AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
+</if>
+			      GROUP BY
+			          B.CRC_STATE_ID,
+			          B.CRC_TRNSC_MID,
+			          D.CODE_ID,
+			          B.CRC_TRNSC_DT
+			  ) SubCrc
+			  JOIN (
+			      /* BANK STATEMENT */
+			      SELECT
+			          B.F_TRNSC_ID,
+			          B.F_TRNSC_REF4 AS MID,
+			          SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+			          SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
+			          B.F_TRNSC_DT,
+			          D.CODE_ID
+			      FROM PAY0079D A
+			      JOIN PAY0081D B
+			        ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+			      LEFT JOIN SYS0001M C
+			        ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+			      JOIN SYS0013M D
+			        ON C.ACC_CODE = D.CODE
+			      WHERE B.F_TRNSC_REM = 'CRC'
+			        AND B.CRC_MAPPING_STUS_ID = 4
+			        AND D.CODE_MASTER_ID = 384
+<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
+</if>
+			      GROUP BY
+			          B.F_TRNSC_ID,
+			          B.F_TRNSC_REF4,
+			          B.F_TRNSC_DT,
+			          D.CODE_ID
+			  ) SubBank
+			  ON SubCrc.CRC_TRNSC_MID = SubBank.MID
+			  and SubCrc.CODE_ID = SubBank.CODE_ID
+			  AND SubCrc.NET_AMT <![CDATA[<> ]]> 0
+              AND (SubCrc.NET_AMT = SubBank.CREDIT_AMT or ABS(SubCrc.NET_AMT) = SubBank.DEBIT_AMT))
+		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+              AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
+        </if>
+        <if test="bankAccount != null and bankAccount != '' ">
+              AND E.CODE_ID = #{bankAccount}
+        </if>
+		ORDER BY B.F_TRNSC_DT DESC
+    </select>
+
+    <update id="updateCrc" parameterType="Map">
+        UPDATE PAY0076D
+		SET BANK_MAPPING_STUS_ID = 4,
+		BANK_MAPPING_DT = TO_DATE(#{mappingDate}, 'DD/MM/YYYY'),
+		BANK_MAPPING_USER_ID = #{userId},
+		BANK_STATE_MAPPING_ID =#{fTrnscId}
+	    WHERE CRC_STATE_ID = #{crcStateId}
+    </update>
+
+    <update id="updateBank" parameterType="Map">
+        UPDATE PAY0081D
+        SET CRC_MAPPING_STUS_ID = 4,
+        CRC_MAPPING_DT = TO_DATE(#{mappingDate}, 'DD/MM/YYYY'),
+        CRC_MAPPING_USER_ID = #{userId}
+        WHERE F_TRNSC_ID = #{fTrnscId}
+    </update>
+
+    <select id="selectCrcIdList" parameterType="Map" resultType="egovMap">
+        SELECT CRC_TRNSC_ID, CRC_TRNSC_APPV, CRC_GROS_AMT
+        FROM PAY0076D
+        WHERE CRC_STATE_ID = #{crcStateId}
+    </select>
+
+    <insert id="insertInterfaceTb" parameterType="Map">
+        INSERT INTO ITF0940M
+		(
+		    IF_KEY,
+		    SEQ,
+		    IF_TYPE,
+		    TRAN_STATUS_CD,
+		    MAPP_DATE,
+		    BANKSEQ,
+		    BANK_AC,
+		    CRC_AC,
+		    TRANDATE,
+		    MID_NO,
+		    APPROVENO,
+		    CRC_ID,
+		    BANK_ID,
+		    CRC_AMT,
+		    BANK_AMT,
+		    DIF_AMT
+		)
+		VALUES(
+		    FN_CRT_IFKEY('940'),
+		    1,
+		    '940',
+		    '10',
+		    TO_CHAR(TO_DATE(#{mappingDate}, 'DD/MM/YYYY'),'YYYYMMDD'),
+		    #{bankSeq},
+		    (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{codeId}),
+		    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = #{codeId}),
+		    TO_CHAR(TO_DATE(#{trnscDate}, 'DD/MM/YYYY'),'YYYYMMDD'),
+		    #{mid} ,
+		    #{appvNo},
+		    #{crcId},
+		    #{bankId},
+		    #{grosAmt},
+		    #{creditAmt},
+		    #{diffAmt}
+		)
+    </insert>
+
+
+
+
+    <insert id="insertCardPaymentMatchIF" parameterType="EgovMap">
+
+         INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            PAY_DT,
+            BANK_SEQ,
+            BANK_ID,
+            BANKAC,
+            DIFF_TYPE,
+            DIFF_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            (select   nvl(max(BANK_SEQ),0)+1    from    ITF0942M  where   PAY_DT = to_char(sysdate,'yyyymmdd')),
+            #{fTrnscId},
+            <!-- (select ACC_CODE    from SYS0001M where acc_id =#{accId} ) , -->
+            <!-- ADD BY JGKIM 2018-02-23 -->
+            (select ACC_CODE    from SYS0001M where acc_id =(SELECT F_BANK_JRNL_ACC_ID FROM PAY0079D WHERE F_BANK_JRNL_ID = (SELECT F_BANK_JRNL_ID FROM PAY0081D WHERE F_TRNSC_ID = #{fTrnscId}))) ,
+            'AC002',
+            NVL(#{variance},0)
+        )
+
+      </insert>
+</mapper>

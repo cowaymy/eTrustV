@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.totalstock.impl.TotalStockMapper">
+
+
+<select id="totStockSearchList" parameterType="Map" resultType="egovMap">
+ WITH l75 AS
+    (
+        SELECT
+            L75.LOC_ID,
+            L75.ITM_CODE,
+            SUM(REQST_QTY) - SUM(NVL(MOV_QTY, 0)) AS BOOKING_QTY
+        FROM
+            LOG0075M L75
+        WHERE NVL(L75.FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+        AND L75.REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+        GROUP BY L75.LOC_ID, L75.ITM_CODE
+    ) ,
+    T AS (
+     SELECT
+            S28.WH_LOC_CODE     LOC_CODE,
+            S28.WH_LOC_DESC     LOC_DESC,
+            S28.WH_LOC_ID       LOC_ID,
+            S26.STK_CODE        STK_CODE,
+            S26.STK_DESC        STK_DESC,
+            S26.STK_TYPE_ID     TYPE_ID,
+            STYPE.CODE_NAME     TYPE_NAME,
+            S28.WH_LOC_CODE,
+            S26.STK_CTGRY_ID    CTGRY_ID,
+            SCATE.CODE_NAME     CTGRY_NAME,
+            L56.QTY             QTY,
+            NVL(L56.MOV_QTY, 0) MOV_QTY,
+            S28.WH_LOC_GB       WHLOCGB,
+            S5.CODE             BRNCH_CODE,
+            S5.name             BRNCH_NAME,
+            S28.CDC_CODE        CDC_CODE,
+            (SELECT  WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_CODE = S28.CDC_CODE ) CDC_NAME,
+            SERIAL_REQUIRE_CHK_YN
+        FROM
+            LOG0056M L56,
+            SYS0028M S28,
+            SYS0005M S5,
+            SYS0026M S26,
+            (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) STYPE,
+            (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 11 ) SCATE
+        WHERE
+                1 = 1
+            AND L56.STK_CTGRY_ID = SCATE.CODE_ID
+            AND L56.STK_TYPE_ID = STYPE.CODE_ID
+            AND L56.STK_CODE = S26.STK_CODE
+            AND L56.LOC_ID = S28.WH_LOC_ID
+            AND S28.WH_LOC_BRNCH_ID = S5.BRNCH_ID (+)
+        <if test="searchMatCode != null and searchMatCode !=''">
+            AND (S26.STK_CODE = #{searchMatCode} OR S26.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+        </if>
+        <if test="searchlocgrade != null and searchlocgrade !=''">
+            AND S28.WH_LOC_STK_GRAD = #{searchlocgrade}
+        </if>
+        <if test="searchLoc != null and searchLoc !=''">
+            AND S28.WH_LOC_CODE in
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+        </if>
+        <if test="sstocknm != null and sstocknm !=''">
+          AND (UPPER(S26.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(S26.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+        </if>
+        <if test="searchType != null and searchType !=''">
+          and S26.STK_TYPE_ID in
+          <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+        <if test="searchCtgry != null and searchCtgry !=''">
+            and S26.STK_CTGRY_ID in
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+        </if>
+        <if test="searchlocgb != null and searchlocgb !=''">
+            and S28.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+        </if>
+        <if test="searchBranch != null and searchBranch !=''">
+          AND #{searchBranch} in(wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3,wh_loc_brnch_id4,wh_loc_brnch_id5)
+        </if>
+        <if test="searchCDC != null and searchCDC !=''">
+          AND S28.CDC_CODE = #{searchCDC}
+        </if>
+    )
+	 SELECT
+	            T.LOC_CODE,
+	            T.LOC_DESC,
+	            T.LOC_ID,
+	            T.STK_CODE,
+	            T.STK_DESC,
+	            T.TYPE_ID,
+	            T.TYPE_NAME,
+	            T.WH_LOC_CODE,
+	            T.CTGRY_ID,
+	            T.CTGRY_NAME,
+	            T.QTY,
+	            T.MOV_QTY,
+	            NVL(L75.BOOKING_QTY, 0)       BOOKING_QTY,
+	            QTY - NVL(L75.BOOKING_QTY, 0) AVAILABLE_QTY,
+	            T.WHLOCGB,
+	            T.BRNCH_CODE,
+	            T.BRNCH_NAME,
+	            T.CDC_CODE,
+	            T.CDC_NAME,
+	            T.SERIAL_REQUIRE_CHK_YN
+	  FROM T
+	  LEFT JOIN L75 ON T.STK_CODE = L75.ITM_CODE AND T.LOC_ID = L75.LOC_ID
+	  ORDER BY T.WH_LOC_CODE
+</select>
+
+<select id="selectBranchList" parameterType="Map" resultType="egovMap">
+      select BRNCH_ID code,code || '-' || NAME CODE_NAME
+       from sys0005m where TYPE_ID in (42 , 43) ORDER BY CODE_NAME
+</select>
+
+<select id="selectCDCList" parameterType="Map" resultType="egovMap">
+ SELECT WH_LOC_CODE CODE , WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+FROM SYS0028M S28M
+WHERE 1 = 1
+AND S28M.WH_LOC_STUS_ID = 1
+AND S28M.WH_LOC_STK_GRAD = 'A'
+AND S28M.WH_LOC_GB IN ('01', '05')
+ORDER BY WH_LOC_CODE
+</select>
+
+<select id="selectTotalDscList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+		      WH_LOC_BRNCH_ID CODE
+		   ,  WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+		FROM SYS0028M S28M
+		LEFT JOIN SYS0005M  S05M ON S28M.WH_LOC_BRNCH_ID = S05M.BRNCH_ID
+		WHERE 1=1
+		    AND S05M.TYPE_ID = 43
+		    AND S28M.WH_LOC_GB = '02'
+		<if test="locationGrade != null and locationGrade !=''">
+            AND S28M.WH_LOC_STK_GRAD = #{locationGrade}
+        </if>
+</select>
+
+
+
+</mapper>

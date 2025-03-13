@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.GuardianOfComplianceMapper">
+
+        <select id="selectGuardianofComplianceList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+            SELECT
+                Project1.REQUESTID REQUESTID  ,
+                ( SELECT TT.CODE_NAME
+                  FROM (
+                    SELECT
+                        DISTINCT T.C1
+                      , T.CODE_ID
+                      , T.CODE_NAME
+                    FROM (
+                        SELECT
+                            1 C1
+                          , T1.RESN_ID CODE_ID
+                          , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                        WHERE T1.RESN_TYPE_ID = '1389'
+                          AND 1 = T1.STUS_CODE_ID
+                        UNION ALL
+                        SELECT
+                            1 C1
+                          , T2.RESN_ID CODE_ID
+                          , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                        WHERE T2.RESN_ID = '1'
+                    ) T
+                  ) TT
+                  WHERE 1=1
+                  AND TT.CODE_ID = project1.requestcategory
+                ) requestcategory,
+                Project1.RESN_DESC RESN_DESC  ,
+                Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                Project1.REQUESTORDERID REQUESTORDERID  ,
+                Project1.SALES_ORD_NO SALES_ORD_NO  ,
+                Project1.NAME NAME  ,
+                Project1.REQUESTREFDATE REQUESTREFDATE  ,
+                Project1.REQUESTMEMID REQUESTMEMID  ,
+                Project1.MEM_CODE MEM_CODE  ,
+                Project1.REQUESTCONTENT REQUESTCONTENT  ,
+                Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                Project1.NAME1 NAME1  ,
+                Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                Project1.USER_NAME USER_NAME ,
+                Project1.STATE STATE ,
+                Project1.RESPNS_UPDATED ,
+                Project1.RESPNS_MSG,
+                Project1.CASE_NO,
+                Project1.PIC_NAME
+            FROM (
+                SELECT
+                    Filter1.REQUESTID REQUESTID  ,
+                    Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
+                    Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                    Filter1.REQUESTORDERID REQUESTORDERID  ,
+                    Filter1.REQUESTREFDATE REQUESTREFDATE  ,
+                    Filter1.REQUESTMEMID REQUESTMEMID  ,
+                    Filter1.REQUESTCONTENT REQUESTCONTENT  ,
+                    Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                    Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                    Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                    Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                    Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+                    Filter1.NAME1 NAME  ,
+                    Filter1.MEM_CODE MEM_CODE  ,
+                    Filter1.RESN_DESC RESN_DESC  ,
+                    Filter1.NAME2 NAME1  ,
+                    Extent8.USER_NAME USER_NAME ,
+                    Filter1.STATE STATE ,
+                    Filter1.RESPNS_UPDATED ,
+                    Filter1.RESPNS_MSG,
+                    Filter1.CASE_NO,
+                    Filter1.PIC_NAME
+                FROM (
+                    SELECT
+                        Extent1.REQST_ID REQUESTID  ,
+                        Extent1.REQST_CTGRY REQUESTCATEGORY  ,
+                        Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
+                        Extent1.REQST_ORD_ID REQUESTORDERID  ,
+                        Extent1.REQST_REF_DT REQUESTREFDATE  ,
+                        Extent1.REQST_MEM_ID REQUESTMEMID  ,
+                        Extent1.REQST_CNTNT REQUESTCONTENT  ,
+                        Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
+                        Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
+                        Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
+                        Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
+                        Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
+                        Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Extent3.NAME NAME1  ,
+                        Extent4.MEM_CODE MEM_CODE  ,
+                        Extent6.RESN_DESC RESN_DESC  ,
+                        Extent7.NAME NAME2 ,
+                        Extent10.STATE STATE ,
+                        Extent9.RESPNS_UPDATED ,
+                        Extent9.RESPNS_MSG,
+                        Extent1.REQST_NO CASE_NO,
+                        Extent11.NAME PIC_NAME,
+                        Extent11.PIC_USER_ID
+                    FROM MSC0043M Extent1
+                    LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
+                    LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+                    LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+                    LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
+                    LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+                    LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+                    LEFT JOIN SAL0023D Extent8   ON Extent8.CUST_ADD_ID = Extent2.CUST_ADD_ID
+                    LEFT JOIN SYS0064M Extent10  ON Extent10.AREA_ID = Extent8.AREA_ID
+                    LEFT JOIN MSC0044M Extent9   ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
+                                                AND Extent9.RESPNS_ID in (
+                                                    SELECT MAX(a.RESPNS_ID)
+                                                    from MSC0044M a , MSC0043M b
+                                                    where a.PAPARAZ_REQST_ID = b.REQST_ID
+                                                    group by a.PAPARAZ_REQST_ID
+                                                )
+                    LEFT JOIN (
+                        SELECT
+                            A.CMPLNC_ID,
+                            A.CMPLNC_NO,
+                            A.MEM_ID,
+                            B.CMPLNC_SO_ID,
+                            D.USER_ID PIC_USER_ID,
+                            C.CMPLNC_PERSON_IN_CHRG,
+                            E.NAME
+                        FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
+                        WHERE A.CMPLNC_ID = B.CMPLNC_ID
+                          AND A.CMPLNC_ID = C.CMPLNC_ID
+                          AND C.CMPLNC_PERSON_IN_CHRG = D.USER_ID
+                          AND D.HR_CODE = E.MEM_CODE
+                    ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
+                                                AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
+                    WHERE 1=1
+            ]]>
+                    <if test="caseCategoryList != null and caseCategoryList != '' ">
+                        AND  Extent1.REQST_CTGRY IN
+                        <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="requestStatusIdList != null and requestStatusIdList != '' ">
+                        AND  Extent1.REQST_STUS_ID IN
+                        <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                ) Filter1
+                JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.REQUESTCREATEBY
+                WHERE 1=1
+                <if test="requestCreatStart != null and requestCreatStart != '' ">
+                    AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')
+                </if>
+                <if test="requestCreatEnd != null and requestCreatEnd != '' ">
+                    AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')
+                </if>
+                <if test="salesOrdNo != null and salesOrdNo != '' ">
+                    AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
+                </if>
+                <if test="customerName != null and customerName != '' ">
+                    AND  Filter1.NAME1 = #{customerName}
+                </if>
+                <if test="complaintDate != null and complaintDate != '' ">
+                    AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')
+                </if>
+                <if test="involvedPersonCode != null and involvedPersonCode != '' ">
+                    AND  Filter1.MEM_CODE = #{involvedPersonCode}
+                </if>
+                <if test="changePerson != null and changePerson != '' ">
+                    AND  Filter1.PIC_USER_ID = #{changePerson}
+                </if>
+                <if test="caseNo != null and caseNo != '' ">
+                    AND  Filter1.CASE_NO = #{caseNo}
+                </if>
+            ) Project1
+            ORDER BY Project1.REQUESTID ASC
+        </select>
+
+    <select id="selectGuardianofComplianceListCodyHP" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT
+            Project1.REQUESTID REQUESTID  ,
+            ( SELECT TT.CODE_NAME
+              FROM (
+                  SELECT
+                      DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                  FROM (
+                      SELECT
+                          1 C1
+                        , T1.RESN_ID CODE_ID
+                        , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                      FROM SYS0032M T1
+                      WHERE T1.RESN_TYPE_ID = '1389'
+                        AND 1 = T1.STUS_CODE_ID
+                        UNION ALL
+                      SELECT
+                          1 C1
+                        , T2.RESN_ID CODE_ID
+                        , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                      FROM SYS0032M T2
+                      WHERE T2.RESN_ID = '1'
+                  ) T
+              ) TT
+              WHERE 1=1 AND TT.CODE_ID = project1.requestcategory
+            ) requestcategory,
+            Project1.RESN_DESC RESN_DESC  ,
+            Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+            Project1.REQUESTORDERID REQUESTORDERID  ,
+            Project1.SALES_ORD_NO SALES_ORD_NO  ,
+            Project1.NAME NAME  ,
+            Project1.REQUESTREFDATE REQUESTREFDATE  ,
+            Project1.REQUESTMEMID REQUESTMEMID  ,
+            Project1.MEM_CODE MEM_CODE  ,
+            Project1.REQUESTCONTENT REQUESTCONTENT  ,
+            Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+            Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
+            Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
+            Project1.NAME1 NAME1  ,
+            Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+            Project1.USER_NAME USER_NAME,
+            Project1.STATE STATE
+        FROM (
+            SELECT
+                Filter1.REQUESTID REQUESTID  ,
+                Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
+                Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                Filter1.REQUESTORDERID REQUESTORDERID  ,
+                Filter1.REQUESTREFDATE REQUESTREFDATE  ,
+                Filter1.REQUESTMEMID REQUESTMEMID  ,
+                Filter1.REQUESTCONTENT REQUESTCONTENT  ,
+                Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+                Filter1.NAME1 NAME  ,
+                Filter1.MEM_CODE MEM_CODE  ,
+                Filter1.RESN_DESC RESN_DESC  ,
+                Filter1.NAME2 NAME1  ,
+                Extent8.USER_NAME USER_NAME ,
+                Filter1.STATE STATE,
+                Filter1.PIC_USER_ID
+            FROM (
+                SELECT
+                    Extent1.REQST_ID REQUESTID  ,
+                    Extent1.REQST_CTGRY REQUESTCATEGORY  ,
+                    Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
+                    Extent1.REQST_ORD_ID REQUESTORDERID  ,
+                    Extent1.REQST_REF_DT REQUESTREFDATE  ,
+                    Extent1.REQST_MEM_ID REQUESTMEMID  ,
+                    Extent1.REQST_CNTNT REQUESTCONTENT  ,
+                    Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
+                    Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
+                    Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
+                    Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
+                    Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
+                    Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                    Extent3.NAME NAME1  ,
+                    Extent4.MEM_CODE MEM_CODE  ,
+                    Extent6.RESN_DESC RESN_DESC  ,
+                    Extent7.NAME NAME2,
+                    Extent9.STATE STATE,
+                    Extent11.PIC_USER_ID
+                FROM MSC0043M Extent1
+                LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
+                LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+                LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
+                LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+                LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+                LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent2.CUST_ADD_ID
+                LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
+                LEFT JOIN (
+                        SELECT
+                            A.CMPLNC_ID,
+                            A.CMPLNC_NO,
+                            A.MEM_ID,
+                            B.CMPLNC_SO_ID,
+                            D.USER_ID PIC_USER_ID,
+                            C.CMPLNC_PERSON_IN_CHRG,
+                            E.NAME
+                        FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
+                        WHERE A.CMPLNC_ID = B.CMPLNC_ID
+                          AND A.CMPLNC_ID = C.CMPLNC_ID
+                          AND C.CMPLNC_PERSON_IN_CHRG = D.USER_ID
+                          AND D.HR_CODE = E.MEM_CODE
+                    ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
+                                                AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
+                WHERE 1=1
+        ]]>
+                <if test="caseCategoryList != null and caseCategoryList != '' ">
+                    AND  Extent1.REQST_CTGRY IN
+                    <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="requestStatusIdList != null and requestStatusIdList != '' ">
+                    AND  Extent1.REQST_STUS_ID IN
+                    <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            ) Filter1
+            JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.REQUESTCREATEBY AND Extent8.USER_ID = #{userID}
+            WHERE 1=1
+            <if test="requestCreatStart != null and requestCreatStart != '' ">
+                AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')
+            </if>
+            <if test="requestCreatEnd != null and requestCreatEnd != '' ">
+                AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')
+            </if>
+            <if test="salesOrdNo != null and salesOrdNo != '' ">
+                AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+            <if test="customerName != null and customerName != '' ">
+                AND  Filter1.NAME1 = #{customerName}
+            </if>
+            <if test="complaintDate != null and complaintDate != '' ">
+                AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')
+            </if>
+            <if test="involvedPersonCode != null and involvedPersonCode != '' ">
+                AND  Filter1.MEM_CODE = #{involvedPersonCode}
+            </if>
+            <if test="changePerson != null and changePerson != '' ">
+                AND  Filter1.PIC_USER_ID = #{changePerson}
+            </if>
+        ) Project1
+        ORDER BY Project1.REQUESTID ASC
+    </select>
+
+    <select id="selectGuardianofComplianceListSearch" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+            SELECT DISTINCT
+                Project1.REQUESTID REQUESTID  ,
+                ( SELECT TT.CODE_NAME
+                  FROM (
+                    SELECT
+                        DISTINCT T.C1
+                      , T.CODE_ID
+                      , T.CODE_NAME
+                    FROM (
+                        SELECT
+                            1 C1
+                          , T1.RESN_ID CODE_ID
+                          , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                        WHERE T1.RESN_TYPE_ID = '1389'
+                          AND 1 = T1.STUS_CODE_ID
+                        UNION ALL
+                        SELECT
+                            1 C1
+                          , T2.RESN_ID CODE_ID
+                          , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                        WHERE T2.RESN_ID = '1'
+                    ) T
+                  ) TT
+                  WHERE 1=1
+                  AND TT.CODE_ID = project1.requestcategory
+                ) requestcategory,
+                Project1.RESN_DESC RESN_DESC  ,
+                Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                Project1.REQUESTORDERID REQUESTORDERID  ,
+                Project1.SALES_ORD_NO SALES_ORD_NO  ,
+                Project1.NAME NAME  ,
+                Project1.REQUESTREFDATE REQUESTREFDATE  ,
+                Project1.REQUESTMEMID REQUESTMEMID  ,
+                Project1.MEM_CODE MEM_CODE  ,
+                Project1.REQUESTCONTENT REQUESTCONTENT  ,
+                Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                Project1.NAME1 NAME1  ,
+                Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                Project1.USER_NAME USER_NAME ,
+                Project1.STATE STATE ,
+                Project1.RESPNS_UPDATED ,
+                Project1.RESPNS_MSG,
+                Project1.CASE_NO,
+                NVL(Project1.COMBO_ORD_NO ,  ' - ') COMBO_ORD_NO,
+                Project1.PIC_NAME,
+                NVL(Project1.RESN_DESC_SUB ,  'Others') RESN_DESC_SUB,
+                NVL(Project1.APPROVAL_STATUS ,  ' - ') APPROVAL_STATUS,
+                NVL(Project1.APPROVAL_USER_ID ,  '0') APPROVAL_USER_ID,
+                NVL(Project1.APPROVAL_NAME ,  ' - ') APPROVAL_USER_ID,
+                Project1.APPROVAL_DATETIME,
+                NVL(Project1.APPROVAL_NAME ,  ' - ') APPROVAL_NAME
+
+            FROM (
+                SELECT
+                    Filter1.REQUESTID REQUESTID  ,
+                    Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
+                    Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                    Filter1.REQUESTORDERID REQUESTORDERID  ,
+                    Filter1.REQUESTREFDATE REQUESTREFDATE  ,
+                    Filter1.REQUESTMEMID REQUESTMEMID  ,
+                    Filter1.REQUESTCONTENT REQUESTCONTENT  ,
+                    Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                    Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                    Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                    Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                    Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+                    Filter1.NAME1 NAME  ,
+                    Filter1.MEM_CODE MEM_CODE  ,
+                    Filter1.RESN_DESC RESN_DESC  ,
+                    Filter1.NAME2 NAME1  ,
+                    Extent8.USER_NAME USER_NAME ,
+                    Filter1.STATE STATE ,
+                    Filter1.RESPNS_UPDATED ,
+                    Filter1.RESPNS_MSG,
+                    Filter1.CASE_NO,
+                    Filter1.PIC_NAME,
+                    Filter1.COMBO_ORD_NO,
+                    Filter1.RESN_DESC_SUB,
+                    Filter1.APPROVAL_STATUS,
+                    Filter1.APPROVAL_USER_ID,
+                    Filter1.APPROVAL_DATETIME,
+                    Filter1.APPROVAL_NAME
+                FROM (
+                    SELECT
+                        Extent1.REQST_ID REQUESTID  ,
+                        Extent1.REQST_CTGRY REQUESTCATEGORY  ,
+                        Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
+                        Extent1.REQST_ORD_ID REQUESTORDERID  ,
+                        Extent1.REQST_REF_DT REQUESTREFDATE  ,
+                        Extent1.REQST_MEM_ID REQUESTMEMID  ,
+                        Extent1.REQST_CNTNT REQUESTCONTENT  ,
+                        Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
+                        Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
+                        Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
+                        Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
+                        Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
+                        Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Extent3.NAME NAME1  ,
+                        Extent4.MEM_CODE MEM_CODE  ,
+                        Extent6.RESN_DESC RESN_DESC  ,
+                        Extent7.NAME NAME2 ,
+                        Extent10.STATE STATE ,
+                        Extent9.RESPNS_UPDATED ,
+                        Extent9.RESPNS_MSG,
+                        Extent1.REQST_NO CASE_NO,
+                        Extent11.USER_FULL_NAME PIC_NAME,
+                        Extent11.USER_ID PIC_USER_ID,
+                        COMBO.SALES_ORD_NO COMBO_ORD_NO,
+                        Extent12.RESN_DESC RESN_DESC_SUB,
+                        T1.NAME AS  APPROVAL_STATUS,
+                        Extent1.APPROVAL_USER_ID,
+                        Extent1.APPROVAL_DATETIME,
+                        Extent12.USER_FULL_NAME APPROVAL_NAME
+
+                    FROM MSC0043M Extent1
+                    LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
+                    LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+                    LEFT JOIN ORG0001D Extent4  ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+                    LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
+                    LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+                    LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+                    LEFT JOIN SAL0023D Extent8   ON Extent8.CUST_ADD_ID = Extent2.CUST_ADD_ID
+                    LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent8.AREA_ID
+                    LEFT JOIN SYS0032M Extent12 ON Extent12.RESN_ID = Extent1.REQST_CTGRY_SUB
+                    LEFT JOIN MSC0044M Extent9  ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
+                                                AND Extent9.RESPNS_ID in (
+                                                    SELECT MAX(a.RESPNS_ID)
+                                                    from MSC0044M a , MSC0043M b
+                                                    where a.PAPARAZ_REQST_ID = b.REQST_ID
+                                                    group by a.PAPARAZ_REQST_ID
+                                                )
+                     LEFT JOIN SYS0047M Extent11 ON Extent1.REQST_UPD_USER_ID = Extent11.USER_ID
+                                       LEFT JOIN SAL0001D COMBO ON (COMBO.PCKAGE_BINDING_NO = EXTENT2.SALES_ORD_ID
+                                                                               OR  EXTENT2.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID)
+                                       LEFT JOIN SYS0038M T1   ON T1.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+                                       LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+
+                                         WHERE 1=1
+            ]]>
+                    <if test="caseCategoryList != null and caseCategoryList != '' ">
+                        AND  Extent1.REQST_CTGRY IN
+                        <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                    <if test="requestStatusIdList != null and requestStatusIdList != '' ">
+                        AND  Extent1.REQST_STUS_ID IN
+                        <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                ) Filter1
+                JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.REQUESTCREATEBY
+                WHERE 1=1
+                <if test="requestCreatStart != null and requestCreatStart != '' ">
+                    AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')
+                </if>
+                <if test="requestCreatEnd != null and requestCreatEnd != '' ">
+                    AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')
+                </if>
+                <if test="salesOrdNo != null and salesOrdNo != '' ">
+                    AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
+                </if>
+                <if test="customerName != null and customerName != '' ">
+                    AND  Filter1.NAME1 = #{customerName}
+                </if>
+                <if test="complaintDate != null and complaintDate != '' ">
+                    AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')
+                </if>
+                <if test="involvedPersonCode != null and involvedPersonCode != '' ">
+                    AND  Filter1.MEM_CODE = #{involvedPersonCode}
+                </if>
+                <if test="changePerson != null and changePerson != '' ">
+                    AND  Filter1.PIC_USER_ID = #{changePerson}
+                </if>
+                <if test="caseNo != null and caseNo != '' ">
+                    AND  Filter1.CASE_NO = #{caseNo}
+                </if>
+
+            ) Project1
+            ORDER BY Project1.REQUESTID ASC
+        </select>
+
+        <insert id="saveGuardian" parameterType="Map">
+         <selectKey keyProperty="reqstId" resultType="Integer" order="BEFORE">
+            SELECT MSC0043M_REQST_ID_SEQ.NEXTVAL FROM DUAL
+         </selectKey>
+            INSERT INTO  MSC0043M (
+                        REQST_ID, REQST_NO, REQST_CTGRY, REQST_CTGRY_SUB,
+                        REQST_ORD_ID, REQST_REF_DT, REQST_MEM_ID, REQST_CNTNT,
+                        REQST_ATTACH,  REQST_OR_TYPE_ID, REQST_REM, REQST_STUS_ID, REQST_CRT_DT,
+                        REQST_CRT_USER_ID, REQST_UPD_DT, REQST_UPD_USER_ID, REQST_ACTN_ID, REQST_ATCH_FILE_GRP_ID )
+            VALUES (
+                        #{reqstId},#{guardianNo} ,  #{guardianCaseCategory}, #{guardianSubCaseCategory},
+                        #{orderId}, TO_DATE(#{complaintDate},'dd-mm-yyyy') , #{memberId}, #{complaintRemark},
+                        #{hidFileName} , #{memTypeId}, null, '1', SYSDATE,
+                        #{reqstCrtUserId}, SYSDATE, #{reqstUpdUserId}, #{ActionId}, #{groupId}
+                        )
+        </insert>
+
+
+		 <select id="selectSalesOrdNoInfo" parameterType="Map" resultType="egovMap">
+		            SELECT SYS.USER_MOBILE_NO,  SYS.USER_FULL_NAME
+						FROM SAL0001D SAL, SYS0047M SYS
+						WHERE 1=1
+						AND SAL.CUST_ID = SYS.USER_ID
+						AND SAL.SALES_ORD_NO  = #{salesOrdNo}
+						AND ROWNUM = 1
+		 </select>
+
+		 <select id="selectGuardianofComplianceInfo" parameterType="Map" resultType="egovMap">
+			SELECT DISTINCT Extent1.REQST_ID REQST_ID,
+			           Extent1.REQST_NO REQST_NO,
+			           Extent1.REQST_CTGRY REQST_CTGRY,
+			           Extent6.RESN_DESC RESN_DESC,
+			           Extent1.REQST_CTGRY_SUB REQST_CTGRY_SUB,
+			           Extent7.RESN_DESC RESN_DESC1,
+			           Extent1.REQST_ORD_ID REQST_ORD_ID,
+			           Extent2.SALES_ORD_NO SALES_ORD_NO,
+			           TO_CHAR(Extent1.REQST_REF_DT, 'DD/MM/YYYY') REQST_REF_DT,
+			           Extent1.REQST_MEM_ID REQST_MEM_ID,
+			           Extent5.MEM_CODE MEM_CODE,
+                       Extent5.NAME MEM_NAME,
+			           Extent1.REQST_CNTNT REQST_CNTNT,
+			           Extent1.REQST_ATTACH REQST_ATTACH,
+			           Extent1.REQST_OR_TYPE_ID REQST_OR_TYPE_ID,
+			           Extent4.TEL_M1 TEL_M1,
+			           Extent3.NAME CUST_NAME,
+			           Extent1.REQST_STUS_ID REQST_STUS_ID,
+			           Extent8.NAME NAME,
+			           TO_CHAR(Extent1.REQST_CRT_DT, 'DD/MM/YYYY') REQST_CRT_DT,
+			           Extent1.REQST_CRT_USER_ID REQST_CRT_USER_ID,
+			           Extent9.USER_NAME USER_NAME,
+			           TO_CHAR(Extent1.REQST_UPD_DT, 'DD/MM/YYYY') REQST_UPD_DT,
+			           Extent1.REQST_UPD_USER_ID REQST_UPD_USER_ID,
+                       Extent10.USER_NAME USER_NAME1,
+			           Extent1.REQST_ACTN_ID REQST_ACTN_ID,
+			           Extent1.REQST_ATCH_FILE_GRP_ID REQST_ATCH_FILE_GRP_ID,
+			           Extent10.USER_ID PERSON_IN_CHRG,
+                       Extent10.HR_CODE  || ' / '  || Extent10.USER_FULL_NAME  AS PERSON_IN_CHRG_NAME,
+                       Extent1.ACTION,
+                       Extent1.EYE_REWARD,
+                       Extent12.HR_CODE APPROVAL_CODE,
+                       NVL(Extent12.USER_FULL_NAME ,  ' - ') APPROVAL_NAME,
+                       NVL(Extent13.NAME ,  ' - ') APPROVAL_STATUS,
+                       TO_CHAR(Extent1.APPROVAL_DATETIME, 'DD/MM/YYYY') as APPROVAL_DATETIME
+
+			  FROM MSC0043M Extent1
+			  LEFT JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
+			  LEFT JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent2.CUST_ID
+			  LEFT JOIN SAL0027D Extent4 ON Extent4.CUST_CNTC_ID = Extent2.CUST_CNT_ID
+			  LEFT JOIN ORG0001D Extent5 ON Extent5.MEM_ID = Extent1.REQST_MEM_ID
+			  LEFT JOIN SYS0032M Extent6 ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+			  LEFT JOIN SYS0032M Extent7 ON Extent7.RESN_ID = Extent1.REQST_CTGRY_SUB
+			  LEFT JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.REQST_STUS_ID
+			  LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.REQST_CRT_USER_ID
+              LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.REQST_UPD_USER_ID
+              LEFT JOIN SYS0047M Extent12 ON Extent12.USER_ID = Extent1.APPROVAL_USER_ID
+              LEFT JOIN SYS0038M Extent13 ON Extent13.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+			 WHERE 1 = 1
+			   AND Extent1.REQST_ID  = #{reqstId} AND ROWNUM = 1
+		</select>
+
+		<select id="selectGuardianRemark" parameterType="Map" resultType="egovMap">
+            SELECT Extent1.RESPNS_ID RESPNS_ID  ,
+                       Extent1.PAPARAZ_REQST_ID PAPARAZ_REQST_ID  ,
+                       Extent1.RESPNS_MSG RESPNS_MSG  ,
+                       Extent1.RESPNS_STUS_ID RESPNS_STUS_ID  ,
+                       Extent3.NAME NAME  ,
+                       Extent1.RESPNS_CREATOR RESPNS_CREATOR  ,
+                       Extent4.USER_NAME USER_NAME  ,
+                       TO_CHAR(Extent1.RESPNS_CREATED, 'DD/MM/YYYY') RESPNS_CREATED  ,
+                       Extent1.RESPNS_UPDATOR RESPNS_UPDATOR  ,
+                       Extent5.USER_NAME USER_NAME1  ,
+                       TO_CHAR(Extent1.RESPNS_UPDATED, 'DD/MM/YYYY') RESPNS_UPDATED,
+                       Extent1.FILE_ID,
+                       Extent12.ATCH_FILE_GRP_ID,
+                       Extent13.ATCH_FILE_ID,
+                       Extent13.ATCH_FILE_NAME,
+                       Extent13.FILE_SUB_PATH,
+                       Extent13.PHYSICL_FILE_NAME,
+                       NVL(Extent14.NAME ,  ' - ') APPROVAL_STUS_ID,
+                       NVL(Extent15.USER_FULL_NAME ,  ' - ') APPROVAL_USER_NAME,
+                       TO_CHAR(Extent1.APPROVAL_DATETIME, 'DD/MM/YYYY') APPROVAL_DATETIME
+
+                  FROM MSC0044M Extent1
+                         LEFT JOIN MSC0043M Extent2   ON Extent2.REQST_ID = Extent1.PAPARAZ_REQST_ID
+                         LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RESPNS_STUS_ID
+                         LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.RESPNS_CREATOR
+                         LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.RESPNS_UPDATOR
+                         LEFT JOIN SYS0070M Extent12 ON Extent12.ATCH_FILE_GRP_ID = Extent1.FILE_ID and Extent1.FILE_ID != 0
+                         LEFT JOIN SYS0071D Extent13 ON Extent13.ATCH_FILE_ID = Extent12.ATCH_FILE_ID and Extent1.FILE_ID != 0
+                         LEFT JOIN SYS0038M Extent14  ON Extent14.STUS_CODE_ID = Extent1.APPROVAL_STUS_ID
+                         LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent1.APPROVAL_USER_ID
+                 WHERE  Extent1.PAPARAZ_REQST_ID = #{reqstId}
+                  order by Extent1.RESPNS_ID
+
+     </select>
+
+     <select id="selectGuardianNoValue" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+            SELECT Extent1.REQST_ID REQST_ID,
+                       Extent1.REQST_NO REQST_NO,
+                       Extent1.REQST_CTGRY REQST_CTGRY,
+                       Extent1.REQST_CTGRY_SUB REQST_CTGRY_SUB,
+                       Extent1.REQST_ORD_ID REQST_ORD_ID,
+                       Extent1.REQST_REF_DT,
+                       Extent1.REQST_MEM_ID REQST_MEM_ID,
+                       Extent1.REQST_CNTNT REQST_CNTNT,
+                       Extent1.REQST_ATTACH REQST_ATTACH,
+                       Extent1.REQST_OR_TYPE_ID REQST_OR_TYPE_ID,
+                       Extent1.REQST_STUS_ID REQST_STUS_ID,
+                       Extent1.REQST_CRT_DT,
+                       Extent1.REQST_CRT_USER_ID REQST_CRT_USER_ID,
+                       Extent1.REQST_UPD_DT,
+                       Extent1.REQST_UPD_USER_ID REQST_UPD_USER_ID,
+                       Extent1.REQST_ACTN_ID REQST_ACTN_ID
+                  FROM MSC0043M Extent1
+                 WHERE  Extent1.REQST_ID = #{reqstId} AND ROWNUM <= 1
+       ]]>
+     </select>
+
+      <update id="updateGuar" parameterType="Map">
+           UPDATE MSC0043M
+           SET REQST_UPD_DT = sysdate,
+                  REQST_STUS_ID = #{guardianStatusId},
+                  REQST_REM = #{guardianRemark},
+                  REQST_CTGRY = #{guardianCaseCategory},
+                  REQST_CTGRY_SUB = #{guardianSubCaseCategory},
+                  REQST_UPD_USER_ID = #{guardianCreateBy},
+                  REQST_MEM_ID = #{guardianpersonInvolvedId},
+                  APPROVAL_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode}),
+                  APPROVAL_STUS_ID = #{guardianApprovalStatusId},
+                  ACTION = #{guardianAction},
+                  EYE_REWARD = #{guardianEyeward}
+           WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+     <insert id="insertGuarSub" parameterType="Map">
+     <selectKey keyProperty="respnsId" resultType="int" order="BEFORE">
+
+        (SELECT DECODE(COUNT(RESPNS_ID),0 , 1 , MAX(RESPNS_ID)+1) FROM MSC0044M )
+        </selectKey>
+
+        INSERT INTO MSC0044M (
+           RESPNS_ID
+         , PAPARAZ_REQST_ID
+         , RESPNS_MSG
+         , RESPNS_STUS_ID
+         , RESPNS_CREATOR
+         , RESPNS_CREATED
+         , RESPNS_UPDATOR
+         , RESPNS_UPDATED
+         , FILE_ID
+         , APPROVAL_USER_ID
+         , APPROVAL_STUS_ID
+         , ACTION
+         , EYE_REWARD
+          )
+         VALUES (
+          #{respnsId}
+         , #{reqstId}
+         , #{guardianRemark}
+         , #{guardianStatusId}
+         , #{guardianCreateBy}
+         , sysdate
+         , #{guardianUpdatedBy}
+         , sysdate
+         , #{fileId}
+         , (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode})
+         , #{guardianApprovalStatusId}
+         , #{guardianAction}
+         , #{guardianEyeward}
+         )
+  </insert>
+
+      <select id="selectComplianceId" parameterType="Map" resultType="Integer">
+            SELECT MAX(CMPLNC_ID) FROM MSC0005D
+    </select>
+
+    <insert id="insertCom" parameterType="Map">
+        INSERT INTO MSC0005D (
+           CMPLNC_ID
+         , CMPLNC_NO
+         , MEM_ID
+         , CMPLNC_STUS_ID
+         , CMPLNC_REM
+         , CMPLNC_CRT_DT
+         , CMPLNC_CRT_USER_ID
+         , CMPLNC_UPD_DT
+         , CMPLNC_UPD_USER_ID
+          )
+         VALUES (
+          MSC0005D_CMPLNC_ID_SEQ.NEXTVAL
+         , #{complianceNo}
+         , #{memberId}
+         , #{complianceStatusId}
+         , NULL
+         , sysdate
+         , #{complianceCreateBy}
+         , sysdate
+         , #{complianceUpdateBy}
+         )
+  </insert>
+
+  <insert id="insertComplianceOrder" parameterType="Map">
+    INSERT INTO MSC0006D (
+        CMPLNC_ITM_ID
+      , CMPLNC_ID
+      , CMPLNC_SO_ID
+      , CMPLNC_STUS_ID
+      , CMPLNC_REM
+       )
+      VALUES (
+      MSC0006D_CMPLNC_ITM_ID_SEQ.NEXTVAL
+       , #{complianceId}
+       , #{complianceSOID}
+       , #{complianceStatusId}
+       , #{complianceRemark}
+        )
+      </insert>
+
+          <insert id="insertComSub" parameterType="Map">
+          INSERT INTO MSC0007D (
+            CMPLNC_ITM_ID
+          , CMPLNC_ID
+          , CMPLNC_SO_ID
+          , CMPLNC_STUS_ID
+          , CMPLNC_ACTN_ID
+          , CMPLNC_FOLW_UP_ID
+          , CMPLNC_RCIV_DT
+          , CMPLNC_CLOS_DT
+          , CMPLNC_REM
+          , CMPLNC_CASE_CTGRY
+          , CMPLNC_DOC_TYPE
+          , CMPLNC_FINDING
+          , CMPLNC_COLCT_AMT
+          , CMPLNC_FINAL_ACTN
+          , CMPLNC_HAS_ATTACH
+          , CMPLNC_ATTACH_FILE_NAME
+          , CMPLNC_CRT_DT
+          , CMPLNC_CRT_USER_ID
+          , CMPLNC_PERSON_IN_CHRG
+          , CMPLNC_ATCH_FILE_GRP_ID
+           )
+          VALUES (
+            MSC0007D_CMPLNC_ITM_ID_SEQ.NEXTVAL
+          , #{complianceId}
+          , #{complianceSOID}
+          , #{complianceStatusId}
+          , #{complianceActionId}
+          , #{complianceFollowUpId}
+          <if test="complianceReceivedDate != null and complianceReceivedDate != '' " >
+            , TO_DATE(#{complianceReceivedDate},'dd-mm-yyyy')
+          </if>
+          <if test="complianceReceivedDate == null " >
+            , #{complianceReceivedDate}
+          </if>
+          <if test="complianceClosedDate != null and complianceClosedDate != '' " >
+            , TO_DATE(#{complianceClosedDate},'dd-mm-yyyy')
+          </if>
+          <if test="complianceClosedDate == null " >
+            , #{complianceClosedDate}
+          </if>
+          , #{complianceRemark}
+          , #{complianceCaseCategory}
+          , #{complianceDocType}
+          , #{complianceFinding}
+          , #{complianceCollectAmt}
+          , #{complianceFinalAction}
+          , #{complianceHasAttachment}
+          , #{complianceAttachmentFilename}
+          , sysdate
+          , #{complianceCreateBy}
+          , #{compliancePersonInCharge}
+          , #{complianceGroupId}
+           )
+    </insert>
+
+    <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT T.APP_TYPE_CODE
+             , T.APP_TYPE_NAME
+             , T.CRT_USER_ID
+             , T.CUST_IC
+             , T.CUST_NAME
+             , T.CUST_VA_NO
+             , T.DSC_BRNCH_ID
+             , T.KEYIN_BRNCH_ID
+             , T.ORD_ID
+             , T.ORD_NO
+             , T.ORD_STUS_CODE
+             , T.PO_NO
+             , T.PRODUCT_CODE
+             , T.PRODUCT_NAME
+             , T.REF_NO
+             , T.RENT_STUS
+             , T.SALESMAN_MEM_ID
+             , T.SALESMAN_CODE
+             , T.SALESMAN_MEM_TYPE_ID
+             , T.BILLING_GRP_ID
+             , T.MAIL_TEL_MOB
+             , T.MAIL_TEL_FAX
+             , T.MAIL_TEL_OFF
+             , T.MAIL_TEL_RES
+             , T.INST_TEL_FAX
+             , T.INST_TEL_MOB
+             , T.INST_TEL_OFF
+             , T.INST_TEL_RES
+             , T.SIRIM_NO
+             , T.SERIAL_NO
+             , T.PROMO_CODE
+             , T.PROMO_DESC
+             , T.RELATED_NO
+             , T.RELATED_ID
+             , T.TEL_M1
+             , 1 C1
+             , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+             , NVL(T.CUST_ID, 0) AS CUST_ID
+             , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+             , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+             , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+             , T.PV_MONTH
+             , T.PV_YEAR
+             , NVL(COMBO_ORD_NO,'') AS COMBO_ORD_NO
+          FROM
+             ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                      V1.APP_TYPE_CODE
+                    , V1.APP_TYPE_ID
+                    , V1.APP_TYPE_NAME
+                    , V1.CRT_USER_ID
+                    , V1.CUST_IC
+                    , V1.CUST_NAME
+                    , V1.CUST_ID
+                    , V1.CUST_VA_NO
+                    , V1.DSC_BRNCH_ID
+                    , V1.KEYIN_BRNCH_ID
+                    , V1.ORD_DT
+                    , V1.ORD_ID
+                    , V1.ORD_NO
+                    , V1.ORD_STUS_CODE
+                    , V1.ORD_STUS_ID
+                    , V1.PO_NO
+                    , V1.PRODUCT_ID
+                    , V1.PRODUCT_CODE
+                    , V1.PRODUCT_NAME
+                    , V1.REF_NO
+                    , V1.RENT_STUS
+                    , V1.SALESMAN_MEM_ID
+                    , V1.SALESMAN_CODE
+                    , V1.SALESMAN_MEM_TYPE_ID
+                    , V1.BILLING_GRP_ID
+                    , V1.MAIL_TEL_MOB
+                    , V1.MAIL_TEL_FAX
+                    , V1.MAIL_TEL_OFF
+                    , V1.MAIL_TEL_RES
+                    , V1.INST_TEL_FAX
+                    , V1.INST_TEL_MOB
+                    , V1.INST_TEL_OFF
+                    , V1.INST_TEL_RES
+                    , V1.SIRIM_NO
+                    , V1.SERIAL_NO
+                    , V1.ITM_PRC_ID
+                    , V1.PV_MONTH
+                    , V1.PV_YEAR
+                    , V1.PROMO_CODE
+                    , V1.PROMO_DESC
+                    , V1.RELATED_NO
+                    , V1.RELATED_ID
+                    , CC.TEL_M1
+                    , COMBO.SALES_ORD_NO COMBO_ORD_NO
+                 FROM SAL1013V  V1
+                 JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = V1.ORD_ID
+                 JOIN SAL0027D CC ON CC.CUST_CNTC_ID = SOM.CUST_CNT_ID
+                 LEFT JOIN SAL0001D COMBO ON COMBO.PCKAGE_BINDING_NO = SOM.SALES_ORD_ID
+                                                             OR  SOM.PCKAGE_BINDING_NO = COMBO.SALES_ORD_ID
+
+                WHERE 1 = 1
+                <if test='ordDt == null || ordDt == ""'>
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                  AND V1.ORD_NO = #{ordNo}
+                </if>
+                <if test='arrAppType != null and arrAppType != ""'>
+                  AND V1.APP_TYPE_ID IN
+                  <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrOrdStusId != null and arrOrdStusId != ""'>
+                  AND V1.ORD_STUS_ID IN
+                  <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+                  AND V1.KEYIN_BRNCH_ID IN
+                  <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+                  AND V1.DSC_BRNCH_ID IN
+                  <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='custId != null and custId != ""'>
+                  AND V1.CUST_ID = #{custId}
+                </if>
+                <if test='custName != null and custName != ""'>
+                  AND UPPER(V1.CUST_NAME) LIKE '%'||UPPER(#{custName})||'%'
+                </if>
+                <if test='custIc != null and custIc != ""'>
+                  AND UPPER(V1.CUST_IC) LIKE '%'||UPPER(#{custIc})||'%'
+                </if>
+                <if test='productId != null and productId != ""'>
+                  AND V1.PRODUCT_ID = #{productId}
+                </if>
+                <if test='salesmanCode != null and salesmanCode != ""'>
+                  AND UPPER(V1.SALESMAN_CODE) = UPPER(#{salesmanCode})
+                </if>
+                <if test='arrRentStus != null and arrRentStus != ""'>
+                  AND V1.RENT_STUS IN
+                  <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='refNo != null and refNo != ""'>
+                  AND UPPER(V1.REF_NO) = UPPER(#{refNo})
+                </if>
+                <if test='poNo != null and poNo != ""'>
+                  AND UPPER(V1.PO_NO) = UPPER(#{poNo})
+                </if>
+                <if test='contactNo != null and contactNo != ""'>
+                  AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
+                </if>
+                <if test='vaNo != null and vaNo != ""'>
+                  AND UPPER(V1.CUST_VA_NO) = UPPER(#{vaNo})
+                </if>
+                <if test='serialNo != null and serialNo != ""'>
+                  AND UPPER(V1.SERIAL_NO) = UPPER(#{serialNo})
+                </if>
+                <if test='sirimNo != null and sirimNo != ""'>
+                  AND UPPER(V1.SIRIM_NO) = UPPER(#{sirimNo})
+                </if>
+                <if test='crtUserId != null and crtUserId != ""'>
+                  AND UPPER(V1.CRT_USER_ID) = UPPER(#{crtUserId})
+                </if>
+                <if test='promoCode != null and promoCode != ""'>
+                  AND UPPER(V1.PROMO_CODE) = UPPER(#{promoCode})
+                </if>
+                <if test='relatedNo != null and relatedNo != ""'>
+                  AND UPPER(V1.RELATED_NO) = UPPER(#{relatedNo})
+                </if>
+                <if test='invoicePoNo != null and invoicePoNo != ""'>
+                  AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+                                      FROM PAY0015D
+                                     WHERE PO_REF_NO = #{invoicePoNo})
+                </if>
+               ) T
+           ORDER BY T.ORD_NO ASC
+    </select>
+
+        <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        SELECT T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+              <if test='stus != null and stus !=""'>
+                AND T1.STUS = #{stus}
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+
+    <select id="selectAttachDownload" parameterType="Map" resultType="egovMap">
+        SELECT *
+        FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+        WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
+     </select>
+
+     <update id="updateGuarContent" parameterType="Map">
+           UPDATE MSC0043M
+           SET REQST_UPD_DT = sysdate,
+                  REQST_CNTNT = #{guardianRemark},
+                  REQST_UPD_USER_ID = #{guardianCreateBy}
+           WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+         <select id="selectReasonCodeList" parameterType="Map" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||#{separator}|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+
+                    ) T
+             ) TT ORDER BY CODE_NAME
+    </select>
+
+        <select id="selectDocNoExpand" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0082M Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+     </select>
+
+     <update id="updateDocNo" parameterType="Map">
+     <![CDATA[
+        UPDATE SYS0082M
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
+        ]]>
+    </update>
+
+    <select id="getSubCatList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT
+     T4.RESN_ID AS CODE_ID,
+     T4.RESN_DESC AS CODE_NAME
+     FROM SYS0032M T1
+    LEFT JOIN SYS0033M T2 ON T2.RESN_ID = T1.RESN_ID
+    LEFT JOIN SYS0033M T3 ON T3.RESN_PARENT_GRP_ID = T2.RESN_ID
+    LEFT JOIN SYS0032M T4 ON T4.RESN_ID = T3.RESN_ID
+    WHERE T2.RESN_ID = #{CASE_CATEGORY}
+    ]]>
+  </select>
+
+   <update id="gocApprove" parameterType="Map">
+      UPDATE MSC0043M
+      SET REQST_UPD_DT = sysdate,
+             APPROVAL_STUS_ID = '5'
+      WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+   <update id="gocReject" parameterType="Map">
+      UPDATE MSC0043M
+      SET REQST_UPD_DT = sysdate,
+             APPROVAL_STUS_ID = null,
+             APPROVAL_USER_ID = null,
+             REQST_STUS_ID = '60'
+      WHERE  ( REQST_ID = #{reqstId} )
+     </update>
+
+     <insert id="insertGuarSubApprove" parameterType="Map">
+           <selectKey keyProperty="respnsId" resultType="int" order="BEFORE">
+           (SELECT DECODE(COUNT(RESPNS_ID),0 , 1 , MAX(RESPNS_ID)+1) FROM MSC0044M )
+           </selectKey>
+
+           INSERT INTO MSC0044M (
+              RESPNS_ID
+            , PAPARAZ_REQST_ID
+            , RESPNS_MSG
+            , RESPNS_STUS_ID
+            , RESPNS_CREATOR
+            , RESPNS_CREATED
+            , RESPNS_UPDATOR
+            , RESPNS_UPDATED
+            , FILE_ID
+            , APPROVAL_USER_ID
+            , APPROVAL_STUS_ID
+            , APPROVAL_DATETIME
+            , ACTION
+            , EYE_REWARD
+             )
+            VALUES (
+             #{respnsId}
+            , #{reqstId}
+            , #{guardianRemark}
+            , #{guardianStatusId}
+            , #{guardianCreateBy}
+            , sysdate
+            , #{guardianUpdatedBy}
+            , sysdate
+            , #{fileId}
+            , (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{guardianApprovalCode})
+            , #{guardianApprovalStatusId}
+            , SYSDATE
+            , #{guardianAction}
+            , #{guardianEyeward}
+            )
+     </insert>
+</mapper>

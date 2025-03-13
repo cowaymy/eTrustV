@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.addressApi.impl.AddressApiMapper">
+
+
+
+<sql id="prefixSql">
+<if test="pageSize >= 0">
+SELECT  *
+FROM
+(
+    SELECT  *
+    FROM
+    (
+        SELECT  ROWNUM                                                          AS RNUM
+            ,   Z.*
+        FROM
+        (
+</if>
+</sql>
+
+
+
+<sql id="suffixSql">
+<if test="pageSize >= 0">
+<![CDATA[
+        ) Z
+    )
+    WHERE   RNUM <= #{pageNo} * #{pageSize}
+)
+WHERE   RNUM >= (#{pageNo} - 1) * #{pageSize} + 1
+]]>
+</if>
+</sql>
+
+
+
+<select id="selectStateCodeList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.addressApi.impl.AddressApiMapper] 20190924 - KR JAEMAJEM */
+SELECT  STATE                                                                   AS CODE
+    ,   STATE                                                                   AS CODE_DESC
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     POSTCODE = #{postcode}
+</if>
+<![CDATA[
+GROUP BY STATE
+ORDER BY STATE ASC
+]]>
+</select>
+
+
+
+<select id="selectCityCodeList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.address.impl.AddressSearchApiMapper.selectCityCodeList] 20190924 - KR JAEMAJEM */
+SELECT  CITY                                                                    AS CODE
+    ,   CITY                                                                    AS CODE_DESC
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+AND     STATE = #{state}
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     POSTCODE = #{postcode}
+</if>
+<![CDATA[
+GROUP BY CITY
+ORDER BY CITY ASC
+]]>
+</select>
+
+
+<select id="selectPostcodeList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+
+SELECT  AREA_ID                         AS CODE  ,
+            POSTCODE ||' - '|| AREA    AS CODE_DESC
+
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+AND     STATE = #{state}
+AND     CITY = #{city}
+
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     POSTCODE = #{postcode}
+</if>
+<![CDATA[
+ORDER BY POSTCODE ASC
+]]>
+</select>
+
+
+<select id="selectAreaList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+
+SELECT  AREA_ID                         AS AREA_ID  ,
+            POSTCODE ||' - '|| AREA    AS CODE_DESC ,
+            POSTCODE            AS POSTCODE ,
+            AREA                AS AREA ,
+
+            NVL(AREA, '')     ||' '||
+            NVL(POSTCODE, '') ||' '||
+            NVL(CITY,'')      ||' '||
+            NVL(STATE,'')     ||' '||
+            NVL(COUNTRY,'')   AS FULL_ADDR
+
+
+
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+AND     STATE = #{state}
+AND     CITY = #{city}
+AND     AREA_ID = #{areaId}
+
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     POSTCODE = #{postcode}
+</if>
+<![CDATA[
+ORDER BY POSTCODE ASC
+]]>
+</select>
+
+
+<select id="selectAddressList" parameterType="Map" resultType="egovMap">
+
+<include refid="prefixSql"/>
+
+<![CDATA[
+/* [com.coway.trust.biz.sales.address.impl.AddressSearchApiMapper.selectCityCodeList] 20190924 - KR JAEMAJEM */
+SELECT  A.AREA_ID                                                               AS AREA_ID
+    ,   A.POSTCODE                                                              AS POSTCODE
+    ,   A.AREA                                                                  AS AREA
+    ,   NVL(A.AREA, '')     ||' '||
+        NVL(A.POSTCODE, '') ||' '||
+        NVL(A.CITY,'')      ||' '||
+        NVL(A.STATE,'')     ||' '||
+        NVL(A.COUNTRY,'')                                                       AS FULL_ADDR
+    ,   COUNT(1) OVER()                                                         AS CNT
+FROM    SYS0064M A
+WHERE   A.STATUS_ID = 1
+AND     A.STATE = #{state}
+AND     A.CITY = #{city}
+AND     A.COUNTRY = 'Malaysia'
+AND     A.AREA_ID NOT LIKE 'DM%'
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     A.POSTCODE = #{postcode}
+</if>
+<if test="area != null and area != '' ">
+AND     REPLACE(UPPER(A.AREA), ' ', '') LIKE '%'||REPLACE(UPPER(#{area}), ' ', '')||'%'
+</if>
+ORDER BY A.AREA ASC
+
+<include refid="suffixSql"/>
+
+</select>
+</mapper>

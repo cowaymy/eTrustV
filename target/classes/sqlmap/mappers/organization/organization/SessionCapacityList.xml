@@ -1,0 +1,1611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.SessionCapacityListMapper">
+
+    <!--
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+
+        <select id="selectSsCapacityBrList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+                    SELECT F.brnch_id CODE_ID,
+                               E.mem_id,
+                               D.morng_sesion_as,
+                               D.morng_sesion_ins,
+                               D.morng_sesion_rtn,
+                               D.aftnon_sesion_as,
+                               D.aftnon_sesion_ins,
+                               D.aftnon_sesion_rtn,
+                               D.evng_sesion_as,
+                               D.evng_sesion_ins,
+                               D.evng_sesion_rtn,
+                               D.stus,
+                               D.crt_dt,
+                               D.crt_user_id,
+                               D.upd_dt,
+                               D. upd_user_id,
+                               F.code
+                               || ' - '
+                               || F.NAME  CODE,
+                               E.mem_code
+                               || ' - '
+                               || E.NAME  MEM_CODE
+                        FROM   (SELECT A.brnch_id CODE_ID,
+                                       A.ct_id    MEM_ID,
+                                       A.morng_sesion_as,
+                                       A.morng_sesion_ins,
+                                       A.morng_sesion_rtn,
+                                       A.aftnon_sesion_as,
+                                       A.aftnon_sesion_ins,
+                                       A.aftnon_sesion_rtn,
+                                       A.evng_sesion_as,
+                                       A.evng_sesion_ins,
+                                       A.evng_sesion_rtn,
+                                       A.stus,
+                                       A.crt_dt,
+                                       A.crt_user_id,
+                                       A.upd_dt,
+                                       A. upd_user_id,
+                                       B.code
+                                       || ' - '
+                                       || B.NAME  CODE,
+                                       C.mem_code
+                                       || ' - '
+                                       || C.NAME  MEM_CODE
+                                FROM   org0015m A
+                                       INNER JOIN sys0005m B
+                                               ON A.brnch_id = B.brnch_id
+                                       INNER JOIN org0001d C
+                                               ON C.mem_id = A.ct_id
+                                WHERE  1 = 1
+                                ]]>
+                                <if test="cmbbranchId != null and cmbbranchId != '' ">
+                                       AND B.brnch_id = #{cmbbranchId}
+                                </if>
+                                <if test="cmbctId != null and cmbctId != '' ">
+                                       AND C.MEM_ID =  #{cmbctId}
+                                </if>
+                                                              ) D
+                    <choose>
+                        <when test="status == 'Active' ">
+                            RIGHT JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       AND D.mem_id IS NULL
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </when>
+                        <when test="status == 'Complete' ">
+                            INNER JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </when>
+                        <otherwise>
+                            FULL OUTER JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+
+                       <if test="orgType != null and orgType != '' ">
+                       AND E.mem_type =  #{orgType}
+                       </if>
+
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </otherwise>
+                    </choose>
+        </select>
+
+        <select id="selectSsCapacityCTM" parameterType="Map" resultType="egovMap">
+                    SELECT A.MEM_CODE || ' - ' || A.NAME CTM_CODE
+                    FROM ORG0001D A, ORG0005D B
+                    WHERE A.MEM_ID = B.MEM_ID
+                    AND A.BRNCH = #{cmbbranchId}
+                    AND A.MEM_TYPE = #{memType}
+                    AND A.STUS      = '1'
+                    AND B.MEM_LVL = '2'
+                    <!-- AND ROWNUM = 1 -->
+        </select>
+
+        <insert id="insertCapacity" parameterType="Map">
+        INSERT INTO ORG0015M(
+         BRNCH_ID,
+        CT_ID,
+        MORNG_SESION_AS,
+        MORNG_SESION_INS,
+        MORNG_SESION_RTN,
+        AFTNON_SESION_AS,
+        AFTNON_SESION_INS,
+        AFTNON_SESION_RTN,
+        EVNG_SESION_AS,
+        EVNG_SESION_INS,
+        EVNG_SESION_RTN
+        )
+        VALUES(
+          TO_NUMBER(#{codeId}),
+          TO_NUMBER(#{memId}),
+          #{morngSesionAs},
+          #{morngSesionIns},
+          #{morngSesionRtn},
+          #{aftnonSesionAs},
+          #{aftnonSesionIns},
+          #{aftnonSesionRtn},
+          #{evngSesionAs},
+          #{evngSesionIns},
+          #{evngSesionRtn}
+         )
+    </insert>
+
+     <update id="updateCapacity" parameterType="Map">
+        MERGE INTO ORG0015M
+        USING DUAL
+        ON (CT_ID = TO_NUMBER(#{memId}))
+        WHEN MATCHED THEN
+          UPDATE SET
+            MORNG_SESION_AS = #{morngSesionAs},
+            MORNG_SESION_INS = #{morngSesionIns},
+            MORNG_SESION_RTN = #{morngSesionRtn},
+            AFTNON_SESION_AS = #{aftnonSesionAs},
+            AFTNON_SESION_INS = #{aftnonSesionIns},
+            AFTNON_SESION_RTN = #{aftnonSesionRtn},
+            EVNG_SESION_AS =   #{evngSesionAs},
+            EVNG_SESION_INS = #{evngSesionIns},
+            EVNG_SESION_RTN = #{evngSesionRtn},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+          WHERE BRNCH_ID = TO_NUMBER(#{codeId})
+          AND CT_ID  = TO_NUMBER(#{memId})
+        WHEN NOT MATCHED THEN
+          INSERT (  BRNCH_ID,
+                        CT_ID,
+                        MORNG_SESION_AS,
+                        MORNG_SESION_INS,
+                        MORNG_SESION_RTN,
+                        AFTNON_SESION_AS,
+                        AFTNON_SESION_INS,
+                        AFTNON_SESION_RTN,
+                        EVNG_SESION_AS,
+                        EVNG_SESION_INS,
+                        EVNG_SESION_RTN,
+                        CRT_DT,
+                        CRT_USER_ID,
+                        UPD_DT,
+                        UPD_USER_ID
+                        )
+          VALUES(
+                        TO_NUMBER(#{codeId}),
+                        TO_NUMBER(#{memId}),
+                        #{morngSesionAs},
+                        #{morngSesionIns},
+                        #{morngSesionRtn},
+                        #{aftnonSesionAs},
+                        #{aftnonSesionIns},
+                        #{aftnonSesionRtn},
+                        #{evngSesionAs},
+                        #{evngSesionIns},
+                        #{evngSesionRtn},
+                        SYSDATE,
+                        #{userId},
+                        SYSDATE,
+                        #{userId}
+                        )
+    </update>
+
+    <update id="updateCTMCapacity" parameterType="Map">
+    MERGE INTO ORG0015M AA
+    USING (SELECT SUM(C.morng_sesion_as) SUM_M_AS, SUM(C.morng_sesion_ins) SUM_M_INS, SUM(C.morng_sesion_rtn) SUM_M_RTN, SUM(C.aftnon_sesion_as) SUM_A_AS, SUM(C.aftnon_sesion_ins) SUM_A_INS, SUM(C.aftnon_sesion_rtn) SUM_A_RTN, SUM(C.evng_sesion_as) SUM_E_AS, SUM(C.evng_sesion_ins) SUM_E_INS, SUM(C.evng_sesion_rtn) SUM_E_RTN
+              FROM ORG0001D A, ORG0005D B, ORG0015M C
+              WHERE A.MEM_ID = B.MEM_ID
+              AND C.CT_ID = A.MEM_ID
+              AND A.BRNCH = #{codeId}
+              <choose>
+                  <when test="memType != null and memType != ''">
+                      AND A.MEM_TYPE = #{memType}
+                  </when>
+                  <otherwise>
+                      AND A.MEM_TYPE = '3'
+                  </otherwise>
+              </choose>
+              AND A.STUS       = '1'
+              AND B.MEM_LVL != '2') BB
+    ON (AA.CT_ID = (SELECT A.MEM_ID
+                            FROM ORG0001D A, ORG0005D B
+                            WHERE A.MEM_ID = B.MEM_ID
+                            AND A.BRNCH = #{codeId}
+                            <choose>
+                                <when test="memType != null and memType != ''">
+                                    AND A.MEM_TYPE = #{memType}
+                                </when>
+                                <otherwise>
+                                    AND A.MEM_TYPE = '3'
+                                </otherwise>
+                            </choose>
+                            AND A.STUS      = '1'
+                            AND B.MEM_LVL = '2' ))
+    WHEN MATCHED THEN
+        UPDATE SET
+        AA.morng_sesion_as = BB.SUM_M_AS,
+        AA.morng_sesion_ins = BB.SUM_M_INS,
+        AA.morng_sesion_rtn = BB.SUM_M_RTN,
+        AA.aftnon_sesion_as = BB.SUM_A_AS,
+        AA.aftnon_sesion_ins = BB.SUM_A_INS,
+        AA.aftnon_sesion_rtn = BB.SUM_A_RTN,
+        AA.evng_sesion_as = BB.SUM_E_AS,
+        AA.evng_sesion_ins = BB.SUM_E_INS,
+        AA.evng_sesion_rtn = BB.SUM_E_RTN,
+        AA.UPD_DT = SYSDATE,
+        AA.UPD_USER_ID = #{userId}
+    WHEN NOT MATCHED THEN
+        INSERT (AA.BRNCH_ID, AA.CT_ID, AA.morng_sesion_as, AA.morng_sesion_ins, AA.morng_sesion_rtn, AA.aftnon_sesion_as, AA.aftnon_sesion_ins, AA.aftnon_sesion_rtn, AA.evng_sesion_as, AA.evng_sesion_ins, AA.evng_sesion_rtn, AA.CRT_DT, AA.CRT_USER_ID, AA.UPD_DT, AA.UPD_USER_ID)
+        VALUES (#{codeId}, (SELECT A.MEM_ID
+                                      FROM ORG0001D A, ORG0005D B
+                                      WHERE A.MEM_ID = B.MEM_ID
+                                      AND A.BRNCH = #{codeId}
+                                      <choose>
+                                          <when test="memType != null and memType != ''">
+                                              AND A.MEM_TYPE = #{memType}
+                                          </when>
+                                          <otherwise>
+                                              AND A.MEM_TYPE = '3'
+                                          </otherwise>
+                                      </choose>
+                                      AND A.STUS      = '1'
+                                      AND B.MEM_LVL = '2'
+                                      AND ROWNUM = 1), BB.SUM_M_AS, BB.SUM_M_INS, BB.SUM_M_RTN, BB.SUM_A_AS, BB.SUM_A_INS, BB.SUM_A_RTN, BB.SUM_E_AS, BB.SUM_E_INS, BB.SUM_E_RTN, SYSDATE, #{userId}, SYSDATE, #{userId})
+    </update>
+
+    <delete id="deleteCapacity" parameterType="Map">
+            DELETE FROM ORG0015M
+            WHERE (MORNG_SESION_AS = '0' OR MORNG_SESION_AS IS NULL)
+            AND (MORNG_SESION_INS = '0 'OR MORNG_SESION_INS IS NULL)
+            AND (MORNG_SESION_RTN = '0' OR MORNG_SESION_RTN IS NULL)
+            AND (AFTNON_SESION_AS = '0' OR AFTNON_SESION_AS IS NULL)
+            AND (AFTNON_SESION_INS = '0' OR AFTNON_SESION_INS IS NULL)
+            AND (AFTNON_SESION_RTN = '0' OR AFTNON_SESION_RTN IS NULL)
+            AND (EVNG_SESION_AS = '0' OR EVNG_SESION_AS IS NULL)
+            AND (EVNG_SESION_INS = '0' OR EVNG_SESION_INS IS NULL)
+            AND (EVNG_SESION_RTN = '0' OR EVNG_SESION_RTN IS NULL)
+    </delete>
+     <select id="seleCtCodeSearch" parameterType="Map" resultType="egovMap">
+           select
+            A.MEM_ID ,A.MEM_CODE || ' - '|| NAME MEM_CODE , NAME
+            from org0001d A INNER JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+            where brnch =#{brnch}
+            AND B.MEM_LVL IN(2,3,4) AND STUS = 1
+            ORDER BY A.MEM_ID , MEM_CODE,NAME
+       </select>
+       <select id="seleCtCodeSearch2" parameterType="Map" resultType="egovMap">
+           select
+            A.MEM_ID CODE_ID, A.MEM_CODE || ' - '|| NAME CODE_NAME , NAME
+            from org0001d A INNER JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+            where brnch =#{groupCode}
+            AND A.MEM_TYPE IN (2,3) <!-- allow only CT and CODY. Hui Ding, 09-04-2021 -->
+            AND B.MEM_LVL IN(2,3,4) AND STUS = 1
+            ORDER BY A.MEM_ID , MEM_CODE,NAME
+       </select>
+       <select id="seleBranchCodeSearch" parameterType="Map" resultType="egovMap">
+           SELECT BRNCH_ID CODE_ID,
+                       CODE ||' - '||NAME CODE_NAME
+            FROM SYS0005M
+            WHERE 1=1
+             <if test="groupCode != null and groupCode != ''">
+               AND TYPE_ID=#{groupCode}
+             </if>
+            GROUP BY BRNCH_ID,CODE,NAME
+            ORDER BY CODE
+       </select>
+                <select id="selectHpChildList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+                    SELECT Project1.MEM_ID MEM_ID  ,
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.ADDR1 ADDR1  ,
+                           Project1.ADDR2 ADDR2  ,
+                           Project1.ADDR3 ADDR3  ,
+                           Project1.ADDR4 ADDR4  ,
+                           Project1.AREAL AREAL  ,
+                           Project1.POST_CODE POST_CODE  ,
+                           Project1.STATE STATE  ,
+                           Project1.CNTY CNTY  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 C1
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.ADDR1 ADDR1  ,
+                                    Extent2.ADDR2 ADDR2  ,
+                                    Extent2.ADDR3 ADDR3  ,
+                                    Extent2.ADDR4 ADDR4  ,
+                                    Extent2.AREAL AREAL  ,
+                                    Extent2.POST_CODE POST_CODE  ,
+                                    Extent2.STATE STATE  ,
+                                    Extent2.CNTY CNTY  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( 1 = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = '1' )
+                                       AND ( Extent1.MEM_LVL = #{memLvl} )
+                                       AND ( Extent1.MEM_UP_ID = #{memId} )
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
+                             ]]>
+        </select>
+
+
+
+
+
+
+
+
+
+
+        <select id="getDeptTreeList" parameterType="Map" resultType="egovMap">
+             <![CDATA[
+            SELECT Project1.MEM_ID CODE_ID  ,
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.ADDR1 ADDR1  ,
+                           Project1.ADDR2 ADDR2  ,
+                           Project1.ADDR3 ADDR3  ,
+                           Project1.ADDR4 ADDR4  ,
+                           Project1.AREAL AREAL  ,
+                           Project1.POST_CODE POST_CODE  ,
+                           Project1.STATE STATE  ,
+                           Project1.CNTY CNTY  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 CODE_NAME
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.ADDR1 ADDR1  ,
+                                    Extent2.ADDR2 ADDR2  ,
+                                    Extent2.ADDR3 ADDR3  ,
+                                    Extent2.ADDR4 ADDR4  ,
+                                    Extent2.AREAL AREAL  ,
+                                    Extent2.POST_CODE POST_CODE  ,
+                                    Extent2.STATE STATE  ,
+                                    Extent2.CNTY CNTY  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( '1' = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{groupCode} )
+                                       AND ( Extent1.MEM_LVL = 1 )
+                                       AND ( Extent1.MEM_UP_ID = #{memUpId} )
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
+           ]]>
+        </select>
+
+
+
+
+
+
+
+                <select id="getGroupTreeList" parameterType="Map" resultType="egovMap">
+             <![CDATA[
+            SELECT Project1.MEM_ID CODE  ,
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.ADDR1 ADDR1  ,
+                           Project1.ADDR2 ADDR2  ,
+                           Project1.ADDR3 ADDR3  ,
+                           Project1.ADDR4 ADDR4  ,
+                           Project1.AREAL AREAL  ,
+                           Project1.POST_CODE POST_CODE  ,
+                           Project1.STATE STATE  ,
+                           Project1.CNTY CNTY  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 CODE_NAME
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.ADDR1 ADDR1  ,
+                                    Extent2.ADDR2 ADDR2  ,
+                                    Extent2.ADDR3 ADDR3  ,
+                                    Extent2.ADDR4 ADDR4  ,
+                                    Extent2.AREAL AREAL  ,
+                                    Extent2.POST_CODE POST_CODE  ,
+                                    Extent2.STATE STATE  ,
+                                    Extent2.CNTY CNTY  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( '1' = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{memType} )
+                                       AND ( Extent1.MEM_LVL = #{memLvl} )
+                                       AND ( Extent1.MEM_UP_ID = #{groupCode} )
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
+           ]]>
+        </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <select id="selectOrgChartCdList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+                    SELECT Project1.MEM_ID MEM_ID  ,
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.ADDR1 ADDR1  ,
+                           Project1.ADDR2 ADDR2  ,
+                           Project1.ADDR3 ADDR3  ,
+                           Project1.ADDR4 ADDR4  ,
+                           Project1.AREAL AREAL  ,
+                           Project1.POST_CODE POST_CODE  ,
+                           Project1.STATE STATE  ,
+                           Project1.CNTY CNTY  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 C1
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.ADDR1 ADDR1  ,
+                                    Extent2.ADDR2 ADDR2  ,
+                                    Extent2.ADDR3 ADDR3  ,
+                                    Extent2.ADDR4 ADDR4  ,
+                                    Extent2.AREAL AREAL  ,
+                                    Extent2.POST_CODE POST_CODE  ,
+                                    Extent2.STATE STATE  ,
+                                    Extent2.CNTY CNTY  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( 1 = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{memType})
+                                       AND ( Extent1.MEM_LVL = #{memLvl} )
+                                       AND ( Extent1.MEM_UP_ID = #{groupCode} )
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
+                             ]]>
+        </select>
+
+        <!-- Select Count Cpacity CTM -->
+        <select id="selectCountSsCapacityCTM" parameterType="Map" resultType="int">
+            SELECT COUNT(A.MEM_CODE)
+             FROM ORG0001D A, ORG0005D B
+            WHERE A.MEM_ID = B.MEM_ID
+            <if test="cmbbranchId != null and cmbbranchId != ''">
+                AND A.BRNCH = #{cmbbranchId}
+            </if>
+            <choose>
+                <when test="memType != null and memType != ''">
+                    AND A.MEM_TYPE = #{memType}
+                </when>
+                <otherwise>
+                    AND A.MEM_TYPE = '3'
+                </otherwise>
+            </choose>
+                AND A.STUS       = '1'
+                AND B.MEM_LVL = '2'
+        </select>
+
+         <select id="selectSsCapacityBrListEnhance" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+                    SELECT F.brnch_id CODE_ID,
+                               E.mem_id,
+                               D.morng_sesion_as,
+                               D.morng_sesion_ins,
+                               D.morng_sesion_rtn,
+                               D.aftnon_sesion_as,
+                               D.aftnon_sesion_ins,
+                               D.aftnon_sesion_rtn,
+                               D.evng_sesion_as,
+                               D.evng_sesion_ins,
+                               D.evng_sesion_rtn,
+                               D.stus,
+                               D.crt_dt,
+                               D.crt_user_id,
+                               D.upd_dt,
+                               D. upd_user_id,
+                               F.code
+                               || ' - '
+                               || F.NAME  CODE,
+                               E.mem_code
+                               || ' - '
+                               || E.NAME  MEM_CODE,
+                               D.car_type,
+                               D.MORNG_SESION_AS_ST,  D.MORNG_SESION_AS_DSK, D.MORNG_SESION_AS_SML,
+                               D.MORNG_SESION_INS_ST, D.MORNG_SESION_INS_DSK, D.MORNG_SESION_INS_SML,
+                               D.MORNG_SESION_RTN_ST, D.MORNG_SESION_RTN_DSK, D.MORNG_SESION_RTN_SML,
+                               D.AFTNON_SESION_AS_ST, D.AFTNON_SESION_AS_DSK, D.AFTNON_SESION_AS_SML,
+                               D.AFTNON_SESION_INS_ST, D.AFTNON_SESION_INS_DSK, D.AFTNON_SESION_INS_SML,
+                               D.AFTNON_SESION_RTN_ST, D.AFTNON_SESION_RTN_DSK, D.AFTNON_SESION_RTN_SML,
+                               D.EVNG_SESION_AS_ST, D.EVNG_SESION_AS_DSK, D.EVNG_SESION_AS_SML,
+                               D.EVNG_SESION_INS_ST, D.EVNG_SESION_INS_DSK, D.EVNG_SESION_INS_SML,
+                               D.EVNG_SESION_RTN_ST, D.EVNG_SESION_RTN_DSK, D.EVNG_SESION_RTN_SML
+                        FROM   (SELECT A.brnch_id CODE_ID,
+                                       A.ct_id    MEM_ID,
+                                       A.morng_sesion_as,
+                                       A.morng_sesion_ins,
+                                       A.morng_sesion_rtn,
+                                       A.aftnon_sesion_as,
+                                       A.aftnon_sesion_ins,
+                                       A.aftnon_sesion_rtn,
+                                       A.evng_sesion_as,
+                                       A.evng_sesion_ins,
+                                       A.evng_sesion_rtn,
+                                       A.stus,
+                                       A.crt_dt,
+                                       A.crt_user_id,
+                                       A.upd_dt,
+                                       A. upd_user_id,
+                                       B.code
+                                       || ' - '
+                                       || B.NAME  CODE,
+                                       C.mem_code
+                                       || ' - '
+                                       || C.NAME  MEM_CODE,
+                                       A.car_type,
+                                       A.MORNG_SESION_AS_ST,  A.MORNG_SESION_AS_DSK, A.MORNG_SESION_AS_SML,
+                                       A.MORNG_SESION_INS_ST, A.MORNG_SESION_INS_DSK, A.MORNG_SESION_INS_SML,
+                                       A.MORNG_SESION_RTN_ST, A.MORNG_SESION_RTN_DSK, A.MORNG_SESION_RTN_SML,
+                                       A.AFTNON_SESION_AS_ST, A.AFTNON_SESION_AS_DSK, A.AFTNON_SESION_AS_SML,
+                                       A.AFTNON_SESION_INS_ST, A.AFTNON_SESION_INS_DSK, A.AFTNON_SESION_INS_SML,
+                                       A.AFTNON_SESION_RTN_ST, A.AFTNON_SESION_RTN_DSK, A.AFTNON_SESION_RTN_SML,
+                                       A.EVNG_SESION_AS_ST, A.EVNG_SESION_AS_DSK, A.EVNG_SESION_AS_SML,
+                                       A.EVNG_SESION_INS_ST, A.EVNG_SESION_INS_DSK, A.EVNG_SESION_INS_SML,
+                                       A.EVNG_SESION_RTN_ST, A.EVNG_SESION_RTN_DSK, A.EVNG_SESION_RTN_SML
+                                FROM   org0015m A
+                                       INNER JOIN sys0005m B
+                                               ON A.brnch_id = B.brnch_id
+                                       INNER JOIN org0001d C
+                                               ON C.mem_id = A.ct_id
+                                WHERE  1 = 1
+                                ]]>
+                                <if test="cmbbranchId != null and cmbbranchId != '' ">
+                                       AND B.brnch_id = #{cmbbranchId}
+                                </if>
+                                <if test="cmbctId != null and cmbctId != '' ">
+                                       AND C.MEM_ID =  #{cmbctId}
+                                </if>
+                                                              ) D
+                    <choose>
+                        <when test="status == 'Active' ">
+                            RIGHT JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       AND D.mem_id IS NULL
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </when>
+                        <when test="status == 'Complete' ">
+                            INNER JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </when>
+                        <otherwise>
+                            FULL OUTER JOIN org0001d E
+                                   ON D.mem_id = E.mem_id
+                           INNER JOIN sys0005m F
+                                   ON F.brnch_id = E.brnch
+                       WHERE  1 = 1
+                       AND F.TYPE_ID = #{branchTypeId}
+                       <if test="cmbbranchId != null and cmbbranchId != '' ">
+                       AND E.brnch = #{cmbbranchId}
+                       </if>
+                       <if test="cmbctId != null and cmbctId != '' ">
+                       AND E.MEM_ID =  #{cmbctId}
+                       </if>
+
+                       <if test="orgType != null and orgType != '' ">
+                       AND E.mem_type =  #{orgType}
+                       </if>
+
+                       AND E.STUS  = '1'
+                       ORDER BY D.MEM_ID ASC, E.MEM_ID ASC
+                        </otherwise>
+                    </choose>
+        </select>
+
+        <insert id="insertCapacityEnhance" parameterType="Map">
+        INSERT INTO ORG0015M(
+         BRNCH_ID,
+        CT_ID,
+        MORNG_SESION_AS,
+        MORNG_SESION_INS,
+        MORNG_SESION_RTN,
+        AFTNON_SESION_AS,
+        AFTNON_SESION_INS,
+        AFTNON_SESION_RTN,
+        EVNG_SESION_AS,
+        EVNG_SESION_INS,
+        EVNG_SESION_RTN,
+        CAR_TYPE,
+        MORNG_SESION_AS_ST,
+        MORNG_SESION_AS_DSK,
+        MORNG_SESION_AS_SML,
+        MORNG_SESION_INS_ST,
+        MORNG_SESION_INS_DSK,
+        MORNG_SESION_INS_SML,
+        MORNG_SESION_RTN_ST,
+        MORNG_SESION_RTN_DSK,
+        MORNG_SESION_RTN_SML,
+        AFTNON_SESION_AS_ST,
+        AFTNON_SESION_AS_DSK,
+        AFTNON_SESION_AS_SML,
+        AFTNON_SESION_INS_ST,
+        AFTNON_SESION_INS_DSK,
+        AFTNON_SESION_INS_SML,
+        AFTNON_SESION_RTN_ST,
+        AFTNON_SESION_RTN_DSK,
+        AFTNON_SESION_RTN_SML,
+        EVNG_SESION_AS_ST,
+        EVNG_SESION_AS_DSK,
+        EVNG_SESION_AS_SML,
+        EVNG_SESION_INS_ST,
+        EVNG_SESION_INS_DSK,
+        EVNG_SESION_INS_SML,
+        EVNG_SESION_RTN_ST,
+        EVNG_SESION_RTN_DSK,
+        EVNG_SESION_RTN_SML
+        )
+        VALUES(
+          TO_NUMBER(#{codeId}),
+          TO_NUMBER(#{memId}),
+          #{morngSesionAs},
+          #{morngSesionIns},
+          #{morngSesionRtn},
+          #{aftnonSesionAs},
+          #{aftnonSesionIns},
+          #{aftnonSesionRtn},
+          #{evngSesionAs},
+          #{evngSesionIns},
+          #{evngSesionRtn},
+          #{carType},
+          #{morngSesionAsSt},
+          #{morngSesionAsDsk},
+          #{morngSesionAsSml},
+          #{morngSesionInsSt},
+          #{morngSesionInsDsk},
+          #{morngSesionInsSml},
+          #{morngSesionRtnSt},
+          #{morngSesionRtnDsk},
+          #{morngSesionRtnSml},
+          #{aftnonSesionAsSt},
+          #{aftnonSesionAsDsk},
+          #{aftnonSesionAsSml},
+          #{aftnonSesionInsSt},
+          #{aftnonSesionInsDsk},
+          #{aftnonSesionInsSml},
+          #{aftnonSesionRtnSt},
+          #{aftnonSesionRtnDsk},
+          #{aftnonSesionRtnSml},
+          #{evngSesionAsSt},
+          #{evngSesionAsDsk},
+          #{evngSesionAsSml},
+          #{evngSesionInsSt},
+          #{evngSesionInsDsk},
+          #{evngSesionInsSml},
+          #{evngSesionRtnSt},
+          #{evngSesionRtnDsk},
+          #{evngSesionRtnSml}
+         )
+    </insert>
+
+     <update id="updateCapacityEnhance" parameterType="Map">
+        MERGE INTO ORG0015M
+        USING DUAL
+        ON (CT_ID = TO_NUMBER(#{memId}))
+        WHEN MATCHED THEN
+          UPDATE SET
+            MORNG_SESION_AS = #{morngSesionAs},
+            MORNG_SESION_INS = #{morngSesionIns},
+            MORNG_SESION_RTN = #{morngSesionRtn},
+            AFTNON_SESION_AS = #{aftnonSesionAs},
+            AFTNON_SESION_INS = #{aftnonSesionIns},
+            AFTNON_SESION_RTN = #{aftnonSesionRtn},
+            EVNG_SESION_AS = #{evngSesionAs},
+            EVNG_SESION_INS = #{evngSesionIns},
+            EVNG_SESION_RTN = #{evngSesionRtn},
+            MORNG_SESION_AS_ST = #{morngSesionAsSt},
+            MORNG_SESION_AS_DSK = #{morngSesionAsDsk},
+            MORNG_SESION_AS_SML = #{morngSesionAsSml},
+            MORNG_SESION_INS_ST = #{morngSesionInsSt},
+            MORNG_SESION_INS_DSK = #{morngSesionInsDsk},
+            MORNG_SESION_INS_SML = #{morngSesionInsSml},
+            MORNG_SESION_RTN_ST = #{morngSesionRtnSt},
+            MORNG_SESION_RTN_DSK = #{morngSesionRtnDsk},
+            MORNG_SESION_RTN_SML = #{morngSesionRtnSml},
+            AFTNON_SESION_AS_ST = #{aftnonSesionAsSt},
+            AFTNON_SESION_AS_DSK = #{aftnonSesionAsDsk},
+            AFTNON_SESION_AS_SML = #{aftnonSesionAsSml},
+            AFTNON_SESION_INS_ST = #{aftnonSesionInsSt},
+            AFTNON_SESION_INS_DSK = #{aftnonSesionInsDsk},
+            AFTNON_SESION_INS_SML = #{aftnonSesionInsSml},
+            AFTNON_SESION_RTN_ST = #{aftnonSesionRtnSt},
+            AFTNON_SESION_RTN_DSK = #{aftnonSesionRtnDsk},
+            AFTNON_SESION_RTN_SML = #{aftnonSesionRtnSml},
+            EVNG_SESION_AS_ST = #{evngSesionAsSt},
+            EVNG_SESION_AS_DSK = #{evngSesionAsDsk},
+            EVNG_SESION_AS_SML = #{evngSesionAsSml},
+            EVNG_SESION_INS_ST = #{evngSesionInsSt},
+            EVNG_SESION_INS_DSK = #{evngSesionInsDsk},
+            EVNG_SESION_INS_SML = #{evngSesionInsSml},
+            EVNG_SESION_RTN_ST = #{evngSesionRtnSt},
+            EVNG_SESION_RTN_DSK = #{evngSesionRtnDsk},
+            EVNG_SESION_RTN_SML = #{evngSesionRtnSml},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId},
+            CAR_TYPE = #{carType}
+          WHERE BRNCH_ID = TO_NUMBER(#{codeId})
+          AND CT_ID  = TO_NUMBER(#{memId})
+        WHEN NOT MATCHED THEN
+          INSERT (  BRNCH_ID,
+                        CT_ID,
+                        MORNG_SESION_AS,
+                        MORNG_SESION_INS,
+                        MORNG_SESION_RTN,
+                        AFTNON_SESION_AS,
+                        AFTNON_SESION_INS,
+                        AFTNON_SESION_RTN,
+                        EVNG_SESION_AS,
+                        EVNG_SESION_INS,
+                        EVNG_SESION_RTN,
+                        CRT_DT,
+                        CRT_USER_ID,
+                        UPD_DT,
+                        UPD_USER_ID,
+                        CAR_TYPE,
+                        MORNG_SESION_AS_ST,
+                        MORNG_SESION_AS_DSK,
+                        MORNG_SESION_AS_SML,
+                        MORNG_SESION_INS_ST,
+                        MORNG_SESION_INS_DSK,
+                        MORNG_SESION_INS_SML,
+                        MORNG_SESION_RTN_ST,
+                        MORNG_SESION_RTN_DSK,
+                        MORNG_SESION_RTN_SML,
+                        AFTNON_SESION_AS_ST,
+                        AFTNON_SESION_AS_DSK,
+                        AFTNON_SESION_AS_SML,
+                        AFTNON_SESION_INS_ST,
+                        AFTNON_SESION_INS_DSK,
+                        AFTNON_SESION_INS_SML,
+                        AFTNON_SESION_RTN_ST,
+                        AFTNON_SESION_RTN_DSK,
+                        AFTNON_SESION_RTN_SML,
+                        EVNG_SESION_AS_ST,
+                        EVNG_SESION_AS_DSK,
+                        EVNG_SESION_AS_SML,
+                        EVNG_SESION_INS_ST,
+                        EVNG_SESION_INS_DSK,
+                        EVNG_SESION_INS_SML,
+                        EVNG_SESION_RTN_ST,
+                        EVNG_SESION_RTN_DSK,
+                        EVNG_SESION_RTN_SML
+                        )
+          VALUES(
+                        TO_NUMBER(#{codeId}),
+                        TO_NUMBER(#{memId}),
+                        #{morngSesionAs},
+                        #{morngSesionIns},
+                        #{morngSesionRtn},
+                        #{aftnonSesionAs},
+                        #{aftnonSesionIns},
+                        #{aftnonSesionRtn},
+                        #{evngSesionAs},
+                        #{evngSesionIns},
+                        #{evngSesionRtn},
+                        SYSDATE,
+                        #{userId},
+                        SYSDATE,
+                        #{userId},
+                        #{carType},
+                        #{morngSesionAsSt},
+                        #{morngSesionAsDsk},
+                        #{morngSesionAsSml},
+                        #{morngSesionInsSt},
+                        #{morngSesionInsDsk},
+                        #{morngSesionInsSml},
+                        #{morngSesionRtnSt},
+                        #{morngSesionRtnDsk},
+                        #{morngSesionRtnSml},
+                        #{aftnonSesionAsSt},
+                        #{aftnonSesionAsDsk},
+                        #{aftnonSesionAsSml},
+                        #{aftnonSesionInsSt},
+                        #{aftnonSesionInsDsk},
+                        #{aftnonSesionInsSml},
+                        #{aftnonSesionRtnSt},
+                        #{aftnonSesionRtnDsk},
+                        #{aftnonSesionRtnSml},
+                        #{evngSesionAsSt},
+                        #{evngSesionAsDsk},
+                        #{evngSesionAsSml},
+                        #{evngSesionInsSt},
+                        #{evngSesionInsDsk},
+                        #{evngSesionInsSml},
+                        #{evngSesionRtnSt},
+                        #{evngSesionRtnDsk},
+                        #{evngSesionRtnSml}
+                        )
+    </update>
+
+    <update id="updateCTMCapacityEnhance" parameterType="Map">
+    MERGE INTO ORG0015M AA
+    USING (SELECT SUM(C.morng_sesion_as) SUM_M_AS, SUM(C.morng_sesion_ins) SUM_M_INS, SUM(C.morng_sesion_rtn) SUM_M_RTN, SUM(C.aftnon_sesion_as) SUM_A_AS, SUM(C.aftnon_sesion_ins) SUM_A_INS, SUM(C.aftnon_sesion_rtn) SUM_A_RTN, SUM(C.evng_sesion_as) SUM_E_AS, SUM(C.evng_sesion_ins) SUM_E_INS, SUM(C.evng_sesion_rtn) SUM_E_RTN,
+                SUM(C.MORNG_SESION_AS_ST) SUM_M_AS_ST,
+                SUM(C.MORNG_SESION_AS_DSK) SUM_M_AS_DSK,
+                SUM(C.MORNG_SESION_AS_SML) SUM_M_AS_SML,
+                SUM(C.MORNG_SESION_INS_ST) SUM_M_INS_ST,
+                SUM(C.MORNG_SESION_INS_DSK) SUM_M_INS_DSK,
+                SUM(C.MORNG_SESION_INS_SML) SUM_M_INS_SML,
+                SUM(C.MORNG_SESION_RTN_ST) SUM_M_RTN_ST,
+                SUM(C.MORNG_SESION_RTN_DSK) SUM_M_RTN_DSK,
+                SUM(C.MORNG_SESION_RTN_SML) SUM_M_RTN_SML,
+                SUM(C.AFTNON_SESION_AS_ST) SUM_A_AS_ST,
+                SUM(C.AFTNON_SESION_AS_DSK) SUM_A_AS_DSK,
+                SUM(C.AFTNON_SESION_AS_SML) SUM_A_AS_SML,
+                SUM(C.AFTNON_SESION_INS_ST) SUM_A_INS_ST,
+                SUM(C.AFTNON_SESION_INS_DSK) SUM_A_INS_DSK,
+                SUM(C.AFTNON_SESION_INS_SML) SUM_A_INS_SML,
+                SUM(C.AFTNON_SESION_RTN_ST) SUM_A_RTN_ST,
+                SUM(C.AFTNON_SESION_RTN_DSK) SUM_A_RTN_DSK,
+                SUM(C.AFTNON_SESION_RTN_SML) SUM_A_RTN_SML,
+                SUM(C.EVNG_SESION_AS_ST) SUM_E_AS_ST,
+                SUM(C.EVNG_SESION_AS_DSK) SUM_E_AS_DSK,
+                SUM(C.EVNG_SESION_AS_SML) SUM_E_AS_SML,
+                SUM(C.EVNG_SESION_INS_ST) SUM_E_INS_ST,
+                SUM(C.EVNG_SESION_INS_DSK) SUM_E_INS_DSK,
+                SUM(C.EVNG_SESION_INS_SML) SUM_E_INS_SML,
+                SUM(C.EVNG_SESION_RTN_ST) SUM_E_RTN_ST,
+                SUM(C.EVNG_SESION_RTN_DSK) SUM_E_RTN_DSK,
+                SUM(C.EVNG_SESION_RTN_SML) SUM_E_RTN_SML
+              FROM ORG0001D A, ORG0005D B, ORG0015M C
+              WHERE A.MEM_ID = B.MEM_ID
+              AND C.CT_ID = A.MEM_ID
+              AND A.BRNCH = #{codeId}
+              <choose>
+                  <when test="memType != null and memType != ''">
+                      AND A.MEM_TYPE = #{memType}
+                  </when>
+                  <otherwise>
+                      AND A.MEM_TYPE = '3'
+                  </otherwise>
+              </choose>
+              AND A.STUS       = '1'
+              AND B.MEM_LVL != '2') BB
+    ON (AA.CT_ID = (SELECT A.MEM_ID
+                            FROM ORG0001D A, ORG0005D B
+                            WHERE A.MEM_ID = B.MEM_ID
+                            AND A.BRNCH = #{codeId}
+                            <choose>
+                                <when test="memType != null and memType != ''">
+                                    AND A.MEM_TYPE = #{memType}
+                                </when>
+                                <otherwise>
+                                    AND A.MEM_TYPE = '3'
+                                </otherwise>
+                            </choose>
+                            AND A.STUS      = '1'
+                            AND B.MEM_LVL = '2' ))
+    WHEN MATCHED THEN
+        UPDATE SET
+        AA.morng_sesion_as = BB.SUM_M_AS,
+        AA.morng_sesion_ins = BB.SUM_M_INS,
+        AA.morng_sesion_rtn = BB.SUM_M_RTN,
+        AA.aftnon_sesion_as = BB.SUM_A_AS,
+        AA.aftnon_sesion_ins = BB.SUM_A_INS,
+        AA.aftnon_sesion_rtn = BB.SUM_A_RTN,
+        AA.evng_sesion_as = BB.SUM_E_AS,
+        AA.evng_sesion_ins = BB.SUM_E_INS,
+        AA.evng_sesion_rtn = BB.SUM_E_RTN,
+        AA.UPD_DT = SYSDATE,
+        AA.UPD_USER_ID = #{userId},
+        AA.MORNG_SESION_AS_ST = BB.SUM_M_AS_ST,
+        AA.MORNG_SESION_AS_DSK = BB.SUM_M_AS_DSK,
+        AA.MORNG_SESION_AS_SML = BB.SUM_M_AS_SML,
+        AA.MORNG_SESION_INS_ST = BB.SUM_M_INS_ST,
+        AA.MORNG_SESION_INS_DSK = BB.SUM_M_INS_DSK,
+        AA.MORNG_SESION_INS_SML = BB.SUM_M_INS_SML,
+        AA.MORNG_SESION_RTN_ST = BB.SUM_M_RTN_ST,
+        AA.MORNG_SESION_RTN_DSK = BB.SUM_M_RTN_DSK,
+        AA.MORNG_SESION_RTN_SML = BB.SUM_M_RTN_SML,
+        AA.AFTNON_SESION_AS_ST = BB.SUM_A_AS_ST,
+        AA.AFTNON_SESION_AS_DSK = BB.SUM_A_AS_DSK,
+        AA.AFTNON_SESION_AS_SML = BB.SUM_A_AS_SML,
+        AA.AFTNON_SESION_INS_ST = BB.SUM_A_INS_ST,
+        AA.AFTNON_SESION_INS_DSK = BB.SUM_A_INS_DSK,
+        AA.AFTNON_SESION_INS_SML = BB.SUM_A_INS_SML,
+        AA.AFTNON_SESION_RTN_ST = BB.SUM_A_RTN_ST,
+        AA.AFTNON_SESION_RTN_DSK = BB.SUM_A_RTN_DSK,
+        AA.AFTNON_SESION_RTN_SML = BB.SUM_A_RTN_SML,
+        AA.EVNG_SESION_AS_ST = BB.SUM_E_AS_ST,
+        AA.EVNG_SESION_AS_DSK = BB.SUM_E_AS_DSK,
+        AA.EVNG_SESION_AS_SML = BB.SUM_E_AS_SML,
+        AA.EVNG_SESION_INS_ST = BB.SUM_E_INS_ST,
+        AA.EVNG_SESION_INS_DSK = BB.SUM_E_INS_DSK,
+        AA.EVNG_SESION_INS_SML = BB.SUM_E_INS_SML,
+        AA.EVNG_SESION_RTN_ST = BB.SUM_E_RTN_ST,
+        AA.EVNG_SESION_RTN_DSK = BB.SUM_E_RTN_DSK,
+        AA.EVNG_SESION_RTN_SML = BB.SUM_E_RTN_SML
+    WHEN NOT MATCHED THEN
+        INSERT (AA.BRNCH_ID, AA.CT_ID, AA.morng_sesion_as, AA.morng_sesion_ins, AA.morng_sesion_rtn, AA.aftnon_sesion_as, AA.aftnon_sesion_ins, AA.aftnon_sesion_rtn, AA.evng_sesion_as, AA.evng_sesion_ins, AA.evng_sesion_rtn, AA.CRT_DT, AA.CRT_USER_ID, AA.UPD_DT, AA.UPD_USER_ID,
+                    AA.MORNG_SESION_AS_ST,
+                    AA.MORNG_SESION_AS_DSK,
+                    AA.MORNG_SESION_AS_SML,
+                    AA.MORNG_SESION_INS_ST,
+                    AA.MORNG_SESION_INS_DSK,
+                    AA.MORNG_SESION_INS_SML,
+                    AA.MORNG_SESION_RTN_ST,
+                    AA.MORNG_SESION_RTN_DSK,
+                    AA.MORNG_SESION_RTN_SML,
+                    AA.AFTNON_SESION_AS_ST,
+                    AA.AFTNON_SESION_AS_DSK,
+                    AA.AFTNON_SESION_AS_SML,
+                    AA.AFTNON_SESION_INS_ST,
+                    AA.AFTNON_SESION_INS_DSK,
+                    AA.AFTNON_SESION_INS_SML,
+                    AA.AFTNON_SESION_RTN_ST,
+                    AA.AFTNON_SESION_RTN_DSK,
+                    AA.AFTNON_SESION_RTN_SML,
+                    AA.EVNG_SESION_AS_ST,
+                    AA.EVNG_SESION_AS_DSK,
+                    AA.EVNG_SESION_AS_SML,
+                    AA.EVNG_SESION_INS_ST,
+                    AA.EVNG_SESION_INS_DSK,
+                    AA.EVNG_SESION_INS_SML,
+                    AA.EVNG_SESION_RTN_ST,
+                    AA.EVNG_SESION_RTN_DSK,
+                    AA.EVNG_SESION_RTN_SML)
+        VALUES (#{codeId}, (SELECT * FROM (SELECT A.MEM_ID
+                                      FROM ORG0001D A, ORG0005D B
+                                      WHERE A.MEM_ID = B.MEM_ID
+                                      AND A.BRNCH = #{codeId}
+                                      <choose>
+                                          <when test="memType != null and memType != ''">
+                                              AND A.MEM_TYPE = #{memType}
+                                          </when>
+                                          <otherwise>
+                                              AND A.MEM_TYPE = '3'
+                                          </otherwise>
+                                      </choose>
+                                      AND A.STUS      = '1'
+                                      AND B.MEM_LVL = '2'
+                                      AND ROWNUM = 1)), BB.SUM_M_AS, BB.SUM_M_INS, BB.SUM_M_RTN, BB.SUM_A_AS, BB.SUM_A_INS, BB.SUM_A_RTN, BB.SUM_E_AS, BB.SUM_E_INS, BB.SUM_E_RTN, SYSDATE, #{userId}, SYSDATE, #{userId},
+                                        BB.SUM_M_AS_ST,
+                                        BB.SUM_M_AS_DSK,
+                                        BB.SUM_M_AS_SML,
+                                        BB.SUM_M_INS_ST,
+                                        BB.SUM_M_INS_DSK,
+                                        BB.SUM_M_INS_SML,
+                                        BB.SUM_M_RTN_ST,
+                                        BB.SUM_M_RTN_DSK,
+                                        BB.SUM_M_RTN_SML,
+                                        BB.SUM_A_AS_ST,
+                                        BB.SUM_A_AS_DSK,
+                                        BB.SUM_A_AS_SML,
+                                        BB.SUM_A_INS_ST,
+                                        BB.SUM_A_INS_DSK,
+                                        BB.SUM_A_INS_SML,
+                                        BB.SUM_A_RTN_ST,
+                                        BB.SUM_A_RTN_DSK,
+                                        BB.SUM_A_RTN_SML,
+                                        BB.SUM_E_AS_ST,
+                                        BB.SUM_E_AS_DSK,
+                                        BB.SUM_E_AS_SML,
+                                        BB.SUM_E_INS_ST,
+                                        BB.SUM_E_INS_DSK,
+                                        BB.SUM_E_INS_SML,
+                                        BB.SUM_E_RTN_ST,
+                                        BB.SUM_E_RTN_DSK,
+                                        BB.SUM_E_RTN_SML)
+    </update>
+
+    <select id="selectAllCarModelList" parameterType="Map" resultType="EgovMap">
+            SELECT CODE,CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 503
+     </select>
+
+</mapper>

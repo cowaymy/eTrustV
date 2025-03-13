@@ -1,0 +1,1305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.rcms.impl.ROSCallLogMapper">
+
+<select id="getAppTypeList" parameterType="Map" resultType="egovMap">
+    SELECT
+       Extent1.CODE_ID   ,
+       Extent1.CODE_MASTER_ID   ,
+       Extent1.CODE   ,
+       Extent1.CODE_NAME   ,
+       Extent1.CODE_DESC   ,
+       Extent1.DISAB   ,
+       Extent1.CRT_DT   ,
+       Extent1.CRT_USER_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.OLD_CODE_ID
+  FROM SYS0013M Extent1
+ WHERE  ( 0 = Extent1.DISAB )
+          AND ( Extent1.CODE_MASTER_ID = #{codeMasterId})
+</select>
+
+<select id="selectRosCallLogList" parameterType="Map" resultType="egovMap">
+	WITH entry_info_min AS (
+			    SELECT
+			        sales_ord_id,
+			        install_entry_id,
+			        install_result_id
+			    FROM
+			        (
+			            SELECT
+			                sales_ord_id,
+			                install_entry_id,
+			                install_result_id,
+			                RANK()
+			                OVER(PARTITION BY sales_ord_id
+			                     ORDER BY
+			                         install_entry_id ASC
+			                ) rank
+			            FROM
+			                sal0046d
+			            WHERE
+			                stus_code_id = 4
+			        )
+			    WHERE
+			        rank = 1
+			), ros AS (
+			    SELECT
+			        *
+			    FROM
+			        (
+			            SELECT
+			                sales_ord_id,
+			                call_result_id,
+			                ROW_NUMBER()
+			                OVER(PARTITION BY sales_ord_id
+			                     ORDER BY
+			                         call_result_id DESC
+			                ) rn
+			            FROM
+			                     ccr0006d ce
+			                JOIN ccr0007d cr ON cr.call_entry_id = ce.call_entry_id
+			            WHERE
+			                type_id = 507
+			        )
+			    WHERE
+			        rn = 1
+			)
+			SELECT
+			     t.ord_id,t.ord_no,
+			    t.rental_stus,
+			    t.ord_ref_no,
+			    t.ord_po_no,
+			    t.ord_stus_name,
+			    t.app_type_code,
+			    t.app_type_desc,
+			    t.stock_code,
+			    t.stock_desc,
+			    t.cust_id,
+			    t.cust_name,
+			    t.cust_nric,
+			    t.cust_type,
+			    t.app_type_id,
+			    t.ord_dt,
+			    t.ord_stus_id,
+			    t.curr_mth_aging,
+			    t.current_os,
+			    t.ros_caller,
+			    t.etr,
+			    to_char(ir1.install_dt, 'DD/MM/YYYY') first_install_dt,
+			    t.paymode,
+			    t.ros_main_reason,
+			    t.cust_bill_id,
+			    cr.call_ros_amt                       colt_amt,
+			    t.recall_dt,
+			    t.ptp_dt,
+			    to_char(cr.call_crt_dt, 'DD/MM/YYYY') key_in_dt
+			FROM
+			    (
+			        SELECT DISTINCT
+			            project1.ord_id,
+			            project1.ord_no,
+			            project1.rental_stus,
+			            project1.ord_ref_no,
+			            project1.ord_po_no,
+			            project1.ord_stus_name,
+			            project1.app_type_code,
+			            project1.app_type_desc,
+			            project1.stock_code,
+			            project1.stock_desc,
+			            project1.cust_id,
+			            project1.cust_name,
+			            project1.cust_nric,
+			            project1.cust_type,
+			            project1.app_type_id,
+			            project1.ord_dt,
+			            project1.ord_stus_id,
+			            project1.curr_mth_aging,
+			            project1.current_os,
+			            project1.ros_caller,
+			            project1.etr,
+			            project1.paymode,
+			            project1.ros_main_reason,
+			            project1.cust_bill_id,
+			            project1.recall_dt,
+			            project1.ptp_dt
+	        FROM
+	            (
+	                SELECT
+	                    extent1.ord_id,
+	                    extent1.ord_no,
+	                    extent1.ord_stus_name,
+	                    extent1.rental_stus,
+	                    extent1.ord_ref_no,
+	                    extent1.ord_po_no,
+	                    extent1.app_type_code,
+	                    extent1.app_type_desc,
+	                    extent1.stock_code,
+	                    extent1.stock_desc,
+	                    extent1.cust_id,
+	                    extent1.cust_name,
+	                    extent1.cust_nric,
+	                    CASE
+	                        WHEN extent1.cust_type_id = 964 THEN
+	                            extent6.code_name
+	                        ELSE
+	                            extent6.code_name
+	                            || ' - '
+	                            || extent7.code_name
+	                    END  cust_type,
+	                    extent1.app_type_id,
+	                    CASE
+	                        WHEN ( extent1.ord_dt IS NOT NULL ) THEN
+	                            to_char(extent1.ord_dt, 'DD/MM/YYYY')
+	                        ELSE
+	                            '01/01/1900'
+	                    END   ord_dt,
+	                    CASE
+	                        WHEN ( extent1.ord_stus_id IS NOT NULL ) THEN
+	                            extent1.ord_stus_id
+	                        ELSE 0
+	                    END  ord_stus_id,
+	                    nvl(extent4.curr_mth_aging, 0)  curr_mth_aging,
+	                    nvl(extent4.web_rent_ldgr_os, 0) current_os,
+	                    CASE
+	                        WHEN extent5.agent_grp_id IS NOT NULL THEN
+	                            ( extent5.agent_grp_id
+	                              || '-'
+	                              || extent13.agent_grp_name )
+	                        ELSE
+	                            'N/A'
+	                    END                                               ros_caller,
+	                    CASE
+	                        WHEN etr_fg = 1 THEN
+	                            'Yes'
+	                        ELSE
+	                            'No'
+	                    END                                               etr,
+	                    extent9.code_name                                 paymode,
+	                    extent11.code                                     ros_call_resn_id,
+	                    CASE
+	                        WHEN extent3.ros_call_resn_id IS NOT NULL THEN
+	                            extent11.code
+	                            || ' - '
+	                            || extent11.resn_desc
+	                    END                                               ros_main_reason,
+	                    extent1.cust_bill_id,
+	                    to_char(extent3.ros_call_recall_dt, 'DD/MM/YYYY') recall_dt,
+	                    to_char(extent3.ptp_dt, 'DD/MM/YYYY')             ptp_dt
+	                FROM
+	                    sal1006v extent1
+	                    LEFT JOIN msc0013d extent3 ON extent3.sales_ord_id = extent1.ord_id
+	                                                  AND ros_year = to_char(sysdate, 'YYYY')
+	                                                  AND ros_month = to_char(sysdate, 'MM')
+	                    LEFT JOIN sal0149d extent4 ON extent4.sales_ord_id = extent1.ord_id
+	                    LEFT JOIN sal0148m extent5 ON extent5.agent_grp_id = extent4.agent_grp_id
+	                    JOIN sal0029d cust ON cust.cust_id = extent1.cust_id
+	                    LEFT JOIN sys0013m extent6 ON extent6.code_id = extent1.cust_type_id
+	                    LEFT JOIN sys0013m extent7 ON extent7.code_id = cust.corp_type_id
+	                    LEFT JOIN sal0074d extent8 ON extent8.sales_ord_id = extent1.ord_id
+	                    LEFT JOIN sys0013m extent9 ON extent9.code_id = extent8.mode_id
+	                    LEFT JOIN sys0034m extent10 ON extent10.resn_id = extent3.ros_call_resn_id
+	                    LEFT JOIN sys0032m extent11 ON extent11.resn_id = extent10.parent_resn_id
+	                    JOIN sal0027d extent12 ON extent12.cust_cntc_id = extent1.ord_cntc_id
+	                    LEFT JOIN sal0324m extent13 ON extent5.agent_grp_id = extent13.agent_grp_id
+	                    LEFT JOIN sys0013m extent14 ON extent14.code_id = extent5.agent_type
+                 WHERE 1 = 1
+                 <if test=" ordNo != null and ordNo != '' ">
+                    AND  Extent1.ORD_NO = #{ordNo}
+                 </if>
+                 <if test=" appTypeArr != null and appTypeArr.length > 0 ">
+                    AND  Extent1.APP_TYPE_ID IN
+                    <foreach collection="appTypeArr" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+                 <if test=" custId != null and custId != '' ">
+                    AND  Extent1.CUST_ID = #{custId}
+                 </if>
+                 <if test=" custName != null and custName != '' ">
+                    AND  UPPER(Extent1.CUST_NAME) LIKE '%'||UPPER(#{custName}) ||'%'
+                 </if>
+                 <if test=" custNric != null and custNric != '' ">
+                    AND  UPPER(Extent1.CUST_NRIC) LIKE '%'||UPPER(#{custNric})||'%'
+                 </if>
+                 <if test=" rentalArr != null and rentalArr.length > 0  ">
+                    AND Extent1.RENTAL_STUS IN
+                    <foreach collection="rentalArr" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                 </if>
+
+                 <if test=" poNo != null and poNo != '' ">
+                    AND  UPPER(Extent1.ORD_PO_NO) LIKE '%'||UPPER(#{poNo}) ||'%'
+                 </if>
+                 <if test=" corpTypeArr != null and corpTypeArr != '' ">
+                    AND Extent8.CORP_TYPE_ID IN
+                    <foreach collection="corpTypeArr" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                 </if>
+                 <if test=" contactNo != null and contactNo != '' ">
+                    AND (Extent12.TEL_M1 = #{contactNo} OR Extent12.TEL_M2 = #{contactNo} OR Extent12.TEL_O = #{contactNo})
+                 </if>
+                 <if test=" productId != null and productId != '' ">
+                    AND  Extent1.STOCK_ID = #{productId}
+                 </if>
+                 <if test=" serialNo != null and serialNo != '' ">
+                    AND  UPPER(ir1.SERIAL_NO) LIKE '%'||UPPER(#{serialNo}) ||'%'
+                 </if>
+                 <if test=" vaNo != null and vaNo != '' ">
+                    AND  UPPER(Extent1.CUST_VA_NO) LIKE '%'||UPPER(#{vaNo}) ||'%'
+                 </if>
+                 <if test=" rosCallerType != null and rosCallerType != '' ">
+                    AND  Extent5.AGENT_TYPE = #{rosCallerType}
+                 </if>
+                 <if test=" rclStartDt != null and rclStartDt != '' ">
+                    AND  Extent3.ROS_CALL_RECALL_DT >= TO_DATE(#{rclStartDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" rclEndDt != null and rclEndDt != '' ">
+                    AND  Extent3.ROS_CALL_RECALL_DT <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" mainReason != null and mainReason != '' ">
+                    AND  Extent11.RESN_ID = #{mainReason}
+                 </if>
+                 <if test=" rosCallerArr != null and rosCallerArr != '' ">
+                    AND extent5.agent_grp_id IN
+                    <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
+                        REGEXP_SUBSTR(#{item},'[^_]+',1,2)
+                    </foreach>
+                 </if>
+                 <if test=" ptpStartDt != null and ptpStartDt != '' ">
+                    AND  Extent3.PTP_DT >= TO_DATE(#{ptpStartDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" ptpEndDt != null and ptpEndDt != '' ">
+                    AND  Extent3.PTP_DT  <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" rosStatus != null and rosStatus != '' ">
+                    AND  Extent3.ROS_STUS =#{rosStatus}
+                 </if>
+                  <if test=" rosCallerArr != null and rosCallerArr != '' and (rosCallerType != null and rosCallerType != '' )">
+                  AND extent1.ord_id IN (
+                        SELECT
+                            ord_id
+                        FROM
+                            sal1006v extent1
+                            LEFT JOIN sal0149d extent4 ON extent4.sales_ord_id = extent1.ord_id
+                            LEFT JOIN sal0148m extent5 ON extent5.agent_grp_id = extent4.agent_grp_id
+                        WHERE extent5.agent_type = #{rosCallerType}
+                        AND extent5.agent_grp_id IN
+	                    <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
+	                        REGEXP_SUBSTR(#{item},'[^_]+',1,2)
+	                    </foreach>
+                     )
+                  </if>
+                  ) Project1
+           )t
+    LEFT JOIN ros  ros ON ros.sales_ord_id = t.ord_id
+    LEFT JOIN ccr0007d cr ON cr.call_result_id = ros.call_result_id
+    LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = t.ord_id
+    LEFT JOIN sal0047d ir1 ON ir1.entry_id = eimin.install_entry_id AND ir1.result_id = eimin.install_result_id
+  ORDER BY t.ORD_ID ASC
+</select>
+
+
+<select id="getRentInstallLatestNo" parameterType="Map" resultType="egovMap">
+				SELECT
+				    T1.RENT_INST_NO
+				FROM(
+				        SELECT
+				            RENT_INST_NO
+				        FROM
+				            SAL0070D
+				        WHERE
+				            SALES_ORD_ID = #{ordId}
+				        ORDER BY RENT_INST_DT DESC ) T1
+				<![CDATA[
+				WHERE ROWNUM <= 1
+				]]>
+</select>
+
+<select id="getRentalStatus" parameterType="Map" resultType="egovMap">
+    SELECT
+        RENTAL_STUS
+    FROM
+        SAL1006V
+    WHERE ORD_ID = #{ordId}
+    <![CDATA[
+    AND ROWNUM <= 1
+    ]]>
+</select>
+
+<select id="selectROSSMSCodyTicketLogList" parameterType="Map" resultType="egovMap">
+				   SELECT Project4.C1   ,
+				       Project4.TYPE_ID   ,
+				       Project4.CODE   ,
+				       Project4.CODE_NAME   ,
+				       Project4.REM   ,
+				       Project4.USER_ID   ,
+				       Project4.USER_NAME   ,
+				       TO_CHAR(Project4.CALL_CRT_DT , 'DD/MM/YYYY') CALL_CRT_DT
+				  FROM ( SELECT Project4.C1   ,
+				                Project4.TYPE_ID   ,
+				                Project4.CODE   ,
+				                Project4.CODE_NAME   ,
+				                Project4.REM   ,
+				                Project4.USER_ID   ,
+				                Project4.USER_NAME   ,
+				                Project4.CALL_CRT_DT
+				         FROM ( SELECT Distinct1.C1   ,
+				                       Distinct1.TYPE_ID   ,
+				                       Distinct1.CODE   ,
+				                       Distinct1.CODE_NAME   ,
+				                       Distinct1.REM   ,
+				                       Distinct1.USER_ID   ,
+				                       Distinct1.USER_NAME   ,
+				                       Distinct1.CALL_CRT_DT
+				                FROM ( SELECT DISTINCT UnionAll1.C1   ,
+				                                       UnionAll1.TYPE_ID   ,
+				                                       UnionAll1.CODE CODE  ,
+				                                       UnionAll1.CODE_NAME   ,
+				                                       UnionAll1.REM   ,
+				                                       UnionAll1.USER_ID   ,
+				                                       UnionAll1.USER_NAME   ,
+				                                       UnionAll1.CALL_CRT_DT
+				                       FROM ( SELECT 1 C1  ,
+				                                     Extent1.TYPE_ID TYPE_ID  ,
+				                                     Extent3.CODE CODE  ,
+				                                     Extent3.CODE_NAME CODE_NAME  ,
+				                                     CASE WHEN ( Extent2.CALL_SMS_REM IS NOT NULL ) THEN Extent2.CALL_SMS_REM ELSE ' ' END REM  ,
+				                                     CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_ID ELSE 0 END USER_ID  ,
+				                                     CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END USER_NAME  ,
+				                                     Extent2.CALL_CRT_DT CALL_CRT_DT
+				                              FROM CCR0006D Extent1
+				                                     JOIN CCR0007D Extent2   ON ( Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID ) AND ( 1 = Extent2.CALL_SMS )
+				                                     JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
+				                                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent2.CALL_CRT_USER_ID
+				                               WHERE  Extent1.SALES_ORD_ID = #{ordId}
+				                              UNION ALL
+				                              SELECT 1 C1  ,
+				                                     Extent7.TYPE_ID   ,
+				                                     Extent8.CODE   ,
+				                                     Extent8.CODE_NAME   ,
+				                                     CASE WHEN ( Extent5.CRCT_REM IS NOT NULL ) THEN Extent5.CRCT_REM ELSE ' ' END REM  ,
+				                                     CASE WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_ID ELSE 0 END USER_ID  ,
+				                                     CASE WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME ELSE ' ' END USER_NAME  ,
+				                                     Extent5.CRT_DT CRT_DT
+				                              FROM CCR0014M Extent5
+				                                     JOIN CCR0007D Extent6   ON Extent6.CALL_RESULT_ID = Extent5.CALL_RESULT_ID
+				                                     JOIN CCR0006D Extent7   ON ( Extent7.CALL_ENTRY_ID = Extent6.CALL_ENTRY_ID )
+				                                     AND ( Extent7.SALES_ORD_ID = #{ordId} )
+				                                     JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent5.CALL_TYPE_ID
+				                                     LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent5.CRT_USER_ID ) UnionAll1 ) Distinct1 ) Project4 ) Project4
+				      ORDER BY Project4.CALL_CRT_DT DESC
+</select>
+
+<select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
+			  SELECT
+			     Extent1.RESN_ID CODE_ID  ,
+			     Extent1.CODE CODE  ,
+			     Extent1.CODE || ' - ' || Extent1.RESN_DESC CODE_NAME
+			  FROM
+			     SYS0032M Extent1
+			  WHERE
+			      Extent1.RESN_TYPE_ID = #{typeId}
+			  AND
+			      Extent1.STUS_CODE_ID = #{stusCodeId}
+</select>
+
+<select id="getFeedbackCodeList" parameterType="Map" resultType="egovMap">
+			    SELECT Extent2.RESN_ID CODE_ID  ,
+			       Extent2.CODE CODE  ,
+			       Extent2.CODE || ' - ' || Extent2.RESN_DESC CODE_NAME
+			  FROM SYS0034M Extent1
+			         JOIN SYS0032M Extent2   ON Extent2.RESN_ID = Extent1.RESN_ID
+			 WHERE  ( Extent1.PARENT_RESN_ID = #{resnId} )
+			          AND ( 0 = Extent1.DISAB )
+</select>
+
+<select id="selectROSCallLogBillGroupOrderCnt" parameterType="Map" resultType="egovMap">
+			SELECT
+			    Extent1.SALES_ORD_ID
+			FROM
+			    SAL0001D Extent1
+			WHERE
+			    Extent1.CUST_BILL_ID = #{custBillId}
+			<![CDATA[
+			AND  1 <> Extent1.STUS_CODE_ID
+			]]>
+</select>
+
+<select id="getOrderServiceMemberViewByOrderID" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+       Limit1.DEPT_CODE DEPT_CODE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEMBERCODE1 ELSE ' ' END MEMBER_CODE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME1 ELSE ' ' END MEMBER_NAME  ,
+       CASE WHEN ( Limit1.TELMOBILE1 IS NOT NULL ) THEN Limit1.TELMOBILE1 ELSE ' ' END MEM_TEL_MOBILE  ,
+       Limit1.GRP_CODE   ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.MEMBERCODE2 ELSE ' ' END MEMBER_CODE1  ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.NAME2 ELSE ' ' END MEMBER_NAME1  ,
+       CASE WHEN ( Limit1.TELMOBILE2 IS NOT NULL ) THEN Limit1.TELMOBILE2 ELSE ' ' END MEM_TEL_MOBILE1  ,
+       Limit1.ORG_CODE   ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.MEMBERCODE3 ELSE ' ' END MEMBER_CODE2  ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.NAME3 ELSE ' ' END MEMBER_NAME2  ,
+       CASE WHEN ( Limit1.TELMOBILE3 IS NOT NULL ) THEN Limit1.TELMOBILE3 ELSE ' ' END MEM_TEL_MOBILE2  ,
+       Limit1.MEM_CODE   ,
+       Limit1.NAME   ,
+       Limit1.NRIC   ,
+       CASE WHEN ( Limit1.TEL_MOBILE IS NOT NULL ) THEN Limit1.TEL_MOBILE ELSE ' ' END TEL_MOBILE  ,
+       CASE WHEN ( Limit1.TEL_HUSE IS NOT NULL ) THEN Limit1.TEL_HUSE ELSE ' ' END TEL_HUSE  ,
+       CASE WHEN ( Limit1.TEL_OFFICE IS NOT NULL ) THEN Limit1.TEL_OFFICE ELSE ' ' END TEL_OFFICE
+  FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                Extent3.MEM_CODE MEM_CODE  ,
+                Extent3.NAME NAME  ,
+                Extent3.NRIC NRIC  ,
+                Extent3.TEL_OFFICE TEL_OFFICE  ,
+                Extent3.TEL_HUSE TEL_HUSE  ,
+                Extent3.TEL_MOBILE TEL_MOBILE  ,
+                Extent4.DEPT_CODE DEPT_CODE  ,
+                Extent4.GRP_CODE GRP_CODE  ,
+                Extent4.ORG_CODE ORG_CODE  ,
+                Extent5.MEM_ID MEM_ID  ,
+                Extent5.MEM_CODE MEMBERCODE1  ,
+                Extent5.NAME NAME1  ,
+                Extent5.TEL_MOBILE TELMOBILE1  ,
+                Extent7.MEM_ID MEMBERID1  ,
+                Extent7.MEM_CODE MEMBERCODE2  ,
+                Extent7.NAME NAME2  ,
+                Extent7.TEL_MOBILE TELMOBILE2  ,
+                Extent9.MEM_ID MEMBERID2  ,
+                Extent9.MEM_CODE MEMBERCODE3  ,
+                Extent9.NAME NAME3  ,
+                Extent9.TEL_MOBILE TELMOBILE3
+         FROM SAL0001D Extent1
+                JOIN SAL0090D Extent2   ON ( Extent2.SRV_SO_ID = Extent1.SALES_ORD_ID )
+                AND ( 1 = Extent2.SRV_STUS_ID )
+                JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent2.SRV_CODY_ID
+                JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                              vMemberOrg.MEM_CODE MEM_CODE  ,
+                              vMemberOrg.MEM_LVL MEM_LVL  ,
+                              vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                              vMemberOrg.GRP_CODE GRP_CODE  ,
+                              vMemberOrg.ORG_CODE ORG_CODE  ,
+                              vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                              vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                              vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                              vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                              vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                              vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                       FROM ORG1001V vMemberOrg ) Extent4   ON Extent4.MEM_ID = Extent3.MEM_ID
+                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent4.MEM_UP_ID
+                LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                            FROM ORG1001V vMemberOrg ) Extent6   ON Extent6.MEM_ID = Extent4.MEM_UP_ID
+                LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Extent6.MEM_UP_ID
+                LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                            FROM ORG1001V vMemberOrg ) Extent8   ON Extent8.MEM_ID = Extent6.MEM_UP_ID
+                LEFT JOIN ORG0001D Extent9   ON Extent9.MEM_ID = Extent8.MEM_UP_ID
+          <![CDATA[
+          WHERE  Extent1.SALES_ORD_ID = #{ordId} AND ROWNUM <= 1 ) Limit1
+          ]]>
+</select>
+<!-- INSERT NEW ROS CALL START -->
+<select id="chkCurrRosCall" parameterType="Map" resultType="egovMap">
+			SELECT
+			    Extent1.SALES_ORD_ID   ,
+			    Extent1.ROS_YEAR   ,
+			    Extent1.ROS_MONTH   ,
+			    Extent1.ROS_CALLER_USER_ID   ,
+			    Extent1.ROS_CALL_RESN_ID   ,
+			    Extent1.ROS_CALL_RECALL_DT   ,
+			    Extent1.ROS_CALL_STUS_ID   ,
+			    Extent1.ROS_CALL_CRT_DT   ,
+			    Extent1.ROS_CALL_CRT_USER_ID   ,
+			    Extent1.ROS_CALL_UPD_DT   ,
+			    Extent1.ROS_CALL_UPD_USER_ID
+			FROM
+			    MSC0013D Extent1
+			WHERE
+			    Extent1.SALES_ORD_ID = #{orderId}
+			AND
+			    Extent1.ROS_YEAR = TO_CHAR(SYSDATE,'YYYY')
+			AND
+			    Extent1.ROS_MONTH = TO_CHAR(SYSDATE,'MM')
+			AND
+			    <![CDATA[
+			    ROWNUM <= 1
+			    ]]>
+</select>
+
+<update id="updateROSCallInfo" parameterType="Map" >
+                UPDATE
+                    MSC0013D
+                SET
+                    ROS_CALL_RESN_ID = #{rosCallResnId},
+                    ROS_CALL_RECALL_DT = TO_DATE(#{rosCallRecallDt} , 'DD/MM/YYYY HH24:MI:SS'),
+                    ROS_CALL_STUS_ID = #{rosCallStusId},
+                    ROS_STUS = #{rosStatus},
+                    PTP_DT = TO_DATE(#{ptpDt}, 'DD/MM/YYYY'),
+                    ROS_CALL_UPD_DT = SYSDATE,
+                    ROS_CALL_UPD_USER_ID = #{userId}
+                WHERE
+                     SALES_ORD_ID = #{orderId}
+                AND
+                    ROS_YEAR = TO_CHAR(SYSDATE,'YYYY')
+                AND
+                    ROS_MONTH = TO_CHAR(SYSDATE,'MM')
+</update>
+
+<select id="chkCurrCallEntryInfo" parameterType="Map" resultType="egovMap">
+            SELECT Extent1.CALL_ENTRY_ID   ,
+                   Extent1.SALES_ORD_ID   ,
+                   Extent1.TYPE_ID   ,
+                   Extent1.STUS_CODE_ID   ,
+                   Extent1.RESULT_ID   ,
+                   Extent1.DOC_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent1.CALL_DT   ,
+                   Extent1.IS_WAIT_FOR_CANCL   ,
+                   Extent1.HAPY_CALLER_ID   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.ORI_CALL_DT
+             FROM
+                CCR0006D Extent1
+             WHERE
+                Extent1.SALES_ORD_ID = #{orderId}
+             AND
+                507 = Extent1.TYPE_ID
+            <![CDATA[
+            AND ROWNUM <= 1
+            ]]>
+</select>
+
+<select id="getSeqCCR0007D" resultType="java.lang.Integer">
+    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCallResultInfo" parameterType="Map">
+    INSERT INTO CCR0007D (
+                CALL_RESULT_ID,
+                CALL_ENTRY_ID,
+                CALL_STUS_ID,
+                CALL_DT,
+                CALL_ACTN_DT,
+                CALL_FDBCK_ID,
+                CALL_CT_ID,
+                CALL_REM,
+                CALL_CRT_USER_ID,
+                CALL_CRT_DT,
+                CALL_CRT_USER_ID_DEPT,
+                CALL_HC_ID,
+                CALL_ROS_AMT,
+                CALL_SMS,
+                CALL_SMS_REM
+        ) VALUES (
+                #{callResultSeq},
+                #{callEntId},
+                #{callStusId},
+                TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+                TO_DATE(#{callActnDt}, 'DD/MM/YYYY'),
+                #{callFdbchId},
+                #{callCtId},
+                #{callRem},
+                #{callCrtUserId},
+                SYSDATE,
+                #{callCrtUserIdDept},
+                #{callHcId},
+                #{callRosAmt},
+                #{callSMS},
+                #{callSMSRem}
+               )
+</insert>
+
+<update id="updateCallEntryInfo" parameterType="Map">
+            UPDATE
+                CCR0006D
+            SET
+                RESULT_ID = #{resultId},
+                UPD_DT = SYSDATE,
+                UPD_USER_ID = #{userId}
+             WHERE
+                CALL_ENTRY_ID = #{callEntId}
+</update>
+
+
+<select id="getSeqCCR0006D" resultType="java.lang.Integer">
+    SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCallEntryInfo" parameterType="Map">
+INSERT INTO CCR0006D(
+                CALL_ENTRY_ID,
+                SALES_ORD_ID,
+                TYPE_ID,
+                STUS_CODE_ID,
+                RESULT_ID,
+                DOC_ID ,
+                CRT_USER_ID,
+                CRT_DT,
+                CALL_DT,
+                IS_WAIT_FOR_CANCL,
+                HAPY_CALLER_ID,
+                UPD_DT,
+                UPD_USER_ID,
+                ORI_CALL_DT,
+                CUR_SEQ_NO,
+                MAIN_DEPT,
+                SUB_DEPT
+        ) VALUES (
+              #{callEntSeq},
+              #{salesOrdId},
+              #{typeId},
+              #{stusCodeId},
+              #{resultId},
+              #{docId},
+              #{userId},
+              SYSDATE,
+              TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+              #{isWaitForCancl},
+              #{happCallerId},
+              SYSDATE,
+              #{userId},
+              TO_DATE(#{oriCallDt}, 'DD/MM/YYYY'),
+              NULL,
+              NULL,
+              NULL
+               )
+
+</insert>
+
+<!--ROS CALL NOT FOUND -->
+<insert id="insertROSCallInfo" parameterType="Map">
+    INSERT INTO MSC0013D (
+                        SALES_ORD_ID,
+                        ROS_YEAR,
+                        ROS_MONTH,
+                        ROS_CALLER_USER_ID,
+                        ROS_CALL_RESN_ID,
+                        ROS_CALL_RECALL_DT,
+                        ROS_CALL_STUS_ID,
+                        ROS_CALL_CRT_DT,
+                        ROS_CALL_CRT_USER_ID,
+                        ROS_CALL_UPD_DT,
+                        ROS_CALL_UPD_USER_ID,
+                        ROS_STUS,
+                        PTP_DT
+        ) VALUES (
+                        #{orderId},
+                        TO_CHAR(SYSDATE,'YYYY'),
+                        TO_CHAR(SYSDATE,'MM'),
+                        #{rosCallerUserId},
+                        #{rosCallResnId},
+                        TO_DATE(#{rosCallRecallDt}, 'DD/MM/YYYY HH24:MI:SS'),
+                        #{rosCallStusId},
+                        SYSDATE,
+                        #{userId},
+                        SYSDATE,
+                        #{userId},
+                        #{rosStatus},
+                        TO_DATE(#{ptpDt}, 'DD/MM/YYYY')
+        )
+</insert>
+
+
+<select id="selectOrderRemList" parameterType="Map" resultType="egovMap">
+			 SELECT Project1.UPLOAD_MID   ,
+			       Project1.STUS_ID   ,
+			       Project1.NAME   ,
+			       Project1.CRT_USER_ID   ,
+			       Project1.CRT_USER_NAME   ,
+			       TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+			       Project1.UPD_USER_ID   ,
+			       Project1.UPD_USER_NAME   ,
+			       TO_CHAR(Project1.UPD_DT, 'DD/MM/YYYY') UPD_DT
+			  FROM ( SELECT Filter1.UPLOAD_MID   ,
+			                Filter1.STUS_ID   ,
+			                Filter1.CRT_USER_ID   ,
+			                Filter1.CRT_DT   ,
+			                Filter1.UPD_USER_ID   ,
+			                Filter1.UPD_DT   ,
+			                Filter1.NAME   ,
+			                CASE WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+			                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END UPD_USER_NAME
+			         FROM ( SELECT Extent1.UPLOAD_MID   ,
+			                       Extent1.STUS_ID   ,
+			                       Extent1.CRT_USER_ID   ,
+			                       Extent1.CRT_DT   ,
+			                       Extent1.UPD_USER_ID   ,
+			                       Extent1.UPD_DT   ,
+			                       Extent2.NAME   ,
+			                       Extent3.USER_ID   ,
+			                       Extent3.USER_NAME
+			                FROM SAL0054D Extent1
+			                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+			                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+			                 <if test="stusArr != null and stusArr.length > 0">
+			                     WHERE  Extent1.STUS_ID IN
+			                         <foreach collection="stusArr" open="(" separator="," close=")" item="item">
+			                             #{item}
+			                         </foreach>
+			                 </if>
+			               ) Filter1
+			                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Filter1.UPD_USER_ID
+			          WHERE
+			                     1 = 1
+			          <if test="batchId != null and batchId != '' ">
+			             AND Filter1.UPLOAD_MID = #{batchId}
+			          </if>
+			          <if test="fromDt != null and fromDt != '' ">
+			             AND  Filter1.CRT_DT >= TO_DATE(#{fromDt}||' 00:00:00' , 'DD/MM/YYYY HH24:MI:SS')
+			          </if>
+			          <if test="toDT != null and toDT != '' ">
+                         <![CDATA[
+                         AND  Filter1.CRT_DT <= TO_DATE(#{toDT}||' 23:59:59' , 'DD/MM/YYYY HH24:MI:SS')
+                         ]]>
+                      </if>
+			        ) Project1
+			        <if test="uploader != null and uploader != '' ">
+                        WHERE UPPER(Project1.CRT_USER_NAME) LIKE '%'||UPPER(#{uploader})||'%'
+                    </if>
+			  ORDER BY Project1.UPLOAD_MID ASC
+</select>
+
+<select id="getSeqSAL0054D" resultType="java.lang.Integer">
+    SELECT SAL0054D_UPLOAD_MID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertOrderRem" parameterType="Map">
+    INSERT INTO SAL0054D(
+                     UPLOAD_MID,
+                     STUS_ID,
+                     CRT_USER_ID,
+                     CRT_DT,
+                     UPD_USER_ID,
+                     UPD_DT )
+        VALUES (#{ordRemSeq},
+                  #{ordRemStus},
+                  #{userId},
+                  SYSDATE,
+                  #{userId},
+                  SYSDATE
+                  )
+</insert>
+
+<select id="getSeqSAL0055D" resultType="int"  flushCache="true">
+    SELECT SAL0055D_UPLOAD_DET_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertOrderRemDetail" parameterType="java.util.List">
+INSERT INTO SAL0055D(
+								UPLOAD_DET_ID,
+								UPLOAD_MID,
+								ORD_NO,
+								REM,
+								STUS_ID,
+								ORD_ID,
+								CRT_USER_ID,
+								CRT_DT,
+								UPD_USER_ID,
+								UPD_DT,
+								VALID_STUS_ID,
+								VALID_REM)
+<foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+SELECT
+    #{item.uploadDetId},
+    #{item.uploadMId},
+    #{item.ordNo},
+    #{item.rem},
+    #{item.statusId},
+    #{item.orderId},
+    #{item.userId},
+    SYSDATE,
+    #{item.userId},
+    SYSDATE,
+    #{item.validStatusId},
+    #{item.validRem}
+FROM DUAL
+</foreach>
+</insert>
+
+<select id="spOrderRemarkUpload_DetVerify" parameterType="Map" statementType="CALLABLE">
+    <![CDATA[
+            {
+                  call SP_ORD_REM_UP_DETVERIFY ( #{ordRemSeq})
+            }
+    ]]>
+</select>
+
+<select id="selectBatchViewInfo" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.UPLOAD_MID   ,
+       Limit1.STUS_ID   ,
+       Limit1.NAME   ,
+       Limit1.CRT_USER_ID   ,
+       Limit1.CRT_USER_NAME   ,
+       TO_CHAR(Limit1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+       Limit1.UPD_USER_ID   ,
+       Limit1.UPD_USER_NAME   ,
+       TO_CHAR(Limit1.UPD_DT, 'DD/MM/YYYY') UPD_DT
+  FROM ( SELECT Extent1.UPLOAD_MID   ,
+                Extent1.STUS_ID   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.CRT_DT   ,
+                Extent1.UPD_USER_ID   ,
+                Extent1.UPD_DT   ,
+                Extent2.NAME   ,
+                CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END UPD_USER_NAME
+         FROM SAL0054D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+          <![CDATA[
+          WHERE  Extent1.UPLOAD_MID = #{batchId} AND ROWNUM <= 1 ) Limit1
+          ]]>
+</select>
+
+<select id="getBatchDetailInfoList" parameterType="Map" resultType="egovMap">
+    SELECT
+       Project1.UPLOAD_DET_ID   ,
+       Project1.UPLOAD_MID   ,
+       Project1.ORD_NO   ,
+       Project1.REM   ,
+       Project1.STUS_ID   ,
+       Project1.NAME   ,
+       Project1.ORD_ID   ,
+       Project1.CRT_USER_ID   ,
+       Project1.C1   ,
+       Project1.CRT_DT   ,
+       Project1.UPD_USER_ID   ,
+       Project1.C2   ,
+       Project1.UPD_DT   ,
+       Project1.VALID_STUS_ID   ,
+       Project1.NAME1   ,
+       Project1.VALID_REM
+  FROM ( SELECT Extent1.UPLOAD_DET_ID   ,
+                Extent1.UPLOAD_MID   ,
+                Extent1.ORD_NO   ,
+                Extent1.REM   ,
+                Extent1.STUS_ID   ,
+                Extent1.ORD_ID   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.CRT_DT   ,
+                Extent1.UPD_USER_ID   ,
+                Extent1.UPD_DT   ,
+                Extent1.VALID_STUS_ID   ,
+                Extent1.VALID_REM   ,
+                Extent2.NAME NAME  ,
+                Extent3.NAME NAME1  ,
+                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END C1  ,
+                CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE ' 'END C2
+         FROM SAL0055D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.VALID_STUS_ID
+                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+          WHERE  ( 1 = Extent1.STUS_ID )
+                   AND ( Extent1.UPLOAD_MID = #{batchId} ) ) Project1
+  ORDER BY Project1.UPLOAD_DET_ID ASC
+</select>
+
+<select id="cntOrdRemUpload" parameterType="Map" resultType="java.lang.Integer">
+    SELECT
+            COUNT(*)
+    FROM
+           SAL0055D Extent1
+           JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+           JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.VALID_STUS_ID
+           LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+           LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+    WHERE
+            1 = Extent1.STUS_ID
+           AND  Extent1.UPLOAD_MID = #{batchId}
+           <if test=" validOrd != null and validOrd != '' ">
+                AND  Extent1.VALID_STUS_ID = #{validOrd}
+           </if>
+           <if test=" inValidOrd != null and inValidOrd != '' ">
+                AND  Extent1.VALID_STUS_ID = #{inValidOrd}
+           </if>
+</select>
+
+<select id="searchExistOrdNo" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SALES_ORD_ID   ,
+       Extent1.SALES_ORD_NO   ,
+       Extent1.REF_NO   ,
+       Extent1.SALES_DT   ,
+       Extent1.CUST_ID   ,
+       Extent1.CUST_CNT_ID   ,
+       Extent1.CUST_ADD_ID   ,
+       Extent1.MEM_ID   ,
+       Extent1.BRNCH_ID   ,
+       Extent1.APP_TYPE_ID   ,
+       Extent1.TOT_AMT   ,
+       Extent1.PROMO_ID   ,
+       Extent1.BINDING_NO   ,
+       Extent1.CC_PROMO_ID   ,
+       Extent1.TOT_PV   ,
+       Extent1.REM   ,
+       Extent1.PV_MONTH   ,
+       Extent1.PV_YEAR   ,
+       Extent1.STUS_CODE_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.SYNC_CHK   ,
+       Extent1.CUST_PO_NO   ,
+       Extent1.REN_CHK_ID   ,
+       Extent1.INST_PRIOD   ,
+       Extent1.DO_NO   ,
+       Extent1.DEPT_CODE   ,
+       Extent1.GRP_CODE   ,
+       Extent1.ORG_CODE   ,
+       Extent1.SALES_ORD_ID_OLD   ,
+       Extent1.EDIT_TYPE_ID   ,
+       Extent1.CUST_BILL_ID   ,
+       Extent1.MTH_RENT_AMT   ,
+       Extent1.LOK   ,
+       Extent1.AEON_STUS_ID   ,
+       Extent1.COMM_DT   ,
+       Extent1.CRT_USER_ID   ,
+       Extent1.CRT_DT   ,
+       Extent1.PAY_COM_DT   ,
+       Extent1.DEF_RENT_AMT   ,
+       Extent1.REF_DOC_ID   ,
+       Extent1.SALES_HM_ID   ,
+       Extent1.SALES_SM_ID   ,
+       Extent1.SALES_GM_ID   ,
+       Extent1.ADV_BILL   ,
+       Extent1.CNVR_SCHEME_ID   ,
+       Extent1.CUST_CARE_CNT_ID
+  FROM SAL0001D Extent1
+ WHERE  Extent1.SALES_ORD_NO = #{ordNo}
+ <![CDATA[
+ AND ROWNUM <= 1
+ ]]>
+</select>
+
+
+<select id="alreadyExistOrdNo" parameterType="Map" resultType="egovMap">
+    SELECT
+       Project1.UPLOAD_DET_ID   ,
+       Project1.UPLOAD_MID   ,
+       Project1.ORD_NO   ,
+       Project1.REM   ,
+       Project1.STUS_ID   ,
+       Project1.NAME   ,
+       Project1.ORD_ID   ,
+       Project1.CRT_USER_ID   ,
+       Project1.C1   ,
+       Project1.CRT_DT   ,
+       Project1.UPD_USER_ID   ,
+       Project1.C2   ,
+       Project1.UPD_DT   ,
+       Project1.VALID_STUS_ID   ,
+       Project1.NAME1   ,
+       Project1.VALID_REM
+  FROM ( SELECT Extent1.UPLOAD_DET_ID   ,
+                Extent1.UPLOAD_MID   ,
+                Extent1.ORD_NO   ,
+                Extent1.REM   ,
+                Extent1.STUS_ID   ,
+                Extent1.ORD_ID   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.CRT_DT   ,
+                Extent1.UPD_USER_ID   ,
+                Extent1.UPD_DT   ,
+                Extent1.VALID_STUS_ID   ,
+                Extent1.VALID_REM   ,
+                Extent2.NAME NAME  ,
+                Extent3.NAME NAME1  ,
+                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END C1  ,
+                CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE ' 'END C2
+         FROM SAL0055D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.VALID_STUS_ID
+                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+          WHERE  ( 1 = Extent1.STUS_ID )
+                   AND  Extent1.UPLOAD_MID = #{batchId}
+                   AND  Extent1.ORD_NO = #{ordNo}
+                    ) Project1
+  <![CDATA[
+  WHERE ROWNUM <= 1
+  ]]>
+
+</select>
+
+<insert id="addNewOrdNo"  parameterType="Map">
+    INSERT INTO SAL0055D(
+                                UPLOAD_DET_ID,
+                                UPLOAD_MID,
+                                ORD_NO,
+                                REM,
+                                STUS_ID,
+                                ORD_ID,
+                                CRT_USER_ID,
+                                CRT_DT,
+                                UPD_USER_ID,
+                                UPD_DT,
+                                VALID_STUS_ID,
+                                VALID_REM)
+		             VALUES(
+		                #{uploadDetId},
+		                #{batchId},
+		                #{addOrdNo},
+		                #{addRem},
+		                #{stusId},
+		                #{ordId},
+		                #{userId},
+		                SYSDATE,
+		                #{userId},
+		                SYSDATE,
+		                #{validStatusId},
+		                #{validRemark}
+		             )
+</insert>
+
+<update id="updOrdNo" parameterType="Map">
+UPDATE
+    SAL0055D
+SET
+    STUS_ID = #{stusId},
+    UPD_DT = SYSDATE,
+    UPD_USER_ID = #{userId}
+WHERE
+    UPLOAD_DET_ID = #{batchId}
+
+</update>
+
+<update id="updBatch" parameterType="Map">
+UPDATE
+    SAL0054D
+SET
+    STUS_ID = #{stusId},
+    UPD_USER_ID = #{userId},
+    UPD_DT = SYSDATE
+WHERE
+    UPLOAD_MID = #{batchId}
+</update>
+
+<!-- Confirm -->
+<select id="chkBatchMasterInfo" parameterType="Map" resultType="egovMap">
+			SELECT
+			       Extent1.UPLOAD_MID   ,
+			       Extent1.STUS_ID   ,
+			       Extent1.CRT_USER_ID   ,
+			       Extent1.CRT_DT   ,
+			       Extent1.UPD_USER_ID   ,
+			       Extent1.UPD_DT
+			  FROM
+			      SAL0054D Extent1
+			 WHERE
+			      Extent1.UPLOAD_MID = #{batchId}
+			<![CDATA[
+			 AND ROWNUM <= 1
+			 ]]>
+</select>
+
+<update id="updConfirmOrdRemMaster" parameterType="Map">
+				UPDATE
+				     SAL0054D
+				SET
+				    STUS_ID = #{stusId},
+				    UPD_DT = SYSDATE,
+				    UPD_USER_ID = #{userId}
+				 WHERE
+				    UPLOAD_MID = #{batchId}
+</update>
+
+
+<select id="spOrderRemarkUpload_Confirm"  parameterType="Map" statementType="CALLABLE">
+    <![CDATA[
+            {
+                  call SP_ORD_REM_UP_CONFIRM ( #{batchId}, #{userId})
+            }
+    ]]>
+</select>
+
+
+<select id="selectCallerList" parameterType="Map" resultType="egovMap">
+         SELECT Project1.ID   ,
+                Project1.CRT_USER_ID   ,
+               TO_CHAR( Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+                Project1.TOT_UP_DT   ,
+                Project1.TOT_CMPLT   ,
+                Project1.TOT_FAIL   ,
+                TO_CHAR(Project1.ROS_DT, 'DD/MM/YYYY')  ROS_DT ,
+                TO_CHAR(Project1.ROS_DT, 'YYYY') ROS_YEAR,
+                TO_CHAR(Project1.ROS_DT, 'MM') ROS_MONTH,
+                Project1.USER_NAME
+         FROM ( SELECT Extent1.ID   ,
+                       Extent1.CRT_USER_ID   ,
+                       Extent1.CRT_DT   ,
+                       Extent1.TOT_UP_DT   ,
+                       Extent1.TOT_CMPLT   ,
+                       Extent1.TOT_FAIL   ,
+                       Extent1.ROS_DT   ,
+                       CASE WHEN ( Extent2.USER_ID IS NOT NULL ) THEN Extent2.USER_NAME ELSE ' ' END USER_NAME
+                FROM MSC0011D Extent1
+                LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.CRT_USER_ID
+                <![CDATA[
+                WHERE 8 <> Extent1.STUS_CODE_ID
+                ]]>
+                )Project1
+          WHERE 1 = 1
+          <if test=" null != callBatchId and '' != callBatchId">
+            AND  Project1.ID = #{callBatchId}
+          </if>
+          <if test=" null != srchDt and '' != srchDt">
+            <![CDATA[
+            AND  Project1.CRT_DT >= TO_DATE(#{srchDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+            AND  Project1.CRT_DT <= TO_DATE(#{srchDt}||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+            ]]>
+          </if>
+          <if test="null != callUpdtor and '' != callUpdtor ">
+            AND UPPER(Project1.USER_NAME) LIKE '%'||UPPER(#{callUpdtor})||'%'
+          </if>
+          ORDER BY Project1.ID ASC
+</select>
+
+<select id="getSeqMSC0011D" resultType="java.lang.Integer">
+    SELECT MSC0011D_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="instCallerMaster" parameterType="Map">
+    INSERT INTO MSC0011D (   ID,
+                                         STUS_CODE_ID,
+                                         CRT_USER_ID,
+                                         CRT_DT,
+                                         TOT_UP_DT,
+                                         TOT_CMPLT,
+                                         TOT_FAIL,
+                                         ROS_DT )
+             VALUES (
+                            #{batchId},
+                            #{stusCodeId},
+                            #{userId},
+                            SYSDATE,
+                            #{totUpDt},
+                            #{totCmplt},
+                            #{totFail},
+                            ( SELECT
+                                    TO_DATE(T1.YM, 'YYYY/MM/DD')
+							  FROM(
+							  SELECT TO_CHAR(SYSDATE , 'YYYY/MM')||'/01' YM FROM DUAL
+							  ) T1
+							)
+						 )
+</insert>
+
+<select id="getSeqMSC0012D" resultType="java.lang.Integer" flushCache="true">
+    SELECT MSC0012D_ITM_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+
+<insert id="insertCallerDetail" parameterType="java.util.List">
+INSERT INTO MSC0012D(
+                                ITM_ID,
+                                ID,
+                                ITM_STUS_CODE_ID,
+                                ITM_MSG,
+                                ORD_NO,
+                                SYS_ORD_ID,
+                                USER_NAME,
+                                SYS_USER_ID
+                                )
+<foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+SELECT
+    #{item.itmId},
+    #{item.batchId},
+    #{item.stusCodeId},
+    #{item.itmMsg},
+    #{item.ordNo},
+    #{item.sysOrdId},
+    #{item.userName},
+    #{item.sysUserId}
+FROM DUAL
+</foreach>
+</insert>
+
+
+<select id="spROSCallerUpdate"  parameterType="Map" statementType="CALLABLE">
+    <![CDATA[
+            {
+                  call SP_ROS_CALLER_UPDATE ( #{batchId})
+            }
+    ]]>
+</select>
+
+<select id="countInfoByBatchId" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.ID   ,
+       Limit1.CRT_DT   ,
+       Limit1.CRT_USER_ID   ,
+       Limit1.USER_NAME   ,
+       Limit1.ROS_DT   ,
+       Limit1.TOT_CMPLT   ,
+       Limit1.TOT_FAIL   ,
+       Limit1.TOT_UP_DT
+  FROM ( SELECT Extent1.ID   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.CRT_DT   ,
+                Extent1.TOT_UP_DT   ,
+                Extent1.TOT_CMPLT   ,
+                Extent1.TOT_FAIL   ,
+                Extent1.ROS_DT   ,
+                CASE WHEN ( Extent2.USER_ID IS NOT NULL ) THEN Extent2.USER_NAME ELSE ' ' END USER_NAME
+         FROM MSC0011D Extent1
+                LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.CRT_USER_ID
+          WHERE  <![CDATA[ 8 <> Extent1.STUS_CODE_ID
+                   AND ( Extent1.ID = #{batchId} ) AND ROWNUM <= 1 ) Limit1
+                   ]]>
+</select>
+
+
+<select id="getCallerDetailList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.ITM_ID   ,
+       Project1.ID   ,
+       Project1.ITM_STUS_CODE_ID   ,
+       Project1.ITM_MSG   ,
+       Project1.ORD_NO   ,
+       Project1.SYS_ORD_ID   ,
+       Project1.USER_NAME   ,
+       Project1.SYS_USER_ID
+  FROM ( SELECT Project1.ITM_ID   ,
+                Project1.ID   ,
+                Project1.ITM_STUS_CODE_ID   ,
+                Project1.ITM_MSG   ,
+                Project1.ORD_NO   ,
+                Project1.SYS_ORD_ID   ,
+                Project1.USER_NAME   ,
+                Project1.SYS_USER_ID
+         FROM ( SELECT Extent1.ITM_ID   ,
+                       Extent1.ID   ,
+                       Extent1.ITM_STUS_CODE_ID   ,
+                       Extent1.ITM_MSG   ,
+                       Extent1.ORD_NO   ,
+                       Extent1.SYS_ORD_ID   ,
+                       Extent1.USER_NAME   ,
+                       Extent1.SYS_USER_ID
+                FROM MSC0012D Extent1
+                 WHERE  Extent1.ID = #{batchId} ) Project1 ) Project1
+  ORDER BY Project1.ITM_ID ASC
+</select>
+</mapper>

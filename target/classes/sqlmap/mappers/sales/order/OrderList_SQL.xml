@@ -1,0 +1,1986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderListMapper">
+
+  <!-- BACKUP AFTER PERFORMANCE TUNING -->
+  <select id="selectOrderList_bak" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT T.APP_TYPE_CODE
+                  , T.APP_TYPE_NAME
+                  , T.CRT_USER_ID
+                  , T.CUST_IC
+                  , T.CUST_NAME
+                  , T.CUST_VA_NO
+                  , T.DSC_BRNCH_ID
+                  , T.KEYIN_BRNCH_ID
+                  , T.ORD_ID
+                  , T.ORD_NO
+                  , T.ORD_STUS_CODE
+                  , T.PO_NO
+                  , T.PRODUCT_CODE
+                  , T.PRODUCT_NAME
+                  , T.REF_NO
+                  , T.RENT_STUS
+                  , T.SALESMAN_MEM_ID
+                  , T.SALESMAN_CODE
+                  , T.SALESMAN_MEM_TYPE_ID
+                  , T.BILLING_GRP_ID
+                  , T.MAIL_TEL_MOB
+                  , T.MAIL_TEL_FAX
+                  , T.MAIL_TEL_OFF
+                  , T.MAIL_TEL_RES
+                  , T.INST_TEL_FAX
+                  , T.INST_TEL_MOB
+                  , T.INST_TEL_OFF
+                  , T.INST_TEL_RES
+                  , T.SIRIM_NO
+                  , T.SERIAL_NO
+                  , T.PROMO_CODE
+                  , T.PROMO_DESC
+                  , T.RELATED_NO
+                  , T.RELATED_ID
+                  , 1 C1
+                  , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+                  , NVL(T.CUST_ID, 0) AS CUST_ID
+                  , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+                  , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+                  , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+                  , T.PV_MONTH
+                  , T.PV_YEAR
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                        V1.APP_TYPE_CODE
+                      , V1.APP_TYPE_ID
+                      , V1.APP_TYPE_NAME
+                      , V1.CRT_USER_ID
+                      , V1.CUST_IC
+                      , V1.CUST_NAME
+                      , V1.CUST_ID
+                      , V1.CUST_VA_NO
+                      , V1.DSC_BRNCH_ID
+                      , V1.KEYIN_BRNCH_ID
+                      , V1.ORD_DT
+                      , V1.ORD_ID
+                      , V1.ORD_NO
+                      , V1.ORD_STUS_CODE
+                      , V1.ORD_STUS_ID
+                      , V1.PO_NO
+                      , V1.PRODUCT_ID
+                      , V1.PRODUCT_CODE
+                      , V1.PRODUCT_NAME
+                      , V1.REF_NO
+                      , V1.RENT_STUS
+                      , V1.SALESMAN_MEM_ID
+                      , V1.SALESMAN_CODE
+                      , V1.SALESMAN_MEM_TYPE_ID
+                      , V1.BILLING_GRP_ID
+                      , V1.MAIL_TEL_MOB
+                      , V1.MAIL_TEL_FAX
+                      , V1.MAIL_TEL_OFF
+                      , V1.MAIL_TEL_RES
+                      , V1.INST_TEL_FAX
+                      , V1.INST_TEL_MOB
+                      , V1.INST_TEL_OFF
+                      , V1.INST_TEL_RES
+                      , V1.SIRIM_NO
+                      , V1.SERIAL_NO
+                      , V1.ITM_PRC_ID
+                      , V1.PV_MONTH
+                      , V1.PV_YEAR
+                      , V1.PROMO_CODE
+                      , V1.PROMO_DESC
+                      , V1.RELATED_NO
+                      , V1.RELATED_ID
+                 FROM SAL1013V  V1
+                 WHERE 1 = 1
+                 <if test='ordDt == null || ordDt == ""'>
+                   AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                 </if>
+                 <if test='ordDt != null and ordDt != ""'>
+                   AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                 </if>
+                 <if test='ordNo != null and ordNo != ""'>
+                   AND V1.ORD_NO = #{ordNo}
+                 </if>
+                 <if test='arrAppType != null and arrAppType != ""'>
+                   AND V1.APP_TYPE_ID IN
+                   <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+                 <if test='arrOrdStusId != null and arrOrdStusId != ""'>
+                   AND V1.ORD_STUS_ID IN
+                   <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+                 <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+                   AND V1.KEYIN_BRNCH_ID IN
+                   <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+                 <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+                   AND V1.DSC_BRNCH_ID IN
+                   <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+                 <if test='custId != null and custId != ""'>
+                   AND V1.CUST_ID = #{custId}
+                 </if>
+                 <if test='custName != null and custName != ""'>
+                   AND UPPER(V1.CUST_NAME) LIKE '%'||UPPER(#{custName})||'%'
+                 </if>
+                 <if test='custIc != null and custIc != ""'>
+                   AND UPPER(V1.CUST_IC) LIKE '%'||UPPER(#{custIc})||'%'
+                 </if>
+                 <if test='productId != null and productId != ""'>
+                   AND V1.PRODUCT_ID = #{productId}
+                 </if>
+                 <if test='salesmanCode != null and salesmanCode != ""'>
+                   AND UPPER(V1.SALESMAN_CODE) = UPPER(#{salesmanCode})
+                 </if>
+                 <if test='arrRentStus != null and arrRentStus != ""'>
+                   AND V1.RENT_STUS IN
+                   <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+                 <if test='refNo != null and refNo != ""'>
+                   AND UPPER(V1.REF_NO) = UPPER(#{refNo})
+                 </if>
+                 <if test='poNo != null and poNo != ""'>
+                   AND UPPER(V1.PO_NO) = UPPER(#{poNo})
+                 </if>
+                 <if test='contactNo != null and contactNo != ""'>
+                   AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
+                 </if>
+                 <if test='vaNo != null and vaNo != ""'>
+                   AND V1.CUST_VA_NO = #{vaNo}
+                 </if>
+                 <if test='serialNo != null and serialNo != ""'>
+                   AND V1.SERIAL_NO = #{serialNo}
+                 </if>
+                 <if test='sirimNo != null and sirimNo != ""'>
+                   AND V1.SIRIM_NO = #{sirimNo}
+                 </if>
+                 <if test='crtUserId != null and crtUserId != ""'>
+                   AND V1.CRT_USER_ID = #{crtUserId}
+                 </if>
+                 <if test='promoCode != null and promoCode != ""'>
+                   AND V1.PROMO_CODE = #{promoCode}
+                 </if>
+                 <if test='relatedNo != null and relatedNo != ""'>
+                   AND V1.RELATED_NO = #{relatedNo}
+                 </if>
+                 <if test='invoicePoNo != null and invoicePoNo != ""'>
+                   AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+                                     FROM PAY0015D
+                                     WHERE PO_REF_NO = #{invoicePoNo})
+                 </if>
+                 <if test='isEKeyin != null and isEKeyin != ""'>
+                   AND EKEY_IN_ID IS NOT NULL
+                 </if>
+    ) T
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+  <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , CASE WHEN LENGTH(T.CUST_IC) = 12 THEN REGEXP_REPLACE(SUBSTR(T.CUST_IC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(T.CUST_IC, 9,12)
+            ELSE T.CUST_IC
+            END CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+         , T.BNDL_ID
+         , T.ECOMM_ORD_ID
+         , T.STK_CTGRY_ID
+         , T.HOMECARE
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+                , V1.BNDL_ID
+                , NVL(S1.ECOMM_ORD_ID,0) AS ECOMM_ORD_ID
+                , M1.STK_CTGRY_ID
+                , GET_HOMECARE_FLAG_YN(M1.STK_CTGRY_ID) AS HOMECARE
+           FROM SAL1013V  V1
+             JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
+             JOIN sal0001d s1 ON v1.ORD_NO = s1.SALES_ORD_NO
+            /*
+             INNER JOIN ( SELECT IE.SALES_ORD_ID
+                          FROM SAL0047D IR
+                          LEFT OUTER JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID WHERE
+                          <choose>
+                            <when test='serialNo != null and serialNo != ""'>
+                              UPPER(IR.SERIAL_NO) = serialNo
+                              <if test='sirimNo != null and sirimNo != ""'>
+                                AND UPPER(IR.SIRIM_NO) = sirimNo
+                              </if>
+                            </when>
+                            <otherwise>
+                              <if test='sirimNo != null and sirimNo != ""'>
+                                IR.SIRIM_NO = sirimNo
+                              </if>
+                            </otherwise>
+                          </choose>
+                        ) A on V1.ORD_ID = A.SALES_ORD_ID
+           */
+           <choose>
+            <when test='memType != null and memType != "" '>
+            JOIN(
+                SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
+                FROM SAL0001D S
+                JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
+                JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
+                JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
+                LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
+                WHERE 1=1 AND NVL(S.BNDL_ID,0) = 0
+                <if test='ordId != null and ordId != ""'>
+                AND S.SALES_ORD_ID = #{ordId}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                AND S.SALES_ORD_NO = #{ordNo}
+                </if>
+                <if test='ordDt == null || ordDt == ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test='memId != null and memId != ""'>
+                AND (V.MEM_ID = #{memId})
+                </if>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+                AND (V.DEPT_CODE = #{deptCode})
+                </if>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+                AND (V.GRP_CODE = #{grpCode})
+                </if>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
+                AND (V.ORG_CODE = #{orgCode})
+                </if>
+                UNION
+                SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
+                FROM SAL0001D S
+                JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+                WHERE 1=1 AND NVL(S.BNDL_ID,0) = 0
+                <if test='ordId != null and ordId != ""'>
+                AND S.SALES_ORD_ID = #{ordId}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                AND S.SALES_ORD_NO = #{ordNo}
+                </if>
+                <if test='ordDt == null || ordDt == ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test='memId != null and memId != ""'>
+                AND (V.MEM_ID = #{memId})
+                </if>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+                AND (V.DEPT_CODE = #{deptCode})
+                </if>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+                AND (V.GRP_CODE = #{grpCode})
+                </if>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
+                AND (V.ORG_CODE = #{orgCode})
+                </if>
+            ) SVC
+            ON V1.ORD_ID = SVC.SALES_ORD_ID
+            </when>
+            <otherwise>
+             JOIN(
+                SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
+                FROM SAL0001D S
+                LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+                WHERE 1=1
+                <if test='memId != null and memId != ""'>
+                AND (V.MEM_ID = #{memId})
+                </if>
+                <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+                AND (V.DEPT_CODE = #{deptCode})
+                </if>
+                <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+                AND (V.GRP_CODE = #{grpCode})
+                </if>
+                <if test='orgCode != null and orgCode != " " and orgCode != ""'>
+                AND (V.ORG_CODE = #{orgCode})
+                </if>
+                 ) SVC
+            ON V1.ORD_ID = SVC.SALES_ORD_ID
+            </otherwise>
+            </choose>
+           WHERE 1 = 1
+           <if test='ordDt == null || ordDt == ""'>
+             AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+           </if>
+           <if test='ordDt != null and ordDt != ""'>
+             AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+           </if>
+           <if test='pdpaMonth != null and pdpaMonth != 0'>
+             AND V1.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+           </if>
+           <if test='invoicePoNo != null and invoicePoNo != ""'>
+             AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+                         FROM PAY0015D
+                         WHERE PO_REF_NO = #{invoicePoNo})
+           </if>
+           <if test='isEKeyin != null and isEKeyin != ""'>
+             AND EKEY_IN_ID IS NOT NULL
+           </if>
+           <if test='isECommerce != null and isECommerce != ""'>
+             AND S1.ECOMM_ORD_ID > 0
+           </if>
+           <if test='isSelectAll == null or isSelectAll == ""'>
+
+		  <!--
+          AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
+                                                             AND BB.CODE = 'FRM')
+            --> -- Mattress, Frame
+
+                  AND v1.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67,7759)
+           </if>
+           <if test = 'memID != null and memID != ""'>
+           AND V1.SALESMAN_MEM_ID = #{memID}
+           </if>
+           <if test='arrAppType != null and arrAppType != ""'>
+                 AND V1.APP_TYPE_ID IN
+                 <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrOrdStusId != null and arrOrdStusId != ""'>
+             AND V1.ORD_STUS_ID IN
+             <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+            <if test='billGroupNo != null and billGroupNo != ""'>
+             AND V1.BILLING_GRP_ID = #{billGroupNo}
+           </if>
+    ) T
+     WHERE 1=1
+           <if test='ordNo != null and ordNo != ""'>
+             AND T.ORD_NO = #{ordNo}
+             AND EXISTS(
+             SELECT
+				A.SALES_ORD_ID
+             FROM SAL0001D A
+             WHERE
+             A.SALES_ORD_NO = #{ordNo}
+             <if test='isSelectAll == null or isSelectAll == ""'>
+             AND A.APP_TYPE_ID  in (1412,144,66,141,68,143,140,142,145,67,7759)
+             </if>
+             <if test='arrAppType != null and arrAppType != ""'>
+                 AND A.APP_TYPE_ID IN
+                 <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+             AND A.BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+
+             )
+           </if>
+           <if test='ordId != null and ordId != ""'>
+           /*29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time*/
+             AND T.ORD_ID IN
+             <foreach item="item" collection="ordId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+
+           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+             AND T.KEYIN_BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+             AND T.DSC_BRNCH_ID IN
+             <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='custId != null and custId != ""'>
+             AND T.CUST_ID = #{custId}
+           </if>
+           <if test='productId != null and productId != ""'>
+             AND T.PRODUCT_ID = #{productId}
+           </if>
+
+             /*AND T.SALESMAN_CODE = salesmanCode*/
+
+           <if test='arrRentStus != null and arrRentStus != ""'>
+             AND T.RENT_STUS IN
+             <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='refNo != null and refNo != ""'>
+             AND T.REF_NO = #{refNo}
+           </if>
+           <if test='poNo != null and poNo != ""'>
+             AND T.PO_NO = #{poNo}
+           </if>
+           <if test='promoCode != null and promoCode != ""'>
+             AND T.PROMO_CODE = #{promoCode}
+           </if>
+           <if test='relatedNo != null and relatedNo != ""'>
+             AND T.RELATED_NO = #{relatedNo}
+           </if>
+
+           <if test='arrayCustId != null and arrayCustId != ""'>
+             AND T.CUST_ID IN
+             <foreach item="item" collection="arrayCustId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+
+
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+  <select id="getApplicationTypeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.CODE_ID CODE_ID ,
+           Project1.CODE_MASTER_ID CODE_MASTER_ID ,
+           Project1.CODE CODE ,
+           Project1.CODE_NAME CODE_NAME ,
+           Project1.DISAB DISAB ,
+           Project1.CRT_DT CRT_DT ,
+           Project1.CRT_USER_ID CRT_USER_ID ,
+           Project1.UPD_DT UPD_DT ,
+           Project1.UPD_USER_ID UPD_USER_ID ,
+           Project1.OLD_CODE_ID OLD_CODE_ID
+    FROM ( SELECT Extent1.CODE_ID CODE_ID ,
+                  Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+                  Extent1.CODE CODE ,
+                  Extent1.CODE_NAME CODE_NAME ,
+                  Extent1.DISAB DISAB ,
+                  Extent1.CRT_DT CRT_DT ,
+                  Extent1.CRT_USER_ID CRT_USER_ID ,
+                  Extent1.UPD_DT UPD_DT ,
+                  Extent1.UPD_USER_ID UPD_USER_ID ,
+                  Extent1.OLD_CODE_ID OLD_CODE_ID
+            FROM SYS0013M Extent1
+            WHERE ( Extent1.CODE_MASTER_ID = #{codeId} )
+              AND ( 0 = Extent1.DISAB )
+    ) Project1
+    ORDER BY Project1.CODE_NAME ASC
+  </select>
+
+  <select id="getUserCodeList" resultType="egovMap">
+    SELECT USER_ID CODE_ID,
+           USER_NAME CODE_NAME
+    FROM SYS0047M
+    WHERE USER_STUS_ID = 1
+      AND USER_TYPE_ID != 1
+      AND USER_TYPE_ID != 2
+      AND USER_TYPE_ID != 3
+    ORDER BY USER_NAME
+  </select>
+
+  <select id="getOrgCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.MEM_ID CODE_ID ,
+           Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME
+    FROM ORG0001D Extent1
+    JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                 vMemberOrg.MEM_CODE MEM_CODE ,
+                 vMemberOrg.MEM_LVL MEM_LVL ,
+                 vMemberOrg.DEPT_CODE DEPT_CODE ,
+                 vMemberOrg.GRP_CODE GRP_CODE ,
+                 vMemberOrg.ORG_CODE ORG_CODE ,
+                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                 vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+          FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+          AND ( Extent2.MEM_LVL  = #{memLvl} )
+    WHERE ( 1 = Extent1.STUS )
+      AND ( Extent1.MEM_TYPE = #{memType} )
+  </select>
+
+  <select id="getGrpCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.MEM_ID CODE_ID ,
+           Extent1.MEM_CODE MEM_CODE ,
+           Extent1.NAME NAME ,
+           Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME ,
+           Extent2.DEPT_CODE DEPT_CODE ,
+           Extent2.GRP_CODE GRP_CODE ,
+           Extent2.ORG_CODE ORG_CODE
+    FROM ORG0001D Extent1
+    JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                 vMemberOrg.MEM_CODE MEM_CODE ,
+                 vMemberOrg.MEM_LVL MEM_LVL ,
+                 vMemberOrg.DEPT_CODE DEPT_CODE ,
+                 vMemberOrg.GRP_CODE GRP_CODE ,
+                 vMemberOrg.ORG_CODE ORG_CODE ,
+                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                 vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+          FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID    = Extent1.MEM_ID )
+                                            AND ( Extent2.MEM_LVL  = #{memLvl} )
+          WHERE ( 1 = Extent1.STUS )
+            AND ( Extent1.MEM_TYPE = #{memType} )
+            AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
+  </select>
+
+  <select id="getMemberOrgInfo" parameterType="Map" resultType="egovMap">
+    SELECT ORG_CODE,
+           GRP_CODE,
+           DEPT_CODE
+    FROM ORG1001V
+    WHERE MEM_ID = #{cmbCode}
+  </select>
+
+  <select id="getBankCodeList" parameterType="Map" resultType="egovMap">
+    SELECT BANK_ID CODE_ID,
+           CODE||' : '||NAME CODE_NAME
+    FROM SYS0004M
+    WHERE STUS_CODE_ID = 1
+    ORDER BY CODE
+  </select>
+
+
+  <select id="selectInstallParam" parameterType="Map" resultType="egovMap">
+    SELECT MAX(INSTALL_ENTRY_ID) INSTALL_ENTRY_ID
+    FROM SAL0046D
+    WHERE STUS_CODE_ID = 4
+      AND SALES_ORD_ID = #{salesOrderId}
+    GROUP BY SALES_ORD_ID
+  </select>
+
+  <select id="selectProductReturnView" parameterType="Map" resultType="egovMap">
+    SELECT A.RETN_NO,
+           C.CODE,
+           TO_CHAR(A.REQST_DT, 'YYYY/MM/DD' ) REQST_DT,
+           D.MEM_CODE,
+           D.NAME,
+           E.SERIAL_REQUIRE_CHK_YN,
+           E.WH_LOC_GB,
+           E.WH_LOC_ID CT_WH_LOC_ID
+    FROM LOG0038D A,
+         SAL0001D B,
+         SYS0038M C,
+         ORG0001D D,
+         SYS0028M E
+    WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+      AND A.STUS_CODE_ID = C.STUS_CODE_ID
+      AND A.CT_ID = D.MEM_ID
+      AND D.MEM_CODE = E.WH_LOC_CODE(+)
+      AND B.SALES_ORD_NO = #{salesOrdNo}
+  </select>
+
+  <select id="selectPReturnParam" parameterType="Map" resultType="egovMap">
+  <!--KV old code
+    select  a.SO_REQ_RESN_ID ,  b.RETN_NO
+    from sal0020d a  , log0038d b
+    where 1=1
+    and a.SO_REQ_CUR_CALL_ENTRY_ID = b.CALL_ENTRY_ID
+    and STUS_CODE_ID = 1
+    and b.CALL_ENTRY_ID = #{callEntryId}-->
+
+    SELECT a.SO_REQ_RESN_ID ,
+           b.RETN_NO,
+           a.SO_REQ_CUR_STUS_ID,
+           b.CT_ID,
+           d.MEM_CODE
+    FROM SAL0020D a
+    JOIN LOG0038D b ON a.SO_REQ_CUR_CALL_ENTRY_ID = b.CALL_ENTRY_ID
+                   AND STK_RETN_ID = (SELECT MAX(STK_RETN_ID) FROM LOG0038D WHERE a.SO_REQ_CUR_CALL_ENTRY_ID = CALL_ENTRY_ID)
+    LEFT JOIN ORG0001D d ON b.CT_ID = d.MEM_ID
+    WHERE 1=1
+      AND b.STUS_CODE_ID = 1
+      AND b.CALL_ENTRY_ID = #{callEntryId}
+  </select>
+
+  <select id="getPrCTInfo" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT b.MEM_ID,
+                    b.MEM_CODE,
+                    b.NAME
+    FROM LOG0038D a
+       , ORG0001D b
+    WHERE CT_ID = MEM_ID
+      AND a.CALL_ENTRY_ID = #{callEntryId}
+      AND a.STUS_CODE_ID = 1
+  </select>
+
+  <insert id="insert_LOG0039D" parameterType="Map">
+    INSERT INTO LOG0039D ( STK_RETN_RESULT_ID,
+                           STK_RETN_ID,
+                           STK_RETN_STUS_ID,
+                           STK_RETN_STK_IS_RET,
+                           STK_RETN_DT,
+                           STK_RETN_REM,
+                           STK_RETN_RESN_ID,
+                           STK_RETN_CC_ID,
+                           STK_RETN_CRT_DT,
+                           STK_RETN_CRT_USER_ID,
+                           STK_RETN_UPD_DT,
+                           STK_RETN_UPD_USER_ID,
+                           STK_RETN_RESULT_IS_SYNCH,
+                           STK_RETN_ALLOW_COMM,
+                           STK_RETN_CT_MEM_ID,
+                           CHECKIN_DT,
+                           CHECKIN_TM,
+                           CHECKIN_GPS,
+                           SIGN_DATA,
+                           SIGN_REG_DT,
+                           SIGN_REG_TM,
+                           OWNER_CODE,
+                           RESULT_CUST_NAME,
+                           RESULT_ICMOBILE_NO,
+                           RESULT_RPT_EMAIL_NO,
+                           RESULT_ACEPT_NAME,
+                           PARTNER_CODE
+    ) VALUES ( LOG0039D_STK_RETN_RESULT_ID.nextval,
+               (SELECT STK_RETN_ID FROM LOG0038D WHERE retn_no = #{serviceNo}),
+               #{stkRetnStusId},
+               #{stkRetnStkIsRet},
+               SYSDATE,
+               #{stkRetnRem},
+               #{stkRetnResnId},
+               #{stkRetnCcId},
+               SYSDATE,
+               #{stkRetnCrtUserId} ,
+               SYSDATE,
+               #{stkRetnCrtUserId} ,
+               #{stkRetnResultIsSynch},
+               #{stkRetnAllowComm},
+               #{stkRetnCtMemId},
+               TO_CHAR( to_date(#{checkinDt},'DD/MM/YYYY') ,'yyyymmdd'),
+               #{checkinTm},
+               #{checkinGps},
+               #{signData},
+               TO_CHAR( to_date( #{signRegDt},'DD/MM/YYYY') ,'yyyymmdd'),
+               #{signRegTm},
+               #{ownerCode},
+               #{resultCustName},
+               #{resultIcmobileNo},
+               #{resultRptEmailNo},
+               #{resultAceptName},
+               #{partnerCode}
+    )
+  </insert>
+
+  <update id="updateState_LOG0038D" parameterType="Map">
+    UPDATE LOG0038D
+    SET STUS_CODE_ID  = '4',
+        UPD_DT  = sysdate,
+        UPD_USER_ID = #{userId}
+    WHERE retn_no = #{serviceNo}
+  </update>
+
+  <insert id="insert_SAL0009D" parameterType="Map">
+    INSERT INTO SAL0009D ( LOG_ID,
+                           SALES_ORD_ID,
+                           PRGRS_ID,
+                           LOG_DT,
+                           REF_ID,
+                           IS_LOK,
+                           LOG_CRT_USER_ID,
+                           LOG_CRT_DT
+    ) VALUES ( SAL0009D_LOG_ID_SEQ.NEXTVAL,
+              (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo}),
+              '13',
+              SYSDATE,
+              '0',
+              '0',
+               #{userId},
+              SYSDATE )
+  </insert>
+
+  <update id="updateState_SAL0020D" parameterType="Map">
+    UPDATE SAL0020D
+    SET SO_REQ_STUS_ID = '32'
+    WHERE SO_REQ_SO_ID = (SELECT SALES_ORD_ID
+                          FROM SAL0001D
+                          WHERE SALES_ORD_NO = #{salesOrderNo})
+  </update>
+
+  <update id="updateState_SAL0071D" parameterType="Map">
+    UPDATE SAL0071D
+    SET STUS_CODE_ID = 'TER'
+    WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID
+                          FROM SAL0001D
+                          WHERE SALES_ORD_NO = #{salesOrderNo})
+  </update>
+
+  <select id="SP_RETURN_BILLING_EARLY_TERMI" parameterType="Map"  statementType="CALLABLE" >
+    {
+      call SP_RETURN_BILLING_EARLY_TERMI( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
+    }
+  </select>
+
+  <update id="updateState_SAL0001D" parameterType="Map">
+    UPDATE SAL0001D A
+    SET STUS_CODE_ID = '10'
+    WHERE A.SALES_ORD_NO = #{salesOrderNo}
+  </update>
+
+  <select id="select_SeqCCR0006D" parameterType="Map" resultType="java.lang.String">
+    select CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL
+    FROM DUAL
+   </select>
+
+   <select id="select_SeqCCR0007D" parameterType="Map" resultType="java.lang.String">
+    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL
+    FROM DUAL
+   </select>
+
+   <insert id="insert_CCR0006D" parameterType="Map">
+     INSERT INTO CCR0006D ( CALL_ENTRY_ID ,
+                            SALES_ORD_ID ,
+                            TYPE_ID,
+                            STUS_CODE_ID ,
+                            RESULT_ID ,
+                            DOC_ID,
+                            CRT_USER_ID ,
+                            CRT_DT ,
+                            CALL_DT,
+                            IS_WAIT_FOR_CANCL ,
+                            HAPY_CALLER_ID,
+                            UPD_DT ,
+                            UPD_USER_ID ,
+                            ORI_CALL_DT
+     ) VALUES ( #{callEntryID} ,
+                (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo}) ,
+                 259 ,
+                 19 ,
+                 #{callResultID} ,
+                 0 ,
+                 #{userId} ,
+                 SYSDATE ,
+                 TO_DATE (#{nextCallDate} , 'DD/MM/YYYY'),
+                 0 ,
+                 0 ,
+                 SYSDATE ,
+                 #{userId} ,
+                 TO_DATE (#{nextCallDate} , 'DD/MM/YYYY')
+     )
+  </insert>
+
+  <insert id="insert_CCR0007D" parameterType="Map">
+    INSERT INTO CCR0007D ( CALL_RESULT_ID ,
+                           CALL_ENTRY_ID ,
+                           CALL_STUS_ID ,
+                           CALL_DT ,
+                           CALL_ACTN_DT ,
+                           CALL_FDBCK_ID ,
+                           CALL_CT_ID ,
+                           CALL_REM ,
+                           CALL_CRT_USER_ID ,
+                           CALL_CRT_DT ,
+                           CALL_CRT_USER_ID_DEPT ,
+                           CALL_HC_ID ,
+                           CALL_ROS_AMT ,
+                           CALL_SMS ,
+                           CALL_SMS_REM
+    ) VALUES ( #{callResultID},
+               #{callEntryID} ,
+               19 ,
+               TO_DATE (#{nextCallDate} , 'DD/MM/YYYY') ,
+               TO_DATE('1900/01/01', 'YYYY/MM/DD' ) ,
+               0 ,
+               0 ,
+               ' ' ,
+               #{userId} ,
+               SYSDATE ,
+               0 ,
+               0 ,
+               0 ,
+               0 ,
+               ' '
+    )
+  </insert>
+
+  <insert id="insertFailed_LOG0039D" parameterType="Map">
+    INSERT INTO LOG0039D ( STK_RETN_RESULT_ID,
+                           STK_RETN_ID,
+                           STK_RETN_STUS_ID,
+                           STK_RETN_CT_MEM_ID,
+                           STK_RETN_CRT_DT,
+                           STK_RETN_CRT_USER_ID
+    ) VALUES ( LOG0039D_STK_RETN_RESULT_ID.nextval,
+               (SELECT STK_RETN_ID FROM LOG0038D WHERE retn_no = #{serviceNo}) ,
+               '21',
+               #{userId},
+               SYSDATE,
+               #{userId}
+   )
+  </insert>
+
+  <update id="updateFailed_LOG0038D" parameterType="Map">
+    UPDATE LOG0038D
+    SET STUS_CODE_ID = '21',
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = #{userId},
+        FAIL_RESN_ID =#{failReasonCode}
+    WHERE  retn_no = #{serviceNo}
+  </update>
+
+  <update id="updateFailed_SAL0020D" parameterType="Map">
+     UPDATE SAL0020D
+     SET SO_REQ_UPD_USER_ID = #{userId}
+       , SO_REQ_UPD_DT = SYSDATE
+       , SO_REQ_STUS_ID = 1
+       , SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryID}
+     WHERE SO_REQ_ID = ( SELECT MAX (B.SO_REQ_ID)
+     FROM SAL0001D A
+      JOIN SAL0020D B ON B.SO_REQ_SO_ID = A.SALES_ORD_ID
+     WHERE A.SALES_ORD_NO = #{salesOrderNo})
+
+  </update>
+
+  <update id="chkRcdTms" parameterType="Map">
+    UPDATE SAL0020D
+    SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE SO_REQ_SO_ID = #{orderId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryId}
+      AND RCD_TMS = #{rcdTms}
+  </update>
+
+  <select id="selectOrderListVRescue" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT T.APP_TYPE_CODE
+             , T.APP_TYPE_NAME
+             , T.CRT_USER_ID
+             , T.CUST_IC
+             , T.CUST_NAME
+             , T.CUST_VA_NO
+             , T.DSC_BRNCH_ID
+             , T.KEYIN_BRNCH_ID
+             , T.ORD_ID
+             , T.ORD_NO
+             , T.ORD_STUS_CODE
+             , T.PO_NO
+             , T.PRODUCT_CODE
+             , T.PRODUCT_NAME
+             , T.REF_NO
+             , T.RENT_STUS
+             , T.SALESMAN_MEM_ID
+             , T.SALESMAN_CODE
+             , T.SALESMAN_MEM_TYPE_ID
+             , T.BILLING_GRP_ID
+             , T.MAIL_TEL_MOB
+             , T.MAIL_TEL_FAX
+             , T.MAIL_TEL_OFF
+             , T.MAIL_TEL_RES
+             , T.INST_TEL_FAX
+             , T.INST_TEL_MOB
+             , T.INST_TEL_OFF
+             , T.INST_TEL_RES
+             , T.SIRIM_NO
+             , T.SERIAL_NO
+             , T.PROMO_CODE
+             , T.PROMO_DESC
+             , T.RELATED_NO
+             , T.RELATED_ID
+             , 1 C1
+             , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+             , NVL(T.CUST_ID, 0) AS CUST_ID
+             , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+             , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+             , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+             , T.PV_MONTH
+             , T.PV_YEAR
+             , T.PAYMODE
+             , T.RENT_PAY_ID
+          FROM
+             ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                      V1.APP_TYPE_CODE
+                    , V1.APP_TYPE_ID
+                    , V1.APP_TYPE_NAME
+                    , V1.CRT_USER_ID
+                    , V1.CUST_IC
+                    , V1.CUST_NAME
+                    , V1.CUST_ID
+                    , V1.CUST_VA_NO
+                    , V1.DSC_BRNCH_ID
+                    , V1.KEYIN_BRNCH_ID
+                    , V1.ORD_DT
+                    , V1.ORD_ID
+                    , V1.ORD_NO
+                    , V1.ORD_STUS_CODE
+                    , V1.ORD_STUS_ID
+                    , V1.PO_NO
+                    , V1.PRODUCT_ID
+                    , V1.PRODUCT_CODE
+                    , V1.PRODUCT_NAME
+                    , V1.REF_NO
+                    , V1.RENT_STUS
+                    , V1.SALESMAN_MEM_ID
+                    , V1.SALESMAN_CODE
+                    , V1.SALESMAN_MEM_TYPE_ID
+                    , V1.BILLING_GRP_ID
+                    , V1.MAIL_TEL_MOB
+                    , V1.MAIL_TEL_FAX
+                    , V1.MAIL_TEL_OFF
+                    , V1.MAIL_TEL_RES
+                    , V1.INST_TEL_FAX
+                    , V1.INST_TEL_MOB
+                    , V1.INST_TEL_OFF
+                    , V1.INST_TEL_RES
+                    , V1.SIRIM_NO
+                    , V1.SERIAL_NO
+                    , V1.ITM_PRC_ID
+                    , V1.PV_MONTH
+                    , V1.PV_YEAR
+                    , V1.PROMO_CODE
+                    , V1.PROMO_DESC
+                    , V1.RELATED_NO
+                    , V1.RELATED_ID
+                    , CASE WHEN V3.CRC_ID != 0 THEN 'Credit Card' WHEN V3.ACC_ID != 0 THEN 'Direct Debit' ELSE ' ' END PAYMODE
+                    , V2.RENT_PAY_ID
+                 FROM SAL1013V  V1
+                 JOIN SAL0074D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
+                 JOIN SAL0236D V3 ON V3.DEDUCTION_ACC_ID = V2.DEDUCT_ACC_ID
+                WHERE 1 = 1
+                <if test='ordDt == null || ordDt == ""'>
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                  AND V1.ORD_NO = #{ordNo}
+                </if>
+                <if test='arrAppType != null and arrAppType != ""'>
+                  AND V1.APP_TYPE_ID IN
+                  <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrOrdStusId != null and arrOrdStusId != ""'>
+                  AND V1.ORD_STUS_ID IN
+                  <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+                  AND V1.KEYIN_BRNCH_ID IN
+                  <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+                  AND V1.DSC_BRNCH_ID IN
+                  <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='custId != null and custId != ""'>
+                  AND V1.CUST_ID = #{custId}
+                </if>
+                <if test='custName != null and custName != ""'>
+                  AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
+                </if>
+                <if test='custIc != null and custIc != ""'>
+                  AND UPPER(V1.CUST_IC) LIKE '%'||#{custIc}||'%'
+                </if>
+                <if test='productId != null and productId != ""'>
+                  AND V1.PRODUCT_ID = #{productId}
+                </if>
+                <if test='salesmanCode != null and salesmanCode != ""'>
+                  AND V1.SALESMAN_CODE = #{salesmanCode}
+                </if>
+                <if test='arrRentStus != null and arrRentStus != ""'>
+                  AND V1.RENT_STUS IN
+                  <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
+                <if test='refNo != null and refNo != ""'>
+                  AND V1.REF_NO = #{refNo}
+                </if>
+                <if test='poNo != null and poNo != ""'>
+                  AND V1.PO_NO = #{poNo}
+                </if>
+                <if test='contactNo != null and contactNo != ""'>
+                  AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
+                </if>
+                <if test='vaNo != null and vaNo != ""'>
+                  AND V1.CUST_VA_NO = #{vaNo}
+                </if>
+                <if test='serialNo != null and serialNo != ""'>
+                  AND V1.SERIAL_NO = #{serialNo}
+                </if>
+                <if test='sirimNo != null and sirimNo != ""'>
+                  AND V1.SIRIM_NO = #{sirimNo}
+                </if>
+                <if test='crtUserId != null and crtUserId != ""'>
+                  AND V1.CRT_USER_ID = #{crtUserId}
+                </if>
+                <if test='promoCode != null and promoCode != ""'>
+                  AND V1.PROMO_CODE = #{promoCode}
+                </if>
+                <if test='relatedNo != null and relatedNo != ""'>
+                  AND V1.RELATED_NO = #{relatedNo}
+                </if>
+                <if test='invoicePoNo != null and invoicePoNo != ""'>
+                  AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+                                      FROM PAY0015D
+                                     WHERE PO_REF_NO = #{invoicePoNo})
+                </if>
+                <if test='isEKeyin != null and isEKeyin != ""'>
+                  AND EKEY_IN_ID IS NOT NULL
+                </if>
+               ) T
+           ORDER BY T.ORD_NO ASC
+    </select>
+
+  <select id="newSearchCancelSAL0001D" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SALES_ORD_ID SALES_ORD_ID ,
+           Extent1.SALES_ORD_NO SALES_ORD_NO ,
+           Extent1.REF_NO REF_NO ,
+           Extent1.SALES_DT SALES_DT ,
+           Extent1.CUST_ID CUST_ID ,
+           Extent1.CUST_CNT_ID CUST_CNT_ID ,
+           Extent1.CUST_ADD_ID CUST_ADD_ID ,
+           Extent1.MEM_ID MEM_ID ,
+           Extent1.BRNCH_ID BRNCH_ID ,
+           Extent1.APP_TYPE_ID APP_TYPE_ID ,
+           Extent1.TOT_AMT TOT_AMT ,
+           Extent1.PROMO_ID PROMO_ID ,
+           Extent1.BINDING_NO BINDING_NO ,
+           Extent1.CC_PROMO_ID CC_PROMO_ID ,
+           Extent1.TOT_PV TOT_PV ,
+           Extent1.REM REM ,
+           Extent1.PV_MONTH PV_MONTH ,
+           Extent1.PV_YEAR PV_YEAR ,
+           Extent1.STUS_CODE_ID STUS_CODE_ID ,
+           Extent1.UPD_DT UPD_DT ,
+           Extent1.UPD_USER_ID UPD_USER_ID ,
+           Extent1.SYNC_CHK SYNC_CHK ,
+           Extent1.CUST_PO_NO CUST_PO_NO ,
+           Extent1.REN_CHK_ID REN_CHK_ID ,
+           Extent1.INST_PRIOD INST_PRIOD ,
+           Extent1.DO_NO DO_NO ,
+           Extent1.DEPT_CODE DEPT_CODE ,
+           Extent1.GRP_CODE GRP_CODE ,
+           Extent1.ORG_CODE ORG_CODE ,
+           Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD ,
+           Extent1.EDIT_TYPE_ID EDIT_TYPE_ID ,
+           Extent1.CUST_BILL_ID CUST_BILL_ID ,
+           Extent1.MTH_RENT_AMT MTH_RENT_AMT ,
+           Extent1.LOK LOK ,
+           Extent1.AEON_STUS_ID AEON_STUS_ID ,
+           Extent1.COMM_DT COMM_DT ,
+           Extent1.CRT_USER_ID CRT_USER_ID ,
+           Extent1.CRT_DT CRT_DT ,
+           Extent1.PAY_COM_DT PAY_COM_DT ,
+           Extent1.DEF_RENT_AMT DEF_RENT_AMT ,
+           Extent1.REF_DOC_ID REF_DOC_ID ,
+           Extent1.SALES_HM_ID SALES_HM_ID ,
+           Extent1.SALES_SM_ID SALES_SM_ID ,
+           Extent1.SALES_GM_ID SALES_GM_ID ,
+           Extent1.ADV_BILL ADV_BILL ,
+           Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID ,
+           Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID ,
+           Extent1.PCKAGE_BINDING_NO ,
+           Extent1.SRV_PAC_ID ,
+           Extent2.ITM_STK_ID ITM_STK_ID
+    FROM SAL0001D Extent1
+    JOIN SAL0002D Extent2 ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+    WHERE Extent1.SALES_ORD_NO = #{salesOrderNo}
+    <![CDATA[
+      AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="chkSubPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{itmStkId}
+      AND SUB_PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkMainPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{itmStkId}
+      AND PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="revSubCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID,
+           A.SALES_ORD_NO AS ORD_NO,
+           A.PROMO_ID AS OLD_PROMO,
+           C.PROMO_CAN_ID AS NEW_PROMO,
+           A.TOT_PV AS OLD_PV,
+           D.PROMO_ITM_PV AS NEW_PV,
+           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+           CASE WHEN C.CHG_RENT_AMT = 1
+           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+           C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0252M C ON A.PROMO_ID = C.PROMO_ID AND B.ITM_STK_ID = C.PROD_CDE
+    JOIN SAL0018D D ON C.PROMO_CAN_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.PROMO_CAN_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.SALES_ORD_ID = ( SELECT PCKAGE_BINDING_NO
+                             FROM SAL0001D
+                             WHERE SALES_ORD_ID = #{salesOrdId} )
+      AND D.PROMO_ITM_STUS_ID = 1
+  </select>
+
+  <select id="revMainCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID,
+           A.SALES_ORD_NO AS ORD_NO,
+           A.PROMO_ID AS OLD_PROMO,
+           C.PROMO_CAN_ID AS NEW_PROMO,
+           A.TOT_PV AS OLD_PV,
+           D.PROMO_ITM_PV AS NEW_PV,
+           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+           CASE WHEN C.CHG_RENT_AMT = 1
+           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+           C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0253D C ON A.PROMO_ID = C.SUB_PROMO_ID AND B.ITM_STK_ID = C.SUB_PROD_ID
+    JOIN SAL0018D D ON C.PROMO_CAN_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.PROMO_CAN_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.PCKAGE_BINDING_NO = #{salesOrdId}
+      AND D.PROMO_ITM_STUS_ID = 1
+  </select>
+
+
+  <insert id="insertSAL0254D" parameterType="Map">
+    INSERT INTO SAL0254D (SEQ_NO,
+                          SALES_ORD_ID,
+                          PROMO_OLD,
+                          PROMO_NEW,
+                          PV_OLD,
+                          PV_NEW,
+                          MTH_RENT_AMT_OLD,
+                          MTH_RENT_AMT_NEW,
+                          REMARK,
+                          DISB,
+                          CRT_DT,
+                          UPD_DT,
+                          CRT_BY,
+                          UPD_BY,
+                          CHG_RENT_AMT
+    ) VALUES (SAL0254D_SEQ_ID.NEXTVAL,
+              #{ordId},
+              #{oldPromo},
+              #{newPromo},
+              #{oldPv},
+              #{newPv},
+              #{oldMthRentAmt},
+              #{promoAmt},
+              #{reqStageId},
+              0,
+              SYSDATE,
+              SYSDATE,
+              349,
+              349,
+              #{chgRentAmt}
+    )
+  </insert>
+
+<!--   <resultMap id="BARCODECHANGERETURNDATA" type="egovMap" />
+  <select id="updateBarcodeChange"  statementType="CALLABLE" parameterType="Map">
+      /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.updateBarcodeChange] KR_HAN */
+           { call SP_SVC_BARCODE_CHANGE
+                   (#{pSerialNo}, #{pBeforeSerialNo}, #{pSalesOrdId}, #{pItmCode}, #{pRefDocNo}, #{pCallGbn}, #{pMobileYn}, #{pUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=BARCODECHANGERETURNDATA}
+                    )
+           }
+  </select> -->
+
+  <select id="SP_RETURN_BILLING_EARLY_TERMI_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+    /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.SP_RETURN_BILLING_EARLY_TERMI_SERIAL] KR_HAN */
+    {
+      call SP_RETURN_BILLING_EARLY_TERMIS( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
+    }
+  </select>
+
+  <select id="selectOrderSerial" parameterType="Map" resultType="egovMap">
+    SELECT  /* [com.coway.trust.biz.sales.order.impl.OrderListMapper.selectOrderSerial] KR_HAN */
+                FN_GET_ORDER_SERIAL( #{pSalesOrdId} , #{pItmCode} ) ORDER_SERIAL
+    FROM    DUAL
+  </select>
+
+  <select id="selectDelvryNo" parameterType="Map" resultType="egovMap">
+    SELECT
+                DISTINCT Y.DELVRY_NO DELVRY_NO
+    FROM    LOG0047M X
+                    INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
+    WHERE  X.REF_DOC_NO = #{refDocNo}
+  </select>
+
+ <select id="selectCboPckLinkOrdSub" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , T.CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+           FROM SAL1013V  V1
+           WHERE 1 = 1 AND V1.ORD_ID = (SELECT PCKAGE_BINDING_NO FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo_1})
+    ) T
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+  <select id="selectCboPckLinkOrdSub2" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , T.CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+           FROM SAL1013V  V1
+           WHERE 1 = 1 AND V1.ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE PCKAGE_BINDING_NO = #{salesOrdId})
+    ) T
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+
+
+
+  <select id="getCustIdOfOrderList" parameterType="Map" resultType="egovMap">
+          SELECT CUST_ID
+            FROM SAL0029D  T
+        WHERE 1=1
+        <if test='custName != null and custName != ""'>
+             AND T.NAME LIKE '%'||UPPER(#{custName})||'%'
+           </if>
+           <if test='custIc != null and custIc != ""'>
+             AND T.NRIC  LIKE '%'||UPPER(#{custIc})||'%'
+           </if>
+            <if test='contactNo != null and contactNo != ""'>
+             AND EXISTS   (
+                 SELECT  CUST_CNTC_ID
+                     FROM  SAL0027D  TT
+                 WHERE  1=1
+                    AND #{contactNo}   IN (TT.TEL_M1, TT.TEL_O, TT.TEL_R)
+                    AND TT.CUST_ID  =T.CUST_ID
+             )
+           </if>
+           <if test='vaNo != null and vaNo != ""'>
+             AND REPLACE(T.CUST_VA_NO,' ')= REPLACE(#{vaNo},' ')
+           </if>
+
+           <if test='crtUserId != null and crtUserId != ""'>
+             AND T.CRT_USER_ID = UPPER(#{crtUserId})
+           </if>
+
+            <if test='refNo != null and refNo != ""'>
+             AND EXISTS   (
+                      SELECT CUST_ID  FROM SAL0001D  AA WHERE AA.CUST_ID = T.CUST_ID AND AA. REF_NO = UPPER(#{refNo})
+             )
+         </if>
+
+           <if test='poNo != null and poNo != ""'>
+             AND EXISTS   (
+                      SELECT CUST_ID  FROM SAL0001D  AA WHERE AA.CUST_ID = T.CUST_ID AND AA. CUST_PO_NO = UPPER(#{poNo})
+             )
+         </if>
+
+ </select>
+
+ <select id="selectOrderListCody" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , CASE WHEN LENGTH(T.CUST_IC) = 12 THEN REGEXP_REPLACE(SUBSTR(T.CUST_IC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(T.CUST_IC, 9,12)
+            ELSE T.CUST_IC
+            END CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+
+    FROM ( SELECT
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+           FROM SAL1013V  V1
+             JOIN SYS0026M M1 ON V1.PRODUCT_CODE = M1.STK_CODE
+
+           /*
+             INNER JOIN ( SELECT IE.SALES_ORD_ID
+                          FROM SAL0047D IR
+                          LEFT OUTER JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID WHERE
+                          <choose>
+                            <when test='serialNo != null and serialNo != ""'>
+                              UPPER(IR.SERIAL_NO) = serialNo
+                              <if test='sirimNo != null and sirimNo != ""'>
+                                AND UPPER(IR.SIRIM_NO) = sirimNo
+                              </if>
+                            </when>
+                            <otherwise>
+                              <if test='sirimNo != null and sirimNo != ""'>
+                                IR.SIRIM_NO = sirimNo
+                              </if>
+                            </otherwise>
+                          </choose>
+                        ) A on V1.ORD_ID = A.SALES_ORD_ID
+           */
+           <if test='userBranchId != null and userBranchId != "" '>
+           LEFT JOIN ORG0001D org001 on org001.MEM_ID = V1.SALESMAN_MEM_ID
+           </if>
+            <if test='memType != null and memType != "" '>
+            JOIN(
+                /*
+                SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
+                FROM SAL0090D G
+                LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
+                JOIN SAL0001D S ON S.SALES_ORD_ID = G.SRV_SO_ID
+                JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
+                JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
+                WHERE 1=1
+                */
+                SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
+                FROM SAL0001D S
+                JOIN SAL0090D G ON S.SALES_ORD_ID = G.SRV_SO_ID
+                LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
+
+                WHERE 1=1
+                <if test='ordId != null and ordId != ""'>
+                AND S.SALES_ORD_ID = #{ordId}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                AND S.SALES_ORD_NO = #{ordNo}
+                </if>
+                <if test='ordDt == null || ordDt == ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test="memlvl == 4">
+                AND V.MEM_ID = #{memId}
+                </if>
+                <if test="memlvl == 3">
+                AND V.DEPT_CODE = #{deptCode}
+                </if>
+                <if test="memlvl == 2">
+                AND V.GRP_CODE = #{grpCode}
+                </if>
+                <if test="memlvl == 1">
+                AND V.ORG_CODE = #{orgCode}
+                </if>
+
+                UNION
+
+                SELECT DISTINCT S.CUST_ID , S.SALES_ORD_ID
+                FROM SAL0001D S
+                LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+                WHERE 1=1
+
+                <if test='ordId != null and ordId != ""'>
+                AND S.SALES_ORD_ID = #{ordId}
+                </if>
+                <if test='ordNo != null and ordNo != ""'>
+                AND S.SALES_ORD_NO = #{ordNo}
+                </if>
+                <if test='ordDt == null || ordDt == ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                </if>
+                <if test='ordDt != null and ordDt != ""'>
+                AND S.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                </if>
+                <if test="memlvl == 4">
+                AND V.MEM_ID = #{memId}
+                </if>
+                <if test="memlvl == 3">
+                AND V.DEPT_CODE = #{deptCode}
+                </if>
+                <if test="memlvl == 2">
+                AND V.GRP_CODE = #{grpCode}
+                </if>
+                <if test="memlvl == 1">
+                AND V.ORG_CODE = #{orgCode}
+                </if>
+
+            ) SVC
+            ON V1.ORD_ID = SVC.SALES_ORD_ID
+            </if>
+           WHERE 1 = 1
+           <if test='userBranchId != null and userBranchId != "" '>
+            AND (V1.CODY_BRNCH_ID = #{userBranchId} OR org001.BRNCH = #{userBranchId})
+           </if>
+           <if test='ordDt == null || ordDt == ""'>
+             AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+           </if>
+           <if test='ordDt != null and ordDt != ""'>
+             AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+           </if>
+           <if test='invoicePoNo != null and invoicePoNo != ""'>
+             AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
+                         FROM PAY0015D
+                         WHERE PO_REF_NO = #{invoicePoNo})
+           </if>
+           <if test='isEKeyin != null and isEKeyin != ""'>
+             AND EKEY_IN_ID IS NOT NULL
+           </if>
+           <if test='isSelectAll == null or isSelectAll == ""'>
+
+            <!--
+            AND M1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
+                                                             AND BB.CODE = 'FRM')
+            --> -- Mattress, Frame
+                  AND V1.APP_TYPE_ID NOT IN (5764)
+           </if>
+           <if test = 'memID != null and memID != ""'>
+           AND V1.SALESMAN_MEM_ID = #{memID}
+           </if>
+    ) T
+     WHERE 1=1
+
+           <if test='ordNo != null and ordNo != ""'>
+             AND T.ORD_NO = #{ordNo}
+           </if>
+           <if test='ordId != null and ordId != ""'>
+           /*29-12-2022 - Chou Jia Cheng - edited serial number to be able to view more than one result at a time*/
+             AND T.ORD_ID IN
+             <foreach item="item" collection="ordId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrAppType != null and arrAppType != ""'>
+             AND T.APP_TYPE_ID IN
+             <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrOrdStusId != null and arrOrdStusId != ""'>
+             AND T.ORD_STUS_ID IN
+             <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+             AND T.KEYIN_BRNCH_ID IN
+             <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+             AND T.DSC_BRNCH_ID IN
+             <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='custId != null and custId != ""'>
+             AND T.CUST_ID = #{custId}
+           </if>
+           <if test='productId != null and productId != ""'>
+             AND T.PRODUCT_ID = #{productId}
+           </if>
+
+             /*AND T.SALESMAN_CODE = salesmanCode*/
+
+           <if test='arrRentStus != null and arrRentStus != ""'>
+             AND T.RENT_STUS IN
+             <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='refNo != null and refNo != ""'>
+             AND T.REF_NO = #{refNo}
+           </if>
+           <if test='poNo != null and poNo != ""'>
+             AND T.PO_NO = #{poNo}
+           </if>
+           <if test='promoCode != null and promoCode != ""'>
+             AND T.PROMO_CODE = #{promoCode}
+           </if>
+           <if test='relatedNo != null and relatedNo != ""'>
+             AND T.RELATED_NO = #{relatedNo}
+           </if>
+
+           <if test='arrayCustId != null and arrayCustId != ""'>
+             AND T.CUST_ID IN
+             <foreach item="item" collection="arrayCustId" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+  <select id="getSirimOrdID" parameterType="Map" resultType="egovMap">
+      SELECT IE.SALES_ORD_ID
+      FROM SAL0047D IR
+      LEFT OUTER JOIN SAL0046D IE
+        ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID
+      WHERE 1=1
+      <if test='sirimNo != null and sirimNo != "" '>
+        AND UPPER(IR.SIRIM_NO) = #{sirimNo}
+      </if>
+      <if test='serialNo != null and serialNo != "" '>
+        AND UPPER(IR.SERIAL_NO) = #{serialNo}
+      </if>
+  </select>
+
+  <select id="getMemberID" parameterType="Map" resultType="int">
+      SELECT MEM_ID
+      FROM ORG0001D
+      WHERE 1=1
+      <if test='salesmanCode != null and salesmanCode != "" '>
+        AND MEM_CODE = #{salesmanCode}
+      </if>
+  </select>
+
+  <insert id="insert_SAL0299D" parameterType="Map">
+    INSERT INTO SAL0299D (
+        REF_ID ,
+        RETN_REF_ID ,
+        SALES_ORD_ID ,
+        APP_TYPE_ID ,
+        CUST_ID ,
+        STK_ID ,
+        STK_CTGRY_ID ,
+        UPD_USER_BRNCH_ID ,
+        UPD_USER_ID ,
+        STK_RETN_COOLING_START_DT ,
+        STK_RETN_COOLING_END_DT ,
+        REM ,
+        STUS_CODE_ID ,
+        CRT_USER_ID ,
+        CRT_DT
+      ) VALUES (
+        SAL0299D_REF_ID_SEQ.nextval,
+        (SELECT STK_RETN_ID FROM LOG0038D WHERE retn_no = #{serviceNo}) ,
+        #{salesOrderId} ,
+        #{appTypeId} ,
+        #{custId} ,
+        #{productId} ,
+        #{categoryId} ,
+        #{brnchId} ,
+        #{userId} ,
+        TO_DATE(#{signRegDt},'DD/MM/YYYY') ,
+        TO_DATE(#{signRegDt},'DD/MM/YYYY')+91 ,
+        NULL ,
+        1 ,
+        #{userId} ,
+        SYSDATE
+      )
+  </insert>
+
+  <select id="selectPRFailReason" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID,
+           CODE,
+           RESN_DESC
+    FROM  SYS0032M
+    WHERE 1=1
+      AND RESN_ID = #{failReasonCode}
+  </select>
+
+  <select id="selectCustBillId" parameterType="Map" resultType="int">
+       SELECT
+            Extent1.CUST_BILL_ID CUST_BILL_ID
+        FROM SAL0024D Extent1
+        WHERE  Extent1.CUST_BILL_GRP_NO = #{billGroupNo}
+    </select>
+
+    <select id="selectOrderId" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID
+     ,A.SALES_ORD_NO AS SALES_ORD_NO
+     ,C.NAME AS CUST_NAME
+     ,NVL (E.ADDR_DTL, ' ') AS INST_ADDR_DTL
+     ,NVL (E.STREET, ' ') AS INST_STREET
+     ,NVL (J.AREA_NAME, ' ') AS INST_AREA
+     ,NVL (F.POSTCODE, ' ') AS INST_POSTCODE
+     ,NVL (F.CITY, ' ') AS INST_CITY
+     ,NVL (F.STATE, ' ') AS INST_STATE
+     ,NVL (F.COUNTRY, ' ') AS INST_COUNTRY
+     ,H.STK_DESC AS PRODUCT_TYPE
+     ,C.CUST_VA_NO AS VA_NO
+     ,I.cust_bill_pay_ref_no1 AS JOMPAY
+     ,A.APP_TYPE_ID AS APP_TYPE_ID
+     ,B.STUS_CODE_ID AS CURR_RENTAL_STUS
+    FROM SAL0001D A
+    JOIN SAL0002D G ON G.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0071D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+    JOIN SAL0045D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+    JOIN SAL0024D I ON I.CUST_BILL_ID = A.CUST_BILL_ID
+    LEFT JOIN SAL0023D E ON E.CUST_ADD_ID = D.ADD_ID
+    LEFT JOIN SYS0064M F ON F.AREA_ID = E.AREA_ID
+    LEFT JOIN SYS0026M H ON H.STK_ID = G.ITM_STK_ID
+    LEFT JOIN SYS0039M J ON J.AREA_ID = E.AREAID
+    WHERE
+    A.SALES_ORD_NO = #{otOrdNo}
+    </select>
+
+    <resultMap id="outStndInfoList" type="egovMap" ></resultMap>
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+        {
+              call SP_GET_ORD_OTSTND_INFO ( #{ordId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndInfoList})
+        }
+        ]]>
+    </select>
+
+    <resultMap id="resultHeaderMap" type="egovMap" ></resultMap>
+    <select id="selectHeaderInfo" statementType="CALLABLE" parameterType="Map" resultType="EgovMap" >
+    {
+        call SP_SAL_AD_HEADER( #{ordId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultHeaderMap})
+    }
+    </select>
+
+    <resultMap id="resultHistoryMap" type="egovMap" ></resultMap>
+    <select id="selectHistInfo" statementType="CALLABLE" parameterType="Map" resultType="EgovMap" >
+    {
+        call SP_SAL_AD_HISTORY( #{ordId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultHistoryMap})
+    }
+    </select>
+
+    <resultMap id="resultMatrixMap" type="egovMap" ></resultMap>
+    <select id="selectMatrixInfo" statementType="CALLABLE" parameterType="Map" resultType="EgovMap" >
+    {
+        call SP_SAL_AD_MATRIX( #{ordId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultMatrixMap})
+    }
+    </select>
+
+    <resultMap id="resultCrcLinkMap" type="egovMap" ></resultMap>
+    <select id="selectAccLinkInfo" statementType="CALLABLE" parameterType="Map" resultType="EgovMap" >
+    {
+        call SP_SAL_AD_LINK( #{ordId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultCrcLinkMap})
+    }
+    </select>
+
+</mapper>

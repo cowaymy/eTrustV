@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper">
+
+  <select id="selectBarcodeRegisterList" parameterType="Map" resultType="EgovMap">
+    SELECT  A.SCAN_NO AS SCAN_NO
+              , A.SERIAL_NO AS SERIAL_NO
+              , A.ITM_CODE AS ITM_CODE
+              , B.STK_DESC AS ITM_DESC
+    FROM LOG0099D A  JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
+
+    <where>
+      AND (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
+      <if test="delvryNo !=null and delvryNo !='' ">
+        AND A.DELVRY_NO = #{delvryNo}
+      </if>
+      <if test="reqstNo !=null and reqstNo !='' ">
+        AND A.REQST_NO = #{reqstNo}
+      </if>
+      <if test="itmCode !=null and itmCode !='' ">
+        AND A.ITM_CODE = #{itmCode}
+      </if>
+      <if test="ioType !=null and ioType !='' ">
+        AND A.IO_TYPE = #{ioType}
+      </if>
+    </where>
+	</select>
+
+     <resultMap id="SAVEAPIBARCODESCANDATA" type="egovMap" />
+     <select id="saveBarcodeScan"  statementType="CALLABLE" parameterType="Map">
+            /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.saveBarcodeScan] 20191217 - KR_HAN */
+             { call SP_LOGISTIC_BARCODE_SCAN
+                     (
+					 #{pScanNo},
+					 #{pSerialNo},
+					 #{pReqstNo},
+					 #{pDelvryNo},
+					 #{pFromLocId},
+					 #{pToLocId},
+					 #{pTrnscType},
+					 #{pIoType},
+					 #{pUserId},
+                     #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SAVEAPIBARCODESCANDATA} ,
+                     #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SAVEAPIBARCODESCANDATA} ,
+                     #{outScanNo , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SAVEAPIBARCODESCANDATA}
+                     )
+             }
+     </select>
+
+     <resultMap id="DELETEAPIBARCODESCANDATA" type="egovMap" />
+     <select id="deleteBarcode"  statementType="CALLABLE" parameterType="Map">
+            /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.deleteBarcode] 20191217 - KR_HAN */
+             { call SP_LOGISTIC_BARCODE_DELETE
+                     (
+					'N',
+					#{pSerialNo},
+					#{pReqstNo},
+					#{pDelvryNo},
+					#{pTrnscType},
+                    #{pIoType},
+                     #{pUserId},
+                     #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SAVEAPIBARCODESCANDATA} ,
+                     #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SAVEAPIBARCODESCANDATA}
+                     )
+             }
+     </select>
+
+    <resultMap id="CHECKAPIBARCODESCANDATA" type="egovMap" />
+    <select id="adMobileCheckBarcode"  statementType="CALLABLE" parameterType="Map">
+        /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.adMobileCheckBarcode] 20191231 - KR_KangJaeMin */
+        {   call SP_LOGISTIC_BARCODE_SCAN_ADJST
+            (
+                #{pScanNo},
+                #{pSerialNo},
+                #{pReqstNo},
+                #{pFromLocId},
+                #{pTrnscType},
+                #{pUserId},
+                #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA} ,
+                #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA} ,
+                #{outScanNo , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=CHECKAPIBARCODESCANDATA}
+            )
+        }
+    </select>
+
+    <select id="selectBarcodeByBox" parameterType="Map" resultType="EgovMap">
+    /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.selectBarcodeByBox] Added to select all serial number by box number. By HLTANG 09-11-2021 */
+        SELECT SERIAL_NO FROM LOG0062M WHERE BOX_NO = #{boxno}
+    </select>
+</mapper>

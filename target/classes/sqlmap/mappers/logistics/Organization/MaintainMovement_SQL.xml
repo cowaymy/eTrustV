@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.organization.impl.MaintainMovementMapper">
+
+    <select id="selectMaintainMovementList" parameterType="Map" resultType="egovMap">
+        SELECT TRNSC_TYPE_CODE||'-'||MOV_TYPE ptype,
+               TRNSC_TYPE_CODE ttype,
+			   (SELECT code_name FROM sys0013m where code_master_id = 306 and code = LOG0046M.TRNSC_TYPE_CODE) ttypedesc,
+			   MOV_TYPE mtype,
+			   (SELECT code_name FROM sys0013m where code_master_id = 308 and code = LOG0046M.MOV_TYPE) mtypedesc,
+			   CANCL_MOV_TYPE cmtype,
+			   CANCL_MVT cmvt,
+			   DEBT_CRDIT decr,
+			   decode (DEBT_CRDIT , 'H' , 'Credit' , 'S' , 'Debit' , DEBT_CRDIT) decrdesc ,
+			   MOV_INDICT mvindict,
+			   (SELECT code_name FROM sys0013m where code_master_id = 307 and code = LOG0046M.MOV_INDICT) mvindictdesc, 
+			   MOV_RETN mretn,
+			   TRNSFR_STEP tstep,
+			   TRNSFR_ORGN tranorgn,
+			   VENDOR vender,
+			   CUST cust,
+			   PURCHS_ORD_FLAG poflag,
+			   STOCK_TRNSFR_FLAG stflag,
+			   SALES_SVC_ORD_FLAG ssoflag,
+			   DELVRY_NO_FLAG dnflag,
+			   ADJ_FLAG adjflag,
+			   RESVTN_FLAG resflag,
+			   GL_ACC_NO_FLAG ganflag,
+			   COST_CENTR_FLAG ccflag,
+			   ORD_NO_FLAG onflag,
+			   MAIN_ASSET_NO_FLAG manflag
+		  FROM LOG0046M
+		 where 1 = 1
+		   <if test="sttype != null and sttype !=''">
+                AND TRNSC_TYPE_CODE = #{sttype}
+           </if>
+           <if test="smtype != null and smtype !=''">
+                AND MOV_TYPE  = #{smtype}
+           </if>
+		 ORDER BY TRNSC_TYPE_CODE , MOV_TYPE
+    </select>
+    
+    <insert id="insMaintainMovement" parameterType="Map">
+   	INSERT INTO LOG0046M (TRNSC_TYPE_CODE,
+		                      MOV_TYPE,
+		                      CANCL_MOV_TYPE,
+		                      CANCL_MVT,
+		                      DEBT_CRDIT,
+		                      MOV_INDICT,
+		                      MOV_RETN,
+		                      TRNSFR_STEP,
+		                      TRNSFR_ORGN,
+		                      VENDOR,
+		                      CUST,
+		                      PURCHS_ORD_FLAG,
+		                      STOCK_TRNSFR_FLAG,
+		                      SALES_SVC_ORD_FLAG,
+		                      DELVRY_NO_FLAG,
+		                      ADJ_FLAG,
+		                      RESVTN_FLAG,
+		                      GL_ACC_NO_FLAG,
+		                      COST_CENTR_FLAG,
+		                      ORD_NO_FLAG,
+		                      MAIN_ASSET_NO_FLAG,
+		                      INS_DT,
+		                      INS_USER_ID)
+		     VALUES (#{ttype} , #{mtype} , #{cmtype} , #{cmvt} , #{decr} , #{mvindict} , #{mretn},#{tstep} 
+		           , #{tranorgn} , #{vender} , #{cust} , #{poflag} , #{stflag} , #{ssoflag} , #{dnflag} 
+		           , #{adjflag} , #{resflag} , #{ganflag} , #{ccflag} , #{onflag} , #{manflag} , SYSDATE , 999999)
+        </insert>
+        
+        <update id="updMaintainMovement" parameterType="Map">
+            UPDATE LOG0046M
+               SET CANCL_MOV_TYPE      = #{cmtype}   
+				 , CANCL_MVT           = #{cmvt}     
+				 , DEBT_CRDIT          = #{decr}     
+				 , MOV_INDICT          = #{mvindict} 
+				 , MOV_RETN            = #{mretn}    
+				 , TRNSFR_STEP         = #{tstep}    
+				 , TRNSFR_ORGN         = #{tranorgn} 
+				 , VENDOR              = #{vender}   
+				 , CUST                = #{cust}     
+				 , PURCHS_ORD_FLAG     = #{poflag}   
+				 , STOCK_TRNSFR_FLAG   = #{stflag}   
+				 , SALES_SVC_ORD_FLAG  = #{ssoflag}  
+				 , DELVRY_NO_FLAG      = #{dnflag}   
+				 , ADJ_FLAG            = #{adjflag}  
+				 , RESVTN_FLAG         = #{resflag}  
+				 , GL_ACC_NO_FLAG      = #{ganflag}  
+				 , COST_CENTR_FLAG     = #{ccflag}   
+				 , ORD_NO_FLAG         = #{onflag}   
+				 , MAIN_ASSET_NO_FLAG  = #{manflag}  
+				 , UPD_DT              = SYSDATE
+				 , UPD_USER_ID         = 999999
+             WHERE TRNSC_TYPE_CODE = #{ttype}
+               AND MOV_TYPE        = #{mtype}
+        </update>
+        
+        <delete id="removeMaintainMovement" parameterType="Map" >
+            DELETE FROM LOG0046M
+             WHERE TRNSC_TYPE_CODE = #{ttype}
+               AND MOV_TYPE        = #{mtype}
+         </delete>
+</mapper>

@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.commission.system.impl.CommissionSystemMapper">
+
+<!-- 	<resultMap id="EgovMap" type="EgovMap">
+		<result property="cdDs" column="cdDs" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="orgDs" column="orgds" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap> -->
+
+	<!-- searchOrganization Gruop List -->
+	<select id="selectOrgGrList" parameterType="Map" resultType="EgovMap">
+	   <![CDATA[
+		SELECT
+		T2.CODE_MASTER_ID AS mstId ,
+		T1.CODE_MASTER_NAME AS mstNm,
+		T2.CODE_ID AS cdId,
+		T2.CODE AS cd,
+		T2.CODE_NAME AS cdNm,
+		T2.CODE_DESC AS cdDs
+		FROM SYS0012M T1
+		JOIN SYS0013M T2
+		ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+		WHERE 1=1
+		 ]]>
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID = #{mstId}
+			AND T2.CODE_ID IN (1,2,3,7)
+		</if>
+		 <![CDATA[
+		ORDER BY T2.CODE
+		 ]]>
+	</select>
+
+	<!-- search Organization List -->
+	<select id="selectOrgList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+        SELECT
+            T2.CODE_MASTER_ID AS mstId ,
+            T1.CODE_MASTER_NAME AS mstNm,
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm,
+            T2.CODE_DESC AS cdDs
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+            ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
+         ]]>
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID = #{mstId}
+		</if>
+           <![CDATA[
+        ORDER BY T2.CODE_ID
+         ]]>
+	</select>
+
+	<!-- search rule book management List -->
+	<select id="selectRuleBookOrgMngList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+         SELECT
+          ORG_GR_CD,
+	      ORG_GR_NM,
+	      ORG_SEQ,
+	      ORG_CD,
+	      ORG_NM,
+	      USE_YN,
+	      CASE WHEN END_YEARMONTH IS NOT NULL AND LENGTH(END_YEARMONTH)=6
+		  THEN SUBSTR(END_YEARMONTH,5) || '/' || SUBSTR(END_YEARMONTH,0,4)
+		  ELSE END_YEARMONTH END END_DT ,
+	     T2.CODE_DESC AS cdDs,
+	     to_char(T1.UPD_DT,'yyyy-mm-dd hh24:mi:ss') UPD_DT
+	      FROM CMM0041C T1 JOIN SYS0013M T2
+	      ON T1.ORG_CD = T2.CODE_ID
+        WHERE 1=1
+         ]]>
+		<if test="orgRgCombo != null and orgRgCombo != ''">
+			AND T1.ORG_GR_CD = #{orgRgCombo}
+		</if>
+		<if test="orgCombo != null and orgCombo != ''">
+			AND T1.ORG_CD = #{orgCombo}
+		</if>
+		<if test="useYnCombo != null and useYnCombo != ''">
+			AND T1.USE_YN = #{useYnCombo}
+		</if>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN START_YEARMONTH AND END_YEARMONTH
+		</if>
+       <![CDATA[
+        ORDER BY T1.ORG_GR_NM , T2.CODE_ID
+         ]]>
+	</select>
+
+	<!-- add coommission rule book management -->
+	<insert id="addCommissionGrid" parameterType="Map">
+		INSERT INTO CMM0041C (
+		ORG_GR_CD,
+		ORG_CD,
+		ORG_SEQ,
+		ORG_GR_NM,
+		ORG_NM,
+		USE_YN,
+		START_YEARMONTH,
+		END_YEARMONTH,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT
+		)
+		VALUES (
+		#{orgGrCd},
+		#{orgCd},
+		CMM0041C_ORG_SEQ.nextval ,
+		#{orgGrNm},
+		#{orgNm},
+		#{useYn},
+		(SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+		#{endDt},
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- search coommission rule book checking data -->
+	<select id="selectRuleBookMngChk" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+         SELECT
+          ORG_GR_CD,
+          ORG_CD,
+          ORG_SEQ
+          FROM CMM0041C
+        WHERE END_YEARMONTH=#{endDt} AND ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd}
+         ]]>
+	</select>
+
+	<!-- update coommission rule book management : end_dt -->
+	<update id="udtCommissionGridEndDt">
+		UPDATE CMM0041C
+		SET
+		END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</update>
+
+	<!-- update coommission rule book management : use_yn -->
+	<update id="udtCommissionGridUseYn">
+		UPDATE CMM0041C
+		SET
+		USE_YN=#{useYn}
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</update>
+
+	<!-- delete coommission rule book management -->
+	<delete id="delCommissionGrid">
+		DELETE FROM CMM0041C
+		WHERE ORG_GR_CD=#{orgGrCd} AND ORG_CD=#{orgCd} AND ORG_SEQ=#{orgSeq}
+	</delete>
+
+	<!-- searchOrganization Gruop Code All List -->
+	<select id="selectOrgGrCdListAll" parameterType="Map" resultType="EgovMap">
+	<![CDATA[
+		SELECT
+		ORG_GR_CD ,
+		ORG_GR_NM
+		FROM CMM0041C
+		WHERE 1=1
+		  AND START_YEARMONTH < END_YEARMONTH
+		 ]]>
+		<if test="useYnCombo != null and useYnCombo != ''">
+			AND USE_YN = #{useYnCombo}
+		</if>
+		<if test="searchDt != null and searchDt != ''">
+			AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN START_YEARMONTH AND END_YEARMONTH
+		</if>
+		<![CDATA[
+		GROUP BY ORG_GR_CD, ORG_GR_NM
+		 ]]>
+	</select>
+
+	<!-- searchOrganization Gruop Code All List -->
+	<select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
+  <![CDATA[
+    SELECT
+    ORG_SEQ,
+    ORG_CD ,
+    ORG_NM
+    FROM CMM0041C
+    WHERE 1=1
+     ]]>
+		<if test="orgGrCombo != null and orgGrCombo != ''">
+			AND ORG_GR_CD = #{orgGrCombo}
+		</if>
+		<if test="searchDt != null and searchDt != ''">
+            AND #{searchDt} between START_YEARMONTH and END_YEARMONTH
+        </if>
+    <![CDATA[
+    GROUP BY ORG_SEQ,ORG_CD, ORG_NM
+    ORDER BY ORG_NM
+     ]]>
+	</select>
+
+	<!-- search Organization Code List -->
+	<select id="selectOrgCdList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+    SELECT
+         T1.ORG_SEQ ,
+         T1.ORG_GR_CD ,
+         T1.ORG_CD ,
+         T1.ORG_NM ,
+         T2.CODE_DESC AS cdDs  ,
+         T2.CODE
+         FROM CMM0041C T1
+           LEFT OUTER JOIN SYS0013M T2
+           ON T1.ORG_CD = T2.CODE_ID
+           WHERE 1=1
+			AND T1.USE_YN = 'Y'
+			AND TO_CHAR(SYSDATE,'YYYYMM') BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
+    ORDER BY T1.ORG_GR_CD,T1.ORG_NM
+     ]]>
+	</select>
+
+
+	<!-- search Organization Item List -->
+	<select id="selectOrgItemList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+    SELECT
+        T1.CODE_MASTER_ID ,
+        T2.CODE_ID ,
+        T2.CODE ,
+        T2.CODE_NAME ,
+        T2.CODE_DESC AS cdDs
+      FROM SYS0012M T1
+        JOIN  SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+            AND T2.DISAB = '0'
+        WHERE 1=1
+         ]]>
+		<if test="mstId != null and mstId != ''">
+			AND T1.CODE_MASTER_ID=#{mstId}
+		</if>
+		<if test="ItemOrgCd != null and ItemOrgCd != ''">
+			AND T2.CODE LIKE #{ItemOrgCd} ||'%'
+		</if>
+		ORDER BY T2.CODE
+	</select>
+
+
+	<!-- search rule book Item management List -->
+	<select id="selectRuleBookItemMngList" parameterType="Map" resultType="EgovMap">
+        <![CDATA[
+		SELECT
+		    T1.ITEM_SEQ,
+		    T1.ITEM_CD,
+		    T1.ORG_SEQ,
+		    T1.ORG_GR_CD,
+		    T1.ORG_CD,
+		    (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs,
+		    T1.TYPE_CD,
+		    T1.USE_YN,
+		    T1.ITEM_NM,
+		    T1.ITEM_DESC,
+		    T1.START_YEARMONTH,
+		    CASE WHEN T1.END_YEARMONTH IS NOT NULL AND LENGTH(T1.END_YEARMONTH)=6
+        THEN SUBSTR(T1.END_YEARMONTH,5) || '/' || SUBSTR(T1.END_YEARMONTH,0,4)
+        ELSE T1.END_YEARMONTH END END_DT ,
+		    T1.CRT_DT,
+		    T1.UPD_USER_ID,
+		    T2.CODE ,
+		    T2.CODE_NAME  ,
+		    T2.CODE_DESC AS cdDs,
+            to_char(T1.UPD_DT,'yyyy-mm-dd hh24:mi:ss') UPD_DT
+		FROM CMM0042C T1 JOIN SYS0013M T2
+		    ON T1.ITEM_CD = to_char(T2.CODE_ID)
+		    ]]>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN T1.START_YEARMONTH AND T1.END_YEARMONTH
+		</if>
+    <![CDATA[
+      JOIN CMM0041C T3 ON T1.ORG_SEQ=T3.ORG_SEQ
+        ]]>
+		<if test="searchDt != null and searchDt != ''">
+			AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		</if>
+    <![CDATA[
+		WHERE 1=1
+        ]]>
+		<if test="orgGrCombo != null and orgGrCombo != ''">
+			AND T1.ORG_GR_CD = #{orgGrCombo}
+		</if>
+		<if test="orgCombo != null and orgCombo != ''">
+            AND T1.ORG_CD = #{orgCombo}
+        </if>
+		<if test="orgSeqCombo != null and orgSeqCombo != ''">
+			AND T1.ORG_SEQ = #{orgSeqCombo}
+		</if>
+		<if test="useYnCombo != null and useYnCombo != ''">
+			AND T1.USE_YN = #{useYnCombo}
+		</if>
+		ORDER BY T1.ITEM_NM
+	</select>
+
+	<!-- search coommission rule book Item checking data -->
+	<select id="selectRuleBookItemMngChk" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+         SELECT
+          ITEM_SEQ,
+          ITEM_CD,
+          ORG_SEQ
+          FROM CMM0042C
+        WHERE 1=1
+            ]]>
+		<if test="orgSeq != null and orgSeq != ''">
+			AND ORG_SEQ = #{orgSeq}
+		</if>
+		<if test="itemCd != null and itemCd != ''">
+			AND ITEM_CD = #{itemCd}
+		</if>
+		<if test="endDt != null and endDt != ''">
+			AND END_YEARMONTH=#{endDt}
+		</if>
+	</select>
+
+
+	<!-- update coommission rule book management : end_dt -->
+	<update id="udtCommissionItemGridEndDt">
+		UPDATE CMM0042C
+		SET
+		END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ITEM_SEQ=#{itemSeq} AND ORG_SEQ=#{orgSeq} AND ITEM_CD=#{itemCd} AND END_YEARMONTH=#{endDt}
+	</update>
+
+	<!-- add coommission rule book Item management -->
+	<insert id="addCommissionItemGrid" parameterType="Map">
+		INSERT INTO CMM0042C (
+		ITEM_SEQ,
+		ITEM_CD,
+		ORG_SEQ,
+		ITEM_NM,
+		ORG_GR_CD,
+		ORG_CD,
+		TYPE_CD,
+		USE_YN,
+		ITEM_DESC,
+		START_YEARMONTH,
+		END_YEARMONTH,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT
+		) VALUES (
+		CMM0042C_ITEM_SEQ.nextval,
+		#{itemCd},
+		#{orgSeq},
+		#{itemNm},
+		#{orgGrCd},
+		#{orgCd},
+		#{typeCd},
+		#{useYn},
+		#{cdDs},
+		(SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+		#{endDt},
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId},
+		SYSDATE
+		)
+	</insert>
+
+	<!-- update coommission rule book management : use_yn -->
+	<update id="udtCommissionItemGridUseYn">
+		UPDATE CMM0042C
+		SET
+		USE_YN=#{useYn}
+		<if test="typeCd != null and typeCd != ''">
+			,TYPE_CD = #{typeCd}
+		</if>
+		, UPD_USER_ID=#{updUserId}
+		, UPD_DT=SYSDATE
+		WHERE ITEM_SEQ=#{itemSeq} AND ORG_SEQ=#{orgSeq} AND ITEM_CD=#{itemCd}
+	</update>
+
+  <!-- search coommission rule  checking data -->
+  <select id="selectRuleMngChk" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+         SELECT
+          RULE_SEQ,
+          ITEM_SEQ,
+          ITEM_CD,
+          RULE_LEVEL,
+          RULE_PID
+          FROM CMM0043M
+        WHERE ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd} AND RULE_SEQ=#{ruleSeq}
+         ]]>
+  </select>
+
+	<!-- add coommission rule book Item management -->
+	<insert id="addCommissionRuleData" parameterType="Map">
+		INSERT INTO CMM0043M (
+		RULE_SEQ,
+		ITEM_SEQ,
+		ITEM_CD,
+		RULE_LEVEL,
+		RULE_PID,
+		RULE_NM,
+		RULE_CATEGORY,
+		RULE_OPT1,
+		RULE_OPT2,
+		VALUE_TYPE,
+		VALUE_TYPE_NM,
+		RESULT_VALUE,
+		RESULT_VALUE_NM,
+		RULE_DESC,
+		START_YEARMONTH,
+		END_YEARMONTH,
+		USE_YN,
+		CRT_USER_ID,
+		CRT_DT,
+		UPD_USER_ID,
+		UPD_DT,
+		PRT_ORDER
+		) VALUES (
+		CMM0043M_RULE_SEQ.nextval,
+		#{itemSeq},
+		#{itemCd},
+		#{ruleLevel},
+		#{rulePid},
+		#{ruleNm},
+		#{ruleCategory},
+		#{ruleOpt1},
+		#{ruleOpt2},
+		#{valueType},
+		#{valueTypeNm},
+		#{resultValue},
+		#{resultValueNm},
+		#{ruleDesc},
+		(SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+		#{endDt},
+		#{useYn},
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId},
+		SYSDATE,
+		#{printOrder}
+		)
+	</insert>
+
+	<select id="cntUpdateData" parameterType="Map" resultType="int">
+	   SELECT COUNT(*)
+	   FROM CMM0043M
+	   WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+	</select>
+
+	<update id="udtRuleDescData"  parameterType="Map">
+	   UPDATE CMM0043M
+	   SET
+	       RULE_NM= #{ruleNm},
+	       RULE_CATEGORY = #{ruleCategory},
+	       VALUE_TYPE = #{valueType},
+	       VALUE_TYPE_NM = #{valueTypeNm},
+	       RESULT_VALUE_NM = #{resultValueNm},
+	       PRT_ORDER = #{printOrder},
+	       RULE_DESC = #{ruleDesc},
+	       USE_YN = #{useYn}
+	   WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+	</update>
+
+  <!-- update coommission rule book management : end_dt -->
+  <update id="udtCommissionRuleEndDt">
+    UPDATE CMM0043M
+    SET
+    END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+    , UPD_USER_ID=#{updUserId}
+    , UPD_DT=SYSDATE
+    WHERE RULE_SEQ=#{ruleSeq} AND  ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd} AND END_YEARMONTH=#{endDt}
+  </update>
+
+  <!-- search rule book mng list-->
+  <select id="selectRuleBookMngList" parameterType="Map" resultType="EgovMap">
+        <![CDATA[
+     SELECT
+        T1.ITEM_SEQ,
+        T1.ITEM_CD,
+        T1.ORG_SEQ,
+        T1.ORG_GR_CD,
+        T1.ORG_CD,
+        (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs,
+        T1.TYPE_CD,
+        T1.ITEM_DESC,
+        T2.CODE ,
+        T2.CODE_NAME  ,
+        T2.CODE_DESC AS cdDs ,
+        T3.RULE_SEQ ,
+        T3.RULE_LEVEL ,
+        CASE WHEN T3.RULE_PID IS NULL THEN NULL
+        WHEN T3.RULE_PID='0' THEN ''
+        ELSE T3.RULE_PID END RULE_PID ,
+        T3.RULE_NM ,
+        T3.RULE_CATEGORY ,
+        T3.RULE_OPT1 ,
+        T3.RULE_OPT2 ,
+        T3.VALUE_TYPE ,
+        T3.VALUE_TYPE_NM ,
+        T3.RESULT_VALUE ,
+        T3.RESULT_VALUE_NM ,
+        T3.RULE_DESC ,
+        T3.START_YEARMONTH ,
+        T3.END_YEARMONTH ,
+        T3.USE_YN ,
+        CASE WHEN T3.START_YEARMONTH IS NOT NULL AND LENGTH(T3.START_YEARMONTH)=6
+        THEN SUBSTR(T3.START_YEARMONTH,5) || '/' || SUBSTR(T3.START_YEARMONTH,0,4)
+        ELSE T3.START_YEARMONTH END START_DT ,
+        CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6
+        THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4)
+        ELSE T3.END_YEARMONTH END END_DT ,
+        T3.PRT_ORDER
+    FROM CMM0042C T1 JOIN SYS0013M T2
+        ON T1.ITEM_CD = to_char(T2.CODE_ID)
+     JOIN CMM0043M T3
+        ON T1.ITEM_SEQ = T3.ITEM_SEQ
+      WHERE 1=1
+        ]]>
+    <if test="orgSeq != null and orgSeq != ''">
+      AND T1.ORG_SEQ = #{orgSeq}
+    </if>
+    <if test="itemSeq != null and itemSeq != ''">
+      AND T1.ITEM_SEQ = #{itemSeq}
+    </if>
+    <if test="itemCd != null and itemCd != ''">
+      AND T1.ITEM_CD = #{itemCd}
+    </if>
+     <if test="ruleSeq != null and ruleSeq != ''">
+      AND T3.RULE_SEQ = #{ruleSeq}
+    </if>
+    START WITH RULE_PID=0
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
+    </if>
+     <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+    CONNECT BY PRIOR RULE_SEQ =RULE_PID
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
+    </if>
+      <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+		ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER
+  </select>
+
+  <select id="selectRuleValueType" parameterType="Map" resultType="EgovMap">
+    SELECT CODE_ID,CODE,CODE_NAME,CODE_DESC
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID=#{mstId} AND DISAB=0
+    ORDER BY CODE
+  </select>
+
+  <!-- search Weekly List -->
+    <select id="selectWeeklyList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+ SELECT
+          A.SEQ ,
+          A.YEAR,
+          A.MONTH,
+          A.WEEKS,
+          TO_CHAR(A.START_DT,'YYYY/MM/DD') START_DT,
+          TO_CHAR(A.END_DT,'YYYY/MM/DD') END_DT,
+          A.CRT_USER_ID,
+          B.USER_NAME CRT_USER,
+          A.CRT_DT,
+          A.UPD_USER_ID,
+          C.USER_NAME UPD_USER,
+          TO_CHAR(A.UPD_DT,'YYYY/MM/DD') UPD_DT
+          FROM CMM0055M A
+          LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+          LEFT JOIN SYS0047M C ON A.UPD_USER_ID = C.USER_ID
+       WHERE 1=1
+           ]]>
+         <if test="year != null and month != null">
+             AND A.YEAR=#{year} AND A.MONTH=#{month}
+        </if>
+          <![CDATA[
+       ORDER BY A.WEEKS
+    ]]>
+    </select>
+
+  <!-- add coommission weekly management -->
+  <insert id="addWeeklyCommissionGrid" parameterType="Map">
+    INSERT INTO CMM0055M (
+      SEQ,
+      YEAR,
+      MONTH,
+      WEEKS,
+      START_DT,
+      END_DT,
+      CRT_USER_ID,
+      CRT_DT
+    )
+    VALUES (
+    CMM0055M_SEQ.NEXTVAL ,
+    #{year},
+    #{month},
+    #{weeks},
+    TO_DATE(#{startDt},'YYYY/MM/DD'),
+    TO_DATE(#{endDt},'YYYY/MM/DD'),
+    #{crtUserId},
+    SYSDATE
+    )
+  </insert>
+
+    <!-- update coommission weekly management :  -->
+	<update id="udtWeeklyCommissionGrid">
+		MERGE INTO CMM0055M T0
+		USING (SELECT #{year} AS YEAR , #{month} AS MONTH , #{weeks} AS WEEKS FROM DUAL)T1
+		  ON ( T0.YEAR = T1.YEAR AND T0.MONTH = T1.MONTH AND T0.WEEKS = T1.WEEKS)
+		WHEN MATCHED THEN
+			UPDATE
+			SET    START_DT= TO_DATE(#{startDt},'YYYY/MM/DD')
+					, END_DT= TO_DATE(#{endDt},'YYYY/MM/DD')
+					, UPD_USER_ID=#{updUserId}
+					, UPD_DT=SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT (
+				SEQ,
+				YEAR,
+				MONTH,
+				WEEKS,
+				START_DT,
+				END_DT,
+				CRT_USER_ID,
+				CRT_DT
+			)
+			VALUES (
+				CMM0055M_SEQ.NEXTVAL ,
+				#{year},
+				#{month},
+				#{weeks},
+				TO_DATE(#{startDt},'YYYY/MM/DD'),
+				TO_DATE(#{endDt},'YYYY/MM/DD'),
+				#{crtUserId},
+				SYSDATE
+			)
+	</update>
+
+    <select id="selectSimulationMngList" parameterType="Map" resultType="EgovMap">
+        <![CDATA[
+        SELECT
+            T1.ITEM_SEQ,
+            T1.ITEM_CD,
+            T1.ORG_SEQ,
+            T1.ORG_GR_CD,
+            T1.ORG_CD,
+            (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs,
+            T1.TYPE_CD,
+            T1.USE_YN,
+            T1.ITEM_NM,
+            T1.ITEM_DESC,
+            T1.START_YEARMONTH,
+            CASE WHEN T1.END_YEARMONTH IS NOT NULL AND LENGTH(T1.END_YEARMONTH)=6
+        THEN SUBSTR(T1.END_YEARMONTH,5) || '/' || SUBSTR(T1.END_YEARMONTH,0,4)
+        ELSE T1.END_YEARMONTH END END_DT ,
+            T1.CRT_DT,
+            T1.UPD_USER_ID,
+            T2.CODE ,
+            T2.CODE_NAME  ,
+            T2.CODE_DESC AS cdDs,
+            to_char(T1.UPD_DT,'dd-mm-yyyy hh24:mi:ss') UPD_DT
+        FROM CMM0042T T1 JOIN SYS0013M T2
+            ON T1.ITEM_CD = to_char(T2.CODE_ID)
+            AND T1.END_YEARMONTH = '999999'
+      JOIN CMM0041C T3 ON T1.ORG_SEQ=T3.ORG_SEQ
+        WHERE 1=1
+        ]]>
+        <if test="orgGrCombo != null and orgGrCombo != ''">
+            AND T1.ORG_GR_CD = #{orgGrCombo}
+        </if>
+        <if test="itemSeq != null and itemSeq != ''">
+            AND T1.ITEM_SEQ = #{itemSeq}
+        </if>
+        <if test="orgCombo != null and orgCombo != ''">
+            AND T1.ORG_CD = #{orgCombo}
+        </if>
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T1.USE_YN = #{useYnCombo}
+        </if>
+        ORDER BY T1.ITEM_NM
+    </select>
+
+    <update id="udtVersionItemEndDt" parameterType="Map">
+        UPDATE CMM0042T
+        SET
+        END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+        , UPD_USER_ID=#{loginId}
+        , UPD_DT=SYSDATE
+        WHERE END_YEARMONTH= #{endDt}
+        <if test="orgGrCombo != null and orgGrCombo != ''">
+            AND ORG_GR_CD = #{orgGrCombo}
+        </if>
+        <if test="orgCombo != null and orgCombo != ''">
+            AND ORG_CD = #{orgCombo}
+        </if>
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND USE_YN = #{useYnCombo}
+        </if>
+        <if test="itemSeq != null and itemSeq != '' ">
+            AND ITEM_SEQ= #{itemSeq}
+        </if>
+    </update>
+
+    <select id="varsionVaildSearch" parameterType="String" resultType="String">
+        SELECT MAX(ITEM_SEQ)
+        FROM CMM0042T
+        WHERE ITEM_CD= #{itemCd}
+        AND END_YEARMONTH='999999'
+    </select>
+
+    <insert id="versionItemInsert" parameterType="Map">
+	    INSERT INTO CMM0042T (
+	        ITEM_SEQ,
+	        ITEM_CD,
+	        ORG_SEQ,
+	        ITEM_NM,
+	        ORG_GR_CD,
+	        ORG_CD,
+	        TYPE_CD,
+	        USE_YN,
+	        ITEM_DESC,
+	        START_YEARMONTH,
+	        END_YEARMONTH,
+	        CRT_USER_ID,
+	        CRT_DT,
+	        UPD_USER_ID,
+	        UPD_DT
+	        ) VALUES (
+	        CMM0042T_ITEM_SEQ.nextval,
+	        #{itemCd},
+	        #{orgSeq},
+	        #{itemNm},
+	        #{orgGrCd},
+	        #{orgCd},
+	        #{typeCd},
+	        #{useYn},
+	        #{cdDs},
+	        (SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+	        #{endDt},
+	        #{loginId},
+	        SYSDATE,
+	        #{loginId},
+	        SYSDATE
+	        )
+    </insert>
+
+    <select id="selectVersionRuleBookList" parameterType="Map" resultType="EgovMap">
+         <![CDATA[
+         SELECT
+			CMM0043T_RULE_SEQ.nextval NEW_SEQ,
+			sub.ITEM_SEQ,
+			sub.ITEM_CD,
+			sub.ORG_SEQ,
+			sub.ORG_GR_CD,
+			sub.ORG_CD,
+			sub.orgDs,
+			sub.TYPE_CD,
+			sub.ITEM_DESC,
+			sub.CODE ,
+			sub.CODE_NAME  ,
+			sub.cdDs ,
+			sub.RULE_SEQ ,
+			sub.RULE_LEVEL ,
+			sub.RULE_PID ,
+			sub.RULE_NM ,
+			sub.RULE_CATEGORY ,
+			sub.RULE_OPT1 ,
+			sub.RULE_OPT2 ,
+			sub.VALUE_TYPE ,
+			sub.VALUE_TYPE_NM ,
+			sub.RESULT_VALUE ,
+			sub.RESULT_VALUE_NM ,
+			sub.RULE_DESC ,
+			sub.START_YEARMONTH ,
+			sub.END_YEARMONTH ,
+			sub.USE_YN ,
+			sub.START_DT ,
+			sub.END_DT ,
+			sub.PRT_ORDER
+         FROM (
+		     SELECT
+		        T1.ITEM_SEQ,
+		        T1.ITEM_CD,
+		        T1.ORG_SEQ,
+		        T1.ORG_GR_CD,
+		        T1.ORG_CD,
+		        (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs,
+		        T1.TYPE_CD,
+		        T1.ITEM_DESC,
+		        T2.CODE ,
+		        T2.CODE_NAME  ,
+		        T2.CODE_DESC AS cdDs ,
+		        T3.RULE_SEQ ,
+		        T3.RULE_LEVEL ,
+		        CASE WHEN T3.RULE_PID IS NULL THEN NULL
+		        WHEN T3.RULE_PID='0' THEN ''
+		        ELSE T3.RULE_PID END RULE_PID ,
+		        T3.RULE_NM ,
+		        T3.RULE_CATEGORY ,
+		        T3.RULE_OPT1 ,
+		        T3.RULE_OPT2 ,
+		        T3.VALUE_TYPE ,
+		        T3.VALUE_TYPE_NM ,
+		        T3.RESULT_VALUE ,
+		        T3.RESULT_VALUE_NM ,
+		        T3.RULE_DESC ,
+		        T3.START_YEARMONTH ,
+		        T3.END_YEARMONTH ,
+		        T3.USE_YN ,
+		        CASE WHEN T3.START_YEARMONTH IS NOT NULL AND LENGTH(T3.START_YEARMONTH)=6
+		        THEN SUBSTR(T3.START_YEARMONTH,5) || '/' || SUBSTR(T3.START_YEARMONTH,0,4)
+		        ELSE T3.START_YEARMONTH END START_DT ,
+		        CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6
+		        THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4)
+		        ELSE T3.END_YEARMONTH END END_DT ,
+		        T3.PRT_ORDER
+		    FROM CMM0042C T1 JOIN SYS0013M T2
+		        ON T1.ITEM_CD = to_char(T2.CODE_ID)
+		     JOIN CMM0043M T3
+		        ON T1.ITEM_SEQ = T3.ITEM_SEQ
+		      WHERE 1=1
+		        ]]>
+		    <if test="orgSeq != null and orgSeq != ''">
+		      AND T1.ORG_SEQ = #{orgSeq}
+		    </if>
+		    <if test="itemSeq != null and itemSeq != ''">
+		      AND T1.ITEM_SEQ = #{itemSeq}
+		    </if>
+		    <if test="itemCd != null and itemCd != ''">
+		      AND T1.ITEM_CD = #{itemCd}
+		    </if>
+		     <if test="ruleSeq != null and ruleSeq != ''">
+		      AND T3.RULE_SEQ = #{ruleSeq}
+		    </if>
+		    START WITH RULE_PID=0
+		    <if test="useYnCombo != null and useYnCombo != ''">
+		      AND T3.USE_YN = #{useYnCombo}
+		    </if>
+		     <if test="searchDt != null and searchDt != ''">
+		      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		    </if>
+		    CONNECT BY PRIOR RULE_SEQ =RULE_PID
+		    <if test="useYnCombo != null and useYnCombo != ''">
+		      AND T3.USE_YN = #{useYnCombo}
+		    </if>
+		      <if test="searchDt != null and searchDt != ''">
+		      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+		    </if>
+		        ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER
+        )sub
+  </select>
+
+
+  <insert id="addCommVersionRuleData" parameterType="Map">
+        INSERT INTO CMM0043T (
+        RULE_SEQ,
+        ITEM_SEQ,
+        ITEM_CD,
+        RULE_LEVEL,
+        RULE_PID,
+        RULE_NM,
+        RULE_CATEGORY,
+        RULE_OPT1,
+        RULE_OPT2,
+        VALUE_TYPE,
+        VALUE_TYPE_NM,
+        RESULT_VALUE,
+        RESULT_VALUE_NM,
+        RULE_DESC,
+        START_YEARMONTH,
+        END_YEARMONTH,
+        USE_YN,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT,
+        PRT_ORDER
+        ) VALUES (
+        <if test="ruleSeq != null and ruleSeq != ''">
+	        #{ruleSeq},
+        </if>
+        <if test="ruleSeq == null or ruleSeq == ''">
+            CMM0043T_RULE_SEQ.nextval,
+        </if>
+        #{itemSeq},
+        #{itemCd},
+        #{ruleLevel},
+        #{rulePid},
+        #{ruleNm},
+        #{ruleCategory},
+        #{ruleOpt1},
+        #{ruleOpt2},
+        #{valueType},
+        #{valueTypeNm},
+        #{resultValue},
+        #{resultValueNm},
+        #{ruleDesc},
+        (SELECT TO_CHAR(SYSDATE,'YYYYMM') FROM DUAL),
+        #{endYearmonth},
+        #{useYn},
+        #{crtUserId},
+        SYSDATE,
+        #{updUserId},
+        SYSDATE,
+        #{prtOrder}
+        )
+    </insert>
+
+    <update id="udtCommVersionRuleEndDt" parameterType="Map">
+	    UPDATE CMM0043T
+	    SET
+	    END_YEARMONTH=(SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYYMM') FROM DUAL)
+	    , UPD_USER_ID=#{loginId}
+	    , UPD_DT=SYSDATE
+	    WHERE END_YEARMONTH=#{endDt}
+	    <if test="ruleSeq != null and ruleSeq != ''">
+	       AND RULE_SEQ=#{ruleSeq}
+        </if>
+        <if test="itemSeq != null and itemSeq != ''">
+        AND ITEM_SEQ=#{itemSeq}
+        </if>
+        <if test="itemCd != null and itemCd != ''">
+        AND ITEM_CD=#{itemCd}
+        </if>
+  </update>
+
+
+  <select id="selectVersionRuleBookMngList" parameterType="Map" resultType="EgovMap">
+        <![CDATA[
+     SELECT
+        T1.ITEM_SEQ,
+        T1.ITEM_CD,
+        T1.ORG_SEQ,
+        T1.ORG_GR_CD,
+        T1.ORG_CD,
+        (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID= T1.ORG_CD ) AS orgDs,
+        T1.TYPE_CD,
+        T1.ITEM_DESC,
+        T2.CODE ,
+        T2.CODE_NAME  ,
+        T2.CODE_DESC AS cdDs ,
+        T3.RULE_SEQ ,
+        T3.RULE_LEVEL ,
+        CASE WHEN T3.RULE_PID IS NULL THEN NULL
+        WHEN T3.RULE_PID='0' THEN ''
+        ELSE T3.RULE_PID END RULE_PID ,
+        T3.RULE_NM ,
+        T3.RULE_CATEGORY ,
+        T3.RULE_OPT1 ,
+        T3.RULE_OPT2 ,
+        T3.VALUE_TYPE ,
+        T3.VALUE_TYPE_NM ,
+        T3.RESULT_VALUE ,
+        T3.RESULT_VALUE_NM ,
+        T3.RULE_DESC ,
+        T3.START_YEARMONTH ,
+        T3.END_YEARMONTH ,
+        T3.USE_YN ,
+        CASE WHEN T3.START_YEARMONTH IS NOT NULL AND LENGTH(T3.START_YEARMONTH)=6
+        THEN SUBSTR(T3.START_YEARMONTH,5) || '/' || SUBSTR(T3.START_YEARMONTH,0,4)
+        ELSE T3.START_YEARMONTH END START_DT ,
+        CASE WHEN T3.END_YEARMONTH IS NOT NULL AND LENGTH(T3.END_YEARMONTH)=6
+        THEN SUBSTR(T3.END_YEARMONTH,5) || '/' || SUBSTR(T3.END_YEARMONTH,0,4)
+        ELSE T3.END_YEARMONTH END END_DT ,
+        T3.PRT_ORDER
+    FROM CMM0042T T1 JOIN SYS0013M T2
+        ON T1.ITEM_CD = to_char(T2.CODE_ID)
+     JOIN CMM0043T T3
+        ON T1.ITEM_SEQ = T3.ITEM_SEQ
+      WHERE 1=1
+        ]]>
+    <if test="orgSeq != null and orgSeq != ''">
+      AND T1.ORG_SEQ = #{orgSeq}
+    </if>
+    <if test="itemCd != null and itemCd != ''">
+      AND T1.ITEM_CD = #{itemCd}
+    </if>
+     <if test="ruleSeq != null and ruleSeq != ''">
+      AND T3.RULE_SEQ = #{ruleSeq}
+    </if>
+    START WITH RULE_PID=0
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
+    </if>
+     <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+    CONNECT BY PRIOR RULE_SEQ =RULE_PID
+    <if test="useYnCombo != null and useYnCombo != ''">
+      AND T3.USE_YN = #{useYnCombo}
+    </if>
+      <if test="searchDt != null and searchDt != ''">
+      AND #{searchDt} BETWEEN T3.START_YEARMONTH AND T3.END_YEARMONTH
+    </if>
+        ORDER BY T3.RULE_LEVEL , T3.PRT_ORDER
+  </select>
+
+  <select id="cntSimulUpdateData" parameterType="Map" resultType="int">
+       SELECT COUNT(*)
+       FROM CMM0043T
+       WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+    </select>
+
+    <update id="udtSimulRuleDescData"  parameterType="Map">
+       UPDATE CMM0043T
+       SET
+           RULE_NM= #{ruleNm},
+           RULE_CATEGORY = #{ruleCategory},
+           VALUE_TYPE = #{valueType},
+           VALUE_TYPE_NM = #{valueTypeNm},
+           RESULT_VALUE_NM = #{resultValueNm},
+           PRT_ORDER = #{printOrder},
+           RULE_DESC = #{ruleDesc},
+           USE_YN = #{useYn}
+       WHERE RULE_SEQ=#{ruleSeq} AND RULE_OPT1=#{ruleOpt1} AND RULE_OPT2=#{ruleOpt2} AND RESULT_VALUE=#{resultValue}
+    </update>
+
+    <select id="selectSimulRuleMngChk" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+         SELECT
+          RULE_SEQ,
+          ITEM_SEQ,
+          ITEM_CD,
+          RULE_LEVEL,
+          RULE_PID
+          FROM CMM0043T
+        WHERE ITEM_SEQ=#{itemSeq} AND ITEM_CD=#{itemCd} AND RULE_SEQ=#{ruleSeq}
+         ]]>
+  </select>
+
+      <select id="selectHPDeptCodeListByLv"  parameterType="Map" resultType="egovMap">
+      SELECT B.DEPT_CODE CODE_ID ,
+      B.DEPT_CODE || ' - ' || A.NAME CODE_NAME
+      FROM ORG0001D A
+    LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+    WHERE A.MEM_TYPE = 1
+    AND B.MEM_LVL = #{groupCode}
+    AND B.ORG_STUS_CODE_ID = 1
+    ORDER BY B.DEPT_CODE
+    </select>
+
+
+      <select id="selectHPDeptCodeListByCode"  parameterType="Map" resultType="egovMap">
+      SELECT B.DEPT_CODE CODE_ID ,
+      B.DEPT_CODE || ' - ' || A.NAME CODE_NAME
+      FROM ORG0001D A
+    LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+    WHERE A.MEM_TYPE = 1
+    AND A.MEM_CODE = #{groupCode}
+    AND B.ORG_STUS_CODE_ID = 1
+    ORDER BY B.DEPT_CODE
+    </select>
+
+</mapper>

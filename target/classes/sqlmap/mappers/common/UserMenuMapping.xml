@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.UserMenuMappingMapper">
+
+<select id="selectUserList" parameterType="Map" resultType="egovMap">
+	SELECT USR.USER_ID AS user_id ,
+	           USR.USER_NAME AS user_name,
+	           USR.USER_ID as row_id /* PK, AUIGrid key row setting */
+	           /* ,
+	           USERROLE.ROLE_ID AS role_id ,
+	           ROLE.ROLE_code AS role_name
+	           */
+	   FROM SYS0047M USR
+	           INNER JOIN SYS0038M STATUS
+	               ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+	           /*INNER JOIN SYS0045M USERROLE
+	               ON USR.USER_ID = USERROLE.USER_ID
+	           INNER JOIN SYS0044M ROLE
+	               ON USERROLE.ROLE_ID = ROLE.ROLE_ID*/
+	 WHERE 1=1
+	     <![CDATA[
+	     AND USR.USER_STUS_ID = 1
+	     AND TO_CHAR(USR.USER_VAL_ID_TO, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	     ]]>
+	     <if test="userCode != null and userCode !=''">
+	     AND (UPPER(USR.USER_ID) LIKE  UPPER(#{userCode}) || '%' OR
+                UPPER(USR.USER_NAME) LIKE '%' || UPPER(#{userCode}) || '%')
+	     </if>
+	  ORDER BY USER_ID
+
+</select>
+
+<select id="selectUserMenuMappingList" parameterType="Map" resultType="egovMap">
+	SELECT z.menu_lvl ,
+		       z.menu_code ,
+		       z.menu_name ,
+		       z.pgm_code ,
+		       z.pgm_name,
+		       z.pgm_trn_code,
+		       z.pgm_trn_name,
+		       #{userId}  AS user_id,
+		       y.valid_dt_from,
+               y.valid_dt_to,
+		       NVL(y.func_yn,'N') AS func_yn ,
+               NVL(y.exist_yn,'N') AS exist_yn,
+		       z.menu_code||z.pgm_trn_code as row_id /* PK, AUIGrid key row setting */
+		  FROM (SELECT a.menu_code ,
+			               a.menu_name ,
+			               a.menu_lvl ,
+			               b.pgm_code ,
+			               b.pgm_name ,
+			               CASE WHEN b.pgm_code IS NULL
+			                    THEN 'MENU'
+			                    ELSE b.pgm_trn_code END AS pgm_trn_code ,
+			               b.pgm_trn_name ,
+			               a.rn
+		         FROM (SELECT e.menu_code ,
+		                      e.menu_name ,
+		                      e.menu_lvl ,
+		                      e.pgm_code ,
+		                      ROWNUM rn
+		                 FROM SYS0051M e
+		                START WITH e.upper_menu_code is null
+		              CONNECT BY PRIOR e.menu_code = e.upper_menu_code
+		                ORDER SIBLINGS BY e.menu_order) a ,
+		              (SELECT d.pgm_code ,
+		                      d.pgm_name ,
+		                      d.pgm_trn_code ,
+		                      d.pgm_trn_name
+		                 FROM (SELECT B.PGM_CODE ,
+                                      B.PGM_NAME ,
+                                      C.PGM_TRN_CODE ,
+                                      C.PGM_TRN_CODE AS PGM_TRN_NAME,
+                                      CASE WHEN C.PGM_TRN_CODE = 'VIEW' THEN b.func_view
+                                           WHEN C.PGM_TRN_CODE = 'CHNG' THEN b.func_chng
+                                           WHEN C.PGM_TRN_CODE = 'PRNT' THEN b.func_prt
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN1' THEN b.func_user_dfn1
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN2' THEN b.func_user_dfn2
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN3' THEN b.func_user_dfn3
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN4' THEN b.func_user_dfn4
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN5' THEN b.func_user_dfn5
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN6' THEN b.func_user_dfn6
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN7' THEN b.func_user_dfn7
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN8' THEN b.func_user_dfn8
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN9' THEN b.func_user_dfn9
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN10' THEN b.func_user_dfn10
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN11' THEN b.func_user_dfn11
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN12' THEN b.func_user_dfn12
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN13' THEN b.func_user_dfn13
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN14' THEN b.func_user_dfn14
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN15' THEN b.func_user_dfn15
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN16' THEN b.func_user_dfn16
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN17' THEN b.func_user_dfn17
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN18' THEN b.func_user_dfn18
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN19' THEN b.func_user_dfn19
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN20' THEN b.func_user_dfn20
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN21' THEN b.func_user_dfn21
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN22' THEN b.func_user_dfn22
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN23' THEN b.func_user_dfn23
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN24' THEN b.func_user_dfn24
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN25' THEN b.func_user_dfn25
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN26' THEN b.func_user_dfn26
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN27' THEN b.func_user_dfn27
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN28' THEN b.func_user_dfn28
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN29' THEN b.func_user_dfn29
+                                           WHEN C.PGM_TRN_CODE = 'USER_DFN30' THEN b.func_user_dfn30  END AS TRANSACTION_YN
+                            FROM SYS0050M b ,
+                            ( SELECT CODE AS PGM_TRN_CODE FROM SYS0013M WHERE CODE_MASTER_ID = 314 AND CODE <![CDATA[<>]]> 'MENU') c ) d
+		                WHERE NVL(d.transaction_yn,'N') = 'Y') b
+		            WHERE a.pgm_code = b.pgm_code(+) ) z,
+		         (
+		             /* 사용자별 프로그램 매핑*/
+					SELECT i.menu_code
+						     , i.pgm_trn_code
+						     , i.valid_dt_from
+						     , i.valid_dt_to
+						     , i.func_yn
+						     , i.exist_yn
+				    FROM (SELECT DISTINCT h.menu_code
+						              , h.pgm_trn_code
+						              , h.valid_dt_from
+						              , h.valid_dt_to
+						              , h.func_yn
+						              , h.exist_yn
+						              , RANK() OVER(PARTITION BY h.menu_code, h.pgm_trn_code
+						                                        ORDER BY h.func_yn desc, h.exist_yn, h.valid_dt_from, h.valid_dt_to desc  ) AS rnk
+					           FROM (
+					                /* 선택한 권한*/
+					                SELECT NULL AS auth_code
+						                     , g.menu_code
+						                     , g.pgm_trn_code
+						                     , g.valid_dt_from
+						                     , g.valid_dt_to
+						                     , g.func_yn
+						                     , 'N' AS exist_yn
+					                  FROM SYS0057M g
+					                 WHERE g.user_id = #{userId}
+
+					                 UNION
+
+					                 /* 선택한 권한의 매핑된 Role의 상위 권한 */
+					                 SELECT e.auth_code
+						                      , e.menu_code
+						                      , e.pgm_trn_code
+						                      , null as valid_dt_from
+						                      , null as valid_dt_to
+						                      , e.func_yn
+						                      , CASE WHEN /* f.own_user_id IS NULL AND */ e.func_yn = 'Y'
+					                             THEN 'Y'
+					                             ELSE 'N' END AS exist_yn
+					                  FROM SYS0056M e
+					                     , (SELECT d.role_id
+					                             , d.auth_code
+					                             , c.user_id AS own_user_id
+					                          FROM (SELECT b.user_id
+					                                     , a.role_id
+					                                  FROM SYS0044M a
+					                                     , SYS0045M b
+					                                 WHERE a.role_id = b.role_id (+)
+					                                   AND b.user_id (+) = #{userId}
+					                                 START WITH a.role_id = b.role_id
+					                                 CONNECT BY a.role_id = PRIOR a.parent_role
+					                               ) c
+					                             , SYS0054M d
+					                         WHERE c.role_id = d.role_id
+					                       ) f
+					                 WHERE e.auth_code = f.auth_code
+
+                                     UNION
+
+                                     /* 예외적으로 부여받은 개인권한 */
+                                     SELECT a.auth_code
+	                                          , a.menu_code
+	                                          , a.pgm_trn_code
+	                                          , b.valid_dt_from
+	                                          , b.valid_dt_to
+	                                          , a.func_yn
+                                              , CASE WHEN a.func_yn = 'Y'
+                                                        THEN 'Y'
+                                                        ELSE 'N' END AS exist_yn
+                                       FROM SYS0056M a
+                                             , SYS0055M b
+                                      WHERE a.auth_code = b.auth_code
+                                          AND b.user_id = #{userId}
+					                ) h
+						    ) i
+						 WHERE i.rnk = 1
+		         ) y
+		  WHERE z.menu_code = y.menu_code(+)
+		    AND z.pgm_trn_code = y.pgm_trn_code(+)
+		    <if test="menuCode != null and menuCode !=''">
+              AND (UPPER(z.menu_code) LIKE  UPPER(#{menuCode}) || '%' OR
+                     UPPER(z.menu_name) LIKE '%' || UPPER(#{menuCode}) || '%')
+         </if>
+		  ORDER BY z.rn, z.pgm_trn_code
+</select>
+
+<update id="updateUserMenuMapping" parameterType="Map">
+MERGE INTO SYS0057M a
+  USING (
+        SELECT #{userId} AS user_id ,
+	               #{menuCode} AS menu_code ,
+	               #{pgmTrnCode} AS pgm_trn_code ,
+	               #{funcYn} AS func_yn ,
+	               REPLACE(#{validDtFrom},'/','') as valid_dt_from ,
+	               REPLACE(#{validDtTo},'/','') as valid_dt_to ,
+	               #{updUserId} AS upd_user_id ,
+	               #{crtUserId} AS crt_user_id
+          FROM dual
+  ) b
+     ON ( a.user_id = b.user_id
+    AND a.menu_code = b.menu_code
+    AND a.pgm_trn_code = b.pgm_trn_code )
+   WHEN MATCHED THEN
+        UPDATE
+           SET a.func_yn = b.func_yn ,
+               a.valid_dt_from = b.valid_dt_from ,
+               a.valid_dt_to = b.valid_dt_to ,
+               a.upd_user_id = b.user_id ,
+               a.upd_dt = SYSDATE
+        DELETE WHERE b.func_yn = 'N'
+   WHEN NOT MATCHED THEN
+        INSERT
+        (
+            a.user_id,
+            a.menu_code,
+            a.pgm_trn_code,
+            a.valid_dt_from,
+            a.valid_dt_to,
+            a.func_yn,
+            a.crt_user_id,
+            a.crt_dt,
+            a.upd_user_id,
+            a.upd_dt
+        )
+        VALUES
+        (
+            b.user_id,
+            b.menu_code,
+            b.pgm_trn_code,
+            b.valid_dt_from,
+            b.valid_dt_to,
+            b.func_yn,
+            b.crt_user_id,
+            SYSDATE,
+            b.upd_user_id,
+            SYSDATE
+        )
+</update>
+
+</mapper>

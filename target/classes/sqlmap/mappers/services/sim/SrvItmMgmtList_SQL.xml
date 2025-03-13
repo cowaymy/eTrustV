@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.sim.impl.SrvItmMgmtListMapper">
+
+  <select id="getBchTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'SIM_BCHTYP'
+      AND DISB = 0
+  </select>
+
+  <select id="getBch" parameterType="Map" resultType="egovMap">
+    SELECT BRNCH_ID AS CODE_ID,
+           CODE || ' - ' || NAME AS CODE_NAME
+    FROM SYS0005M
+    WHERE 1 = 1
+    AND TYPE_ID IN (42,43)
+      <if test="cboBchTyp != null and cboBchTyp !='' ">
+        <![CDATA[ AND TYPE_ID = #{cboBchTyp} ]]>
+      </if>
+    ORDER BY CODE
+  </select>
+
+  <select id="getItm" parameterType="Map" resultType="egovMap">
+    <!-- 1370 Consignment Tool -->
+    <!-- 2687 Item Bank -->
+    <!-- 1362 Cody Tools -->
+    SELECT STK_ID as CODE_ID,
+           STK_CODE || ' - ' || STK_DESC AS CODE_NAME
+    FROM SYS0026M
+    WHERE STK_TYPE_ID IN ('1370', '2687')
+      AND STK_CTGRY_ID IN ('1362', '1249','6433')
+    ORDER BY STK_CODE ASC
+  </select>
+
+  <select id="searchSrvItmLst" parameterType="Map" resultType="egovMap">
+    SELECT A.BR_NO AS BR_CDE,
+           B.CODE || ' - ' || B.NAME AS BR,
+           A.ITM_CDE AS ITM_CDE,
+           C.STK_CODE AS STK_CDE,
+           UPPER(C.STK_DESC) AS STK_DESC,
+           QTY AS QTY,
+           TO_CHAR(CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+           USER_NAME AS CRT_BY
+    FROM ( SELECT A.REF_NO,
+                          A.BR_NO,
+                          A.ITM_CDE,
+                          SUM(QTY) AS QTY,
+                          MAX(A.CRT_DT) AS CRT_DT,
+                          MAX(A.CRT_USR) AS CRT_USR
+                FROM ( SELECT A.REF_NO,
+                                      A.BR_NO,
+                                      A.ITM_CDE,
+                                      CASE WHEN B.MOV_TYP IN (1,3) THEN
+                                        -B.QTY
+                                      ELSE
+                                         B.QTY
+                                      END AS QTY,
+                                      A.CRT_DT AS CRT_DT,
+                                      A.CRT_USR AS CRT_USR
+                            FROM LOG0089M A
+                            JOIN LOG0091D B ON A.REF_NO = B.REF_PFX_NO AND B.STUS_CODE_ID = 1
+                            WHERE EXISTS(
+                                                    SELECT 1
+                                                    FROM LOG0091D
+                                                    WHERE B.TRX_DT BETWEEN FN_GET_FIRST_DAY_MONTH(SYSDATE) AND FN_GET_LAST_DAY_MONTH(SYSDATE) + 1
+                                                    AND SEQ_NO = B.SEQ_NO
+                             )
+                 ) A
+                 GROUP BY A.REF_NO, A.BR_NO, A.ITM_CDE
+    ) A LEFT JOIN SYS0005M B ON A.BR_NO = B.BRNCH_ID
+    LEFT JOIN SYS0026M C ON A.ITM_CDE = C.STK_ID
+    LEFT JOIN SYS0047M D ON A.CRT_USR = D.USER_ID
+    WHERE 1 = 1
+    <if test="cboBchTyp != null and cboBchTyp !='' ">
+      <![CDATA[ AND B.TYPE_ID = #{cboBchTyp} ]]>
+    </if>
+    <if test="cboBch != null and cboBch !='' ">
+      <![CDATA[ AND A.BR_NO = #{cboBch} ]]>
+    </if>
+    <if test="cboItm != null and cboItm !='' ">
+      <![CDATA[ AND A.ITM_CDE = #{cboItm} ]]>
+    </if>
+    <if test="trxStrDate != null and trxStrDate !='' ">
+      <![CDATA[ AND ( A.CRT_DT >= TO_DATE(#{trxStrDate} ,'dd/mm/yyyy'))  ]]>
+    </if>
+    <if test="trxEndDate != null and trxEndDate != '' ">
+      <![CDATA[ AND ( A.CRT_DT <= TO_DATE( #{trxEndDate},'dd/mm/yyyy') + 1 )]]>
+    </if>
+     <if test="ctgryList != null and ctgryList != '' ">
+        and C.STK_CTGRY_ID in
+        <foreach item="item" collection="ctgryList" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+     </if>
+  </select>
+
+  <select id="getBrTypId" parameterType="String" resultType="String">
+    SELECT B.TYPE_ID
+    FROM SYS0047M A
+    JOIN SYS0005M B ON A.USER_BRNCH_ID = B.BRNCH_ID
+    WHERE A.USER_NAME = #{params}
+  </select>
+
+
+  <select id="getBchTypDesc" parameterType="String" resultType="String">
+    SELECT CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'SIM_BCHTYP'
+      AND DISB = 0
+      AND CODE = #{params}
+  </select>
+
+  <select id="getBchDesc" parameterType="String" resultType="String">
+    SELECT CODE || ' - ' || NAME AS CODE_NAME
+    FROM SYS0005M
+    WHERE BRNCH_ID = #{params}
+  </select>
+
+  <select id="getItmCde" parameterType="String" resultType="String">
+    SELECT STK_CODE
+    FROM SYS0026M
+    WHERE STK_ID = #{params}
+  </select>
+
+  <select id="getItmDesc" parameterType="String" resultType="String">
+    SELECT STK_DESC
+    FROM SYS0026M
+    WHERE STK_ID = #{params}
+  </select>
+
+  <select id="getSrvItmRcd" parameterType="Map" resultType="egovMap">
+  WITH LOG0090D_MAX AS (
+                      SELECT DISTINCT T1.REF_SEQ_NO
+                             , T1.PFX_SEQ_NO
+                             , T1.MEM_ID
+                             , T2.MEM_CODE
+                             , T1.RMK
+                             , T1.DEPT_CODE
+                             FROM
+                             LOG0090D T1
+                             LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
+  )
+    SELECT * FROM
+      (SELECT H.CODE AS DSC,
+             TO_CHAR(B.TRX_DT, 'dd/mm/yyyy') AS TRX_DT,
+             UPPER(G.STK_DESC) AS STK_DESC,
+             C.CODE_NAME AS MOV_TYP,
+             B.MOV_TYP AS MOV_TYP_CDE,
+             CASE WHEN B.MOV_TYP = 0 THEN D.CODE_NAME
+                  WHEN B.MOV_TYP = 1 THEN E.CODE_NAME
+                  ELSE '-' END AS MOV_DTL,
+             CASE WHEN B.MOV_TYP = 0 THEN D.CODE
+                  WHEN B.MOV_TYP = 1 THEN E.CODE
+                  ELSE '-' END AS MOV_DTL_CDE,
+             B.QTY AS QTY,
+             B.RMK AS RMK,
+             B.CRT_DT AS CRT_DT,
+             F.USER_NAME AS CRT_BY,
+             B.SEQ_NO,
+             X.MEM_ID,
+             X.MEM_CODE,
+             X.RMK REF_NO,
+             X.DEPT_CODE
+      FROM LOG0089M A
+      JOIN LOG0091D B ON A.REF_NO = B.REF_PFX_NO AND B.STUS_CODE_ID = 1
+      LEFT JOIN LOG0090D_MAX X ON X.PFX_SEQ_NO = B.SEQ_NO
+      LEFT JOIN SYS0013M C ON C.CODE_MASTER_ID = '419' AND C.CODE = B.MOV_TYP
+      LEFT JOIN SYS0013M D ON D.CODE_MASTER_ID = '420' AND D.CODE = B.MOV_DTL
+      LEFT JOIN SYS0013M E ON E.CODE_MASTER_ID = '421' AND E.CODE = B.MOV_DTL
+      LEFT JOIN SYS0047M F ON B.CRT_USR = F.USER_ID
+      LEFT JOIN SYS0026M G ON A.ITM_CDE = G.STK_ID
+      LEFT JOIN SYS0005M H ON A.BR_NO = H.BRNCH_ID
+      WHERE A.BR_NO = #{BR}
+        AND A.ITM_CDE = #{ITM_CDE}
+      ORDER BY B.TRX_DT DESC, B.SEQ_NO DESC)
+    WHERE ROWNUM <![CDATA[ <= ]]> 500
+  </select>
+
+  <select id="getMovTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_DESC AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '419'
+        AND DISAB = 0
+    ORDER BY CODE
+  </select>
+
+  <select id="getBrTypDesc" parameterType="String" resultType="String">
+    SELECT CODE_DESC
+    FROM SYS0013M
+    WHERE CODE_ID IN ( SELECT TYPE_ID
+                       FROM SYS0005M
+                       WHERE BRNCH_ID = #{params})
+      AND CODE_MASTER_ID = '45'
+  </select>
+
+  <select id="getMovDtl" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_DESC AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = #{groupCode}
+    ORDER BY CODE
+  </select>
+
+  <select id="get89MPrxNo" parameterType="Map" resultType="egovMap">
+    SELECT REF_NO,
+           SEQ_NO
+    FROM LOG0089M
+    WHERE BR_NO = #{BR}
+      AND ITM_CDE = #{ITM_CDE}
+  </select>
+
+  <insert id="insertLog89M" parameterType="Map">
+    INSERT INTO LOG0089M ( SEQ_NO,
+                           REF_NO,
+                           BR_NO,
+                           ITM_CDE,
+                           CRT_USR,
+                           UPD_USR,
+                           CRT_DT,
+                           UPD_DT
+    ) VALUES ( LOG0089M_SEQ.NEXTVAL,
+               'SC' || LPAD(LOG0089M_PFX_SEQ.NEXTVAL, 8, 0),
+               #{BR},
+               #{ITM_CDE},
+               #{updator},
+               #{updator},
+               SYSDATE,
+               SYSDATE
+    )
+  </insert>
+
+  <insert id="insertLog91D" parameterType="Map">
+  <selectKey keyProperty="log91DseqNo" resultType="int" order="BEFORE">
+      SELECT LOG0091D_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO LOG0091D ( SEQ_NO,
+                           REF_PFX_NO,
+                           TRX_DT,
+                           MOV_TYP,
+                           MOV_DTL,
+                           QTY,
+                           RMK,
+                           CRT_USR,
+                           UPD_USR,
+                           CRT_DT,
+                           UPD_DT,
+                           STUS_CODE_ID
+    ) VALUES ( #{log91DseqNo},
+               #{prxNo},
+               to_date(#{trxDt}, 'dd/mm/yyyy hh24:mi:ss'),
+               #{movTypCde},
+               #{movDtlCde},
+               #{qty},
+               #{rmk},
+               #{updator},
+               #{updator},
+               SYSDATE,
+               SYSDATE,
+               1
+    )
+  </insert>
+
+  <insert id="insertLog90D" parameterType="Map">
+    INSERT INTO LOG0090D ( SEQ_NO,
+                           REF_SEQ_NO,
+                           MEM_ID,
+                           SR_NO,
+                           QTY,
+                           ASG_DT,
+                           RMK,
+                           CRT_USR,
+                           UPD_USR,
+                           CRT_DT,
+                           UPD_DT,
+                           PFX_SEQ_NO,
+                           DEPT_CODE
+    ) VALUES ( LOG0090D_SEQ.NEXTVAL,
+               #{seqNo},
+               #{memId},
+               '',
+               1,
+               SYSDATE,
+               #{refDocNo},
+               #{updator},
+               #{updator},
+               SYSDATE,
+               SYSDATE,
+               #{log91DseqNo},
+               #{deptCode}
+    )
+  </insert>
+
+  <update id="updUsrLog89" parameterType="Map">
+    UPDATE LOG0089M SET UPD_USR = #{updator}
+                      , UPD_DT = SYSDATE
+                      , RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE SEQ_NO = #{seqNo}
+  </update>
+
+  <update id="deactivateLog91d" parameterType="Map">
+    UPDATE LOG0091D SET UPD_USR = #{updator}
+                      , UPD_DT = SYSDATE
+                      , RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+                      , STUS_CODE_ID = 8
+    WHERE SEQ_NO = #{seqNo}
+  </update>
+
+
+</mapper>

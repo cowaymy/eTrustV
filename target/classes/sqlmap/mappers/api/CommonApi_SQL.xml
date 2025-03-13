@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.CommonApiMapper">
+
+<!--
+**************************************
+ * Author                  Date                    Remark
+ * Chew Kah Kit        2019/04/11           API for Common
+**************************************
+ -->
+
+<select id="checkAccess" parameterType="Map" resultType="egovMap">
+  SELECT *
+  FROM API0001M
+  WHERE API_USER_STUS_ID = 1
+  AND API_KEY = #{key}
+  <if test="userName != null and userName != ''">
+    AND API_USER_NAME = #{userName}
+  </if>
+</select>
+
+<insert id="insertApiAccessLog" parameterType="Map">
+   INSERT INTO API0004M
+   (
+        RESP_ID
+       ,REQ_PARAM
+       ,RESP_PARAM
+       ,RESP_CODE
+       ,RESP_TM
+       ,IP_ADDR
+       ,PGM_PATH
+       ,ERR_MSG
+       ,CRT_DT
+       ,API_USER_ID
+       ,REF_NO
+    ) VALUES (
+        API0004M_RESP_ID_SEQ.NEXTVAL
+        , #{reqParam}
+        , #{respParam}
+        , #{respCde}
+        , #{respTm}
+        , #{ipAddr}
+        , #{prgPath}
+        , #{errMsg}
+        , SYSDATE
+        , #{apiUserId}
+        , #{refNo}
+    )
+</insert>
+
+</mapper>

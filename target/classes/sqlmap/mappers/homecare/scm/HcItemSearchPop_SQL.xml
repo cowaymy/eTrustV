@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcItemSearchPopMapper">
+
+    <select id="selectHcItemSearch" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcItemSearchPopMapper.selectHcItemSearch] - KR JIN */
+        SELECT A.STK_ID  AS ITEM_ID
+             , A.STK_CODE AS ITEM_CODE
+             , A.STK_DESC AS ITEM_NAME
+             , A.STK_CTGRY_ID AS CATEGORY_ID
+             , A.STK_TYPE_ID AS TYPE_ID
+             , A.STUS_CODE_ID AS STATE_ID
+             , NVL(B.UOM, A.UOM) AS UOM
+             , B.CUR
+             , B.PURCHS_PRC
+             , A.SERIAL_CHK
+             , (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = A.STK_CTGRY_ID) AS CATEGORY_NAME
+             , (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = A.STK_TYPE_ID) AS TYPE_NAME
+             , (SELECT SYS0038M.NAME
+                  FROM SYS0038M
+                 WHERE SYS0038M.STUS_CODE_ID = A.STUS_CODE_ID) STATUS_NAME
+         FROM SYS0026M A
+            , (
+               SELECT DISTINCT MEM_ACC_ID
+                    , STOCK_ID
+                    , STOCK_CODE
+                    , PURCHS_PRC
+                    , CUR
+                    , UOM
+                 FROM HMC0001M
+                WHERE MEM_ACC_ID = #{memAccId}
+                  AND VALID_START_DT <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND VALID_END_DT <![CDATA[>=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+               ) B
+       WHERE 1 = 1
+         AND A.STK_ID = B.STOCK_ID
+         AND A.STK_CODE = B.STOCK_CODE
+         AND A.STK_CTGRY_ID IN ( SELECT AA.CODE_ID       -- Mattress('5706'), Frame('5707')
+                                   FROM SYS0013M AA
+                                      , SYS0094M BB
+								  WHERE AA.CODE = BB.CODE
+									AND AA.CODE_MASTER_ID = 11
+									AND BB.IND = 'HOMECARE')
+
+       <if test="scode != null and scode !=''">
+            AND A.STK_CODE LIKE  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+            AND A.STK_DESC LIKE '%'|| #{sname} ||'%'
+       </if>
+       <if test="cateid != null and cateid !=''">
+            AND A.STK_CTGRY_ID =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+            AND A.STK_TYPE_ID =  #{typeid}
+       </if>
+       <if test="catelist != null and catelist != ''">
+            AND A.STK_CTGRY_ID in
+            <foreach item="item" collection="catelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="typelist != null and typelist != ''">
+            AND A.STK_TYPE_ID in
+            <foreach item="item" collection="typelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="stateid != null and stateid !=''">
+            AND A.STUS_CODE_ID =  #{stateid}
+       </if>
+       <if test="statlist != null and statlist != ''">
+            AND A.STUS_CODE_ID in
+            <foreach item="item" collection="statlist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="sCodeList != null and sCodeList != ''">
+            AND A.STK_ID in
+            <foreach item="item" collection="sCodeList" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+    </select>
+
+</mapper>

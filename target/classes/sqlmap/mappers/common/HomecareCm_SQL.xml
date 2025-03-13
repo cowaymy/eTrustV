@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.HomecareCmMapper">
+
+    <!-- Select Homecare Branch Code List  -->
+    <select id="selectHomecareBranchCd"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.common.impl.HomecareCmMapper.selectHomecareBranchCd */
+        SELECT CODE CODE_ID,
+        CODE || ' - '|| NAME  CODE_NAME
+        FROM SYS0005M
+        <where>
+            <!-- <if test="brnchType != null and brnchType != ''">
+                AND TYPE_ID = #{brnchType}
+            </if> -->
+            <if test="branchTypeList != null and branchTypeList != ''">
+              AND TYPE_ID IN
+            <foreach item="item" collection="branchTypeList" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        AND STUS_ID = 1
+        </where>
+        ORDER BY CODE
+	</select>
+
+	<!-- Select Homecare Branch Code List  -->
+	<select id="selectHomecareBranchList" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID CODE_ID
+                 , CODE ||#{separator}|| NAME  CODE_NAME
+                 , TYPE_ID
+
+         FROM SYS0005M
+        WHERE STUS_ID = 1
+            <if test="branchTypeList != null and branchTypeList != ''">
+              AND TYPE_ID IN
+            <foreach item="item" collection="branchTypeList" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            </if>
+            <if test="brnchTypeDsc != null and brnchTypeDsc != ''">
+                OR TYPE_ID = #{brnchTypeDsc}
+            </if>
+         ORDER BY CODE
+    </select>
+
+	<select id="checkIfIsAcInstallationProductCategoryCode" parameterType="string" resultType="int">
+		SELECT CASE WHEN (s0013m.CODE = 'ACO' OR s0013m.CODE = 'ACI') THEN 1 ELSE 0 END AS RESULT
+		FROM SYS0026M s0026m
+		INNER JOIN SYS0013M s0013m
+		ON s0026m.STK_CTGRY_ID = s0013m.CODE_ID
+		WHERE s0026m.STK_ID = #{stkId} AND s0013m.CODE_MASTER_ID = 11
+	</select>
+
+	<select id="selectAcBranchList" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT(BRNCH_ID) CODE_ID, CODE ||'-'|| NAME  CODE_NAME,CODE,TYPE_ID FROM SYS0005M A JOIN SYS0064M B ON CODE = CT_BRNCH_CODE WHERE HT_BRNCH_CODE IS NOT NULL AND A.STUS_ID = 1
+		ORDER BY CODE
+	</select>
+
+	<select id="selectHomecareAndDscBranchList" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID CODE_ID
+                 , CODE ||#{separator}|| NAME  CODE_NAME
+                 , TYPE_ID
+
+         FROM SYS0005M
+        WHERE STUS_ID = 1
+              AND TYPE_ID IN
+                <foreach item="item" collection="branchTypeList" index="index"
+                    open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            <if test="brnchTypeDsc != null and brnchTypeDsc != ''">
+                OR TYPE_ID = #{brnchTypeDsc}
+            </if>
+         ORDER BY CODE
+    </select>
+</mapper>

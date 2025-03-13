@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.hiCare.impl.HiCareMapper">
+
+
+    <select id="selectCdbCode" parameterType="Map" resultType="egovMap">
+	    <![CDATA[
+	       SELECT Extent1.BRNCH_ID CODE_ID
+	       , Extent1.CODE CODE
+	       , Extent1.CODE ||' '|| Extent1.NAME CODE_NAME
+	       FROM SYS0005M Extent1
+	       WHERE Extent1.TYPE_ID = '42' AND Extent1.STUS_ID = '1'
+	       ORDER BY CODE
+	    ]]>
+    </select>
+
+    <select id="selectModelCode" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT
+             A.CODE_ID CODE_ID
+             ,B.STK_CODE STK_CODE
+             ,B.STK_CODE || ' - ' || B.STK_DESC  AS CODE_NAME
+            ,B.STK_CODE || ' - ' || B.STK_DESC  AS CODE_DESC
+            FROM SYS0013M A
+            LEFT JOIN SYS0026M B ON B.STK_CODE = A.CODE
+            WHERE
+            A.CODE_MASTER_ID IN ('490')
+            AND A.DISAB = 0]]>
+            <if test="modelCode != null and modelCode !='' ">
+                AND A.CODE = #{modelCode}
+            </if>
+            order by A.CODE_ID
+
+    </select>
+
+    <select id="getBch" parameterType="Map" resultType="egovMap">
+	    SELECT BRNCH_ID AS CODE_ID,
+	           CODE || ' - ' || NAME AS CODE_NAME
+	    FROM SYS0005M
+	    WHERE 1 = 1
+	    AND TYPE_ID IN (42) --43
+	      <!-- <if test="cboBchTyp != null and cboBchTyp !='' ">
+	        <![CDATA[ AND TYPE_ID = #{cboBchTyp} ]]>
+	      </if> -->
+	      <if test="groupCode != null and groupCode !='' ">
+	      AND BRNCH_ID = #{groupCode}
+	      </if>
+	    ORDER BY CODE
+    </select>
+
+    <select id="selectHiCareList" parameterType="Map" resultType="egovMap">
+        select
+        rownum rnum,
+		A.SERIAL_NO
+		, A.MODEL model1
+		, A.STATUS status1
+		, A.CONDITION condition1
+		, A.TRNSC_TYPE trans_type
+		, A.TRNSC_TYPE_DTL
+		, A.BRANCH_ID
+		, A.LOC_ID
+		, TO_CHAR(A.CONSIGN_DT, 'DD-MM-YYYY AM HH:MI:SS ') CONSIGN_DT
+		, A.FROM_LOC
+		, A.TO_LOC
+		, TO_CHAR(A.FILTER_CHG_DT, 'DD-MM-YYYY AM HH:MI:SS ') FILTER_CHG_DT
+		, A.FILTER_SN
+		, TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
+		, A.CRT_USER_ID
+		, TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
+		, A.UPD_USER_ID
+		, A.DELVRY_NO
+		, B.WH_LOC_DESC
+		, CASE WHEN C.CODE IS NOT NULL
+        THEN C.CODE || '-' || C.NAME
+        ELSE ' '
+        END
+        BRANCH_LOC
+        , CASE WHEN B.WH_LOC_CODE IS NOT NULL
+        THEN B.WH_LOC_CODE || '-' || B.WH_LOC_DESC
+        ELSE ' '
+        END
+        HOLDER_LOC
+		, C.CODE
+		, D.NAME status
+		, E.NAME condition
+		, F.USER_NAME creator
+		, i.stk_code || ' - ' || i.stk_desc model
+		, Case when A.DELVRY_NO is not null
+        then nvl(h.DELVRY_CMPLT,'N')
+        else
+        'Y'
+        end
+        delv_status
+		from SVC0126M a
+		left join SYS0028M b on b.wh_loc_code = a.loc_id
+		left join SYS0005M c on c.brnch_id = a.BRANCH_ID
+		left join SYS0038M d on d.stus_code_id = a.STATUS
+		left join SYS0038M e on e.stus_code_id = a.CONDITION
+		left join SYS0047m f on f.user_id = A.CRT_USER_ID
+		left join SYS0013m g on g.code_id = A.model
+		left join SVC0127M h on h.transit_no = a.delvry_no
+		left join sys0026m i on i.stk_code = g.code
+		<if test=" '' != filterSN and null != filterSN">
+		  join (select distinct(serial_no) from svc0129h where filter_sn = #{filterSN}) i on i.serial_no = a.serial_no
+		</if>
+		where 1=1
+		<if test=" '' != serialNo and null != serialNo">
+		  and a.serial_no like UPPER(#{serialNo}) || '%'
+		</if>
+		<if test=" '' != cmbModel and null != cmbModel ">
+           and a.model in
+           <foreach collection="modelList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        <if test=" '' != cmbStatus and null != cmbStatus ">
+           and a.status in
+           <foreach collection="statusList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        <if test=" '' != cmbCondition and null != cmbCondition ">
+           and a.condition in
+           <foreach collection="conditionList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+		<if test=" '' != branchId and null != branchId ">
+           and a.branch_id in
+           <foreach collection="branchList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+		<if test=" '' != cmdMemberCode and null != cmdMemberCode ">
+           and b.wh_loc_code in
+           <foreach item="item" collection="memberList" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+        </if>
+        <if test=" '' != cmbHolder and null != cmbHolder ">
+        AND
+        <![CDATA[nvl(b.wh_loc_type_id,'277') in]]>
+
+           <foreach collection="holderList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        order by a.serial_no
+    </select>
+
+    <select id="selectItemSerch" parameterType="Map" resultType="egovMap">
+        SELECT STK_ID
+        , STK_CODE
+        , STK_DESC
+        , UOM
+        , DECODE(SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+        , STK_TYPE_ID
+        FROM SYS0026M
+        WHERE STK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectHiCareSerialCheck" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+        FROM SVC0126M
+        WHERE SERIAL_NO = #{serialNo}
+        AND STATUS <![CDATA[<>]]> '113'
+    </select>
+
+  <select id="selectHiCareMasterSeq" resultType="String">
+        SELECT 'HC' || TO_CHAR(SYSDATE,'YYMMDD') || LPAD(SVC0126M_ID_SEQ.NEXTVAL, 10, 0) FROM DUAL
+  </select>
+
+    <insert id="insertHiCareSerialMaster" parameterType="Map">
+        MERGE INTO SVC0126M A
+            USING(
+            SELECT
+		        #{scanNo} AS SCAN_NO         --scan no
+		        , #{serialNo} AS SERIAL_NO         --serial number
+		        , #{model} AS MODEL            --6586 SPS 2.0
+		        , '113' AS STATUS                  --1 active, 36 closed ,10 delete, 113 temporary
+		        , '33' AS CONDITION                 --33 new, 111 used, 112 defect
+		        , #{transactionType} AS TRNSC_TYPE   --Transaction Type
+		        , #{branchCode} AS BRANCH_ID        --branchId sys0005m
+		        , #{crtUserId} AS CRT_USER_ID         --name of person who created the object
+		        , SYSDATE AS CRT_DT              --date on which record was created
+		        , #{updUserId} AS UPD_USER_ID        --update User id
+		        , SYSDATE AS UPD_DT          --update date
+            FROM DUAL) B
+            ON(A.SERIAL_NO = B.SERIAL_NO)
+            WHEN MATCHED THEN
+            UPDATE SET
+	             A.SCAN_NO    = B.SCAN_NO
+				,A.MODEL       = B.MODEL
+				,A.STATUS      = B.STATUS
+				,A.CONDITION   = B.CONDITION
+				,A.TRNSC_TYPE  = B.TRNSC_TYPE
+				,A.BRANCH_ID   = B.BRANCH_ID
+				,A.CRT_DT      = B.CRT_DT
+				,A.CRT_USER_ID = B.CRT_USER_ID
+				,A.UPD_DT      = B.UPD_DT
+				,A.UPD_USER_ID = B.UPD_USER_ID
+            WHEN NOT MATCHED THEN
+            INSERT(
+	            A.SCAN_NO,
+				A.SERIAL_NO,
+				A.MODEL,
+				A.STATUS,
+				A.CONDITION,
+				A.TRNSC_TYPE,
+				A.BRANCH_ID,
+				A.CRT_DT,
+				A.CRT_USER_ID,
+				A.UPD_DT,
+				A.UPD_USER_ID
+            )VALUES(
+				B.SCAN_NO,      --scan number
+				B.SERIAL_NO,    --serial number
+				B.MODEL,        --6586 SPS 2.0
+				B.STATUS,       --1 active, 36 closed ,10 delete, 113 temporary
+				B.CONDITION,    --33 new, 111 used, 112 defect
+				B.TRNSC_TYPE,   --Transaction Type
+				B.BRANCH_ID,    --branchId sys0005m
+				B.CRT_DT,       --name of person who created the object
+				B.CRT_USER_ID,  --date on which record was created
+				B.UPD_DT,       --update User id
+				B.UPD_USER_ID   --update date
+        )
+    </insert>
+
+    <delete id="deleteHiCareSerialInfo" parameterType="Map">
+        DELETE FROM SVC0126M
+        WHERE
+        SCAN_NO = #{scanNo}
+        <if test="serialNo !=null and serialNo !=''">
+            AND SERIAL_NO = #{serialNo}
+        </if>
+        AND status != 'A'
+    </delete>
+
+    <update id="updateHiCareSerialMaster" parameterType="Map">
+        UPDATE SVC0126M SET
+        STATUS = '1'
+        ,BRANCH_ID = #{branchCode}
+        ,MODEL = #{model}
+        ,UPD_DT = SYSDATE
+        ,UPD_USER_ID = #{userId}
+        WHERE
+        SCAN_NO = #{scanNo}
+        AND STATUS = '113'
+    </update>
+
+    <insert id="insertHiCareSerialHistory" parameterType="Map">
+        INSERT INTO SVC0129H (
+                SERIAL_NO,
+                SEQ,
+                MODEL,
+                STATUS,
+                CONDITION,
+                TRNSC_TYPE,
+                BRANCH_ID,
+                LOC_ID,
+                CONSIGN_DT,
+                FROM_LOC,
+                TO_LOC,
+                FILTER_CHG_DT,
+                FILTER_SN,
+                FILTER_NXT_CHG_DT,
+                REASON,
+                REMARKS,
+                ATCH_FILE_GRP_ID,
+                IS_RETURN,
+                OLD_FILTER_SN,
+                CRT_DT,
+                CRT_USER_ID,
+                UPD_DT,
+                UPD_USER_ID,
+                DELVRY_NO,
+                DEFECT_TYPE
+            )
+                SELECT SERIAL_NO
+             , (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM SVC0129H WHERE SERIAL_NO = #{serialNo}) as SEQ
+             , MODEL
+             , STATUS
+             , CONDITION
+             , TRNSC_TYPE
+             , BRANCH_ID
+             , LOC_ID
+             , CONSIGN_DT
+             , FROM_LOC
+             , TO_LOC
+             , FILTER_CHG_DT
+             , FILTER_SN
+             , FILTER_NXT_CHG_DT
+             , #{reason}
+             , #{remarks}
+             , ATCH_FILE_GRP_ID
+             , IS_RETURN
+             , OLD_FILTER_SN
+             , CRT_DT
+             , CRT_USER_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , DELVRY_NO
+             , DEFECT_TYPE
+            FROM SVC0126M
+            WHERE SERIAL_NO = #{serialNo}
+    </insert>
+
+    <insert id="insertHiCareSerialHistory1" parameterType="Map">
+        MERGE INTO SVC0129H A
+            USING(
+            SELECT
+                (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM SVC0129H WHERE SERIAL_NO = #{serialNo}) as SEQ
+                , #{serialNo} AS SERIAL_NO         --serial number
+                , #{model} AS MODEL            --6586 SPS 2.0
+                , '113' AS STATUS                  --1 active, 36 closed ,10 delete, 113 temporary
+                , '33' AS CONDITION                 --33 new, 111 used, 112 defect
+                , #{transactionType} AS TRNSC_TYPE   --Transaction Type
+                , #{branchCode} AS BRANCH_ID        --branchId sys0005m
+                , #{crtUserId} AS CRT_USER_ID         --name of person who created the object
+                , SYSDATE AS CRT_DT              --date on which record was created
+                , #{updUserId} AS UPD_USER_ID        --update User id
+                , SYSDATE AS UPD_DT          --update date
+            FROM DUAL) B
+            ON(A.SERIAL_NO = B.SERIAL_NO)
+            WHEN MATCHED THEN
+            UPDATE SET
+                A.MODEL       = B.MODEL
+                ,A.STATUS      = B.STATUS
+                ,A.CONDITION   = B.CONDITION
+                ,A.TRNSC_TYPE  = B.TRNSC_TYPE
+                ,A.BRANCH_ID   = B.BRANCH_ID
+                ,A.CRT_DT      = B.CRT_DT
+                ,A.CRT_USER_ID = B.CRT_USER_ID
+                ,A.UPD_DT      = B.UPD_DT
+                ,A.UPD_USER_ID = B.UPD_USER_ID
+            WHEN NOT MATCHED THEN
+            INSERT(
+                A.SEQ,
+                A.SERIAL_NO,
+                A.MODEL,
+                A.STATUS,
+                A.CONDITION,
+                A.TRNSC_TYPE,
+                A.BRANCH_ID,
+                A.CRT_DT,
+                A.CRT_USER_ID,
+                A.UPD_DT,
+                A.UPD_USER_ID
+            )VALUES(
+                B.SEQ, --sequence
+                B.SERIAL_NO,    --serial number
+                B.MODEL,        --6586 SPS 2.0
+                B.STATUS,       --1 active, 36 closed ,10 delete, 113 temporary
+                B.CONDITION,    --33 new, 111 used, 112 defect
+                B.TRNSC_TYPE,   --Transaction Type
+                B.BRANCH_ID,    --branchId sys0005m
+                B.CRT_DT,       --name of person who created the object
+                B.CRT_USER_ID,  --date on which record was created
+                B.UPD_DT,       --update User id
+                B.UPD_USER_ID   --update date
+        )
+    </insert>
+
+    <update id="updateHiCareSerialHistory" parameterType="Map">
+        UPDATE SVC0129H SET
+        STATUS = '1'
+        ,BRANCH_ID = #{branchCode}
+        ,MODEL = #{model}
+        ,UPD_DT = SYSDATE
+        ,UPD_USER_ID = #{userId}
+        WHERE
+        SERIAL_NO IN (SELECT SERIAL_NO FROM SVC0126M WHERE SCAN_NO = #{scanNo})
+        AND STATUS = '113'
+        AND TRNSC_TYPE = 'H1'
+    </update>
+
+    <select id="selectHiCareDetail" parameterType="Map" resultType="egovMap">
+        select
+        A.SERIAL_NO
+        , A.MODEL model1
+        , A.STATUS status1
+        , A.CONDITION condition1
+        , A.TRNSC_TYPE trans_type
+        , A.TRNSC_TYPE_DTL
+        , A.BRANCH_ID
+        , A.LOC_ID
+        , TO_CHAR(A.CONSIGN_DT, 'DD-MM-YYYY AM HH:MI:SS ') CONSIGN_DT
+        , A.FROM_LOC
+        , A.TO_LOC
+        , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') FILTER_CHG_DT
+        , NVL(A.FILTER_SN,'') FILTER_SN
+        , TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
+        , A.CRT_USER_ID
+        , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
+        , TO_CHAR(A.FILTER_NXT_CHG_DT, 'DD/MM/YYYY')  FILTER_NXT_CHG_DT
+        , A.UPD_USER_ID
+        ,CASE WHEN A.UPD_USER_ID IS NOT NULL
+        THEN
+        A.UPD_USER_ID || '(' || TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') || ')'
+        ELSE ' '
+        END
+        UPD_BY
+        , A.REMARKS
+        , A.DELVRY_NO
+        , NVL(A.ATCH_FILE_GRP_ID,'0') ATCH_FILE_GRP_ID
+        , B.WH_LOC_DESC
+        , CASE WHEN C.CODE IS NOT NULL
+        THEN C.CODE || '-' || C.NAME
+        ELSE ' '
+        END
+        BRANCH_LOC
+        , CASE WHEN B.WH_LOC_CODE IS NOT NULL
+        THEN B.WH_LOC_CODE || '-' || B.WH_LOC_DESC
+        ELSE ' '
+        END
+        HOLDER_LOC
+        , C.CODE
+        , C.Name
+        , D.NAME status
+        , E.NAME condition
+        , F.USER_NAME creator
+        , j.stk_code || ' - ' || j.stk_desc model
+        , H.CODE_DESC reason_desc
+        , i.code_name trans_type_desc
+        from SVC0126M a
+        left join SYS0028M b on b.wh_loc_code = a.loc_id
+        left join SYS0005M c on c.brnch_id = a.BRANCH_ID
+        left join SYS0038M d on d.stus_code_id = a.STATUS
+        left join SYS0038M e on e.stus_code_id = a.CONDITION
+        left join SYS0047m f on f.user_id = A.CRT_USER_ID
+        left join SYS0013m g on g.code_id = A.model
+        left join SYS0013m h on h.code_id = a.reason
+        left join SYS0013m i on i.code = a.trnsc_type and i.code_master_id = '491'
+        left join sys0026m j on j.stk_code = g.code
+        where 1=1
+          and a.serial_no = #{serialNo}
+    </select>
+
+    <update id="updateHiCareDetail" parameterType="Map">
+        UPDATE SVC0126M SET
+        UPD_DT = SYSDATE
+        ,UPD_USER_ID = #{userId}
+        <if test="status !=null and status !=''">
+            ,STATUS = #{status}
+        </if>
+        <if test="condition !=null and condition !=''">
+             , CONDITION = #{condition}
+        </if>
+        <if test="transType !=null and transType !=''">
+             , TRNSC_TYPE = #{transType}
+        </if>
+        <if test="branchId !=null and branchId !=''">
+             , BRANCH_ID = #{branchId}
+        </if>
+        <if test="model !=null and model !=''">
+             , MODEL = #{model}
+        </if>
+        <if test="locId !=null">
+             , LOC_ID = #{locId}
+        </if>
+        <if test="consignDt !=null and consignDt !=''">
+             , CONSIGN_DT = SYSDATE
+        </if>
+        <if test="fromLoc !=null and fromLoc !=''">
+             , FROM_LOC = #{fromLoc}
+        </if>
+        <if test="toLoc !=null and toLoc !=''">
+             , TO_LOC = #{toLoc}
+        </if>
+        <if test="filterChgDt !=null and filterChgDt !=''">
+             , FILTER_CHG_DT = TO_DATE(#{filterChgDt}, 'dd/MM/yyyy')
+        </if>
+        <if test="filterNxtChgDt !=null and filterNxtChgDt !=''">
+             , FILTER_NXT_CHG_DT = TO_DATE(#{filterNxtChgDt}, 'dd/MM/yyyy')
+        </if>
+        <if test="filterSn !=null and filterSn !=''">
+             , FILTER_SN = #{filterSn}
+        </if>
+        <if test="oldFilterSn !=null">
+             , OLD_FILTER_SN = #{oldFilterSn}
+        </if>
+        <if test="reason !=null and reason !=''">
+             , REASON = #{reason}
+        </if>
+        <if test="remarks !=null and remarks !=''">
+             , REMARKS = #{remarks}
+        </if>
+        <if test="isReturn !=null and isReturn !=''">
+             , IS_RETURN = #{isReturn}
+        </if>
+        <if test="delvryNo !=null and delvryNo !=''">
+             , DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="defectType !=null and defectType !=''">
+             , DEFECT_TYPE = #{defectType}
+        </if>
+        WHERE
+        serial_no = #{serialNo}
+        AND STATUS != '113'
+    </update>
+
+    <select id="selectHiCareMemberCheck" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+        FROM SVC0126M
+        WHERE lOC_ID = #{cmdMemberCode1}
+        AND STATUS = '1'
+    </select>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <update id="updateHiCareAttach" parameterType="Map">
+            UPDATE SVC0126M set ATCH_FILE_GRP_ID = #{atchFileGrpIdNew} where serial_no = #{serialNo}
+    </update>
+
+    <select id="selectHiCareHistory" parameterType="Map" resultType="egovMap">
+        select
+        A.SERIAL_NO
+        , A.MODEL model1
+        , A.STATUS status1
+        , A.CONDITION condition1
+        , A.TRNSC_TYPE trans_type
+        , A.TRNSC_TYPE_DTL
+        , A.BRANCH_ID
+        , A.LOC_ID
+        , TO_CHAR(A.CONSIGN_DT, 'DD-MM-YYYY AM HH:MI:SS ') CONSIGN_DT
+        , A.FROM_LOC
+        , A.TO_LOC
+        , TO_CHAR(A.FILTER_CHG_DT, 'DD-MM-YYYY AM HH:MI:SS ') FILTER_CHG_DT
+        , A.FILTER_SN
+        , TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
+        , A.CRT_USER_ID
+        , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
+        , A.UPD_USER_ID
+        , A.DELVRY_NO
+        , B.WH_LOC_DESC
+        , C.CODE BRANCH_CODE
+        , CASE WHEN C.CODE IS NOT NULL
+        THEN C.CODE || '-' || C.NAME
+        ELSE ' '
+        END
+        BRANCH_LOC
+        , CASE WHEN B.WH_LOC_CODE IS NOT NULL
+        THEN B.WH_LOC_CODE || '-' || B.WH_LOC_DESC
+        ELSE ' '
+        END
+        HOLDER_LOC
+        , C.CODE
+        , D.NAME status
+        , E.NAME condition
+        , F.USER_NAME creator
+        , j.stk_code || ' - ' || j.stk_desc model
+        , H.CODE_DESC reason_desc
+        , i.code_name trans_type_desc
+        ,a.remarks
+        ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else H.CODE_DESC end reason_desc_1
+        ,case when A.TRNSC_TYPE in ('H2','H4','H8') then '' else a.remarks end remark1
+        , K.CODE_DESC DEFECT_TYPE_DESC
+        from SVC0129H a
+        left join SYS0028M b on b.wh_loc_code = a.loc_id
+        left join SYS0005M c on c.brnch_id = a.BRANCH_ID
+        left join SYS0038M d on d.stus_code_id = a.STATUS
+        left join SYS0038M e on e.stus_code_id = a.CONDITION
+        left join SYS0047m f on f.user_id = A.upd_user_id
+        left join SYS0013m g on g.code_id = A.model
+        left join SYS0013m h on h.code_id = a.reason
+        left join SYS0013m i on i.code = a.trnsc_type and i.code_master_id = '491'
+        left join sys0026m j on j.stk_code = g.code
+        LEFT JOIN SYS0013M K ON K.CODE_ID = A.DEFECT_TYPE AND K.CODE_MASTER_ID = '613'
+        where 1=1
+          and a.serial_no = #{serialNo}
+          order by a.seq
+    </select>
+
+    <select id="selectHiCareHolderDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.MEM_ID
+        , A.MEM_CODE
+        , A.NAME MEM_NAME
+        , A.NRIC MEM_NRIC
+        , B.ORG_CODE
+        , B.GRP_CODE
+        , B.DEPT_CODE
+        FROM ORG0001D A
+        LEFT JOIN ORG1001V B ON B.MEM_CODE = A.MEM_CODE
+        WHERE A.MEM_CODE = #{memCode}
+    </select>
+
+    <select id="selectHiCarePreviousFilter" resultType="String">
+        SELECT NVL(FILTER_SN,' ') FROM SVC0129H
+		WHERE
+		SERIAL_NO = #{serialNo}
+		AND SEQ = (SELECT MAX(SEQ) FROM SVC0129H
+			WHERE
+			SERIAL_NO = #{serialNo}
+			AND TRNSC_TYPE = 'H7')
+    </select>
+
+    <select id="selectOverallPreviousFilter" parameterType="Map" resultType="int">
+        SELECT COUNT(1) AS CNT
+        FROM SVC0129H
+        WHERE filter_SN = #{newFilterTxtBarcode}
+        --AND STATUS = '1'
+    </select>
+
+    <select id="selectHiCareFilterHistory" parameterType="Map" resultType="egovMap">
+        SELECT
+		A.SERIAL_NO
+		, TO_CHAR(A.FILTER_CHG_DT, 'DD-MM-YYYY AM HH:MI:SS ') FILTER_CHG_DT
+		, A.FILTER_SN
+		, A.IS_RETURN
+		, B.CODE_DESC REASON
+		, A.UPD_USER_ID
+		, C.USER_NAME
+		FROM SVC0129H A
+		LEFT JOIN SYS0013M B ON B.CODE_ID = A.REASON AND B.CODE_MASTER_ID = '497'
+		LEFT JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
+		WHERE A.TRNSC_TYPE = 'H7'
+		AND SERIAL_NO = #{serialNo}
+        order by a.FILTER_CHG_DT,a.seq
+    </select>
+
+    <select id="selectTransitNo" resultType="String">
+         SELECT  'HCT'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SVC0127M_ID_SEQ.NEXTVAL, 5, '0') FROM  DUAL
+    </select>
+
+    <insert id="insertTransitMaster" parameterType="Map">
+        Insert into SVC0127M (
+	        TRANSIT_NO
+	        ,TRNSC_TYPE
+	        ,TRNSC_TYPE_DTL
+	        ,DELVRY_DT
+	        ,DELVRY_GI_DT
+	        ,DELVRY_GR_DT
+	        ,DELVRY_CMPLT
+	        ,DELVRY_GI_CMPLT
+			,DELVRY_GR_CMPLT
+			,FROM_LOC
+			,TO_LOC
+			,CRT_USER_ID
+			,CRT_DT
+			,UPD_USER_ID
+			,UPD_DT
+			,DEL_FLAG
+			,DOC_GIHDER_TXT
+			,DOC_GRHDER_TXT
+			,COURIER
+		) values (
+			#{transitNo}
+			,'H4'
+			,null
+			,to_char(sysdate , 'yyyymmdd')
+			,to_char(sysdate , 'yyyymmdd')
+			,null
+			,null
+			,'Y'
+			,null
+			,#{fromLoc}
+			,#{toLoc}
+			,#{userId}
+			,SYSDATE
+			,null
+			,null
+			,null
+			,null
+			,null
+			,#{courier}
+		)
+    </insert>
+
+    <insert id="insertTransitDetails" parameterType="Map">
+    Insert into SVC0128D (
+		TRANSIT_NO
+		,DELVRY_NO_ITM
+		,MODEL
+		,MODEL_NAME
+		,CRT_USER_ID
+		,CRT_DT
+		,UPD_USER_ID
+		,UPD_DT
+		,SERIAL_NO
+		,DEL_FLAG
+	) values (
+		#{transitNo}
+		,(SELECT NVL(MAX(DELVRY_NO_ITM), 0)+1 AS SEQ FROM SVC0128D WHERE TRANSIT_NO = #{transitNo})
+		,#{model1}
+		,#{model}
+		,#{userId}
+		,SYSDATE
+		,null
+		,null
+		,#{serialNo}
+		,null
+	)
+    </insert>
+
+    <select id="selectHiCareItemList" parameterType="Map" resultType="egovMap">
+        select
+        rownum rnum,
+        A.SERIAL_NO
+        , A.MODEL model1
+        , A.STATUS status1
+        , A.CONDITION condition1
+        , A.TRNSC_TYPE trans_type
+        , A.TRNSC_TYPE_DTL
+        , A.BRANCH_ID
+        , A.LOC_ID
+        , TO_CHAR(A.CONSIGN_DT, 'DD-MM-YYYY AM HH:MI:SS ') CONSIGN_DT
+        , A.FROM_LOC
+        , A.TO_LOC
+        , TO_CHAR(A.FILTER_CHG_DT, 'DD-MM-YYYY AM HH:MI:SS ') FILTER_CHG_DT
+        , A.FILTER_SN
+        , TO_CHAR(A.CRT_DT, 'DD-MM-YYYY AM HH:MI:SS ') CRT_DT
+        , A.CRT_USER_ID
+        , TO_CHAR(A.UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') UPD_DT
+        , A.UPD_USER_ID
+        , A.DELVRY_NO
+        , B.WH_LOC_DESC
+        , CASE WHEN C.CODE IS NOT NULL
+        THEN C.CODE || '-' || C.NAME
+        ELSE ' '
+        END
+        BRANCH_LOC
+        , CASE WHEN B.WH_LOC_CODE IS NOT NULL
+        THEN B.WH_LOC_CODE || '-' || B.WH_LOC_DESC
+        ELSE ' '
+        END
+        HOLDER_LOC
+        , C.CODE
+        , D.NAME status
+        , E.NAME condition
+        , F.USER_NAME creator
+        , h.stk_code || ' - ' || h.stk_desc model
+        from SVC0126M a
+        left join SYS0028M b on b.wh_loc_code = a.loc_id
+        left join SYS0005M c on c.brnch_id = a.BRANCH_ID
+        left join SYS0038M d on d.stus_code_id = a.STATUS
+        left join SYS0038M e on e.stus_code_id = a.CONDITION
+        left join SYS0047m f on f.user_id = A.CRT_USER_ID
+        left join SYS0013m g on g.code_id = A.model
+        left join sys0026m h on h.stk_code = g.code
+        where 1=1
+        and a.serial_no not in
+        (
+        select bb.serial_no from SVC0127M aa
+        left join SVC0128D bb on bb.transit_no = aa.transit_no
+        where nvl(aa.DELVRY_GR_CMPLT,'N') = 'N'
+        )
+        and A.LOC_ID is null
+        <if test=" '' != serialNo and null != serialNo">
+          and a.serial_no = #{serialNo}
+        </if>
+        <if test=" '' != tcmbModel and null != tcmbModel ">
+           and a.model in
+           <foreach collection="modelList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        <if test=" '' != tstatus and null != tstatus ">
+           and a.status in
+           <foreach collection="statusList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        <if test=" '' != tcondition and null != tcondition ">
+           and a.condition in
+           <foreach collection="conditionList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        <if test=" null != sLocation ">
+           and a.branch_id in
+           <foreach collection="branchList" item="value" open="(" separator="," close=")">
+               <choose>
+                   <when test="value ==  0 ">
+                       #{value}
+                   </when>
+                   <otherwise>
+                       #{value}
+                   </otherwise>
+               </choose>
+           </foreach>
+        </if>
+        order by a.serial_no
+    </select>
+
+    <select id="selectHiCareDeliveryList" parameterType="Map" resultType="egovMap">
+        SELECT
+		A.TRANSIT_NO
+		, A.FROM_LOC
+		, A.TO_LOC
+		, CASE WHEN NVL(A.DELVRY_CMPLT,'N') = 'Y'
+	        THEN 'Completed'
+	        ELSE 'Active'
+	        END
+	        status
+		, A.CRT_USER_ID
+		, TO_CHAR(TO_DATE(A.DELVRY_GR_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY ') RECEIVE_DT
+		, TO_CHAR(TO_DATE(A.DELVRY_GI_DT, 'YYYY/MM/DD'), 'DD/MM/YYYY ') CRT_DT
+		, C.CODE || '-' || C.NAME FROM_LOCATION
+		, D.CODE || '-' || D.NAME TO_LOCATION
+		, E.USER_NAME creator
+		, F.CODE_NAME courier
+		<if test=" '' != transitNo and null != transitNo">
+		, (SELECT COUNT(1) FROM SVC0128D WHERE TRANSIT_NO = #{transitNo}) QTY
+		</if>
+		FROM SVC0127M A
+		--left join SVC0128D b on b.transit_no = a.transit_no
+		LEFT JOIN SYS0005M C ON C.BRNCH_ID = A.FROM_LOC
+		LEFT JOIN SYS0005M D ON D.BRNCH_ID = A.TO_LOC
+		LEFT JOIN SYS0047M E ON E.USER_ID = A.CRT_USER_ID
+		LEFT JOIN SYS0013M F ON F.CODE_ID = A.COURIER
+		WHERE 1=1
+		<if test=" '' != transitNo and null != transitNo">
+          and A.TRANSIT_NO = #{transitNo}
+        </if>
+        <if test=" '' != serialNo and null != serialNo">
+          and a.transit_no in (select transit_no from SVC0128D where serial_no = #{serialNo})
+        </if>
+        <if test="crtsdt !=null and crtsdt !=''">
+           and to_char(A.CRT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+        </if>
+        <if test="crtedt !=null and crtedt !=''">
+           and to_char(A.CRT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+        </if>
+        <if test=" '' != transitNo and null != transitNo">
+          and A.TRANSIT_NO = #{transitNo}
+        </if>
+        <if test=" '' != delvryStatus and null != delvryStatus">
+          and NVL(A.DELVRY_CMPLT,'N') = #{delvryStatus}
+        </if>
+        <if test=" '' != cmbFromBranch and null != cmbFromBranch">
+          and A.FROM_LOC = #{cmbFromBranch}
+        </if>
+        <if test=" '' != cmbToBranch and null != cmbToBranch">
+          and A.TO_LOC = #{cmbToBranch}
+        </if>
+		ORDER BY A.TRANSIT_NO
+    </select>
+
+    <select id="selectHiCareDeliveryDetail" parameterType="Map" resultType="egovMap">
+        select
+		a.serial_no
+		, a.model_name
+		, b.condition
+		, b.status
+		, C.name condition_Desc
+		, b.status
+		, d.name status_desc
+		, NVL(replace(A.final_cmplt,'D','Y'),'N') final_cmplt
+		FROM SVC0128D A
+		left join SVC0126M b on b.serial_no = a.serial_no
+		left join SYS0038m c on c.stus_code_id = b.CONDITION
+		left join SYS0038M d on d.stus_code_id = replace(b.STATUS,'D',10)
+		where a.TRANSIT_NO = #{transitNo}
+    </select>
+
+    <select id="selectHiCareDeliverySerialCheck" parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT
+		FROM SVC0127M A
+		LEFT JOIN SVC0128D B ON B.TRANSIT_NO = A.TRANSIT_NO
+		WHERE
+		A.TRANSIT_NO = #{transitNo}
+		AND B.SERIAL_NO = #{serialNo}
+    </select>
+
+    <update id="updateHiCareDeliverySerialTemp" parameterType="Map">
+        UPDATE SVC0128D SET
+        FINAL_CMPLT = 'D'
+        WHERE
+        TRANSIT_NO = #{transitNo}
+        AND SERIAL_NO = #{serialNo}
+    </update>
+
+    <delete id="deleteHiCareDeliverySerial" parameterType="Map">
+        UPDATE SVC0128D SET
+        FINAL_CMPLT = 'N'
+        WHERE
+        TRANSIT_NO = #{transitNo}
+        <if test=" '' != serialNo and null != serialNo">
+        AND SERIAL_NO = #{serialNo}
+        </if>
+    </delete>
+
+    <update id="updateHiCareDeliverySerial" parameterType="Map">
+        UPDATE SVC0128D SET
+        FINAL_CMPLT = 'Y'
+        WHERE
+        TRANSIT_NO = #{transitNo}
+        <if test=" '' != serialNo and null != serialNo">
+        AND SERIAL_NO = #{serialNo}
+        </if>
+    </update>
+
+    <update id="updateHiCareDeliveryMaster" parameterType="Map">
+        UPDATE SVC0127M SET
+        DELVRY_GR_DT = to_char(SYSDATE , 'yyyymmdd')
+        , DELVRY_CMPLT = 'Y'
+        , DELVRY_GR_CMPLT = 'Y'
+        , UPD_USER_ID = #{userId}
+        , UPD_DT = SYSDATE
+        WHERE
+        TRANSIT_NO = #{transitNo}
+    </update>
+</mapper>

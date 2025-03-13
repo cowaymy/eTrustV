@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.MemberApprovalMapper">
+
+    <select id="selectMemberApproval" parameterType="Map" resultType="egovMap">
+           SELECT
+                O46D.MEM_ELIGIBLE_ID,
+                O46D.MEM_ID,
+                O46D.NAME,
+                O46D.MEM_CODE,
+                O46D.NRIC,
+                A.STUS AS STUS,
+                A.STATUS_NAME AS STATUS_NAME,
+                S13M.CODE AS SAL_ORG_REJOIN,
+                S38M.NAME AS APPR_STUS,
+                B.USER_FULL_NAME AS APPROVED_BY,
+                A.TRM_REJOIN AS TRM_REJOIN,
+                O46D.ATCH_FILE_ID
+            FROM ORG0046D O46D
+            LEFT JOIN SYS0038M S38M ON O46D.APPR_STUS = S38M.STUS_CODE_ID
+            LEFT JOIN (
+			                SELECT
+			                    O01D.MEM_ID,
+			                    O01D.STUS,
+			                    SY38M.NAME AS STATUS_NAME,
+			                    O01D.TRM_REJOIN AS TRM_REJOIN
+			                FROM ORG0001D O01D
+			                LEFT JOIN SYS0038M SY38M ON O01D.STUS = SY38M.STUS_CODE_ID
+			                WHERE 1=1
+				                <if test="icNum != null and icNum != '' " >
+				                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum})
+				                </if>
+				                <if test="code != null and code != '' " >
+				                      AND O01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
+				                </if>
+				                <if test="name != null and name != '' " >
+				                      AND O01D.NAME = #{name}
+				                </if>
+				                <if test="currentStatus != null and currentStatus != '' " >
+				                     <if test="currentStatus != 'Rejoin' " >
+				                            AND O01D.STUS =  #{currentStatus}
+				                      </if>
+				                       <if test="currentStatus == 'Rejoin' " >
+				                            AND O01D.TRM_REJOIN = 1 AND O01D.STUS = 3
+				                      </if>
+				                </if>
+            )A ON A.MEM_ID = O46D.MEM_ID
+            LEFT JOIN (
+			                SELECT
+			                    S47M.USER_ID,
+			                    S47M.USER_FULL_NAME
+			                FROM SYS0047M S47M
+			                WHERE 1=1
+			                <if test="approvedBy != null and approvedBy != '' " >
+			                      AND S47M.USER_FULL_NAME = #{approvedBy}
+			                </if>
+            ) B ON O46D.APPR_USER_ID = B.USER_ID
+            LEFT JOIN SYS0013M S13M ON O46D.SAL_ORG_REJOIN = S13M.CODE_ID
+            WHERE 1=1
+               <if test="icNum != null and icNum != '' " >
+                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum})
+               </if>
+                <if test="code != null and code != '' " >
+                      AND O46D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
+                </if>
+                <if test="name != null and name != '' " >
+                      AND O46D.NAME = #{name}
+                </if>
+                <if test="currentStatus != null and currentStatus != '' " >
+                      <if test="currentStatus != 'Rejoin' " >
+                            AND A.STUS =  #{currentStatus}
+                      </if>
+                       <if test="currentStatus == 'Rejoin' " >
+                            AND A.TRM_REJOIN = 1 AND A.STUS = 3
+                      </if>
+                </if>
+                 <if test="orgToJoin != null and orgToJoin != '' " >
+                      AND O46D.SAL_ORG_REJOIN =  #{orgToJoin}
+                </if>
+                  <if test="approvalStatus != null and approvalStatus != '' " >
+                      AND O46D.APPR_STUS =  #{approvalStatus}
+                </if>
+                <if test="approvedBy != null and approvedBy != '' " >
+                      AND B.USER_FULL_NAME =  #{approvedBy}
+                </if>
+            ORDER BY O46D.CRT_DT DESC
+  </select>
+
+  <select id="selectAttachDownload" parameterType="Map" resultType="egovMap">
+        SELECT *
+        FROM SYS0070M S70M
+        LEFT JOIN SYS0071D S71D ON S70M.ATCH_FILE_ID = S71D.ATCH_FILE_ID
+        WHERE S70M.ATCH_FILE_ID = #{memTrmAtchFileId}
+     </select>
+
+  <insert id="submitMemberApproval" parameterType="Map" >
+		  UPDATE ORG0046D
+	       SET APPR_STUS = #{selectApprStatusId}
+		          , APPR_USER_ID = #{userId}
+		          , APPR_DT = SYSDATE
+		   WHERE MEM_ELIGIBLE_ID = #{selectMemEligibleId}
+   </insert>
+</mapper>

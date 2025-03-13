@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.courier.impl.CourierMapper">
+    <select id="selectCourierList" parameterType="Map" resultType="EgovMap">
+        SELECT P1.CURIER_ID courierId,
+         P1.CURIER_CODE courierCd,
+         P1.CURIER_NAME courierNm,
+         P1.CURIER_REG_NO regNo,
+         P1.NAME country,
+         P1.NAME1 state,
+         P1.AREA_NAME area,
+         P1.CURIER_AREA_ID areaId,
+         P1.CURIER_POST_CODE_ID postCd,
+         P1.CURIER_CNTC_NO1 contactNo1,
+         P1.CURIER_CNTC_NO2 contactNo2,
+         P1.CURIER_FAX_NO faxNo,
+         P1.C1 cnt
+    FROM (SELECT P1.C1 C1,
+                 P1.CURIER_ID CURIER_ID,
+                 P1.CURIER_CODE CURIER_CODE,
+                 P1.CURIER_NAME CURIER_NAME,
+                 P1.CURIER_REG_NO CURIER_REG_NO,
+                 P1.CURIER_AREA_ID CURIER_AREA_ID,
+                 P1.CURIER_POST_CODE_ID CURIER_POST_CODE_ID,
+                 P1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                 P1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                 P1.CURIER_FAX_NO CURIER_FAX_NO,
+                 P1.NAME NAME,
+                 P1.NAME1 NAME1,
+                 P1.AREA_NAME AREA_NAME,
+                 ROW_NUMBER () OVER (ORDER BY P1.CURIER_CODE ASC) ROW_NUMBER
+            FROM (SELECT G1.A1 C1,
+                         F1.CURIER_ID CURIER_ID,
+                         F1.CURIER_CODE CURIER_CODE,
+                         F1.CURIER_NAME CURIER_NAME,
+                         F1.CURIER_REG_NO CURIER_REG_NO,
+                         F1.AREAID CURIER_AREA_ID,
+                         F1.POSTCODE CURIER_POST_CODE_ID,
+                         F1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                         F1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                         F1.CURIER_FAX_NO CURIER_FAX_NO,
+                         F1.COUNTRY NAME,
+                         F1.STATE NAME1,
+                         F1.AREA AREA_NAME
+                    FROM    (SELECT E1.CURIER_ID     CURIER_ID,
+                                    E1.CURIER_CODE   CURIER_CODE,
+                                    E1.CURIER_NAME   CURIER_NAME,
+                                    E1.CURIER_REG_NO CURIER_REG_NO,
+                                    E2.COUNTRY       COUNTRY,
+                                    E2.AREA_ID       AREAID,
+                                    E2.STATE         STATE,
+                                    E2.AREA          AREA,
+                                    E2.CITY          CITY,
+                                    E2.POSTCODE      POSTCODE,
+                                    E1.CURIER_CNTC_NO1 CURIER_CNTC_NO1,
+                                    E1.CURIER_CNTC_NO2 CURIER_CNTC_NO2,
+                                    E1.CURIER_FAX_NO CURIER_FAX_NO
+                               FROM SYS0016M E1, SYS0064M E2
+                              WHERE     E1.AREA_ID = E2.AREA_ID(+)
+                                    AND 1 = E1.CURIER_STUS_ID) F1
+                                 CROSS JOIN
+                                 (SELECT COUNT (1) A1
+                                    FROM (SELECT E5.CURIER_CODE CURIER_CODE,
+	                                             E5.CURIER_NAME CURIER_NAME,
+	                                             E5.CURIER_REG_NO CURIER_REG_NO,
+	                                             E5.AREA_ID AREA_ID,
+	                                             E6.STATE STATE,
+	                                             E6.AREA AREA,
+	                                             E6.POSTCODE POSTCODE,
+	                                             E6.CITY CITY,
+	                                             E6.COUNTRY COUNTRY,
+	                                             E5.CURIER_CNTC_NO1 CURIER_CNTC_NO1
+	                                        FROM SYS0016M E5, SYS0064M E6
+	                                       WHERE     E5.CURIER_STUS_ID = 1
+	                                         AND E5.AREA_ID = E6.AREA_ID(+)) F2
+	                                         WHERE 1 = 1
+                                             <if test="srchCourierCd !=null and srchCourierCd !=''">      
+                                             AND F2.CURIER_CODE LIKE  '%'||#{srchCourierCd}||'%'
+                                             </if>
+                                             <if test="srchCourierNm !=null and srchCourierNm !=''">
+                                             AND F2.CURIER_NAME LIKE  '%'||#{srchCourierNm}||'%'
+                                             </if>
+                                             <if test="srchRegNo !=null and srchRegNo !=''">
+                                             AND F2.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
+                                             </if>
+                                             <if test="srchCntry !=null and srchCntry !=''">
+                                             AND F2.COUNTRY = #{srchCntry}
+                                             </if>
+                                             <if test="srchState !=null and srchState !=''">
+                                             AND F2.STATE = #{srchState}
+                                             </if>
+                                             <if test="srchArea !=null and srchArea !=''">
+                                             AND F2.AREA = #{srchArea}
+                                             </if>
+                                             <if test="srchPstCd !=null and srchPstCd !=''">
+                                             AND F2.POSTCODE = #{srchPstCd}
+                                             </if>
+                                             <if test="srchcontactNo !=null and srchcontactNo !=''">
+                                             AND F2.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
+                                             </if>
+                                             ) G1
+                                     WHERE 1=1
+                                     <if test="srchCourierCd !=null and srchCourierCd !=''">      
+                                     AND F1.CURIER_CODE LIKE  '%'||#{srchCourierCd}||'%'
+                                     </if>
+                                     <if test="srchCourierNm !=null and srchCourierNm !=''">
+                                     AND F1.CURIER_NAME LIKE  '%'||#{srchCourierNm}||'%'
+                                     </if>
+                                     <if test="srchRegNo !=null and srchRegNo !=''">
+                                     AND F1.CURIER_REG_NO LIKE  '%'||#{srchRegNo}||'%'
+                                     </if>
+                                     <if test="srchCntry !=null and srchCntry !=''">
+                                     AND F1.COUNTRY = #{srchCntry}
+                                     </if>
+                                     <if test="srchState !=null and srchState !=''">
+                                     AND F1.STATE = #{srchState}
+                                     </if>
+                                     <if test="srchArea !=null and srchArea !=''">
+                                     AND F1.AREAID = #{srchArea}
+                                     </if>
+                                     <if test="srchPstCd !=null and srchPstCd !=''">
+                                     AND F1.POSTCODE = #{srchPstCd}
+                                     </if>
+                                     <if test="srchcontactNo !=null and srchcontactNo !=''">
+                                     AND F1.CURIER_CNTC_NO1 LIKE  '%'||#{srchcontactNo}||'%'
+                                     </if>
+                             ) P1
+                        ) P1
+           <![CDATA[                   
+           WHERE P1.ROW_NUMBER > 0
+           ]]>
+        ORDER BY P1.CURIER_CODE ASC
+    </select>
+    
+    <select id="selectCourierDetail" parameterType="Map" resultType="EgovMap">
+        SELECT S16.CURIER_ID AS CURIER_ID,
+		       S16.CURIER_CODE AS CURIER_CODE,
+		       S16.CURIER_NAME AS CURIER_NAME,
+		       S16.CURIER_REG_NO AS CURIER_REG_NO,
+		       S16.CURIER_STUS_ID AS CURIER_STUS_ID,
+		       S64.STATE AS CURIER_ADD1,
+		       S64.CITY AS CURIER_ADD2,
+		       S16.ADDR_DTL    AS CURIER_ADD3,
+		       S64.COUNTRY     AS CURIER_CNTY_ID,
+		       S64.STATE       AS CURIER_STATE_ID,
+		       S64.AREA        AS CURIER_AREA_ID,
+		       S64.POSTCODE    AS CURIER_POST_CODE_ID,
+		       S16.CURIER_CNTC_NO1 AS CURIER_CNTC_NO1,
+		       S16.CURIER_CNTC_NO2 AS CURIER_CNTC_NO2,
+		       S16.CURIER_FAX_NO AS CURIER_FAX_NO,
+		       S16.CURIER_EMAIL AS CURIER_EMAIL,
+		       S16.CURIER_CRT_DT AS CURIER_CRT_DT,
+		       S16.CURIER_CRT_USER_ID AS CURIER_CRT_USER_ID,
+		       S16.CURIER_UPD_DT AS CURIER_UPD_DT,
+		       S16.CURIER_UPD_USER_ID AS CURIER_UPD_USER_ID
+		  FROM SYS0016M s16 , SYS0064m s64
+		 WHERE S16.AREA_ID  = S64.AREA_ID(+)
+           AND CURIER_ID = #{courierid}
+    </select>
+    
+    <update id="motifyCourier" parameterType="Map">
+	     UPDATE SYS0016M
+					SET      
+						       CURIER_NAME               =#{curname},
+						       CURIER_REG_NO            =#{curregno},
+						       CURIER_ADD1               =#{curadd1},
+						       CURIER_ADD2               =#{curadd2},
+						       CURIER_ADD3               =#{curadd3},
+						       CURIER_CNTY_ID          =#{curcntyid},
+						       CURIER_STATE_ID         =#{curstateid},
+						       CURIER_AREA_ID          =#{curareaid},
+						       CURIER_POST_CODE_ID =#{curpostcod},
+						       CURIER_CNTC_NO1       =#{curcntcno1},
+						       CURIER_CNTC_NO2       =#{curcntcno2},
+						       CURIER_FAX_NO           =#{curfaxno},
+						       CURIER_EMAIL             =#{curemail},
+						       CURIER_UPD_DT           =SYSDATE,
+						       CURIER_UPD_USER_ID   =#{upd_user}
+					WHERE  CURIER_CODE              =#{curcode}
+    </update>
+    <insert id="insertCourier" parameterType="Map">
+             INSERT INTO SYS0016M
+               (
+               CURIER_ID,                                
+                 CURIER_CODE,                                        
+                 CURIER_NAME,                                        
+                 CURIER_REG_NO,                                      
+                 CURIER_STUS_ID,                                    
+                 CURIER_ADD1,                                    
+                 CURIER_ADD2,                                      
+                 CURIER_ADD3,                                     
+                 CURIER_CNTY_ID,                                    
+                 CURIER_STATE_ID,                                     
+                 CURIER_AREA_ID,                                      
+                 CURIER_POST_CODE_ID,                                  
+                 CURIER_CNTC_NO1,                                       
+                 CURIER_CNTC_NO2,                                       
+                 CURIER_FAX_NO,                          
+                 CURIER_EMAIL,                       
+                 CURIER_CRT_DT,                                   
+                 CURIER_CRT_USER_ID,                     
+                 CURIER_UPD_DT,                          
+                 CURIER_UPD_USER_ID                      
+                 )                                        
+      VALUES                                        
+               (
+                 curid_seq.nextval,     
+                 #{curcode},   
+                 #{curname},   
+                 #{curregno},  
+                 1, 
+                 #{curadd1},   
+                 #{curadd2},   
+                 #{curadd3},   
+                 #{curcntyid}, 
+                 #{curstateid},
+                 #{curareaid}, 
+                 #{curpostcod},
+                 #{curcntcno1},
+                 #{curcntcno2},
+                 #{curfaxno},  
+                  #{curemail}, 
+                 SYSDATE,      
+                 #{upd_user},          
+                 SYSDATE,      
+                 #{upd_user}           
+                 )
+    </insert>
+    <select id="selectCourierId" parameterType="Map" resultType="EgovMap">
+	    SELECT DOC_NO_ID DOC_NO_ID  ,
+	       CASE 
+	            WHEN ( DOC_NO IS NOT NULL ) THEN DOC_NO
+	       ELSE ''
+	          END C1  ,
+	       CASE 
+	            WHEN ( DOC_NO_PREFIX IS NOT NULL ) THEN DOC_NO_PREFIX
+	       ELSE ''
+	          END C2  
+	  FROM SYS0022C  
+	 WHERE  DOC_NO_ID =#{chkId} AND ROWNUM <![CDATA[<= ]]> 1
+
+
+    </select>
+    
+    <select id="selectCourierComboList"  parameterType="Map" resultType="egovMap">
+        SELECT CURIER_ID as CODE_ID , CURIER_CODE as CODE , CURIER_NAME as CODE_NAME
+		  FROM SYS0016M
+		 WHERE CURIER_STUS_ID = 1
+		 ORDER BY CURIER_CODE
+    </select>
+    
+    <update id="updateDocNo"  parameterType="Map">
+     UPDATE SYS0022C
+		   SET DOC_NO =  #{docNoFormat}
+		 WHERE  DOC_NO_ID = #{chkId}
+    </update>
+     
+</mapper>

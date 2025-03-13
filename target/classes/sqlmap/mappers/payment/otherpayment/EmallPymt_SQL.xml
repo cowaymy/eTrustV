@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.EmallPymtMapper">
+
+<select id="selectEmallPymtList" parameterType="Map" resultType="EgovMap">
+    SELECT
+      EXTENT1.FILE_ID,
+      EXTENT1.FILE_NAME,
+      EXTENT1.TOTAL_RECORD,
+      EXTENT2.NAME STUS,
+      TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') CRT_DT,
+      (select count(1) from PAY0357D where STUS =4 and FILE_ID = EXTENT1.FILE_ID) TOT_SUCCES,
+      (select count(1) from PAY0357D where STUS <![CDATA[<> ]]> 4 and FILE_ID = EXTENT1.FILE_ID) TOT_FAIL
+    FROM PAY0356M EXTENT1
+    JOIN SYS0038M EXTENT2 ON EXTENT2.STUS_CODE_ID = EXTENT1.STUS
+    WHERE 1 = 1
+    <if test="fileId != null and fileId != '' ">
+      AND EXTENT1.FILE_ID = #{fileId}
+    </if>
+    <if test="createDt1 != null and createDt1 != '' ">
+      AND TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') <![CDATA[>= ]]> #{createDt1}
+    </if>
+    <if test="createDt2 != null and createDt2 != '' ">
+      AND TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') <![CDATA[<= ]]> #{createDt2}
+    </if>
+
+    ORDER BY FILE_ID DESC
+
+  </select>
+
+  <select id="selectEmallPymtDetailsList" parameterType="Map" resultType="EgovMap">
+    SELECT
+	 D.FILE_ID
+	, D.EMALL_ORD_NO
+	, D.REF_NO
+	, D.CARD_NO
+	, D.APPR_CODE
+	, TO_CHAR(D.TRANS_DT,'DD/MM/YYYY') TRANS_DT
+	, D.APP_TYPE
+	, TO_CHAR(D.TRANS_AMT,'99,999.00') AMOUNT
+	, S.NAME STATUS
+	, D.REM
+    FROM PAY0357D D
+    JOIN SYS0038M S ON S.STUS_CODE_ID = D.STUS
+    WHERE FILE_ID = #{fileId}
+        <if test="status == 4">
+            AND D.STUS = 4
+        </if>
+        <if test="status == 6">
+            AND D.STUS <![CDATA[<> ]]> 4
+        </if>
+    ORDER BY D.FILE_ITM_ID
+  </select>
+
+<select id="selectPay0356M_Seq" parameterType="Map" resultType="int">
+        SELECT PAY0356M_FILE_ID_SEQ.nextval FROM DUAL
+    </select>
+
+  <insert id="insertPay0356M" parameterType="Map">
+        INSERT INTO PAY0356M (
+            FILE_ID
+          , FILE_NAME
+          , TOTAL_RECORD
+          , STUS
+          , CRT_DT
+          , CRT_USER_ID
+        ) VALUES (
+          #{id}
+        , #{fileName}
+        , #{totalRecord}
+        , #{stus}
+        , SYSDATE
+        , #{crtUserId}
+        )
+    </insert>
+
+    <insert id="insertPay0357D" parameterType="Map">
+        INSERT INTO PAY0357D (
+             FILE_ITM_ID
+			, FILE_ID
+			, EMALL_ORD_NO
+			, REF_NO
+			, CARD_NO
+			, APPR_CODE
+			, TRANS_DT
+			, APP_TYPE
+			, TRANS_AMT
+			, CRT_DT
+			, CRT_USER_ID
+			, STUS
+			, REM
+        )
+        SELECT PAY0357D_FILE_ITM_ID_SEQ.nextval, EXTENT1.*  FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+              #{id}
+            , #{item.refNo}
+            , #{item.doNo}
+            , #{item.cardNo}
+            , #{item.apprCd}
+            , TO_DATE(#{item.trnsDt},'MM/DD/YYYY HH:MI:SS AM')
+            , #{item.appType}
+            , #{item.trnsAmt}
+            , SYSDATE
+            , #{crtUserId}
+            , #{stus}
+            , ''
+            FROM DUAL
+        </foreach>
+        ) EXTENT1
+    </insert>
+
+  <select id="getOrderDetail" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (SELECT
+    SAL.SALES_ORD_ID
+    , SAL.SALES_ORD_NO
+    , APPCD.CODE APP_CODE
+    FROM SAL0001D SAL
+    LEFT JOIN SYS0013M APPCD ON APPCD.CODE_ID = SAL.APP_TYPE_ID
+    WHERE SAL.REF_NO =  #{doNo}
+    ORDER BY SAL.STUS_CODE_ID
+    )
+    WHERE ROWNUM = 1
+  </select>
+
+    <update id="updatePay0356mMaster" parameterType="Map">
+        UPDATE PAY0356M
+        SET
+        STUS = #{stus}
+        WHERE  FILE_ID = #{id}
+    </update>
+
+    <update id="updatePay0357dDetail" parameterType="Map">
+        MERGE INTO PAY0357D C
+            USING
+            (
+	            SELECT
+	              BATCH_ID batchId
+	            , USER_REF_NO userRefNo
+	            , VALID_REM validRemark
+	            , VALID_STUS_ID stus
+                , USER_REM
+                , CARD_NO
+	            FROM PAY0043D
+	            WHERE BATCH_ID = #{batchId}
+            ) N
+            ON (  C.FILE_ID = N.batchId and c.REF_NO = n.userRefNo and c.EMALL_ORD_NO = n.USER_REM and c.CARD_NO = n.CARD_NO)
+            WHEN MATCHED THEN
+            UPDATE
+            SET  C.stus = N.stus
+                  , C.REM = N.validRemark
+                  , C.UPD_USER_ID  = 349
+                  , C.UPD_DT         = SYSDATE
+    </update>
+
+</mapper>

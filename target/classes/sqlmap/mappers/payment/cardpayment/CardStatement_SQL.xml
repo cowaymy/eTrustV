@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.cardpayment.service.impl.CardStatementMapper">
+
+    <select id="selectCardStatementMasterList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.CRC_STATE_ID,
+            A.CRC_STATE_ACC_ID,
+            C.ACC_CODE || ' - ' ||  C.ACC_DESC AS BANK_ACC_NAME,
+            A.CRC_STATE_REF_DT,
+            (SELECT NVL(SUM(CRC_GROS_AMT),0) FROM PAY0076D WHERE CRC_STATE_ID = A.CRC_STATE_ID) AS CRC_TOT_GROSS_AMT,
+            A.CRC_STATE_REM,
+            A.CRC_STATE_UPLOAD_DT,
+            A.CRC_STATE_UPLOAD_USER_ID,
+            D.USER_NAME AS CRC_STATE_UPLOAD_USER_NM,
+            A.CRC_BC_STUS_ID,
+            E.CODE AS CRC_BC_STUS_CODE,
+            E.NAME AS CRC_BC_STUS_NAME,
+            (SELECT COUNT(1) FROM PAY0076D WHERE CRC_STATE_ID = A.CRC_STATE_ID AND BANK_MAPPING_STUS_ID = 1
+                AND KEYIN_STUS_ID = 1
+                AND BANK_STATE_MAPPING_ID IS NULL) AS COUNT
+        FROM
+            PAY0075D A
+            LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+            LEFT JOIN SYS0047M D ON A.CRC_STATE_UPLOAD_USER_ID = D.USER_ID
+            LEFT JOIN SYS0038M E ON A.CRC_BC_STUS_ID = E.STUS_CODE_ID
+        WHERE
+            1=1
+            <if test="crcNo != null and crcNo != '' ">
+            AND A.CRC_STATE_ID = #{crcNo}
+            </if>
+            <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+            AND A.CRC_STATE_REF_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+            AND A.CRC_STATE_ACC_ID = #{bankAccount}
+            </if>
+            <if test="uploadDateFr != null and uploadDateFr != '' and uploadDateTo != null and uploadDateTo != '' ">
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY')
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
+            </if>
+            <if test="uploadUserNm != null and uploadUserNm != '' ">
+            AND D.USER_NAME LIKE  #{uploadUserNm} || '%'
+            </if>
+        ORDER BY A.CRC_STATE_ID DESC
+
+    </select>
+
+    <select id="selectCardStatementDetailList" parameterType="Map" resultType="egovMap">
+        SELECT
+            CRC_TRNSC_ID,
+            CRC_TRNSC_MID,
+            CRC_TRNSC_DT,
+            CRC_TRNSC_NO,
+            CRC_TRNSC_APPV,
+            CRC_GROS_AMT,
+            CRC_BC_AMT,
+            CRC_GST_AMT,
+            CRC_NET_AMT,
+            CRC_TOT_BC_AMT,
+            CRC_TOT_GST_AMT,
+            CRC_TOT_NET_AMT,
+            (SELECT COUNT(1) FROM PAY0075D B   WHERE A.CRC_STATE_ID = B.CRC_STATE_ID AND A.BANK_MAPPING_STUS_ID = 1
+                AND A.KEYIN_STUS_ID = 1
+                AND A.BANK_STATE_MAPPING_ID IS NULL) AS COUNT
+        FROM
+            PAY0076D A
+        WHERE
+            CRC_STATE_ID = #{crcStateId}
+    </select>
+
+    <!-- CRCStatementRunningNo 가져오기  -->
+    <select id="getCRCStatementRunningNo" parameterType="Map" resultType="string">
+        SELECT ACC_DESC || '_' || runningNO FROM
+                (SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = #{uploadBankAccount} AND IS_PAY_CRC = 1) A
+                JOIN
+                (SELECT
+                    TO_CHAR(SYSDATE,'YYMM') || '_' ||LPAD(SUBSTR(NVL(MAX(CRC_STATE_RUNNG_NO),'0000'),-4,4) + 1,4,'0') AS runningNO
+                FROM
+                    PAY0075D WHERE CRC_STATE_ID = (SELECT MAX(CRC_STATE_ID) AS MAXVAL FROM PAY0075D)
+                    AND SUBSTR(CRC_STATE_RUNNG_NO,-9,4) = TO_CHAR(SYSDATE,'YYMM')) B
+            ON 1=1
+    </select>
+
+    <insert id="insertCardStatementMaster" parameterType="Map">
+        <selectKey keyProperty="crcStateId" resultType="int" order="BEFORE">
+            SELECT PAY0075D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0075D (
+            CRC_STATE_ID,
+            CRC_STATE_REF_DT,
+            CRC_STATE_REF_NO,
+            CRC_STATE_RUNNG_NO,
+            CRC_STATE_ACC_ID,
+            CRC_STATE_REM,
+            CRC_STATE_STUS_ID,
+            CRC_STATE_ADJ,
+            CRC_STATE_REFUND,
+            CRC_STATE_CRT_DT,
+            CRC_STATE_CRT_USER_ID,
+            CRC_STATE_UPLOAD_DT,
+            CRC_STATE_UPLOAD_USER_ID,
+            CRC_STATE_TOT,
+            CRC_BC_STUS_ID
+        ) VALUES (
+            #{crcStateId},
+            TO_DATE(#{uploadTranDt},'DD/MM/YYYY'),
+            FN_GET_DOCNO('110'),
+            #{crcRunningNo},
+            #{uploadBankAccount},
+            #{uploadRemark},
+            1,
+            0,
+            0,
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            0,
+            1
+        )
+    </insert>
+
+    <insert id="insertCardStatementDetail" parameterType="Map">
+      <selectKey keyProperty="crcTrnscId" resultType="int" order="BEFORE">
+            SELECT PAY0076D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0076D (
+            CRC_TRNSC_ID,
+            CRC_STATE_ID,
+            CRC_TRNSC_DT,
+            CRC_TRNSC_NO,
+            CRC_TRNSC_APPV,
+            CRC_TRNSC_MID,
+            CRC_TRNSC_REF_NO,
+            CRC_TRNSC_AMT,
+            CRC_TRNSC_REM,
+            CRC_TRNSC_IS_MTCH,
+            CRC_TRNSC_UPD_DT,
+            CRC_TRNSC_UPD_USER_ID,
+            CRC_GROS_AMT,
+            CRC_BC_AMT,
+            CRC_GST_AMT,
+            CRC_NET_AMT,
+            CRC_TOT_BC_AMT,
+            CRC_TOT_GST_AMT,
+            CRC_TOT_NET_AMT,
+            BANK_MAPPING_STUS_ID,
+            KEYIN_STUS_ID,
+            CRDIT_CARD
+        ) VALUES (
+            #{crcTrnscId},
+            #{crcStateId},
+            TO_DATE(#{crcTrnscDt},'DD/MM/YYYY'),
+            #{crcTrnscNo},
+            LPAD(#{crcTrnscAppv}, 6,'0') ,
+            #{crcTrnscMid},
+            '',
+            0,
+            '',
+            0,
+            SYSDATE,
+            #{userId},
+            #{crcGrosAmt},
+            #{crcBcAmt},
+            #{crcGstAmt},
+            #{crcNetAmt},
+            #{crcTotBcAmt},
+            #{crcTotGstAmt},
+            #{crcTotNetAmt},
+            1,
+            1,
+            #{crditCard}
+        )
+    </insert>
+
+    <select id="selectCRCConfirmMasterList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.CRC_STATE_ID,
+            B.CRC_TRNSC_DT,
+            A.CRC_STATE_UPLOAD_DT,
+            A.CRC_STATE_REM,
+            A.CRC_STATE_UPLOAD_USER_ID,
+            D.USER_NAME AS CRC_STATE_UPLOAD_USER_NM,
+            A.CRC_POSTNG_DT,
+            A.CRC_BC_STUS_ID,
+            COUNT(B.CRC_STATE_ID) AS CRC_ITM_CNT,
+            SUM(CRC_GROS_AMT) AS CRC_GROS_AMT,
+            SUM(CASE WHEN CRC_TOT_BC_AMT IS NOT NULL AND CRC_TOT_BC_AMT <![CDATA[  > ]]> 0 THEN CRC_TOT_BC_AMT ELSE CRC_BC_AMT END) AS BC_AMT,
+            SUM(CASE WHEN CRC_TOT_GST_AMT IS NOT NULL AND CRC_TOT_GST_AMT <![CDATA[  > ]]> 0  THEN CRC_TOT_GST_AMT ELSE CRC_GST_AMT END) AS GST_AMT,
+            SUM(CASE WHEN CRC_TOT_NET_AMT IS NOT NULL AND CRC_TOT_NET_AMT <![CDATA[  > ]]> 0  THEN CRC_TOT_NET_AMT ELSE CRC_NET_AMT END) AS NET_AMT
+        FROM
+            PAY0075D A
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+            LEFT JOIN SYS0047M D ON A.CRC_STATE_UPLOAD_USER_ID = D.USER_ID
+        WHERE
+            1=1
+            <if test="crcStateId != null and crcStateId != '' ">
+            AND A.CRC_STATE_ID = #{crcStateId}
+            </if>
+            <if test="status != null and status != '' ">
+            AND A.CRC_BC_STUS_ID = #{status}
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+            AND A.CRC_STATE_ACC_ID = #{bankAccount}
+            </if>
+            <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+            AND A.CRC_STATE_REF_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="uploadDateFr != null and uploadDateFr != '' and uploadDateTo != null and uploadDateTo != '' ">
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY')
+            AND A.CRC_STATE_UPLOAD_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
+            </if>
+        GROUP BY
+            A.CRC_STATE_ID,
+            B.CRC_TRNSC_DT,
+            A.CRC_STATE_UPLOAD_DT,
+            A.CRC_STATE_REM,
+            A.CRC_STATE_UPLOAD_USER_ID,
+            D.USER_NAME,
+            A.CRC_POSTNG_DT,
+            A.CRC_BC_STUS_ID
+    </select>
+
+    <!--Credit Card Statement Master Posting 처리 -->
+    <update id="postCardStatement" parameterType="Map" >
+        UPDATE PAY0075D SET
+            CRC_BC_STUS_ID = 4
+            , CRC_POSTNG_DT = SYSDATE
+            , CRC_MAPPING_USER_ID = #{userId}
+        WHERE
+            CRC_STATE_ID = #{crcStateId}
+    </update>
+
+    <insert id="insertCrcStatementITF" parameterType="Map">
+        INSERT INTO ITF0920M (
+            IF_KEY,
+			SEQ,
+			IF_TYPE,
+			TRAN_STATUS_CD,
+			RGST_DT,
+			RGST_TM,
+			RGST_ID,
+			CRCNO,
+			CRCCOM,
+			TRANDATE,
+			UPLODATE,
+			ZCOUNT,
+			REMARK,
+			GROSS,
+			BANCG,
+			BANCGGST
+        )
+        SELECT
+            FN_CRT_IFKEY('920'),
+            1,
+            '920',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            A.CRC_STATE_ID,
+            MAX(B.CRDIT_CARD) AS CRDIT_CARD,
+            TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD'),
+            TO_CHAR(A.CRC_STATE_UPLOAD_DT,'YYYYMMDD'),
+            COUNT(B.CRC_STATE_ID) AS CRC_ITM_CNT,
+            A.CRC_STATE_REM,
+            SUM(CRC_GROS_AMT) AS CRC_GROS_AMT,
+            SUM(CASE WHEN CRC_TOT_BC_AMT IS NOT NULL THEN CRC_TOT_BC_AMT ELSE CRC_BC_AMT END) AS BC_AMT,
+            SUM(CASE WHEN CRC_TOT_GST_AMT IS NOT NULL THEN CRC_TOT_GST_AMT ELSE CRC_GST_AMT END) AS GST_AMT
+        FROM
+            PAY0075D A
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+        WHERE
+            A.CRC_STATE_ID = #{crcStateId}
+        GROUP BY
+            A.CRC_STATE_ID,
+            TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD'),
+            TO_CHAR(A.CRC_STATE_UPLOAD_DT,'YYYYMMDD'),
+            A.CRC_STATE_REM
+    </insert>
+
+    <delete id="deleteBankStateMaster" parameterType="Map">
+        DELETE FROM PAY0075D
+        WHERE CRC_STATE_ID =#{crcStateId}
+    </delete>
+
+    <delete id="deleteBankStateDetail" parameterType="Map">
+        DELETE FROM PAY0076D
+        WHERE CRC_STATE_ID =#{crcStateId}
+    </delete>
+
+    <update id="updateCardStateDetail" parameterType="Map">
+        UPDATE PAY0076D SET
+            CRC_TRNSC_MID = #{crcTrnscMid},
+            CRC_TRNSC_NO = #{crcTrnscNo},
+            CRC_TRNSC_APPV = #{crcTrnscAppv},
+            CRC_GROS_AMT = #{crcGrosAmt},
+            CRC_BC_AMT = #{crcBcAmt},
+            CRC_GST_AMT = #{crcGstAmt},
+            CRC_NET_AMT = #{crcNetAmt},
+            CRC_TOT_BC_AMT = #{crcTotBcAmt},
+            CRC_TOT_GST_AMT = #{crcTotGstAmt},
+            CRC_TOT_NET_AMT = #{crcTotNetAmt}
+        WHERE
+            CRC_TRNSC_ID = #{crcTrnscId}
+    </update>
+
+    <select id="getCustId" parameterType="Map" resultType="int">
+        SELECT
+            CUST_ID
+        FROM SAL0001D
+        WHERE SALES_ORD_ID = #{rentalOrdId}
+    </select>
+
+</mapper>

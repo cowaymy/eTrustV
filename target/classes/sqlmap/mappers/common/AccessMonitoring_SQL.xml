@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.AccessMonitoringMapper">
+
+<select id="selectAccessMonitoringList" parameterType="Map" resultType="egovMap">
+    SELECT a.system_id ,
+               c.code_name AS system_nm ,
+               b.pgm_code ,
+               b.pgm_name ,
+               a.pgm_path ,
+               a.pgm_path_param ,
+               a.user_id,
+               a.user_name,
+               a.ip_addr,
+               TO_CHAR(a.access_dtm,'HH24:MI:SS MM-DD-YYYY') as access_dtm
+       FROM SYS0078M a ,
+                SYS0050M b,
+                SYS0013M c
+     WHERE 1=1
+         AND  A.PGM_PATH = B.PGM_PATH(+)
+         AND c.CODE_MASTER_ID = 336
+         AND c.CODE = A.SYSTEM_ID
+         AND a.system_id = #{systemId}
+         AND a.ACCES_DAY   between TO_CHAR(TO_DATE(#{frDate},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toDate},'DD/MM/YYYY'),'YYYYMMDD') /* Essential Param*/
+         <if test="pgmCode != null and pgmCode !=''">
+         AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
+         </if>
+         <if test="userId != null and userId !=''">
+         AND (UPPER(a.user_id) LIKE  UPPER(#{userId}) || '%' OR
+                UPPER(a.user_name) LIKE '%' || UPPER(#{userId}) || '%')
+         </if>
+         <if test="ipAddr != null and ipAddr !=''">
+         AND a.ip_addr LIKE #{ipAddr} || '%'
+         </if>
+      ORDER BY a.system_id , a.access_dtm desc
+</select>
+
+<select id="selectAccessMonitoringDtmList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT a.system_id ,
+               (SELECT a.code_name
+                   FROM SYS0013M a
+                 WHERE a.code_master_id = 336
+                     AND a.code = a.system_id) AS system_nm ,
+               b.pgm_code ,
+               b.pgm_name ,
+               TO_CHAR(a.access_dtm,'MM/DD/YYYY') as access_day ,
+               TO_CHAR(a.access_dtm,'HH24') as access_time ,
+               COUNT(a.access_dtm) OVER(PARTITION BY TO_CHAR(a.access_dtm,'YYYYMMDDHH24'), a.pgm_code, a.system_id) as access_dtm_cnt
+       FROM SYS0078M a ,
+               SYS0050M b
+     WHERE 1=1
+         AND  A.PGM_PATH = B.PGM_PATH(+)
+         AND a.system_id = #{systemId}
+         AND a.ACCES_DAY BETWEEN TO_CHAR(TO_DATE(REPLACE(#{frDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(REPLACE(#{toDate},'/',''),'DDMMYYYY'), 'YYYYMMDD') /* Essential Param*/
+         <if test="pgmCode != null and pgmCode !=''">
+         AND (UPPER(a.pgm_code) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(b.pgm_name) LIKE '%' || UPPER(#{pgmCode}) || '%')
+         </if>
+        ORDER BY a.system_id , b.pgm_name
+</select>
+
+<select id="selectAccessMonitoringUserList" parameterType="Map" resultType="egovMap">
+    SELECT a.user_id ,
+               a.user_name ,
+               TO_CHAR(a.access_dtm,'HH24:MI:SS MM-DD-YYYY') as access_dtm
+      FROM SYS0078M a ,
+               SYS0050M b
+     WHERE 1=1
+         AND  A.PGM_PATH = B.PGM_PATH(+)
+         AND a.system_id = #{systemId}
+         AND b.pgm_code(+) = #{pgmCode}
+         AND TO_CHAR(a.access_dtm,'HH24MMDDYYYY') = #{searchDt}
+      ORDER BY a.access_dtm
+</select>
+
+
+<insert id="insertAccessMonitoring" parameterType="Map">
+
+   INSERT INTO SYS0078M
+   (
+        system_id
+       ,access_dtm
+       ,user_id
+       ,user_name
+       ,ip_addr
+       ,pgm_code
+       ,pgm_path
+       ,acces_day
+       ,pgm_path_param
+    )
+    SELECT #{systemId}
+             , SYSDATE
+             , #{userId}
+             , #{userName}
+             , #{ipAddr}
+             /* Remark for all log
+             , a.pgm_code
+             , a.pgm_path
+             */
+             ,#{pgmCode}
+             ,#{pgmPath}
+             , TO_CHAR(SYSDATE,'YYYYMMDD')
+             ,#{pgmPathParam}
+      FROM SYS0050M a
+     WHERE ROWNUM = 1
+     /* Remark for all log
+     WHERE a.pgm_path = :pgmPath
+     */
+</insert>
+
+
+</mapper>

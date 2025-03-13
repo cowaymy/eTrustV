@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.ePR.ePRMapper">
+    <select id="selectUserCostCenter" parameterType="Map" resultType="egovMap">
+        SELECT
+		    A.COST_CENTER, COST_CENTER_TEXT
+		FROM FCM0008M A
+		JOIN SYS0105M B ON A.COST_CENTER = B.COST_CENTER
+		RIGHT JOIN ORG0001D C ON (C.MAIN_DEPT = B.MAIN_DEPT_CODE AND C.SUB_DEPT = B.SUB_DEPT_CODE) OR (C.MAIN_DEPT = B.MAIN_DEPT_CODE AND B.SUB_DEPT_CODE = '-' AND C.SUB_DEPT = '-')
+        WHERE C.MEM_CODE = #{memCode}
+    </select>
+
+    <insert id="insertRequestDraft" parameterType="Map">
+        INSERT INTO FCM0041M
+        SELECT
+            #{id},
+            #{ePRTitle},
+            120,
+            SYSDATE,
+            (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{crtUsrNm} AND ROWNUM = 1),
+            #{costCenterCode},
+            #{ePRRemark},
+            #{rciv},
+            #{add},
+            NULL,
+            NULL
+        FROM DUAL
+    </insert>
+
+    <update id="updateRequest" parameterType="Map">
+        UPDATE FCM0041M
+        SET STUS = 121, SUBMIT_DT = SYSDATE
+        WHERE REQUEST_ID = #{id}
+    </update>
+
+    <update id="ePRApproval" parameterType="Map">
+        UPDATE FCM0044D
+        SET STUS = #{stus}, UPD_DT = SYSDATE, REMARK = #{remark}
+        WHERE MEM_ID = #{memId} AND REQUEST_ID = #{requestId}
+    </update>
+
+    <update id="updateRequestFinal" parameterType="Map">
+        UPDATE FCM0041M
+        SET STUS = #{stus}, ASSIGN_USER = #{assignMemId}
+        WHERE REQUEST_ID = #{requestId}
+    </update>
+
+    <update id="updateRequestDraft" parameterType="Map">
+        UPDATE FCM0041M
+        <set>
+            <if test="rciv != null">RCIV_ATCH_ID = #{rciv},</if>
+            <if test="add != null">ADD_ATCH_ID = #{add},</if>
+	        TITLE = #{ePRTitle},
+	        CRT_DT = SYSDATE,
+	        COST_CENTER = #{costCenterCode},
+	        REMARK = #{ePRRemark}
+        </set>
+	    WHERE REQUEST_ID = #{requestId}
+    </update>
+
+    <select id="selectRequestId" resultType="int">
+        SELECT FCM0041M_REQUEST_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <delete id="deleteDeliverDet" parameterType="Map">
+        DELETE FROM FCM0043D WHERE REQUEST_ID = #{id}
+    </delete>
+
+    <insert id="insertDeliverDet" parameterType="Map">
+        <selectKey keyProperty="delId" resultType="int" order="BEFORE">
+          SELECT FCM0043D_DELIVERY_DET_ID.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO FCM0043D
+        SELECT
+            #{delId},
+            #{id},
+            #{item},
+            #{quantity},
+            #{uom},
+            #{usage},
+            #{branch},
+            #{type},
+            #{branchCode},
+            #{region},
+            #{pic},
+            #{contact},
+            #{address},
+            SYSDATE
+        FROM DUAL
+    </insert>
+
+    <select id="currAF" parameterType="Map" resultType="egovMap">
+        SELECT ASSIGN_USER A, RCIV_ATCH_ID F
+        FROM FCM0041M
+        WHERE REQUEST_ID = #{id}
+    </select>
+
+    <insert id="insertEditHist" parameterType="Map">
+        INSERT INTO FCM0045D
+        SELECT
+            #{id},
+            NVL((SELECT MAX(SEQ) FROM FCM0045D WHERE REQUEST_ID = #{id}), 0) + 1,
+            SYSDATE,
+            #{crtUsr},
+            #{remark},
+            #{a},
+            NVL(#{newAssign}, #{a}),
+            #{f},
+            NVL(#{rciv}, #{f})
+        FROM DUAL
+    </insert>
+
+    <update id="updateRciv" parameterType="Map">
+        UPDATE FCM0041M
+        SET RCIV_ATCH_ID = #{rciv}
+        WHERE REQUEST_ID = #{id}
+    </update>
+
+    <update id="updateAssign" parameterType="Map">
+        UPDATE FCM0041M
+        SET ASSIGN_USER = #{newAssign}
+        WHERE REQUEST_ID = #{id}
+    </update>
+
+    <insert id="insertRequestItems" parameterType="Map">
+        <selectKey keyProperty="subId" resultType="int" order="BEFORE">
+          SELECT FCM0042D_REQUEST_ITM_ID.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO FCM0042D
+        SELECT
+            #{subId},
+            #{id},
+            #{budgetCode},
+            TO_DATE(#{eta}, 'YYYY/MM/DD'),
+            #{item},
+            #{specs},
+            #{quantity},
+            #{uom},
+            #{remark}
+        FROM DUAL
+    </insert>
+
+    <insert id="insertApprovalLine" parameterType="Map">
+        INSERT INTO FCM0044D
+        SELECT
+            #{id},
+            MEM_ID,
+            #{seq},
+            44,
+            SYSDATE,
+            NULL,
+            NULL
+        FROM ORG0001D WHERE MEM_CODE = #{memCode}
+    </insert>
+
+    <delete id="deleteRequest" parameterType="Map">
+        DELETE FROM FCM0041M WHERE REQUEST_ID = #{requestId}
+    </delete>
+
+    <delete id="deleteRequestItems" parameterType="Map">
+        DELETE FROM FCM0042D WHERE REQUEST_ID = #{requestId}
+    </delete>
+
+    <select id="selectRequests" parameterType="Map" resultType="egovMap">
+        SELECT
+            CONCAT('PR', LPAD(A.REQUEST_ID, 5, '0')) EPR_NO,
+            A.TITLE,
+            A.COST_CENTER,
+            B.COST_CENTER_TEXT,
+            C.USER_NAME,
+            A.CRT_DT,
+            D.CODE
+        FROM FCM0041M A
+        JOIN FCM0008M B ON A.COST_CENTER = B.COST_CENTER
+        JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+        JOIN SYS0038M D ON D.STUS_CODE_ID = A.STUS
+        WHERE (A.CRT_USER_ID = #{curr}
+        OR (
+            A.STUS IN (121, 44, 10, 5, 6)
+            AND EXISTS(
+                SELECT 1
+                FROM FCM0044D Z
+                JOIN ORG0001D X ON Z.MEM_ID = X.MEM_ID
+                JOIN SYS0047M C ON X.MEM_CODE = C.HR_CODE
+                WHERE Z.REQUEST_ID = A.REQUEST_ID AND C.USER_ID = #{curr}
+            )
+        )
+        OR (
+            A.STUS IN (44, 10, 5, 6)
+            AND EXISTS(
+                SELECT 1
+		        FROM SYS0047M
+		        WHERE HR_CODE IN ('P0018', 'P2217', 'P2098', 'P2513', 'P2135') AND USER_ID = #{curr}
+		        UNION
+		        SELECT 1 FROM DUAL WHERE #{curr} = 217
+            )
+        ))
+        <if test="ePRNo != null and ePRNo != ''">
+            AND A.REQUEST_ID = #{ePRNo}
+        </if>
+        <if test="ePRStus != null and ePRStus != ''">
+            AND A.STUS = #{ePRStus}
+        </if>
+        <if test="start != null and start != ''">
+            AND TRUNC(A.CRT_DT) <![CDATA[>=]]> TO_DATE(#{start}, 'DD/MM/YYYY')
+        </if>
+        <if test="end != null and end != ''">
+            AND TRUNC(A.CRT_DT) <![CDATA[<=]]> TO_DATE(#{end}, 'DD/MM/YYYY')
+        </if>
+        <if test="pic != null and pic != ''">
+            AND A.ASSIGN_USER = #{pic}
+        </if>
+        <if test="crt != null and crt != ''">
+            AND C.USER_NAME = #{crt}
+        </if>
+        ORDER BY A.REQUEST_ID
+    </select>
+
+    <resultMap type="egovMap" id="ePRRequest">
+        <result property="request_id" column="request_id"/>
+	    <result property="title" column="title"/>
+	    <result property="stus" column="stus"/>
+	    <result property="cost_center" column="cost_center"/>
+	    <result property="cost_center_text" column="cost_center_text"/>
+	    <result property="remark" column="remark"/>
+	    <result property="reciv_atch_id" column="rciv_atch_id"/>
+	    <result property="add_atch_id" column="add_atch_id"/>
+	    <result property="reciv_name" column="rciv_name"/>
+        <result property="add_name" column="add_name"/>
+	    <result property="mem_code" column="mem_code"/>
+	    <result property="submit_dt" column="submit_dt"/>
+	    <result property="assigned_user" column="assigned_user"/>
+	    <result property="stus_name" column="request_stus"/>
+	    <result property="reqst_name" column="reqst_name"/>
+	    <result property="submit_dt" column="submit_dt"/>
+	    <result property="email" column="email"/>
+	    <collection property="items" ofType="egovMap" javaType="ArrayList">
+	        <result property="request_itm_id" column="request_itm_id"/>
+	        <result property="budget_code" column="budget_code"/>
+	        <result property="budget_code_text" column="budget_code_text"/>
+	        <result property="eta" column="eta"/>
+	        <result property="item" column="item" />
+	        <result property="specs" column="specs"/>
+	        <result property="quantity" column="quantity"/>
+	        <result property="uom" column="uom"/>
+	        <result property="remark" column="item_remark"/>
+	    </collection>
+	    <collection property="approvals" ofType="egovMap" javaType="ArrayList">
+	        <result property="name" column="appv_name" />
+	        <result property="mem_code" column="appv_mem_code" />
+	        <result property="seq" column="appv_seq" />
+	        <result property="act_dt" column="appv_act_dt" />
+	        <result property="stus" column="appv_stus" />
+	        <result property="remark" column="appv_remark" />
+	    </collection>
+	</resultMap>
+    <select id="selectRequest" parameterType="Map" resultMap="ePRRequest">
+        SELECT
+		    A.REQUEST_ID,
+		    A.TITLE,
+		    A.STUS,
+		    A.COST_CENTER,
+		    D.COST_CENTER_TEXT,
+		    A.REMARK,
+		    FD.ATCH_FILE_ID RCIV_ATCH_ID,
+		    FD.ATCH_FILE_NAME RCIV_NAME,
+		    GD.ATCH_FILE_ID ADD_ATCH_ID,
+		    GD.ATCH_FILE_NAME ADD_NAME,
+		    C.BUDGET_CODE,
+		    C.BUDGET_CODE_TEXT,
+		    B.REQUEST_ITM_ID,
+		    B.ETA,
+		    B.ITEM,
+		    B.SPECS,
+		    B.QUANTITY,
+		    B.UOM,
+		    B.REMARK ITEM_REMARK,
+		    E.HR_CODE MEM_CODE,
+		    A.SUBMIT_DT,
+		    L.USER_NAME ASSIGNED_USER,
+		    K.FULL_NAME APPV_NAME,
+		    K.MEM_CODE APPV_MEM_CODE,
+		    J.SEQ APPV_SEQ,
+		    J.UPD_DT APPV_ACT_DT,
+		    J.REMARK APPV_REMARK,
+		    L.NAME APPV_STUS,
+		    M.NAME REQUEST_STUS,
+		    N.FULL_NAME REQST_NAME,
+		    A.SUBMIT_DT,
+		    E.USER_EMAIL EMAIL
+		FROM FCM0041M A
+		LEFT JOIN FCM0042D B ON A.REQUEST_ID = B.REQUEST_ID
+		LEFT JOIN FCM0010M C ON B.BUDGET_CODE = C.BUDGET_CODE
+		LEFT JOIN FCM0008M D ON D.COST_CENTER = A.COST_CENTER
+		JOIN SYS0047M E ON E.USER_ID = A.CRT_USER_ID
+		LEFT JOIN SYS0070M F ON F.ATCH_FILE_GRP_ID = RCIV_ATCH_ID
+		LEFT JOIN SYS0071D FD ON F.ATCH_FILE_ID = FD.ATCH_FILE_ID
+		LEFT JOIN SYS0070M G ON G.ATCH_FILE_GRP_ID = ADD_ATCH_ID
+		LEFT JOIN SYS0071D GD ON G.ATCH_FILE_ID = GD.ATCH_FILE_ID
+		LEFT JOIN ORG0001D I ON I.MEM_ID = A.ASSIGN_USER
+		LEFT JOIN FCM0044D J ON J.REQUEST_ID = A.REQUEST_ID
+		LEFT JOIN ORG0001D K ON K.MEM_ID = J.MEM_ID
+		LEFT JOIN SYS0038M L ON L.STUS_CODE_ID = J.STUS
+		JOIN SYS0038M M ON M.STUS_CODE_ID = A.STUS
+		JOIN ORG0001D N ON N.MEM_CODE = E.HR_CODE
+		LEFT JOIN SYS0047M L ON L.HR_CODE = I.MEM_CODE
+        WHERE A.REQUEST_ID = #{requestId}
+    </select>
+
+    <update id="cancelEPR" parameterType="Map">
+        UPDATE FCM0041M SET STUS = 10 WHERE REQUEST_ID = #{id}
+    </update>
+
+    <select id="selectDeliveryInfo" resultType="egovMap">
+        SELECT
+            ITEM,
+            QUANTITY,
+            UOM,
+            USAGE,
+            CODE,
+            ADDRESS,
+            CONTACT,
+            PIC,
+            TYPE,
+            REGION,
+            BRANCH,
+            CRT_DT
+        FROM FCM0043D WHERE REQUEST_ID = #{requestId}
+    </select>
+
+    <select id="getFinalApprv" resultType="egovMap">
+        SELECT
+            MEM_ID, MEM_CODE, A.FULL_NAME
+        FROM ORG0001D A
+        JOIN SYS0047M B ON A.MEM_CODE = B.HR_CODE
+        JOIN SYS0098M C ON C.SUB_MODULE = 'PROCUREMENT' AND C.PARAM_CODE = 'FIN_APPV' AND C.PARAM_VAL = B.USER_NAME
+    </select>
+
+    <select id="getCurrApprv" resultType="egovMap" parameterType="map">
+        SELECT A.MEM_ID, USER_EMAIL EMAIL FROM (
+		    SELECT
+		        LAG(STUS) OVER (ORDER BY SEQ) PREV_STUS,
+		        STUS,
+		        MEM_ID
+		    FROM FCM0044D WHERE REQUEST_ID = #{requestId}
+		) A
+		JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+		JOIN SYS0047M C ON B.MEM_CODE = C.HR_CODE
+		WHERE A.STUS = 44 AND (A.PREV_STUS IS NULL OR A.PREV_STUS <![CDATA[<>]]> 44)
+    </select>
+
+    <update id="updateRequestSPC" parameterType="map">
+        UPDATE FCM0041M
+        SET STUS = 44
+        WHERE REQUEST_ID = #{requestId}
+    </update>
+
+    <select id="getSPCMembers" resultType="egovMap">
+        SELECT D.MEM_ID, C.USER_NAME, D.MEM_CODE
+		FROM SYS0044M A
+		LEFT JOIN SYS0045M B ON A.ROLE_ID = B.ROLE_ID
+		LEFT JOIN SYS0047M C ON C.USER_ID = B.USER_ID
+		LEFT JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
+		WHERE B.USER_ID IS NOT NULL
+		START WITH A.ROLE_ID = 509
+		CONNECT BY PRIOR A.ROLE_ID = PARENT_ROLE
+    </select>
+
+    <select id="getMemberEmail" resultType="String" parameterType="map">
+        SELECT USER_EMAIL EMAIL
+        FROM SYS0047M WHERE HR_CODE = #{memCode}
+    </select>
+</mapper>

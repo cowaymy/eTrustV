@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.AdvPaymentMatchMapper">
+
+    <select id="selectAdvKeyInList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+            A.PAY_ITM_MODE_ID,
+            E.CODE AS PAY_ITM_MODE_NM,
+            NVL(SUM (A.PAY_ITM_AMT),0) AS TOT_AMT,
+            NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
+            CASE WHEN A.PAY_ITM_MODE_ID = 106 THEN MAX(C.PAY_ITM_CHQ_NO) ELSE MAX (C.PAY_ITM_BANK_IN_SLIP_NO) END AS PAY_ITM_BANK_IN_SLIP_NO,
+            CASE WHEN A.KEY_IN_SCRN = 'BAT' THEN MAX(C.PAY_ITM_REF_NO) ELSE MAX (B.REF_DTL) END AS REF_DTL,
+            MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
+            MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM
+        FROM
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+            LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+            LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+        WHERE
+            A.BANK_STATE_MAPPING_STUS_ID = 1
+            AND A.BANK_CHG_MAPPING_STUS_ID = 1
+            AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
+            AND A.GROUP_SEQ IN (
+                SELECT
+                    DISTINCT A.GROUP_SEQ
+                FROM
+                    PAY0252T A
+                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                    /*JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID*/
+                WHERE
+                    C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
+                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
+                    <if test="bankAcc != null and bankAcc != '' ">
+                        AND C.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                    </if>
+                    <if test="payType != null and payType != '' ">
+                    AND C.PAY_ITM_MODE_ID = #{payType}
+                    </if>
+                    <if test="vaAccount != null and vaAccount != '' ">
+                    AND B.VA_ACC_NO = #{vaAccount}
+                    </if>
+                    <if test="branchId != null and branchId != '' ">
+                    AND B.BRNCH_ID = #{branchId}
+                    </if>
+                    <choose>
+                      <when test="advanceSearch != '' and advanceSearch != null">
+                        AND A.KEY_IN_SCRN = 'BAT'
+                      </when>
+                      <otherwise>
+                        AND A.KEY_IN_SCRN = 'ADV'
+                      </otherwise>
+                    </choose>
+  )
+  GROUP BY
+  A.GROUP_SEQ,
+  TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+  A.KEY_IN_SCRN,
+  A.PAY_ITM_MODE_ID,
+  E.CODE
+
+    </select>
+
+    <select id="selectBankStateMatchList" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.F_TRNSC_ID AS F_TRNSC_ID,
+            A.BANK_ID AS BANK_ID,
+            C.NAME AS BANK_NAME,
+            A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
+            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+            TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
+            B.F_TRNSC_REF3,
+            B.F_TRNSC_REF1,
+            B.F_TRNSC_REF4,
+            B.F_TRNSC_REF2,
+            B.F_TRNSC_REF6,
+            B.F_TRNSC_REM,
+            B.F_TRNSC_DEBT_AMT,
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+        FROM
+            PAY0079D A
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+        WHERE
+            A.TRNSC_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
+            AND A.TRNSC_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
+            <if test="payType != null and payType != '' ">
+            AND B.F_TRNSC_REM = (CASE WHEN #{payType} = 105 THEN 'CSH'
+                                                        WHEN #{payType} = 106 THEN 'CHQ'
+                                                        WHEN #{payType} = 107 THEN 'CRC'
+                                                        WHEN #{payType} = 108 THEN 'ONL' ELSE ' ' END)
+            </if>
+            <if test="bankAcc != null and bankAcc != '' ">
+            AND A.F_BANK_JRNL_ACC_ID = #{bankAcc}
+            </if>
+            <if test="vaAccount != null and vaAccount != '' ">
+            AND B.F_TRNSC_REF_VA_NO = #{vaAccount}
+            </if>
+            <if test="bnkCrAmt != null and bnkCrAmt != '' ">
+            AND B.F_TRNSC_CRDIT_AMT = #{bnkCrAmt}
+            </if>
+            AND B.OTH_KEYIN_STUS_ID = 1
+            AND B.OTH_KEYIN_BC_STUS_ID = 1
+        ORDER BY B.F_TRNSC_ID DESC
+    </select>
+
+
+    <update id="mappingAdvGroupPayment" parameterType="Map">
+        UPDATE PAY0252T SET
+            BANK_STATE_MAPPING_ID = #{fTrnscId},
+            BANK_STATE_MAPPING_STUS_ID = 4,
+            BANK_STATE_MAPPING_USER_ID = #{userId},
+            BANK_STATE_MAPPING_DT = SYSDATE,
+            BANK_CHG_MAPPING_ID  = #{fTrnscId},
+            BANK_CHG_MAPPING_STUS_ID = 4,
+            BANK_CHG_MAPPING_USER_ID = #{userId},
+            BANK_CHG_MAPPING_DT = SYSDATE,
+            REMARK = #{remark}
+        WHERE
+            <if test="groupSeqArr == null or groupSeqArr == ''">
+                GROUP_SEQ = #{groupSeq}
+            </if>
+            <if test="groupSeqArr != null and groupSeqArr != ''">
+                GROUP_SEQ IN
+                <foreach item="item" collection="groupSeqArr" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+    </update>
+
+    <update id="mappingBankStatementAdv" parameterType="Map">
+        UPDATE PAY0081D SET
+            OTH_KEYIN_STUS_ID = 4,
+            OTH_KEYIN_MAPPING_DT = SYSDATE,
+            OTH_KEYIN_MAPPING_USER_ID = #{userId},
+            OTH_KEYIN_BC_STUS_ID = 4,
+            OTH_KEYIN_BC_MAPPING_DT = SYSDATE,
+            OTH_KEYIN_BC_MAPPING_USER_ID = #{userId}
+        WHERE
+            F_TRNSC_ID = #{fTrnscId}
+    </update>
+
+    <select id="selectMappedData" parameterType="Map" resultType="egovMap">
+        SELECT
+            '1' abc,
+            PAY_ITM_REF_DT,
+            ROW_NUMBER() OVER(ORDER BY OR_NO) AS BANK_SEQ,
+            GROUP_SEQ,
+            SALES_ORD_NO,
+            OR_NO,
+            BANK_STATE_MAPPING_ID,
+            SUM(PAY_ITM_AMT) AS ADV_AMT,
+            CUST_ID,
+            ACC_CODE,
+            (SELECT CODE FROM SYS0013M CD WHERE CD.CODE_ID = #{accCode}) AS DIFF_TYPE
+        FROM
+            (
+            SELECT
+                C.PAY_ITM_REF_DT,
+                A.GROUP_SEQ,
+                CASE WHEN D.SALES_ORD_NO is not null THEN D.SALES_ORD_NO ELSE Y.SALES_ORD_NO END AS SALES_ORD_NO,
+                B.OR_NO,
+                A.BANK_STATE_MAPPING_ID,
+                L.ACC_CODE CUST_ID,
+                E.ACC_CODE,
+                C.PAY_ITM_AMT
+            FROM
+                PAY0252T A
+                JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+                LEFT JOIN PAY0007D Z ON B.BILL_ID = Z.BILL_ID
+                LEFT JOIN SAL0001D Y ON Z.BILL_SO_ID = Y.SALES_ORD_ID
+                LEFT JOIN SYS0001M L ON L.ACC_ID = C.PAY_ITM_BANK_ACC_ID
+                LEFT JOIN (
+                    SELECT
+                        B.F_TRNSC_ID, C.ACC_CODE
+                    FROM
+                        PAY0079D A
+                        JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                        <!-- LEFT JOIN SYS0001M C ON A.BANK_ID = C.ACC_ID -->
+                        <!-- ADD BY JGKIM 2018-02-23 -->
+                        LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+                    ) E ON A.BANK_STATE_MAPPING_ID = E.F_TRNSC_ID
+            WHERE
+                <if test="groupSeqArr == null or groupSeqArr == ''">
+                    A.GROUP_SEQ = #{groupSeq}
+                </if>
+                <if test="groupSeqArr != null and groupSeqArr != ''">
+                    A.GROUP_SEQ IN
+                    <foreach item="item" collection="groupSeqArr" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+            )
+            GROUP BY
+                PAY_ITM_REF_DT,
+                GROUP_SEQ,
+                SALES_ORD_NO,
+                OR_NO,
+                BANK_STATE_MAPPING_ID,
+                CUST_ID,
+                ACC_CODE
+
+    </select>
+
+
+    <insert id="insertAdvPaymentMatchIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+			SEQ,
+			IF_TYPE,
+			TRAN_STATUS_CD,
+			RGST_DT,
+			RGST_TM,
+			RGST_ID,
+			PAY_DT,
+			BANK_SEQ,
+			GRP_SEQ,
+			ORD_NO,
+			WOR_NO,
+			BANK_ID,
+			BANKAC,
+			ADV_AMT,
+			DIFF_TYPE,
+			DIFF_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            TO_CHAR(#{payItmRefDt},'YYYYMMDD'),
+            #{bankSeq},
+            #{groupSeq},
+            #{salesOrdNo},
+            #{orNo},
+            #{bankStateMappingId},
+            #{accCode},
+            #{advAmt},
+            #{diffType},
+            NVL(#{variance},0)
+        )
+
+
+    </insert>
+
+    <insert id="insertAdvPaymentDebtorIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            PAY_DT,
+            BANK_SEQ,
+            GRP_SEQ,
+            ORD_NO,
+            WOR_NO,
+            BANKAC,
+            ADV_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            TO_CHAR(#{payItmRefDt},'YYYYMMDD'),
+            #{bankSeq},
+            #{groupSeq},
+            #{salesOrdNo},
+            #{orNo},
+            #{custId},
+            #{advAmt}
+        )
+
+
+    </insert>
+
+    <select id="selectJompayMatchList" parameterType="Map" resultType="egovMap">
+        SELECT * FROM
+                (SELECT
+                            D.FILE_ID,
+                            A.GROUP_SEQ,
+                            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+                            E.CODE AS PAY_ITM_MODE_NM,
+                            NVL(SUM (A.PAY_ITM_AMT),0) AS TOT_AMT,
+                            NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
+                            CASE WHEN A.PAY_ITM_MODE_ID = 106 THEN MAX(C.PAY_ITM_CHQ_NO) ELSE MAX (C.PAY_ITM_BANK_IN_SLIP_NO) END AS PAY_ITM_BANK_IN_SLIP_NO,
+                            MAX (B.REF_DTL) AS REF_DTL,
+                            MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM
+                        FROM
+                            PAY0252T A
+                            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                            JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                            LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+                            LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+                            JOIN PAY0303D D ON D.SLIP_NO = C.PAY_ITM_EFT_NO
+                        WHERE
+                            A.BANK_STATE_MAPPING_STUS_ID = 1
+                            AND A.BANK_CHG_MAPPING_STUS_ID = 1
+                            AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
+                            <if test="fileId != null or fileId != ' ' ">
+                                AND D.FILE_ID = #{fileId}
+                            </if>
+                            <if test="jompayTransDateFr != null and jompayTransDateFr != '' ">
+                                AND PAY_ITM_REF_DT <![CDATA[ >= ]]> TO_DATE(#{jompayTransDateFr},'DD/MM/YYYY')
+                            </if>
+                            <if test="jompayTransDateTo != null and jompayTransDateTo != '' ">
+                             AND PAY_ITM_REF_DT <![CDATA[ <= ]]> TO_DATE(#{jompayTransDateTo},'DD/MM/YYYY') + 1
+                             </if>
+                        GROUP BY
+                            D.FILE_ID,
+                            A.GROUP_SEQ,
+                            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+                            A.PAY_ITM_MODE_ID,
+                            E.CODE) adv
+                JOIN
+                (SELECT
+                            B.F_TRNSC_ID AS F_TRNSC_ID,
+                            C.NAME AS BANK_NAME,
+                            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+                            TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
+                            B.F_TRNSC_REF4,
+                            B.F_TRNSC_CRDIT_AMT,
+                            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
+                                AND OTH_KEYIN_STUS_ID =1
+                                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+                        FROM
+                            PAY0079D A
+                            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+                            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+                        WHERE
+                            B.F_TRNSC_REM = (CASE WHEN '108' = 105 THEN 'CSH'
+                                                                        WHEN '108' = 106 THEN 'CHQ'
+                                                                        WHEN '108' = 107 THEN 'CRC'
+                                                                        WHEN '108' = 108 THEN 'ONL' ELSE ' ' END)
+                            AND B.OTH_KEYIN_STUS_ID = 1
+                            AND B.OTH_KEYIN_BC_STUS_ID = 1
+                            <if test="jompayTransDateFr != null and jompayTransDateFr != '' " >
+                                AND A.TRNSC_DT <![CDATA[ >= ]]> TO_DATE(#{jompayTransDateFr},'DD/MM/YYYY')
+                            </if>
+                            <if test="jompayTransDateTo != null and jompayTransDateTo != '' ">
+                                AND A.TRNSC_DT <![CDATA[ <= ]]> TO_DATE(#{jompayTransDateTo},'DD/MM/YYYY') + 1
+                             </if>
+                            ) bnk ON bnk.F_TRNSC_REF4 = adv.PAY_ITM_BANK_IN_SLIP_NO AND bnk.F_TRNSC_CRDIT_AMT = adv.TOT_AMT
+                            ORDER BY GROUP_SEQ
+
+    </select>
+
+  <resultMap id="resultJompayMap" type="egovMap" />
+  <select id="saveJompayPaymentMapping" statementType="CALLABLE" parameterType="Map">
+    {
+    call SP_INST_JOMPAY_ADV_MAPPING_V2(#{fileId},#{jompayTransDateFr},#{jompayTransDateTo}, #{userId})
+    }
+  </select>
+
+  <update id="updateDiffTypeDiffAmt" parameterType="Map">
+        UPDATE ITF0942M SET
+            DIFF_TYPE = NULL,
+            DIFF_AMT = '0'
+        WHERE IF_TYPE = '942' AND
+        TRAN_STATUS_CD = '10' AND
+        BANK_SEQ > 1
+  </update>
+
+  <select id="selectAdvanceMatchList" parameterType="Map" resultType="egovMap">
+    SELECT *
+    FROM ( SELECT DISTINCT P43.BATCH_ID,
+                                        M.PAY_ITM_REF_DT,
+                                        M.GROUP_SEQ,
+                                        M.PAY_ITM_MODE_ID,
+                                        M.PAY_ITM_MODE_NM,
+                                        M.TOT_AMT,
+                                        M.BANK_CHG_AMT,
+                                        M.REF_DTL,
+                                        M.PAY_ITM_BANK_ACC_ID,
+                                        M.PAY_ITM_BANK_ACC_NM
+               FROM ( SELECT P.*,
+                                     ROW_NUMBER()
+                                     OVER(PARTITION BY P.PAY_ITM_REF_DT,
+                                                                   P.GROUP_SEQ,
+                                                                   P.PAY_ITM_MODE_ID,
+                                                                   P.PAY_ITM_MODE_NM,
+                                                                   P.TOT_AMT,
+                                                                   P.BANK_CHG_AMT,
+                                                                   P.REF_DTL,
+                                                                   P.PAY_ITM_BANK_ACC_ID,
+                                                                   P.PAY_ITM_BANK_ACC_NM
+                                     ORDER BY 1
+                                     ) AS ROW_NUM
+                          FROM ( SELECT TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+                                                A.GROUP_SEQ,
+                                                A.PAY_ITM_MODE_ID,
+                                                E.CODE AS PAY_ITM_MODE_NM,
+
+                                                <if test="advType == 1">
+                                                  NVL(SUM (A.PAY_ITM_AMT),0) TOT_AMT,
+                                                </if>
+
+                                                <if test="advType == 2">
+                                                  NVL(SUM (A.PAY_ITM_AMT),0) - NVL(SUM (C.PAY_ITM_BANK_CHRG_AMT),0) TOT_AMT,
+                                                </if>
+
+                                                NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
+                                                C.PAY_ITM_REF_NO AS REF_DTL,
+                                                MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
+                                                MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM
+                                     FROM PAY0252T A
+                                     JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                                     JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                                     LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+                                     LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+                                     WHERE 1=1
+                                         AND A.BANK_STATE_MAPPING_STUS_ID = 1
+                                         AND A.BANK_CHG_MAPPING_STUS_ID = 1
+                                         AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
+                                         AND C.PAY_ITM_MODE_ID = '108'
+                                         AND A.KEY_IN_SCRN = 'BAT'
+
+                                         <if test="TransDateFr != null and TransDateFr != '' ">
+                                           AND PAY_ITM_REF_DT <![CDATA[ >= ]]> TO_DATE(#{TransDateFr},'DD/MM/YYYY')
+                                         </if>
+
+                                         <if test="TransDateTo != null and TransDateTo != '' ">
+                                           AND PAY_ITM_REF_DT <![CDATA[ <= ]]> TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
+                                         </if>
+
+                                     GROUP BY A.GROUP_SEQ,
+                                                    C.PAY_ITM_REF_NO,
+                                                    TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+                                                    A.PAY_ITM_MODE_ID,
+                                                    E.CODE
+                          ) P
+               ) M JOIN PAY0043D P43 ON P43.USER_REF_NO = M.REF_DTL
+               WHERE 1 = 1
+
+               <if test="batchId != null or batchId != ' ' ">
+                 AND P43.BATCH_ID = #{batchId}
+               </if>
+
+               <if test="advType == 1">
+                 AND P43.PAY_CHANNEL = 'IPAY88'
+               </if>
+
+               <if test="advType == 2">
+  	             AND P43.PAY_CHANNEL = 'EGHL'
+               </if>
+
+               AND M.ROW_NUM = 1
+
+    ) ADV JOIN ( SELECT TO_CHAR(B.F_TRNSC_DT, 'DD/MM/YYYY')F_TRNSC_DT,
+                                 B.F_TRNSC_REF4,
+                                 B.F_TRNSC_CRDIT_AMT
+                      FROM PAY0079D A
+                      JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                      LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+                      LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+                      WHERE B.OTH_KEYIN_STUS_ID = 1
+                          AND B.OTH_KEYIN_BC_STUS_ID = 1
+
+                      <if test="TransDateFr != null and TransDateFr != '' ">
+                        AND A.TRNSC_DT <![CDATA[ >= ]]> TO_DATE(#{TransDateFr},'DD/MM/YYYY')
+                      </if>
+
+                      <if test="TransDateTo != null and TransDateTo != '' ">
+                        AND A.TRNSC_DT <![CDATA[ <= ]]> TO_DATE(#{TransDateTo},'DD/MM/YYYY') + 1
+                      </if>
+
+    ) BNK ON bnk.F_TRNSC_REF4 = ADV.REF_DTL AND BNK.F_TRNSC_CRDIT_AMT = ADV.TOT_AMT
+    ORDER BY GROUP_SEQ
+</select>
+
+<resultMap id="resultAdvanceMap" type="egovMap" />
+  <select id="saveAdvancePaymentMapping" statementType="CALLABLE" parameterType="Map">
+    {
+    call SP_INST_ADV_MAPPING(#{batchId},#{TransDateFr},#{TransDateTo}, #{userId},#{advType})
+    }
+  </select>
+
+</mapper>

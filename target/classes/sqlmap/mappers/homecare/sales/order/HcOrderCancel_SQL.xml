@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper">
+
+    <!-- Homecare Order Cancellation List 데이터조회 -->
+    <select id="hcOrderCancellationList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper.hcOrderCancellationList */
+        SELECT A.REQ_ID REQ_ID ,
+                   A.REQ_NO REQ_NO ,
+                   A.ORD_ID ORD_ID ,
+                   A.REQ_STUS_ID REQ_STUS_ID ,
+                   A.REQ_STUS_CODE REQ_STUS_CODE ,
+                   A.REQ_STUS_NAME REQ_STUS_NAME ,
+                   A.REQ_RESN_ID REQ_RESN_ID ,
+                   A.REQ_RESN_CODE REQ_RESN_CODE ,
+                   A.REQ_RESN_DESC REQ_RESN_DESC ,
+                   A.PREV_CALL_ENTRY_ID PREV_CALL ,
+                   A.CALL_ENTRY_ID CALL_ENTRY_ID ,
+                   A.REQ_STAGE_ID REQ_STAGE_ID ,
+                   A.REQ_STAGE REQ_STAGE ,
+                   A.STOCK_ID STOCK_ID ,
+                   A.STOCK_CODE STOCK_CODE ,
+                   A.STOCK_NAME STOCK_NAME ,
+                   A.CRT_USER_ID_ID CRT_USER_ID_ID ,
+                   A.CRT_USER_ID CRT_USER_ID ,
+                   A.UPD_USER_ID_ID UPD_USER_ID_ID ,
+                   A.UPD_USER_ID UPD_USER_ID ,
+                   A.APP_TYPE_ID APP_TYPE_ID ,
+                   A.APP_TYPE_CODE APP_TYPE_CODE ,
+                   A.APP_TYPE_NAME APP_TYPE_NAME ,
+                   A.ORD_AMT ORD_AMT ,
+                   A.ORD_PV ORD_PV ,
+                   A.ORD_RENT_AMT ORD_RENT_AMT ,
+                   A.ORD_OTSTND ORD_OTSTND ,
+                   A.PNALTY_AMT PNALTY_AMT ,
+                   A.ADJ_AMT ADJ_AMT ,
+                   A.GRAND_TOT GRAND_TOT ,
+                   A.OBLIGT_MTH OBLIGT_MTH ,
+                   A.USED_MTH USED_MTH ,
+                   A.IS_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD ,
+                   A.REQSTER_ID REQSTER_ID ,
+                   A.REQSTER REQSTER ,
+                   A.CALL_STUS_ID CALL_STUS_ID ,
+                   A.CALL_STUS_CODE CALL_STUS_CODE ,
+                   A.CALL_STUS_NAME CALL_STUS_NAME ,
+                   A.CUST_ID CUST_ID ,
+                   A.CUST_NAME CUST_NAME ,
+                   A.CUST_IC CUST_IC ,
+                   A.ORD_NO ORD_NO ,
+                   A.REQ_REM REQ_REM ,
+                   A.BANK_ACC BANK_ACC ,
+                   A.ISS_BANK ISS_BANK ,
+                   A.ACC_NAME ACC_NAME ,
+                   A.ATTACH ATTACH ,
+                   CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
+                            THEN A.ACTUAL_CANCL_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END ACTUAL_CANCL_DT ,
+                   CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
+                            THEN A.APP_RETN_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_RETN_DT ,
+                   CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
+                            THEN A.CALL_RECALL_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
+                   CASE WHEN ( A.CRT_DT IS NOT NULL )
+                            THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
+                   CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
+                            THEN A.DSC_BRNCH_ID
+                    ELSE 0 END DSC_BRNCH_ID ,
+                    CASE WHEN ( A.DSC_BRNCH_ID2 IS NOT NULL )
+                            THEN A.DSC_BRNCH_ID2
+                    ELSE 0 END DSC_BRNCH_ID2 ,
+                   CASE WHEN ( A.UPD_DT IS NOT NULL )
+                            THEN A.UPD_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
+                   A.TYPE_ID,
+                   A.DOC_ID,
+                   A.REF_ID,
+                   A.RSO_STUS AS RSO_STUS_ID,
+                   ( SELECT CODE FROM SYS0038M WHERE STUS_CODE_ID =  A.RSO_STUS) RSO_STUS,
+                   A.PRD_RTN_LST_UPD,
+                   CASE WHEN ( A.APP_DT IS NOT NULL )
+                            THEN A.APP_DT
+                    ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
+                   A.ASSIGN_CT,
+                   A.PARTNER_CODE,
+                   A.RCD_TMS,
+                   B.CODE AS HDC,
+                   A.DSC_BRNCH_CODE2 AS DSC,
+                   A.BNDL_NO,
+                   A.ATCH_FILE_GRP_ID ,
+                   A.ATTCHMENT_DOWNLOAD ,
+                   A.FILE_SUB_PATH ,
+                   A.ATCH_FILE_NAME ,
+                   A.PHYSICL_FILE_NAME
+         FROM (
+            SELECT V.REQ_ID ,
+                       V.REQ_NO ,
+                       V.ORD_ID ,
+                       V.REQ_STUS_ID ,
+                       V.REQ_STUS_CODE ,
+                       V.REQ_STUS_NAME ,
+                       V.REQ_RESN_ID ,
+                       V.REQ_RESN_CODE ,
+                       V.REQ_RESN_DESC ,
+                       V.PREV_CALL_ENTRY_ID ,
+                       V.CALL_ENTRY_ID ,
+                       V.REQ_STAGE_ID ,
+                       V.REQ_STAGE ,
+                       V.STOCK_ID ,
+                       V.STOCK_CODE ,
+                       V.STOCK_NAME ,
+                       V.CRT_DT ,
+                       V.CRT_USER_ID_ID ,
+                       V.CRT_USER_ID ,
+                       V.UPD_DT ,
+                       V.UPD_USER_ID_ID ,
+                       V.UPD_USER_ID ,
+                       V.APP_TYPE_ID ,
+                       V.APP_TYPE_CODE ,
+                       V.APP_TYPE_NAME ,
+                       V.ORD_AMT ,
+                       V.ORD_PV ,
+                       V.ORD_RENT_AMT ,
+                       V.ORD_OTSTND ,
+                       V.PNALTY_AMT ,
+                       V.ADJ_AMT ,
+                       V.GRAND_TOT ,
+                       V.OBLIGT_MTH ,
+                       V.USED_MTH ,
+                       V.IS_UNDER_COOL_PRIOD ,
+                       V.ACTUAL_CANCL_DT ,
+                       V.REQSTER_ID ,
+                       V.REQSTER ,
+                       V.APP_RETN_DT ,
+                       V.CALL_STUS_ID ,
+                       V.CALL_STUS_CODE ,
+                       V.CALL_STUS_NAME ,
+                       V.CALL_RECALL_DT ,
+                       V.DSC_BRNCH_ID ,
+                       V.DSC_BRNCH_ID2 ,
+                       V.DSC_BRNCH_CODE2 ,
+                       V.CUST_ID ,
+                       V.CUST_NAME ,
+                       V.CUST_IC ,
+                       V.ORD_NO ,
+                       V.REQ_REM ,
+                       V.BANK_ACC ,
+                       V.ISS_BANK ,
+                       V.ACC_NAME ,
+                       V.ATTACH ,
+                       V.TYPE_ID ,
+                       V.DOC_ID ,
+                       V.REF_ID ,
+                       V.RSO_STUS,
+                       NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
+                       V.APP_DT AS APP_DT,
+                       V.ASSIGN_CT,
+                       V.PARTNER_CODE,
+                       V.RCD_TMS,
+                       V.STK_CTGRY_ID,
+                       D1.BNDL_NO,
+                       V.ATCH_FILE_GRP_ID ,
+	                   V.ATTCHMENT_DOWNLOAD ,
+	                   V.FILE_SUB_PATH ,
+	                   V.ATCH_FILE_NAME ,
+	                   V.PHYSICL_FILE_NAME
+             FROM (
+                SELECT DISTINCT
+                    r.so_req_id                         req_id,
+                    r.so_req_no                         req_no,
+                    r.so_req_so_id                      ord_id,
+                    r.so_req_stus_id                    req_stus_id,
+                    s1.code                             req_stus_code,
+                    s1.name                             req_stus_name,
+                    nvl(r.so_req_resn_id, 0)            req_resn_id,
+                    nvl(rc.code, ' ')                   req_resn_code,
+                    nvl(to_char(rc.resn_desc),
+                        ' ')                            req_resn_desc,
+                    nvl(r.so_req_prev_call_entry_id, 0) prev_call_entry_id,
+                    nvl(r.so_req_cur_call_entry_id, 0)  call_entry_id,
+                    r.so_req_cur_stus_id                req_stage_id,
+                    s2.name                             req_stage,
+                    r.so_req_cur_stk_id                 stock_id,
+                    stk.stk_code                        stock_code,
+                    stk.stk_desc                        stock_name,
+                    r.so_req_crt_dt                     AS crt_dt,
+                    nvl(r.so_req_crt_user_id, 0)        crt_user_id_id,
+                    nvl(u1.user_name, ' ')              crt_user_id,
+                    r.so_req_upd_dt                     AS upd_dt,
+                    nvl(r.so_req_upd_user_id, 0)        upd_user_id_id,
+                    nvl(u2.user_name, ' ')              upd_user_id,
+                    r.so_req_cur_app_type_id            app_type_id,
+                    apptype.code                        app_type_code,
+                    apptype.code_name                   app_type_name,
+                    r.so_req_cur_amt                    ord_amt,
+                    r.so_req_cur_pv                     ord_pv,
+                    r.so_req_curr_amt                   ord_rent_amt,
+                    r.so_req_cancl_rental_otstnd        ord_otstnd,
+                    r.so_req_cancl_pnalty_amt           pnalty_amt,
+                    r.so_req_cancl_adj_amt              adj_amt,
+                    r.so_req_cancl_tot_otstnd           grand_tot,
+                    r.so_req_cancl_ob_priod             obligt_mth,
+                    r.so_req_cancl_tot_used_priod       used_mth,
+                    r.so_req_cancl_under_cool_priod     is_under_cool_priod,
+                    r.so_req_actual_cancl_dt            actual_cancl_dt,
+                    r.so_reqster                        reqster_id,
+                    nvl(requestor.code_name, ' ')       reqster,
+                    r.so_req_pre_retn_dt                app_retn_dt,
+                    ce.stus_code_id                     call_stus_id,
+                    s3.code                             call_stus_code,
+                    s3.name                             call_stus_name,
+                    ce.call_dt                          call_recall_dt,
+                    i.brnch_id                          dsc_brnch_id,
+                    dsc.brnch_id                          dsc_brnch_id2,
+                    dsc.code                                dsc_brnch_code2,
+                    cust.cust_id                        cust_id,
+                    cust.name                           cust_name,
+                    cust.nric                           cust_ic,
+                    som.sales_ord_no                    ord_no,
+                    nvl(to_char(r.so_req_rem),
+                        ' ')                            req_rem,
+                    nvl(r.so_req_bank_acc, ' ')         bank_acc,
+                    nvl(r.so_req_iss_bank, ' ')         iss_bank,
+                    nvl(r.so_req_acc_name, ' ')         acc_name,
+                    nvl(r.so_req_attach, ' ')           attach,
+                    re.type_id,
+                    ce.doc_id,
+                    re.ref_id,
+                    re.stus_code_id                     rso_stus,
+                    ce.type_id                          call_type_id,
+                    ir.stus_code_id                     instal_stus_id,
+                    CASE
+                        WHEN org.mem_code IS NOT NULL THEN
+                            org.mem_code
+                        ELSE
+                            org2.user_name
+                    END                                 prd_rtn_lst_upd,
+                    re.app_dt                           AS app_dt,
+                    org3.mem_code                       AS assign_ct,
+                    org4.mem_code                       AS PARTNER_CODE,
+                    r.rcd_tms                           AS rcd_tms,
+                    stk.stk_ctgry_id                    stk_ctgry_id,
+                    som.bndl_id,
+                    re.retn_no,
+                    r.atch_file_grp_id,
+                    CASE
+                        WHEN r.atch_file_grp_id IS NOT NULL
+                             OR r.atch_file_grp_id != 0 THEN
+                            'DOWN'
+                        ELSE
+                            NULL
+                    END                                 AS attchment_download,
+                    CASE
+                        WHEN r.atch_file_grp_id IS NOT NULL
+                             OR r.atch_file_grp_id != 0 THEN
+                            f.file_sub_path
+                        ELSE
+                            NULL
+                    END                                 AS file_sub_path,
+                    f.atch_file_name                    AS atch_file_name,
+                    f.physicl_file_name                 AS physicl_file_name,
+                    r.so_req_follow_up
+                FROM
+                         sal0020d r
+                    JOIN sal0001d som ON som.sales_ord_id = r.so_req_so_id
+                    JOIN sal0045d i ON i.sales_ord_id = som.sales_ord_id
+                    JOIN sal0029d cust ON cust.cust_id = som.cust_id
+                    JOIN sys0038m s1 ON s1.stus_code_id = r.so_req_stus_id
+                    JOIN sys0038m s2 ON s2.stus_code_id = r.so_req_cur_stus_id
+                    JOIN sys0026m stk ON stk.stk_id = r.so_req_cur_stk_id
+                    JOIN sys0013m apptype ON apptype.code_id = r.so_req_cur_app_type_id
+                    JOIN ccr0006d ce ON ce.call_entry_id = r.so_req_cur_call_entry_id
+                    JOIN sys0038m s3 ON s3.stus_code_id = ce.stus_code_id
+                    JOIN SAL0023D CUSTADD ON CUSTADD.CUST_ADD_ID = I.ADD_ID
+                    LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
+                    LEFT JOIN SYS0005M dsc ON dsc.CODE = MA.CT_BRNCH_CODE
+                    LEFT JOIN sys0032m rc ON rc.resn_id = r.so_req_resn_id
+                    LEFT JOIN sys0047m u1 ON u1.user_id = r.so_req_crt_user_id
+                    LEFT JOIN sys0047m u2 ON u2.user_id = r.so_req_upd_user_id
+                    LEFT JOIN sys0013m requestor ON requestor.code_id = r.so_reqster
+                    LEFT JOIN log0038d re ON re.call_entry_id = r.so_req_cur_call_entry_id
+                    LEFT JOIN log0039d rer ON re.STK_RETN_ID = rer.STK_RETN_ID
+                    LEFT JOIN (
+                        SELECT
+                            MAX(install_entry_id) install_entry_id,
+                            sales_ord_id
+                        FROM
+                            sal0046d
+                        WHERE
+                            sales_ord_id IN (
+                                SELECT
+                                    sales_ord_id
+                                FROM
+                                    sal0001d
+                                WHERE
+                                    sales_ord_no = #{ordNo}
+                            )
+                        GROUP BY
+                            sales_ord_id
+                    )        ie ON som.sales_ord_id = ie.sales_ord_id
+                    LEFT JOIN sal0047d ir ON ie.install_entry_id = ir.entry_id
+                    LEFT JOIN org0001d org ON org.mem_id = re.upd_user_id
+                                              AND org.mem_type > 2
+                    LEFT JOIN sys0047m org2 ON org2.user_id = re.upd_user_id
+                                               AND org2.user_type_id > 2
+                    LEFT JOIN org0001d org3 ON org3.mem_id = re.ct_id
+                    LEFT JOIN sys0070m e ON r.atch_file_grp_id = e.atch_file_grp_id
+                    LEFT JOIN sys0071d f ON e.atch_file_id = f.atch_file_id
+                    LEFT JOIN org0001d org4 ON org4.mem_id = rer.PARTNER_CODE
+            )        v
+
+        LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
+             ) A
+    LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
+        WHERE A.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                               WHERE AA.CODE = BB.CODE
+                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') /* STKCATEGORYID_HOMECARE */
+	    <if test="typeIdList != null and typeIdList != ''">
+	        AND A.APP_TYPE_ID IN
+	        <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="stusIdList != null and stusIdList != ''">
+	        AND A.CALL_STUS_ID IN
+	        <foreach item="item" collection="stusIdList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="reqStageList != null and reqStageList != ''">
+	        AND A.REQ_STAGE_ID IN
+	        <foreach item="item" collection="reqStageList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="branchList != null and branchList != ''">
+	        AND A.DSC_BRNCH_ID IN
+	        <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+	    <if test="branchList2 != null and branchList2 != ''"> <!--  added for HA and HC Branch Merging, Hui Ding,  13/03/2024-->
+            AND A.DSC_BRNCH_ID2 IN
+            <foreach item="item" collection="branchList2" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+	       <if test="productRetReasonList != null and productRetReasonList != ''">
+      AND A.REQ_RESN_ID IN
+        <foreach item="item" collection="productRetReasonList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+     <if test="rsoStatusList != null and rsoStatusList != ''">
+      AND A.RSO_STUS IN
+        <foreach item="item" collection="rsoStatusList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+     <if test="arrProd != null and arrProd != ''">
+      AND A.STOCK_ID IN
+        <foreach item="item" collection="arrProd" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+
+	    <if test="ordNo != null and ordNo != ''">
+	        AND A.ORD_NO = #{ordNo}
+	    </if>
+	    <if test="reqNo != null and reqNo != ''">
+	        AND UPPER(A.REQ_NO) = UPPER(#{reqNo})
+	    </if>
+	    <if test="crtUserId != null and crtUserId != ''">
+	        AND UPPER(A.CRT_USER_ID) like '%'|| UPPER(#{crtUserId}) ||'%'
+	    </if>
+	    <if test="custId != null and custId != ''">
+	        AND UPPER(A.CUST_ID) = UPPER(#{custId})
+	    </if>
+	    <if test="custName != null and custName != ''">
+	        AND UPPER(A.CUST_NAME) like '%'|| UPPER(#{custName}) ||'%'
+	    </if>
+	    <if test="custIc != null and custIc != ''">
+	        AND UPPER(A.CUST_IC) = UPPER(#{custIc})
+	    </if>
+	    <if test="startCrtDt != null and startCrtDt != '' ">
+	        AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endCrtDt != null and endCrtDt != ''">
+	        AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test="startRecallDt != null and startRecallDt != '' ">
+	        AND CALL_RECALL_DT <![CDATA[ >= ]]>  TO_DATE(#{startRecallDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endRecallDt != null and endRecallDt != '' ">
+	        AND CALL_RECALL_DT <![CDATA[ <= ]]>  TO_DATE(#{endRecallDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test="startAppDt != null and startAppDt != '' ">
+	        AND APP_DT <![CDATA[ >= ]]>  TO_DATE(#{startAppDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endAppDt != null and endAppDt != '' ">
+	        AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test='bndlNo != null and bndlNo != ""'>
+            AND UPPER(A.BNDL_NO) = UPPER(#{bndlNo})
+        </if>
+    </select>
+
+    <!-- Get CallEntryId -->
+    <select id="getCallEntryId" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper.getCallEntryId */
+        SELECT V.CALL_ENTRY_ID
+                 , V.REQ_ID
+                 , V.REQ_NO
+                 , V.STOCK_ID
+                 , V.RETN_NO
+         FROM SAL1007V V
+        <where>
+            <if test="paramOrdId != null and paramOrdId != ''">
+		        AND V.ORD_ID = #{paramOrdId}
+		    </if>
+		    <if test="appTypeId != null and appTypeId != ''">
+                AND V.APP_TYPE_ID = #{appTypeId}
+            </if>
+            <if test="cancellationType != null and cancellationType != ''">
+	               <if test="cancellationType == 'CAN'">
+	                     AND REQ_STUS_ID IN (1,19)
+	               </if>
+	               <if test="cancellationType == 'PR'">
+	                     AND REQ_STUS_ID IN (32)
+	               </if>
+            </if>
+        </where>
+
+  </select>
+
+  <select id="getPartnerMemInfo" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID AS CODE_ID,
+           MEM_CODE AS CODE_NAME
+    FROM ORG0001D
+    WHERE BRNCH = (SELECT A.BRNCH_ID FROM SAL0045D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE  B.SALES_ORD_NO = #{ORDER_NO})
+    AND MEM_TYPE NOT IN (4)
+  </select>
+
+</mapper>

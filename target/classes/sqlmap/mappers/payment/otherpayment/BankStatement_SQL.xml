@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.BankStatementMapper">
+
+    <select id="selectBankStatementMasterList" parameterType="Map" resultType="egovMap">
+     SELECT
+            P.BS_NO,
+            P.BANK_ID,
+            P.BANK_NAME,
+            P.BANK_ACC,
+            P.BANK_ACC_NAME,
+            P.TRNSC_DT,
+            P.UPD_DT,
+            P.REMARK,
+            SUM(COUNT_CRC+COUNT_NOTCRC) AS COUNT
+        FROM  (SELECT
+                A.F_BANK_JRNL_ID           AS BS_NO,
+                A.BANK_ID                      AS BANK_ID,
+                B.NAME                          AS BANK_NAME,
+                A.F_BANK_JRNL_ACC_ID    AS BANK_ACC,
+                C.ACC_CODE || ' - ' ||  C.ACC_DESC AS BANK_ACC_NAME,
+                A.TRNSC_DT,
+                A.F_BANK_JRNL_CRT_DT AS UPD_DT,
+
+
+             (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID
+                AND CRC_MAPPING_STUS_ID =1
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1
+                AND F_TRNSC_REM = 'CRC') AS COUNT_CRC,
+
+                (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1
+                AND F_TRNSC_REM NOT IN ('CRC')) AS COUNT_NOTCRC,
+
+            A.F_BANK_JRNL_REM AS REMARK
+        FROM
+            PAY0079D A
+            LEFT JOIN SYS0004M B ON A.BANK_ID = B.BANK_ID
+            LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID AND C.IS_PAY_CASH = 1
+            LEFT JOIN SYS0047M D ON A.F_BANK_JRNL_CRT_USER_ID = D.USER_ID
+        WHERE
+            1=1
+            <if test="bsNo != null and bsNo != '' ">
+            AND A.F_BANK_JRNL_ID = #{bsNo}
+            </if>
+            <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+            AND A.TRNSC_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+            AND A.F_BANK_JRNL_ACC_ID = #{bankAccount}
+            </if>
+            <if test="uploadDateFr != null and uploadDateFr != '' and uploadDateTo != null and uploadDateTo != '' ">
+            AND A.F_BANK_JRNL_CRT_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY')
+            AND A.F_BANK_JRNL_CRT_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
+            </if>
+            <if test="uploadUserNm != null and uploadUserNm != '' ">
+            AND D.NAME LIKE  #{uploadUserNm} || '%'
+            </if>
+        ORDER BY A.F_BANK_JRNL_ID DESC) P
+        GROUP BY    P.BS_NO, P.BANK_ID, P.BANK_NAME, P.BANK_ACC, P.BANK_ACC_NAME, P.TRNSC_DT, P.UPD_DT, P.REMARK
+        ORDER BY P.BS_NO DESC
+
+    </select>
+
+    <select id="selectBankStatementDetailList" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.F_TRNSC_ID AS F_TRNSC_ID,
+            A.BANK_ID AS BANK_ID,
+            C.NAME AS BANK_NAME,
+            A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
+            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+            B.F_TRNSC_DT,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
+            B.F_TRNSC_REF3,
+            B.F_TRNSC_REF1,
+            B.F_TRNSC_REF4,
+            B.F_TRNSC_REF2,
+            B.F_TRNSC_REF6,
+            B.F_TRNSC_REM,
+            B.F_TRNSC_DEBT_AMT,
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO,
+             CASE WHEN F_TRNSC_REM = 'CRC' THEN  decode (B.CRC_MAPPING_STUS_ID, 4,'Mapped' , 'Unmap' )ELSE decode (B.OTH_KEYIN_STUS_ID, 4,'Mapped' , 'Unmap' ) END AS Tranx_state,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+        FROM
+            PAY0079D A
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+        WHERE
+            A.F_BANK_JRNL_ID = #{bsNo}
+        ORDER BY B.F_TRNSC_ID DESC
+    </select>
+
+    <insert id="insertBankStatementMaster" parameterType="Map">
+        <selectKey keyProperty="fBankJrnlId" resultType="int" order="BEFORE">
+            SELECT PAY0079D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0079D (
+            F_BANK_JRNL_ID,
+            F_BANK_JRNL_REF_NO,
+            F_BANK_JRNL_ACC_ID,
+            F_BANK_JRNL_REM,
+            F_BANK_JRNL_STUS_ID,
+            F_BANK_JRNL_CRT_DT,
+            F_BANK_JRNL_CRT_USER_ID,
+            F_BANK_JRNL_ADJ,
+            TRNSC_DT,
+            BANK_ID,
+            BC_STUS_ID
+        ) VALUES (
+            #{fBankJrnlId},
+            FN_GET_DOCNO('109'),
+            #{uploadBankAccount} ,
+            #{uploadRemark},
+            1,
+            SYSDATE,
+            #{userId},
+            0,
+            TO_DATE(#{uploadTranDt},'DD/MM/YYYY'),
+            #{uploadIssueBank},
+            1
+        )
+    </insert>
+
+    <insert id="insertBankStatementDetail" parameterType="Map">
+      <selectKey keyProperty="fTrnscId" resultType="int" order="BEFORE">
+            SELECT PAY0081D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0081D (
+            F_TRNSC_ID,
+            F_BANK_JRNL_ID,
+            F_TRNSC_DT,
+            F_TRNSC_REF1,
+            F_TRNSC_REF2,
+            F_TRNSC_REF3,
+            F_TRNSC_REF4,
+            F_TRNSC_REF6,
+            F_TRNSC_DEBT_AMT,
+            F_TRNSC_CRDIT_AMT,
+            F_TRNSC_IS_MTCH,
+            F_TRNSC_REM,
+            F_TRNSC_REF_CHQ_NO,
+            F_TRNSC_REF_VA_NO,
+            F_TRNSC_TELLER_ID,
+            F_TRNSC_NEW_CHQ_NO,
+            CRC_MAPPING_STUS_ID,
+            OTH_KEYIN_STUS_ID,
+			OTH_KEYIN_BC_STUS_ID
+        ) VALUES (
+            #{fTrnscId},
+            #{fBankJrnlId},
+            TO_DATE(#{fTrnscDt},'DD/MM/YYYY'),
+            #{fTrnscRef1},
+            #{fTrnscRef2},
+            #{fTrnscRef3},
+            #{fTrnscRef4},
+            #{fTrnscRef6},
+            #{fTrnscDebtAmt},
+            #{fTrnscCrditAmt},
+            0,
+            #{fTrnscRem},
+            #{fTrnscRefChqNo},
+            #{fTrnscRefVaNo},
+            #{fTrnscTellerId},
+            #{fTrnscNewChqNo},
+            1,
+            1,
+			1
+        )
+    </insert>
+
+    <insert id="insertBankStatementITF" parameterType="Map">
+
+        INSERT INTO ITF0900M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            BANKSID,
+            BANKSEQ,
+            BANKCO,
+            BANKAC,
+            INDATE,
+            INREF1,
+            INREF2,
+            INREF3,
+            INREF4,
+            INREF5,
+            INREF6,
+            BNTYPE,
+            BNDEBIT,
+            BNCRDIT
+        ) VALUES (
+            FN_CRT_IFKEY('900'),
+            1,
+            '900',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            #{fBankJrnlId},
+            #{fTrnscId},
+            #{uploadIssueBank},
+            #{uploadBankAccount},
+            TO_CHAR(TO_DATE(#{fTrnscDt},'DD/MM/YYYY'),'YYYYMMDD'),
+            #{fTrnscRefChqNo},
+            #{fTrnscRef3},
+            #{fTrnscRef1},
+            #{fTrnscRef4},
+            #{fTrnscRef2},
+            #{fTrnscRef6},
+            #{fTrnscRem},
+            #{fTrnscDebtAmt},
+            #{fTrnscCrditAmt}
+        )
+    </insert>
+
+    <delete id="deleteBankStateMaster" parameterType="Map">
+        DELETE FROM PAY0079D
+        WHERE F_BANK_JRNL_ID =#{bsNo}
+    </delete>
+
+    <delete id="deleteBankStateDetail" parameterType="Map">
+        DELETE FROM PAY0081D
+        WHERE F_BANK_JRNL_ID =#{bsNo}
+    </delete>
+
+    <update id="updateBankStateDetail" parameterType="Map">
+        UPDATE PAY0081D SET
+            F_TRNSC_TELLER_ID = #{fTrnscTellerId},
+			      F_TRNSC_REF3 = #{fTrnscRef3},
+			      F_TRNSC_REF_CHQ_NO = #{fTrnscRefChqNo},
+			      F_TRNSC_REF1 = #{fTrnscRef1},
+			      F_TRNSC_REF2 = #{fTrnscRef2},
+			      F_TRNSC_REF6 = #{fTrnscRef6},
+			      F_TRNSC_REM = #{fTrnscRem},
+			      F_TRNSC_DEBT_AMT = #{fTrnscDebtAmt},
+			      F_TRNSC_CRDIT_AMT = #{fTrnscCrditAmt},
+			      F_TRNSC_REF4 = #{fTrnscRef4},
+			      F_TRNSC_NEW_CHQ_NO = #{fTrnscNewChqNo},
+			      F_TRNSC_REF_VA_NO = #{fTrnscRefVaNo}
+        WHERE
+            F_TRNSC_ID = #{fTrnscId}
+    </update>
+
+    <select id="selectBankStatementDownloadList" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.F_TRNSC_ID AS F_TRNSC_ID,
+            A.BANK_ID AS BANK_ID,
+            C.NAME AS BANK_NAME,
+            A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
+            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+            B.F_TRNSC_DT,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
+            B.F_TRNSC_REF3,
+            B.F_TRNSC_REF1,
+            B.F_TRNSC_REF4,
+            B.F_TRNSC_REF2,
+            B.F_TRNSC_REF6,
+            B.F_TRNSC_REM,
+            B.F_TRNSC_DEBT_AMT,
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+        FROM
+            PAY0079D A
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+        WHERE
+            1=1
+            <if test="downloadTranDateFr != null and downloadTranDateFr != '' and downloadTranDateTo != null and downloadTranDateTo != '' ">
+            AND A.TRNSC_DT BETWEEN TO_DATE(#{downloadTranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{downloadTranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="downloadBankAccount != null and downloadBankAccount != '' ">
+            AND A.F_BANK_JRNL_ACC_ID = #{downloadBankAccount}
+            </if>
+        ORDER BY B.F_TRNSC_ID DESC
+    </select>
+</mapper>

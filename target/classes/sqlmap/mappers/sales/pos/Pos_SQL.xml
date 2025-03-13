@@ -1,0 +1,3926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pos.impl.PosMapper">
+
+   <select id="selectPosModuleCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+            CODE_ID,
+            CODE_NAME
+        FROM
+            SYS0013M
+        WHERE
+            CODE_MASTER_ID = #{groupCode}
+
+            <if test=" null != codeArray and codeArray.size > 0">
+                AND CODE_ID IN
+                <foreach collection="codeArray" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+   </select>
+
+   <select id="selectStatusCodeList"  parameterType="Map" resultType="egovMap">
+        SELECT
+            T1.STUS_CODE_ID CODE_ID,
+            T2.NAME CODE_NAME
+        FROM
+            SYS0037M T1
+            INNER JOIN SYS0038M T2
+        ON
+            T1.STUS_CODE_ID = T2.STUS_CODE_ID
+        WHERE
+            T1.STUS_CTGRY_ID = #{groupCode}
+   </select>
+
+<select id="selectWhBrnchList" resultType="egovMap">
+		   SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID ,
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05' , '08')
+            ORDER BY   S5.CODE
+   </select>
+
+   <select id="selectWarehouse"  parameterType="Map" resultType="egovMap">
+          SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID ,
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB,
+                case when SUBSTR(S5.code,0,3) = 'CDB' then 'N' ELSE S28.SERIAL_REQUIRE_CHK_YN
+                end as SERIAL_REQUIRE_CHK_YN
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05', '08')
+            AND S5.BRNCH_ID = #{brnchId}
+            <![CDATA[
+            AND ROWNUM <= 1
+            ]]>
+   </select>
+
+    <select id="selectPosJsonList" parameterType="Map" resultType="egovMap">
+        SELECT  Extent1.POS_ID ,
+                        Extent1.POS_NO ,
+                        Extent1.POS_CUST_NAME ,
+                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT,
+                        Extent1.POS_TYPE_ID   ,
+                        Extent1.POS_MODULE_TYPE_ID  ,
+                        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
+                        Extent1.STUS_ID,
+                        EXTENT11.NAME STUS_DESC ,
+                        Extent1.POS_WH_ID  ,
+                        Extent1.POS_MEM_ID  ,
+                        Extent1.POS_CRT_USER_ID  ,
+                        Extent2.CODE_NAME  ,
+                        Extent3.CODE_NAME CODE_NAME1 ,
+                        Extent6.USER_NAME  ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+                        CASE
+                            WHEN Extent1.POS_MODULE_TYPE_ID =6795 THEN Extent12.USER_FULL_NAME
+                            WHEN (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME
+                            ELSE 'CASH'
+                        END NAME ,
+                        CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
+                        extent10.MEMO_ADJ_REF_NO,
+                        Extent1.BRNCH_ID,
+                        Extent9.CODE BRNCH_DESC,
+                        UPPER(Extent1.POS_REM) REV_RMK
+                FROM SAL0057D Extent1
+                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+                        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+                        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+                        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+                        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+                        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                        LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
+                        LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+                        LEFT JOIN SYS0038M EXTENT11 ON EXTENT1.STUS_ID = EXTENT11.STUS_CODE_ID
+                        LEFT JOIN SYS0047M Extent12 ON Extent1.POS_CUST_NAME =  Extent12.USER_NAME
+                        <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
+                            LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
+                        </if>
+                WHERE  1=1
+               <if test=" null != posModuleTypeId and '' != posModuleTypeId">
+                   AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+                </if>
+
+                <if test=" null != systemArray and systemArray.length > 0">
+                   AND Extent1.POS_TYPE_ID IN
+                    <foreach collection="systemArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test=" null != statusArray and statusArray.length > 0">
+                    AND Extent1.STUS_ID IN
+                    <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test="posNo != nul and posNo != '' ">
+                    AND  UPPER(Extent1.POS_NO) = UPPER(#{posNo})
+                </if>
+
+                <if test="sDate != null and sDate != '' ">
+                    <![CDATA[
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                     ]]>
+                </if>
+
+                <if test="eDate != null and eDate != '' ">
+                   <![CDATA[
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                    ]]>
+                </if>
+                <if test="brnchId != null and brnchId != '' ">
+                    AND Extent1.BRNCH_ID = #{brnchId}
+                </if>
+                <if test=" null != salesmanId and '' != salesmanId">
+                    AND Extent1.POS_MEM_ID = #{salesmanId}
+                </if>
+
+                <if test=" null != posCustName and '' != posCustName">
+                    AND  Extent1.POS_CUST_NAME  = #{posCustName}
+                </if>
+
+                <if test="deducMem != null and deducMem != '' ">
+                    AND Extent1.POS_MODULE_TYPE_ID = 2391
+                    AND UPPER(Extent8.MEM_CODE) = UPPER(#{deducMem})
+                </if>
+
+                <if test="deducMemNric != null and deducMemNric != '' ">
+                    AND Extent1.POS_MODULE_TYPE_ID = 2391
+                    AND UPPER(Extent8.NRIC) = UPPER(#{deducMemNric})
+                </if>
+
+                ORDER BY Extent1.POS_NO DESC
+    </select>
+
+    <select id="selectPosTypeList" parameterType="Map" resultType="egovMap">
+				SELECT
+				    CODE_ID ,
+				    CODE_NAME
+				FROM
+				    SYS0013M
+				WHERE
+				    CODE_MASTER_ID = #{codeM}
+				    <if test=" null != codArr and codArr.length > 0 ">
+				          AND CODE_ID IN
+				          <foreach collection="codArr" item="item" open="(" separator="," close=")">
+				                #{item}
+				          </foreach>
+				    </if>
+				    <!-- <if test=" null != exArr and exArr.length > 0">
+				          AND CODE_ID NOT IN
+				         <foreach collection="exArr" item="item" open="(" separator=","  close=")">
+				             #{item}
+				         </foreach>
+				    </if> -->
+				ORDER BY CODE_ID
+    </select>
+
+
+     <select id="selectPosItmList" parameterType="Map" resultType="egovMap">
+	    SELECT
+            Project1.CODE_NAME,
+            Project1.STK_CODE,
+            Project1.CODE_ID,
+            Project1.STK_DESC,
+            Project1.STK_CTGRY_ID,
+            Project1.STK_TYPE_ID,
+            Project1.STK_GRAD,
+            Project1. ALLOW_SALES,
+            Project1.STUS_CODE_ID
+        FROM
+        (SELECT
+                T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
+                T1.STK_ID CODE_ID,
+                T1.STK_CODE,
+                T1.STK_DESC,
+                T1.STK_CTGRY_ID,
+                T1.STK_TYPE_ID,
+                T1.STK_GRAD,
+                T1.ALLOW_SALES,
+                T1.STUS_CODE_ID
+            FROM
+                SYS0026M T1
+                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
+            WHERE
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1
+
+            <!-- Filter / Parts -->
+            <if test=" null != posSal and '' != posSal">
+                WHERE
+                    Project1.STUS_CODE_ID = 1
+                AND
+                    Project1.ALLOW_SALES = 1
+                AND
+                    Project1.STK_CTGRY_ID IN ('54','55','56','57','58','59','400','924')
+                AND
+                    Project1.STK_TYPE_ID = #{itemType}
+            </if>
+
+             <!-- Item Bank -->
+             <if test=" null != posItm and '' != posItm">
+                WHERE
+                     Project1. ALLOW_SALES = 1
+                AND
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+             </if>
+
+             <!-- OtherIncome -->
+             <if test=" null != posOth and '' != posOth">
+                WHERE
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+             </if>
+
+              <!--Item Bank HQ -->
+              <if test=" null != posHQ and '' != posHQ">
+                WHERE
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1. ALLOW_SALES = 0
+                 AND
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+                     <if test="stkTypeId != '1350' ">
+                        AND
+                            Project1.STK_CTGRY_ID = #{itemType}
+                     </if>
+                  </if>
+                  ORDER BY Project1.STK_CODE ASC
+     </select>
+
+     <!-- <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
+            SELECT Project1.ITM_ID CODE_ID  ,
+                   Project1.ITM_ID STK_ID  ,
+                   Project1.ITM_CODE STK_CODE ,
+                   Project1.ITM_CODE || ' - ' || Project1.ITM_DESC CODE_NAME,
+                   Project1.ITM_DESC  STK_DESC ,
+                   NVL(Project1.ITM_PRC , 0)  AMT,
+                   Project1.ALLOW_SALES,
+                   100 QTY
+            FROM ( SELECT Extent1.ITM_ID   ,
+                            Extent1.ITM_CODE   ,
+                            Extent1.ITM_DESC   ,
+                            Extent1.ALLOW_SALES   ,
+                            Extent2.ITM_PRC
+                     FROM LOG0026D Extent1
+                            JOIN LOG0027D Extent2   ON Extent2.ITM_ID = Extent1.ITM_ID
+                     WHERE   1 = Extent1.STUS_CODE_ID
+                               <if test=" null != itemType and '' != itemType">
+                               AND  Extent1.ITM_TYPE_ID = #{itemType}
+                               </if>
+                               AND  Extent1.ALLOW_SALES = 1
+                                <if test=" null != itmIdArray    and    itmIdArray.length > 0">
+                                    AND Extent1.ITM_ID IN
+                                    <foreach collection="itmIdArray" item = "item" open = "(" separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                               </if>
+                                ) Project1
+              ORDER BY Project1.ITM_CODE ASC
+     </select> -->
+
+
+     <select id="chkStockList" parameterType="Map" resultType="egovMap">
+						SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        <!-- NVL(Project1.QTY, 0 ) QTY, -->
+                        <!-- CASE WHEN Project1.STK_CODE IN ('M500140','M500139','M500167','M500188','M500225') THEN
+                              25000
+                        ELSE 999
+                        END AS QTY -->
+                        <!-- editing  by leo  14.07.2021-->
+                        CASE WHEN STK_CTGRY_ID IN (1346,1347,1348) THEN
+                            NVL((SELECT ITEM_INV_QTY FROM LOG0106M WHERE ITEM_CODE =Project1.STK_ID  AND LOC_ID =(SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_ID= #{locId}) ),0 )
+                        ELSE 999 END
+                        QTY,
+                        Project1.MOV_QTY,
+                        NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[
+                                (SELECT
+									     T1.STK_ID, T1.AMT
+									   FROM
+									      (SELECT
+									          STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+									       FROM SAL0016M
+									       WHERE MEM_PAC_ID = 0
+									       AND APP_TYPE_ID = 67
+									       AND STUS_CODE_ID = 1
+									      ) T1
+									WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+         <select id="chkStockList2" parameterType="Map" resultType="egovMap">
+                        SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        NVL(Project1.QTY, 0 ) QTY,
+                        Project1.MOV_QTY,
+                        NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[
+                                (SELECT
+                                         T1.STK_ID, T1.AMT
+                                       FROM
+                                          (SELECT
+                                              STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+                                           FROM SAL0016M
+                                           WHERE MEM_PAC_ID = 0
+                                           AND APP_TYPE_ID = 67
+                                           AND STUS_CODE_ID = 1
+                                          ) T1
+                                    WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY
+                                FROM LOG0075M
+                                WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'
+                                AND REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N')  <>  'Y')
+                                GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                             <!-- bug fix ticket 24033963 - POS logic not same with Total stock  -->
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+     <select id="getMemCode" parameterType="Map" resultType="egovMap">
+				SELECT
+                    T1.MEM_CODE,
+                    T1.MEM_ID,
+                    T1.BRNCH
+                FROM
+                    ORG0001D T1 LEFT JOIN SYS0047M T2
+                ON
+                    --T1.MEM_CODE = T2.USER_NAME
+                    T1.MEM_CODE = T2.HR_CODE
+                WHERE 1 = 1
+                    <if test=" userId != null and userId != ''">
+                    AND T2.USER_ID = #{userId}
+                    </if>
+
+                    <if test="memCode != null and memCode != '' ">
+                    AND T1.MEM_CODE = #{memCode}
+                    </if>
+     </select>
+
+     <select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
+                SELECT
+                    RESN_ID CODE_ID,
+                    CODE ,
+                    RESN_DESC CODE_NAME
+                FROM
+                    SYS0032M
+                WHERE
+                    RESN_TYPE_ID = #{masterCode}
+                ORDER BY RESN_ID
+     </select>
+
+     <select id="getFilterSerialNum_backup" parameterType="Map" resultType="egovMap">
+                    SELECT
+                        T1.MATNR,
+                        T3.STK_ID,
+                        T1.SERIAL_NO,
+                        T3.STK_DESC,
+                        T2.USER_ID,
+                        T2.USER_NAME,
+                        T2.WH_LOC_CODE,
+                        T2.WH_LOC_ID
+                    FROM
+                        LOG0063D T1
+                        INNER JOIN (
+                                    SELECT
+                                        Extent1.USER_ID,
+                                        Extent1.USER_NAME,
+                                        Extent2.WH_LOC_CODE,
+                                        Extent2.WH_LOC_ID
+                                    FROM
+                                        SYS0047M Extent1
+                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME
+                                   ) T2 ON T2.WH_LOC_ID = T1.LOC_ID
+                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR
+                      WHERE
+                       T2.USER_ID = #{userId}
+                       <if test=" null != basketStkCode and '' != basketStkCode">
+                            AND T1.MATNR = #{basketStkCode}
+                       </if>
+
+                        <if test="null != filterArr and filterArr.length > 0">
+                            AND T1.SERIAL_NO IN
+                            <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                        <if test="null != serialArr and serialArr.length > 0">
+                            AND T1.SERIAL_NO NOT IN
+                            <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                                #{idx}
+                            </foreach>
+                        </if>
+     </select>
+
+     <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
+                    SELECT
+                        T1.MATNR,
+                        T1.MATNR as STK_ID,
+                        T1.SERIAL_NO,
+                        T3.STK_DESC,
+                        T2.USER_ID,
+                        T2.USER_NAME,
+                        T4.WH_LOC_CODE,
+                        T1.LOC_ID AS WH_LOC_ID
+                    FROM
+                        LOG0063D T1
+                        LEFT OUTER JOIN (
+                                    SELECT
+                                        Extent1.USER_ID,
+                                        Extent1.USER_NAME,
+                                        Extent2.WH_LOC_CODE,
+                                        Extent2.WH_LOC_ID
+                                    FROM
+                                        SYS0047M Extent1
+                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME
+                                   ) T2 ON T2.WH_LOC_ID = T1.LOC_ID
+                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR
+                         INNER JOIN SYS0028M T4 ON T4.WH_LOC_ID = T1.LOC_ID
+                      WHERE
+                       T1.LOC_ID = #{locId}
+                       <if test=" null != basketStkCode and '' != basketStkCode">
+                            AND T1.MATNR = #{basketStkCode}
+                       </if>
+
+                        <if test="null != filterArr and filterArr.length > 0">
+                            AND T1.SERIAL_NO IN
+                            <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+
+                        <if test="null != serialArr and serialArr.length > 0">
+                            AND T1.SERIAL_NO NOT IN
+                            <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                                #{idx}
+                            </foreach>
+                        </if>
+     </select>
+
+     <!--현재 미사용 : 계정과목 부여 Query  -->
+     <select id="getItemBankAccCodeByItemTypeID" parameterType="Map" resultType="egovMap">
+					SELECT Extent1.ITM_BANK_TYPE_ID   ,
+					       Extent1.CR_ACC_ID   ,
+					       Extent1.DR_ACC_ID   ,
+					       Extent1.STUS_ID   ,
+					       Extent1.UPD_USER_ID   ,
+					       Extent1.UPD_DT
+					FROM LOG0025M Extent1
+					WHERE   Extent1.ITM_BANK_TYPE_ID = #{insPosSystemType}
+					AND 1 = Extent1.STUS_ID
+					<![CDATA[
+					AND ROWNUM <= 1
+					]]>
+     </select>
+
+     <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>
+
+    <select id="getSeqSal0057D" resultType="java.lang.Integer">
+         SELECT SAL0057D_POS_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqSal0058D" resultType="java.lang.Integer">
+        SELECT SAL0058D_POS_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0007D" resultType="java.lang.Integer">
+        SELECT PAY0007D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0016D" resultType="java.lang.Integer">
+        SELECT PAY0016D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0031D" resultType="java.lang.Integer">
+        SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0032D" resultType="java.lang.Integer">
+        SELECT PAY0032D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqLog0014D" resultType="java.lang.Integer">
+        SELECT LOG0014D_SR_CARD_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0069D" resultType="java.lang.Integer">
+          SELECT PAY0069D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqSal0147M" resultType="java.lang.Integer">
+        SELECT SAL0147M_POS_SERIAL_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0064D" resultType="java.lang.Integer">
+        SELECT PAY0064D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqPay0065D" resultType="java.lang.Integer">
+        SELECT PAY0065D_SEQ.NEXTVAL  FROM DUAL
+    </select>
+
+     <select id="getSeqPay0009D" resultType="java.lang.Integer">
+        SELECT PAY0009D_SEQ.NEXTVAL FROM DUAL
+     </select>
+
+    <select id="getUserFullName" parameterType="Map" resultType="egovMap">
+		<!--  SELECT
+		    USER_NAME || ' - ' || USER_FULL_NAME NAME
+		 FROM
+		    SYS0047M
+		 WHERE
+		    USER_NAME = #{salesmanPopCd} -->
+
+			SELECT
+			    FULL_NAME
+			NAME
+			    FROM ORG0001D
+			WHERE
+			    MEM_CODE = #{salesmanPopCd}
+    </select>
+
+    <insert id="insertPosMaster" parameterType="Map" >
+        INSERT INTO SAL0057D
+				  ( POS_ID,
+				    POS_NO,
+				    POS_BILL_ID,
+				    POS_CUST_NAME,
+				    POS_DT,
+				    POS_TYPE_ID,
+				    POS_MODULE_TYPE_ID,
+				    POS_TOT_AMT,
+				    POS_TOT_CHRG,
+				    POS_TOT_TXS,
+				    POS_TOT_DSCNT,
+				    POS_WH_ID,
+				    POS_REM,
+				    POS_MTCH_ID,
+				    POS_MEM_ID,
+				    POS_CUST_ID,
+				    POS_CRT_USER_ID,
+				    POS_CRT_DT,
+				    POS_CRT_DEPT_ID,
+				    CR_ACC_ID,
+				    DR_ACC_ID,
+				    POS_RESN_ID,
+				    BRNCH_ID,
+				    POS_RCV_DT,
+				    STUS_ID,
+				    <!--Case Other Income  -->
+				    <if test=" null != othCheck and othCheck > 0">
+    				   AREA_ID,
+    				   ADDR_DTL,
+    				   STREET,
+				    </if>
+				    CRT_USER_ID,
+				    CRT_DT,
+				    UPD_USER_ID,
+				    UPD_DT,
+				    POS_CRT_DEPT_CODE )
+  VALUES ( #{posMasterSeq},
+           #{docNoPsn},
+           #{posBillId},
+           #{posCustName},
+           SYSDATE,
+           #{insPosSystemType},
+           #{insPosModuleType},
+           #{posTotalAmt},
+           #{posCharge},
+           #{posTaxes},
+           #{posDiscount},
+           #{hidLocId},
+           #{posRemark},
+           #{posMtchId},
+           #{salesmanPopId},
+           #{posCustomerId},
+           #{userId},
+           SYSDATE,
+           #{userDeptId},
+           #{crAccId},
+           #{drAccId},
+           #{posReason},
+           #{cmbWhBrnchIdPop},
+           <choose>
+               <when test=" null != othCheck and othCheck > 0">
+                    SYSDATE,
+               </when>
+               <otherwise>
+                   TO_DATE(#{recvDate}, 'DD/MM/YYYY'),
+               </otherwise>
+            </choose>
+           #{posStusId},
+           <!--Case Other Income  -->
+           <if test=" null != othCheck and othCheck > 0">
+              #{areaId},
+              #{addrDtl},
+              #{streetDtl},
+           </if>
+           #{userId},
+           SYSDATE,
+           #{userId},
+           SYSDATE,
+           #{userDeptCode})
+    </insert>
+
+    <insert id="insertPosDetail" parameterType="Map">
+			INSERT INTO SAL0058D
+			  ( POS_ITM_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID,
+			    POS_ITM_QTY,
+			    POS_ITM_UNIT_PRC,
+			    POS_ITM_TOT,
+			    POS_ITM_CHRG,
+			    POS_ITM_TXS,
+			    POS_ITM_TAX_CODE_ID,
+			    MEM_ID,
+			    RCV_STUS_ID,
+			    CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+			  VALUES ( #{posDetailSeq},
+			           #{posMasterSeq},
+			           #{stkId},
+			           #{inputQty},
+			           #{amt},
+			           #{totalAmt},
+			           #{subTotal},
+			           #{subChng},
+			           #{posItemTaxCodeId},
+			           #{posMemId},
+			           #{posRcvStusId},
+			           #{userId},
+			           SYSDATE,
+			           #{userId},
+			           SYSDATE)
+    </insert>
+
+    <insert id="insertDeductionPosDetail" parameterType="Map">
+            INSERT INTO SAL0058D
+              ( POS_ITM_ID,
+                POS_ID,
+                POS_ITM_STOCK_ID,
+                POS_ITM_QTY,
+                POS_ITM_UNIT_PRC,
+                POS_ITM_TOT,
+                POS_ITM_CHRG,
+                POS_ITM_TXS,
+                POS_ITM_TAX_CODE_ID,
+                MEM_ID,
+                MEM_CODE,
+                MEM_TYPE,
+                NAME,
+                FULL_NAME,
+                NRIC,
+                MEM_STUS_ID,
+                RCV_STUS_ID,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+              VALUES ( #{posDetailDuducSeq},
+                       #{posMasterSeq},
+                       #{posDetailStkId},
+                       #{posDetailQty},
+                       #{posDetailUnitPrc},
+                       #{posDetailTotal},
+                       #{posDetailCharge},
+                       #{posDetailTaxs},
+                       #{posItemTaxCodeId},
+                       #{memId},
+                       #{memCode},
+                       #{memType},
+                       #{name},
+                       #{fullName},
+                       #{nric},
+                       #{stus},
+                       #{posRcvStusId},
+                       #{userId},
+                       SYSDATE,
+                       #{userId},
+                       SYSDATE)
+    </insert>
+
+    <insert id="insertPosBilling" parameterType="Map">
+				INSERT INTO PAY0007D
+				  ( BILL_ID,
+				    BILL_TYPE_ID,
+				    BILL_SO_ID,
+				    BILL_MEM_ID,
+				    BILL_AS_ID,
+				    BILL_PAY_TYPE_ID,
+				    BILL_NO,
+				    BILL_MEM_SHIP_NO,
+				    BILL_DT,
+				    BILL_AMT,
+				    BILL_REM,
+				    BILL_IS_PAID,
+				    BILL_IS_COMM,
+				    UPD_USER_ID,
+				    UPD_DT,
+				    SYNC_CHK,
+				    COURS_ID,
+				    STUS_ID )
+				  VALUES ( #{posBillSeq},
+				           #{posBillTypeId},
+				           #{posBillSoId},
+				           #{posBillMemId},
+				           #{posBillAsId},
+				           #{posBillPayTypeId},
+				           #{docNoPsn},
+				           #{posMemberShipNo},
+				           SYSDATE,
+				           #{posBillAmt},
+				           #{posBillRem},
+				           #{posBillIsPaid},
+				           #{posBillIsComm},
+				           #{userId},
+				           SYSDATE,
+				           #{posSyncChk},
+				           #{posCourseId},
+				           #{posStatusId})
+    </insert>
+
+    <update id="updatePosMasterPosBillId" parameterType="Map">
+				UPDATE
+				    SAL0057D
+				SET
+				    POS_BILL_ID = #{posBillSeq}
+				WHERE
+				    POS_ID = #{posMasterSeq}
+    </update>
+
+    <insert id="insertPosOrderBilling" parameterType="Map">
+        INSERT INTO PAY0016D
+				  ( ACC_BILL_ID,
+				    ACC_BILL_TASK_ID,
+				    ACC_BILL_REF_DT,
+				    ACC_BILL_REF_NO,
+				    ACC_BILL_ORD_ID,
+				    ACC_BILL_ORD_NO,
+				    ACC_BILL_TYPE_ID,
+				    ACC_BILL_MODE_ID,
+				    ACC_BILL_SCHDUL_ID,
+				    ACC_BILL_SCHDUL_PRIOD,
+				    ACC_BILL_ADJ_ID,
+				    ACC_BILL_SCHDUL_AMT,
+				    ACC_BILL_ADJ_AMT,
+				    ACC_BILL_TXS_AMT,
+				    ACC_BILL_NET_AMT,
+				    ACC_BILL_STUS,
+				    ACC_BILL_REM,
+				    ACC_BILL_CRT_DT,
+				    ACC_BILL_CRT_USER_ID,
+				    ACC_BILL_GRP_ID,
+				    ACC_BILL_TAX_CODE_ID,
+				    ACC_BILL_TAX_RATE,
+				    ACC_BILL_ACCT_CNVR,
+				    ACC_BILL_CNTRCT_ID )
+		  VALUES (     #{posOrderBillSeq},
+				            #{posOrdBillTaskId},
+				            SYSDATE,
+				            #{posOrdBillRefNo},
+				            #{posOrdBillOrdId},
+				            #{posOrdBillOrdNo},
+				            #{posOrdBillTypeId},
+				            #{posOrdBillModeId},
+				            #{posOrdBillScheduleId},
+				            #{posOrdBillSchedulePeriod},
+				            #{posOrdBillAdjustmentId},
+				            #{posOrdBillScheduleAmt},
+				            #{posOrdBillAdjustmentAmt},
+				            #{posOrdBillTaxesAmt},
+				            #{posOrdBillNetAmount},
+				            #{posOrdBillStatus},
+				            #{posOrdBillRem},
+				            SYSDATE,
+				            #{userId},
+				            #{posOrdBillGroupId},
+				            #{posOrdBillTaxCodeId},
+				            #{posOrdBillTaxRate},
+				            #{posOrdBillAcctCnvr},
+				            #{posOrdBillCntrctId})
+    </insert>
+
+    <insert id="insertPosTaxInvcMisc" parameterType="Map">
+        INSERT INTO PAY0031D
+							  ( TAX_INVC_ID,
+							    TAX_INVC_REF_NO,
+							    TAX_INVC_REF_DT,
+							    TAX_INVC_SVC_NO,
+							    TAX_INVC_TYPE,
+							    TAX_INVC_CUST_NAME,
+							    TAX_INVC_CNTC_PERSON,
+							    <!-- 추후 삭제 -->
+							   <!--  TAX_INVC_ADDR1,
+							    TAX_INVC_ADDR2,
+							    TAX_INVC_ADDR3,
+							    TAX_INVC_ADDR4,
+							    TAX_INVC_POST_CODE,
+							    TAX_INVC_STATE_NAME,
+							    TAX_INVC_CNTY,   -->
+
+							    TAX_INVC_TASK_ID,
+							    TAX_INVC_REM,
+							    TAX_INVC_CHRG,
+							    TAX_INVC_TXS,
+							    TAX_INVC_AMT_DUE,
+							    TAX_INVC_CRT_DT,
+							    TAX_INVC_CRT_USER_ID )
+						  VALUES ( #{accTaxInvMiscSeq},
+								           #{posTaxInvRefNo},
+								           SYSDATE,
+								           #{posTaxInvSvcNo},
+								           #{posTaxInvType},
+								           #{posTaxInvCustName},
+								           #{posTaxInvCntcPerson},
+								            <!-- 추후 삭제 -->
+								          <!--  #{addr1},
+								           #{addr2},
+								           #{addr3},
+								           #{addr4},
+								           #{postCode},
+								           #{stateName},
+								           #{cnty}, -->
+
+								           #{posTaxInvTaskId},
+								           #{posTaxInvUserName},
+								           #{posTaxInvCharges},
+								           #{posTaxInvTaxes},
+								           #{posTaxInvTotalCharges},
+								           SYSDATE,
+								           #{userId}
+								           )
+    </insert>
+
+    <insert id="insertPosTaxInvcMiscSub" parameterType="Map">
+        INSERT INTO PAY0032D
+					  ( INVC_ITM_ID,
+					    TAX_INVC_ID,
+					    INVC_ITM_TYPE,
+					    INVC_ITM_ORD_NO,
+					    INVC_ITM_PO_NO,
+					    INVC_ITM_CODE,
+					    INVC_ITM_DESC1,
+					    INVC_ITM_DESC2,
+					    INVC_ITM_SERIAL_NO,
+					    INVC_ITM_QTY,
+					    INVC_ITM_UNIT_PRC,
+					    INVC_ITM_GST_RATE,
+					    INVC_ITM_GST_TXS,
+					    INVC_ITM_CHRG,
+					    INVC_ITM_AMT_DUE,
+					    <!-- 추후 삭제  Magic Address -->
+					  <!--   INVC_ITM_ADD1,
+					    INVC_ITM_ADD2,
+					    INVC_ITM_ADD3,
+					    INVC_ITM_ADD4,
+					    INVC_ITM_POST_CODE,
+					    INVC_ITM_AREA_NAME,
+					    INVC_ITM_STATE_NAME,
+					    INVC_ITM_CNTY, -->
+
+					    INVC_ITM_INSTALL_DT,
+					    INVC_ITM_RETN_DT,
+					    INVC_ITM_BILL_REF_NO )
+					  VALUES ( #{invDetailSeq},
+					           #{accTaxInvMiscSeq},
+					           #{invItemTypeID},
+					           #{posTaxInvSubOrdNo},
+					           #{posTaxInvSubItmPoNo},
+					           #{stkCode},
+					           #{stkDesc},
+					           #{posTaxInvSubDescSub},
+					           #{posTaxInvSubSerialNo},
+					           #{inputQty},
+					           #{amt},
+					           #{posTaxInvSubGSTRate},
+					           #{subChng},
+					           #{subTotal},
+					           #{totalAmt},
+					           <!-- 추후 삭제 Magic Address -->
+					          <!--  #{posTaxInvSubAddr1},
+					           #{posTaxInvSubAddr2},
+					           #{posTaxInvSubAddr3},
+					           #{posTaxInvSubAddr4},
+					           #{posTaxInvSubPostCode},
+					           #{posTaxInvSubAreaName},
+					           #{posTaxInvSubStateName},
+					           #{posTaxInvSubCntry},			 -->
+
+					           NULL,
+					           NULL,
+					           NULL )
+    </insert>
+
+    <insert id="insertStkRecord" parameterType="Map">
+		        INSERT INTO LOG0014D
+		                ( SR_CARD_ID,
+		                  LOC_ID,
+		                  STOCK_ID,
+		                  ENTRY_DT,
+		                  TYPE_ID,
+		                  REF_NO,
+		                  SALES_ORD_ID,
+		                  ITM_NO,
+		                  SRC_ID,
+		                  PRJCT_ID,
+		                  BATCH_NO,
+		                  QTY,
+		                  CURR_ID,
+		                  CURR_RATE,
+		                  COST,
+		                  PRC,
+		                  REM,
+		                  SERIAL_NO,
+		                  INSTALL_NO,
+		                  COST_DT,
+		                  APP_TYPE_ID,
+		                  STK_GRAD,
+		                  INSTALL_FAIL,
+		                  IS_SYNCH,
+		                  ENTRY_MTH_ID,
+		                  ORGN,
+		                  TRANS_TYPE,
+		                  DOC_LNE_NO,
+		                  PO_NO,
+		                  INSERT_DT,
+		                  IS_GR,
+		                  PO_STUS )
+					  VALUES ( #{stkRecordSeq},
+					           #{locId},
+					           #{stkCode},
+					           SYSDATE,
+					           #{invStkRecordTypeId},
+					           #{invStkRecordRefNo},
+					           #{invStkRecordOrdId},
+					           #{invStkRecordItmNo},
+					           #{invStkRecordSourceId},
+					           #{invStkRecordProjectId},
+					           #{invStkRecordBatchNo},
+					           #{inputQty},
+					           #{invStkRecordCurrId},
+					           #{invStkRecordCurrRate},
+					           #{invStkRecordCost},
+					           #{invStkRecordPrice},
+					           #{invStkRecordRem},
+					           #{invStkRecordSerialNo},
+					           #{invStkRecordInstallNo},
+					           SYSDATE,
+					           #{invStkRecordAppTypeId},
+					           #{invStkRecordStkGrade},
+					           #{invStkRecordInstallFail},
+					           #{invStkRecordIsSynch},
+					           #{invStkRecordEntryMthId},
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL,
+					           NULL )
+    </insert>
+
+    <insert id="insertSerialNo" parameterType="Map">
+			        INSERT INTO SAL0147M( POS_SERIAL_ID,
+			                                  POS_ID,
+			                                  POS_ITM_STOCK_ID,
+			                                  POS_SERIAL_NO,
+			                                  POS_ITM_STUS_ID,
+			                                  CRT_DT,
+			                                  CRT_USER_ID,
+			                                  UPD_DT,
+			                                  UPD_USER_ID)
+                            VALUES (  #{serialSeq},
+                                           #{posMasterSeq},
+                                           #{stkId},
+                                           #{serialNo},
+                                           NULL,
+                                           SYSDATE,
+                                           #{userId},
+                                           SYSDATE,
+                                           #{userId})
+    </insert>
+
+    <select id="getUploadMemList" parameterType="Map" resultType="egovMap">
+				SELECT
+				    T1.MEM_ID,
+                    T1.MEM_CODE,
+                    T1.NAME,
+                    T1.NRIC,
+                    T2.CODE,
+                    T1.BRNCH,
+                    T1.MEM_TYPE,
+                    T1.FULL_NAME,
+                    T1.STUS
+				 FROM
+				     ORG0001D T1 LEFT JOIN SYS0005M T2 ON T2.BRNCH_ID = T1.BRNCH
+				  <if test=" null != memberIdArr and memberIdArr.length > 0">
+				    WHERE T1.MEM_CODE IN
+				    <foreach collection="memberIdArr" item="item" open="(" separator="," close=")">
+				        #{item}
+				    </foreach>
+				  </if>
+    </select>
+
+    <!--### Reversal ###  -->
+
+    <select id="chkReveralBeforeReversal" parameterType="Map" resultType="egovMap">
+			SELECT
+			    Extent1.POS_ID POS_ID
+			FROM
+			     SAL0057D Extent1
+			     JOIN SAL0057D Extent2   ON Extent2.POS_MTCH_ID = Extent1.POS_ID
+			WHERE
+			     Extent1.POS_NO = #{reRefNo}
+			<![CDATA[
+			AND ROWNUM <= 1
+			]]>
+    </select>
+
+    <select id="posReversalDetail" parameterType="Map" resultType="egovMap">
+		        SELECT
+                        T1.POS_ID,
+                        T1.POS_NO,
+                        T1.POS_BILL_ID,
+                        T1.POS_CUST_NAME,
+                        TO_CHAR(T1.POS_DT, 'DD/MM/YYYY') POS_DT,
+                        T1.POS_TYPE_ID,
+                        T1.POS_MODULE_TYPE_ID,
+                        T1.POS_TOT_AMT,
+                        T1.POS_TOT_CHRG,
+                        T1.POS_TOT_TXS,
+                        T1.POS_TOT_DSCNT,
+                        T1.POS_WH_ID,
+                        T1.POS_REM,
+                        T1.POS_MEM_ID,
+                        T2.MEM_CODE,
+                        T1.POS_RESN_ID,
+                        T1.BRNCH_ID,
+                        T1.CR_ACC_ID,
+                        T1.DR_ACC_ID,
+                        T1.STUS_ID,
+                        T1.POS_RCV_DT,
+                        T3.CODE
+                    FROM
+                        SAL0057D T1
+                    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
+                    WHERE
+                        POS_ID = #{posId}
+                    AND
+                    <![CDATA[
+                        ROWNUM <= 1
+                     ]]>
+    </select>
+
+    <select id="getPosDetailList"  parameterType="Map" resultType="egovMap">
+            SELECT
+                T1.POS_ITM_ID,
+                T1.POS_ID,
+                T1.POS_ITM_STOCK_ID,
+                CASE WHEN T1.POS_ITM_STOCK_ID = 0 THEN 'Shipping Fee' ELSE T2.STK_DESC END AS STK_DESC,
+                T2.STK_CODE,
+                <!-- <if test=" null != filterType and '' != filterType">
+                </if> -->
+                <!-- <if test=" null != itembankType and '' != itembankType">
+                    T2.ITM_DESC STK_DESC,
+                    T2.ITM_CODE STK_CODE,
+                </if> -->
+                T1.POS_ITM_QTY QTY,
+                T1.POS_ITM_UNIT_PRC AMT,
+                T1.POS_ITM_TOT TOT,
+                T1.POS_ITM_CHRG CHRG,
+                T1.POS_ITM_TXS TXS,
+                T1.MEM_ID,
+                T1.RCV_STUS_ID,
+                T4.NAME STUS_DESC,
+                T3. POS_TYPE_ID,
+                T3.POS_MODULE_TYPE_ID
+            FROM
+                SAL0058D T1
+                LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID
+                <!-- <if test=" null != filterType and '' != filterType">
+
+                </if> -->
+                <!-- <if test=" null != itembankType and '' != itembankType">
+                    LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
+                </if> -->
+                LEFT JOIN SAL0057D T3 ON T3.POS_ID = T1.POS_ID
+                LEFT JOIN SYS0038M T4 ON T1.RCV_STUS_ID = T4.STUS_CODE_ID
+            WHERE
+               T1.POS_ID = #{rePosId}
+               <if test=" null != memId and '' != memId">
+                    AND T1.MEM_ID = #{memId}
+               </if>
+    </select>
+
+    <insert id="insertPosReversalMaster" parameterType="Map" >
+        INSERT INTO SAL0057D
+                  ( POS_ID,
+                    POS_NO,
+                    POS_BILL_ID,
+                    POS_CUST_NAME,
+                    POS_DT,
+                    POS_TYPE_ID,
+                    POS_MODULE_TYPE_ID,
+                    POS_TOT_AMT,
+                    POS_TOT_CHRG,
+                    POS_TOT_TXS,
+                    POS_TOT_DSCNT,
+                    POS_WH_ID,
+                    POS_REM,
+                    POS_MTCH_ID,
+                    POS_MEM_ID,
+                    POS_CUST_ID,
+                    POS_CRT_USER_ID,
+                    POS_CRT_DT,
+                    POS_CRT_DEPT_ID,
+                    CR_ACC_ID,
+                    DR_ACC_ID,
+                    POS_RESN_ID,
+                    BRNCH_ID,
+                    POS_RCV_DT,
+                    STUS_ID,
+                    <if test=" null != chkOth and chkOth > 0">
+                        AREA_ID ,
+                        ADDR_DTL,
+                        STREET,
+                    </if>
+                    CRT_USER_ID,
+                    CRT_DT,
+                    UPD_USER_ID,
+                    UPD_DT,
+                    POS_CRT_DEPT_CODE )
+  VALUES ( #{posMasterSeq},
+           #{docNoPsn},
+           #{posBillId},
+           #{posCustName},
+           SYSDATE,
+           #{insPosSystemType},
+           #{insPosModuleType},
+           #{posTotalAmt},
+           #{posCharge},
+           #{posTaxes},
+           #{posDiscount},
+           #{hidLocId},
+           #{posRemark},
+           #{posMtchId},
+           #{salesmanPopId},
+           #{posCustomerId},
+           #{userId},
+           SYSDATE,
+           #{userDeptId},
+           #{crAccId},
+           #{drAccId},
+           #{posReason},
+           #{cmbWhBrnchIdPop},
+           TO_DATE(#{recvDate}, 'DD/MM/YYYY HH24:MI:SS'),
+           #{posStusId},
+           <if test=" null != chkOth and chkOth > 0">
+                 #{getAreaId},
+                 #{addrDtl},
+                 #{streetDtl},
+            </if>
+            #{userId},
+           SYSDATE,
+           #{userId},
+           SYSDATE,
+           #{userDeptCode})
+    </insert>
+
+    <select id="getOldDetailList"  parameterType="Map" resultType="egovMap">
+        SELECT
+        POS_ID,
+        POS_ITM_STOCK_ID,
+        POS_ITM_QTY,
+        POS_ITM_UNIT_PRC,
+        POS_ITM_TOT,
+        POS_ITM_CHRG,
+        POS_ITM_TXS,
+        POS_ITM_TAX_CODE_ID,
+        MEM_ID,
+        MEM_CODE,
+        MEM_TYPE,
+        NAME,
+        FULL_NAME,
+        NRIC,
+        MEM_STUS_ID,
+        RCV_STUS_ID
+      FROM
+        SAL0058D
+      WHERE
+        POS_ID = #{rePosId}
+    </select>
+
+    <insert id="insertPosReversalDetail" parameterType="egovMap">
+        INSERT INTO SAL0058D
+              ( POS_ITM_ID,
+                POS_ID,
+                POS_ITM_STOCK_ID,
+                POS_ITM_QTY,
+                POS_ITM_UNIT_PRC,
+                POS_ITM_TOT,
+                POS_ITM_CHRG,
+                POS_ITM_TXS,
+                POS_ITM_TAX_CODE_ID,
+                MEM_ID,
+
+                <!-- DEDUCTION -->
+                MEM_CODE,
+                MEM_TYPE,
+                NAME,
+                FULL_NAME,
+                NRIC,
+                MEM_STUS_ID,
+
+                RCV_STUS_ID,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+              VALUES ( #{posDetailDuducSeq},
+                       #{posMasterSeq},
+                       #{posItmStockId},
+                       #{posDetailQty},
+                       #{posItmUnitPrc},
+                       #{posDetailTotal},
+                       #{posDetailCharge},
+                       #{posDetailTaxs},
+                       #{posItmTaxCodeId},
+                       #{memId},
+                       <choose>
+                            <when test=" null != memCode and '' != memCode">
+                                #{memCode},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       <choose>
+                            <when test=" null != memType and '' != memType">
+                                #{memType},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       <choose>
+                            <when test=" null != name and '' != name">
+                                #{name},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       <choose>
+                            <when test=" null != fullName and '' != fullName">
+                                #{fullName},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       <choose>
+                            <when test=" null != nric and '' != nric">
+                                #{nric},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       <choose>
+                            <when test=" null != stus and '' != stus">
+                                #{stus},
+                            </when>
+                            <otherwise>
+                                NULL,
+                            </otherwise>
+                       </choose>
+                       #{posRcvStusId},
+                       #{userId},
+                       SYSDATE,
+                       #{userId},
+                       SYSDATE)
+    </insert>
+
+    <select id="getBillInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            BILL_ID,
+            BILL_TYPE_ID,
+            BILL_SO_ID,
+            BILL_MEM_ID,
+            BILL_AS_ID,
+            BILL_PAY_TYPE_ID,
+            BILL_NO,
+            BILL_MEM_SHIP_NO,
+            BILL_DT,
+            BILL_AMT,
+            BILL_REM,
+            BILL_IS_PAID,
+            BILL_IS_COMM,
+            UPD_USER_ID,
+            UPD_DT,
+            SYNC_CHK,
+            COURS_ID,
+            STUS_ID
+        FROM
+          PAY0007D
+        WHERE
+          BILL_ID = #{rePosBillId}
+        AND
+          <![CDATA[
+          ROWNUM <= 1
+          ]]>
+    </select>
+
+    <insert id="insertPosReversalBilling"  parameterType="Map">
+                INSERT INTO PAY0007D
+                  ( BILL_ID,
+                    BILL_TYPE_ID,
+                    BILL_SO_ID,
+                    BILL_MEM_ID,
+                    BILL_AS_ID,
+                    BILL_PAY_TYPE_ID,
+                    BILL_NO,
+                    BILL_MEM_SHIP_NO,
+                    BILL_DT,
+                    BILL_AMT,
+                    BILL_REM,
+                    BILL_IS_PAID,
+                    BILL_IS_COMM,
+                    UPD_USER_ID,
+                    UPD_DT,
+                    SYNC_CHK,
+                    COURS_ID,
+                    STUS_ID )
+                  VALUES ( #{posBillSeq},
+                           #{billTypeId},
+                           #{billSoId},
+                           #{billMemId},
+                           #{billAsId},
+                           #{billPayTypeId},
+                           #{docNoPsn},
+                           #{billMemShipNo},
+                           SYSDATE,
+                           #{billAmt},
+                           #{billRem},
+                           #{billIsPaid},
+                           #{billIsComm},
+                           #{userId},
+                           SYSDATE,
+                           #{syncChk},
+                           #{coursId},
+                           #{stusId})
+    </insert>
+
+    <select id="getTaxInvoiceMisc" parameterType="Map" resultType="egovMap">
+			     SELECT
+			        TAX_INVC_ID,
+			        TAX_INVC_REF_NO,
+			        TAX_INVC_REF_DT,
+			        TAX_INVC_SVC_NO,
+			        TAX_INVC_TYPE,
+			        TAX_INVC_CUST_NAME,
+			        TAX_INVC_CNTC_PERSON,
+			        TAX_INVC_TASK_ID,
+			        TAX_INVC_REM,
+			        TAX_INVC_CHRG,
+			        TAX_INVC_TXS,
+			        TAX_INVC_AMT_DUE,
+			        TAX_INVC_CRT_DT,
+			        TAX_INVC_CRT_USER_ID
+			    FROM
+			        PAY0031D
+			    WHERE
+			        TAX_INVC_SVC_NO = #{rePosNo}
+			    AND
+			        <![CDATA[
+			        ROWNUM <= 1
+			        ]]>
+    </select>
+
+    <select id="getAccOrderBill" parameterType="Map" resultType="egovMap">
+			  SELECT Extent1.ACC_BILL_ID   ,
+			       Extent1.ACC_BILL_TASK_ID   ,
+			       Extent1.ACC_BILL_REF_DT   ,
+			       Extent1.ACC_BILL_REF_NO   ,
+			       Extent1.ACC_BILL_ORD_ID   ,
+			       Extent1.ACC_BILL_ORD_NO   ,
+			       Extent1.ACC_BILL_TYPE_ID   ,
+			       Extent1.ACC_BILL_MODE_ID   ,
+			       Extent1.ACC_BILL_SCHDUL_ID   ,
+			       Extent1.ACC_BILL_SCHDUL_PRIOD   ,
+			       Extent1.ACC_BILL_ADJ_ID   ,
+			       Extent1.ACC_BILL_SCHDUL_AMT   ,
+			       Extent1.ACC_BILL_ADJ_AMT   ,
+			       Extent1.ACC_BILL_TXS_AMT   ,
+			       Extent1.ACC_BILL_NET_AMT   ,
+			       Extent1.ACC_BILL_STUS   ,
+			       Extent1.ACC_BILL_REM   ,
+			       Extent1.ACC_BILL_CRT_DT   ,
+			       Extent1.ACC_BILL_CRT_USER_ID   ,
+			       Extent1.ACC_BILL_GRP_ID   ,
+			       Extent1.ACC_BILL_TAX_CODE_ID   ,
+			       Extent1.ACC_BILL_TAX_RATE   ,
+			       Extent1.ACC_BILL_ACCT_CNVR   ,
+			       Extent1.ACC_BILL_CNTRCT_ID
+			  FROM
+			       PAY0016D Extent1
+			  WHERE
+			       Extent1.ACC_BILL_REM = #{taxInvcRefNo}
+			  AND
+			       <![CDATA[
+			       ROWNUM <= 1
+			       ]]>
+    </select>
+
+    <update id="updateAccOrderBillingWithPosReversal"  parameterType="Map">
+			UPDATE
+			    PAY0016D
+			SET
+			    ACC_BILL_STUS = #{accBillStatus}
+			WHERE
+			    ACC_BILL_ID = #{accBillId}
+			AND
+			    ACC_BILL_TASK_ID = #{accBillTaskId}
+    </update>
+
+     <update id="updateLOG0106MDetail"  parameterType="Map">
+	     UPDATE
+	           LOG0106M
+	     SET
+	           ITEM_INV_QTY = ITEM_INV_QTY - #{posDetailQty}
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{userId}
+	     WHERE LOC_ID = #{locId} AND ITEM_CODE = #{posItmStockId}
+     </update>
+
+    <select id="getSeqPay0011D" resultType="java.lang.Integer">
+         SELECT PAY0011D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertInvAdjMemo"  parameterType="Map">
+				INSERT INTO PAY0011D
+						    ( MEMO_ADJ_ID,
+						      MEMO_ADJ_REF_NO,
+						      MEMO_ADJ_RPT_NO,
+						      MEMO_ADJ_TYPE_ID,
+						      MEMO_ADJ_INVC_NO,
+						      MEMO_ADJ_INVC_TYPE_ID,
+						      MEMO_ADJ_STUS_ID,
+						      MEMO_ADJ_RESN_ID,
+						      MEMO_ADJ_REM,
+						      MEMO_ADJ_TXS_AMT,
+						      MEMO_ADJ_TOT_AMT,
+						      MEMO_ADJ_CRT_DT,
+						      MEMO_ADJ_CRT_USER_ID,
+						      MEMO_ADJ_UPD_DT,
+						      MEMO_ADJ_UPD_USER_ID )
+						  VALUES ( #{memoAdjSeq},
+								        #{memoAdjRefNo},
+							            #{memoAdjReptNo},
+							            #{memoAdjTypeId},
+							            #{memoAdjInvNo},
+							            #{memoAdjInvTypeId},
+							            #{memoAdjStatusId},
+							            #{memoAdjReasonId},
+							            #{memoAdjRem},
+							            #{memoAdjTotTxs},
+							            #{memoAdjTotAmt},
+							            SYSDATE,
+							            #{userId},
+							            SYSDATE,
+							            #{userId})
+    </insert>
+
+    <select id="getSeqPay0027D" resultType="java.lang.Integer">
+        SELECT PAY0027D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertTaxDebitCreditNote"  parameterType="Map">
+        INSERT INTO PAY0027D
+            ( NOTE_ID,
+              NOTE_ENTRY_ID,
+              NOTE_TYPE_ID,
+              NOTE_GRP_NO,
+              NOTE_REF_NO,
+              NOTE_REF_DT,
+              NOTE_INVC_NO,
+              NOTE_INVC_TYPE_ID,
+              NOTE_CUST_NAME,
+              NOTE_CNTC_PERSON,
+              <!-- Magic Address  미반영 추후 삭제  -->
+             <!--  NOTE_ADDR1,
+              NOTE_ADDR2,
+              NOTE_ADDR3,
+              NOTE_ADDR4,
+              NOTE_POST_CODE,
+              NOTE_AREA_NAME,
+              NOTE_STATE_NAME,
+              NOTE_CNTY_NAME, -->
+
+              NOTE_TXS,
+              NOTE_CHRG,
+              NOTE_AMT_DUE,
+              NOTE_REM,
+              NOTE_STUS_ID,
+              NOTE_CRT_DT,
+              NOTE_CRT_USER_ID )
+  VALUES (    #{noteSeq},
+		           #{memoAdjSeq},
+		           #{noteTypeId},
+		           #{noteGrpNo},
+		           #{noteRefNo},
+		           #{noteRefDate},
+		           #{noteInvNo},
+		           #{noteInvTypeId},
+		           #{noteInvCustName},
+		           #{noteCntcPerson},
+		           <!--Magic Address  미반영, 추후 삭제  -->
+		          <!--  '',
+		           '',
+		           '',
+		           '',
+		           '',
+		           '',
+		           '',
+		           '', -->
+
+		           #{noteInvTxs},
+		           #{noteInvChrg},
+		           #{noteInvAmt},
+		           #{noteRem},
+		           #{noteStatusId},
+		           SYSDATE,
+		           #{userId})
+    </insert>
+
+    <select id="getMiscSubList" parameterType="Map" resultType="egovMap">
+			  SELECT Extent1.INVC_ITM_ID   ,
+			       Extent1.TAX_INVC_ID   ,
+			       Extent1.INVC_ITM_TYPE   ,
+			       Extent1.INVC_ITM_ORD_NO   ,
+			       Extent1.INVC_ITM_PO_NO   ,
+			       Extent1.INVC_ITM_CODE   ,
+			       Extent1.INVC_ITM_DESC1   ,
+			       Extent1.INVC_ITM_DESC2   ,
+			       Extent1.INVC_ITM_SERIAL_NO   ,
+			       Extent1.INVC_ITM_QTY   ,
+			       Extent1.INVC_ITM_UNIT_PRC   ,
+			       Extent1.INVC_ITM_GST_RATE   ,
+			       Extent1.INVC_ITM_GST_TXS   ,
+			       Extent1.INVC_ITM_CHRG   ,
+			       Extent1.INVC_ITM_AMT_DUE   ,
+
+			      <!--  Extent1.INVC_ITM_ADD1   ,
+			       Extent1.INVC_ITM_ADD2   ,
+			       Extent1.INVC_ITM_ADD3   ,
+			       Extent1.INVC_ITM_ADD4   ,
+			       Extent1.INVC_ITM_POST_CODE   ,
+			       Extent1.INVC_ITM_AREA_NAME   ,
+			       Extent1.INVC_ITM_STATE_NAME   ,
+			       Extent1.INVC_ITM_CNTY   , -->
+
+			       Extent1.INVC_ITM_INSTALL_DT   ,
+			       Extent1.INVC_ITM_RETN_DT   ,
+			       Extent1.INVC_ITM_BILL_REF_NO
+			  FROM PAY0032D Extent1
+			 WHERE  Extent1.TAX_INVC_ID = #{taxInvcId}
+    </select>
+
+    <select id="getSeqPay0012D" resultType="java.lang.Integer">
+        SELECT PAY0012D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertInvAdjMemoSub"  parameterType="Map">
+        INSERT INTO PAY0012D
+                ( MEMO_ITM_ID,
+                  MEMO_ADJ_ID,
+                  MEMO_ITM_INVC_ITM_ID,
+                  MEMO_ITM_INVC_ITM_QTY,
+                  MEMO_ITM_CRDIT_ACC_ID,
+                  MEMO_ITM_DEBT_ACC_ID,
+                  MEMO_ITM_TAX_CODE_ID,
+                  MEMO_ITM_STUS_ID,
+                  MEMO_ITM_REM,
+                  MEMO_ITM_GST_RATE,
+                  MEMO_ITM_CHRG,
+                  MEMO_ITM_TXS,
+                  MEMO_ITM_AMT )
+        VALUES ( #{miscSubSeq},
+                     #{memoAdjSeq},
+	                 #{memoSubItmInvItmId},
+	                 #{memoSubItmInvItmQty},
+	                 #{memoSubItmCrditAccId},
+	                 #{memoSubItmDebtAccId},
+	                 #{memoSubItmTaxCodeId},
+	                 #{memoSubItmStusId},
+	                 #{memoSubItmRem},
+	                 #{memoSubItmInvItmGSTRate},
+	                 #{memoSubItmInvItmCharges},
+	                 #{memoSubItmInvItmTaxes},
+	                 #{memoSubItmInvItmAmount} )
+    </insert>
+
+    <select id="getSeqPay0028D" resultType="java.lang.Integer">
+        SELECT PAY0028D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertTaxDebitCreditNoteSub" parameterType="Map">
+        INSERT INTO PAY0028D (  NOTE_ITM_ID,
+					                        NOTE_ID,
+					                        NOTE_ITM_INVC_ITM_ID,
+					                        NOTE_ITM_ORD_NO,
+					                        NOTE_ITM_PRODUCT_MODEL,
+					                        NOTE_ITM_SERIAL_NO,
+					                        NOTE_ITM_INSTALL_DT,
+
+					                       <!--
+					                        NOTE_ITM_ADD1,
+					                        NOTE_ITM_ADD2,
+					                        NOTE_ITM_ADD3,
+					                        NOTE_ITM_ADD4,
+					                        NOTE_ITM_POST_CODE,
+					                        NOTE_ITM_AREA_NAME,
+					                        NOTE_ITM_STATE_NAME,
+					                        NOTE_ITM_CNTY, -->
+
+					                        NOTE_ITM_QTY,
+					                        NOTE_ITM_UNIT_PRC,
+					                        NOTE_ITM_GST_RATE,
+					                        NOTE_ITM_GST_TXS,
+					                        NOTE_ITM_CHRG,
+					                        NOTE_ITM_DUE_AMT)
+					         VALUES (   #{noteSubSeq},
+						                    #{noteSeq},
+						                    #{noteSubItmId},
+						                    #{noteSubOrdNo},
+						                    #{noteSubItmProductModel},
+						                    #{noteSubItmSerialNo},
+						                    #{noteSubItmInstDt},
+						                    <!-- V_5,
+						                    V_6,
+						                    V_7,
+						                    NULL,
+						                    V_8,
+						                    NULL,
+						                    V_9,
+						                    V_10, -->
+						                    #{noteSubItmQty},
+						                    #{noteSubItmUnitPrc},
+						                    #{noteSubItmGstRate},
+						                    #{noteSubItmGstTxs},
+						                    #{noteSubItmChrg},
+						                    #{noteSubItmDueAmt})
+    </insert>
+
+    <select id="getSeqPay0017D" resultType="java.lang.Integer">
+        SELECT PAY0017D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertAccOrderVoidInv" parameterType="Map">
+        INSERT INTO PAY0017D (  ACC_INV_VOID_ID,
+					                        ACC_INV_VOID_REF_NO,
+					                        ACC_INV_VOID_INVC_NO,
+					                        ACC_INV_VOID_INVC_AMT,
+					                        ACC_INV_VOID_REM,
+					                        ACC_INV_VOID_STUS_ID,
+					                        ACC_INV_VOID_CRT_USER_ID,
+					                        ACC_INV_VOID_CRT_DT )
+						     VALUES ( #{ordVoidSeq},
+								              #{voidNo},
+								              #{accInvVoidRefNo},
+								              #{accInvVoidInvcAmt},
+								              #{accInvVoidRem},
+								              #{accInvVoidStausId},
+								              #{userId},
+								              SYSDATE)
+    </insert>
+
+     <select id="getSeqPay0018D" resultType="java.lang.Integer">
+        SELECT PAY0018D_SEQ.NEXTVAL FROM DUAL
+      </select>
+
+    <insert id="insertAccOrderVoidInvSub" parameterType="Map">
+        INSERT INTO PAY0018D (  ACC_INV_VOID_SUB_ID,
+					                        ACC_INV_VOID_ID,
+					                        ACC_INV_VOID_SUB_ORD_ID,
+					                        ACC_INV_VOID_SUB_BILL_ID,
+					                        ACC_INV_VOID_SUB_BILL_AMT,
+					                        ACC_INV_VOID_SUB_CRDIT_NOTE,
+					                        ACC_INV_VOID_SUB_CRDIT_NOTE_ID,
+					                        ACC_INV_VOID_SUB_REM)
+						       VALUES ( #{ordVoidSubSeq},
+								                #{ordVoidSeq},
+								                #{ordVoidSubOrdId},
+								                #{ordVoidSubBillId},
+								                #{ordVoidSubBillAmt},
+								                #{ordVoidSubCrditNote},
+								                #{ordVoidSubCrditNoteId},
+								                #{ordVoidSubRem})
+	</insert>
+
+	<select id="selectStkCardRecordList"  parameterType="Map" resultType="egovMap">
+				  SELECT Extent1.SR_CARD_ID   ,
+				       Extent1.LOC_ID   ,
+				       Extent1.STOCK_ID   ,
+				       Extent1.ENTRY_DT   ,
+				       Extent1.TYPE_ID   ,
+				       Extent1.REF_NO   ,
+				       Extent1.SALES_ORD_ID   ,
+				       Extent1.ITM_NO   ,
+				       Extent1.SRC_ID   ,
+				       Extent1.PRJCT_ID   ,
+				       Extent1.BATCH_NO   ,
+				       Extent1.QTY   ,
+				       Extent1.CURR_ID   ,
+				       Extent1.CURR_RATE   ,
+				       Extent1.COST   ,
+				       Extent1.PRC   ,
+				       Extent1.REM   ,
+				       Extent1.SERIAL_NO   ,
+				       Extent1.INSTALL_NO   ,
+				       Extent1.COST_DT   ,
+				       Extent1.APP_TYPE_ID   ,
+				       Extent1.STK_GRAD   ,
+				       Extent1.INSTALL_FAIL   ,
+				       Extent1.IS_SYNCH   ,
+				       Extent1.ENTRY_MTH_ID   ,
+				       Extent1.ORGN   ,
+				       Extent1.TRANS_TYPE   ,
+				       Extent1.DOC_LNE_NO   ,
+				       Extent1.PO_NO   ,
+				       Extent1.INSERT_DT   ,
+				       Extent1.IS_GR   ,
+				       Extent1.PO_STUS
+				  FROM LOG0014D Extent1
+				 WHERE  Extent1.REF_NO = #{rePosNo}
+	</select>
+
+	<insert id="insertStkCardRecordReversal" parameterType="egovMap">
+	   INSERT INTO LOG0014D (  SR_CARD_ID,
+					                        LOC_ID,
+					                        STOCK_ID,
+					                        ENTRY_DT,
+					                        TYPE_ID,
+					                        REF_NO,
+					                        SALES_ORD_ID,
+					                        ITM_NO,
+					                        SRC_ID,
+					                        PRJCT_ID,
+					                        BATCH_NO,
+					                        QTY,
+					                        CURR_ID,
+					                        CURR_RATE,
+					                        COST,
+					                        PRC,
+					                        REM,
+					                        SERIAL_NO,
+					                        INSTALL_NO,
+					                        COST_DT,
+					                        APP_TYPE_ID,
+					                        STK_GRAD,
+					                        INSTALL_FAIL,
+					                        IS_SYNCH,
+					                        ENTRY_MTH_ID,
+					                        ORGN,
+					                        TRANS_TYPE,
+					                        DOC_LNE_NO,
+					                        PO_NO,
+					                        INSERT_DT,
+					                        IS_GR,
+					                        PO_STUS)
+				              VALUES (     #{stkSeq} ,
+						                        #{locId},
+						                        #{stockId},
+						                        SYSDATE,
+						                        #{typeId},
+						                        #{posRefNo},
+						                        #{salesOrdId},
+						                        #{itemNo},
+						                        #{srcId},
+						                        #{prjctId},
+						                        #{batchNo},
+						                        #{stkTempQty},
+						                        #{currId},
+						                        #{currRate},
+						                        #{cost},
+						                        #{prc},
+						                        #{stkRem},
+						                        #{serialNo},
+						                        #{installNo},
+						                        SYSDATE,
+						                        #{appTypeId},
+						                        #{stkGrad},
+						                        #{installFail},
+						                        #{isSynch},
+						                        #{entryMthId},
+						                        NULL,
+						                        NULL,
+						                        NULL,
+						                        NULL,
+						                        NULL,
+						                        NULL,
+						                        NULL)
+	</insert>
+
+	<select id="getPurchMemList"  parameterType="Map" resultType="egovMap">
+				SELECT
+				    Project1.MEM_ID,
+				    Project1.RCV_STUS_ID,
+				    Project1.MEM_CODE,
+				    Project1.NAME,
+				    Project1.NRIC,
+				    Project1.MEM_STUS_ID,
+				    Project1.BRNCH_ID,
+				    Project1.CODE,
+				    Project1.POS_ID,
+				    Project1.POS_TYPE_ID
+				  FROM ( SELECT T1.MEM_ID,
+				                T1.RCV_STUS_ID,
+				                ROW_NUMBER() OVER(PARTITION BY MEM_ID ORDER BY RCV_STUS_ID DESC) AS ROW_NUM,
+				                MAX(T1.MEM_CODE) AS MEM_CODE,
+				                MAX(T1.NAME) AS NAME,
+				                MAX(T1.NRIC) AS NRIC,
+				                MAX(T1.MEM_STUS_ID) AS MEM_STUS_ID,
+				                MAX(T2.BRNCH_ID) AS BRNCH_ID,
+				                MAX(T3.CODE) AS CODE ,
+				                MAX(T1.POS_ID) AS POS_ID,
+				                MAX(T2.POS_TYPE_ID) AS POS_TYPE_ID
+				           FROM SAL0058D T1
+				                JOIN SAL0057D T2 ON T2.POS_ID = T1.POS_ID
+				                JOIN SYS0005M T3 ON T2.BRNCH_ID = T3.BRNCH_ID
+				          WHERE T1.POS_ID = #{rePosId}
+				          GROUP BY MEM_ID, RCV_STUS_ID ) Project1
+				 WHERE Project1.ROW_NUM = 1
+	</select>
+
+
+	<update id="updatePosMStatus"  parameterType="posMasterVO">
+	   UPDATE
+	        SAL0057D
+	   SET
+	        STUS_ID = #{stusId},
+	        UPD_DT = SYSDATE
+	   WHERE
+	        POS_ID = #{posId}
+	</update>
+
+	<update id="updatePosDStatus" parameterType="posMasterVO">
+	   UPDATE
+	       SAL0058D
+	   SET
+	       RCV_STUS_ID = #{changeStatus},
+	       UPD_DT = SYSDATE
+	   WHERE
+	       POS_ID = #{posId}
+	</update>
+
+
+	<select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        SELECT T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+             , T.STUS
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID,
+                    T1.STUS
+               FROM ORG0001D T1
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+
+    <update id="updatePosDStatusByPosItmId"   parameterType="posDetailVO">
+       UPDATE
+            SAL0058D
+       SET
+            RCV_STUS_ID = #{rcvStusId}
+       WHERE
+            POS_ITM_ID = #{posItmId}
+    </update>
+
+    <select id="updatePosMemStatus" parameterType="posMemberVO">
+        UPDATE
+            SAL0058D
+       SET
+            RCV_STUS_ID = #{rcvStusId}
+       WHERE
+            POS_ID = #{posId}
+       AND
+            MEM_ID = #{memId}
+    </select>
+
+    <resultMap type="egovMap" id="bookMap"/>
+
+    <select id="posBookingCallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[
+            {
+                  call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,'',#{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
+            }
+         ]]>
+      </select>
+
+
+       <resultMap type="egovMap" id="giMap"/>
+       <select id="posGICallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[
+            {
+                  call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=giMap})
+            }
+         ]]>
+      </select>
+
+    <!-- PAYMENT START -->
+
+    <insert id="insertPayTrx" parameterType="Map">
+				INSERT INTO  PAY0069D
+				       (
+				        TRX_ID,
+				        TRX_DT,
+				        TRX_TYPE,
+				        TRX_AMT,
+				        TRX_MTCH_NO
+				        )
+				VALUES (
+				         #{trxSeq},
+				         SYSDATE,
+				         #{trxType},
+				         #{trxAmt},
+				         #{trxMatchNo}
+				        )
+    </insert>
+
+    <insert id="insertPayMaster" parameterType="Map">
+		     INSERT INTO PAY0064D
+		            ( PAY_ID,
+		              OR_NO,
+		              SALES_ORD_ID,
+		              BILL_ID,
+		              TR_NO,
+		              TYPE_ID,
+		              PAY_DATA,
+		              BANK_CHG_AMT,
+		              BANK_CHG_ACC_ID,
+		              COLL_MEM_ID,
+		              BRNCH_ID,
+		              BANK_ACC_ID,
+		              ALLOW_COMM,
+		              STUS_CODE_ID,
+		              UPD_USER_ID,
+		              UPD_DT,
+		              SYNC_HECK,
+		              CUST_ID_3PARTY,
+		              TOT_AMT,
+		              MTCH_ID,
+		              CRT_USER_ID,
+		              CRT_DT,
+		              IS_ALLOW_REV_MULTI,
+		              IS_GL_POST_CLM,
+		              GL_POST_CLM_DT,
+		              TRX_ID,
+		              ADV_MONTH,
+		              ACC_BILL_ID,
+		              TR_ISSU_DT,
+		              TAX_INVC_IS_GEN,
+		              TAX_INVC_REF_NO,
+		              TAX_INVC_REF_DT,
+		              SVC_CNTRCT_ID,
+		              BATCH_PAY_ID )
+		  VALUES (  #{payMseq},
+			            #{orNo},
+			            #{salesOrdId},
+			            #{billId},
+			            #{trNo},
+			            #{typeId},
+			            SYSDATE,
+			            #{bankChgAmt},
+			            #{bankChgAccId},
+			            #{collMemId},
+			            #{brnchId},
+			            #{bankAccId},
+			            #{allowComm},
+			            #{stusCodeId},
+			            #{updUserId},
+			            SYSDATE,
+			            #{syncCheck},
+			            #{thirdPartyCustId},
+			            #{totAmt},
+			            #{matchId},
+			            #{crtUserId},
+			            SYSDATE,
+			            #{isAllowRevMulti},
+			            #{isGlPostClm},
+			            TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),
+			            #{trxSeq},
+			            #{advMonth},
+			            #{orderBillId},
+			            TO_DATE(#{trIssuDt}, 'DD/MM/YYYY'),
+			            #{payInvIsGen},
+			            #{taxInvcRefNo},
+			            SYSDATE,
+			            #{svcCntrctId},
+			            #{batchPayId})
+    </insert>
+
+     <insert id="insertAccGlRoute" parameterType="Map">
+        INSERT INTO PAY0009D (  ID,
+					                        GL_POSTNG_DT,
+					                        GL_FISCAL_DT,
+					                        GL_BATCH_NO,
+					                        GL_BATCH_TYPE_DESC,
+					                        GL_BATCH_TOT,
+					                        GL_RECIPT_NO,
+					                        GL_RECIPT_TYPE_ID,
+					                        GL_RECIPT_BRNCH_ID,
+					                        GL_RECIPT_SETL_ACC_ID,
+					                        GL_RECIPT_ACC_ID,
+					                        GL_RECIPT_ITM_ID,
+					                        GL_RECIPT_ITM_MODE_ID,
+					                        GL_REVRS_RECIPT_ITM_ID,
+					                        GL_RECIPT_ITM_AMT,
+					                        GL_RECIPT_ITM_CHRG,
+					                        GL_RECIPT_ITM_RCL_STUS,
+					                        GL_JRNL_NO,
+					                        GL_AUDIT_REF,
+					                        GL_CNVR_STUS,
+					                        GL_CNVR_DT)
+					       VALUES ( #{glSeq},
+								                SYSDATE,
+								                TO_DATE(#{glFisCalDate}, 'DD/MM/YYYY'),
+								                #{glBatchNo},
+								                #{glBatchTypeDesc},
+								                #{glBatchTotal},
+								                #{glReceiptNo},
+								                #{glReceiptTypeId},
+								                #{glReceiptBranchId},
+								                #{glReceiptSettleAccId},
+								                #{glReceiptAccountId},
+								                #{glReceiptItemId},
+								                #{glReceiptItemModeId},
+								                #{glReverseReceiptItemId},
+								                #{glReceiptItemAmount},
+								                #{glReceiptItemCharges},
+								                #{glReceiptItemRclStatus},
+								                NULL,
+								                NULL,
+								                #{glConversionStatus},
+								                NULL)
+     </insert>
+     <insert id="insertPayDetail" parameterType="Map">
+		 INSERT INTO PAY0065D
+		        ( PAY_ITM_ID,
+		          PAY_ID,
+		          PAY_ITM_MODE_ID,
+		          PAY_ITM_REF_NO,
+		          PAY_ITM_CC_NO,
+		          PAY_ITM_ORI_CC_NO,
+		          PAY_ITM_ENCRYPT_CC_NO,
+		          PAY_ITM_CC_TYPE_ID,
+		          PAY_ITM_CHQ_NO,
+		          PAY_ITM_ISSU_BANK_ID,
+		          PAY_ITM_AMT,
+		          PAY_ITM_IS_ONLINE,
+		          PAY_ITM_BANK_ACC_ID,
+		          PAY_ITM_REF_DT,
+		          PAY_ITM_APPV_NO,
+		          PAY_ITM_REM,
+		          PAY_ITM_STUS_ID,
+		          PAY_ITM_IS_LOK,
+		          PAY_ITM_CC_HOLDER_NAME,
+		          PAY_ITM_CC_EXPR_DT,
+		          PAY_ITM_BANK_CHRG_AMT,
+		          PAY_ITM_IS_THRD_PARTY,
+		          PAY_ITM_THRD_PARTY_IC,
+		          PAY_ITM_BANK_BRNCH_ID,
+		          PAY_ITM_BANK_IN_SLIP_NO,
+		          PAY_ITM_EFT_NO,
+		          PAY_ITM_CHQ_DEP_RECIPT_NO,
+		          ETC1,
+		          ETC2,
+		          ETC3,
+		          PAY_ITM_MID,
+		          PAY_ITM_GRP_ID,
+		          PAY_ITM_REF_ITM_ID,
+		          PAY_ITM_BANK_CHRG_ACC_ID,
+		          PAY_ITM_RUNNG_NO,
+		          UPD_USER_ID,
+		          UPD_DT,
+		          IS_FUND_TRNSFR,
+		          SKIP_RECON,
+		          PAY_ITM_CARD_TYPE_ID,
+		          PAY_ITM_CARD_MODE_ID )
+		  VALUES ( #{payItemId},
+		               #{payId},
+			           #{payMode},
+			           #{transactionRefNo},
+			           #{payCreditCardNo},
+			           #{payCreditCardNo},
+			           NULL,
+			           #{payCrcType},
+			           NULL,
+			           #{payIssueBank},
+			           #{payAmt},
+			           #{payCrcMode},
+			           #{payBankAccount},
+			           TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
+			           #{payApprovNo},
+			           #{payRem},
+			           #{payItmStusId},
+			           #{payItmIsLok},
+			           NULL,
+			           NULL,
+			           NULL,
+			           #{payItmIsThirdParty},
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           NULL,
+			           #{isFundTrnsfr},
+			           #{skipRecon},
+			           NULL,
+			           NULL )
+     </insert>
+
+
+      <select id="getpayBranchList" resultType="egovMap">
+				SELECT
+				           Project1.CODE_ID,
+				           Project1.CODE_NAME
+				FROM ( SELECT
+				                      Extent1.BRNCH_ID CODE_ID,
+				                      Extent1.CODE || '-' || Extent1.NAME CODE_NAME
+				             FROM
+				                      SYS0005M Extent1
+				           WHERE
+				                      1 = Extent1.STUS_ID ) Project1
+				ORDER BY
+				           Project1.CODE_NAME ASC
+      </select>
+
+      <select id="getDebtorAccList" parameterType="Map" resultType="egovMap">
+				  SELECT
+				       Extent1.ACC_ID CODE_ID  ,
+				       Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME
+				  FROM
+				       SYS0001M Extent1
+				 WHERE
+				      Extent1.ACC_CODE = #{accCode}
+      </select>
+
+      <select id="getBankAccountList" parameterType="Map" resultType="egovMap">
+
+				   SELECT Project1.CODE_ID,
+				       Project1.CODE_NAME,
+				       Project1.ACC_DESC
+				  FROM ( SELECT Extent1.ACC_ID CODE_ID  ,
+				                Extent1.ACC_CODE ACC_CODE  ,
+				                Extent1.ACC_DESC   ,
+				                Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME
+				         FROM SYS0001M Extent1
+				          WHERE
+				            1 = 1
+				         <if test=" null != isCash and '' != isCash">
+				                   <![CDATA[
+				                   AND ( 1 = Extent1.ACC_STUS_ID )
+				                   AND ( 1 = Extent1.IS_PAY_CASH )
+				                   AND ( '2221/000' <> Extent1.ACC_CODE )
+				                   AND ( '3220/000' <> Extent1.ACC_CODE )
+				                   AND ( '3221/001' <> Extent1.ACC_CODE )
+				                   AND ( '3221/006' <> Extent1.ACC_CODE )
+				                   AND ( '3221/009' <> Extent1.ACC_CODE )
+				                   AND ( '3233/000' <> Extent1.ACC_CODE )
+				                   AND ( '7090/000' <> Extent1.ACC_CODE )
+				                   AND ( '9020/003' <> Extent1.ACC_CODE )
+				                   AND ( '9048/003' <> Extent1.ACC_CODE )
+				                   AND ( '9049/000' <> Extent1.ACC_CODE )
+				                   AND ( '9101/001' <> Extent1.ACC_CODE )
+				                   AND ( '9301/000' <> Extent1.ACC_CODE )
+				                   AND ( '9326/000' <> Extent1.ACC_CODE )
+				                   AND ( '9999/999' <> Extent1.ACC_CODE )
+				                   ]]>
+				          </if>
+
+				          <if test=" null != isDeduc and '' != isDeduc">
+				                    AND '2136/000' = Extent1.ACC_CODE
+				          </if>
+				                   ) Project1
+				  ORDER BY Project1.ACC_CODE ASC
+
+      </select>
+
+      <select id="selectAccountIdByBranchId"  parameterType="Map" resultType="egovMap">
+			 SELECT Extent2.ACC_ID   ,
+			       Extent2.SAP_ACC_CODE   ,
+			       Extent2.ACC_CODE   ,
+			       Extent2.ACC_DESC   ,
+			       Extent2.ACC_GRP   ,
+			       Extent2.ACC_TYPE   ,
+			       Extent2.ACC_CURR_ID   ,
+			       Extent2.ACC_LINK   ,
+			       Extent2.ACC_IS_MFG   ,
+			       Extent2.ACC_PAY_TYPE_ID   ,
+			       Extent2.ACC_ADDR1   ,
+			       Extent2.ACC_ADDR2   ,
+			       Extent2.ACC_ADDR3   ,
+			       Extent2.ACC_ADD_POST_CODE_ID   ,
+			       Extent2.ACC_ADD_AREA_ID   ,
+			       Extent2.ACC_ADD_STATE_ID   ,
+			       Extent2.ACC_ADD_CNTY_ID   ,
+			       Extent2.ACC_TEL_NO1   ,
+			       Extent2.ACC_TEL_NO2   ,
+			       Extent2.ACC_CRT_USER_ID   ,
+			       Extent2.ACC_CRT_DT   ,
+			       Extent2.ACC_UPD_USER_ID   ,
+			       Extent2.ACC_UPD_DT   ,
+			       Extent2.ACC_STUS_ID   ,
+			       Extent2.IS_PAY_CASH   ,
+			       Extent2.IS_PAY_ONLINE   ,
+			       Extent2.IS_PAY_CHQ   ,
+			       Extent2.IS_PAY_CRC
+			  FROM SYS0006D Extent1
+			         JOIN SYS0001M Extent2   ON Extent1.BRNCH_BANK_CNTRL_ACC_ID = Extent2.ACC_ID
+			 WHERE  ( Extent1.BRNCH_BANK_CNTRL_BRNCH_ID = #{brnchId} )
+			          AND ( 1 = Extent1.BRNCH_BANK_CNTRL_STUS_ID )
+			          <![CDATA[
+			          AND ROWNUM <= 1
+			          ]]>
+      </select>
+
+      <select id="isPaymentKnowOffByPOSNo" parameterType="Map" resultType="egovMap">
+			 SELECT Extent4.ID   ,
+			       Extent4.GL_POSTNG_DT   ,
+			       Extent4.GL_FISCAL_DT   ,
+			       Extent4.GL_BATCH_NO   ,
+			       Extent4.GL_BATCH_TYPE_DESC   ,
+			       Extent4.GL_BATCH_TOT   ,
+			       Extent4.GL_RECIPT_NO   ,
+			       Extent4.GL_RECIPT_TYPE_ID   ,
+			       Extent4.GL_RECIPT_BRNCH_ID   ,
+			       Extent4.GL_RECIPT_SETL_ACC_ID   ,
+			       Extent4.GL_RECIPT_ACC_ID   ,
+			       Extent4.GL_RECIPT_ITM_ID   ,
+			       Extent4.GL_RECIPT_ITM_MODE_ID   ,
+			       Extent4.GL_REVRS_RECIPT_ITM_ID   ,
+			       Extent4.GL_RECIPT_ITM_AMT   ,
+			       Extent4.GL_RECIPT_ITM_RCL_STUS   ,
+			       Extent4.GL_JRNL_NO   ,
+			       Extent4.GL_AUDIT_REF   ,
+			       Extent4.GL_CNVR_STUS   ,
+			       Extent4.GL_CNVR_DT   ,
+			       Extent4.GL_RECIPT_ITM_CHRG
+			  FROM SAL0057D Extent1
+			         JOIN PAY0064D Extent2   ON Extent2.BILL_ID = Extent1.POS_BILL_ID
+			         JOIN PAY0065D Extent3   ON Extent3.PAY_ID = Extent2.PAY_ID
+			         JOIN PAY0009D Extent4   ON Extent4.GL_RECIPT_ITM_ID = Extent3.PAY_ITM_ID
+			 WHERE  Extent1.POS_NO = #{psnNo}
+      </select>
+
+      <select id="posReversalPayDetail" parameterType="Map" resultType="egovMap">
+			  SELECT Limit1.POS_ID   ,
+			       Limit1.POS_NO   ,
+			       CASE WHEN ( Limit1.POSID1 IS NOT NULL ) THEN Limit1.POSNO1 ELSE ' ' END POSNO1  ,
+			       Limit1.POS_MODULE_TYPE_ID   ,
+			       Limit1.CODE_NAME   ,
+			       Limit1.POS_TYPE_ID   ,
+			       Limit1.CODENAME1   ,
+			       Limit1.POS_WH_ID   ,
+			       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_CODE ELSE ' ' END WH_LOC_CODE  ,
+			       CASE WHEN ( Limit1.WH_LOC_ID IS NOT NULL ) THEN Limit1.WH_LOC_DESC ELSE ' ' END WH_LOC_DESC  ,
+			       Limit1.POS_DT   ,
+			       Limit1.POS_CUST_NAME   ,
+			       Limit1.POS_MEM_ID   ,
+			       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE ELSE ' ' END MEM_CODE  ,
+			       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME ELSE ' ' END NAME  ,
+			       Limit1.POS_REM   ,
+			       Limit1.POS_CRT_USER_ID   ,
+			       Limit1.USER_NAME   ,
+			       Limit1.USER_FULL_NAME   ,
+			       Limit1.CR_ACC_ID   ,
+			       Limit1.DR_ACC_ID   ,
+			       Limit1.POS_BILL_ID   ,
+			       Limit1.POS_TOT_AMT   ,
+			       Limit1.POS_TOT_CHRG   ,
+			       Limit1.POS_TOT_TXS   ,
+			       Limit1.POS_TOT_DSCNT   ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.PAY_ID ELSE 0 END PAY_ID  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.OR_NO ELSE ' ' END OR_NO  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BRNCH_ID ELSE 0 END BRNCH_ID  ,
+			       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.CODE ELSE ' ' END CODE  ,
+			       CASE WHEN ( Limit1.BRANCHID1 IS NOT NULL ) THEN Limit1.NAME1 ELSE ' ' END NAME1  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.TR_NO ELSE ' ' END TR_NO  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN TO_CHAR(Limit1.TR_ISSU_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END TR_ISSU_DT  ,
+			       CASE WHEN ( Limit1.PAY_ID IS NOT NULL ) THEN Limit1.BANK_ACC_ID ELSE 0 END BANK_ACC_ID  ,
+			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE ' ' END ACC_CODE  ,
+			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE ' ' END ACC_DESC  ,
+			       Limit1.POS_RESN_ID   ,
+			       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE ' ' END RESN_DESC
+			  FROM ( SELECT Extent1.POS_ID   ,
+			                Extent1.POS_NO   ,
+			                Extent1.POS_BILL_ID   ,
+			                Extent1.POS_CUST_NAME   ,
+			                Extent1.POS_DT   ,
+			                Extent1.POS_TYPE_ID   ,
+			                Extent1.POS_MODULE_TYPE_ID   ,
+			                Extent1.POS_TOT_AMT   ,
+			                Extent1.POS_TOT_CHRG   ,
+			                Extent1.POS_TOT_TXS   ,
+			                Extent1.POS_TOT_DSCNT   ,
+			                Extent1.POS_WH_ID   ,
+			                Extent1.POS_REM   ,
+			                Extent1.POS_MEM_ID   ,
+			                Extent1.POS_CRT_USER_ID   ,
+			                Extent1.CR_ACC_ID   ,
+			                Extent1.DR_ACC_ID   ,
+			                Extent1.POS_RESN_ID   ,
+			                Extent2.CODE_NAME CODE_NAME  ,
+			                Extent3.CODE_NAME CODENAME1  ,
+			                Extent4.MEM_ID   ,
+			                Extent4.MEM_CODE   ,
+			                Extent4.NAME   ,
+			                Extent5.WH_LOC_ID   ,
+			                Extent5.WH_LOC_CODE   ,
+			                Extent5.WH_LOC_DESC   ,
+			                Extent6.USER_NAME   ,
+			                Extent6.USER_FULL_NAME   ,
+			                Extent7.PAY_ID   ,
+			                Extent7.OR_NO   ,
+			                Extent7.TR_NO   ,
+			                Extent7.BRNCH_ID   ,
+			                Extent7.BANK_ACC_ID   ,
+			                Extent7.TR_ISSU_DT   ,
+			                Extent8.BRNCH_ID BRANCHID1  ,
+			                Extent8.CODE   ,
+			                Extent8.NAME NAME1  ,
+			                Extent9.ACC_ID   ,
+			                Extent9.ACC_CODE   ,
+			                Extent9.ACC_DESC   ,
+			                Extent10.POS_ID POSID1  ,
+			                Extent10.POS_NO POSNO1  ,
+			                Extent11.RESN_ID   ,
+			                Extent11.CODE CODE1  ,
+			                Extent11.RESN_DESC
+			         FROM SAL0057D Extent1
+			                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+			                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+			                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+			                LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+			                JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+			                LEFT JOIN PAY0064D Extent7   ON Extent7.BILL_ID = Extent1.POS_BILL_ID
+			                LEFT JOIN SYS0005M Extent8   ON Extent8.BRNCH_ID = Extent7.BRNCH_ID
+			                LEFT JOIN SYS0001M Extent9   ON Extent9.ACC_ID = Extent7.BANK_ACC_ID
+			                LEFT JOIN SAL0057D Extent10   ON Extent10.POS_ID = Extent1.POS_MTCH_ID
+			                LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent1.POS_RESN_ID
+			           <![CDATA[
+			          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
+			          ]]>
+      </select>
+
+      <select id="getPayInfoByPayId" parameterType="Map" resultType="egovMap">
+				 SELECT Extent1.PAY_ID   ,
+				       Extent1.OR_NO   ,
+				       Extent1.SALES_ORD_ID   ,
+				       Extent1.BILL_ID   ,
+				       Extent1.TR_NO   ,
+				       Extent1.TYPE_ID   ,
+				       TO_CHAR(Extent1.PAY_DATA,  'DD/MM/YYYY' ) PAY_DATA ,
+				       NVL(Extent1.BANK_CHG_AMT, 0  ) BANK_CHG_AMT ,
+				       Extent1.BANK_CHG_ACC_ID   ,
+				       Extent1.COLL_MEM_ID   ,
+				       Extent1.BRNCH_ID   ,
+				       Extent1.BANK_ACC_ID   ,
+				       Extent1.ALLOW_COMM   ,
+				       Extent1.STUS_CODE_ID   ,
+				       Extent1.UPD_USER_ID   ,
+				       TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY') UPD_DT ,
+				       Extent1.SYNC_HECK   ,
+				       Extent1.CUST_ID_3PARTY   ,
+				       NVL(Extent1.TOT_AMT, 0 ) TOT_AMT  ,
+				       Extent1.MTCH_ID   ,
+				       Extent1.CRT_USER_ID   ,
+				       TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT ,
+				       Extent1.IS_ALLOW_REV_MULTI   ,
+				       Extent1.IS_GL_POST_CLM   ,
+				       TO_CHAR(Extent1.GL_POST_CLM_DT, 'DD/MM/YYYY') GL_POST_CLM_DT  ,
+				       Extent1.TRX_ID   ,
+				       Extent1.ADV_MONTH   ,
+				       Extent1.ACC_BILL_ID   ,
+				       TO_CHAR(Extent1.TR_ISSU_DT, 'DD/MM/YYYY')  TR_ISSU_DT ,
+				       Extent1.TAX_INVC_IS_GEN   ,
+				       Extent1.TAX_INVC_REF_NO   ,
+				       TO_CHAR(Extent1.TAX_INVC_REF_DT, 'DD/MM/YYYY') TAX_INVC_REF_DT ,
+				       Extent1.SVC_CNTRCT_ID   ,
+				       Extent1.BATCH_PAY_ID
+				  FROM PAY0064D Extent1
+				  <![CDATA[
+				 WHERE  Extent1.PAY_ID = #{rePayId} AND ROWNUM <= 1
+				  ]]>
+      </select>
+
+      <insert id="insertRePayMaster" parameterType="Map">
+             INSERT INTO PAY0064D
+                    ( PAY_ID,
+                      OR_NO,
+                      SALES_ORD_ID,
+                      BILL_ID,
+                      TR_NO,
+                      TYPE_ID,
+                      PAY_DATA,
+                      BANK_CHG_AMT,
+                      BANK_CHG_ACC_ID,
+                      COLL_MEM_ID,
+                      BRNCH_ID,
+                      BANK_ACC_ID,
+                      ALLOW_COMM,
+                      STUS_CODE_ID,
+                      UPD_USER_ID,
+                      UPD_DT,
+                      SYNC_HECK,
+                      CUST_ID_3PARTY,
+                      TOT_AMT,
+                      MTCH_ID,
+                      CRT_USER_ID,
+                      CRT_DT,
+                      IS_ALLOW_REV_MULTI,
+                      IS_GL_POST_CLM,
+                      GL_POST_CLM_DT,
+                      TRX_ID,
+                      ADV_MONTH,
+                      ACC_BILL_ID,
+                      TR_ISSU_DT,
+                      TAX_INVC_IS_GEN,
+                      TAX_INVC_REF_NO,
+                      TAX_INVC_REF_DT,
+                      SVC_CNTRCT_ID,
+                      BATCH_PAY_ID )
+          VALUES (  #{payMseq},
+                        #{orNo},
+                        #{salesOrdId},
+                        #{billId},
+                        #{trNo},
+                        #{typeId},
+                        SYSDATE,
+                        #{bankChgAmt},
+                        #{bankChgAccId},
+                        #{collMemId},
+                        #{brnchId},
+                        #{bankAccId},
+                        #{allowComm},
+                        #{stusCodeId},
+                        #{updUserId},
+                        SYSDATE,
+                        #{syncCheck},
+                        #{thirdPartyCustId},
+                        #{totAmt},
+                        #{matchId},
+                        #{crtUserId},
+                        SYSDATE,
+                        #{isAllowRevMulti},
+                        #{isGlPostClm},
+                        TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),
+                        #{trxSeq},
+                        #{advMonth},
+                        #{orderBillId},
+                        TO_DATE(NVL(#{trIssuDt},'01/01/1900'), 'DD/MM/YYYY'),
+                        #{payInvIsGen},
+                        #{taxInvcRefNo},
+                        TO_DATE(#{taxInvcRefDt} , 'DD/MM/YYYY'),
+                        #{svcCntrctId},
+                        #{batchPayId})
+    </insert>
+
+    <select id="getTrxInfo" parameterType="Map" resultType="egovMap">
+			 SELECT
+			       Extent1.TRX_ID   ,
+			       Extent1.TRX_AMT   ,
+			       Extent1.TRX_DT   ,
+			       Extent1.TRX_TYPE   ,
+			       Extent1.TRX_MTCH_NO
+			  FROM
+			       PAY0069D Extent1
+			  <![CDATA[
+			  WHERE  Extent1.TRX_ID = #{trxId} AND ROWNUM <= 1
+			  ]]>
+    </select>
+
+    <insert id="insertRePayTrx"  parameterType="Map">
+                INSERT INTO  PAY0069D
+                       (
+                        TRX_ID,
+                        TRX_DT,
+                        TRX_TYPE,
+                        TRX_AMT,
+                        TRX_MTCH_NO
+                        )
+                VALUES (
+                         #{trxSeq},
+                         SYSDATE,
+                         #{trxType},
+                         #{trxAmt},
+                         #{trxMatchNo}
+                        )
+    </insert>
+
+    <update id="updatePayMTrxId" parameterType="Map">
+					UPDATE
+					    PAY0064D
+					SET
+					    TRX_ID = #{trxId}
+					WHERE
+					     PAY_ID = #{payId}
+    </update>
+
+    <select id="getPayDetailListByPayId"  parameterType="Map" resultType="egovMap">
+			SELECT Extent1.PAY_ITM_ID   ,
+			       Extent1.PAY_ID   ,
+			       Extent1.PAY_ITM_MODE_ID   ,
+			       Extent1.PAY_ITM_REF_NO   ,
+			       Extent1.PAY_ITM_CC_NO   ,
+			       Extent1.PAY_ITM_ORI_CC_NO   ,
+			       Extent1.PAY_ITM_ENCRYPT_CC_NO   ,
+			       Extent1.PAY_ITM_CC_TYPE_ID   ,
+			       Extent1.PAY_ITM_CHQ_NO   ,
+			       Extent1.PAY_ITM_ISSU_BANK_ID   ,
+			       NVL(Extent1.PAY_ITM_AMT , 0 ) PAY_ITM_AMT  ,
+			       Extent1.PAY_ITM_IS_ONLINE   ,
+			       Extent1.PAY_ITM_BANK_ACC_ID   ,
+			       TO_CHAR(Extent1.PAY_ITM_REF_DT, 'DD/MM/YYYY')  PAY_ITM_REF_DT ,
+			       Extent1.PAY_ITM_APPV_NO   ,
+			       Extent1.PAY_ITM_REM   ,
+			       Extent1.PAY_ITM_STUS_ID   ,
+			       Extent1.PAY_ITM_IS_LOK   ,
+			       Extent1.PAY_ITM_CC_HOLDER_NAME   ,
+			       PAY_ITM_CC_EXPR_DT,
+			       NVL(Extent1.PAY_ITM_BANK_CHRG_AMT , 0)  PAY_ITM_BANK_CHRG_AMT ,
+			       Extent1.PAY_ITM_IS_THRD_PARTY   ,
+			       Extent1.PAY_ITM_THRD_PARTY_IC   ,
+			       Extent1.PAY_ITM_BANK_BRNCH_ID   ,
+			       Extent1.PAY_ITM_BANK_IN_SLIP_NO   ,
+			       Extent1.PAY_ITM_EFT_NO   ,
+			       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO   ,
+			       Extent1.ETC1   ,
+			       Extent1.ETC2   ,
+			       Extent1.ETC3   ,
+			       Extent1.PAY_ITM_MID   ,
+			       Extent1.PAY_ITM_GRP_ID   ,
+			       Extent1.PAY_ITM_REF_ITM_ID   ,
+			       Extent1.PAY_ITM_BANK_CHRG_ACC_ID   ,
+			       Extent1.PAY_ITM_RUNNG_NO   ,
+			       Extent1.UPD_USER_ID   ,
+			       TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY' ) UPD_DT ,
+			       Extent1.IS_FUND_TRNSFR   ,
+			       Extent1.SKIP_RECON   ,
+			       Extent1.PAY_ITM_CARD_TYPE_ID   ,
+			       Extent1.PAY_ITM_CARD_MODE_ID
+			  FROM PAY0065D Extent1
+			 WHERE  Extent1.PAY_ID = #{rePayId}
+    </select>
+
+    <insert id="insertRePayDetail" parameterType="Map">
+         INSERT INTO PAY0065D
+                ( PAY_ITM_ID,
+                  PAY_ID,
+                  PAY_ITM_MODE_ID,
+                  PAY_ITM_REF_NO,
+                  PAY_ITM_CC_NO,
+                  PAY_ITM_ORI_CC_NO,
+                  PAY_ITM_ENCRYPT_CC_NO,
+                  PAY_ITM_CC_TYPE_ID,
+                  PAY_ITM_CHQ_NO,
+                  PAY_ITM_ISSU_BANK_ID,
+                  PAY_ITM_AMT,
+                  PAY_ITM_IS_ONLINE,
+                  PAY_ITM_BANK_ACC_ID,
+                  PAY_ITM_REF_DT,
+                  PAY_ITM_APPV_NO,
+                  PAY_ITM_REM,
+                  PAY_ITM_STUS_ID,
+                  PAY_ITM_IS_LOK,
+                  PAY_ITM_CC_HOLDER_NAME,
+                  PAY_ITM_CC_EXPR_DT,
+                  PAY_ITM_BANK_CHRG_AMT,
+                  PAY_ITM_IS_THRD_PARTY,
+                  PAY_ITM_THRD_PARTY_IC,
+                  PAY_ITM_BANK_BRNCH_ID,
+                  PAY_ITM_BANK_IN_SLIP_NO,
+                  PAY_ITM_EFT_NO,
+                  PAY_ITM_CHQ_DEP_RECIPT_NO,
+                  ETC1,
+                  ETC2,
+                  ETC3,
+                  PAY_ITM_MID,
+                  PAY_ITM_GRP_ID,
+                  PAY_ITM_REF_ITM_ID,
+                  PAY_ITM_BANK_CHRG_ACC_ID,
+                  PAY_ITM_RUNNG_NO,
+                  UPD_USER_ID,
+                  UPD_DT,
+                  IS_FUND_TRNSFR,
+                  SKIP_RECON,
+                  PAY_ITM_CARD_TYPE_ID,
+                  PAY_ITM_CARD_MODE_ID )
+          VALUES ( #{payItemId},
+                       #{payId},
+                       #{payMode},
+                       #{transactionRefNo},
+                       #{payCreditCardNo},
+                       #{payCreditCardOriNo},
+                       #{payCreditCardEncryptNo},
+                       #{payCrcType},
+                       #{payItmChqNo},
+                       #{payIssueBank},
+                       #{payAmt},
+                       #{payCrcMode},
+                       #{payBankAccount},
+                       TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
+                       #{payApprovNo},
+                       #{payRem},
+                       #{payItmStusId},
+                       #{payItmIsLok},
+                       #{payItmCcHolderName},
+                       #{payItmCcExprDt},
+                       #{payItmBankChrgAmt},
+                       #{payItmIsThirdParty},
+                       #{payItmThrdPartyIc},
+                       #{payItmBankBrnchId},
+                       #{payItmBankInSlipNo},
+                       #{payItmEftNo},
+                       #{payItmChqDepReciptNo},
+                       #{etc1},
+                       #{etc2},
+                       #{etc3},
+                       #{payItmMid},
+                       #{payItmGrpId},
+                       #{payItmRefItmId},
+                       #{payItmBankChrgAccId},
+                       #{payItmRunngNo},
+                       #{updUserId},
+                       SYSDATE,
+                       #{isFundTrnsfr},
+                       #{skipRecon},
+                       #{payItmCardTypeId},
+                       #{payItmCardModeId} )
+     </insert>
+
+     <select id="getAccGLRoutesInfoByRcpItmId" parameterType="Map" resultType="egovMap">
+				SELECT
+				       Extent1.ID   ,
+				       Extent1.GL_POSTNG_DT   ,
+				       Extent1.GL_FISCAL_DT   ,
+				       Extent1.GL_BATCH_NO   ,
+				       Extent1.GL_BATCH_TYPE_DESC   ,
+				       Extent1.GL_BATCH_TOT   ,
+				       Extent1.GL_RECIPT_NO   ,
+				       Extent1.GL_RECIPT_TYPE_ID   ,
+				       Extent1.GL_RECIPT_BRNCH_ID   ,
+				       Extent1.GL_RECIPT_SETL_ACC_ID   ,
+				       Extent1.GL_RECIPT_ACC_ID   ,
+				       Extent1.GL_RECIPT_ITM_ID   ,
+				       Extent1.GL_RECIPT_ITM_MODE_ID   ,
+				       Extent1.GL_REVRS_RECIPT_ITM_ID   ,
+				       NVL(Extent1.GL_RECIPT_ITM_AMT , 0)  GL_RECIPT_ITM_AMT ,
+				       Extent1.GL_RECIPT_ITM_RCL_STUS   ,
+				       Extent1.GL_JRNL_NO   ,
+				       Extent1.GL_AUDIT_REF   ,
+				       Extent1.GL_CNVR_STUS   ,
+				       Extent1.GL_CNVR_DT   ,
+				       Extent1.GL_RECIPT_ITM_CHRG
+				  FROM
+				       PAY0009D Extent1
+				 WHERE
+				       Extent1.GL_RECIPT_ITM_ID = #{payItmRefItmId}
+				 AND
+				    <![CDATA[
+				        ROWNUM <= 1
+				    ]]>
+     </select>
+
+     <insert id="insertReAccGlRoute" parameterType="Map">
+				INSERT INTO PAY0009D (
+													    ID,
+													    GL_POSTNG_DT,
+													    GL_FISCAL_DT,
+													    GL_BATCH_NO,
+													    GL_BATCH_TYPE_DESC,
+													    GL_BATCH_TOT,
+													    GL_RECIPT_NO,
+													    GL_RECIPT_TYPE_ID,
+													    GL_RECIPT_BRNCH_ID,
+													    GL_RECIPT_SETL_ACC_ID,
+													    GL_RECIPT_ACC_ID,
+													    GL_RECIPT_ITM_ID,
+													    GL_RECIPT_ITM_MODE_ID,
+													    GL_REVRS_RECIPT_ITM_ID,
+													    GL_RECIPT_ITM_AMT,
+													    GL_RECIPT_ITM_CHRG,
+													    GL_RECIPT_ITM_RCL_STUS,
+													    GL_JRNL_NO,
+													    GL_AUDIT_REF,
+													    GL_CNVR_STUS,
+													    GL_CNVR_DT)
+								 VALUES (
+											    #{accGlRouteSeq},
+											    SYSDATE,
+											    TO_DATE(#{glFiscalDt}, 'DD/MM/YYYY'),
+											    #{glBatchNo},
+											    #{glBatchTypeDesc},
+											    #{glBatchTot},
+											    #{glReciptNo},
+											    #{glReciptType},
+											    #{glReciptBrnchId},
+											    #{glReciptSetlAccId},
+											    #{glReciptAccId},
+											    #{glReciptItmId},
+											    #{glReciptItmModeId},
+											    #{glRevrsReciptItmId},
+											    #{glReciptItmAmt},
+											    #{glReciptItmChrg},
+											    #{glReciptItmRclStus},
+											    #{glJrnlNo},
+											    #{glAuditRef},
+											    #{glCnvrStus},
+											    #{glCnvrDt}
+											)
+     </insert>
+
+     <select id="getPayDetailList" parameterType="Map" resultType="egovMap">
+				SELECT
+				       Extent2.PAY_ITM_ID   ,
+				       Extent2.PAY_ID   ,
+				       Extent2.PAY_ITM_MODE_ID   ,
+				       Extent3.CODE_NAME,
+				       Extent2.PAY_ITM_REF_NO   ,
+				       Extent2.PAY_ITM_AMT   ,
+				       Extent2.PAY_ITM_ORI_CC_NO   ,
+				       Extent2.PAY_ITM_APPV_NO   ,
+				       Extent2.PAY_ITM_CC_TYPE_ID   ,
+				       Extent6.CODE_NAME   ,
+				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent2.PAY_ITM_CARD_MODE_ID ELSE 0 END C1  ,
+				       CASE WHEN ( 107 = Extent2.PAY_ITM_MODE_ID ) THEN Extent7.CODE_NAME ELSE ' ' END C2  ,
+				       Extent2.PAY_ITM_ISSU_BANK_ID   ,
+				       Extent4.NAME   ,
+				       Extent2.PAY_ITM_BANK_ACC_ID   ,
+				       Extent5.ACC_DESC   ,
+				       TO_CHAR(Extent2.PAY_ITM_REF_DT, 'DD/MM/YYYY') PAY_ITM_REF_DT ,
+				       Extent2.PAY_ITM_REM
+				  FROM PAY0064D Extent1
+				         JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+				         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.PAY_ITM_MODE_ID
+				         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent2.PAY_ITM_ISSU_BANK_ID
+				         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent2.PAY_ITM_BANK_ACC_ID
+				         LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent2.PAY_ITM_CC_TYPE_ID
+				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
+				 WHERE  Extent1.PAY_ID = #{rePayId}
+     </select>
+
+     <insert id="insertTransactionLog" parameterType="Map">
+     <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
+        SELECT SYS0049D_LOG_ID_SEQ.NEXTVAL  FROM DUAL
+      </selectKey>
+        INSERT INTO  SYS0049D
+								(
+										LOG_ID,
+										LOG_RPT_CHK_POINT,
+										LOG_RPT_MODULE,
+										LOG_RPT_NAME,
+										LOG_RPT_SUB_NAME,
+										LOG_RPT_ET_TYPE,
+										LOG_RPT_PATH,
+										LOG_RPT_PARAMTR_VALU,
+										LOG_RPT_REM,
+										LOG_CRT_USER_ID,
+										LOG_CRT_DT
+								)
+								VALUES(
+										#{logId},
+										#{rptChkPoint},
+										#{rptModule},
+										#{rptName},
+										#{rptSubName},
+										#{rptEtType},
+										#{rptPath},
+										#{rptParamtrValu},
+										#{rptRem},
+										#{userId},
+										SYSDATE
+								)
+     </insert>
+
+     <select id="getDetailInfoList" parameterType="Map" resultType="egovMap">
+			SELECT
+			    POS_ITM_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID ,
+			    POS_ITM_QTY ,
+			    POS_ITM_UNIT_PRC,
+			    POS_ITM_TOT ,
+			    POS_ITM_CHRG ,
+			    POS_ITM_TXS,
+			    POS_ITM_TAX_CODE_ID,
+			    MEM_ID,
+			    MEM_CODE,
+			    MEM_TYPE,
+			    NAME,
+			    FULL_NAME,
+			    NRIC,
+			    MEM_STUS_ID,
+			    RCV_STUS_ID ,
+			    CRT_DT ,
+			    CRT_USER_ID,
+			    UPD_DT ,
+			    UPD_USER_ID
+			FROM
+			    SAL0058D
+			WHERE
+			    POS_ID = #{posId}
+			AND
+			    RCV_STUS_ID = #{rcvStusId}
+     </select>
+
+     <select id="getPosNobyPosId" parameterType="posDetailVO" resultType="egovMap">
+        SELECT
+            POS_NO
+        FROM
+            SAL0057D
+        WHERE
+            1 = 1
+        <if test=" null != posId and '' != posId">
+            AND POS_ID = #{posId}
+        </if>
+         <![CDATA[
+           AND   ROWNUM <= 1
+         ]]>
+     </select>
+
+     <select id="getPosItmIdListByPosIdAndMemId" parameterType="posMemberVO" resultType="egovMap">
+       SELECT
+            POS_ITM_ID
+       FROM
+            SAL0058D
+       WHERE
+            POS_ID = #{posId}
+       AND
+            MEM_ID = #{memId}
+     </select>
+
+
+     <select id="getPosNobyPosIdForMember" parameterType="posMemberVO" resultType="egovMap">
+        SELECT
+            POS_NO
+        FROM
+            SAL0057D
+        WHERE
+            1 = 1
+        <if test=" null != posId and '' != posId">
+            AND POS_ID = #{posId}
+        </if>
+         <![CDATA[
+           AND   ROWNUM <= 1
+         ]]>
+     </select>
+
+     <select id="getPosItmIdListByPosNo" parameterType="Map" resultType="egovMap">
+			SELECT
+			    T2.POS_ITM_ID
+			FROM
+			    SAL0057D T1
+			    JOIN SAL0058D T2 ON T1.POS_ID = T2.POS_ID
+			WHERE
+			    T1.POS_NO = #{psno}
+			AND
+			    T2.RCV_STUS_ID = #{rcvStusId}
+     </select>
+
+     <select id="chkMemIdByMemCode" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEM_ID
+        FROM
+            ORG0001D
+        WHERE
+           UPPER(MEM_CODE) =  UPPER(#{memCode})
+        AND
+        <![CDATA[
+            ROWNUM <= 1
+        ]]>
+     </select>
+
+     <select id="chkUserIdByUserName" parameterType="Map" resultType="egovMap">
+		 SELECT
+		    USER_ID
+		 FROM
+		    SYS0047M
+		 WHERE
+		    UPPER(USER_NAME) = UPPER(#{userName})
+		 AND
+		    <![CDATA[
+		    ROWNUM <=1
+		    ]]>
+     </select>
+
+     <select id="chkOldReqSerial" parameterType="Map" resultType="egovMap">
+			SELECT
+			    POS_SERIAL_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID,
+			    POS_SERIAL_NO,
+			    POS_ITM_STUS_ID,
+			    CRT_DT,
+			    CRT_USER_ID,
+			    UPD_DT,
+			    UPD_USER_ID
+			FROM
+			    SAL0147M
+			WHERE
+			    POS_ID = #{rePosId}
+     </select>
+
+     <select id="getSeqPay0240T" resultType="java.lang.Integer">
+         SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
+     </select>
+
+     <insert id="insertPayT" parameterType="Map">
+        <selectKey keyProperty="rsltSeq" resultType="java.lang.Integer" order="BEFORE" >
+            SELECT PAY0252T_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        <!-- <selectKey keyProperty="groupSeq" resultType="java.lang.Integer" order="BEFORE">
+            SELECT PAY0240T_SEQ.NEXTVAL FROM DAUL
+        </selectKey> -->
+
+		INSERT INTO PAY0252T(
+										    RSLT_SEQ ,
+										    GROUP_SEQ ,
+										    PRCSS_SEQ ,
+										    TRX_ID ,
+										    PAY_ID ,
+										    PAY_ITM_ID ,
+										    PAY_ITM_MODE_ID ,
+										    TOT_AMT ,
+										    PAY_ITM_AMT ,
+										    BANK_CHG_AMT ,
+										    APP_TYPE ,
+										    CRC_STATE_MAPPING_ID ,
+										    CRC_STATE_MAPPING_STUS_ID ,
+										    CRC_STATE_MAPPING_USER_ID ,
+										    CRC_STATE_MAPPING_DT ,
+										    BANK_STATE_MAPPING_ID ,
+										    BANK_STATE_MAPPING_STUS_ID ,
+										    BANK_STATE_MAPPING_USER_ID ,
+										    BANK_STATE_MAPPING_DT ,
+										    REV_STUS_ID ,
+										    REV_USER_ID ,
+										    REV_DT ,
+										    PAY_ROUTE ,
+										    KEY_IN_SCRN ,
+										    LDGR_TYPE ,
+										    BANK_CHG_MAPPING_ID ,
+										    BANK_CHG_MAPPING_STUS_ID ,
+										    BANK_CHG_MAPPING_USER_ID ,
+										    BANK_CHG_MAPPING_DT ,
+										    FT_STUS_ID ,
+										    FT_USER_ID ,
+										    FT_DT
+										)
+						      VALUES(
+    										#{rsltSeq},
+    										#{groupSeq},
+    										#{prcssSeq},
+    										#{trxId},
+    										#{payId},
+    										#{payItmId},
+    										#{payItmModeId},
+    										#{totAmt},
+    										#{payItmAmt},
+    										#{bankChgAmt},
+    										#{appType},
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										#{payRoute},
+    										#{payKeyinScrn},
+    										#{ldgrType},
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL
+										)
+     </insert>
+
+        <select id="getPosBillingDetailList"  parameterType="Map" resultType="egovMap">
+          SELECT t0.TRX_ID,
+          t0.TRX_DT,
+          t0.TRX_AMT,
+          t1.PAY_ID,
+          t1.OR_NO,
+          t1.TR_NO,
+          t1.PAY_DATA AS PAY_DT,
+          t1.UPD_DT AS LAST_UPD_DT,
+          t12.CODE_ID AS PAY_TYPE_ID,
+          t12.CODE_NAME AS PAY_TYPE_NAME,
+          t9.USER_ID AS LAST_UPD_USER_ID,
+          t9.USER_NAME AS LAST_UPD_USER_NAME,
+          t2.SALES_ORD_ID,
+          t2.SALES_ORD_NO,
+          t1.TOT_AMT AS OR_AMT,
+          t2.CUST_PO_NO AS PO_NO,
+          t3.BRNCH_ID AS CLCTR_BRNCH_ID,
+          t3.CODE AS CLCTR_BRNCH_CODE,
+          t3.NAME AS CLCTR_BRNCH_NAME,
+          t4.CUST_ID,
+          t4.NAME AS CUST_NAME,
+          t4.NRIC AS CUST_IC,
+          t11.CODE_ID AS CUST_TYPE_ID,
+          t11.CODE_NAME AS CUST_TYPE_NAME,
+          t10.CODE_ID AS PRODUCT_CTGRY_ID,
+          t10.CODE_NAME AS PRODUCT_CTGRY_NAME,
+          t6.STK_ID AS PRODUCT_ID,
+          t6.STK_CODE AS PRODUCT_CODE,
+          t6.STK_DESC AS PRODUCT_DESC,
+          t7.USER_ID AS KEYIN_USER_ID,
+          t7.USER_NAME AS KEYIN_USER_NAME,
+          NVL (t8.CODE_ID, 0) AS APP_TYPE_ID,
+          NVL (t8.CODE_NAME, '') AS APP_TYPE_NAME,
+          NVL (t13.FULL_NAME, '') AS CLCTR_NAME,
+          NVL (t13.MEM_CODE, '') AS CLCTR_CODE,
+          t14.BRNCH_ID AS KEYIN_BRNCH_ID,
+          t14.CODE AS KEYIN_BRNCH_CODE,
+          t14.NAME AS KEYIN_BRNCH_NAME,
+          t15.ACC_ID AS DEBTOR_ACC_ID,
+          t15.ACC_CODE AS DEBTOR_ACC_CODE,
+          t15.ACC_DESC AS DEBTOR_ACC_DESC,
+          t16.MEM_ID AS SALES_MEM_ID,
+          t16.MEM_CODE AS SALES_MEM_CODE,
+          t16.FULL_NAME AS SALES_MEM_NAME,
+          t4.CUST_VA_NO AS VIRTL_ACC_NO,
+          '' AS HP_CODE,
+          '' AS HP_NAME,
+          t17.BILL_MEM_ID AS HP_ID,
+          NVL (t1.COLL_MEM_ID, 0) AS CLCTR_ID,
+          NVL (t1.ALLOW_COMM, 0) AS ALLOW_COMM,
+          NVL (t1.ADV_MONTH, 0) AS ADV_MONTH,
+          NVL (t1.TR_ISSU_DT, TO_DATE ('1900-01-01', 'YYYY-MM-DD'))
+             AS TR_ISSU_DT,
+          NVL (t1.BATCH_PAY_ID, 0) AS BATCH_PAY_ID
+     FROM PAY0069D t0
+          LEFT JOIN PAY0064D t1 ON t0.TRX_ID = t1.TRX_ID
+          LEFT JOIN PAY0007D t17 ON t1.BILL_ID = t17.BILL_ID
+          LEFT JOIN SAL0001D t2 ON t2.SALES_ORD_ID = t17.BILL_SO_ID
+          LEFT JOIN SYS0005M t3 ON t1.BRNCH_ID = t3.BRNCH_ID
+          LEFT JOIN SAL0029D t4 ON t2.CUST_ID = t4.CUST_ID
+          LEFT JOIN SAL0002D t5 ON t2.SALES_ORD_ID = t5.SALES_ORD_ID
+          LEFT JOIN SYS0026M t6 ON t5.ITM_STK_ID = t6.STK_ID
+          LEFT JOIN SYS0047M t7 ON t1.CRT_USER_ID = t7.USER_ID
+          LEFT JOIN SYS0013M t8 ON t2.APP_TYPE_ID = t8.CODE_ID
+          LEFT JOIN SYS0047M t9 ON t1.UPD_USER_ID = t9.USER_ID
+          LEFT JOIN SYS0013M t10 ON t6.STK_CTGRY_ID = t10.CODE_ID
+          LEFT JOIN SYS0013M t11 ON t4.TYPE_ID = t11.CODE_ID
+          LEFT JOIN SYS0013M t12 ON t1.TYPE_ID = t12.CODE_ID
+          LEFT JOIN ORG0001D t13 ON t13.MEM_ID = t1.COLL_MEM_ID
+          LEFT JOIN SYS0005M t14 ON t14.BRNCH_ID = t7.USER_BRNCH_ID
+          LEFT JOIN SYS0001M t15 ON t15.ACC_ID = t1.BANK_ACC_ID
+          LEFT JOIN ORG0001D t16 ON t16.MEM_ID = t2.MEM_ID
+    WHERE t1.BILL_ID > 0 AND t1.SALES_ORD_ID = 0 AND t1.TYPE_ID NOT IN (577)
+            and  t17.BILL_NO = #{billNo}
+
+    </select>
+
+      <select id="selectPosFlexiJsonList" parameterType="Map" resultType="egovMap">
+        SELECT  Extent1.POS_ID ,
+                        Extent1.POS_NO ,
+                        Extent1.POS_CUST_NAME ,
+                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT,
+                        Extent1.POS_TYPE_ID   ,
+                        Extent1.POS_MODULE_TYPE_ID  ,
+                        TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
+                        Extent1.STUS_ID,
+                        extent11.NAME STUS_DESC,
+                        Extent1.POS_WH_ID  ,
+                        Extent1.POS_MEM_ID  ,
+                        Extent1.POS_CRT_USER_ID  ,
+                        Extent2.CODE_NAME  ,
+                        Extent3.CODE_NAME CODE_NAME1 ,
+                        Extent6.USER_NAME  ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
+                        CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
+                        CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
+                       <!--  CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,-->
+                        <!-- extent10.MEMO_ADJ_REF_NO, -->
+                        Extent1.BRNCH_ID,
+                        Extent9.CODE BRNCH_DESC,
+                        Extent1.APV_USER_ID ,
+                        extent12.USER_NAME APV_USER_NAME ,
+                        TO_CHAR(Extent1.APV_DT, 'DD-MM-YYYY') APV_DT
+                FROM SAL0057D Extent1
+                        JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
+                        JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
+                        LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.POS_MEM_ID
+                        LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
+                        JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
+                        LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                        LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
+                         LEFT JOIN PAY0011D extent10 ON extent10.MEMO_ADJ_INVC_NO = extent7.tax_invc_ref_no AND MEMO_ADJ_STUS_ID = 4
+                        LEFT JOIN SYS0038M extent11 ON Extent1.STUS_ID = extent11.STUS_CODE_ID
+                        LEFT JOIN SYS0047M extent12 ON Extent1.APV_USER_ID = extent12.USER_ID
+                WHERE  1=1
+               <if test=" null != posModuleTypeId and '' != posModuleTypeId">
+                   AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
+                </if>
+
+                <if test=" null != systemArray and systemArray.length > 0">
+                   AND Extent1.POS_TYPE_ID IN
+                    <foreach collection="systemArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test=" null != statusArray and statusArray.length > 0">
+                    AND Extent1.STUS_ID IN
+                    <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+
+                <if test="posNo != nul and posNo != '' ">
+                    AND  UPPER(Extent1.POS_NO) = UPPER(#{posNo})
+                </if>
+
+                <if test="sDate != null and sDate != '' ">
+                    <![CDATA[
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                     ]]>
+                </if>
+
+                <if test="eDate != null and eDate != '' ">
+                   <![CDATA[
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                    ]]>
+                </if>
+                <if test="brnchId != null and brnchId != '' ">
+                    AND Extent1.BRNCH_ID = #{brnchId}
+                </if>
+                <if test=" null != salesmanId and '' != salesmanId">
+                    AND Extent1.POS_MEM_ID = #{salesmanId}
+                </if>
+
+                <if test=" null != posCustName and '' != posCustName">
+                    AND  Extent1.POS_CUST_NAME  = #{posCustName}
+                </if>
+
+                ORDER BY Extent1.POS_NO DESC
+    </select>
+
+
+ <select id="selectPosFlexiItmList" parameterType="Map" resultType="egovMap">
+        SELECT
+            Project1.CODE_NAME,
+            Project1.STK_CODE,
+            Project1.CODE_ID,
+            Project1.STK_DESC,
+            Project1.STK_CTGRY_ID,
+            Project1.STK_TYPE_ID,
+            Project1.STK_GRAD,
+            Project1. ALLOW_SALES,
+            Project1.STUS_CODE_ID
+        FROM
+        (SELECT
+                T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
+                T1.STK_ID CODE_ID,
+                T1.STK_CODE,
+                T1.STK_DESC,
+                T1.STK_CTGRY_ID,
+                T1.STK_TYPE_ID,
+                T1.STK_GRAD,
+                T1.ALLOW_SALES,
+                T1.STUS_CODE_ID
+            FROM
+                SYS0026M T1
+                LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
+            WHERE
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1
+
+             <!-- Item Bank -->
+             <if test=" null != posItm and '' != posItm">
+                WHERE
+                     Project1. ALLOW_SALES = 1
+                AND
+                     Project1.STUS_CODE_ID = 1
+                AND
+                     Project1.STK_CTGRY_ID = #{itemType}
+                 AND
+                     Project1.STK_TYPE_ID = #{stkTypeId}
+                       AND
+                    Project1.CODE_ID IN (
+                   SELECT STK_ID FROM LOG0092D WHERE STUS_CODE_ID = 1 AND STK_GRP_ID = 5570
+                    )
+
+             </if>
+
+                  ORDER BY Project1.STK_CODE ASC
+     </select>
+
+
+
+     <select id="chkFlexiStockList" parameterType="Map" resultType="egovMap">
+                        SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        <!-- NVL(Project1.QTY, 0 ) QTY, -->
+                        CASE WHEN Project1.STK_CODE IN ('M500097','M500140','M500139','M500083','M500167') THEN
+                        25000 ELSE
+                        999 END AS QTY,
+                        Project1.MOV_QTY,
+<!--                         NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES, -->
+                        0 AS AMT ,
+                        0 AS SUB_CHARGES,
+                        0 AS TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[
+                                (SELECT
+                                         T1.STK_ID, T1.AMT
+                                       FROM
+                                          (SELECT
+                                              STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+                                           FROM SAL0016M
+                                           WHERE MEM_PAC_ID = 0
+                                           AND APP_TYPE_ID = 67
+                                           AND STUS_CODE_ID = 1
+                                          ) T1
+                                    WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+         <select id="posFlexiDetail" parameterType="Map" resultType="egovMap">
+                SELECT
+                        T1.POS_ID,
+                        T1.POS_NO,
+                        T1.POS_BILL_ID,
+                        T1.POS_CUST_NAME,
+                        TO_CHAR(T1.POS_DT, 'DD/MM/YYYY') POS_DT,
+                        T1.POS_TYPE_ID,
+                        T1.POS_MODULE_TYPE_ID,
+                        T1.POS_TOT_AMT,
+                        T1.POS_TOT_CHRG,
+                        T1.POS_TOT_TXS,
+                        T1.POS_TOT_DSCNT,
+                        T1.POS_WH_ID,
+                        T1.POS_REM,
+                        T1.POS_MEM_ID,
+                        T2.MEM_CODE,
+                        T1.POS_RESN_ID,
+                        T1.BRNCH_ID,
+                        T1.CR_ACC_ID,
+                        T1.DR_ACC_ID,
+                        T1.STUS_ID,
+                        T1.POS_RCV_DT,
+                        T3.CODE
+                    FROM
+                        SAL0057D T1
+                    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
+                    WHERE
+                        POS_ID = #{posId}
+                    AND
+                    <![CDATA[
+                        ROWNUM <= 1
+                     ]]>
+    </select>
+
+        <update id="updatePosFlexiStatus" parameterType="Map">
+                UPDATE
+                    SAL0057D
+                SET
+                    APV_DT = SYSDATE ,
+                    APV_USER_ID = #{approvalUserId} ,
+                    APV_REM = #{posFlexiRemark} ,
+                    STUS_ID = #{posFlexiStatusCode}
+
+                WHERE
+                    POS_ID = #{posFlexiId}
+    </update>
+
+    <select id="selectWhSOBrnchList" parameterType="Map" resultType="egovMap">
+       SELECT * FROM (
+	           SELECT
+		                S5.BRNCH_ID CODE_ID,
+		                S5.CODE || '-' || S5.NAME CODE_NAME,
+		                S5.NAME ,
+		                S5.CODE ,
+		                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+	            FROM
+	                SYS0005M S5 ,SYS0028M S28
+	            WHERE
+	                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+	            AND S28.WH_LOC_STK_GRAD = 'A'
+	            AND S5.STUS_ID = 1
+	            AND S28.WH_LOC_STUS_ID = 1
+	            AND S28.WH_LOC_GB IN ('08','02','09')
+
+	            UNION
+
+	            SELECT
+		                S5.BRNCH_ID CODE_ID,
+		                S5.CODE || '-' || S5.NAME CODE_NAME,
+		                S5.NAME ,
+		                S5.CODE ,
+		                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+	            FROM
+	                SYS0005M S5 ,SYS0028M S28
+	            WHERE
+	                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+	            AND S28.WH_LOC_STK_GRAD = 'A'
+	            AND S5.STUS_ID = 1
+	            AND S28.WH_LOC_STUS_ID = 1
+	            AND S5.BRNCH_ID = 250
+      ) WHERE 1=1
+      <if test="code != null and code != ''">
+      AND CODE LIKE '%' || #{code} || '%'
+      </if>
+      ORDER BY CODE
+   </select>
+
+<select id="selectPOSFlexiItem" parameterType="Map" resultType="egovMap">
+   SELECT
+     stk.STK_ID ITEM_ID,
+     stkM.STK_CODE ITEM_CODE,
+     stkM.STK_DESC ITEM_DESC,
+     stkM.STK_TYPE_ID ITEM_TYPE_ID,
+     D.CODE_NAME AS ITEM_TYPE,
+     E.CODE_NAME AS ITEM_CATEGORY,
+     C.NAME AS STATUS
+ FROM
+    LOG0092D stk
+    JOIN SYS0026M stkM ON stk.STK_ID = stkM.STK_ID
+    LEFT JOIN SYS0038M C ON stk.STUS_CODE_ID = C.STUS_CODE_ID
+    LEFT JOIN SYS0013M D ON stkM.STK_TYPE_ID = D.CODE_ID
+    LEFT JOIN SYS0013M E ON stkM.STK_CTGRY_ID = E.CODE_ID
+    WHERE 1=1
+    AND stkM.STK_CTGRY_ID IN (1346,1348)
+
+        <if test="stkCode != null and stkCode != ''">
+            AND UPPER(stkM.STK_CODE) LIKE UPPER('%'||#{stkCode}||'%')
+        </if>
+           <if test="itemTypeCategory != null and itemTypeCategory != ''">
+            AND stkM.STK_CTGRY_ID = #{itemTypeCategory}
+        </if>
+          <if test="statusId != null and statusId != ''">
+            AND stk.STUS_CODE_ID = #{statusId}
+        </if>
+
+
+    ORDER BY stk.STK_ID
+
+    </select>
+
+     <update id="updatePOSFlexiItemActive" parameterType="Map">
+                       UPDATE LOG0092D
+                           SET STUS_CODE_ID  =  1 ,
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE
+                         STK_ID IN
+                         <foreach item="item" collection="stkIdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
+                       <update id="updatePOSFlexiItemInactive" parameterType="Map">
+                       UPDATE LOG0092D
+                           SET STUS_CODE_ID  =  8 ,
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE
+                         STK_ID IN
+                         <foreach item="item" collection="stkIdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+
+                     </update>
+
+
+    <select id="getFilterSerialNumLOG0100" parameterType="Map" resultType="egovMap">
+     /* [com.coway.trust.biz.sales.pos.impl.PosMapper.getFilterSerialNumLOG0100] 20200109 - KR OHK */
+        SELECT T1.ITM_CODE MATNR
+                  ,T1.ITM_CODE STK_ID
+                  ,T1.SERIAL_NO
+                  ,T3.STK_DESC
+                  ,T2.USER_ID
+                  ,T2.USER_NAME
+                  ,T4.WH_LOC_CODE
+                  ,T1.LAST_LOC_ID AS WH_LOC_ID
+           FROM LOG0100M T1
+            LEFT OUTER JOIN (
+                    SELECT A.USER_ID
+                              ,A.USER_NAME
+                              ,B.WH_LOC_CODE
+                              ,B.WH_LOC_ID
+                       FROM SYS0047M A
+                        LEFT JOIN SYS0028M B ON B.WH_LOC_CODE = A.USER_NAME
+                   ) T2 ON T2.WH_LOC_ID = T1.LAST_LOC_ID
+           INNER JOIN SYS0026M T3 ON T3.STK_CODE = T1.ITM_CODE
+           INNER JOIN SYS0028M T4 ON T4.WH_LOC_ID = T1.LAST_LOC_ID
+         WHERE T1.STUS_CODE = 'I'
+             AND T1.TEMP_SCAN_NO IS NULL
+             AND T1.LAST_LOC_ID = #{locId}
+           <if test=" null != basketStkCode and '' != basketStkCode">
+             AND T1.ITM_CODE = #{basketStkCode}
+           </if>
+           <if test="null != filterArr and filterArr.length > 0">
+             AND T1.SERIAL_NO IN
+               <foreach collection="filterArr" item="item" open="(" separator="," close=")">
+                   #{item}
+               </foreach>
+           </if>
+           <if test="null != serialArr and serialArr.length > 0">
+             AND T1.SERIAL_NO NOT IN
+               <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
+                   #{idx}
+               </foreach>
+           </if>
+     </select>
+
+    <resultMap type="egovMap" id="serialMap"/>
+    <select id="SP_LOGISTIC_POS_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.sales.pos.impl.PosMapper.SP_LOGISTIC_POS_SERIAL] 20200109 - KR OHK */
+        <![CDATA[
+            {
+                  call SP_LOGISTIC_POS_SERIAL ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=serialMap})
+            }
+         ]]>
+    </select>
+
+    <select id="SP_SALES_BARCODE_SAVE"  parameterType="Map"  statementType="CALLABLE" >
+    /* [com.coway.trust.biz.sales.pos.impl.PosMapper.SP_SALES_BARCODE_SAVE] 20200109 - KR OHK*/
+      {
+          call  SP_SALES_BARCODE_SAVE(#{reqstNo}, #{callGbn}, #{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
+      }
+     </select>
+
+     <select id="selectLoyaltyRewardPointList" parameterType="Map" resultType="egovMap">
+        SELECT M.LRP_BATCH_ID
+            , S.CODE STUS
+            , M.REM
+            , TO_CHAR(M.CRT_DT,'DD/MM/YYYY') CRT_DT
+            , U.USER_NAME CRT_USER_NAME
+        FROM SAL0286M M
+        JOIN SYS0047M U ON U.USER_ID = M.CRT_USER_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_ID
+        <if test="status != null and status != ''">
+            AND M.STUS_ID = #{status}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND M.LRP_BATCH_ID = #{batchId}
+        </if>
+        ORDER BY M.LRP_BATCH_ID DESC
+     </select>
+
+     <select id="selectLoyaltyRewardPointDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            D.LRP_ITM_ID ,
+            D.LRP_BATCH_ID ,
+            D.MEM_CODE ,
+            D.LRP_UPL_AMT ,
+            D.LRP_UPL_DISCOUNT_PERCENT ,
+            TO_CHAR(D.LRP_START_DT,'DD/MM/YYYY') START_DT,
+            TO_CHAR(D.LRP_END_DT,'DD/MM/YYYY') END_DT,
+            D.LRP_BALANCE_AMT ,
+            S.CODE STUS ,
+            D.REM
+        FROM SAL0287D D
+        JOIN SAL0286M M ON M.LRP_BATCH_ID = D.LRP_BATCH_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = D.STUS_ID
+        <if test="status != null and status != ''">
+            AND D.STUS_ID = #{status}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND D.LRP_BATCH_ID = #{batchId}
+        </if>
+        ORDER BY D.LRP_ITM_ID
+     </select>
+
+     <select id="selectLoyaltyRewardPointByMemCode" parameterType="Map" resultType="egovMap">
+        SELECT
+            LRP_ITM_ID ,
+            LRP_BATCH_ID ,
+            MEM_CODE ,
+            LRP_UPL_AMT ,
+            LRP_UPL_DISCOUNT_PERCENT ,
+            TO_CHAR(LRP_START_DT,'DD/MM/YYYY') START_DT,
+            TO_CHAR(LRP_END_DT,'DD/MM/YYYY') END_DT,
+            LRP_BALANCE_AMT ,
+            STUS_ID ,
+            REM ,
+            CRT_DT ,
+            CRT_USER_ID ,
+            UPD_DT ,
+            UPD_USER_ID
+        FROM SAL0287D
+        WHERE STUS_ID = 4
+        AND MEM_CODE = #{memCode}
+        AND LRP_BALANCE_AMT > 0
+        AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(LRP_START_DT,'YYYYMMDD') AND TO_CHAR(LRP_END_DT,'YYYYMMDD')
+     </select>
+
+     <insert id="insertUploadedLoyaltyRewardMaster" parameterType="Map">
+      INSERT INTO SAL0286M (
+          LRP_BATCH_ID,
+          STUS_ID,
+          REM,
+          CRT_DT,
+          CRT_USER_ID,
+          UPD_DT,
+          UPD_USER_ID
+      ) VALUES (
+          #{id},
+          #{stus},
+          null,
+          SYSDATE,
+          #{usrId},
+          SYSDATE,
+          #{usrId}
+      )
+     </insert>
+
+     <insert id="insertLoyaltyRewardPointItmBulk" parameterType="java.util.List">
+        INSERT INTO SAL0287D
+        (   LRP_ITM_ID ,
+            LRP_BATCH_ID ,
+            MEM_CODE ,
+            LRP_UPL_AMT ,
+            LRP_UPL_DISCOUNT_PERCENT ,
+            LRP_START_DT ,
+            LRP_END_DT ,
+            LRP_BALANCE_AMT ,
+            STUS_ID ,
+            REM ,
+            CRT_DT ,
+            CRT_USER_ID ,
+            UPD_DT ,
+            UPD_USER_ID )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+          SELECT
+              #{item.itmId},
+              #{item.id},
+              #{item.memCode},
+              #{item.balanceCapped},
+              #{item.discount},
+              TO_DATE(#{item.startDate},'dd/mm/yyyy'),
+              TO_DATE(#{item.endDate},'dd/mm/yyyy'),
+              0,
+              1,
+              NULL,
+              SYSDATE,
+              #{item.userId},
+              SYSDATE,
+              #{item.userId}
+          FROM DUAL
+          </foreach>
+      </insert>
+
+      <select id="getSeqSAL0286M" resultType="int"  flushCache="true">
+          SELECT SAL0286M_LRP_BATCH_ID_SEQ.NEXTVAL FROM DUAL
+      </select>
+
+      <select id="getSeqSAL0287D" resultType="int"  flushCache="true">
+          SELECT SAL0287D_LRP_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </select>
+
+      <update id="updateLoyaltyRewardPoint"  parameterType="Map">
+          UPDATE SAL0287D
+          SET UPD_DT = SYSDATE
+            , UPD_USER_ID = #{userId}
+            , LRP_BALANCE_AMT = LRP_BALANCE_AMT - #{posDiscount}
+          WHERE LRP_ITM_ID = #{hidLrpId}
+      </update>
+
+      <select id="SP_POS_LRP_CONFIRM"  parameterType="Map"  statementType="CALLABLE" >
+            {call  SP_POS_LRP_CONFIRM(#{id}, #{usrId})}
+      </select>
+
+</mapper>

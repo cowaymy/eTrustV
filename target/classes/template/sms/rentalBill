@@ -1,0 +1,9 @@
+RM0.00 COWAY RENTAL BILL FOR
+${month}
+INVOICE NO : ${invoiceNo}
+
+ACCT : ${acct} UNIT(S)
+PREV BAL = RM ${prevBal}
+CURR CHG = RM ${currChg}
+AMT DUE = RM ${amtDue}
+AS AT ${asAt}

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpCHSMapper">
+
+    <select id="selectCcpCHSMstList" parameterType="Map" resultType="egovMap">
+    SELECT  A.CHS_BATCH_ID
+  ,A.CHS_BATCH_DT
+  ,A.CHS_STUS_ID
+  ,A.CHS_REM
+  ,A.CHS_TOT_ITM
+  ,A.CHS_TOT_SUCCES
+  ,A.CHS_TOT_FAIL
+  ,A.CRT_USER_ID
+  ,A.CRT_DT
+  ,A.UPD_USER_ID
+  ,A.UPD_DT
+  ,B.USER_NAME
+  ,C.NAME STUS_CODE
+  FROM
+  SAL0263D A
+  LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+  LEFT JOIN SYS0038M C ON A.CHS_STUS_ID = C.STUS_CODE_ID
+  WHERE
+  1=1
+   <if test="chsBatchId != null and chsBatchId != ''">
+  AND A.CHS_BATCH_ID = #{chsBatchId}
+  </if>
+
+   <if test="crtUserName != null and crtUserName != ''">
+  AND B.USER_NAME LIKE '%'||#{crtUserName}||'%'
+  </if>
+
+     <if test="cmbBatchStatus != null and cmbBatchStatus != ''">
+  AND A.CHS_STUS_ID = #{cmbBatchStatus}
+  </if>
+
+
+    <if test=" '' != chsCreateStDate and null != chsCreateStDate">
+                             AND  A.CRT_DT >= TO_DATE(#{chsCreateStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                          </if>
+
+                          <if test=" '' != chsCreateEnDate and null != chsCreateEnDate">
+                             <![CDATA[
+                             AND  A.CRT_DT <= TO_DATE(#{chsCreateEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                             ]]>
+                          </if>
+
+ORDER BY A.CHS_BATCH_ID DESC
+    </select>
+
+
+        <select id="selectNextBatchId" resultType="int">
+    SELECT NVL(MAX(CHS_BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0263D
+    </select>
+
+        <select id="selectNextDetId" resultType="int">
+    SELECT NVL(MAX(CHS_DTL_ID) + 1, 1) AS DET_ID FROM SAL0264D
+    </select>
+
+    <select id="selectLastCHSMaster" resultType="int">
+     SELECT MAX(CHS_BATCH_ID) CHS_BATCH_ID
+          FROM SAL0263D
+    </select>
+
+  <insert id="insertCustHealthScoreMst" parameterType="Map">
+  INSERT INTO SAL0263D (
+  CHS_BATCH_ID
+  ,CHS_BATCH_DT
+  ,CHS_STUS_ID
+  ,CHS_REM
+  ,CHS_TOT_ITM
+  ,CHS_TOT_SUCCES
+  ,CHS_TOT_FAIL
+  ,CRT_USER_ID
+  ,CRT_DT
+  ,UPD_USER_ID
+  ,UPD_DT
+   ) VALUES (
+   #{chsBatchId}
+   ,SYSDATE
+   ,1
+   ,#{chsRem}
+   ,#{chsTotItm}
+   ,#{chsTotSuccess}
+   ,#{chsTotFail}
+   ,#{crtUserId}
+   ,SYSDATE
+   ,#{crtUserId}
+   ,SYSDATE
+  )
+
+  </insert>
+
+       <insert id="insertCustHealthScoreDtl" parameterType="Map">
+        INSERT INTO SAL0264D(
+        CHS_DTL_ID
+        ,CHS_BATCH_ID
+        ,CUST_ID
+        ,CHS_MONTH
+        ,CHS_YEAR
+        ,CHS_STUS
+        ,CHS_RSN
+        ,CRT_USER_ID
+        ,CRT_DT
+        ,UPD_USER_ID
+        ,UPD_DT
+        ,CUST_CAT
+        ,REN_CAT
+        ,SCORE_GRP
+        ,REN_UNIT_ENTITLE
+        )
+   <!--      VALUES (
+            #{chsDtlId}
+            ,#{chsBatchId}
+            ,#{custId}
+            ,#{month}
+            ,#{year}
+            ,#{chsStatus}
+            ,#{chsRsn}
+            ,#{crtUserId}
+            ,SYSDATE
+            ,#{updUserId}
+            ,SYSDATE
+     ) -->
+
+SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , chsRsn , crtUserId , crtDt , updUserId , updDt, custCat, renCat, scoreGrp, renUnitEntitle
+FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+
+            #{chsBatchId} chsBatchId
+            ,#{item.custId} custId
+            ,#{item.month} month
+            ,#{item.year} year
+            ,#{item.chsStatus} chsStatus
+            ,#{item.chsRsn} chsRsn
+            ,#{item.crtUserId} crtUserId
+            ,SYSDATE crtDt
+            ,#{item.updUserId} updUserId
+            ,SYSDATE updDt
+            ,#{item.custCat} custCat
+            ,#{item.renCat} renCat
+            ,#{item.scoreGrp} scoreGrp
+            ,#{item.renUnitEntitle} renUnitEntitle
+            FROM DUAL
+        </foreach>
+)
+    </insert>
+
+    <select id="selectCHSDetailInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+    A.CHS_BATCH_ID,
+    A.CHS_STUS_ID ,
+    A.CHS_TOT_ITM ,
+    B.CUST_ID ,
+    B.CHS_MONTH ,
+    B.CHS_YEAR ,
+    B.CHS_STUS ,
+    B.CHS_RSN ,
+    C.NAME STUS_NAME ,
+       REGEXP_REPLACE(D.NAME, '[^0-9A-Za-z]', ' ') CUST_NAME
+  FROM
+  SAL0263D A
+  JOIN SAL0264D B ON A.CHS_BATCH_ID = B.CHS_BATCH_ID
+  LEFT JOIN SYS0038M C ON A.CHS_STUS_ID = C.STUS_CODE_ID
+  LEFT JOIN SAL0029D D ON B.CUST_ID = D.CUST_ID
+  WHERE
+    B.CHS_MONTH NOT IN ('MM')
+  AND B.CHS_YEAR NOT IN  ('YYYY')
+  AND
+  A.CHS_BATCH_ID = #{chsBatchId}
+  <![CDATA[
+AND ROWNUM <= 20000
+ ]]>
+    </select>
+
+       <select id="selectCHSMasterInfo" parameterType="Map" resultType="egovMap">
+    SELECT  A.CHS_BATCH_ID
+  ,A.CHS_BATCH_DT
+  ,A.CHS_STUS_ID
+  ,A.CHS_REM
+  ,A.CHS_TOT_ITM
+  ,A.CHS_TOT_SUCCES
+  ,A.CHS_TOT_FAIL
+  ,A.CRT_USER_ID
+  ,A.CRT_DT
+  ,A.UPD_USER_ID
+  ,A.UPD_DT
+  ,B.USER_NAME
+  ,C.NAME STUS_NAME
+  FROM
+  SAL0263D A
+  LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+  LEFT JOIN SYS0038M C ON A.CHS_STUS_ID = C.STUS_CODE_ID
+  WHERE
+  1=1 AND
+  A.CHS_BATCH_ID = #{chsBatchId}
+
+  </select>
+
+ <update id="callBatchCHSUpdScore" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_CHS_UPD_SCORE(#{chsBatchId})}
+    </update>
+
+
+</mapper>

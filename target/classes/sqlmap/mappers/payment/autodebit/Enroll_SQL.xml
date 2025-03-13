@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.autodebit.service.impl.EnrollMapper">
+      
+    <!--EnrollmentList(Master Grid) 리스트 조회  -->
+    <select id="selectEnrollmentList" parameterType="Map" resultType="egovMap">
+    <![CDATA[ 
+        SELECT 
+                enrlId, 
+                crtDt, 
+                crtUserId, 
+                C1, 
+                debtDtFrom, 
+                createDate, 
+                debtDtTo, 
+                bankId, 
+                code, 
+                name 
+	                FROM ( SELECT Project1.ENRL_ID enrlId  ,
+	                Project1.CRT_DT crtDt  ,
+	                Project1.CRT_USER_ID crtUserId  ,
+	                Project1.C1 C1  ,
+	                Project1.DEBT_DT_FROM debtDtFrom,
+	                TO_CHAR(Project1.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') AS createDate,
+	                Project1.DEBT_DT_TO debtDtTo  ,
+	                Project1.BANK_ID bankId  ,
+	                Project1.CODE code  ,
+	                Project1.NAME name  
+	            FROM ( SELECT Project1.ENRL_ID ENRL_ID  ,
+	                Project1.BANK_ID BANK_ID  ,
+	                Project1.DEBT_DT_FROM DEBT_DT_FROM  ,
+	                Project1.CRT_USER_ID CRT_USER_ID  ,
+	                Project1.CRT_DT CRT_DT  ,
+	                Project1.DEBT_DT_TO DEBT_DT_TO  ,
+	                Project1.CODE CODE  ,
+	                Project1.NAME NAME  ,
+	                Project1.C1 C1  ,
+	                ROW_NUMBER() OVER ( ORDER BY Project1.ENRL_ID ASC  ) ROW_NUMBER  
+	            FROM ( SELECT Extent1.ENRL_ID ENRL_ID  ,
+	                       Extent1.BANK_ID BANK_ID  ,
+	                       Extent1.DEBT_DT_FROM DEBT_DT_FROM  ,
+	                       Extent1.CRT_USER_ID CRT_USER_ID  ,
+	                       Extent1.CRT_DT CRT_DT  ,
+	                       Extent1.DEBT_DT_TO DEBT_DT_TO  ,
+	                       Extent2.CODE CODE  ,
+	                       Extent2.NAME NAME  ,
+	                       CASE 
+	                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+	                       ELSE 'N' 
+	                          END C1  
+	                FROM PAY0056D Extent1
+	                       JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.BANK_ID
+	                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+	                 WHERE  1=1
+                 ]]>
+                 <if test = "enrollID != ''">
+                    AND Extent1.ENRL_ID = #{enrollID}
+                     
+                </if>
+                <if test = "creator != ''">
+                    AND ( (CASE 
+                                      WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                        ELSE 'N'
+                           END) = #{creator} )
+                </if>
+                <if test = "cmbIssueBank != ''">
+                    AND Extent1.BANK_ID = #{cmbIssueBank}
+                </if>
+                <if test="rdpCreateDateFr != '' and rdpCreateDateTo != '' ">
+                    AND Extent1.CRT_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{rdpCreateDateFr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                    AND Extent1.CRT_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{rdpCreateDateTo},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+                </if>
+                 ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER <![CDATA[> ]]>0
+		  ORDER BY Project1.ENRL_ID ASC )
+    </select>
+            
+    <select id="selectViewEnrollment" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT Limit1.ENRL_ID ENRL_ID  ,
+       NVL(TO_CHAR(Limit1.CRT_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')  CRT_DT,   
+       Limit1.CRT_USER_ID CRT_USER_ID  ,
+       Limit1.C1 C1  ,
+       NVL(TO_CHAR(Limit1.DEBT_DT_FROM ,'DD-MM-YYYY'),'01-01-1900')  DEBT_DT_FROM,   
+       NVL(TO_CHAR(Limit1.DEBT_DT_TO ,'DD-MM-YYYY'),'01-01-1900')  DEBT_DT_TO,   
+       Limit1.BANK_ID BANK_ID  ,
+       Limit1.CODE CODE  ,
+       Limit1.NAME NAME  
+         FROM ( SELECT Extent1.ENRL_ID ENRL_ID  ,
+                Extent1.BANK_ID BANK_ID  ,
+                Extent1.DEBT_DT_FROM DEBT_DT_FROM  ,
+                Extent1.CRT_USER_ID CRT_USER_ID  ,
+                Extent1.CRT_DT CRT_DT  ,
+                Extent1.DEBT_DT_TO DEBT_DT_TO  ,
+                Extent2.CODE CODE  ,
+                Extent2.NAME NAME  ,
+                CASE 
+                     WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                ELSE 'N' 
+                   END C1  
+         FROM PAY0056D Extent1
+                JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.BANK_ID
+                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+          WHERE  Extent1.ENRL_ID = #{enrollId} AND ROWNUM <= 1 ) Limit1
+          ]]>
+    </select>
+    
+    <select id="selectViewEnrollmentList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT 
+	       Project1.ENRL_ITM_ID ENRL_ITM_ID  ,
+	       Project1.ACC_NAME ACC_NAME  ,
+	       Project1.ACC_NO ACC_NO  ,
+	       Project1.ACC_NRIC ACC_NRIC  ,
+	       Project1.APPV_DT APPV_DT  ,
+	       Project1.BILL_AMT BILL_AMT  ,
+	       Project1.CLM_AMT CLM_AMT  ,
+	       Project1.ENRL_ID ENRL_ID  ,
+	       Project1.LIMIT_AMT LIMIT_AMT  ,
+	       Project1.SALES_ORD_ID SALES_ORD_ID  ,
+	       Project1.SALES_ORD_NO SALES_ORD_NO  ,
+	       Project1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
+	       Project1.C1 C1  
+	        FROM ( SELECT Project1.ENRL_ITM_ID ENRL_ITM_ID  ,
+	                Project1.ENRL_ID ENRL_ID  ,
+	                Project1.SALES_ORD_ID SALES_ORD_ID  ,
+	                Project1.ACC_NO ACC_NO  ,
+	                Project1.ACC_NAME ACC_NAME  ,
+	                Project1.ACC_NRIC ACC_NRIC  ,
+	                Project1.LIMIT_AMT LIMIT_AMT  ,
+	                Project1.BILL_AMT BILL_AMT  ,
+	                Project1.CLM_AMT CLM_AMT  ,
+	                Project1.APPV_DT APPV_DT  ,
+	                Project1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
+	                Project1.SALES_ORD_NO SALES_ORD_NO  ,
+	                Project1.C1 C1  ,
+	                ROW_NUMBER() OVER ( ORDER BY Project1.ENRL_ITM_ID ASC  ) ROW_NUMBER  
+	            FROM ( SELECT Extent1.ENRL_ITM_ID ENRL_ITM_ID  ,
+	                       Extent1.ENRL_ID ENRL_ID  ,
+	                       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+	                       Extent1.ACC_NO ACC_NO  ,
+	                       Extent1.ACC_NAME ACC_NAME  ,
+	                       Extent1.ACC_NRIC ACC_NRIC  ,
+	                       Extent1.LIMIT_AMT LIMIT_AMT  ,
+	                       Extent1.BILL_AMT BILL_AMT  ,
+	                       Extent1.CLM_AMT CLM_AMT  ,
+	                       Extent1.APPV_DT APPV_DT  ,
+	                       Extent1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
+	                       Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+	                       CASE 
+	                            WHEN ( Extent3.SRV_CNTRCT_ID IS NOT NULL ) THEN Extent3.SRV_CNTRCT_REF_NO
+	                       ELSE ''
+	                          END C1  
+	                FROM PAY0057D Extent1
+	                       JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+	                       LEFT JOIN SAL0077D Extent3   ON Extent3.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+	                 WHERE  ( 1 = Extent1.STUS_CODE_ID )
+	                          AND ( Extent1.ENRL_ID = #{enrollId} ) ) Project1 ) Project1
+        WHERE  Project1.ROW_NUMBER > 0
+        ORDER BY Project1.ENRL_ITM_ID ASC
+          ]]>
+    </select>
+    
+    <resultMap id="enrollMap" type="egovMap"></resultMap>
+    <select id="saveEnroll" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_INST_RSC_ENRL(#{cmbIssueBank2},TO_CHAR(TO_DATE(#{rdpCreateDateFr2},'DD/MM/YYYY'),'YYYYMMDD'), TO_CHAR(TO_DATE(#{rdpCreateDateTo2},'DD/MM/YYYY'),'YYYYMMDD'),#{userId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=enrollMap})
+        }
+    </select>
+    
+    <select id="selectEnrollmentDetView" parameterType="Map" resultType="egovMap">
+        SELECT 
+            Extent1.ENRL_ITM_ID,
+            Extent1.ENRL_ID,
+            Extent1.SALES_ORD_ID,
+            Extent1.ACC_NO,
+            Extent1.ACC_NAME,
+            Extent1.ACC_NRIC,
+            Extent1.LIMIT_AMT,
+            Extent1.BILL_AMT,
+            Extent1.CLM_AMT,
+            Extent1.APPV_DT,
+            Extent1.SVC_CNTRCT_ID,
+            Extent2.SALES_ORD_NO,
+            (CASE WHEN Extent3.SRV_CNTRCT_ID IS NOT NULL THEN Extent3.SRV_CNTRCT_REF_NO ELSE 'N' END) AS  SRV_CNTRCT_ID,
+            (CASE 
+                WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+                            (CASE 
+                                WHEN LENGTH(Extent2.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN
+                                    SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent2.SALES_ORD_NO)
+                                ELSE
+                                    SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent2.SALES_ORD_NO)
+                                END)
+                ELSE
+                    (CASE 
+                        WHEN LENGTH(Extent2.SALES_ORD_NO) = 7 AND SUBSTR(Extent2.SALES_ORD_NO,0,1) = '0' THEN
+                            TRIM(SUBSTR(Extent2.SALES_ORD_NO,2,LENGTH(Extent2.SALES_ORD_NO)))
+                        ELSE
+                            TRIM(Extent2.SALES_ORD_NO)
+                    END)
+                END) AS CNTRCT_N_ORD_NO
+        FROM 
+            PAY0057D Extent1
+            JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN SAL0077D Extent3   ON Extent3.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+        WHERE  
+            Extent1.STUS_CODE_ID = 1
+            AND Extent1.ENRL_ID = #{enrlId}
+        ORDER BY 
+            Extent1.ACC_NO ASC
+    </select>
+    
+</mapper>

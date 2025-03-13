@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper">
+
+  <sql id="prefixSql">
+    <if test="pageSize >= 0">
+    SELECT  *
+    FROM ( SELECT  *
+               FROM ( SELECT ROWNUM AS RNUM
+                                   , Z.*
+                          FROM (
+    </if>
+  </sql>
+
+  <sql id="suffixSql">
+    <if test="pageSize >= 0">
+      <![CDATA[
+        ) Z
+      ) WHERE   RNUM <= #{pageNo} * #{pageSize}
+    ) WHERE   RNUM >= (#{pageNo} - 1) * #{pageSize} + 1
+      ]]>
+    </if>
+  </sql>
+
+  <select id="selectTicketStatusCode" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectTicketStatusCode] 20191023 - KR JAEMAJEM */
+      SELECT STUS_CODE_ID AS CODE
+             ,   NAME AS CODE_NAME
+      FROM SYS0038M
+      WHERE STUS_CODE_ID IN (1, 5, 6, 10)
+    ]]>
+  </select>
+
+  <sql id="selectRequestFundTransferTalbe">
+    <![CDATA[
+      FROM PAY0296D A --Mobile Request Fund Transfer
+      INNER JOIN MOB0001D B ON B.MOB_TICKET_NO = A.MOB_TICKET_NO
+      INNER JOIN SYS0038M C ON C.STUS_CODE_ID = B.TICKET_STUS_ID
+      INNER JOIN SYS0013M D ON D.CODE_MASTER_ID = 396
+                                         AND D.CODE_ID = A.FT_RESN
+      LEFT OUTER JOIN SYS0070M E ON  E.CHENAL_TYPE = 'M'
+                                                AND E.ATCH_FILE_GRP_ID = A.FT_ATTCH_IMG
+      LEFT OUTER JOIN SYS0071D F ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+      INNER JOIN SYS0005M G ON G.BRNCH_ID = B.CRT_USER_BRNCH
+      INNER JOIN SYS0047M H ON  A.CRT_USER_ID = H.USER_ID
+      INNER JOIN SYS0047M I ON  A.UPD_USER_ID = I.USER_ID
+      LEFT JOIN SAL0001D J ON J.SALES_ORD_NO = A.CUR_ORD_NO
+      LEFT JOIN SAL0001D K ON K.SALES_ORD_NO = A.NEW_ORD_NO
+      WHERE TO_CHAR(B.CRT_DT, 'YYYYMMDD') BETWEEN TO_CHAR(TO_DATE(#{fromReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+    ]]>
+
+    <if test="mobTicketNo != null and mobTicketNo != '' ">
+      AND A.MOB_TICKET_NO = #{mobTicketNo}
+    </if>
+
+    <if test="curOrdNo != null and curOrdNo != '' ">
+      AND A.CUR_ORD_NO = #{curOrdNo}
+    </if>
+
+    <if test="ticketStusId != null and ticketStusId != '' ">
+      AND B.TICKET_STUS_ID = #{ticketStusId}
+    </if>
+
+    <if test="brnchCode != null and brnchCode != '' ">
+      AND G.CODE = #{brnchCode}
+    </if>
+
+    <if test="memCode != null and memCode != '' ">
+       AND H.HR_CODE = #{memCode}
+    </if>
+  </sql>
+
+  <select id="selectRequestFundTransferCount" parameterType="Map" resultType="int">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectRequestFundTransferCount] 20191023 - KR JAEMAJEM */
+      SELECT  COUNT(1) AS CNT
+    ]]>
+    <include refid="selectRequestFundTransferTalbe"/>
+  </select>
+
+  <select id="selectRequestFundTransferList" parameterType="Map" resultType="egovMap">
+    <if test='gu.equals("LIST")'>
+      <include refid="prefixSql"/>
+    </if>
+    <![CDATA[
+    /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectRequestFundTransferList] 20191023 - KR JAEMAJEM */
+    SELECT  B.MOB_TICKET_NO AS MOB_TICKET_NO
+              , TO_CHAR(B.CRT_DT, 'DD/MM/YYYY') AS REQ_DT
+              , C.NAME AS TICKET_STUS_NM
+              , A.CUR_ORD_NO AS CUR_ORD_NO
+              , A.CUR_CUST_NAME AS CUR_CUST_NAME
+              , A.CUR_WOR_NO AS CUR_WOR_NO
+              , A.CUR_AMT AS CUR_AMT
+              , A.NEW_ORD_NO AS NEW_ORD_NO
+              , A.NEW_CUST_NAME AS NEW_CUST_NAME
+              , D.CODE_NAME AS FT_RESN_NAME
+              , CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN 'DOWN'
+                                                ELSE NULL
+                                                END AS FT_ATTCH_IMG_URL
+              , CASE WHEN A.FT_ATTCH_IMG IS NOT NULL THEN F.FILE_SUB_PATH
+                                                ELSE NULL
+                                                END AS FILE_SUB_PATH
+              , A.FT_REM AS FT_REM
+              , G.CODE AS BRNCH_CODE
+              , H.HR_CODE AS MEM_CODE
+              , TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI:SS')  AS UPD_DT
+              , I.USER_NAME AS UPD_USER_ID
+              , A.FT_REQ_ID AS FT_REQ_ID
+              , A.FT_STUS_ID AS FT_STUS_ID
+              , B.TICKET_STUS_ID AS TICKET_STUS_ID
+              , A.NEW_AMT AS NEW_AMT
+              , A.FT_RESN AS FT_RESN
+              , A.FT_ATTCH_IMG AS REF_ATTCH_IMG
+              , F.ATCH_FILE_NAME AS ATCH_FILE_NAME
+              , F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME
+              , J.CUST_ID AS CUR_CUST_ID
+              , K.CUST_ID AS NEW_CUST_ID
+    ]]>
+    <include refid="selectRequestFundTransferTalbe"/>
+    <if test='gu.equals("LIST")'>
+      <include refid="suffixSql"/>
+    </if>
+    ORDER BY MOB_TICKET_NO DESC
+  </select>
+
+  <resultMap id="selectOutstandingAmountMap" type="egovMap"></resultMap>
+  <select id="selectOutstandingAmount" parameterType="Map" statementType="CALLABLE">
+     /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.selectOutstandingAmount] 20191202 - KR JAEMAJEM */
+    {
+      call  SP_GET_ORD_OUTSTANDING(#{ftReqId}, #{selectData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=selectOutstandingAmountMap})
+    }
+  </select>
+
+<resultMap id="callSpInstReqFundTrnsfrMap" type="egovMap"></resultMap>
+  <select id="callSpInstReqFundTrnsfr" parameterType="Map" statementType="CALLABLE">
+    /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.callSpInstReqFundTrnsfr] 20191223 - KR JAEMAJEM */
+    {
+      call  SP_INST_REQ_FUND_TRNSFR
+      (
+          #{ftReqId}
+        , #{userId}
+        , #{errcode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
+        , #{errmsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=callSpInstReqFundTrnsfrMap}
+      )
+    }
+  </select>
+
+  <update id="updateApprovePAY0296D" parameterType="Map">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateApprovePAY0296D] 20191222 - KR JAEMAJEM */
+      UPDATE  PAY0296D A SET A.NEW_ORD_OUT_AMT = #{newOrdOutAmt}
+                                        , A.ADV_AMT = #{advAmt}
+                                        , A.ADV_MONTH = #{advMonth}
+                                        , A.UPD_DT = SYSDATE
+                                        , A.UPD_USER_ID = #{updUserId}
+      WHERE A.FT_REQ_ID = #{ftReqId}
+          AND A.FT_STUS_ID = 1
+    ]]>
+  </update>
+
+  <update id="updateRejectedPAY0296D" parameterType="Map">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestFundTransferMapper.updateRejectedPAY0296D] 20191023 - KR JAEMAJEM */
+      UPDATE  PAY0296D A SET A.FT_STUS_ID = #{ftStusId}
+                                        , A.FT_REM = #{ftRem}
+                                        , A.UPD_DT = SYSDATE
+                                        , A.UPD_USER_ID = #{updUserId}
+      WHERE A.FT_REQ_ID = #{ftReqId}
+          AND A.FT_STUS_ID = 1
+    ]]>
+  </update>
+</mapper>

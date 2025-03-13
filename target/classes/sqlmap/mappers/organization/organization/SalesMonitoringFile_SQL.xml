@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.SalesMonitoringFileMapper">
+
+        <select id="selectSummarySalesListing" parameterType="Map" resultType="egovMap">
+          SELECT
+                TYPE
+              , CODE_NAME
+              , CODE_ID
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A,0))||'%' END ELSE TO_CHAR(NVL(A,0)) END A
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B,0))||'%' END ELSE TO_CHAR(NVL(B,0)) END B
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C,0))||'%' END ELSE TO_CHAR(NVL(C,0)) END C
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(D,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(D,0))||'%' END ELSE TO_CHAR(NVL(D,0)) END D
+              FROM
+           (
+	            SELECT * FROM
+	            (
+	             SELECT MONTH, TYPE, CODE_NAME, CODE_ID , CASE WHEN TYPE IN (6604,6605,6607,6809) THEN SUM(AMT) WHEN TYPE IN (6608) THEN MAX(ROUND(AMT,2))  ELSE MAX(AMT) END RESULT FROM
+	                (
+	                SELECT
+	                           CASE WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm3} THEN 'A'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm2} THEN 'B'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{previousYm}   THEN 'C'
+                                       WHEN A.YEAR ||TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM')  = #{currentYm}     THEN 'D'
+                              END AS MONTH
+	                        , A.TYPE
+	                        , B.CODE_NAME
+	                        , B.CODE_ID
+	                        , SUM(NVL(A.W1,0)) W1
+	                        , SUM(NVL(A.W2,0)) W2
+	                        , SUM(NVL(A.W3,0)) W3
+	                        , SUM(NVL(A.W4,0)) W4
+	                 FROM SYS0013M B
+                     LEFT JOIN ORG0043T A ON A.TYPE = B.CODE_ID AND A.MEM_CODE = #{memCode}  AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+	                 WHERE  B.CODE_ID IN (6604,6605,6606,6607,6608,6809)
+	                 GROUP BY A.YEAR, A.MONTH, A.TYPE, B.CODE_NAME, B.CODE_ID
+	                 ORDER BY B.CODE_ID
+	                )
+	                UNPIVOT INCLUDE NULLS
+	                (
+	                AMT FOR WEEKS IN ( W1 AS 'W1', W2 AS 'W2', W3 AS 'W3',W4 AS 'W4')
+	                )
+	            GROUP BY MONTH, TYPE, CODE_NAME, CODE_ID
+	            )
+	            PIVOT (SUM(RESULT) FOR MONTH IN ('A' AS A, 'B' AS b, 'C' AS C, 'D' AS D))
+	            ORDER BY CODE_ID
+            )
+        </select>
+
+       <select id="selectWeekSalesListing" parameterType="Map" resultType="egovMap">
+        SELECT
+                CODE_ID AS TYPE
+              , CODE_NAME
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A_W1,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A_W1,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(A_W1,0)) END A_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A_W2,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A_W2,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(A_W2,0)) END A_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A_W3,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A_W3,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(A_W3,0)) END A_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(A_W4,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(A_W4,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(A_W4,0)) END A_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B_W1,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B_W1,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(B_W1,0)) END B_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B_W2,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B_W2,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(B_W2,0)) END B_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B_W3,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B_W3,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(B_W3,0)) END B_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(B_W4,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(B_W4,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(B_W4,0)) END B_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C_W1,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C_W1,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(C_W1,0)) END C_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C_W2,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C_W2,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(C_W2,0)) END C_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C_W3,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C_W3,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(C_W3,0)) END C_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(C_W4,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(C_W4,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(C_W4,0)) END C_W4
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(D_W1,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(D_W1,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(D_W1,0)) END D_W1
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(D_W2,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(D_W2,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(D_W2,0)) END D_W2
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(D_W3,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(D_W3,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(D_W3,0)) END D_W3
+              , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(D_W4,0))||'%' = '0%' THEN '-' ELSE TO_CHAR(NVL(D_W4,0),'fm9,999,999,999,990.00')||'%' END ELSE TO_CHAR(NVL(D_W4,0)) END D_W4
+              FROM
+              (
+                    SELECT * FROM (
+                        SELECT * FROM
+                            (
+                             SELECT
+                                      CASE WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm3} THEN 'A'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm2} THEN 'B'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{previousYm}   THEN 'C'
+                                              WHEN B.YEAR ||TO_CHAR(TO_DATE(B.MONTH,'MM'),'MM')  = #{currentYm}     THEN 'D'
+                                      END AS MONTH
+                                    , B.TYPE
+                                    , A.CODE_ID
+                                    , A.CODE_NAME
+                                    , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(B.W1,0),2)) ELSE SUM(NVL(B.W1,0)) END W1
+                                    , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(B.W2,0),2)) ELSE SUM(NVL(B.W2,0)) END W2
+                                    , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(B.W3,0),2)) ELSE SUM(NVL(B.W3,0)) END W3
+                                    , CASE WHEN TYPE IN (6608) THEN SUM(ROUND(NVL(B.W4,0),2)) ELSE SUM(NVL(B.W4,0)) END W4
+                             FROM SYS0013M A
+                             LEFT JOIN ORG0043T B ON B.TYPE = A.CODE_ID AND B.MEM_CODE = #{memCode} AND TO_CHAR(TO_DATE(B.YEAR || B.MONTH,'YYYYMM'),'YYYYMM')  BETWEEN #{previousYm3} AND #{currentYm}
+                             WHERE A.CODE_ID IN (6604,6605,6606,6607,6608,6809)
+                             GROUP BY B.YEAR, B.MONTH, B.TYPE, A.CODE_ID, A.CODE_NAME
+                            )
+                        )
+                        PIVOT
+                        (
+                            SUM(W1) AS W1,  SUM(W2) AS W2 , SUM(W3) AS W3, SUM(W4) AS W4
+                            FOR (MONTH) IN ('A' AS A, 'B' AS B, 'C' AS C, 'D' AS D)
+                        )
+                     ORDER BY CODE_ID
+          )
+        </select>
+
+        <select id="selectPerformanceView" parameterType="Map" resultType="egovMap">
+
+         SELECT DISTINCT
+            MEM_CODE
+          , MEM_LVL
+          , FULL_NAME
+          , TRIM(DEPT_CODE) DEPT_CODE
+          , TRIM(GRP_CODE) GRP_CODE
+          , TRIM(ORG_CODE) ORG_CODE
+          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
+                    WHEN MEM_LVL = 2 THEN GRP_CODE
+                    WHEN MEM_LVL = 3 THEN DEPT_CODE
+            ELSE '' END CRS_CODE
+          , POSITION
+          , YEAR
+          , TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
+          , PRODUCTCTGRY
+          , PRODUCTNAME
+          , NVL(KEYIN_W1,0) KEYIN_W1
+          , NVL(KEYIN_W2,0) KEYIN_W2
+          , NVL(KEYIN_W3,0) KEYIN_W3
+          , NVL(KEYIN_W4,0) KEYIN_W4
+          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
+          , NVL(NETSALES_W1,0) NETSALES_W1
+          , NVL(NETSALES_W2,0) NETSALES_W2
+          , NVL(NETSALES_W3,0) NETSALES_W3
+          , NVL(NETSALES_W4,0) NETSALES_W4
+          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
+          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
+            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2), 'fm9,999,999,999,990.00') || '%' END NET_RATE
+          , TARGETATMT_NS
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
+          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
+            ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
+          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN TO_CHAR('0', 'fm9,999,999,999,990.00')
+            ELSE TO_CHAR(ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2), 'fm9,999,999,999,990.00')  END NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN TO_CHAR('0', 'fm9,999,999,999,990.00')
+            ELSE TO_CHAR(ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2), 'fm9,999,999,999,990.00')  END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NVL(ACT_HP,0) END ACTHP
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NVL(RECRUIT,0) END RECRUIT
+          , CASE WHEN NVL(TARGETATMT_SHI,0) = 0 AND NVL(SHI,0)= 0 THEN '-'
+                    WHEN NVL(TARGETATMT_SHI,0) <![CDATA[ <> ]]>0 AND NVL(SHI,0)= 0 THEN '0%'
+            ELSE TO_CHAR(ROUND(SHI,2), 'fm9,999,999,999,990.00') || '%' END SHI
+          , TARGETATMT_SHI
+          , NVL(DIRECT_RECRUIT,0) DIRECT_RECRUIT
+            FROM (
+               SELECT *
+               FROM
+                        (
+                          WITH TARGETCOLLECTION AS(
+                          SELECT
+                                    DISTINCT PV_YEAR, PV_MONTH,MEM_ID,MAX(TARGETATMT_SHI)TARGETATMT_SHI
+                           FROM ORG0044T
+                           WHERE TARGETATMT_SHI IS NOT NULL
+
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                            AND ORG_CODE = #{orgCode}
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND GRP_CODE = #{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND DEPT_CODE = #{deptCode}
+                        </if>
+                        <if test="memCode != null and memCode != ''">
+                            AND  MEM_CODE = #{memCode}
+                        </if>
+                          <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " )'>
+                           AND TO_CHAR(TO_DATE(PV_YEAR || PV_MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
+                         </if>
+
+                         <if test="netSalesMonth != null and netSalesMonth != ''">
+                            AND PV_YEAR = EXTRACT( YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND PV_MONTH = EXTRACT( MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                         </if>
+                         GROUP BY PV_YEAR, PV_MONTH,MEM_ID
+                        )
+                        SELECT
+                                  A.MEM_CODE
+                                , E.FULL_NAME
+                                , A.DEPT_CODE
+                                , A.GRP_CODE
+                                , CASE WHEN A.ORG_CODE = ' ' THEN 'CRS0002' ELSE A.ORG_CODE END ORG_CODE
+                                , A.MEM_LVL
+                                , CASE WHEN A.MEM_LVL = 0 THEN 'SGM'
+                                          WHEN A.MEM_LVL = 1 THEN 'GM'
+                                          WHEN A.MEM_LVL = 2 THEN 'SM'
+                                          WHEN A.MEM_LVL = 3 THEN 'HM'
+                                          WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
+                                , A.TYPE
+                                , A.YEAR
+                                , A.MONTH
+                                , SUM(NVL(A.W1,0)) W1
+                                , SUM(NVL(A.W2,0)) W2
+                                , SUM(NVL(A.W3,0)) W3
+                                , SUM(NVL(A.W4,0)) W4
+                                , SUM(NVL(A.W1,0)+NVL(A.W2,0)+NVL(A.W3,0)+NVL(A.W4,0)) TOTAL_AMT
+                                , A.TARGETATMT_NS
+                                , A.PARTTIME
+                                , A.NEW_NEO_ACT
+                                , A.PARTTIME_NET
+                                , A.NEO_PRO
+                                , A.NEO_PRO_NET
+                                , A.ACT_HP
+                                , A.RECRUIT
+                                , A.DIRECT_RECRUIT
+                                , A.SHI
+                                , F.TARGETATMT_SHI
+                                 <if test="cmbProductCtgry == null or cmbProductCtgry == ''">
+                                , 'ALL' PRODUCTCTGRY
+                                </if>
+                                <if test="cmbProduct == null or cmbProduct == ''">
+                                , 'ALL'  PRODUCTNAME
+                                </if>
+                                <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
+                                , C.CODE_NAME PRODUCTCTGRY
+                                </if>
+                                <if test="cmbProduct != null and cmbProduct != ''">
+                                 , B.STK_DESC PRODUCTNAME
+                                </if>
+                        FROM ORG0043T A
+                        LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
+                        LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+                        LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
+                        LEFT JOIN TARGETCOLLECTION F ON A.MEM_ID = F.MEM_ID AND A.YEAR = F.PV_YEAR AND A.MONTH =F.PV_MONTH
+                        JOIN ORG0001D G ON A.MEM_ID = G.MEM_ID AND NVL(G.STUS,0) = 1
+                        WHERE 1 = 1
+                        AND E.MEM_TYPE = 1
+                         <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                            AND A.ORG_CODE = #{orgCode}
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND A.GRP_CODE = #{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND A.DEPT_CODE = #{deptCode}
+                        </if>
+                        <if test="memCode != null and memCode != ''">
+                            AND  E.MEM_CODE = #{memCode}
+                        </if>
+                        <if test="memName != null and memName != ''">
+                            AND  UPPER(E.NAME) LIKE UPPER('%' || #{memName} || '%')
+                        </if>
+                         <if test="memLvl != null and memLvl != ''">
+                            AND  UPPER(A.MEM_LVL) LIKE UPPER('%' || #{memLvl} || '%')
+                        </if>
+
+                         <if test='(netSalesMonth == null or netSalesMonth == "" or netSalesMonth == " " )'>
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM') = #{currentYm}
+                         </if>
+
+                         <if test="netSalesMonth != null and netSalesMonth != ''">
+                            AND A.YEAR = EXTRACT( YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND A.MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                         </if>
+                         <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
+                           AND B.STK_CTGRY_ID IN
+                            <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                         </if>
+                         <if test="cmbProduct != null and cmbProduct != ''">
+                            AND B.STK_ID IN
+                              <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                        GROUP BY A.MEM_CODE, E. FULL_NAME, A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, A.MEM_LVL,  A.TYPE, D.CODE_NAME, A.YEAR, A.MONTH, C.CODE_NAME, B.STK_DESC , A.TARGETATMT_NS, A.PARTTIME, A.NEW_NEO_ACT, A.PARTTIME_NET, A.NEO_PRO, A.NEO_PRO_NET, A.ACT_HP, A.RECRUIT, A.DIRECT_RECRUIT, A.SHI,F.TARGETATMT_SHI
+                        ORDER BY A.MEM_LVL, A.MEM_CODE, A.YEAR, A.MONTH
+                        )
+                        PIVOT
+                        (
+                              SUM(W1) AS W1,
+                              SUM(W2) AS W2 ,
+                              SUM(W3) AS W3,
+                              SUM(W4) AS W4,
+                              SUM(TOTAL_AMT) AS TOTAL_AMT
+                              FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES, '6606' AS ACTHP, '6607' AS RECRUIT, '6608' AS SHI)
+                        )
+             )
+             WHERE ROWNUM <![CDATA[ <= ]]> 20000
+<!--               NVL(KEYIN_TOTAL_AMT,0) !=0  -->
+              ORDER BY YEAR DESC, MONTH DESC, ORG_CODE ASC, MEM_LVL ASC, MEM_CODE ASC
+        </select>
+
+        <select id="selectSmfHA" parameterType="Map" resultType="egovMap">
+            SELECT
+		            MEM_CODE
+		          , MEM_LVL
+		          , FULL_NAME
+		          , DEPT_CODE
+		          , GRP_CODE
+		          , ORG_CODE
+		          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
+		                    WHEN MEM_LVL = 2 THEN GRP_CODE
+		                    WHEN MEM_LVL = 3 THEN DEPT_CODE
+		            ELSE '' END CRS_CODE
+		          , POSITION
+		          , YEAR
+		          , TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
+		          , PRODUCTCTGRY
+		          , PRODUCTNAME
+		       , NVL(KEYIN_W1,0) KEYIN_W1
+		          , NVL(KEYIN_W2,0) KEYIN_W2
+		          , NVL(KEYIN_W3,0) KEYIN_W3
+		          , NVL(KEYIN_W4,0) KEYIN_W4
+		          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
+		          , NVL(NETSALES_W1,0) NETSALES_W1
+		          , NVL(NETSALES_W2,0) NETSALES_W2
+		          , NVL(NETSALES_W3,0) NETSALES_W3
+		          , NVL(NETSALES_W4,0) NETSALES_W4
+		          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
+		          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
+		            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) || '%' END NET_RATE
+		          , TARGETATMT_NS
+		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
+		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
+		          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
+		            ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
+		          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)  END NEO_PRO_PRODUCTIVITY
+		          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)  END PARTTIME_PRODUCTIVITY
+		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
+		          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
+		          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' ELSE TO_CHAR(ROUND(SHI,2)) || '%' END SHI
+		            FROM (
+		               SELECT * FROM
+		                        (
+		                        SELECT
+		                                  A.MEM_CODE
+		                                , E.FULL_NAME
+		                                , A.DEPT_CODE
+		                                , A.GRP_CODE
+		                                , CASE WHEN A.ORG_CODE = ' ' THEN 'CRS0002' ELSE A.ORG_CODE END ORG_CODE
+		                                , A.MEM_LVL
+		                                , CASE WHEN A.MEM_LVL = 0 THEN 'SGM'
+		                                WHEN A.MEM_LVL = 1 THEN 'GM'
+		                                WHEN A.MEM_LVL = 2 THEN 'SM'
+		                                WHEN A.MEM_LVL = 3 THEN 'HM'
+		                                WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
+		                                , A.TYPE
+		                                , A.YEAR
+		                                , A.MONTH
+		                                , SUM(NVL(A.W1,0)) W1
+		                                , SUM(NVL(A.W2,0)) W2
+		                                , SUM(NVL(A.W3,0)) W3
+		                                , SUM(NVL(A.W4,0)) W4
+		                                , SUM(NVL(A.W1,0)+NVL(A.W2,0)+NVL(A.W3,0)+NVL(A.W4,0)) TOTAL_AMT
+		                                , A.TARGETATMT_NS
+		                                , A.PARTTIME
+		                                , A.NEW_NEO_ACT
+		                                , A.PARTTIME_NET
+		                                , A.NEO_PRO
+		                                , A.NEO_PRO_NET
+		                                , A.ACT_HP
+		                                , A.RECRUIT
+		                                , A.SHI
+				                        <if test="cmbProductCtgry_HA == null or cmbProductCtgry_HA == ''">
+		                                , 'ALL' PRODUCTCTGRY
+		                                </if>
+		                                <if test="cmbProduct_HA == null or cmbProduct_HA == ''">
+		                                , 'ALL'  PRODUCTNAME
+		                                </if>
+		                                <if test="cmbProductCtgry_HA != null and cmbProductCtgry_HA != ''">
+		                                , C.CODE_NAME PRODUCTCTGRY
+		                                </if>
+		                                <if test="cmbProduct_HA != null and cmbProduct_HA != ''">
+		                                 , B.STK_DESC PRODUCTNAME
+		                                </if>
+		                        FROM ORG0043T A
+		                        LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
+		                        LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+		                        LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
+		                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS=1
+		                        WHERE 1 = 1
+		                        AND B.STK_CTGRY_ID NOT IN ('5706','5707')
+		                        AND E.MEM_TYPE = 1
+		                        <if test="memCode_HA != null and memCode_HA != ''">
+                                    AND A.MEM_CODE = #{memCode_HA}
+                                </if>
+		                        <if test='orgCode_HA != null and orgCode_HA != "" and orgorgCode_HACode != " "'>
+		                            AND A.ORG_CODE = #{orgCode_HA}
+		                        </if>
+		                        <if test='grpCode_HA != null and grpCode_HA != "" and grpCode_HA != " "'>
+		                            AND A.GRP_CODE = #{grpCode_HA}
+		                        </if>
+		                         <if test='deptCode_HA != null and deptCode_HA != "" and deptCode_HA != " "'>
+		                            AND A.DEPT_CODE = #{deptCode_HA}
+		                        </if>
+		                         <if test='netSalesMonth_HA == null or netSalesMonth_HA == "" or netSalesMonth_HA == " "'>
+		                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
+		                         </if>
+	                               <if test="netSalesMonth_HA != null and netSalesMonth_HA != ''">
+	                               AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HA},'MM/YYYY')))
+	                               </if>
+		                         <if test="cmbProductCtgry_HA != null and cmbProductCtgry_HA != ''">
+		                           AND B.STK_CTGRY_ID IN
+		                            <foreach item="item" collection="cmbProductCtgry_HA" index="index" open="(" separator="," close=")">
+		                              #{item}
+		                            </foreach>
+		                         </if>
+		                         <if test="cmbProduct_HA != null and cmbProduct_HA != ''">
+		                            AND B.STK_ID IN
+		                              <foreach item="item" collection="cmbProduct_HA" index="index" open="(" separator="," close=")">
+		                                    #{item}
+		                              </foreach>
+		                          </if>
+		                        GROUP BY A.MEM_CODE, E. FULL_NAME, A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, A.MEM_LVL,  A.TYPE, D.CODE_NAME, A.YEAR, A.MONTH, C.CODE_NAME, B.STK_DESC , A.TARGETATMT_NS, A.PARTTIME, A.NEW_NEO_ACT, A.PARTTIME_NET, A.NEO_PRO, A.NEO_PRO_NET, A.ACT_HP, A.RECRUIT, A.SHI
+		                        ORDER BY A.MEM_LVL, A.MEM_CODE, A.YEAR, A.MONTH
+		                        )
+		                        PIVOT
+		                        (
+		                        SUM(W1) AS W1,  SUM(W2) AS W2 , SUM(W3) AS W3, SUM(W4) AS W4, SUM(TOTAL_AMT) AS TOTAL_AMT
+		                        FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES)
+		                        )
+		             )
+		             WHERE ROWNUM <![CDATA[ <= ]]> 20000
+		             ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
+         </select>
+
+         <select id="selectSmfHC" parameterType="Map" resultType="egovMap">
+          SELECT
+            MEM_CODE
+          , MEM_LVL
+          , FULL_NAME
+          , DEPT_CODE
+          , GRP_CODE
+          , ORG_CODE
+          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
+                    WHEN MEM_LVL = 2 THEN GRP_CODE
+                    WHEN MEM_LVL = 3 THEN DEPT_CODE
+            ELSE '' END CRS_CODE
+          , POSITION
+          , YEAR
+          , TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
+          , PRODUCTCTGRY
+          , PRODUCTNAME
+       , NVL(KEYIN_W1,0) KEYIN_W1
+          , NVL(KEYIN_W2,0) KEYIN_W2
+          , NVL(KEYIN_W3,0) KEYIN_W3
+          , NVL(KEYIN_W4,0) KEYIN_W4
+          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
+          , NVL(NETSALES_W1,0) NETSALES_W1
+          , NVL(NETSALES_W2,0) NETSALES_W2
+          , NVL(NETSALES_W3,0) NETSALES_W3
+          , NVL(NETSALES_W4,0) NETSALES_W4
+          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
+          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
+            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) || '%' END NET_RATE
+          , TARGETATMT_NS
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
+          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
+            ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
+          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)  END NEO_PRO_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)  END PARTTIME_PRODUCTIVITY
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
+          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
+          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' ELSE TO_CHAR(ROUND(SHI,2)) || '%' END SHI
+            FROM (
+               SELECT * FROM
+                        (
+                        SELECT
+                                  A.MEM_CODE
+                                , E.FULL_NAME
+                                , A.DEPT_CODE
+                                , A.GRP_CODE
+                                , CASE WHEN A.ORG_CODE = ' ' THEN 'CRS0002' ELSE A.ORG_CODE END ORG_CODE
+                                , A.MEM_LVL
+                                , CASE WHEN A.MEM_LVL = 0 THEN 'SGM'
+                                WHEN A.MEM_LVL = 1 THEN 'GM'
+                                WHEN A.MEM_LVL = 2 THEN 'SM'
+                                WHEN A.MEM_LVL = 3 THEN 'HM'
+                                WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
+                                , A.TYPE
+                                , A.YEAR
+                                , A.MONTH
+                                , SUM(NVL(A.W1,0)) W1
+                                , SUM(NVL(A.W2,0)) W2
+                                , SUM(NVL(A.W3,0)) W3
+                                , SUM(NVL(A.W4,0)) W4
+                                , SUM(NVL(A.W1,0)+NVL(A.W2,0)+NVL(A.W3,0)+NVL(A.W4,0)) TOTAL_AMT
+                                , A.TARGETATMT_NS
+                                , A.PARTTIME
+                                , A.NEW_NEO_ACT
+                                , A.PARTTIME_NET
+                                , A.NEO_PRO
+                                , A.NEO_PRO_NET
+                                , A.ACT_HP
+                                , A.RECRUIT
+                                , A.SHI
+                                <if test="cmbProductCtgry_HC == null or cmbProductCtgry_HC == ''">
+                                , 'ALL' PRODUCTCTGRY
+                                </if>
+                                 <if test="cmbProduct_HC == null or cmbProduct_HC == ''">
+                                 , 'ALL'  PRODUCTNAME
+                                 </if>
+                                <if test="cmbProductCtgry_HC != null and cmbProductCtgry_HC != ''">
+                                , C.CODE_NAME PRODUCTCTGRY
+                                </if>
+                                <if test="cmbProduct_HC != null and cmbProduct_HC != ''">
+                                 , B.STK_DESC PRODUCTNAME
+                                </if>
+                        FROM ORG0043T A
+                        LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
+                        LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+                        LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
+                        WHERE 1 = 1
+                        AND B.STK_CTGRY_ID IN ('5706')
+                        AND E.MEM_TYPE = 1
+                         <if test="memCode_HC != null and memCode_HC != ''">
+                            AND A.MEM_CODE = #{memCode_HC}
+                         </if>
+                        <if test='orgCode_HC != null and orgCode_HC != "" and orgCode_HC != " "'>
+                            AND A.ORG_CODE =  #{orgCode_HC}
+                        </if>
+                        <if test='grpCode_HC != null and grpCode_HC != "" and grpCode_HC != " "'>
+                            AND A.GRP_CODE = #{grpCode_HC}
+                        </if>
+                         <if test='deptCode_HC != null and deptCode_HC != "" and deptCode_HC != " "'>
+                            AND A.DEPT_CODE = #{deptCode_HC}
+                        </if>
+                          <if test='netSalesMonth_HC == null or netSalesMonth_HC == "" or netSalesMonth_HC == " "'>
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM')  = #{currentYm}
+                         </if>
+                         <if test="netSalesMonth_HC != null and netSalesMonth_HC != ''">
+                            AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_HC},'MM/YYYY')))
+                         </if>
+                         <if test="cmbProductCtgry_HC != null and cmbProductCtgry_HC != ''">
+                           AND B.STK_CTGRY_ID IN
+                            <foreach item="item" collection="cmbProductCtgry_HC" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                         </if>
+                         <if test="cmbProduct_HC != null and cmbProduct_HC != ''">
+                            AND B.STK_ID IN
+                              <foreach item="item" collection="cmbProduct_HC" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                        GROUP BY A.MEM_CODE, E. FULL_NAME, A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, A.MEM_LVL,  A.TYPE, D.CODE_NAME, A.YEAR, A.MONTH, C.CODE_NAME, B.STK_DESC , A.TARGETATMT_NS, A.PARTTIME, A.NEW_NEO_ACT, A.PARTTIME_NET, A.NEO_PRO, A.NEO_PRO_NET, A.ACT_HP, A.RECRUIT, A.SHI
+                        ORDER BY A.MEM_LVL, A.MEM_CODE, A.YEAR, A.MONTH
+                        )
+                        PIVOT
+                        (
+                        SUM(W1) AS W1,  SUM(W2) AS W2 , SUM(W3) AS W3, SUM(W4) AS W4, SUM(TOTAL_AMT) AS TOTAL_AMT
+                        FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES)
+                        )
+             )
+             WHERE ROWNUM <![CDATA[ <= ]]> 20000
+             ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
+         </select>
+
+
+
+         <select id="selectSmfActHp" parameterType="Map" resultType="egovMap">
+           SELECT
+	            MEM_CODE
+	          , MEM_LVL
+	          , FULL_NAME
+	          , DEPT_CODE
+	          , GRP_CODE
+	          , ORG_CODE
+	          , CASE WHEN MEM_LVL = 1 THEN ORG_CODE
+	                    WHEN MEM_LVL = 2 THEN GRP_CODE
+	                    WHEN MEM_LVL = 3 THEN DEPT_CODE
+	            ELSE '' END CRS_CODE
+	          , POSITION
+	          , YEAR
+	          ,TO_CHAR(TO_DATE(YEAR || MONTH,'YYYYMM'),'YYYYMM') MONTH
+	          <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
+	          , PRODUCTCTGRY
+	           </if>
+	          <if test="cmbProduct_actHP != null and cmbProduct_actHP != ''">
+	          , PRODUCTNAME
+	           </if>
+              , NVL(KEYIN_W1,0) KEYIN_W1
+	          , NVL(KEYIN_W2,0) KEYIN_W2
+	          , NVL(KEYIN_W3,0) KEYIN_W3
+	          , NVL(KEYIN_W4,0) KEYIN_W4
+	          , NVL(KEYIN_TOTAL_AMT,0) KEYIN_TOTAL_AMT
+	          , NVL(NETSALES_W1,0) NETSALES_W1
+	          , NVL(NETSALES_W2,0) NETSALES_W2
+	          , NVL(NETSALES_W3,0) NETSALES_W3
+	          , NVL(NETSALES_W4,0) NETSALES_W4
+	          , NVL(NETSALES_TOTAL_AMT,0) NETSALES_TOTAL_AMT
+	          , CASE WHEN NVL(KEYIN_TOTAL_AMT,0)= 0 THEN '0%'
+	            ELSE TO_CHAR(ROUND(NVL(NETSALES_TOTAL_AMT,0) / NVL(KEYIN_TOTAL_AMT,0) *100 ,2)) || '%' END NET_RATE
+	          , TARGETATMT_NS
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE PARTTIME END PARTTIME
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE NEW_NEO_ACT END NEW_NEO_ACT
+	          , CASE WHEN NVL(RECRUIT,0)= 0 OR MEM_LVL = 4 THEN '0%'
+	            ELSE TO_CHAR(ROUND(NVL(NEW_NEO_ACT,0) / NVL(RECRUIT,0) *100 ,2)) || '%' END NEW_NEO_ACT_RATE
+	          , CASE WHEN MEM_LVL = 4  OR NVL(NEO_PRO,0) = 0 THEN 0 ELSE ROUND(NVL(NEO_PRO_NET,0) / NVL(NEO_PRO,0) ,2)  END NEO_PRO_PRODUCTIVITY
+	          , CASE WHEN MEM_LVL = 4 OR NVL(PARTTIME,0) = 0  THEN 0 ELSE ROUND(NVL(PARTTIME_NET,0) / NVL(PARTTIME,0),2)  END PARTTIME_PRODUCTIVITY
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE ACT_HP END ACTHP
+	          , CASE WHEN MEM_LVL = 4 THEN 0 ELSE RECRUIT END RECRUIT
+	          , CASE WHEN NVL(SHI,0)= 0 THEN '0%' ELSE TO_CHAR(ROUND(SHI,2)) || '%' END SHI
+            FROM (
+               SELECT * FROM
+                        (
+                        SELECT
+                                  A.MEM_CODE
+                                , E.FULL_NAME
+                                , A.DEPT_CODE
+                                , A.GRP_CODE
+                                , CASE WHEN A.ORG_CODE = ' ' THEN 'CRS0002' ELSE A.ORG_CODE END ORG_CODE
+                                , A.MEM_LVL
+                                , CASE WHEN A.MEM_LVL = 0 THEN 'SGM'
+                                WHEN A.MEM_LVL = 1 THEN 'GM'
+                                WHEN A.MEM_LVL = 2 THEN 'SM'
+                                WHEN A.MEM_LVL = 3 THEN 'HM'
+                                WHEN A.MEM_LVL = 4 THEN 'HP' END POSITION
+                                , A.TYPE
+                                , A.YEAR
+                                , A.MONTH
+                                , SUM(NVL(A.W1,0)) W1
+                                , SUM(NVL(A.W2,0)) W2
+                                , SUM(NVL(A.W3,0)) W3
+                                , SUM(NVL(A.W4,0)) W4
+                                , SUM(NVL(A.W1,0)+NVL(A.W2,0)+NVL(A.W3,0)+NVL(A.W4,0)) TOTAL_AMT
+                                , A.TARGETATMT_NS
+                                , A.PARTTIME
+                                , A.NEW_NEO_ACT
+                                , A.PARTTIME_NET
+                                , A.NEO_PRO
+                                , A.NEO_PRO_NET
+                                , A.ACT_HP
+                                , A.RECRUIT
+                                , A.SHI
+                                <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
+                                , C.CODE_NAME PRODUCTCTGRY
+                                </if>
+                                <if test="cmbProduct_actHP != null and cmbProduct_actHP != ''">
+                                 , B.STK_DESC PRODUCTNAME
+                                </if>
+                        FROM ORG0043T A
+                        LEFT JOIN SYS0026M B ON A.STK_ID = B.STK_ID
+                        LEFT JOIN SYS0013M C ON A.STK_CTGRY_ID = C.CODE_ID
+                        LEFT JOIN SYS0013M D ON A.TYPE = D.CODE_ID
+                        LEFT JOIN ORG0001D E ON A.MEM_ID = E.MEM_ID AND E.STUS =1
+                        WHERE 1 = 1
+                        AND E.MEM_TYPE = 1
+                        <if test="memCode_actHP != null and memCode_actHP != ''">
+                            AND A.MEM_CODE = #{memCode_actHP}
+                        </if>
+                        <if test='orgCode_actHP != null and orgCode_actHP != "" and orgCode_actHP != " "'>
+                            AND A.ORG_CODE = #{orgCode_actHP}
+                        </if>
+                        <if test='grpCode_actHP != null and grpCode_actHP != "" and grpCode_actHP != " "'>
+                            AND A.GRP_CODE = #{grpCode_actHP}
+                        </if>
+                         <if test='deptCode_actHP != null and deptCode_actHP != "" and deptCode_actHP != " "'>
+                            AND A.DEPT_CODE = #{deptCode_actHP}
+                        </if>
+                        <if test='netSalesMonth_actHP == null or netSalesMonth_actHP == "" or netSalesMonth_actHP == " "'>
+                           AND TO_CHAR(TO_DATE(A.YEAR || A.MONTH,'YYYYMM'),'YYYYMM') = #{currentYm}
+                         </if>
+                         <if test="netSalesMonth_actHP != null and netSalesMonth_actHP != ''">
+                            AND TO_CHAR(A.YEAR || A.MONTH)  =TO_CHAR(EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')) || EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth_actHP},'MM/YYYY')))
+                         </if>
+                         <if test="cmbProductCtgry_actHP != null and cmbProductCtgry_actHP != ''">
+                           AND B.STK_CTGRY_ID IN
+                            <foreach item="item" collection="cmbProductCtgry_actHP" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                         </if>
+                         <if test="cmbProduct_actHP != null and cmbProduct_actHP != ''">
+                            AND B.STK_ID IN
+                              <foreach item="item" collection="cmbProduct_actHP" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                        GROUP BY A.MEM_CODE, E. FULL_NAME, A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, A.MEM_LVL,  A.TYPE, D.CODE_NAME, A.YEAR, A.MONTH, C.CODE_NAME, B.STK_DESC , A.TARGETATMT_NS, A.PARTTIME, A.NEW_NEO_ACT, A.PARTTIME_NET, A.NEO_PRO, A.NEO_PRO_NET, A.ACT_HP, A.RECRUIT, A.SHI
+                        ORDER BY A.MEM_LVL, A.MEM_CODE, A.YEAR, A.MONTH
+                        )
+                        PIVOT
+                        (
+                        SUM(W1) AS W1,  SUM(W2) AS W2 , SUM(W3) AS W3, SUM(W4) AS W4, SUM(TOTAL_AMT) AS TOTAL_AMT
+                        FOR (TYPE) IN ('6604' AS KEYIN, '6605' AS NETSALES)
+                        )
+             )
+             WHERE ROWNUM <![CDATA[ <= ]]> 20000
+             ORDER BY MEM_LVL,MEM_CODE, YEAR, MONTH
+         </select>
+
+        <select id="selectSmfDailyListing" parameterType="Map" resultType="egovMap">
+        SELECT
+            CODE_NAME
+           <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+           <if test="orgCode != 'CRS0002'">
+           , ORG_CODE
+           </if>
+           </if>
+           <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+           , GRP_CODE
+           </if>
+           <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+           , DEPT_CODE
+           </if>
+           <if test='position != null and position != "" and position != " "'>
+            <if test="position == 'HP'">
+           , MEM_CODE
+             </if>
+           </if>
+          , TYPE
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY1,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY1,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY1,0)) END DAY1
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY2,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY2,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY2,0)) END DAY2
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY3,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY3,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY3,0)) END DAY3
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY4,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY4,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY4,0)) END DAY4
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY5,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY5,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY5,0)) END DAY5
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY6,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY6,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY6,0)) END DAY6
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY7,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY7,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY7,0)) END DAY7
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY8,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY8,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY8,0)) END DAY8
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY9,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY9,'fm9,999,999,999,990.00') ||'%' END  ELSE TO_CHAR(NVL(DAY9,0)) END DAY9
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY10,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY10,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY10,0)) END DAY10
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY11,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY11,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY11,0)) END DAY11
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY12,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY12,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY12,0)) END DAY12
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY13,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY13,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY13,0)) END DAY13
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY14,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY14,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY14,0)) END DAY14
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY15,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY15,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY15,0)) END DAY15
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY16,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY16,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY16,0)) END DAY16
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY17,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY17,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY17,0)) END DAY17
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY18,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY18,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY18,0)) END DAY18
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY19,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY19,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY19,0)) END DAY19
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY20,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY20,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY20,0)) END DAY20
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY21,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY21,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY21,0)) END DAY21
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY22,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY22,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY22,0)) END DAY22
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY23,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY23,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY23,0)) END DAY23
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY24,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY24,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY24,0)) END DAY24
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY25,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY25,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY25,0)) END DAY25
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY26,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY26,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY26,0)) END DAY26
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY27,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY27,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY27,0)) END DAY27
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY28,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY28,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY28,0)) END DAY28
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY29,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY29,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY29,0)) END DAY29
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY30,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY30,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY30,0)) END DAY30
+          , CASE WHEN TYPE IN (6608) THEN CASE WHEN TO_CHAR(NVL(DAY31,0)) = '0' THEN '0%' ELSE TO_CHAR(DAY31,'fm9,999,999,999,990.00')||'%' END  ELSE TO_CHAR(NVL(DAY31,0)) END DAY31
+        FROM
+        (
+            SELECT B.CODE_NAME,A.* FROM
+                (
+                SELECT * FROM
+                 (
+
+                  WITH ACT_HP AS(
+				          SELECT
+				                  TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
+				                , COUNT(DISTINCT A.MEM_CODE)  RESULT_ACTHP
+				          FROM ORG0044T A
+                 WHERE  1=1
+                  AND A.RESULT_ACTHP IS NOT NULL
+                  AND TO_CHAR(TO_DATE(A.SALES_DT),'YYYYMM')  = #{currentYm}
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                                <if test="orgCode != 'CRS0002'">
+                                 AND A.ORG_CODE = #{orgCode}
+                                </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND A.GRP_CODE =#{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND A.DEPT_CODE = #{deptCode}
+                        </if>
+                         <if test='position != null and position != "" and position != " "'>
+                              <if test="position == 'HP'">
+                              AND A.MEM_CODE = #{memCode}
+                              </if>
+                        </if>
+
+                       GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD'), MEM_LVL
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+	                         <if test="orgCode != 'CRS0002'">
+	                            , A.ORG_CODE
+	                         </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                                , A.GRP_CODE
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                                 , A.DEPT_CODE
+                        </if>
+                       <if test='position != null and position != "" and position != " "'>
+                            <if test="position == 'HP'">
+                                 , A.MEM_CODE
+                             </if>
+                        </if>
+				  )
+                 SELECT
+                            TO_CHAR(TO_DATE(A.SALES_DT), 'DD') AS DAY
+                          <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                          <if test="orgCode != 'CRS0002'">
+					          ,A.ORG_CODE
+					       </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            , A.GRP_CODE
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            , A.DEPT_CODE
+                        </if>
+                        <if test='position != null and position != "" and position != " "'>
+                            <if test="position == 'HP'">
+                             , A.MEM_CODE
+                             </if>
+                        </if>
+                        , NVL(SUM(A.RESULT_KEYIN),0) RESULT_KEYIN
+                        , NVL(SUM(A.RESULT_NETSALES),0) RESULT_NETSALES
+                         ,NVL(B.RESULT_ACTHP,0) RESULT_ACTHP
+                        , NVL(SUM(A.RESULT_RECRUIT),0) RESULT_RECRUIT
+                        , NVL(ROUND(SUM(COLLECTAMT_SHI)/SUM(TARGETATMT_SHI) * 100,2),0) AS RESULT_SHI
+                 FROM ORG0044T A
+                  LEFT JOIN ACT_HP B ON TO_CHAR(TO_DATE(A.SALES_DT), 'DD') = B.DAY
+                 WHERE  1=1
+                  AND TO_CHAR(TO_DATE(A.SALES_DT),'YYYYMM')  = #{currentYm}
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+		                        <if test="orgCode != 'CRS0002'">
+		                         AND A.ORG_CODE = #{orgCode}
+		                        </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            AND A.GRP_CODE =#{grpCode}
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            AND A.DEPT_CODE = #{deptCode}
+                        </if>
+                         <if test='position != null and position != "" and position != " "'>
+                              <if test="position == 'HP'">
+                              AND A.MEM_CODE = #{memCode}
+                              </if>
+                        </if>
+
+                 GROUP BY TO_CHAR(TO_DATE(A.SALES_DT), 'DD'), MEM_LVL, B.RESULT_ACTHP
+                        <if test='orgCode != null and orgCode != "" and orgCode != " "'>
+                              <if test="orgCode != 'CRS0002'">
+                                 , A.ORG_CODE
+                                </if>
+                        </if>
+                        <if test='grpCode != null and grpCode != "" and grpCode != " "'>
+                            , A.GRP_CODE
+                        </if>
+                         <if test='deptCode != null and deptCode != "" and deptCode != " "'>
+                            , A.DEPT_CODE
+                        </if>
+                       <if test='position != null and position != "" and position != " "'>
+                            <if test="position == 'HP'">
+                             , A.MEM_CODE
+                             </if>
+                        </if>
+                 )
+                 UNPIVOT INCLUDE NULLS
+                 (
+                 AMT
+                 FOR TYPE IN(RESULT_KEYIN AS 6604, RESULT_NETSALES AS 6605, RESULT_ACTHP AS 6606, RESULT_RECRUIT AS 6607, RESULT_SHI AS 6608)
+                 )
+                )
+             PIVOT
+            (
+                SUM(NVL(AMT,0))
+                FOR (DAY) IN ('01' day1,'02' day2,'03' day3,'04' day4,'05' day5,'06' day6,'07' day7,'08' day8,'09' day9,'10' day10,
+                '11' day11,'12' day12,'13' day13,'14' day14,'15' day15,'16' day16,'17' day17,'18' day18,'19' day19,'20' day20,
+                '21' day21,'22' day22,'23' day23,'24' day24,'25' day25,'26' day26,'27' day27,'28' day28,'29' day29,'30' day30,'31' day31)
+            ) A
+            JOIN SYS0013M B ON A.TYPE =B.CODE_ID
+            WHERE 1=1
+        ORDER BY TYPE
+        )
+        </select>
+
+         <select id="selectSimulatedMemberCRSCode" parameterType="Map" resultType="egovMap">
+           SELECT
+                    A.MEM_ID, A.MEM_CODE, A.MEM_LVL, A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, A.TOP_ORG_CODE
+           FROM ORG1001V A
+           JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+           JOIN SYS0047M C ON B.MEM_CODE = C.USER_NAME
+           WHERE A.MEM_LVL = 0 AND B.STUS = 1 AND B.MEM_TYPE = 1 AND C.USER_STUS_ID = 1 AND TOP_ORG_CODE = 'CRS0002'
+
+         </select>
+
+	   <select id="cmbProduct_HA" resultType="egovMap">
+	    SELECT S.STK_ID CODE_ID
+	         , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+	         , C.CODE_NAME GROUP_CD
+	    FROM SYS0026M S, SAL0016M P, SYS0013M C
+	    WHERE S.STK_ID = P.STK_ID
+	      AND S.STK_CTGRY_ID = C.CODE_ID
+	      AND S.IS_NCV <![CDATA[<>]]> 1
+	      AND S.STUS_CODE_ID = 1
+	      AND S.STK_TYPE_ID = 61
+	      AND S.STK_CTGRY_ID NOT IN (5706,5707)
+	      AND P.AMT <![CDATA[>]]> 0
+	    GROUP BY s.STK_ID,
+	             s.STK_CODE,
+	             s.STK_DESC,
+	             c.CODE_NAME
+	    ORDER BY c.CODE_NAME,
+	             s.STK_DESC
+	  </select>
+
+      <select id="cmbProduct_HC" resultType="egovMap">
+        SELECT S.STK_ID CODE_ID
+             , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+             , C.CODE_NAME GROUP_CD
+        FROM SYS0026M S, SAL0016M P, SYS0013M C
+        WHERE S.STK_ID = P.STK_ID
+          AND S.STK_CTGRY_ID = C.CODE_ID
+          AND S.IS_NCV <![CDATA[<>]]> 1
+          AND S.STUS_CODE_ID = 1
+          AND S.STK_TYPE_ID = 61
+          AND S.STK_CTGRY_ID IN (5706,5707)
+          AND P.AMT <![CDATA[>]]> 0
+        GROUP BY s.STK_ID,
+                 s.STK_CODE,
+                 s.STK_DESC,
+                 c.CODE_NAME
+        ORDER BY c.CODE_NAME,
+                 s.STK_DESC
+      </select>
+
+      <select id="selectProductCategoryList_HA" resultType="egovMap">
+        SELECT T2.CODE_ID
+             , T2.CODE
+             , T2.CODE_NAME
+          FROM
+             ( SELECT DISTINCT STK_CTGRY_ID
+                 FROM SYS0026M
+                WHERE STK_TYPE_ID = '61'
+                  AND STK_CTGRY_ID NOT IN (5706,5707)
+                  AND STK_CTGRY_ID IS NOT NULL) T1
+             , SYS0013M T2
+         WHERE T1.STK_CTGRY_ID = T2.CODE_ID
+         ORDER BY T2.CODE_ID
+    </select>
+
+    <select id="selectProductCategoryList_HC" resultType="egovMap">
+        SELECT T2.CODE_ID
+             , T2.CODE
+             , T2.CODE_NAME
+          FROM
+             ( SELECT DISTINCT STK_CTGRY_ID
+                 FROM SYS0026M
+                WHERE STK_TYPE_ID = '61'
+                  AND STK_CTGRY_ID IN (5706,5707)
+                  AND STK_CTGRY_ID IS NOT NULL) T1
+             , SYS0013M T2
+         WHERE T1.STK_CTGRY_ID = T2.CODE_ID
+         ORDER BY T2.CODE_ID
+    </select>
+
+    <select id="checkCurrentMonth"  parameterType="Map" resultType="egovMap">
+        SELECT MONTH FROM CMM0055M
+		WHERE TRUNC(SYSDATE) BETWEEN TRUNC(START_DT) AND TRUNC(END_DT)
+		AND ROWNUM =1
+    </select>
+
+
+	 <select id="checkCurrentYearMonth"  parameterType="Map" resultType="egovMap">
+        SELECT
+            PREVIOUSYM3, PREVIOUSYM2, PREVIOUSYM, CURRENTYM, TO_CHAR(TO_DATE(CURRENTYM,'YYYYMM'),'MM') CURRENTM
+        FROM
+        (
+            WITH CNT_CMM55 AS (
+                SELECT COUNT(*) CNT FROM CMM0055M WHERE TRUNC(SYSDATE) BETWEEN TRUNC(START_DT) AND TRUNC(END_DT)
+            ),
+            TBL_CMM55 AS (
+                SELECT TO_DATE(YEAR || MONTH,'YYYYMM') DT FROM CMM0055M WHERE TRUNC(SYSDATE) BETWEEN TRUNC(START_DT) AND TRUNC(END_DT)
+            )
+            SELECT
+                 LEVEL SEQ
+               , CASE WHEN TBL1.CNT = 0 THEN TO_CHAR(ADD_MONTHS(TO_DATE(SYSDATE),LEVEL - 4),'YYYYMM')
+                          ELSE TO_CHAR(ADD_MONTHS(TO_DATE(TBL2.DT),LEVEL - 4),'YYYYMM')  END RESULT
+            FROM DUAL
+            LEFT JOIN CNT_CMM55 TBL1 ON 1=1
+            LEFT JOIN TBL_CMM55 TBL2 ON 1=1
+            CONNECT BY LEVEL <![CDATA[ <= ]]>   4
+        )
+        PIVOT
+        (
+           MAX(RESULT)
+           FOR SEQ IN ('1' AS PREVIOUSYM3 ,'2' AS PREVIOUSYM2 ,'3' AS PREVIOUSYM ,'4' AS CURRENTYM)
+        )
+	 </select>
+
+
+</mapper>

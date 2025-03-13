@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialMgmtMapper">
+
+<!-- @author Adrian C. -->
+
+    <select id="selectDeliveryBalance" parameterType="Map"  resultType="EgovMap">
+		SELECT
+		    <if test="Type == '10'">
+                COUNT(CASE WHEN (DELVRY_GI_CMPLT = 'Y' AND NVL(DELVRY_GR_CMPLT, 'N') = 'N')
+                             THEN 1 END) AS grcdc
+            </if>
+            <if test="Type == '20'">
+                COUNT(CASE WHEN NVL(DELVRY_GI_CMPLT, 'N') = 'N'
+                             THEN 1 END) AS gicdc
+            </if>
+
+		FROM LOG0054M
+    </select>
+
+    <select id="selectGIRDCBalance" parameterType="Map"  resultType="EgovMap">
+        SELECT
+            COUNT(DISTINCT SCAN_NO) AS girdc
+
+        FROM LOG0087D
+        WHERE SCAN_TYPE = 30
+    </select>
+
+    <select id="selectDeliveryList" parameterType="Map" resultType="EgovMap">
+        SELECT
+              l55.DELVRY_NO AS delno,
+              l55.REQST_NO AS reqstno,
+              TO_CHAR(TO_DATE(l47.REQST_CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS reqstdt,
+              tran.CODE_NAME AS stktrans,
+              trand.CODE_NAME AS stkactivity,
+              DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
+              DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
+              l47.RCIV_CDC_RDC AS frmlocid,
+              l47.REQST_CDC_RDC AS tolocid,
+              NVL(TO_CHAR(TO_DATE(l54.DELVRY_DT, 'yyyy/mm/dd'), 'dd/mm/yyyy'), '-') AS deldate,
+              l55.DELVRY_QTY AS delqty,
+              l54.CRT_USER_ID AS crt,
+              TO_CHAR(TO_DATE(l54.CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS crtdt
+
+          FROM log0047m l47
+              LEFT JOIN SYS0028M s28c ON l47.RCIV_CDC_RDC = s28c.WH_LOC_ID
+              LEFT JOIN SYS0028M s28q ON l47.REQST_CDC_RDC = s28q.WH_LOC_ID,
+              (SELECT REQST_NO, DELVRY_NO, SUM(NVL(DELVRY_QTY, 0)) DELVRY_QTY
+               FROM LOG0055D GROUP BY REQST_NO, DELVRY_NO) l55,
+              LOG0054M l54,
+              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 306) tran,
+              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 308) trand
+         WHERE 1 = 1
+           AND l47.TRNSC_TYPE = tran.CODE
+           AND l47.TRNSC_TYPE_DTL = trand.CODE
+           AND l47.REQST_NO = l55.REQST_NO
+           AND l54.DELVRY_NO = l55.DELVRY_NO
+
+     <if test="Type == '10'">
+           AND l54.DELVRY_GI_CMPLT = 'Y' AND NVL(l54.DELVRY_GR_CMPLT, 'N') = 'N'
+     </if>
+
+     <if test="Type == '20'">
+           AND NVL(l54.DELVRY_GI_CMPLT, 'N') = 'N'
+     </if>
+
+        ORDER BY l55.DELVRY_NO DESC
+    </select>
+
+    <select id="selectSerialDetails" parameterType="Map" resultType="EgovMap">
+        SELECT
+            l87.SERIAL_NO AS serialno,
+            l87.SEQ AS seq,
+            l87.BOX_NO AS boxno,
+            l87.CRT_USER_ID AS crt,
+            TO_CHAR(TO_DATE(l87.CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS crtdt
+
+        FROM LOG0087D l87
+        WHERE l87.SCANINFO_STUS = 'N' AND l87.REQST_NO = #{delno} AND l87.MATNR = #{itmcode}
+    </select>
+
+    <select id="selectRDCScanList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            l87.SCAN_NO AS scanno,
+            l87.SEQ AS seq,
+            l87.SERIAL_NO AS serialno,
+            l87.MATNR AS itmcode,
+            S26.STK_DESC AS itmdesc,
+            TO_CHAR(TO_DATE(l87.REQST_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS reqstdt,
+            DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
+            DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
+            l87.CRT_USER_ID AS crt,
+            TO_CHAR(TO_DATE(l87.CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS crtdt
+
+        FROM LOG0087D l87
+	        JOIN SYS0026M s26 ON l87.MATNR = s26.STK_CODE
+	        LEFT JOIN SYS0028M s28c ON l87.FROM_LOC_ID = s28c.WH_LOC_ID
+	        LEFT JOIN SYS0028M s28q ON l87.TO_LOC_ID = s28q.WH_LOC_ID
+        WHERE l87.SCAN_TYPE = 30 AND l87.SCANINFO_STUS = 'N'
+
+        ORDER BY l87.CRT_DT DESC
+    </select>
+
+    <select id="selectScanList" parameterType="Map"  resultType="EgovMap">
+        SELECT
+            l55.ITM_CODE AS itmcode,
+            l55.ITM_NAME AS itmdesc,
+            SUM(l55.DELVRY_QTY) AS delqty,
+            NVL((SELECT COUNT(SERIAL_NO)
+                    FROM LOG0087D
+                    WHERE REQST_NO = #{delno}
+                                 AND MATNR = l55.ITM_CODE
+                                 AND SCANINFO_STUS = 'N'
+                                 AND SCAN_TYPE != 30), '0') AS scanqty,
+            SUM(l55.DELVRY_QTY) - NVL((SELECT COUNT(SERIAL_NO)
+                                                           FROM LOG0087D
+                                                           WHERE REQST_NO = #{delno}
+							                                            AND MATNR = l55.ITM_CODE
+							                                            AND SCANINFO_STUS = 'N'
+							                                            AND SCAN_TYPE != 30) , '0') AS remainqty
+        FROM LOG0055D l55
+        WHERE l55.DELVRY_NO = #{delno}
+        GROUP BY l55.ITM_CODE, l55.ITM_NAME
+    </select>
+
+    <select id="selectBoxNoList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            l62.SERIAL_NO AS serialno,
+            (CASE WHEN l87.SERIAL_NO IS NULL
+             THEN l62.MATNR
+             ELSE 'Serial Has Been Scanned.' END) AS itmcode,
+            l62.BOX_NO AS boxno
+
+        FROM LOG0062M l62
+        LEFT JOIN LOG0087D l87 ON l62.SERIAL_NO = l87.SERIAL_NO
+
+        WHERE
+                    l62.BOX_NO IN
+                    <foreach item="item" collection="barcodeList" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+    </select>
+
+     <select id="selectUserDetails" resultType="EgovMap">
+        SELECT
+            WH_LOC_ID AS locid,
+            WH_LOC_CODE || ' - ' || WH_LOC_DESC AS locdesc
+
+        FROM SYS0028M
+
+        WHERE WH_LOC_CODE = RDC_CODE AND WH_LOC_BRNCH_ID = #{brnchid}
+    </select>
+
+    <select id="selectScanNoSeq" resultType="String">
+        SELECT 'S'||TO_CHAR(SYSTIMESTAMP, 'YYMMDDFF') FROM DUAL
+    </select>
+
+     <select id="checkScanNoSeq" resultType="String">
+        SELECT MAX(SCAN_NO) FROM LOG0087D WHERE REQST_NO = #{reqstno}
+    </select>
+
+    <insert id="insertScanItems" parameterType="Map">
+        INSERT INTO LOG0087D
+        (
+          SCAN_NO,
+          SEQ,
+          SERIAL_SCAN,
+          SERIAL_NO,
+          BOX_NO,
+          MATNR,
+          SCAN_TYPE,
+          SCANINFO_STUS,
+          REQST_NO,
+          REQST_DT,
+          FROM_LOC_ID,
+          TO_LOC_ID,
+          CRT_DT,
+          CRT_USER_ID
+         )
+        VALUES
+        (
+          #{scanno},
+          #{seqno},
+          #{boxno},
+          #{serialno},
+          #{boxno},
+          #{itmcode},
+          #{scantype},
+          #{scanstus},
+          #{reqstno},
+          #{reqstdt},
+          #{frmlocid},
+          #{tolocid},
+          SYSDATE,
+          #{userid}
+         )
+    </insert>
+</mapper>

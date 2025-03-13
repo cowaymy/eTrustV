@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.govEInvoice.service.impl.GovEInvoiceMapper">
+
+<select id="selectGovEInvoiceList" parameterType="Map" resultType="egovMap">
+	SELECT
+           A.BATCH_ID
+           ,A.INV_TYPE
+           ,A.INV_PERIOD_MONTH
+           ,A.INV_PERIOD_START
+           ,A.INV_PERIOD_END
+           ,A.TOTAL_AMT
+           ,A.TOTAL_TAX_AMT
+           ,A.TOTAL_CHARG_AMT
+           ,A.TOTAL_RECORDS
+           ,TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH:MM:SS') CRT_DT
+           ,A.CRT_USER_ID
+           ,TO_CHAR(A.UPD_DT,'DD/MM/YYYY HH:MM:SS') UPD_DT
+           ,A.UPD_USER_ID
+           ,A.REMARK
+           ,A.STATUS STS_CODE
+           ,STUS.CODE STS
+           ,INV_TYPE.CODE_NAME INV_TYPE_NAME
+           ,USERN.USER_NAME CRT_USER_NAME
+       FROM EIV0003M A
+       LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = A.STATUS
+       LEFT JOIN EIV0009M INV_TYPE ON INV_TYPE.CODE_MASTER_ID =1 AND INV_TYPE.CODE = A.INV_TYPE
+       LEFT JOIN SYS0047M USERN ON USERN.USER_ID = A.CRT_USER_ID
+       WHERE
+       1=1
+       <if test="status != null and status != ''">
+           AND A.STATUS = #{status}
+       </if>
+       <if test="invoicePeriod != null and invoicePeriod != ''">
+           AND A.INV_PERIOD_MONTH = #{invoicePeriod}
+       </if>
+       <if test="createDt1 != null and createDt1 != ''">
+           AND TO_CHAR(A.CRT_DT,'MM/YYYY') = #{createDt1}
+       </if>
+       <if test="invType != null and invType != ''">
+           AND A.INV_TYPE = #{invType}
+       </if>
+       <if test="batchId != null and batchId != ''">
+           AND A.BATCH_ID = #{batchId}
+       </if>
+       <if test="creator != null and creator != ''">
+           AND USERN.USER_NAME = #{creator}
+       </if>
+       ORDER BY A.BATCH_ID DESC
+</select>
+
+<select id="selectGovEInvoiceMain" parameterType="Map" resultType="egovMap">
+	SELECT
+	    A.BATCH_ID
+	    ,A.INV_TYPE
+	    ,A.INV_PERIOD_MONTH
+	    ,A.INV_PERIOD_START
+	    ,A.INV_PERIOD_END
+	    ,A.TOTAL_AMT
+	    ,A.TOTAL_TAX_AMT
+	    ,A.TOTAL_CHARG_AMT
+	    ,A.TOTAL_RECORDS
+	    ,TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH:MM:SS') CRT_DT
+	    ,A.CRT_USER_ID
+	    ,CASE WHEN A.CONF_DT IS NOT NULL THEN CASE WHEN A.STATUS IN (8,21) THEN 'DEACTIVATE' ELSE 'CONFIRM' END ELSE 'PENDING' END CONFIRM_STS
+	    ,TO_CHAR(A.CONF_DT,'DD/MM/YYYY HH:MM:SS') CONF_DT
+	    ,A.CONF_USER_ID
+	    ,TO_CHAR(A.UPD_DT,'DD/MM/YYYY HH:MM:SS') UPD_DT
+	    ,A.UPD_USER_ID
+	    ,A.REMARK
+	    ,A.STATUS STS_CODE
+	    ,STUS.CODE STS
+	    ,INV_TYPE.CODE_NAME INV_TYPE_NAME
+	    ,USERN.USER_NAME CRT_USER_NAME
+	    ,CONFUSERN.USER_NAME CONF_USER_NAME
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (1)) RECORD_ACTIVE
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (21)) RECORD_FAILED
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (8)) RECORD_INACTIVE
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (104)) RECORD_PROCESSING
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (121)) RECORD_SENT
+        ,(SELECT COUNT(INV_ID) FROM EIV0004D WHERE BATCH_ID = #{batchId} AND STATUS IN (4)) RECORD_CONFIRM
+        ,INV_TYPE_BILL.CODE_NAME INV_TYPE_BILL_NAME
+	FROM EIV0003M A
+	LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = A.STATUS
+	LEFT JOIN EIV0009M INV_TYPE ON INV_TYPE.CODE_MASTER_ID =1 AND INV_TYPE.CODE = A.INV_TYPE
+	LEFT JOIN EIV0009M INV_TYPE_BILL ON INV_TYPE_BILL.CODE_MASTER_ID =4 AND INV_TYPE_BILL.CODE = A.INV_TYPE_BILL
+	LEFT JOIN SYS0047M USERN ON USERN.USER_ID = A.CRT_USER_ID
+	LEFT JOIN SYS0047M CONFUSERN ON CONFUSERN.USER_ID = A.CONF_USER_ID
+	WHERE
+	1=1
+	AND A.BATCH_ID = #{batchId}
+	ORDER BY A.BATCH_ID DESC
+</select>
+
+<select id="selectEInvStat" parameterType="Map" resultType="egovMap">
+	SELECT A.STUS_CODE_ID CODE_ID,
+	A.NAME CODE_NAME
+	FROM SYS0038M A
+	WHERE
+	A.STUS_CODE_ID IN ('1', '5', '8','21')
+	ORDER BY A.STUS_CODE_ID
+</select>
+
+<select id="selectEInvCommonCode" parameterType="Map" resultType="egovMap">
+    SELECT
+		D.CODE_ID
+		, D.CODE_MASTER_ID
+		, D.CODE
+		, CODE_NAME
+		, D.CODE_DESC
+	FROM EIV0009M D
+	LEFT JOIN EIV0008M M ON M.CODE_MASTER_ID = D.CODE_MASTER_ID
+	WHERE D.DISAB = 0
+	<if test="ind != null and ind != ''">
+    AND M.CODE_MASTER_NAME = #{ind}
+    </if>
+	ORDER BY CODE_ID
+</select>
+
+<select id="selectGovEInvoiceDetail" parameterType="Map" resultType="egovMap">
+	SELECT
+		INV_ID
+		, INV_TYPE_CODE
+		, ISSUE_DT
+		, DOC_CUR_CODE
+		, TO_CHAR(INVPRD_START_DT, 'YYYY-MM-DD') INVPRD_START_DT
+		, TO_CHAR(INVPRD_END_DT, 'YYYY-MM-DD') INVPRD_END_DT
+		, INV_PRD_DESC
+		, PYMTMEANS_CODE
+		, PYMTTERMS_NOTE
+		, LGL_TAX_EXCL_AMT
+		, LGL_TAX_INCL_AMT
+		, LGL_PAYABLE_AMT
+		, LGL_LN_NEXT_AMT
+		, LGL_CHARG_TOT_AMT
+		, A.CRT_DT
+		, A.CRT_USER_ID
+		, A.UPD_DT
+		, A.UPD_USER_ID
+		, B.STATUS
+		, STUS.NAME STATUS_NAME
+		, B.UNIQUE_ID
+		, INV_REF_NO
+		, GRP_ID
+		, A.BATCH_ID
+		, B.DOCUMENT_ID
+		, CASE WHEN DETLOG.RESP_CODE = 'false' THEN DETLOG.RESP_PARAM END RESP_MSG
+	FROM EIV0003M A
+	LEFT JOIN EIV0004D B ON B.BATCH_ID = A.BATCH_ID
+	LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = B.STATUS
+	LEFT JOIN EIV0006M MAIN_LOG ON MAIN_LOG.REF_NO = TO_CHAR(B.GRP_ID)
+	LEFT JOIN EIV0007D DETLOG ON DETLOG.RESP_ID = MAIN_LOG.RESP_ID and DETLOG.UNIQUE_ID = B.UNIQUE_ID
+	WHERE
+	1=1
+	<if test="batchId != null and batchId != ''">
+    AND A.BATCH_ID = #{batchId}
+	</if>
+	ORDER BY B.INV_ID
+</select>
+
+<resultMap id="resultEInvMap" type="egovMap" />
+<select id="createEInvClaim" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  call SP_E_INVOICE_GENRT_MONTHLY(#{invType},#{invoicePeriod}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  }
+</select>
+
+<resultMap id="resultEInvMap1" type="egovMap" />
+<select id="createEInvClaimDaily" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  call SP_E_INVOICE_GENRT(#{invType},#{invoicePeriod}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap1} )
+  }
+</select>
+
+<resultMap id="resultTaxInvConsolidateMap" type="egovMap" />
+<select id="createTaxInvConsolidateClaim" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  	call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE_ALL(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  }
+</select>
+
+<resultMap id="resultTaxInvConsolidateCNDNMap" type="egovMap" />
+<select id="createTaxInvConsolidateClaimCNDN" statementType="CALLABLE"
+  parameterType="Map">
+  {
+  call SP_E_INVOICE_GENRT_MONTHLY_CONSOLIDATE_CNDN(#{invType},#{invBillType},#{invMonth}, #{userId}, #{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=resultEInvMap} )
+  }
+</select>
+
+<update id="saveEInvBatchMain" parameterType="Map">
+     UPDATE EIV0003M
+     SET
+     STATUS = #{status},
+     CONF_USER_ID = #{userId},
+     CONF_DT = SYSDATE
+     WHERE  BATCH_ID = #{batchId}
+</update>
+
+<update id="saveEInvDeactivateBatchEInv" parameterType="Map">
+     UPDATE EIV0004D
+     SET
+     STATUS = '21',
+     UPD_USER_ID = #{userId},
+     UPD_DT = SYSDATE
+     WHERE  BATCH_ID = #{batchId}
+     AND STATUS IN (1,104)
+</update>
+
+<update id="saveEInvConfirmBatch" parameterType="Map">
+     UPDATE EIV0003M
+     SET
+     STATUS = '5',
+     CONF_USER_ID = #{userId},
+     CONF_DT = SYSDATE
+     WHERE  BATCH_ID = #{batchId}
+     AND STATUS IN (1)
+</update>
+
+<select id="selectInvoiceGroupIdSeq" parameterType="Map" resultType="int">
+    SELECT EIV0004D_GRP_ID_SEQ.nextval INV_SEQ from dual
+</select>
+
+<select id="selectEInvSendList" parameterType="Map" resultType="egovMap">
+	SELECT * FROM (
+     SELECT
+         INV_ID
+		, INV_TYPE_CODE
+		, ISSUE_DT
+		, DOC_CUR_CODE
+		, TO_CHAR(INVPRD_START_DT, 'YYYY-MM-DD') INVPRD_START_DT
+		, TO_CHAR(INVPRD_END_DT, 'YYYY-MM-DD') INVPRD_END_DT
+		, INV_PRD_DESC
+		, PYMTMEANS_CODE
+		, PYMTTERMS_NOTE
+		, LGL_TAX_EXCL_AMT
+		, LGL_TAX_INCL_AMT
+		, LGL_PAYABLE_AMT
+		, LGL_LN_NEXT_AMT
+		, LGL_CHARG_TOT_AMT
+		, TAXTOT_TAX_AMT
+		, TAXTOT_SUB_TAX_CURID
+		, TAXTOT_SUB_TAX_VAL
+		, TAXTOT_SUB_TAXABLE_CURID
+		, TAXTOT_SUB_TAXABLE_VAL
+		, TAXTOT_SUB_CATID
+		, TAXTOT_SUB_SUB_TAX_CURID
+		, TAXTOT_SUB_SUB_TAX_VAL
+		, ACCSUP_CONT_EMAIL
+		, ACCSUP_CONT_TEL
+		, ACCSUP_INDUSTRY_VAL
+		, ACCSUP_INDUSTRY_NM
+		, ACCSUP_PARTY_TIN
+		, ACCSUP_PARTY_BRN
+		, ACCSUP_PARTY_SST
+		, ACCSUP_PARTY_TTX
+		, ACCSUP_LGL_REGNM
+		, ACCSUP_POSTAL_ADDR1
+		, ACCSUP_POSTAL_ADDR2
+		, ACCSUP_POSTAL_ADDR3
+		, ACCSUP_POSTAL_CITY
+		, ACCSUP_POSTAL_CTRY
+		, ACCSUP_POSTAL_CTRY_SUBCODE
+		, ACCSUP_POSTAL_ZONE
+		, ACCCUST_CONT_EMAIL
+		, ACCCUST_CONT_TEL
+		, ACCCUST_INDUSTRY_VAL
+		, ACCCUST_INDUSTRY_NM
+		, ACCCUST_PARTY_TIN
+		, ACCCUST_PARTY_ID_TYPE
+		, ACCCUST_PARTY_ID_VALUE
+		, ACCCUST_PARTY_BRN
+		, ACCCUST_PARTY_SST
+		, ACCCUST_PARTY_TTX
+		, ACCCUST_LGL_REGNM
+		, ACCCUST_POSTAL_ADDR1
+		, ACCCUST_POSTAL_ADDR2
+		, ACCCUST_POSTAL_ADDR3
+		, ACCCUST_POSTAL_CITY
+		, ACCCUST_POSTAL_CTRY
+		, ACCCUST_POSTAL_CTRY_SUBCODE
+		, ACCCUST_POSTAL_ZONE
+		, A.CRT_DT
+		, A.CRT_USER_ID
+		, A.UPD_DT
+		, A.UPD_USER_ID
+		, A.STATUS
+		, UNIQUE_ID
+		, INV_REF_NO
+		, JSON_STRING
+		, GRP_ID
+		, A.BATCH_ID
+		, B.DOCUMENT_ID
+		, B.BILL_REF_NO
+		--, C.CNT
+		, B.BILL_REF_INTERNAL_ID
+     FROM EIV0003M A
+     LEFT JOIN EIV0004D B ON B.BATCH_ID = A.BATCH_ID
+     --LEFT JOIN (SELECT BATCH_ID,INV_ID,COUNT(1) CNT FROM EIV0005D GROUP BY BATCH_ID,INV_ID ) C ON C.BATCH_ID = B.BATCH_ID AND C.INV_ID = B.INV_ID
+     WHERE
+     1=1
+ 	<if test="einvStatus != null and einvStatus != ''">
+         AND B.STATUS = #{einvStatus}
+     </if>
+     <if test="batchStatus != null and batchStatus != ''">
+         AND A.STATUS = #{batchStatus}
+     </if>
+     <if test="batchId != null and batchId != ''">
+         AND A.BATCH_ID = #{batchId}
+     </if>
+     <if test="invType != null and invType != ''">
+         AND A.INV_TYPE = NVL(#{invType},'01')
+     </if>
+     ORDER BY B.INV_ID
+     )
+     WHERE 1=1
+     <if test="maxRowNum != null and maxRowNum != ''">
+         AND ROWNUM <![CDATA[<=]]> #{maxRowNum}
+     </if>
+</select>
+
+<select id="selectEInvLineSendList" parameterType="Map" resultType="egovMap">
+     SELECT
+         INV_ID
+		, INV_ITM_ID
+		, INV_ITM_SEQ
+		, INVQTY_QTY
+		, INVQTY_UNITCD
+		, ITM_COMMCLASS_LISTID
+		, ITM_COMMCLASS_VALUE
+		, ITM_DESC
+		, ITM_ORICTRY_CODE
+		, ITMPRCEXT_CURID
+		, ITMPRCEXT_VALUE
+		, PRC_CURID
+		, PRC_VAL
+		, LNEXTAMT_CURID
+		, LNEXTAMT_VAL
+		, TAXTOT_TAXAMT_CURID
+		, TAXTOT_TAXAMT_VAL
+		, TAXTOT_TAXSUB_TAXAMT_CURID
+		, TAXTOT_TAXSUB_TAXAMT_VAL
+		, TAXTOT_TAXSUB_TAXABLEAMT_CURID
+		, TAXTOT_TAXSUB_TAXABLEAMT_VAL
+		, TAXTOT_TAXSUB_TAXCAT_ID
+		, TAXTOT_TAXSUB_TAXCAT_RATE
+		, TAXTOT_TAXSUB_PERC
+     FROM EIV0005D
+     WHERE STATUS = 1
+     AND INV_ID = #{invId}
+     AND BATCH_ID = #{batchId}
+     ORDER BY INV_ITM_SEQ
+</select>
+
+<update id="updEInvJsonString" parameterType="Map">
+    UPDATE EIV0004D
+    SET
+    <if test="jsonString != null and jsonString != '' ">
+     JSON_STRING = #{jsonString,jdbcType=CLOB},
+    </if>
+    <if test="issueDt != null and issueDt != '' ">
+     ISSUE_DT = to_date(#{issueDt},'YYYY-MM-DD'),
+    </if>
+     STATUS = #{status},
+     <if test="groupId != null and groupId != '' ">
+     GRP_ID = #{groupId},
+     </if>
+     UPD_USER_ID = #{userId},
+     UPD_DT = SYSDATE
+    WHERE  INV_ID = #{invId}
+    AND BATCH_ID = #{batchId}
+</update>
+
+<select id="selectApiInvoiceSeq" parameterType="Map" resultType="int">
+    SELECT EIV0006M_RESP_ID_SEQ.nextval INV_SEQ from dual
+</select>
+
+<insert id="insertApiAccessLog" parameterType="Map">
+	INSERT INTO EIV0006M
+	(
+	 RESP_ID
+	,REQ_PARAM
+	,RESP_PARAM
+	,RESP_CODE
+	,RESP_TM
+	,IP_ADDR
+	,PGM_PATH
+	,ERR_MSG
+	,CRT_DT
+	,API_USER_ID
+	,REF_NO
+	 ) VALUES (
+		#{respId}
+		, #{reqParam,jdbcType=CLOB}
+        <!-- ,UTL_RAW.CAST_TO_RAW(#{reqParam}) -->
+		, #{respParam,jdbcType=CLOB}
+		, #{respCde}
+		, #{respTm}
+		, #{ipAddr}
+		, #{prgPath}
+		, #{errMsg}
+		, SYSDATE
+		, #{apiUserId}
+		, #{refNo}
+    )
+</insert>
+
+<insert id="insertApiDetailAccessLog" parameterType="Map">
+   INSERT INTO EIV0007D
+   (
+        RESP_ID
+		,UNIQUE_ID
+		,DOCUMENT_ID
+		,UUID
+		,Internal_Id
+		,RESP_PARAM
+		,RESP_CODE
+		,ERR_MSG
+		,CRT_DT
+    ) VALUES (
+        #{respId}
+        , #{uin}
+        , #{docId}
+        , #{uuid}
+        , #{internalId}
+        , #{errorDetails}
+        , #{respCode}
+        , #{warningDetails}
+        , SYSDATE
+    )
+</insert>
+
+<update id="updateEInvMain" parameterType="Map">
+
+	MERGE INTO EIV0004D TRG
+	USING (
+		SELECT
+		inv.rowid as rid,
+		INV.BATCH_ID BATCH_ID
+		,INV.GRP_ID GRP_ID
+		,MAIN_LOG.REF_NO
+		,INV.UNIQUE_ID INV_UIN
+		,DET_LOG.DOCUMENT_ID DOCUMENT_ID
+		,CASE WHEN DET_LOG.RESP_CODE = 'true' THEN '121' ELSE '8' END STATUS
+		FROM EIV0004D INV
+		LEFT JOIN EIV0003M MBATCH ON MBATCH.BATCH_ID = INV.BATCH_ID
+		LEFT JOIN EIV0006M MAIN_LOG ON MAIN_LOG.REF_NO = TO_CHAR(INV.GRP_ID)
+		LEFT JOIN EIV0007D DET_LOG ON DET_LOG.RESP_ID = MAIN_LOG.RESP_ID AND INV.UNIQUE_ID = DET_LOG.UNIQUE_ID
+		WHERE INV.STATUS = 44
+		AND INV.GRP_ID IS NOT NULL
+		AND MBATCH.STATUS not in ('8','21')
+		--AND MAIN_LOG.RESP_ID IS NOT NULL
+	) SRC
+	on (trg.rowid = src.rid)
+	WHEN MATCHED THEN
+	UPDATE SET
+		TRG.STATUS = SRC.STATUS
+		,TRG.DOCUMENT_ID = SRC.DOCUMENT_ID
+</update>
+
+<update id="updEInvByDocId" parameterType="Map">
+    UPDATE EIV0004D
+    SET
+    <if test="qrCode != null and qrCode != '' ">
+        QR_CODE = UTL_RAW.CAST_TO_RAW(#{qrCode}),
+    </if>
+    <if test="uuid != null and uuid != '' ">
+        UUID = #{uuid},
+    </if>
+    <if test="internalId != null and internalId != '' ">
+        INTERNAL_ID = #{internalId},
+    </if>
+        STATUS = #{status},
+        DT_TM_VALIDATED = TO_DATE(#{dateTimeValidated}, 'YYYY-MM-DD"T"HH24:MI:SS'),
+        UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE
+    WHERE  DOCUMENT_ID = #{documentId}
+    AND STATUS NOT IN (8,21)
+</update>
+
+<select id="getSendMaxRowCount" parameterType="Map" resultType="String">
+	SELECT CODE FROM EIV0009M WHERE CODE_MASTER_ID = #{codeMasterId}
+	AND ROWNUM = 1
+</select>
+</mapper>

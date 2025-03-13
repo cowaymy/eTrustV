@@ -1,0 +1,1995 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.promotion.impl.PromotionMapper">
+
+    <select id="selectPromotionList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , T1.PROMO_CODE
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T3.CODE_NAME AS PROMO_TYPE_NAME
+             , T1.PROMO_APP_TYPE_ID
+             , T2.CODE_NAME AS PROMO_APP_TYPE_NAME
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , T1.PROMO_UPD_DT
+             , T1.PROMO_UPD_USER_ID
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , T1.B2B
+             , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
+             , T1.CHS
+             , T6.NAME AS APPV_STUS
+          FROM SAL0017D T1
+          LEFT OUTER
+          JOIN SYS0013M T2
+            ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
+           AND T2.CODE_MASTER_ID = '320'
+          LEFT OUTER
+          JOIN SYS0013M T3
+            ON T1.PROMO_TYPE_ID = T3.CODE_ID
+           AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+          LEFT JOIN SAL0358M T5 ON T5.PROMO_ID = T1.PROMO_ID and T5.PROMO_REQST_ID = (SELECT MAX(PROMO_REQST_ID) FROM SAL0358M where PROMO_ID = T1.PROMO_ID)
+          LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T5.APPV_STUS
+         WHERE 1 = 1
+         <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
+           AND T1.PROMO_APP_TYPE_ID IN
+           <foreach item="item" collection="arrPromoAppTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='arrPromoTypeId != null and arrPromoTypeId !=""'>
+           AND T1.PROMO_TYPE_ID IN
+           <foreach item="item" collection="arrPromoTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='promoDt != null and promoDt !=""'>
+           AND #{promoDt} BETWEEN TO_CHAR(T1.PROMO_DT_FROM, 'YYYY-MM-DD') AND TO_CHAR(T1.PROMO_DT_END, 'YYYY-MM-DD')
+         </if>
+         <if test='promoStusId != null and promoStusId !=""'>
+           AND T1.PROMO_STUS_ID = #{promoStusId}
+         </if>
+         <if test='promoCode != null and promoCode !=""'>
+           AND UPPER(T1.PROMO_CODE) LIKE '%'||UPPER(#{promoCode})||'%'
+         </if>
+         <if test='promoDesc != null and promoDesc !=""'>
+           AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+
+         UNION
+
+         SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , ''
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T3.CODE_NAME AS PROMO_TYPE_NAME
+             , T1.PROMO_APP_TYPE_ID
+             , T2.CODE_NAME AS PROMO_APP_TYPE_NAME
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , NULL
+             , NULL
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , 0
+             , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
+             , 0
+             , T6.NAME AS APPV_STUS
+          FROM SAL0358M T1
+          LEFT OUTER
+          JOIN SYS0013M T2
+            ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
+           AND T2.CODE_MASTER_ID = '320'
+          LEFT OUTER
+          JOIN SYS0013M T3
+            ON T1.PROMO_TYPE_ID = T3.CODE_ID
+           AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+          LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T1.APPV_STUS
+         WHERE 1 = 1
+         AND T1.APPV_STUS = 60
+         AND T1.ACTION_TAB = 'NEW'
+         <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
+           AND T1.PROMO_APP_TYPE_ID IN
+           <foreach item="item" collection="arrPromoAppTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='arrPromoTypeId != null and arrPromoTypeId !=""'>
+           AND T1.PROMO_TYPE_ID IN
+           <foreach item="item" collection="arrPromoTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='promoDt != null and promoDt !=""'>
+           AND #{promoDt} BETWEEN TO_CHAR(T1.PROMO_DT_FROM, 'YYYY-MM-DD') AND TO_CHAR(T1.PROMO_DT_END, 'YYYY-MM-DD')
+         </if>
+         <if test='promoStusId != null and promoStusId !=""'>
+           AND T1.PROMO_STUS_ID = #{promoStusId}
+         </if>
+         <if test='promoDesc != null and promoDesc !=""'>
+           AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+    </select>
+
+    <update id="updatePromoStatus" parameterType="salesPromoMVO">
+        UPDATE SAL0017D
+           SET PROMO_STUS_ID = #{promoStusId}
+             , PROMO_UPD_DT = SYSDATE
+             , PROMO_UPD_USER_ID = #{promoUpdUserId}
+         WHERE PROMO_ID = #{promoId}
+    </update>
+
+    <select id="selectMembershipPkg" parameterType="Map" resultType="egovMap">
+		SELECT CODE_ID
+		     , CODE_NAME
+		  FROM
+		     ( SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+		         FROM SAL0081D T1
+                    , SYS0013M T2
+		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+		          AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '367'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_CNTRCT_PAC_ID
+		          AND '1' = #{selType}
+		        UNION ALL
+		       SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                 FROM SAL0081D T1
+                WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '1' = #{selType}
+                UNION ALL
+		       SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+		         FROM SAL0081D T1
+		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+		          AND T1.PAC_TYPE = '1'
+		          AND '2' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                    , SYS0013M T2
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '368'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_MEM_PAC_ID
+                  AND '3' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '3' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                    , SYS0013M T2
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '370'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_MEM_PAC_ID
+                  AND '5' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '5' = #{selType}
+                UNION ALL
+		       SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+		            , T1.SRV_MEM_DESC AS CODE_NAME
+		         FROM SAL0091M T1
+		        WHERE T1.SRV_MEM_STUS_ID = 1
+		          AND T1.PAC_TYPE = '1'
+		          AND '4' = #{selType}
+		        UNION ALL
+		        SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+		            , T1.SRV_MEM_DESC AS CODE_NAME
+		         FROM SAL0091M T1
+		        WHERE T1.SRV_MEM_STUS_ID = 1
+		          AND T1.PAC_TYPE = '0'
+                  AND T1.SRV_MEM_PAC_ID IN (10)
+		          AND '6' = #{selType}
+		         UNION ALL
+                SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                 FROM SAL0081D T1
+                    , SYS0013M T2
+                WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '614'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_CNTRCT_PAC_ID
+                  AND '7' = #{selType}
+		     )
+		 ORDER BY CODE_ID
+    </select>
+
+    <select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.PRC_ID
+             , T1.MEM_PAC_ID
+             , T1.STK_ID
+             , NVL(T1.AMT,0) AMT
+             , T1.UOM_ID
+             , T1.UOM_CONV
+             , T1.START_DT
+             , T1.END_DT
+             , T1.CNTY_ID
+             , T1.APP_TYPE_ID
+             , T1.PRIOD
+             , NVL(T1.PRC_RPF, 0) PRC_RPF
+             , NVL(T1.PRC_PV, 0) PRC_PV
+             , NVL(T1.TRADE_IN_PV, 0) TRADE_IN_PV
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , NVL(T1.PRC_CHRG, 0) PRC_CHRG
+             , NVL(T1.PRC_COSTING, 0) PRC_COSTING
+             , T1.STUS_CODE_ID
+             , T2.STK_CTGRY_ID
+          FROM SAL0016M T1
+          JOIN SYS0026M T2 ON T1.STK_ID = T2.STK_ID
+         WHERE T1.STK_ID = #{stkId}
+           AND T1.APP_TYPE_ID = #{appTypeId}
+           AND MEM_PAC_ID = #{srvPacId}
+           AND T1.STUS_CODE_ID = 1
+           AND ROWNUM = 1
+    </select>
+
+    <select id="selectRentMemPriceInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.SRV_PAC_ITM_ID
+             , T1.SRV_CNTRCT_PAC_ID
+             , T1.SRV_PAC_ITM_PRODUCT_ID
+             , T1.SRV_PAC_ITM_SVC_FREQ
+             , T1.SRV_PAC_ITM_RENTAL AS AMT
+             , 0                     AS PRC_RPF
+             , T1.SRV_PAC_ITM_PV     AS PRC_PV
+             , T1.SRV_PAC_ITM_REM
+             , T1.SRV_PAC_ITM_STUS_ID
+             , T1.SRV_PAC_ITM_UPD_DT
+             , T1.SRV_PAC_ITM_UPD_USER_ID
+             , T1.DISCONTINUE
+          FROM SAL0082D T1
+         WHERE T1.SRV_CNTRCT_PAC_ID = #{promoSrvMemPacId}
+           AND T1.SRV_PAC_ITM_PRODUCT_ID = #{stkId}
+           AND T1.SRV_PAC_ITM_STUS_ID = 1
+           AND ROWNUM = 1
+    </select>
+
+    <select id="selectOutMemPriceInfo" parameterType="Map" resultType="egovMap">
+		SELECT T1.SRV_MEM_PAC_ID
+		     , T1.SRV_MEM_ITM_STK_ID
+		     , T1.SRV_MEM_ITM_PRC    AS AMT
+		     , 0                     AS PRC_RPF
+		     , T1.SRV_MEM_ITM_PV     AS PRC_PV
+		     , T1.SRV_MEM_ITM_PRIOD
+		     , T1.SRV_MEM_ITM_STUS_ID
+		     , T1.SRV_MEM_ITM_REM
+		     , T1.SRV_MEM_ITM_CRT_DT
+		     , T1.SRV_MEM_ITM_CRT_USER_ID
+		     , T1.SRV_MEM_ITM_UPD_DT
+		     , T1.SRV_MEM_ITM_UPD_USER_ID
+		     , T1.DISCONTINUE
+		  FROM SAL0092M T1
+		 WHERE T1.SRV_MEM_PAC_ID = #{promoSrvMemPacId}
+		   AND T1.SRV_MEM_ITM_STK_ID = #{stkId}
+		   AND T1.SRV_MEM_ITM_STUS_ID = 1
+		   AND ROWNUM = 1
+    </select>
+
+    <select id="selectFilterPriceInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.PRC_ID
+             , T1.MEM_PAC_ID
+             , T1.STK_ID
+             , T1.AMT
+             , T1.UOM_ID
+             , T1.UOM_CONV
+             , T1.START_DT
+             , T1.END_DT
+             , T1.CNTY_ID
+             , T1.APP_TYPE_ID
+             , T1.PRIOD
+             , 0 AS PRC_RPF
+             , 0 AS PRC_PV
+             , T1.TRADE_IN_PV
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.PRC_CHRG
+             , T1.PRC_COSTING
+             , T1.STUS_CODE_ID
+          FROM SAL0016M T1
+         WHERE T1.STK_ID       = #{stkId}
+           AND T1.MEM_PAC_ID   = 0
+           AND T1.APP_TYPE_ID  = 67
+           AND T1.STUS_CODE_ID = 1
+           AND ROWNUM = 1
+    </select>
+
+    <insert id="insertSalesPromoM" parameterType="salesPromoMVO">
+      <selectKey keyProperty="promoId" resultType="Integer" order="BEFORE">
+        SELECT SAL0017D_PROMO_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0017D
+             ( PROMO_ID
+             , PROMO_MTCH_ID
+             , PROMO_CODE
+             , PROMO_DESC
+             , PROMO_TYPE_ID
+             , PROMO_APP_TYPE_ID
+             , PROMO_SRV_MEM_PAC_ID
+             , PROMO_DT_FROM
+             , PROMO_DT_END
+             , PROMO_STUS_ID
+             , PROMO_UPD_DT
+             , PROMO_UPD_USER_ID
+             , PROMO_IS_TRIAL_CNVR
+             , PROMO_PRC_PRCNT
+             , PROMO_CUST_TYPE
+             , PROMO_DISC_TYPE
+             , PROMO_RPF_DISC_AMT
+             , PROMO_DISC_PERIOD_TP
+             , PROMO_DISC_PERIOD
+             , PROMO_FREESVC_PERIOD_TP
+             , PROMO_ADD_DISC_PRC
+             , PROMO_ADD_DISC_PV
+             , EMP_CHK
+             , EX_TRADE
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , IS_NEW
+             , MEGA_DEAL
+             , E_SALES
+             , ADV_DISC
+             , STK_SIZE
+             , PRE_BOOK
+             , VOUCHER_PROMOTION
+             , PROMO_DISC_ON_BILL
+             , WO_HS
+             , EXTRADE_FR
+             , EXTRADE_TO
+             , EXTRADE_APP_TYPE
+             , BILL_DISC_TYPE
+             , BILL_DISC_VALUE
+             , BILL_DISC_FR
+             , BILL_DISC_TO
+             , PROMO_GROUP
+             )
+        VALUES
+             ( #{promoId}
+             , #{promoMtchId}
+             , FN_GET_PROMO_CODE(#{promoAppTypeId}, #{promoTypeId}, TO_CHAR(SYSDATE, 'YYMMDD'))
+             , #{promoDesc}
+             , #{promoTypeId}
+             , #{promoAppTypeId}
+             , #{promoSrvMemPacId}
+             , TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
+             , TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
+             , #{promoStusId}
+             , SYSDATE
+             , #{promoUpdUserId}
+             , #{promoIsTrialCnvr}
+             , #{promoPrcPrcnt}
+             , #{promoCustType}
+             , #{promoDiscType}
+             , #{promoRpfDiscAmt}
+             , #{promoDiscPeriodTp}
+             , #{promoDiscPeriod}
+             , #{promoFreesvcPeriodTp}
+             , #{promoAddDiscPrc}
+             , #{promoAddDiscPv}
+             , #{empChk}
+             , #{exTrade}
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{isNew}
+             , #{megaDeal}
+             , #{promoESales}
+             , #{advDisc}
+             , #{stkSize}
+             , #{preBook}
+             , #{voucherPromotion}
+             , #{promoDiscOnBill}
+             , #{woHs}
+             , #{extradeFr}
+             , #{extradeTo}
+             , #{extradeAppType}
+             , #{billDiscType}
+             , #{billDiscValue}
+             , #{billDiscPeriodFrom}
+             , #{billDiscPeriodTo}
+             , #{promoGroup}
+             )
+    </insert>
+
+    <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
+      <selectKey keyProperty="promoItmId" resultType="Integer" order="BEFORE">
+        SELECT SAL0018D_PROMO_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0018D
+             ( PROMO_ITM_ID
+             , PROMO_ID
+             , PROMO_ITM_STK_ID
+             , PROMO_ITM_CUR_ID
+             , PROMO_ITM_PV
+             , PROMO_ITM_PV_SS
+             , PROMO_ITM_PRC_SS
+             , PROMO_ITM_STUS_ID
+             , PROMO_ITM_UPD_USER_ID
+             , PROMO_ITM_UPD_DT
+             , SRV_TYPE
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , PROMO_ITM_PV_GST
+             )
+        VALUES
+             ( #{promoItmId}
+             , #{promoId}
+             , #{promoItmStkId}
+             , #{promoItmCurId}
+             , #{promoItmPv}
+             , #{promoItmPvSs}
+             , #{promoAmtSs}
+             , #{promoItmStusId}
+             , #{promoItmUpdUserId}
+             , SYSDATE
+             , #{srvType}
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{promoItmPvGst}
+             )
+    </insert>
+
+    <insert id="insertSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
+      <selectKey keyProperty="promoFreeGiftId" resultType="Integer" order="BEFORE">
+        SELECT SAL0019D_FREE_GIFT_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0019D
+             ( PROMO_FREE_GIFT_ID
+             , PROMO_FREE_GIFT_PROMO_ID
+             , PROMO_FREE_GIFT_STK_ID
+             , PROMO_FREE_GIFT_STUS_ID
+             , PROMO_FREE_GIFT_START_DT
+             , PROMO_FREE_GIFT_EXPR_DT
+             , PROMO_FREE_GIFT_CRT_USER_ID
+             , PROMO_FREE_GIFT_CRT_DT
+             , PROMO_FREE_GIFT_QTY)
+        VALUES
+             ( #{promoFreeGiftId}
+             , #{promoFreeGiftPromoId}
+             , #{promoFreeGiftStkId}
+             , #{promoFreeGiftStusId}
+             , TO_DATE('1900-01-01', 'YYYY-MM-DD')
+             , TO_DATE('9999-12-31', 'YYYY-MM-DD')
+             , #{promoFreeGiftCrtUserId}
+             , SYSDATE
+             , #{promoFreeGiftQty})
+    </insert>
+
+    <select id="selectPromotionDetail" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , T1.PROMO_CODE
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T1.PROMO_APP_TYPE_ID
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , T1.PROMO_UPD_DT
+             , T1.PROMO_UPD_USER_ID
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , T1.MEGA_DEAL
+             , T1.E_SALES
+             , T1.ADV_DISC
+             , T1.STK_SIZE
+             , T1.VOUCHER_PROMOTION
+             , T3.cust_Status_en
+             , T3.cust_Status_Disen
+             , T3.cust_Status_New
+             , T3.cust_Status_en_Wout_WP
+             , T3.cust_Status_en_Wp_6m
+             , T1.PROMO_DISC_ON_BILL
+             , T1.PRE_BOOK
+             , T1.WO_HS
+             , T1.EXTRADE_FR
+             , T1.EXTRADE_TO
+             , T1.EXTRADE_APP_TYPE
+             , T1.BILL_DISC_TYPE
+             , T1.BILL_DISC_VALUE
+             , T1.BILL_DISC_FR
+             , T1.BILL_DISC_TO
+             , TO_NUMBER(T1.PROMO_GROUP) PROMO_GROUP
+          FROM SAL0017D T1
+          LEFT JOIN (SELECT * FROM (select PROMO_ID,PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0405D a)
+pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP,7502 cust_Status_en_Wp_6m))) T3 on T3.PROMO_ID = T1.PROMO_ID
+         WHERE T1.PROMO_ID = #{promoId}
+    </select>
+
+    <select id="selectPromotionPrdList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_UPD_USER_ID
+             , T1.PROMO_ITM_UPD_DT
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.SRV_TYPE
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+    </select>
+
+    <select id="selectPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , CASE WHEN T4.APP_TYPE_ID IN (67,68)
+                THEN TRUNC(FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC),-1)
+                ELSE FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC)
+                END AS PROMO_AMT
+             , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
+             , T1.SRV_TYPE
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.APP_TYPE_ID = #{appTypeId}
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
+    <select id="selectRentMemPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.SRV_PAC_ITM_RENTAL AS AMT
+             , 0                     AS PRC_RPF
+             , T4.SRV_PAC_ITM_PV     AS PRC_PV
+             , FLOOR(T4.SRV_PAC_ITM_RENTAL - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_PAC_ITM_RENTAL*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , 0                     AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0082D T4
+            ON T4.SRV_PAC_ITM_PRODUCT_ID = T1.PROMO_ITM_STK_ID
+           AND T4.SRV_CNTRCT_PAC_ID = T3.PROMO_SRV_MEM_PAC_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
+    <select id="selectOutMemPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.SRV_MEM_ITM_PRC AS AMT
+             , 0                  AS PRC_RPF
+             , T4.SRV_MEM_ITM_PV  AS PRC_PV
+             , FLOOR(T4.SRV_MEM_ITM_PRC - DECODE(T3.PROMO_DISC_TYPE, 0, T4.SRV_MEM_ITM_PRC*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , 0 AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0092M T4
+            ON T4.SRV_MEM_ITM_STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.SRV_MEM_PAC_ID = T3.PROMO_SRV_MEM_PAC_ID
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
+    <select id="selectFilterPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC) AS PROMO_AMT
+             , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV_SS
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.MEM_PAC_ID   = 0
+           AND T4.APP_TYPE_ID  = 67
+           AND T4.STUS_CODE_ID = 1
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+         ORDER BY PROMO_ITM_ID ASC
+    </select>
+
+    <select id="selectPromotionFreeGiftList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_FREE_GIFT_ID
+             , T1.PROMO_FREE_GIFT_PROMO_ID
+             , T1.PROMO_FREE_GIFT_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_FREE_GIFT_STUS_ID
+             , T1.PROMO_FREE_GIFT_START_DT
+             , T1.PROMO_FREE_GIFT_EXPR_DT
+             , T1.PROMO_FREE_GIFT_CRT_USER_ID
+             , T1.PROMO_FREE_GIFT_CRT_DT
+             , T1.PROMO_FREE_GIFT_QTY
+          FROM SAL0019D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_FREE_GIFT_STK_ID = T2.STK_ID
+         WHERE T1.PROMO_FREE_GIFT_PROMO_ID = #{promoId}
+           AND T1.PROMO_FREE_GIFT_STUS_ID = 1
+    </select>
+
+    <update id="updateSalesPromoM" parameterType="salesPromoMVO">
+        UPDATE SAL0017D
+           SET PROMO_DESC              = #{promoDesc}
+             , PROMO_SRV_MEM_PAC_ID        = #{promoSrvMemPacId}
+             , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
+             , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
+             , PROMO_UPD_DT            = SYSDATE
+             , PROMO_UPD_USER_ID       = #{promoUpdUserId}
+             , PROMO_IS_TRIAL_CNVR     = #{promoIsTrialCnvr}
+             , PROMO_PRC_PRCNT         = #{promoPrcPrcnt}
+             , PROMO_CUST_TYPE         = #{promoCustType}
+             , PROMO_DISC_TYPE         = #{promoDiscType}
+             , PROMO_RPF_DISC_AMT      = #{promoRpfDiscAmt}
+             , PROMO_DISC_PERIOD_TP    = #{promoDiscPeriodTp}
+             , PROMO_DISC_PERIOD       = #{promoDiscPeriod}
+             , PROMO_FREESVC_PERIOD_TP = #{promoFreesvcPeriodTp}
+             , PROMO_ADD_DISC_PRC      = #{promoAddDiscPrc}
+             , PROMO_ADD_DISC_PV       = #{promoAddDiscPv}
+             , EMP_CHK                 = #{empChk}
+             , EX_TRADE                = #{exTrade}
+             , UPD_USER_ID             = #{updUserId}
+             , UPD_DT                  = SYSDATE
+             , MEGA_DEAL               = #{megaDeal}
+             , E_SALES                 = #{promoESales}
+             , ADV_DISC                = #{advDisc}
+             , STK_SIZE                = #{stkSize}
+             , VOUCHER_PROMOTION = #{voucherPromotion}
+             , PROMO_DISC_ON_BILL = #{promoDiscOnBill}
+             , PRE_BOOK 		       = #{preBook}
+             , WO_HS = #{woHs}
+             , EXTRADE_FR = #{extradeFr}
+             , EXTRADE_TO = #{extradeTo}
+             , EXTRADE_APP_TYPE = #{extradeAppType}
+             , BILL_DISC_TYPE =  #{billDiscType}
+             , BILL_DISC_VALUE = #{billDiscValue}
+             , BILL_DISC_FR = #{billDiscPeriodFrom}
+             , BILL_DISC_TO = #{billDiscPeriodTo}
+             , PROMO_GROUP = #{promoGroup}
+         WHERE PROMO_ID                = #{promoId}
+    </update>
+
+    <update id="updateSalesPromoD" parameterType="salesPromoDVO">
+        UPDATE SAL0018D
+           SET PROMO_ITM_PV          = #{promoItmPv}
+           	 , PROMO_ITM_PV_SS       = #{promoItmPvSs}
+           	 , PROMO_ITM_PRC_SS      = #{promoAmtSs}
+             , PROMO_ITM_STUS_ID     = #{promoItmStusId}
+             , PROMO_ITM_UPD_USER_ID = #{promoItmUpdUserId}
+             , SRV_TYPE 			 = #{srvType}
+             , PROMO_ITM_UPD_DT      = SYSDATE
+         WHERE PROMO_ITM_ID          = #{promoItmId}
+    </update>
+
+    <update id="updateSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
+        UPDATE SAL0019D
+           SET PROMO_FREE_GIFT_STUS_ID = #{promoFreeGiftStusId}
+             , PROMO_FREE_GIFT_QTY     = #{promoFreeGiftQty}
+         WHERE PROMO_FREE_GIFT_ID      = #{promoFreeGiftId}
+    </update>
+
+    <!--Product 정보 조회 -->
+    <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
+        SELECT itemid
+             , itemcode
+             , itemname
+             , cateid
+             , typeid
+             , stateid
+             , catename
+             , statusname
+          FROM
+             (
+            <if test='stkType != null and stkType == "1"'>
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , SAL0082D T2
+                    , SYS0013M T3
+                WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 1 = T2.SRV_PAC_ITM_STUS_ID
+                  AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
+            </if>
+            <if test='stkType != null and stkType == "2"'>
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , SAL0092M T2
+                    , SYS0013M T3
+                WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 1 = T2.SRV_MEM_ITM_STUS_ID
+                  AND T2.SRV_MEM_PAC_ID = #{srvPacId}
+            </if>
+            <if test='stkType != null and stkType == "3"'>
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                    , (SELECT BOM_COMPNT FROM SAL0203D WHERE SRV_PAC_ID = #{srvPacId} GROUP BY BOM_COMPNT) T2
+                    , SYS0013M T3
+                WHERE T1.STK_CODE = T2.BOM_COMPNT
+                  AND T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND T1.STK_TYPE_ID = 62
+                  AND T1.STUS_CODE_ID = 1
+            </if>
+             )
+         WHERE 1 = 1
+       <if test="scode != null and scode !=''">
+           AND itemcode LIKE  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+           AND itemname LIKE '%'|| #{sname} ||'%'
+       </if>
+       <if test="cateid != null and cateid !=''">
+           AND cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+           AND typeid =  #{typeid}
+       </if>
+         ORDER BY itemname ASC
+    </select>
+
+    <!--Free Gift 정보 조회 -->
+    <select id="selectFreeGiftCodeList" parameterType="Map" resultType="egovMap">
+        SELECT itemid
+             , itemcode
+             , itemname
+             , cateid
+             , typeid
+             , stateid
+             , catename
+             , statusname
+          FROM
+             ( SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                WHERE STK_TYPE_ID = '61'
+                  AND T1.STUS_CODE_ID = 1
+             )
+         WHERE 1 = 1
+       <if test="scode != null and scode !=''">
+           AND itemcode LIKE  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+           AND itemname LIKE '%'|| #{sname} ||'%'
+       </if>
+       <if test="cateid != null and cateid !=''">
+           AND cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+           AND typeid =  #{typeid}
+       </if>
+         ORDER BY itemname ASC
+    </select>
+
+    <select id="selectProductCategoryList" resultType="egovMap">
+		SELECT T2.CODE_ID
+		     , T2.CODE
+		     , T2.CODE_NAME
+		  FROM
+		     ( SELECT DISTINCT STK_CTGRY_ID
+		         FROM SYS0026M
+		        WHERE STK_TYPE_ID = '61'
+		          AND STK_CTGRY_ID IS NOT NULL) T1
+		     , SYS0013M T2
+		 WHERE T1.STK_CTGRY_ID = T2.CODE_ID
+		 ORDER BY T2.CODE_ID
+    </select>
+
+     <insert id="insertPromoReqstM" parameterType="salesPromoMVO">
+      <selectKey keyProperty="promoReqstId" resultType="Integer" order="BEFORE">
+        SELECT SAL0358M_PROMO_REQST_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0358M
+             ( PROMO_REQST_ID
+             , PROMO_ID
+             , PROMO_MTCH_ID
+             , PROMO_DESC
+             , PROMO_TYPE_ID
+             , PROMO_APP_TYPE_ID
+             , PROMO_SRV_MEM_PAC_ID
+             , PROMO_DT_FROM
+             , PROMO_DT_END
+             , PROMO_STUS_ID
+             , PROMO_IS_TRIAL_CNVR
+             , PROMO_PRC_PRCNT
+             , PROMO_CUST_TYPE
+             , PROMO_DISC_TYPE
+             , PROMO_RPF_DISC_AMT
+             , PROMO_DISC_PERIOD_TP
+             , PROMO_DISC_PERIOD
+             , PROMO_FREESVC_PERIOD_TP
+             , PROMO_ADD_DISC_PRC
+             , PROMO_ADD_DISC_PV
+             , EMP_CHK
+             , EX_TRADE
+             , IS_NEW
+             , MEGA_DEAL
+             , E_SALES
+             , ADV_DISC
+             , STK_SIZE
+             , VOUCHER_PROMOTION
+             , PRE_BOOK
+             , ACTION_TAB
+             , APPV_STUS
+             , APPV_USER_ID
+             , APPV_DT
+             , REMARK
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , CHG_REMARK
+             , PROMO_DISC_ON_BILL
+             , WO_HS
+             , EXTRADE_FR
+             , EXTRADE_TO
+             , EXTRADE_APP_TYPE
+             , BILL_DISC_TYPE
+             , BILL_DISC_VALUE
+             , BILL_DISC_FR
+             , BILL_DISC_TO
+             , PROMO_GROUP
+             )
+        VALUES
+             ( #{promoReqstId}
+             , #{promoId}
+             , #{promoMtchId}
+             , #{promoDesc}
+             , #{promoTypeId}
+             , #{promoAppTypeId}
+             , #{promoSrvMemPacId}
+             , TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
+             , TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
+             , #{promoStusId}
+             , #{promoIsTrialCnvr}
+             , #{promoPrcPrcnt}
+             , #{promoCustType}
+             , #{promoDiscType}
+             , #{promoRpfDiscAmt}
+             , #{promoDiscPeriodTp}
+             , #{promoDiscPeriod}
+             , #{promoFreesvcPeriodTp}
+             , #{promoAddDiscPrc}
+             , #{promoAddDiscPv}
+             , #{empChk}
+             , #{exTrade}
+             , #{isNew}
+             , #{megaDeal}
+             , #{promoESales}
+             , #{advDisc}
+             , #{stkSize}
+             , #{voucherPromotion}
+             , #{preBook}
+             , #{actionTab}
+             , 60
+             , null
+             , null
+             , null
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{chgRemark}
+             , #{promoDiscOnBill}
+             , #{woHs}
+             , #{extradeFr}
+             , #{extradeTo}
+             , #{extradeAppType}
+             , #{billDiscType}
+             , #{billDiscValue}
+             , #{billDiscPeriodFrom}
+             , #{billDiscPeriodTo}
+             , #{promoGroup}
+             )
+    </insert>
+
+    <insert id="insertPromoReqstD" parameterType="salesPromoDVO">
+      <selectKey keyProperty="promoReqstItmId" resultType="Integer" order="BEFORE">
+        SELECT SAL0359D_PROMO_REQST_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SAL0359D
+             ( PROMO_REQST_ITM_ID
+             , PROMO_REQST_ID
+             , PROMO_ID
+             , PROMO_ITM_ID
+             , ACTION_TAB
+             , PROMO_ITM_STK_ID
+             , PROMO_ITM_CUR_ID
+             , PROMO_ITM_PV
+             , PROMO_ITM_STUS_ID
+             , PROMO_ITM_RENTAL
+             , PROMO_ITM_RENT_PRIOD
+             , PROMO_ITM_OBLIG_PRIOD
+             , PROMO_ITM_PV_GST
+             , CTRL_FLAG
+             , CTRL_QUOTA
+             , SRV_TYPE
+             , PROMO_ITM_PV_SS
+             , PROMO_ITM_PRC_SS
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             )
+        VALUES
+             ( #{promoReqstItmId}
+             , #{promoReqstId}
+             , #{promoId}
+             , #{promoItmId}
+             , #{actionTab}
+             , #{promoItmStkId}
+             , #{promoItmCurId}
+             , #{promoItmPv}
+             , #{promoItmStusId}
+             , 0
+             , 0
+             , 0
+             , #{promoItmPvGst}
+             , 0
+             , 0
+             , NVL(#{srvType}, 'HS')
+             , #{promoItmPvSs}
+             , NVL(#{promoAmtSs}, 0)
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             )
+    </insert>
+
+    <select id="selectPromotionApprovalList" parameterType="Map" resultType="egovMap">
+  SELECT T1.PROMO_REQST_ID
+             ,T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T3.CODE_NAME AS PROMO_TYPE_NAME
+             , T1.PROMO_APP_TYPE_ID
+             , T2.CODE_NAME AS PROMO_APP_TYPE_NAME
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.APPV_STUS
+             , U1.USER_NAME AS CREATOR
+             , U2.USER_NAME AS APPROVER
+             , T1.APPV_DT
+             , T1.CRT_DT
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
+             , T1.ACTION_TAB
+             , T1.VOUCHER_PROMOTION
+             , T1.PRE_BOOK
+             , T1.WO_HS
+             , T1.EXTRADE_FR
+             , T1.EXTRADE_TO
+             , T1.EXTRADE_APP_TYPE
+          FROM SAL0358M T1
+          LEFT JOIN SYS0047M U1 ON U1.USER_ID = T1.CRT_USER_ID
+          LEFT JOIN SYS0047M U2 ON U2.USER_ID = T1.APPV_USER_ID
+          LEFT JOIN SYS0045M U3 ON U3.USER_ID = T1.CRT_USER_ID
+          LEFT OUTER
+          JOIN SYS0013M T2
+            ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
+           AND T2.CODE_MASTER_ID = '320'
+          LEFT OUTER
+          JOIN SYS0013M T3
+            ON T1.PROMO_TYPE_ID = T3.CODE_ID
+           AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.APPV_STUS
+         WHERE 1 = 1
+         <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
+           AND T1.PROMO_APP_TYPE_ID IN
+           <foreach item="item" collection="arrPromoAppTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='arrPromoTypeId != null and arrPromoTypeId !=""'>
+           AND T1.PROMO_TYPE_ID IN
+           <foreach item="item" collection="arrPromoTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='promoDt != null and promoDt !=""'>
+           AND #{promoDt} BETWEEN TO_CHAR(T1.PROMO_DT_FROM, 'YYYY-MM-DD') AND TO_CHAR(T1.PROMO_DT_END, 'YYYY-MM-DD')
+         </if>
+         <if test='promoStusId != null and promoStusId !=""'>
+           AND T1.APPV_STUS = #{promoStusId}
+         </if>
+         <if test='promoDesc != null and promoDesc !=""'>
+           AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+         <if test='roleId == "236"'>
+           AND U3.ROLE_ID IN ('237', '238')
+         </if>
+         <if test='roleId == "96"'>
+           AND U3.ROLE_ID IN ('95')
+         </if>
+    </select>
+
+        <select id="selectPromoReqstInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , CASE WHEN T1.PROMO_ID > 0
+             THEN T2.PROMO_CODE
+             ELSE '' END AS PROMO_CODE
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T1.PROMO_APP_TYPE_ID
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , T1.EX_TRADE
+             , T1.MEGA_DEAL
+             , T1.E_SALES
+             , T1.ADV_DISC
+             , T1.STK_SIZE
+             , T1.ACTION_TAB
+             , T1.APPV_STUS AS APPV_STATUS
+             , T1.REMARK AS APPV_REMARK
+             , T1.VOUCHER_PROMOTION
+             , T1.PRE_BOOK
+             , T1.CHG_REMARK
+             , T3.cust_Status_en
+             , T3.cust_Status_Disen
+             , T3.cust_Status_New
+             , T3.cust_Status_en_Wout_WP
+             , T3.cust_Status_en_Wp_6m
+             , T1.PROMO_DISC_ON_BILL
+             , T1.WO_HS
+             , T1.EXTRADE_FR
+             , T1.EXTRADE_TO
+             , T1.EXTRADE_APP_TYPE
+             , T1.BILL_DISC_TYPE
+             , T1.BILL_DISC_VALUE
+             , T1.BILL_DISC_FR
+             , T1.BILL_DISC_TO
+             , T1.PROMO_GROUP
+          FROM SAL0358M T1
+          LEFT JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
+          LEFT JOIN (SELECT * FROM (select PROMO_REQST_ID,ITM_VALUE, STUS_ID from SAL0406D a)
+pivot ( max(STUS_ID) For ITM_VALUE in (7466 cust_Status_en, 7467 cust_Status_Disen, 7465 cust_Status_New,7476 cust_Status_en_Wout_WP,7502 cust_Status_en_Wp_6m))) T3 on T3.PROMO_REQST_ID = T1.PROMO_REQST_ID
+         WHERE T1.PROMO_REQST_ID = #{promoReqstId}
+    </select>
+
+    <select id="selectPromoReqstPrdList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_REQST_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.ACTION_TAB
+             , T1.SRV_TYPE
+          FROM SAL0359D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+         WHERE T1.PROMO_REQST_ID = #{promoReqstId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+    </select>
+
+    <select id="selectPromoReqstPrdUpdateList" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_REQST_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.ACTION_TAB
+             , T1.SRV_TYPE
+          FROM SAL0359D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+         WHERE T1.PROMO_REQST_ID = #{promoReqstId}
+    </select>
+
+      <update id="updatePromoReqstApproval" parameterType="Map">
+          UPDATE SAL0358M
+           SET APPV_STUS = #{appvStus}
+             , APPV_USER_ID = #{upd_user}
+             , APPV_DT   = SYSDATE
+             , REMARK     = <if test="appvRemark != null and appvRemark != ''">#{appvRemark}</if>
+                            <if test="appvRemark == null or appvRemark == ''">NULL</if>
+             , UPD_USER_ID = #{upd_user}
+             , UPD_DT         = SYSDATE
+         WHERE PROMO_REQST_ID = #{reqstId}
+  </update>
+
+  <select id="cntInPrgrsPromoReqst" parameterType="Map" resultType="int">
+  SELECT COUNT(*) FROM SAL0358M
+  WHERE PROMO_ID = #{promoId}
+  AND APPV_STUS = 60
+  </select>
+
+        <update id="updateReqstPromoId" parameterType="salesPromoMVO">
+          UPDATE SAL0358M
+           SET PROMO_ID = #{promoId}
+         WHERE PROMO_REQST_ID = #{promoReqstId}
+  </update>
+
+          <update id="updatePromoReqstItmId" parameterType="salesPromoDVO">
+          UPDATE SAL0359D
+           SET PROMO_ID = #{promoId}
+           , PROMO_ITM_ID = #{promoItmId}
+         WHERE PROMO_REQST_ITM_ID = #{promoReqstItmId}
+  </update>
+
+      <select id="selectPromoHistList" parameterType="Map" resultType="egovMap">
+SELECT A.PROMO_REQST_ID, B.PROMO_ID, B.PROMO_CODE, A.PROMO_DESC
+             , TO_CHAR(A.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(A.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , DECODE(C.CODE_DESC, NULL, 'ALL', C.CODE_DESC) AS CUST_TYPE
+             , DECODE(A.EX_TRADE, 1, 'YES', 'NO') AS EXTRADE
+             , DECODE(A.EMP_CHK, 1, 'YES', 'NO') AS EMPLOYEE
+             , DECODE(A.MEGA_DEAL, 1, 'YES', 'NO') AS MEGA_DEAL
+             , DECODE(A.ADV_DISC, 1, 'YES', 'NO') AS ADV_DISC
+             , DECODE(A.PRE_BOOK, 1, 'YES', 'NO') AS PRE_BOOK
+             , D.CODE_DESC AS DISC_TYPE
+             , A.PROMO_PRC_PRCNT AS PRCNT
+             , A.PROMO_RPF_DISC_AMT AS RPF
+             , E.CODE_DESC AS PERIOD_TYPE
+             , A.PROMO_DISC_PERIOD AS DISC_PERIOD
+             , A.PROMO_ADD_DISC_PRC AS ADD_DISC_PRC
+             , A.PROMO_ADD_DISC_PV AS ADD_DISC_PV
+             , F.CODE_DESC AS APPLY_TO
+             , A.STK_SIZE
+FROM SAL0358M A
+JOIN SAL0017D B ON B.PROMO_ID = A.PROMO_ID
+LEFT JOIN SYS0013M C ON C.CODE_ID = A.PROMO_CUST_TYPE AND C.CODE_MASTER_ID = 8
+LEFT JOIN SYS0013M D ON D.CODE = A.PROMO_DISC_TYPE AND D.CODE_MASTER_ID = 323
+LEFT JOIN SYS0013M E ON E.CODE_ID = A.PROMO_DISC_PERIOD_TP AND E.CODE_MASTER_ID = 322
+LEFT JOIN SYS0013M F ON F.CODE = A.E_SALES AND F.CODE_MASTER_ID = 451
+WHERE A.APPV_STUS = '5'
+AND B.PROMO_ID = #{promoId}
+ORDER BY A.PROMO_REQST_ID DESC
+    </select>
+
+    <select id="selectPromoReqstPrdHistList" parameterType="Map" resultType="egovMap">
+SELECT T1.PROMO_REQST_ITM_ID
+             , T1.PROMO_REQST_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PRC_SS AS PROMO_AMT_SS
+             , T1.PROMO_ITM_PV
+             , T1.PROMO_ITM_PV_SS
+             , T1.PROMO_ITM_STUS_ID
+             , T1.PROMO_ITM_RENTAL
+             , T1.PROMO_ITM_RENT_PRIOD
+             , T1.PROMO_ITM_OBLIG_PRIOD
+             , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
+             , T1.ACTION_TAB
+             , T5.AMT
+             , T5.PRC_PV
+             , T5.PRC_RPF
+             , T2.STK_CTGRY_ID
+             , T4.PROMO_DISC_TYPE
+             , T4.PROMO_PRC_PRCNT
+             , T4.PROMO_APP_TYPE_ID
+             , T4.PROMO_SRV_MEM_PAC_ID
+             , T4.PROMO_ADD_DISC_PRC
+             , T4.PROMO_ADD_DISC_PV
+             , T4.EX_TRADE
+             , T4.PROMO_RPF_DISC_AMT
+             , T4.PRE_BOOK
+             , T1.SRV_TYPE
+          FROM SAL0359D T1
+          JOIN SAL0358M T4 ON T4.PROMO_REQST_ID = T1.PROMO_REQST_ID
+          JOIN SAL0018D T3 ON T3.PROMO_ITM_ID = T1.PROMO_ITM_ID
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT JOIN SAL0016M T5 ON T5.STK_ID = T2.STK_ID
+          AND T5.MEM_PAC_ID = T4.PROMO_SRV_MEM_PAC_ID
+          AND T5.STUS_CODE_ID = 1
+         WHERE
+         T1.PROMO_ID = #{promoId}
+           AND T3.PROMO_ITM_STUS_ID = 1
+           AND T4.APPV_STUS = '5'
+           ORDER BY T1.PROMO_REQST_ID DESC
+
+    </select>
+
+<select id="selectExcelPromoList" parameterType="Map" resultType="egovMap">
+
+WITH PKG_LIST AS (
+ SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 1 AS APP_ID
+                 FROM SAL0081D W1
+                    , SYS0013M W2
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '367'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_CNTRCT_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 1 AS APP_ID
+                 FROM SAL0081D W1
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , W1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                    , 2 AS APP_ID
+                 FROM SAL0081D W1
+                WHERE W1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND W1.PAC_TYPE = '1'
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 3 AS APP_ID
+                 FROM SAL0091M W1
+                    , SYS0013M W2
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '368'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_MEM_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 3 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 5 AS APP_ID
+                 FROM SAL0091M W1
+                    , SYS0013M W2
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('0')
+                  AND W2.CODE_MASTER_ID = '370'
+                  AND W2.DISAB = 0
+                  AND W2.CODE = W1.SRV_MEM_PAC_ID
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 5 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE IN ('2')
+
+                UNION ALL
+               SELECT W1.SRV_MEM_PAC_ID AS CODE_ID
+                    , W1.SRV_MEM_DESC AS CODE_NAME
+                    , 4 AS APP_ID
+                 FROM SAL0091M W1
+                WHERE W1.SRV_MEM_STUS_ID = 1
+                  AND W1.PAC_TYPE = '1'
+
+)
+SELECT A.* , B.CODE_NAME
+
+FROM (
+
+        SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , T1.PROMO_CODE
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T3.CODE_NAME AS PROMO_TYPE_NAME
+             , T1.PROMO_APP_TYPE_ID
+             , T2.CODE_NAME AS PROMO_APP_TYPE_NAME
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , T1.PROMO_UPD_DT
+             , T1.PROMO_UPD_USER_ID
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION
+             , DECODE(T1.PROMO_CUST_TYPE, 964, 'Individual', 965, 'Company', 'All') PROMO_CUST_TYPE_DESC
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , DECODE(T1.PROMO_DISC_TYPE, 0, '%', 1, 'Amount') PROMO_DISC_TYPE_DESC
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , DECODE(T1.PROMO_DISC_PERIOD_TP, 2293, 'Equal in the period', 2294, 'Early in the period',2295, 'Late in the period') PROMO_DISC_PERIOD_TP_DESC
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , DECODE(T1.EMP_CHK, 0, 'Not Employee', 1, 'Employee') EMP_CHK_DESC
+             , T1.EX_TRADE
+             , DECODE(T1.EX_TRADE, 1, 'Extrade', 2, 'I-Care', 'No') EX_TRADE_DESC
+             , T1.B2B
+             , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
+             , T1.CHS
+             , T6.NAME AS APPV_STUS
+             , DECODE(T1.MEGA_DEAL, 1, 'Yes', 'No') MEGA_DEAL
+             , DECODE(T1.ADV_DISC, 1, 'Yes', 'No') ADV_DISC
+             , DECODE(T1.STK_SIZE, 'KING', 'KING', 'QUEEN', 'QUEEN', 'SINGLE', 'SINGLE') STK_SIZE_DESC
+             , DECODE(T1.E_SALES, 0, 'Admin key-in', 1, 'eKey-in', 2, 'Both') E_SALES
+             ,  CASE WHEN t1.promo_app_type_id IN (2284)
+                 THEN '1'
+                 WHEN t1.promo_app_type_id IN (2285)
+                 THEN '3'
+                 WHEN t1.promo_app_type_id IN (2287)
+                 THEN '5'
+                 WHEN t1.promo_app_type_id IN (2289, 2744)
+                 THEN '2'
+                 WHEN t1.promo_app_type_id IN (2288, 2290)
+                 THEN '4'
+              ELSE '0' END AS APP_ID
+             , DECODE(T1.PRE_BOOK, 1, 'Yes', 'No') PRE_BOOK
+          FROM SAL0017D T1
+          LEFT OUTER
+          JOIN SYS0013M T2
+            ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
+           AND T2.CODE_MASTER_ID = '320'
+          LEFT OUTER
+          JOIN SYS0013M T3
+            ON T1.PROMO_TYPE_ID = T3.CODE_ID
+           AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+          LEFT JOIN SAL0358M T5 ON T5.PROMO_ID = T1.PROMO_ID and T5.PROMO_REQST_ID = (SELECT MAX(PROMO_REQST_ID) FROM SAL0358M where PROMO_ID = T1.PROMO_ID)
+          LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T5.APPV_STUS
+         WHERE 1 = 1
+         <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
+           AND T1.PROMO_APP_TYPE_ID IN
+           <foreach item="item" collection="arrPromoAppTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='arrPromoTypeId != null and arrPromoTypeId !=""'>
+           AND T1.PROMO_TYPE_ID IN
+           <foreach item="item" collection="arrPromoTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='promoDt != null and promoDt !=""'>
+           AND #{promoDt} BETWEEN TO_CHAR(T1.PROMO_DT_FROM, 'YYYY-MM-DD') AND TO_CHAR(T1.PROMO_DT_END, 'YYYY-MM-DD')
+         </if>
+         <if test='promoStusId != null and promoStusId !=""'>
+           AND T1.PROMO_STUS_ID = #{promoStusId}
+         </if>
+         <if test='promoCode != null and promoCode !=""'>
+           AND UPPER(T1.PROMO_CODE) LIKE '%'||UPPER(#{promoCode})||'%'
+         </if>
+         <if test='promoDesc != null and promoDesc !=""'>
+           AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+
+         UNION
+
+         SELECT T1.PROMO_ID
+             , T1.PROMO_MTCH_ID
+             , ''
+             , T1.PROMO_DESC
+             , T1.PROMO_TYPE_ID
+             , T3.CODE_NAME AS PROMO_TYPE_NAME
+             , T1.PROMO_APP_TYPE_ID
+             , T2.CODE_NAME AS PROMO_APP_TYPE_NAME
+             , T1.PROMO_SRV_MEM_PAC_ID
+             , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+             , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+             , T1.PROMO_STUS_ID
+             , NULL
+             , NULL
+             , T1.PROMO_IS_TRIAL_CNVR
+             , T1.PROMO_PRC_PRCNT
+             , DECODE(T1.VOUCHER_PROMOTION, 1, 'Yes', 'No') VOUCHER_PROMOTION
+             , DECODE(T1.PROMO_CUST_TYPE, 964, 'Individual', 965, 'Company', 'All') PROMO_CUST_TYPE_DESC
+             , T1.PROMO_CUST_TYPE
+             , T1.PROMO_DISC_TYPE
+             , DECODE(T1.PROMO_DISC_TYPE, 0, '%', 1, 'Amount') PROMO_DISC_TYPE_DESC
+             , T1.PROMO_RPF_DISC_AMT
+             , T1.PROMO_DISC_PERIOD_TP
+             , DECODE(T1.PROMO_DISC_PERIOD_TP, 2293, 'Equal in the period', 2294, 'Early in the period',2295, 'Late in the period') PROMO_DISC_PERIOD_TP_DESC
+             , T1.PROMO_DISC_PERIOD
+             , T1.PROMO_FREESVC_PERIOD_TP
+             , T1.PROMO_ADD_DISC_PRC
+             , T1.PROMO_ADD_DISC_PV
+             , T1.EMP_CHK
+             , DECODE(T1.EMP_CHK, 0, 'Not Employee', 1, 'Employee') EMP_CHK_DESC
+             , T1.EX_TRADE
+             , DECODE(T1.EX_TRADE, 1, 'Extrade', 2, 'I-Care', 'No') EX_TRADE_DESC
+             , 0
+             , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
+             , 0
+             , T6.NAME AS APPV_STUS
+             , DECODE(T1.MEGA_DEAL, 1, 'Yes', 'No') MEGA_DEAL
+             , DECODE(T1.ADV_DISC, 1, 'Yes', 'No') ADV_DISC
+             , DECODE(T1.STK_SIZE, 'KING', 'KING', 'QUEEN', 'QUEEN', 'SINGLE', 'SINGLE') STK_SIZE_DESC
+             , DECODE(T1.E_SALES, 0, 'Admin key-in', 1, 'eKey-in', 2, 'Both') E_SALES
+             ,  CASE WHEN t1.promo_app_type_id IN (2284)
+                 THEN '1'
+                 WHEN t1.promo_app_type_id IN (2285)
+                 THEN '3'
+                 WHEN t1.promo_app_type_id IN (2287)
+                 THEN '5'
+                 WHEN t1.promo_app_type_id IN (2289, 2744)
+                 THEN '2'
+                 WHEN t1.promo_app_type_id IN (2288, 2290)
+                 THEN '4'
+              ELSE '0' END AS APP_ID
+            , DECODE(T1.PRE_BOOK, 1, 'Yes', 'No') PRE_BOOK
+          FROM SAL0358M T1
+          LEFT OUTER
+          JOIN SYS0013M T2
+            ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID
+           AND T2.CODE_MASTER_ID = '320'
+          LEFT OUTER
+          JOIN SYS0013M T3
+            ON T1.PROMO_TYPE_ID = T3.CODE_ID
+           AND T3.CODE_MASTER_ID = '76'
+           LEFT OUTER JOIN SYS0038M T4
+           ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+          LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T1.APPV_STUS
+         WHERE 1 = 1
+         AND T1.APPV_STUS = 60
+         AND T1.ACTION_TAB = 'NEW'
+         <if test='arrPromoAppTypeId != null and arrPromoAppTypeId != ""'>
+           AND T1.PROMO_APP_TYPE_ID IN
+           <foreach item="item" collection="arrPromoAppTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='arrPromoTypeId != null and arrPromoTypeId !=""'>
+           AND T1.PROMO_TYPE_ID IN
+           <foreach item="item" collection="arrPromoTypeId" index="index" open="(" separator="," close=")">
+             #{item}
+           </foreach>
+         </if>
+         <if test='promoDt != null and promoDt !=""'>
+           AND #{promoDt} BETWEEN TO_CHAR(T1.PROMO_DT_FROM, 'YYYY-MM-DD') AND TO_CHAR(T1.PROMO_DT_END, 'YYYY-MM-DD')
+         </if>
+         <if test='promoStusId != null and promoStusId !=""'>
+           AND T1.PROMO_STUS_ID = #{promoStusId}
+         </if>
+         <if test='promoDesc != null and promoDesc !=""'>
+           AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+         </if>
+
+) A
+
+LEFT JOIN PKG_LIST B on B.APP_ID = A.APP_ID AND A.PROMO_SRV_MEM_PAC_ID = B.CODE_ID
+
+    </select>
+
+    <insert id="insertSalesPromoAddtValue" parameterType="Map">
+    MERGE INTO SAL0405D T
+	USING
+	(
+	<foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+		SELECT
+		#{item.promoId} PROMO_ID,
+		#{item.promoReqstId} PROMO_REQST_ID,
+		#{item.typeId} TYPE_ID,
+		#{item.itmValue} ITM_VALUE,
+		#{item.stusId} STUS_ID,
+		#{item.userId} CRT_USER_ID,
+		SYSDATE CRT_DT,
+		#{item.userId} UPD_USER_ID,
+		SYSDATE UPD_DT
+		FROM DUAL
+	</foreach>
+	)S
+	ON (S.PROMO_ID = T.PROMO_ID AND T.TYPE_ID = S.TYPE_ID AND T.ITM_VALUE = S.ITM_VALUE)
+	WHEN NOT MATCHED THEN
+	    INSERT (
+	    PROMO_ID,
+	    PROMO_REQST_ID,
+	    TYPE_ID,
+	    ITM_VALUE,
+	    STUS_ID,
+	    CRT_USER_ID,
+	    CRT_DT
+	    )VALUES(
+	    S.PROMO_ID,
+	    S.PROMO_REQST_ID,
+	    S.TYPE_ID,
+	    S.ITM_VALUE,
+	    S.STUS_ID,
+	    S.CRT_USER_ID,
+	    S.CRT_DT
+	    )
+	WHEN MATCHED THEN UPDATE SET
+	   T.PROMO_REQST_ID = S.PROMO_REQST_ID,
+	    T.STUS_ID = S.STUS_ID,
+	    T.UPD_USER_ID = S.UPD_USER_ID,
+	    T.UPD_DT = S.UPD_DT
+    </insert>
+
+    <insert id="insertSalesPromoRequestAddtValue" parameterType="Map">
+    MERGE INTO SAL0406D T
+    USING
+    (
+    <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+        #{item.promoId} PROMO_ID,
+        #{item.promoReqstId} PROMO_REQST_ID,
+        #{item.typeId} TYPE_ID,
+        #{item.itmValue} ITM_VALUE,
+        #{item.stusId} STUS_ID,
+        #{item.userId} CRT_USER_ID,
+        SYSDATE CRT_DT,
+        #{item.userId} UPD_USER_ID,
+        SYSDATE UPD_DT
+        FROM DUAL
+    </foreach>
+    )S
+    ON (S.PROMO_REQST_ID = T.PROMO_REQST_ID AND T.TYPE_ID = S.TYPE_ID AND T.ITM_VALUE = S.ITM_VALUE)
+    WHEN NOT MATCHED THEN
+        INSERT (
+        PROMO_ID,
+        PROMO_REQST_ID,
+        TYPE_ID,
+        ITM_VALUE,
+        STUS_ID,
+        CRT_USER_ID,
+        CRT_DT
+        )VALUES(
+        S.PROMO_ID,
+        S.PROMO_REQST_ID,
+        S.TYPE_ID,
+        S.ITM_VALUE,
+        S.STUS_ID,
+        S.CRT_USER_ID,
+        S.CRT_DT
+        )
+    WHEN MATCHED THEN UPDATE SET
+       T.PROMO_ID = S.PROMO_ID,
+        T.STUS_ID = S.STUS_ID,
+        T.UPD_USER_ID = S.UPD_USER_ID,
+        T.UPD_DT = S.UPD_DT
+    </insert>
+
+    <select id="selectProductCompntConfigList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT T1.PROMO_ID
+           , T1.PROMO_CODE
+           , T1.PROMO_DESC
+           , T1.PROMO_TYPE_ID
+           , T3.CODE_NAME AS PROMO_TYPE_NAME
+           , T1.PROMO_APP_TYPE_ID APP_TYPE_ID
+           , T2.CODE_NAME AS APP_TYPE
+           , T1.PROMO_SRV_MEM_PAC_ID
+           , TO_CHAR(T1.PROMO_DT_FROM, 'DD/MM/YYYY') AS PROMO_DT_FROM
+           , TO_CHAR(T1.PROMO_DT_END,  'DD/MM/YYYY') AS PROMO_DT_END
+           , T1.PROMO_STUS_ID
+           , T4.NAME STATUS
+           , TO_CHAR(T1.UPD_DT, 'DD/MM/YYYY') UPD_DT
+           , T1.UPD_USER_ID
+           , TO_CHAR(T1.CRT_DT, 'DD/MM/YYYY') CRT_DT
+           , T1.CRT_USER_ID
+		   , T8.STK_CODE || ' - ' || STK_DESC STK_DESC
+		   , T8.STK_ID
+		   , T11.USER_NAME UPD_USER_NAME
+		   , T12.USER_NAME CRT_USER_NAME
+    FROM SAL0017D T1
+       LEFT OUTER JOIN SYS0013M T2 ON T1.PROMO_APP_TYPE_ID = T2.CODE_ID AND T2.CODE_MASTER_ID = '320'
+       LEFT OUTER JOIN SYS0013M T3 ON T1.PROMO_TYPE_ID = T3.CODE_ID AND T3.CODE_MASTER_ID = '76'
+       LEFT OUTER JOIN SYS0038M T4 ON T4.STUS_CODE_ID = T1.PROMO_STUS_ID
+       LEFT JOIN SAL0358M T5 ON T5.PROMO_ID = T1.PROMO_ID and T5.PROMO_REQST_ID = (SELECT MAX(PROMO_REQST_ID) FROM SAL0358M where PROMO_ID = T1.PROMO_ID)
+       LEFT JOIN SYS0038M T6 ON T6.STUS_CODE_ID = T5.APPV_STUS
+       LEFT JOIN SAL0018D T7 ON T1.PROMO_ID = T7.PROMO_ID AND T7.PROMO_ITM_STUS_ID = 1
+       LEFT JOIN SYS0026M T8 ON T7.PROMO_ITM_STK_ID = T8.STK_ID
+       JOIN SAL0237M T9 ON T1.PROMO_ID = T9.PROMO_ID AND T8.STK_ID = T9.ITM_STK_ID AND T9.DISAB = 0
+       AND T9.APP_TYPE_ID = (CASE WHEN T1.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T1.PROMO_APP_TYPE_ID = 7553 THEN 144
+                             ELSE 0 END)
+       LEFT JOIN SAL0223M T10 ON T9.ITM_CPNT_ID = T10.ITM_CPNT_ID AND T10.DISAB = 0 AND T7.PROMO_ITM_STK_ID = T10.ITM_STK_ID
+       LEFT JOIN SYS0047M T11 ON T1.UPD_USER_ID = T11.USER_ID
+       LEFT JOIN SYS0047M T12 ON T1.CRT_USER_ID = T12.USER_ID
+
+    WHERE T7.PROMO_ITM_STK_ID = #{product}
+
+    <if test='productCompnt != null and productCompnt !=""'>
+          AND T10.ITM_CPNT_ID = #{productCompnt}
+    </if>
+
+    <if test='promoId != null and promoId !=""'>
+          AND T1.PROMO_ID = #{promoId}
+    </if>
+
+    <if test='promoCode != null and promoCode !=""'>
+          AND UPPER(T1.PROMO_CODE) LIKE '%'||UPPER(#{promoCode})||'%'
+    </if>
+
+    <if test='promoDesc != null and promoDesc !=""'>
+         AND UPPER(T1.PROMO_DESC) LIKE '%'||UPPER(#{promoDesc})||'%'
+    </if>
+
+    <if test='effectStartDt != null and effectStartDt != ""'>
+         AND TO_DATE(#{effectStartDt},'DD/MM/YYYY') BETWEEN T1.PROMO_DT_FROM AND T1.PROMO_DT_END
+    </if>
+
+    <if test='appType != null and appType != ""'>
+          AND T1.PROMO_APP_TYPE_ID = #{appType}
+    </if>
+    ORDER BY T1.PROMO_CODE
+    </select>
+
+    <select id="selectProductCompntConfigItmList" parameterType="Map" resultType="egovMap">
+    SELECT   T5.ITM_CPNT_ID COMPNT_ID
+		   , T5.ITM_CPNT_NAME PRD_COMPNT
+		   , TO_CHAR(T4.EFF_DT, 'DD/MM/YYYY') AS EFFECT_DT
+		   , TO_CHAR(T4.EXP_DT, 'DD/MM/YYYY') AS EXPIRE_DT
+    FROM SAL0017D T1
+       LEFT JOIN SAL0018D T2 ON T1.PROMO_ID = T2.PROMO_ID AND T2.PROMO_ITM_STUS_ID = 1
+       LEFT JOIN SYS0026M T3 ON T2.PROMO_ITM_STK_ID = T3.STK_ID
+       JOIN SAL0237M T4 ON T1.PROMO_ID = T4.PROMO_ID AND T3.STK_ID = T4.ITM_STK_ID AND T4.DISAB = 0
+       AND T4.APP_TYPE_ID = (CASE WHEN T1.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T1.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T1.PROMO_APP_TYPE_ID = 7553 THEN 144
+                             ELSE 0 END)
+       LEFT JOIN SAL0223M T5 ON T4.ITM_CPNT_ID = T5.ITM_CPNT_ID
+       <!-- AND T5.DISAB = 0 -->
+       AND T2.PROMO_ITM_STK_ID = T5.ITM_STK_ID
+    WHERE T1.PROMO_ID = #{promoId}
+    <if test='appTypeId != null and appTypeId != ""'>
+          AND T1.PROMO_APP_TYPE_ID = #{appTypeId}
+    </if>
+    <if test='stkId != null and stkId != ""'>
+          AND T2.PROMO_ITM_STK_ID = #{stkId}
+    </if>
+    </select>
+
+    <select id="selectProductCompnt" parameterType="Map" resultType="egovMap">
+    SELECT ITM_CPNT_ID AS CODE,
+           UPPER(A.ITM_CPNT_NAME) AS CODE_NAME
+    FROM SAL0223M A
+    JOIN SYS0026M B ON A.ITM_STK_ID = B.STK_ID
+    WHERE
+    DISAB = '0' AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    ORDER BY A.ITM_STK_ID, A.ITM_CPNT_ID
+    </select>
+
+	<select id="selectProductCompntPromotionList" parameterType="Map" resultType="egovMap">
+        SELECT T.PROMO_ID CODE
+             , T.PROMO_DESC CODE_NAME
+          FROM
+             ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
+                    , T2.PROMO_DT_FROM
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
+                  AND T2.PROMO_STUS_ID = 1
+                  AND T2.PROMO_APP_TYPE_ID = #{appType}
+                 AND SYSDATE BETWEEN T2.PROMO_DT_FROM AND T2.PROMO_DT_END
+         LEFT JOIN SAL0237M T3 ON T1.PROMO_ID = T3.PROMO_ID AND T1.PROMO_ITM_STK_ID = T3.ITM_STK_ID AND T3.DISAB = 0
+                                  AND T3.APP_TYPE_ID = (CASE WHEN T2.PROMO_APP_TYPE_ID = 2284 THEN 66
+                                  WHEN T2.PROMO_APP_TYPE_ID = 2285 THEN 67
+                                  WHEN T2.PROMO_APP_TYPE_ID = 2286 THEN 68
+                                  WHEN T2.PROMO_APP_TYPE_ID = 7553 THEN 144
+                                  ELSE 0 END)
+        WHERE T1.PROMO_ITM_STK_ID = #{stkId}
+                  AND T1.PROMO_ITM_STUS_ID = 1
+                      <if test="config !=null and config == 0">
+                           AND T3.PROMO_ID IS NULL
+                      </if>
+                      <if test="config !=null and config == 1">
+                           AND T3.PROMO_ID IS NOT NULL
+                      </if>
+                      <if test="promoId !=null and promoId != ''">
+                           AND T2.PROMO_ID = #{promoId}
+                      </if>
+                  ) T
+         ORDER BY T.PROMO_DT_FROM DESC
+   </select>
+
+   <insert id="insertProductCompntConfig" parameterType="Map">
+   INSERT INTO SAL0237M ( APP_TYPE_ID ,
+                                        ITM_STK_ID ,
+                                        PROMO_ID ,
+                                        ITM_CPNT_ID ,
+                                        DISAB ,
+                                        EFF_DT ,
+                                        EXP_DT ,
+                                        CRT_DT ,
+                                        CRT_USER_ID
+     ) VALUES ( #{appTypeId} ,
+                     #{itmStkId} ,
+                     #{promoId} ,
+                     #{compntId} ,
+                     0 ,
+                     TO_DATE(#{effectDt},'DD/MM/YYYY'),
+                     TO_DATE(#{expireDt},'DD/MM/YYYY'),
+                     SYSDATE ,
+                     #{crtUsrId} )
+   </insert>
+
+   <update id="updateProductCompntConfig" parameterType="Map">
+    UPDATE SAL0237M SET CRT_DT = SYSDATE
+   					   , CRT_USER_ID = #{crtUsrId}
+   					   , DISAB = #{disab}
+   					   <if test='effectDt != null and effectDt != "" and effectDt != null and effectDt != "" and disab == 0'>
+   					   , EFF_DT = TO_DATE(#{effectDt},'DD/MM/YYYY')
+   					   , EXP_DT = TO_DATE(#{expireDt},'DD/MM/YYYY')
+   					   </if>
+    WHERE
+   		APP_TYPE_ID = #{appTypeId}
+		AND ITM_STK_ID = #{itmStkId}
+		AND PROMO_ID = #{promoId}
+		AND ITM_CPNT_ID = #{compntId}
+   </update>
+
+   <select id="selectCntComponentExists"  parameterType="Map" resultType="int">
+	SELECT
+		COUNT(*) CNT
+	FROM SAL0237M Extent1
+	WHERE
+		APP_TYPE_ID = #{appTypeId}
+		AND ITM_STK_ID = #{itmStkId}
+		AND PROMO_ID = #{promoId}
+		AND ITM_CPNT_ID = #{compntId}
+	</select>
+
+</mapper>

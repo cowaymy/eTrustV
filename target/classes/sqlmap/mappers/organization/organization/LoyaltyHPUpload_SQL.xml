@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.LoyaltyHPUploadMapper">
+
+
+
+	<select id="getLoyltyHpUploadMasterUploadId" parameterType="String"  resultType="String">
+	                SELECT SAL0300M_SEQ.NEXTVAL AS  uploadId FROM DUAL
+	</select>
+
+
+
+    <select id="selectLoyaltyHPUploadList" parameterType="Map" resultType="egovMap">
+
+
+                SELECT   sm.LOTY_UPLOAD_ID
+					        ,sm.LOTY_UPLOAD_STATUS_CODE
+					        ,(SELECT CODE_NAME  FROM sys0013m WHERE  sm.LOTY_UPLOAD_STATUS_CODE  =CODE  AND CODE_MASTER_ID  ='486')  AS  LOTY_UPLOAD_STATUS_NAME
+					        ,(SELECT  CODE_NAME  FROM   sys0013m WHERE  sm.LOTY_APPROVAL_STATUS_CODE  =CODE  AND CODE_MASTER_ID  ='488')  AS LOTY_APPROVAL_STATUS_NAME
+					        ,(SELECT COUNT(*) FROM SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= sm.LOTY_UPLOAD_ID )  AS tot_Cnt
+					        ,sm.LOTY_APPROVAL_STATUS_CODE
+					        ,sm.LOTY_APPROVER as LOTY_APPROVER_ID
+					        ,asy.USER_NAME as LOTY_APPROVER
+					        ,sm.LOTY_APPROVER_DATE
+					        ,sm.CRT_DT
+					        ,sm.CRT_USER_ID
+					        ,csy.USER_NAME  AS creator
+				FROM  SAL0300M sm  ,   SYS0047M csy , SYS0047M asy
+				    WHERE 1=1
+				    AND sm.CRT_USER_ID  =  csy.USER_ID (+)
+				    AND sm.LOTY_APPROVER  =  asy.USER_ID (+)
+				     <if test="uploadId != null and uploadId != ''">
+				          AND LOTY_UPLOAD_ID  = #{uploadId }
+				     </if>
+
+				    <if test="createDateTo != null and createDateTo != ''">
+                         AND TO_CHAR(CRT_DT,'dd/mm/yyyy') BETWEEN  #{createDateTo}  AND #{createDateFr}
+                     </if>
+
+                     <if test="creator != null and creator != ''">
+                            AND csy.USER_NAME  LIKE '%' ||UPPER( #{creator} )|| '%'
+                     </if>
+
+					 <if test='statusList != null and statusList != ""'>
+					            AND sm.LOTY_UPLOAD_STATUS_CODE  IN
+					               <foreach item="item" collection="statusList" index="index" open="(" separator="," close=")">
+					           #{item}
+					           </foreach>
+					 </if>
+
+
+    </select>
+
+
+<update id="deActiveteItem"  parameterType="Map">
+            UPDATE SAL0300M
+            SET LOTY_UPLOAD_STATUS_CODE = 10
+                ,LOTY_APPROVAL_STATUS_CODE = 'C'
+                ,LOTY_APPROVER_DATE =SYSDATE
+                ,LOTY_APPROVER =#{userId}
+                ,UPD_DT        =SYSDATE
+                ,UPD_USER_ID   =#{userId}
+            WHERE  LOTY_UPLOAD_ID  = #{uploadId}
+    </update>
+<update id="confrimItem"  parameterType="Map">
+			UPDATE SAL0300M
+			SET LOTY_UPLOAD_STATUS_CODE = 4
+			   , LOTY_APPROVAL_STATUS_CODE = 'C'
+			   , LOTY_APPROVER_DATE =SYSDATE
+			   , LOTY_APPROVER =#{userId}
+			   , UPD_DT        =SYSDATE
+			    ,UPD_USER_ID   =#{userId}
+			WHERE  LOTY_UPLOAD_ID  = #{uploadId}
+    </update>
+
+
+  <update id="removeItem"  parameterType="Map">
+         DELETE SAL0301D
+            WHERE LOTY_UPLOAD_ID = #{lotyUploadId}
+            AND LOTY_YEAR =#{lotyYear}
+            AND LOTY_PERIOD =#{lotyPeriod}
+            AND LOTY_MEMBER_CODE =#{lotyMemberCode}
+    </update>
+
+
+	<insert id="insertSAL0300Master" parameterType="Map">
+
+			INSERT INTO SAL0300M(
+			     LOTY_UPLOAD_ID
+			    ,LOTY_UPLOAD_STATUS_CODE
+			    ,LOTY_APPROVAL_STATUS_CODE
+			    ,LOTY_APPROVER_DATE
+			    ,CRT_DT
+			    ,CRT_USER_ID
+			) VALUES(
+			    #{lotyUploadId}
+			    ,#{lotyUploadStatusCode}
+			    ,#{lotyApprovalStatusCode}
+			    ,#{lotyApproverDate}
+			    ,SYSDATE
+			    ,#{userId}
+			)
+
+	</insert>
+
+
+    <insert id="insertSAL0301Details" parameterType="Map">
+			INSERT INTO SAL0301D (
+			     LOTY_UPLOAD_ID
+			    ,LOTY_YEAR
+			    ,LOTY_PERIOD
+			    ,LOTY_MEMBER_CODE
+			    ,LOTY_MEMBER_STATUS_CODE
+			    ,LOTY_VAILD_STATUS_CODE
+			    ,LOTY_START_DATE
+			    ,LOTY_END_DATE
+			    ,CRT_DT
+			    ,CRT_USER_ID
+			)VALUES(
+			        #{lotyUploadId}
+			        ,#{lotyYear}
+			        ,#{lotyPeriod}
+			        ,#{lotyMemberCode}
+			        ,#{lotyMemberStatusCode}
+			        , (SELECT count(1)  FROM ORG0001D  WHERE  MEM_CODE =#{lotyMemberCode})
+			        ,  to_date(#{lotyStartDate},'dd/mm/yyyy')
+			        ,to_date(#{lotyEndDate},'dd/mm/yyyy')
+			        ,SYSDATE
+			        ,#{userId}
+			)
+    </insert>
+
+
+
+
+    <insert id="addLoyaltyHpUpload" parameterType="Map">
+            INSERT INTO SAL0301D (
+                 LOTY_UPLOAD_ID
+                ,LOTY_YEAR
+                ,LOTY_PERIOD
+                ,LOTY_MEMBER_CODE
+                ,LOTY_MEMBER_STATUS_CODE
+                ,LOTY_VAILD_STATUS_CODE
+                ,LOTY_START_DATE
+                ,LOTY_END_DATE
+                ,CRT_DT
+                ,CRT_USER_ID
+            )VALUES(
+                    #{uploadId}
+                    ,#{year}
+                    ,#{period}
+                    , #{itemMemCd}
+                    ,(SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID ='487' AND CODE_ID  =#{hpStatus}  )
+                    , (SELECT count(1)  FROM ORG0001D  WHERE  MEM_CODE =#{itemMemCd})
+                    ,  to_date(#{requestCreatStart},'dd/mm/yyyy')
+                    ,to_date(#{requestCreatEnd},'dd/mm/yyyy')
+                    ,SYSDATE
+                    ,#{userId}
+            )
+    </insert>
+
+
+
+    <select id="selectLoyaltyHPUploadDetailInfo" parameterType="Map" resultType="egovMap">
+
+					SELECT   sm.LOTY_UPLOAD_ID
+					        ,sm.LOTY_UPLOAD_STATUS_CODE
+					        ,(SELECT CODE_NAME  FROM sys0013m WHERE  sm.LOTY_UPLOAD_STATUS_CODE  =CODE  AND CODE_MASTER_ID  ='486')  AS  LOTY_UPLOAD_STATUS_NAME
+					        ,sm.LOTY_APPROVAL_STATUS_CODE
+					        ,sm.LOTY_APPROVER
+					        ,sm.LOTY_APPROVER_DATE
+					        ,sm.CRT_DT
+					        ,sm.CRT_USER_ID
+					        ,csy.USER_NAME  AS updateor
+					        ,NVL(TO_CHAR(LOTY_APPROVER_DATE,'dd/mm/yyyy hh:mm:ss'),'-') as lotyupdate
+					        ,(SELECT COUNT(*) FROM  SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID  AND  NVL(SS.LOTY_VAILD_STATUS_CODE,0)  =0  ) AS IN_VAL_CNT
+					        ,(SELECT COUNT(*) FROM SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID   AND  NVL(SS.LOTY_VAILD_STATUS_CODE,0)  =1 )  AS VAL_CNT
+				            ,(SELECT COUNT(*) FROM SAL0301D SS WHERE  SS.LOTY_UPLOAD_ID= SM.LOTY_UPLOAD_ID )  AS tot_Cnt
+					FROM  SAL0300M sm  ,   sys0047m csy
+					    WHERE 1=1
+					     AND  sm.CRT_USER_ID     =csy.USER_ID (+)
+					 <if test="uploadId != null and uploadId != ''">
+                          AND sm.LOTY_UPLOAD_ID  = #{uploadId }
+                     </if>
+    </select>
+
+
+
+    <select id="selectLoyaltyHPUploadDetailList" parameterType="Map" resultType="egovMap">
+
+				   SELECT
+				         sd.LOTY_UPLOAD_ID
+				        , sd.LOTY_MEMBER_CODE
+				        ,NVL(od.NAME,'') AS NAME
+				        ,sd.LOTY_MEMBER_STATUS_CODE
+				        ,sy.CODE_NAME
+				        ,sd.LOTY_START_DATE
+				        ,sd.LOTY_END_DATE
+				        ,sd.LOTY_PERIOD
+				        ,sd.LOTY_YEAR
+				        ,DECODE (sd.LOTY_VAILD_STATUS_CODE ,'0','InVaild' ,'Vaild') AS status
+				    FROM SAL0301D sd, ORG0001D od  ,  SYS0013M sy
+				    WHERE sd.LOTY_UPLOAD_ID  =  #{uploadId }
+				    AND sd.LOTY_MEMBER_CODE  =od.MEM_CODE (+)
+				    AND sd.LOTY_MEMBER_STATUS_CODE  =sy.CODE (+)
+				    AND sy.CODE_MASTER_ID  ='487'
+
+				     <if test="lotyMemberStatus != null and lotyMemberStatus != ''">
+                          AND nvl(sd.LOTY_VAILD_STATUS_CODE,0)   = #{lotyMemberStatus }
+                     </if>
+
+    </select>
+
+
+    <select id="selectLoyaltyHPUploadDetailListForMember" parameterType="Map" resultType="egovMap">
+                      SELECT LOTY_YEAR
+                                ,LOTY_PERIOD
+                                ,LOTY_MEMBER_STATUS_CODE
+                                ,CSY.CODE_NAME
+                          FROM SAL0301D D, SYS0013M csy , SAL0300M M
+                           WHERE D.LOTY_MEMBER_CODE  =#{memberCode}
+                            AND M.LOTY_UPLOAD_ID = D.LOTY_UPLOAD_ID
+                            AND csy.CODE_MASTER_ID  ='487'
+                             AND M.LOTY_APPROVAL_STATUS_CODE ='C'
+                            AND D.LOTY_MEMBER_STATUS_CODE= CSY.CODE
+    </select>
+
+    <select id="selectLoyaltyHPUploadMemberStatusList" parameterType="Map" resultType="egovMap">
+
+	    SELECT * FROM (
+	                            SELECT   COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH01'  AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH01'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH02'   AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH02'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH03'  AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH03'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH04'   AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH04'
+	                       ) WHERE 1=1
+	                       ORDER BY LOTY_MEMBER_STATUS_CODE ASC
+
+   </select>
+
+
+
+    <select id="selectLoyaltyActiveHPList" parameterType="Map" resultType="egovMap">
+    SELECT T.* FROM (
+        SELECT DISTINCT A.MEM_ID, A.MEM_CODE,A.NAME, TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
+                                V.DEPT_CODE,  V.GRP_CODE,  V.ORG_CODE,
+                                NVL(X6.M6,0) M6,
+                                NVL(X5.M5,0) M5,
+                                NVL(X4.M4,0) M4,
+                                NVL(X3.M3,0) M3,
+                                NVL(X2.M2,0) M2,
+                                NVL(X1.M1,0) M1,
+                                NVL(X0.M0,0) M0,
+                                NVL(M6,0)+NVL(M5,0)+NVL(M4,0)+NVL(M3,0)+NVL(M2,0)+NVL(M1,0) AS TOT_SAL,
+                                NVL(WS.WS_ACHV,'NO ACHIEVE')  WS_ACHV,
+                                MP.MEET_POINT_CODE
+         FROM ORG0001D A
+            JOIN ORG1001V V ON V.MEM_ID = A.MEM_ID
+            LEFT JOIN ORG0003D AP ON AP.APLCTN_ID = A.APLICNT_ID
+            LEFT JOIN REP0109T WS ON WS.MEM_ID = A.MEM_ID AND WS.RPT_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-1)))) AND  RPT_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-1))))
+            LEFT JOIN SYS0089M MP ON MP.MEET_POINT_ID = AP.APLICNT_MEETPOINT
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M6
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-6)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-6))))
+                GROUP BY MEM_ID)X6 ON X6.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M5
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-5)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-5))))
+                GROUP BY MEM_ID)X5 ON X5.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M4
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-4)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-4))))
+                GROUP BY MEM_ID)X4 ON X4.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M3
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-3)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-3))))
+                GROUP BY MEM_ID)X3 ON X3.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M2
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-2)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-2))))
+                GROUP BY MEM_ID)X2 ON X2.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M1
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-1)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-1))))
+                GROUP BY MEM_ID)X1 ON X1.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M0
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM SYSDATE) AND PV_YEAR = EXTRACT(YEAR FROM SYSDATE)
+                GROUP BY MEM_ID)X0 ON X0.MEM_ID = A.MEM_ID
+         WHERE A.MEM_TYPE = 1 AND A.STUS = 1
+         <if test="hpCode != null and hpCode != ''">
+            AND UPPER(A.MEM_CODE) LIKE '%'||UPPER(#{hpCode})||'%'
+         </if>
+         <if test="orgCode != null and orgCode != ''">
+            AND UPPER(V.ORG_CODE) LIKE '%'||UPPER(#{orgCode})||'%'
+         </if>
+         <if test="grpCode != null and grpCode != ''">
+            AND UPPER(V.GRP_CODE) LIKE '%'||UPPER(#{grpCode})||'%'
+         </if>
+         <if test="deptCode != null and deptCode != ''">
+            AND UPPER(V.DEPT_CODE) LIKE '%'||UPPER(#{deptCode})||'%'
+         </if>
+         <if test="meetingPoint != null and meetingPoint !=''">
+            AND MP.MEET_POINT_ID = #{meetingPoint}
+         </if>
+         ) T WHERE T.TOT_SAL <![CDATA[>]]>= 1
+    </select>
+
+</mapper>

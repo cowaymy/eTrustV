@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.cardpayment.service.impl.CardTransactionListMapper">
+
+   <select id="selectCardTransactionList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.payment.cardpayment.service.impl.CardTransactionListMapper.selectCardTransactionList] 20190930 - KR OHK */
+         SELECT T.CRC_STATE_ID
+                  , T.CRC_STATE_CRT_DT
+                  , T.CRC_STATE_REF_NO
+                  , T.CRC_STATE_ACC_ID
+                  , T.CRC_STATE_ACC_NM
+                  , T.CRC_TRNSC_MID
+                  , T.CRCMODE
+                  , T.TENURE
+                  , T.CRC_TRNSC_DT
+                  , T.CRC_TRNSC_NO
+                  , T.CRC_TRNSC_APPV
+                  , T.CRC_GROS_AMT
+                  , T.CRC_TOT_BC_AMT
+                  , T.CRC_GST_AMT
+                  , T.CRC_NET_AMT
+                  , T.CRC_TOT_GST_AMT
+                  , T.CRC_TOT_NET_AMT
+                  , T.CRC_TRNSC_IS_MTCH
+                  , T.CRC_STATE_MAPPING_DT
+                  , T.CRC_STATE_MAPPING_ID
+                  , T.PAY_ITM_AMT
+                  , T.SALES_ORD_NO
+                  , T.OR_NO
+                  , T.TRX_ID
+                  , T.F_TRNSC_ID
+           FROM (SELECT DISTINCT A.CRC_STATE_ID
+                              , TO_CHAR(A.CRC_STATE_CRT_DT , 'DD/MM/YYYY') CRC_STATE_CRT_DT
+                              , A.CRC_STATE_REF_NO
+                              , A.CRC_STATE_ACC_ID
+                              , H.ACC_CODE || ' - ' ||  H.ACC_DESC CRC_STATE_ACC_NM
+                              , B.CRC_TRNSC_MID
+                              , CASE WHEN E.PAY_ITM_CARD_MODE_ID IS NOT NULL THEN
+                                        CASE WHEN 1298 = E.PAY_ITM_CARD_MODE_ID THEN 'On'
+                                        WHEN 1299 = E.PAY_ITM_CARD_MODE_ID THEN 'Off'
+                                        WHEN 1300 = E.PAY_ITM_CARD_MODE_ID THEN 'PNP'
+                                        ELSE G.CODE_NAME END
+                                WHEN 1 = E.PAY_ITM_IS_ONLINE THEN 'On'
+                                WHEN 0 = E.PAY_ITM_IS_ONLINE THEN 'Off'
+                                ELSE '-' END CRCMODE
+                              , E.TENURE
+                              , B.CRC_TRNSC_DT
+                              , B.CRC_TRNSC_NO
+                              , B.CRC_TRNSC_APPV
+                              , B.CRC_GROS_AMT
+                              , B.CRC_TOT_BC_AMT
+                              , B.CRC_GST_AMT
+                              , B.CRC_NET_AMT
+                              , B.CRC_TOT_GST_AMT
+                              , B.CRC_TOT_NET_AMT
+                              , DECODE(C.CRC_STATE_MAPPING_ID, NULL, 'Unknown', 'Matched') AS CRC_TRNSC_IS_MTCH
+                              , C.CRC_STATE_MAPPING_DT
+                              , C.CRC_STATE_MAPPING_ID
+                              , E.PAY_ITM_AMT
+                              , NVL(F.SALES_ORD_NO, J.SRV_ORD_NO) SALES_ORD_NO
+                              , D.OR_NO
+                              , C.TRX_ID
+                              , E.PAY_ITM_ID
+                              , L.F_TRNSC_ID
+                          FROM PAY0075D A
+                         INNER JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                          LEFT OUTER JOIN PAY0252T C ON B.CRC_TRNSC_ID = C.CRC_STATE_MAPPING_ID AND NVL(REV_STUS_ID,0) <![CDATA[<>]]> 5
+                          LEFT OUTER JOIN PAY0064D D ON C.PAY_ID = D.PAY_ID
+                          LEFT OUTER JOIN PAY0065D E ON C.PAY_ID = E.PAY_ID AND C.PAY_ITM_ID = E.PAY_ITM_ID
+                          LEFT OUTER JOIN PAY0007D t17 ON D.BILL_ID = t17.BILL_ID
+                          LEFT OUTER JOIN SAL0001D F ON DECODE(D.SALES_ORD_ID,0,t17.BILL_SO_ID,D.SALES_ORD_ID) = F.SALES_ORD_ID
+                          LEFT OUTER JOIN SYS0013M G ON E.PAY_ITM_CARD_MODE_ID = G.CODE_ID
+                          LEFT OUTER JOIN SYS0001M H ON A.CRC_STATE_ACC_ID = H.ACC_ID AND H.ACC_STUS_ID = 1 AND H.IS_PAY_CRC = 1
+                          LEFT OUTER JOIN PAY0007D I ON D.BILL_ID = I.BILL_ID
+                          LEFT OUTER JOIN SAL0225D J ON  I.BILL_SO_ID = J.SRV_ORD_ID
+                          LEFT OUTER JOIN SYS0013M K ON H.ACC_CODE = K.CODE_NAME AND K.CODE_MASTER_ID = 384
+                          LEFT OUTER JOIN
+                              (SELECT
+                                    B.F_TRNSC_ID,
+                                    B.F_TRNSC_REF4 AS MID,
+                                    SUM(B.F_TRNSC_CRDIT_AMT) AS CREDIT_AMT,
+                                    SUM(B.F_TRNSC_DEBT_AMT) AS DEBIT_AMT,
+                                    B.F_TRNSC_DT,
+                                    D.CODE_ID
+                                FROM PAY0079D A JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                                LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
+                                JOIN SYS0013M D ON C.ACC_CODE = D.CODE
+                                WHERE
+                                    B.F_TRNSC_REM = 'CRC'
+                                    AND D.CODE_MASTER_ID = 384
+                                GROUP BY
+                                    B.F_TRNSC_ID,
+                                    B.F_TRNSC_REF4,
+                                    B.F_TRNSC_DT,
+                                D.CODE_ID ) L
+                          ON TO_CHAR(LTRIM(B.CRC_TRNSC_MID,'0')) = L.MID AND K.CODE_ID = L.CODE_ID AND B.CRC_TRNSC_DT = L.F_TRNSC_DT AND B.CRC_TOT_NET_AMT = L.CREDIT_AMT
+                       WHERE 1 = 1
+                        <if test='salesOrdNo != null and salesOrdNo != ""'>
+                           AND (F.SALES_ORD_NO = #{salesOrdNo} OR J.SRV_ORD_NO = #{salesOrdNo})
+                        </if>
+                        <if test='stateNo != null and stateNo != ""'>
+                           AND A.CRC_STATE_REF_NO = #{stateNo}
+                        </if>
+                        <if test='mid != null and mid != ""'>
+                           AND B.CRC_TRNSC_MID = #{mid}
+                        </if>
+                        <if test='(salesOrdNo == null or salesOrdNo == "") and (stateNo == null or stateNo == "")  and (mid == null or mid == "")'>
+                            <if test='stateDateFr != null and stateDateFr != "" and stateDateTo != null and stateDateTo != ""'>
+                               AND A.CRC_STATE_CRT_DT <![CDATA[>=]]>TO_DATE(#{stateDateFr}, 'DD/MM/YYYY')
+                               AND A.CRC_STATE_CRT_DT <![CDATA[<]]>TO_DATE(#{stateDateTo}, 'DD/MM/YYYY') +1
+                            </if>
+                            <if test='transDateFr != null and transDateFr != "" and transDateTo != null and transDateTo != ""'>
+                               AND B.CRC_TRNSC_DT <![CDATA[>=]]>TO_DATE(#{transDateFr}, 'DD/MM/YYYY')
+                               AND B.CRC_TRNSC_DT <![CDATA[<]]>TO_DATE(#{transDateTo}, 'DD/MM/YYYY') +1
+                            </if>
+                            <if test='bankAccount != null and bankAccount != ""'>
+                               AND H.ACC_ID = #{bankAccount}
+                            </if>
+                            <if test='paymentMode != null and paymentMode != ""'>
+                               AND E.PAY_ITM_MODE_ID = #{paymentMode}
+                            </if>
+                            <if test='crcStateId != null and crcStateId != ""'>
+                               AND A.CRC_STATE_ID = #{crcStateId}
+                            </if>
+                        </if>
+                   ) T
+           ORDER BY T.CRC_STATE_ID DESC, T.CRC_STATE_CRT_DT DESC, T.CRC_TRNSC_APPV ASC, T.OR_NO ASC
+    </select>
+
+</mapper>

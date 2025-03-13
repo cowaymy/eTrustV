@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.common.impl.SalesCommonMapper">
+
+<select id="getUserInfo" parameterType="Map" resultType="egovMap">
+	 SELECT usr.USER_ID
+	          , B.MEM_TYPE
+	          , A.MEM_LVL
+	          , B.MEM_CODE
+	          , B.NAME
+	          , C.ORG_CODE
+	          , C.GRP_CODE
+	          , C.DEPT_CODE
+	          , B.BRNCH
+	          , A.BRNCH_ID AS ORG_BRANCH
+	          , B.MEM_ID
+	          , D.CODE MEMBER_TYPE
+	  FROM SYS0047M usr, ORG0005D A, ORG0001D B, ORG1001V C, SYS0013M D
+	  WHERE usr.USER_NAME = B.MEM_CODE
+	  AND B.MEM_ID = A.MEM_ID
+	  AND C.MEM_ID = B.MEM_ID
+      AND usr.USER_STUS_ID = 1
+	  AND B.STUS = 1
+	  AND A.ORG_STUS_CODE_ID = 1
+	  AND B.MEM_TYPE = D.CODE_ID
+	  AND D.CODE_MASTER_ID = 1
+	  AND usr.USER_ID =  #{userId}
+</select>
+
+<select id="getUserBranchType" parameterType="Map" resultType="egovMap">
+    SELECT C.CODE, C.CODE_ID FROM SYS0047M U
+	JOIN ORG0001D A ON A.MEM_CODE = U.HR_CODE
+	JOIN SYS0005M B ON BRNCH_ID = BRNCH
+	JOIN SYS0013M C ON C.CODE_ID = B.TYPE_ID AND CODE_MASTER_ID = 45
+	WHERE U.USER_ID = #{userId}
+</select>
+
+</mapper>

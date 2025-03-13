@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.supplement.payment.service.impl.SupplementBatchPaymentMapper">
+
+  <select id="selectBatchList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.BATCH_ID BATCH_ID ,
+               Project1.BATCH_STUS_ID BATCH_STUS_ID ,
+               Project1.NAME NAME ,
+               Project1.CNFM_USER_ID CNFM_USER_ID ,
+               Project1.C1 C1 ,
+               TO_CHAR(Project1.CNFM_DT,'DD-MM-YYYY') CNFM_DT ,
+               Project1.CNFM_STUS_ID CNFM_STUS_ID ,
+               Project1.NAME1 NAME1 ,
+               Project1.CNVR_USER_ID CNVR_USER_ID ,
+               Project1.C2 C2 ,
+               TO_CHAR(Project1.CNVR_DT,'DD-MM-YYYY') CNVR_DT ,
+               TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
+               Project1.CRT_USER_ID CRT_USER_ID ,
+               Project1.USER_NAME USER_NAME ,
+               Project1.PAY_MODE_ID PAY_MODE_ID ,
+               Project1.CODE_NAME CODE_NAME ,
+               TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT ,
+               Project1.USERNAME1 USERNAME1 ,
+               Project1.UPD_USER_ID UPD_USER_ID ,
+               Project1.BATCH_PAY_TYPE BATCH_PAY_TYPE ,
+               Project1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+               CASE WHEN Project1.BATCH_IS_ADV = 1 THEN 'YES' ELSE 'NO' END AS BATCH_IS_ADV
+    FROM ( SELECT Project1.BATCH_ID BATCH_ID ,
+                          Project1.PAY_MODE_ID PAY_MODE_ID ,
+                          Project1.BATCH_STUS_ID BATCH_STUS_ID ,
+                          Project1.CNFM_STUS_ID CNFM_STUS_ID ,
+                          Project1.CRT_USER_ID CRT_USER_ID ,
+                          Project1.CRT_DT CRT_DT ,
+                          Project1.UPD_USER_ID UPD_USER_ID ,
+                          Project1.UPD_DT UPD_DT ,
+                          Project1.CNFM_DT CNFM_DT ,
+                          Project1.CNVR_DT CNVR_DT ,
+                          Project1.CNFM_USER_ID CNFM_USER_ID ,
+                          Project1.CNVR_USER_ID CNVR_USER_ID ,
+                          Project1.BATCH_PAY_TYPE BATCH_PAY_TYPE ,
+                          Project1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+                          Project1.BATCH_IS_ADV ,
+                          Project1.CODE_NAME CODE_NAME ,
+                          Project1.NAME NAME ,
+                          Project1.USER_NAME USER_NAME ,
+                          Project1.USERNAME1 USERNAME1 ,
+                          Project1.NAME1 NAME1 ,
+                          Project1.C1 C1 ,
+                          Project1.C2 C2 ,
+                          ROW_NUMBER() OVER ( ORDER BY Project1.BATCH_ID ASC  ) ROW_NUMBER
+              FROM ( SELECT Filter1.BATCH_ID BATCH_ID ,
+                                    Filter1.PAY_MODE_ID PAY_MODE_ID ,
+                                    Filter1.BATCH_STUS_ID BATCH_STUS_ID ,
+                                    Filter1.CNFM_STUS_ID CNFM_STUS_ID ,
+                                    Filter1.CREATOR1 CRT_USER_ID ,
+                                    Filter1.CREATED1 CRT_DT ,
+                                    Filter1.UPDATOR1 UPD_USER_ID ,
+                                    Filter1.UPDATED1 UPD_DT ,
+                                    Filter1.CNFM_DT CNFM_DT ,
+                                    Filter1.CNVR_DT CNVR_DT ,
+                                    Filter1.CNFM_USER_ID CNFM_USER_ID ,
+                                    Filter1.CNVR_USER_ID CNVR_USER_ID ,
+                                    Filter1.BATCH_PAY_TYPE BATCH_PAY_TYPE ,
+                                    Filter1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+                                    Filter1.BATCH_IS_ADV ,
+                                    Filter1.CODE_NAME CODE_NAME ,
+                                    Filter1.NAME2 NAME ,
+                                    Filter1.USERNAME2 USER_NAME ,
+                                    Filter1.USERNAME3 USERNAME1 ,
+                                    Filter1.NAME3 NAME1 ,
+                                    CASE WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME4
+                                            ELSE '' END C1 ,
+                                    CASE WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                                            ELSE '' END C2
+                        FROM ( SELECT Extent1.BATCH_ID BATCH_ID ,
+                                              Extent1.PAY_MODE_ID PAY_MODE_ID ,
+                                              Extent1.BATCH_STUS_ID BATCH_STUS_ID ,
+                                              Extent1.CNFM_STUS_ID CNFM_STUS_ID ,
+                                              Extent1.CRT_USER_ID CREATOR1 ,
+                                              Extent1.CRT_DT CREATED1 ,
+                                              Extent1.UPD_USER_ID UPDATOR1 ,
+                                              Extent1.UPD_DT UPDATED1 ,
+                                              Extent1.CNFM_DT CNFM_DT ,
+                                              Extent1.CNVR_DT CNVR_DT ,
+                                              Extent1.CNFM_USER_ID CNFM_USER_ID ,
+                                              Extent1.CNVR_USER_ID CNVR_USER_ID ,
+                                              Extent1.BATCH_PAY_TYPE BATCH_PAY_TYPE ,
+                                              Extent1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+                                              Extent1.BATCH_IS_ADV ,
+                                              Extent2.CODE_NAME CODE_NAME ,
+                                              Extent3.NAME NAME2 ,
+                                              Extent4.USER_NAME USERNAME2 ,
+                                              Extent5.USER_NAME USERNAME3 ,
+                                              Extent6.USER_ID USERID1 ,
+                                              Extent6.USER_NAME USERNAME4 ,
+                                              Extent7.NAME NAME3
+                                   FROM PAY0360M Extent1
+                                   JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+                                   JOIN SYS0038M Extent3 ON Extent3.STUS_CODE_ID = Extent1.BATCH_STUS_ID
+                                   JOIN SYS0047M Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+                                   JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+                                   LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CNFM_USER_ID
+                                   JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.CNFM_STUS_ID
+                                   WHERE  1=1
+                                   AND Extent1.DEL_FLG = 'N'
+
+                                   <if test="payMode != null">
+                                     AND Extent1.PAY_MODE_ID IN
+                                     <foreach collection="payMode" item="item" open="(" close=")" separator="," >
+                                       #{item}
+                                     </foreach>
+                                   </if>
+
+                                   <if test="confirmStatus != null">
+                                     AND Extent1.CNFM_STUS_ID IN
+                                     <foreach collection="confirmStatus" item="item" open="(" close=")" separator="," >
+                                       #{item}
+                                     </foreach>
+                                   </if>
+
+                                   <if test="batchStatus != null">
+                                     AND Extent1.BATCH_STUS_ID IN
+                                     <foreach collection="batchStatus" item="item" open="(" close=")" separator="," >
+                                       #{item}
+                                     </foreach>
+                                   </if>
+
+                        ) Filter1
+                        LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.CNVR_USER_ID
+                        WHERE Filter1.BATCH_PAY_TYPE = #{payType}
+                            AND Filter1.BATCH_PAY_CUST_TYPE = #{payCustType}
+
+                        <if test="batchId != ''">
+                           AND Filter1.BATCH_ID = #{batchId}
+                        </if>
+
+                        <if test="createDateFr != null and createDateTo != null and createDateFr != '' and createDateTo != ''" >
+                          AND Filter1.CREATED1 <![CDATA[ >= ]]> TO_DATE(#{createDateFr},'DD/MM/YYYY')
+                          AND Filter1.CREATED1 <![CDATA[ < ]]> TO_DATE(#{createDateTo},'DD/MM/YYYY') +1
+                        </if>
+
+                        <if test="creator != ''">
+                          AND Filter1.USERNAME2 = #{creator}
+                        </if >
+              ) Project1 ) Project1
+              WHERE Project1.ROW_NUMBER > 0
+              ORDER BY Project1.BATCH_ID DESC
+  </select>
+
+  <select id="selectBatchPaymentView" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.BATCH_ID BATCH_ID ,
+               Limit1.BATCH_STUS_ID BATCH_STUS_ID ,
+               Limit1.NAME NAME ,
+               Limit1.CNFM_USER_ID CNFM_USER_ID ,
+               Limit1.C1 C1 ,
+               TO_CHAR(Limit1.CNFM_DT , 'DD-MM-YYYY HH:MI:SS AM') AS CNFM_DT,
+               Limit1.CNFM_STUS_ID CNFM_STUS_ID ,
+               Limit1.NAME1 NAME1 ,
+               Limit1.CNVR_USER_ID CNVR_USER_ID ,
+               Limit1.BATCH_IS_ADV ,
+               Limit1.C2 C2 ,
+               TO_CHAR(Limit1.CNVR_DT , 'DD-MM-YYYY HH:MI:SS AM') AS CNVR_DT,
+               TO_CHAR(Limit1.CRT_DT , 'DD-MM-YYYY HH:MI:SS AM') AS CRT_DT,
+               Limit1.CRT_USER_ID CRT_USER_ID ,
+               Limit1.USER_NAME USER_NAME ,
+               Limit1.PAY_MODE_ID PAY_MODE_ID ,
+               Limit1.CODE_NAME CODE_NAME ,
+               TO_CHAR(Limit1.UPD_DT , 'DD-MM-YYYY HH:MI:SS AM') AS UPD_DT,
+               Limit1.USERNAME1 USERNAME1 ,
+               Limit1.UPD_USER_ID UPD_USER_ID
+    FROM ( SELECT Extent1.BATCH_ID BATCH_ID ,
+                          Extent1.PAY_MODE_ID PAY_MODE_ID ,
+                          Extent1.BATCH_STUS_ID BATCH_STUS_ID ,
+                          Extent1.CNFM_STUS_ID CNFM_STUS_ID ,
+                          Extent1.CRT_USER_ID CRT_USER_ID ,
+                          Extent1.CRT_DT CRT_DT ,
+                          Extent1.UPD_USER_ID UPD_USER_ID ,
+                          Extent1.UPD_DT UPD_DT ,
+                          Extent1.CNFM_DT CNFM_DT ,
+                          Extent1.CNVR_DT CNVR_DT ,
+                          Extent1.CNFM_USER_ID CNFM_USER_ID ,
+                          Extent1.CNVR_USER_ID CNVR_USER_ID ,
+                          CASE WHEN Extent1.BATCH_IS_ADV = 1 THEN 'YES' ELSE 'NO' END AS BATCH_IS_ADV ,
+                          Extent2.CODE_NAME CODE_NAME ,
+                          Extent3.NAME NAME ,
+                          Extent4.USER_NAME USER_NAME ,
+                          Extent5.USER_NAME USERNAME1 ,
+                          Extent7.NAME NAME1 ,
+                          CASE WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+                                  ELSE ' ' END C1 ,
+                          CASE WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                                  ELSE ' ' END C2
+              FROM PAY0360M Extent1
+              JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+              JOIN SYS0038M Extent3 ON Extent3.STUS_CODE_ID = Extent1.BATCH_STUS_ID
+              JOIN SYS0047M Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+              JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+              LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CNFM_USER_ID
+              JOIN SYS0038M Extent7 ON Extent7.STUS_CODE_ID = Extent1.CNFM_STUS_ID
+              LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Extent1.CNVR_USER_ID
+              WHERE Extent1.BATCH_ID = #{batchId}
+                  AND Extent1.DEL_FLG = 'N'
+                  AND ROWNUM <![CDATA[  <= ]]> 1 ) Limit1
+  </select>
+
+  <select id="selectBatchPaymentDetList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.DET_ID DET_ID ,
+               Project1.BATCH_ID BATCH_ID ,
+               Project1.DISAB DISAB ,
+               Project1.USER_AMT USER_AMT ,
+               Project1.USER_BANK_ACC USER_BANK_ACC ,
+               Project1.USER_BC_ACC USER_BC_ACC ,
+               Project1.USER_BC_AMT USER_BC_AMT ,
+               Project1.USER_CHQ_NO USER_CHQ_NO ,
+               Project1.USER_EFT_NO USER_EFT_NO ,
+               Project1.USER_ISS_BANK USER_ISS_BANK ,
+               Project1.USER_ORD_NO USER_ORD_NO ,
+               Project1.USER_REF_DT_DAY USER_REF_DT_DAY ,
+               Project1.USER_REF_DT_MONTH USER_REF_DT_MONTH ,
+               Project1.USER_REF_DT_YEAR USER_REF_DT_YEAR ,
+               Project1.USER_REF_NO USER_REF_NO ,
+               Project1.USER_RUN_NO USER_RUN_NO ,
+               Project1.USER_TR_NO USER_TR_NO ,
+               Project1.SYS_AMT SYS_AMT ,
+               Project1.VALID_REM VALID_REM ,
+               Project1.CODE CODE ,
+               Project1.VALID_STUS_ID VALID_STUS_ID ,
+               Project1.USER_TR_DT USER_TR_DT ,
+               Project1.USER_CLCTR_CODE USER_CLCTR_CODE,
+               Project1.CARD_NO,
+               Project1.APPROVAL_CODE,
+               Project1.PAY_CHANNEL
+    FROM ( SELECT Project1.DET_ID DET_ID ,
+                          Project1.BATCH_ID BATCH_ID ,
+                          Project1.DISAB DISAB ,
+                          Project1.VALID_STUS_ID VALID_STUS_ID ,
+                          Project1.VALID_REM VALID_REM ,
+                          Project1.USER_ORD_NO USER_ORD_NO ,
+                          Project1.USER_TR_NO USER_TR_NO ,
+                          Project1.USER_REF_NO USER_REF_NO ,
+                          Project1.USER_AMT USER_AMT ,
+                          Project1.USER_BANK_ACC USER_BANK_ACC ,
+                          Project1.USER_CHQ_NO USER_CHQ_NO ,
+                          Project1.USER_ISS_BANK USER_ISS_BANK ,
+                          Project1.USER_RUN_NO USER_RUN_NO ,
+                          Project1.USER_EFT_NO USER_EFT_NO ,
+                          Project1.USER_REF_DT_MONTH USER_REF_DT_MONTH ,
+                          Project1.USER_REF_DT_DAY USER_REF_DT_DAY ,
+                          Project1.USER_REF_DT_YEAR USER_REF_DT_YEAR ,
+                          Project1.USER_BC_AMT USER_BC_AMT ,
+                          Project1.USER_BC_ACC USER_BC_ACC ,
+                          Project1.SYS_AMT SYS_AMT ,
+                          Project1.USER_TR_DT USER_TR_DT ,
+                          Project1.USER_CLCTR_CODE USER_CLCTR_CODE ,
+                          Project1.CODE CODE ,
+                          ROW_NUMBER() OVER ( ORDER BY Project1.DET_ID ASC  ) ROW_NUMBER,
+                          Project1.CARD_NO,
+                          Project1.APPROVAL_CODE,
+                          Project1.PAY_CHANNEL
+               FROM ( SELECT Extent1.DET_ID DET_ID ,
+                                     Extent1.BATCH_ID BATCH_ID ,
+                                     Extent1.DISAB DISAB ,
+                                     Extent1.VALID_STUS_ID VALID_STUS_ID ,
+                                     Extent1.VALID_REM VALID_REM ,
+                                     Extent1.USER_ORD_NO USER_ORD_NO ,
+                                     Extent1.USER_TR_NO USER_TR_NO ,
+                                     Extent1.USER_REF_NO USER_REF_NO ,
+                                     Extent1.USER_AMT USER_AMT ,
+                                     Extent1.USER_BANK_ACC USER_BANK_ACC ,
+                                     Extent1.USER_CHQ_NO USER_CHQ_NO ,
+                                     Extent1.USER_ISS_BANK USER_ISS_BANK ,
+                                     Extent1.USER_RUN_NO USER_RUN_NO ,
+                                     Extent1.USER_EFT_NO USER_EFT_NO ,
+                                     Extent1.USER_REF_DT_MONTH USER_REF_DT_MONTH ,
+                                     Extent1.USER_REF_DT_DAY USER_REF_DT_DAY ,
+                                     Extent1.USER_REF_DT_YEAR USER_REF_DT_YEAR ,
+                                     Extent1.USER_BC_AMT USER_BC_AMT ,
+                                     Extent1.USER_BC_ACC USER_BC_ACC ,
+                                     Extent1.SYS_AMT SYS_AMT ,
+                                     Extent1.USER_TR_DT USER_TR_DT ,
+                                     Extent1.USER_CLCTR_CODE USER_CLCTR_CODE ,
+                                     Extent2.CODE CODE,
+                                     Extent1.CARD_NO,
+                                     Extent1.APPROVAL_CODE,
+                                     Extent1.PAY_CHANNEL
+                          FROM PAY0359D Extent1
+                          JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
+                          WHERE Extent1.BATCH_ID = #{batchId}
+                          AND Extent1.DISAB = 0
+
+                          <if test="validStatusId != null and validStatusId != ''">
+                            AND Extent1.VALID_STUS_ID = #{validStatusId}
+                          </if>
+             ) Project1
+    ) Project1
+    WHERE Project1.ROW_NUMBER > 0
+    ORDER BY Project1.DET_ID ASC
+  </select>
+
+  <select id="selectTotalValidAmt" parameterType="Map" resultType="egovMap">
+    SELECT GroupBy1.A1 C1,
+               TO_CHAR(NVL(GroupBy1.SYS_AMT,'0.00'), 'FM9999999999990.00') AS SYS_AMT
+    FROM ( SELECT COUNT(1) A1,
+                          SUM(Extent1.SYS_AMT) SYS_AMT
+               FROM PAY0359D Extent1
+               JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
+               WHERE (Extent1.BATCH_ID = #{batchId})
+                   AND (Extent1.DISAB = 0)
+                   AND (VALID_STUS_ID = 4)
+    ) GroupBy1
+  </select>
+
+  <update id="updRemoveItem" parameterType="Map">
+    UPDATE PAY0359D SET DISAB = '1',
+                                     UPD_USER_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DET_ID = #{detId}
+  </update>
+
+  <update id="saveConfirmBatch" parameterType="Map">
+    UPDATE PAY0360M SET CNFM_STUS_ID = '77',
+                                     UPD_USER_ID = #{userId},
+                                     UPD_DT = SYSDATE,
+                                     CNFM_DT = SYSDATE,
+                                     CNFM_USER_ID = #{userId}
+    WHERE BATCH_ID = #{batchId}
+  </update>
+
+  <update id="saveDeactivateBatch" parameterType="Map">
+    UPDATE PAY0360M SET BATCH_STUS_ID = '8',
+                                     CNFM_STUS_ID = '8',
+                                     UPD_USER_ID = #{userId},
+                                     UPD_DT = SYSDATE,
+                                     CNFM_DT = SYSDATE,
+                                     CNFM_USER_ID = #{userId}
+    WHERE  BATCH_ID = #{batchId}
+  </update>
+
+  <select id="selectBatchPaymentMs" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.BATCH_ID BATCH_ID ,
+               Extent1.PAY_MODE_ID PAY_MODE_ID ,
+               Extent1.BATCH_STUS_ID BATCH_STUS_ID ,
+               Extent1.CNFM_STUS_ID CNFM_STUS_ID ,
+               Extent1.CNFM_DT CNFM_DT ,
+               Extent1.CNVR_DT CNVR_DT ,
+               Extent1.CNFM_USER_ID CNFM_USER_ID ,
+               Extent1.CNVR_USER_ID CNVR_USER_ID ,
+               Extent1.BATCH_PAY_TYPE BATCH_PAY_TYPE ,
+               Extent1.BATCH_PAY_REM BATCH_PAY_REM ,
+               Extent1.BATCH_PAY_CUST_TYPE BATCH_PAY_CUST_TYPE ,
+               NVL (Extent1.BATCH_IS_ADV, 0) BATCH_IS_ADV,
+               Extent1.CRT_USER_ID CRT_USER_ID ,
+               Extent1.CRT_DT CRT_DT ,
+               Extent1.UPD_USER_ID UPD_USER_ID ,
+               Extent1.UPD_DT UPD_DT
+    FROM PAY0360M Extent1
+    WHERE Extent1.BATCH_ID = #{batchId}
+    AND Extent1.DEL_FLG = 'N'
+    AND ROWNUM <![CDATA[ <= ]]> 1
+  </select>
+
+  <select id="selectBatchPaymentDs" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.DET_ID DET_ID ,
+               Extent1.BATCH_ID BATCH_ID ,
+               Extent1.DISAB DISAB ,
+               Extent1.VALID_STUS_ID VALID_STUS_ID ,
+               Extent1.VALID_REM VALID_REM ,
+               Extent1.USER_ORD_NO USER_ORD_NO ,
+               Extent1.USER_TR_NO USER_TR_NO ,
+               Extent1.USER_REF_NO USER_REF_NO ,
+               Extent1.USER_AMT USER_AMT ,
+               Extent1.USER_BANK_ACC USER_BANK_ACC ,
+               Extent1.USER_CHQ_NO USER_CHQ_NO ,
+               Extent1.USER_ISS_BANK USER_ISS_BANK ,
+               Extent1.USER_RUN_NO USER_RUN_NO ,
+               Extent1.USER_EFT_NO USER_EFT_NO ,
+               Extent1.USER_REF_DT_MONTH USER_REF_DT_MONTH ,
+               Extent1.USER_REF_DT_DAY USER_REF_DT_DAY ,
+               Extent1.USER_REF_DT_YEAR USER_REF_DT_YEAR ,
+               Extent1.USER_BC_AMT USER_BC_AMT ,
+               Extent1.USER_BC_ACC USER_BC_ACC ,
+               Extent1.SYS_ORD_ID SYS_ORD_ID ,
+               Extent1.SYS_APP_TYPE_ID SYS_APP_TYPE_ID ,
+               Extent1.SYS_AMT SYS_AMT ,
+               Extent1.SYS_BANK_ACC_ID SYS_BANK_ACC_ID ,
+               Extent1.SYS_ISS_BANK_ID SYS_ISS_BANK_ID ,
+               Extent1.SYS_REF_DT SYS_REF_DT ,
+               Extent1.SYS_BC_AMT SYS_BC_AMT ,
+               Extent1.SYS_BC_ACC_ID SYS_BC_ACC_ID ,
+               Extent1.USER_TR_DT USER_TR_DT ,
+               Extent1.USER_CLCTR_CODE USER_CLCTR_CODE ,
+               Extent1.SYS_CLCTR_ID SYS_CLCTR_ID ,
+               Extent1.PAY_TYPE PAY_TYPE ,
+               Extent1.PAY_TYPE_ID PAY_TYPE_ID ,
+               Extent1.ADV_MONTH ADV_MONTH,
+               Extent1.CRT_USER_ID CRT_USER_ID ,
+               Extent1.CRT_DT CRT_DT ,
+               Extent1.UPD_USER_ID UPD_USER_ID ,
+               Extent1.UPD_DT UPD_DT
+    FROM PAY0359D Extent1
+    WHERE Extent1.DEL_FLG = 'N'
+    AND Extent1.DET_ID = #{detId}
+    AND ROWNUM <![CDATA[ <= ]]> 1
+  </select>
+
+  <select id="checkIfIsEGHLRecord" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM PAY0359D
+    WHERE DET_ID = #{detId}
+        AND DEL_FLG = 'N'
+        AND PAY_CHANNEL = 'EGHL'
+  </select>
+
+  <update id="removeEGHLBatchOrderRecord" parameterType="Map">
+    UPDATE PAY0359D SET DISAB = '1',
+                                     DEL_FLG = 'Y',
+                                     UPD_USER_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DEL_FLG = 'N'
+        AND DET_ID = #{detId}
+        AND BATCH_ID = #{batchId}
+        AND USER_REF_NO = #{userRefNo}
+  </update>
+
+  <select id="getPAY0360MSEQ" resultType="int">
+    SELECT PAY0360M_BATCH_SEQ_ID.NEXTVAL FROM DUAL
+  </select>
+
+  <select id="getPAY0359DSEQ" resultType="int" flushCache="true">
+    SELECT PAY0359D_DET_SEQ_ID.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="saveBatchPayMaster" parameterType="Map">
+    INSERT INTO PAY0360M ( BATCH_ID,
+                                        PAY_MODE_ID,
+                                        BATCH_STUS_ID,
+                                        CNFM_STUS_ID,
+                                        CNFM_DT,
+                                        CNVR_DT,
+                                        CNFM_USER_ID,
+                                        CNVR_USER_ID,
+                                        BATCH_PAY_TYPE,
+                                        BATCH_PAY_REM,
+                                        BATCH_PAY_CUST_TYPE,
+                                        BATCH_IS_ADV,
+                                        BATCH_IS_EMANDATE,
+                                        IS_BATCH,
+                                        DEL_FLG,
+                                        CRT_USER_ID,
+                                        CRT_DT,
+                                        UPD_USER_ID,
+                                        UPD_DT
+    ) VALUES ( #{batchId},
+                    #{payModeId},
+                    #{batchStatusId},
+                    #{confirmStatusId},
+                    TO_DATE(#{confirmDate} , 'YYYY/MM/DD'),
+                    TO_DATE(#{convertDate} , 'YYYY/MM/DD'),
+                    #{confirmBy},
+                    #{convertBy},
+                    #{paymentType},
+                    #{paymentRemark},
+                    #{paymentCustType},
+                    #{advance},
+                    #{eMandate},
+                    #{isBatch},
+                    #{delFlg},
+                    #{creator},
+                    SYSDATE,
+                    #{updator},
+                    SYSDATE
+    )
+  </insert>
+
+  <insert id="saveBatchPayDetailList" parameterType="Map">
+    INSERT INTO PAY0359D ( DET_ID,
+                                        BATCH_ID,
+                                        DISAB,
+                                        VALID_STUS_ID,
+                                        VALID_REM,
+                                        USER_ORD_NO,
+                                        USER_TR_NO,
+                                        USER_REF_NO,
+                                        USER_AMT,
+                                        USER_BANK_ACC,
+                                        USER_CHQ_NO,
+                                        USER_ISS_BANK,
+                                        USER_RUN_NO,
+                                        USER_EFT_NO,
+                                        USER_REF_DT_MONTH,
+                                        USER_REF_DT_DAY,
+                                        USER_REF_DT_YEAR,
+                                        USER_BC_AMT,
+                                        USER_BC_ACC,
+                                        SYS_ORD_ID,
+                                        SYS_APP_TYPE_ID,
+                                        SYS_AMT,
+                                        SYS_BANK_ACC_ID,
+                                        SYS_ISS_BANK_ID,
+                                        SYS_REF_DT,
+                                        SYS_BC_AMT,
+                                        SYS_BC_ACC_ID,
+                                        USER_TR_DT,
+                                        USER_CLCTR_CODE,
+                                        SYS_CLCTR_ID,
+                                        PAY_TYPE,
+                                        PAY_TYPE_ID,
+                                        ADV_MONTH,
+                                        USER_REM,
+                                        CARD_NO,
+                                        CARD_MODE_ID,
+                                        APPROVAL_CODE,
+                                        PAY_CHANNEL,
+                                        DEL_FLG,
+                                        CRT_USER_ID,
+                                        CRT_DT,
+                                        UPD_USER_ID,
+                                        UPD_DT
+    )
+    <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT #{item.detId},
+                   #{item.batchId},
+                   #{item.disabled},
+                   #{item.validStatusId},
+                   #{item.validRemark},
+                   #{item.userOrderNo},
+                   #{item.userTrNo},
+                   #{item.userRefNo},
+                   #{item.userAmount},
+                   #{item.userBankAcc},
+                   #{item.userChqNo},
+                   #{item.userIssueBank},
+                   #{item.userRunningNo},
+                   #{item.userEftNo},
+                   #{item.userRefDate_Month},
+                   #{item.userRefDate_Day},
+                   #{item.userRefDate_Year},
+                   #{item.userBankChargeAmt},
+                   #{item.userBankChargeAcc},
+                   #{item.sysOrderId},
+                   #{item.sysAppTypeId},
+                   #{item.sysAmount},
+                   #{item.sysBankAccId},
+                   #{item.sysIssBankId},
+                   TO_DATE(#{item.sysRefDate} , 'YYYY/MM/DD'),
+                   #{item.sysBCAmt},
+                   #{item.sysBCAccId},
+                   TO_DATE(#{item.userTrDate} , 'YYYY/MM/DD'),
+                   #{item.userCollectorCode},
+                   #{item.sysCollectorId},
+                   #{item.paymentType},
+                   #{item.PaymentTypeId},
+                   #{item.advanceMonth},
+                   #{item.userRemark},
+                   #{item.cardNo},
+                   #{item.cardModeId},
+                   #{item.approvalCode},
+                   #{item.paymentChnnl},
+                   #{item.delFlg},
+                   #{item.creator},
+                   SYSDATE,
+                   #{item.updator},
+                   SYSDATE
+        FROM DUAL
+    </foreach>
+  </insert>
+
+  <resultMap id="rstMap" type="egovMap"></resultMap>
+  <update id="callCnvrSupBatchPay" statementType="CALLABLE" parameterType="Map">
+    { call SP_SUPPLEMENT_UPD_CNVR_BATCH_PAY(#{batchId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap} )}
+  </update>
+
+  <resultMap id="rstMap1" type="egovMap"></resultMap>
+  <update id="callSupBatchPayVerifyDet" statementType="CALLABLE" parameterType="Map">
+    { call SP_SUPPLEMENT_BATCH_PAY_VERIFY_DET(#{batchId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=confMap1} )}
+  </update>
+
+  <select id="selectBatchPayCardModeId" parameterType="String" resultType="String">
+    SELECT CODE_ID
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '130'
+        AND CODE = #{cardModeCode}
+  </select>
+
+  <select id="selectSupBatchPaymentDtl" parameterType="Map" resultType="egovMap">
+    SELECT DET_ID,
+               BATCH_ID,
+               DISAB,
+               VALID_STUS_ID,
+               VALID_REM,
+               USER_ORD_NO,
+               USER_TR_NO,
+               USER_REF_NO,
+               USER_AMT,
+               USER_BANK_ACC,
+               USER_CHQ_NO,
+               USER_ISS_BANK,
+               USER_RUN_NO,
+               USER_EFT_NO,
+               USER_REF_DT_MONTH,
+               USER_REF_DT_DAY,
+               USER_REF_DT_YEAR,
+               USER_BC_AMT,
+               USER_BC_ACC,
+               SYS_ORD_ID,
+               SYS_APP_TYPE_ID ,
+               SYS_AMT,
+               SYS_BANK_ACC_ID ,
+               SYS_ISS_BANK_ID ,
+               SYS_REF_DT,
+               SYS_BC_AMT,
+               SYS_BC_ACC_ID,
+               USER_TR_DT,
+               USER_CLCTR_CODE,
+               SYS_CLCTR_ID,
+               PAY_TYPE,
+               PAY_TYPE_ID,
+               ADV_MONTH,
+               DEL_FLG,
+               CRT_USER_ID,
+               CRT_DT,
+               UPD_USER_ID ,
+               UPD_DT
+        FROM PAY0359D
+        WHERE BATCH_ID = #{batchId}
+        AND DISAB = 0
+  </select>
+
+  <update id="updSupplementOrdStage" parameterType="Map">
+    UPDATE SUP0001M SET SUP_REF_STG = '2',
+                                     UPD_USR_ID = #{userId},
+                                     UPD_DT = SYSDATE
+    WHERE DEL_FLG = 'N'
+    AND SUP_REF_NO = #{userOrdNo}
+  </update>
+
+  <select id="getPaymentMode" parameterType="Map" resultType="egovMap">
+    SELECT CODE_ID AS CODE_ID,
+               CODE_NAME || '(' || CODE || ')' AS CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = '36'
+        AND DISAB = '0'
+  </select>
+
+  <select id="getPaymentBatStatus" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID AS CODE_ID,
+               NAME || '(' || CODE || ')' AS CODE_NAME
+    FROM SYS0038M
+    WHERE STUS_CODE_ID IN ('1', '4', '8')
+  </select>
+
+  <select id="getPaymentBatConfirmtStatus" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID AS CODE_ID,
+               NAME || '(' || CODE || ')' AS CODE_NAME
+    FROM SYS0038M
+    WHERE STUS_CODE_ID IN ('44', '77', '8')
+  </select>
+
+</mapper>

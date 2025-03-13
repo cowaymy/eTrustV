@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.logistics.materialdocument.impl.MaterialDocumentMapper">
+
+    <select id="selectLocation" parameterType="Map" resultType="egovMap">
+        select
+        STK_CODE CODE_ID,
+        STK_DESC CODE_NAME
+        from sys0026m
+    </select>
+
+
+
+    <select id="MaterialDocSearchList" parameterType="Map" resultType="egovMap">
+        select
+        rownum rnum
+        , l59.matrl_doc_no
+        , l59.matrl_doc_year
+        , l59.trnsc_type_code
+        , l60.MATRL_DOC_ITM
+        , l60.delvry_no
+        , l60.delvry_itm_no
+        , (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0046D WHERE INSTALL_ENTRY_NO = l60.sales_ord_no)) ordno
+        , l60.STOCK_TRNSFR_REQST
+        , l60.STOCK_TRNSFR_REQST_ITM_NO
+        , tt.code_name trantype
+        , l60.INVNTRY_MOV_TYPE
+        , mt.code_name movtype
+        , l60.DEBT_CRDIT_INDICT
+        , DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', 'Credit',
+                 'S', 'Debit',
+                 l60.DEBT_CRDIT_INDICT)
+          DEBT_CRDIT_INDICT
+        , l60.AUTO_CRT_ITM
+        , DECODE (l60.AUTO_CRT_ITM,
+                 'A', 'Auto',
+                 'M', 'Manual',
+                 l60.AUTO_CRT_ITM)
+          AUTO_CRT_ITM
+        , l60.matrl_no
+        , s26.stk_desc
+        , DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', l60.qty*-1,
+                 'S', l60.qty*1,
+                 l60.qty) qty
+        , l60.measure_bas_unit
+        , ut.code_name
+        , l60.storg_loc
+        , (select (wh_loc_code || ' - ' || wh_loc_desc) from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
+        , l60.rciv_issu_storg_loc
+        , (select (wh_loc_code || ' - ' || wh_loc_desc) from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
+        , to_char(to_date(L60.DOC_POSTNG_DT , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+        ,l59.CRT_DT
+        ,l60.sales_ord_no sales_ord_no
+        , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l59.CRT_USER_ID),l59.CRT_USER_ID) user_Name
+<!--         , (select RCIV_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC -->
+<!--         , (select REQST_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC -->
+        ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= RCIV_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC
+        ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= REQST_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC
+        <!-- Added by Hui Ding for displaying main sales order no in mdn search list, 2020-06-24 -->
+        , l60.MAIN_ORD_NO
+        from log0059m l59
+        <choose>
+            <when test="serialNo !=null and serialNo !=''">
+        , (
+                    SELECT
+                        *
+                    FROM
+                        log0060d
+                    WHERE
+                        EXISTS (
+                            SELECT 1 FROM
+                                log0099d t
+                            WHERE
+                                t.reqst_no = stock_trnsfr_reqst
+                                AND t.serial_no = #{serialNo}
+                        )
+                    UNION
+                    SELECT
+                        *
+                    FROM
+                        log0060d
+                    WHERE
+                        EXISTS (
+                            SELECT
+                                1
+                            FROM
+                                log0100m
+                            WHERE
+                                hs_no = sales_ord_no
+                                AND serial_no = #{serialNo}
+                        )
+                ) l60
+            </when>
+            <otherwise>
+                        , log0060d l60
+            </otherwise>
+        </choose>
+        , sys0026m s26
+        , sys0028m f28
+        , sys0028m t28
+        , (select * from sys0013m where code_master_id = 306) tt
+        , (select * from sys0013m where code_master_id = 308) mt
+        , (select * from sys0013m where code_master_id = 42) ut
+        <if test="isHomeCare=='true'">
+           ,(SELECT S13M.CODE_ID FROM SYS0013M S13M JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE WHERE S94M.IND= 'HOMECARE') hc
+        </if>
+<!--   , sal0046d s46
+        , sal0001d s1 -->
+        where 1 = 1
+        and l60.matrl_no = s26.STK_CODE(+)
+        and l60.measure_bas_unit = ut.code_id(+)
+        and l59.trnsc_type_code = tt.code
+        and l60.INVNTRY_MOV_TYPE = mt.code
+        AND l60.rciv_issu_storg_loc = t28.wh_loc_id(+)
+        AND l60.storg_loc = f28.wh_loc_id(+)
+      <!--   AND l60.SALES_ORD_NO = s46.INSTALL_ENTRY_NO (+)
+        AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+) -->
+        <if test="isHomeCare=='true'">
+             AND s26.STK_CTGRY_ID = hc.CODE_ID
+        </if>
+        <if test="matdoc !=null and matdoc !=''">
+            and l59.matrl_doc_no like  #{matdoc} ||'%'
+        </if>
+        <if test="frlocgrade !=null and frlocgrade !=''">
+            and f28.WH_LOC_STK_GRAD = #{frlocgrade}
+        </if>
+        <if test="tolocgrade !=null and tolocgrade !=''">
+            and t28.WH_LOC_STK_GRAD = #{tolocgrade}
+        </if>
+
+        <if test="toloctype !=null and toloctype !=''">
+            and t28.wh_loc_gb in
+             <foreach item="item" collection="toloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloctype !=null and frloctype !=''">
+            and f28.wh_loc_gb in
+             <foreach item="item" collection="frloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="toloc !=null and toloc !=''">
+            and t28.wh_loc_code in
+             <foreach item="item" collection="toloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloc !=null and frloc !=''">
+            and f28.wh_loc_code in
+             <foreach item="item" collection="frloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="materialcode !=null and materialcode !=''">
+            and l60.matrl_no = #{materialcode}
+        </if>
+        <if test="smattype !=null and smattype !=''">
+            and s26.STK_TYPE_ID in
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="smatcate !=null and smatcate !=''">
+            and s26.STK_CTGRY_ID in
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="trantype !=null and trantype !=''">
+            and l59.trnsc_type_code in
+            <foreach item="item" collection="trantype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="movetype !=null and movetype !=''">
+            and l60.INVNTRY_MOV_TYPE in
+            <foreach item="item" collection="movetype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="movetype ==null or movetype ==''">
+            and l60.INVNTRY_MOV_TYPE not in ('US05', 'US06' , 'US95' , 'US96', 'UM05', 'UM06' , 'UM95' , 'UM96')
+        </if>
+        <if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" >
+           AND L60.DOC_POSTNG_DT   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+         <if test="crtdatefr != null and crtdateto != null and crtdatefr != '' and crtdateto != ''" >
+           AND l59.CRT_DT between TO_DATE(TO_CHAR(TO_DATE(#{crtdatefr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                              AND TO_DATE(TO_CHAR(TO_DATE(#{crtdateto},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss')
+       </if>
+        and l59.matrl_doc_no = l60.matrl_doc_no
+        <if test="sdocno !=null and sdocno !=''">
+            and l59.REF_DOC_NO = #{sdocno}
+        </if>
+        <if test="sreqstno !=null and sreqstno !=''">
+            and l60.STOCK_TRNSFR_REQST = #{sreqstno}
+        </if>
+        <if test="sdelvno !=null and sdelvno !=''">
+            and l60.DELVRY_NO = #{sdelvno}
+        </if>
+          <if test="sam !=null and sam !=''">
+            and  l60.AUTO_CRT_ITM= #{sam}
+        </if>
+        <if test="sordno !=null and sordno !=''">
+            and l60.SALES_ORD_NO = #{sordno}
+        </if>
+         <if test="mainloc !=null and mainloc !=''">
+            and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC)
+        </if>
+        <if test="ordno !=null and ordno != ''">
+            AND l59.MAIN_SALES_ORD_NO = #{ordno}
+        </if>
+        order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+    </select>
+
+    <select id="MaterialDocMovementType" parameterType="Map" resultType="egovMap">
+       SELECT S8.CODE , S8.CODE_NAME
+         FROM (SELECT *
+                 FROM SYS0013M
+                WHERE CODE_MASTER_ID = '308') S8,
+              (SELECT *
+                 FROM SYS0013M
+                WHERE CODE_MASTER_ID = '306'
+                <if test="strctype != null and strctype !=''">
+                  AND CODE IN
+                  <foreach item="item" collection="strctype" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+               </if>
+               ) S6
+        WHERE S8.CODE LIKE S6.CODE || '%'
+     ORDER BY S8.CODE
+    </select>
+
+    <select id="selectMaterialDocSerialList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.materialdocument.impl.MaterialDocumentMapper.selectMaterialDocSerialList] 20191122 - KR OHK */
+    <if test="trnscTypeCode == 'OD' and invntryMovType != 'OD05' and invntryMovType != 'OD03'">
+    SELECT SERIAL_NO
+              ,SERIAL_NO AS SERIAL_SCAN
+              ,SERIAL_NO AS BOX_NO
+              ,ITM_CODE
+              ,LAST_REQST_NO AS REQST_NO
+              ,LAST_REQST_NO_ITM AS REQST_NO_ITM
+              ,LAST_DELVRY_NO AS DELVRY_NO
+              ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
+      FROM LOG0100M
+    WHERE LAST_SALES_ORD_ID in (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordno})
+        AND LAST_SALES_ORD_ID IS NOT NULL
+    </if>
+    <if test="invntryMovType == 'OD05'">
+    SELECT SERIAL_NO
+              ,SERIAL_NO AS SERIAL_SCAN
+              ,SERIAL_NO AS BOX_NO
+              ,ITM_CODE
+              ,LAST_REQST_NO AS REQST_NO
+              ,LAST_REQST_NO_ITM AS REQST_NO_ITM
+              ,LAST_DELVRY_NO AS DELVRY_NO
+              ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
+      FROM LOG0100M
+    WHERE LAST_REQST_NO = (SELECT A.NO FROM SVC0006D A LEFT JOIN SVC0008D B ON B.SCHDUL_ID = A.SCHDUL_ID
+		                              WHERE B.NO = #{refDocNo} AND A.RESULT_IS_CURR = 1)
+		      AND LAST_REQST_NO is not null and hs_no is not null
+		      and  ITM_CODE = #{matrlNo}
+    </if>
+    <if test="invntryMovType == 'OD03'">
+    SELECT SERIAL_NO
+              ,SERIAL_NO AS SERIAL_SCAN
+              ,SERIAL_NO AS BOX_NO
+              ,ITM_CODE
+              ,LAST_REQST_NO AS REQST_NO
+              ,LAST_REQST_NO_ITM AS REQST_NO_ITM
+              ,LAST_DELVRY_NO AS DELVRY_NO
+              ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
+      FROM LOG0100M
+    WHERE LAST_REQST_NO = (SELECT  A.AS_RESULT_NO
+										FROM SVC0004D A
+										JOIN SVC0001D B ON B.AS_ID = A.AS_ENTRY_ID
+										WHERE B.AS_NO = #{refDocNo} AND A.AS_RESULT_IS_CURR = 1)
+              AND LAST_REQST_NO is not null
+              and  ITM_CODE = #{matrlNo}
+    </if>
+    <if test="trnscTypeCode != 'OD'">
+    SELECT SERIAL_NO
+              ,SERIAL_SCAN
+              ,BOX_NO
+              ,ITM_CODE
+              ,REQST_NO
+              ,REQST_NO_ITM
+              ,DELVRY_NO
+              ,DELVRY_NO_ITM
+      FROM LOG0099D
+    WHERE 1=1
+        AND SCAN_STUS_CODE != 'D'
+        AND IO_TYPE = #{ioType}
+
+        <if test="delvryNo != null and delvryNo !='' and trnscTypeCode != 'HP'">
+            AND DELVRY_NO = #{delvryNo}
+            AND DELVRY_NO_ITM = #{delvryNoItm}
+        </if>
+        <if test="reqstNo != null and trnscTypeCode = 'HP'">
+            AND REQST_NO =  #{reqstNo}
+        </if>
+        <if test="reqstNoItm != null and restNoItm !=  '' ">
+            AND REQST_NO_ITM = #{reqstNoItm}
+        </if>
+
+        <if test="stkCode != null ">
+            AND ITM_CODE = #{stkCode}
+        </if>
+
+     ORDER BY SERIAL_NO
+     </if>
+    </select>
+
+    <select id="getNextMdnNo" parameterType="Map" resultType="egovMap">
+        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 8, '0') mdnno
+              FROM DUAL
+    </select>
+
+    <insert id="insertMdnMaster" parameterType="Map">
+        INSERT INTO LOG0059M (
+                MATRL_DOC_NO
+                , MATRL_DOC_YEAR
+                , TRNSC_TYPE_CODE
+                , DOC_DT
+                , USNAM
+                , PGM
+                , REF_DOC_NO
+                , MAIN_SALES_ORD_NO
+                , CRT_USER_ID
+                , CRT_DT)
+         VALUES (
+            #{newmdnno}
+            , TO_CHAR (SYSDATE, 'YYYY')
+            , #{ttype}
+            , TO_CHAR (SYSDATE, 'YYYYMMDD')
+            , TO_CHAR (SYSDATE, 'YYYYMMDD')
+            , #{prgnm}
+            , #{refdocno}
+            , #{gtype}
+            , #{ordno}
+            , #{userid}
+            , SYSDATE
+         )
+    </insert>
+
+    <insert id="insertMdnDetail" parameterType="Map">
+            INSERT INTO LOG0060D (
+                  MATRL_DOC_NO,
+                  MATRL_DOC_YEAR,
+                  MATRL_DOC_ITM,
+                  INVNTRY_MOV_TYPE,
+                  AUTO_CRT_ITM,
+                  DEBT_CRDIT_INDICT,
+                  MATRL_NO,
+                  STORG_LOC,
+                  SALES_ORD_NO,
+                  DELVRY_NO,
+                  DELVRY_ITM_NO,
+                  STOCK_TRNSFR_REQST,
+                  STOCK_TRNSFR_REQST_ITM_NO,
+                  QTY,
+                  MEASURE_BAS_UNIT,
+                  ITM_TXT,
+                  RCIV_ISSU_MATRL,
+                  RCIV_ISSU_STORG_LOC,
+                  DOC_POSTNG_DT,
+                  CRT_USER_ID,
+                  CRT_DT)
+            VALUES (
+                #{newmdnno}
+                , TO_CHAR (SYSDATE, 'YYYY')
+                , #{itmno}
+                , #{mtype}
+                , #{autoManual}
+                , #{cdtype}
+                , #{itmCode}
+                , #{rcivcdcrdc}
+                , #{refdocno}
+                , #{delvryno}
+                , #{delvrynoitm}
+                , #{reqstno}
+                , #{reqstnoitm}
+                , #{delvryqty}
+                , #{uom}
+                , #{itmtxt}
+                , #{itmCode}
+                , #{reqstcdcrdc}
+                , TO_CHAR (SYSDATE, 'YYYYMMDD')
+                , #{userid}
+                , SYSDATE
+            )
+    </insert>
+
+    <select id="MaterialDocSearchListUpTo" parameterType="Map" resultType="egovMap">
+        select
+        rownum rnum
+        , l59.matrl_doc_no
+        , l59.matrl_doc_year
+        , l59.trnsc_type_code
+        , l60.MATRL_DOC_ITM
+        , l60.delvry_no
+        , l60.delvry_itm_no
+        , (SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0046D WHERE INSTALL_ENTRY_NO = l60.sales_ord_no)) ordno
+        , l60.STOCK_TRNSFR_REQST
+        , l60.STOCK_TRNSFR_REQST_ITM_NO
+        , tt.code_name trantype
+        , l60.INVNTRY_MOV_TYPE
+        , mt.code_name movtype
+        , l60.DEBT_CRDIT_INDICT
+        , DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', 'Credit',
+                 'S', 'Debit',
+                 l60.DEBT_CRDIT_INDICT)
+          DEBT_CRDIT_INDICT
+        , l60.AUTO_CRT_ITM
+        , DECODE (l60.AUTO_CRT_ITM,
+                 'A', 'Auto',
+                 'M', 'Manual',
+                 l60.AUTO_CRT_ITM)
+          AUTO_CRT_ITM
+        , l60.matrl_no
+        , s26.stk_desc
+        , DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', l60.qty*-1,
+                 'S', l60.qty*1,
+                 l60.qty) qty
+        , l60.measure_bas_unit
+        , ut.code_name
+        , l60.storg_loc
+        , (select (wh_loc_code || ' - ' || wh_loc_desc) from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
+        , l60.rciv_issu_storg_loc
+        , (select (wh_loc_code || ' - ' || wh_loc_desc) from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
+        , to_char(to_date(L60.DOC_POSTNG_DT , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+        ,l59.CRT_DT
+        ,l60.sales_ord_no sales_ord_no
+        , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l59.CRT_USER_ID),l59.CRT_USER_ID) user_Name
+<!--         , (select RCIV_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC -->
+<!--         , (select REQST_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC -->
+        ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= RCIV_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC
+        ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= REQST_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC
+        <!-- Added by Hui Ding for displaying main sales order no in mdn search list, 2020-06-24 -->
+        , l60.MAIN_ORD_NO
+        from LOG0203M l59
+        , LOG0204D l60
+        , sys0026m s26
+        , sys0028m f28
+        , sys0028m t28
+        , (select * from sys0013m where code_master_id = 306) tt
+        , (select * from sys0013m where code_master_id = 308) mt
+        , (select * from sys0013m where code_master_id = 42) ut
+        <if test="isHomeCare=='true'">
+           ,(SELECT S13M.CODE_ID FROM SYS0013M S13M JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE WHERE S94M.IND= 'HOMECARE') hc
+        </if>
+<!--   , sal0046d s46
+        , sal0001d s1 -->
+        where 1 = 1
+        and l60.matrl_no = s26.STK_CODE(+)
+        and l60.measure_bas_unit = ut.code_id(+)
+        and l59.trnsc_type_code = tt.code
+        and l60.INVNTRY_MOV_TYPE = mt.code
+        AND l60.rciv_issu_storg_loc = t28.wh_loc_id(+)
+        AND l60.storg_loc = f28.wh_loc_id(+)
+      <!--   AND l60.SALES_ORD_NO = s46.INSTALL_ENTRY_NO (+)
+        AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+) -->
+        <if test="isHomeCare=='true'">
+             AND s26.STK_CTGRY_ID = hc.CODE_ID
+        </if>
+        <if test="matdoc !=null and matdoc !=''">
+            and l59.matrl_doc_no like  #{matdoc} ||'%'
+        </if>
+        <if test="frlocgrade !=null and frlocgrade !=''">
+            and f28.WH_LOC_STK_GRAD = #{frlocgrade}
+        </if>
+        <if test="tolocgrade !=null and tolocgrade !=''">
+            and t28.WH_LOC_STK_GRAD = #{tolocgrade}
+        </if>
+
+        <if test="toloctype !=null and toloctype !=''">
+            and t28.wh_loc_gb in
+             <foreach item="item" collection="toloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloctype !=null and frloctype !=''">
+            and f28.wh_loc_gb in
+             <foreach item="item" collection="frloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="toloc !=null and toloc !=''">
+            and t28.wh_loc_code in
+             <foreach item="item" collection="toloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloc !=null and frloc !=''">
+            and f28.wh_loc_code in
+             <foreach item="item" collection="frloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="materialcode !=null and materialcode !=''">
+            and l60.matrl_no = #{materialcode}
+        </if>
+        <if test="smattype !=null and smattype !=''">
+            and s26.STK_TYPE_ID in
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="smatcate !=null and smatcate !=''">
+            and s26.STK_CTGRY_ID in
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="trantype !=null and trantype !=''">
+            and l59.trnsc_type_code in
+            <foreach item="item" collection="trantype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="movetype !=null and movetype !=''">
+            and l60.INVNTRY_MOV_TYPE in
+            <foreach item="item" collection="movetype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="movetype ==null or movetype ==''">
+            and l60.INVNTRY_MOV_TYPE not in ('US05', 'US06' , 'US95' , 'US96', 'UM05', 'UM06' , 'UM95' , 'UM96')
+        </if>
+        <if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" >
+           AND L60.DOC_POSTNG_DT   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+         <if test="crtdatefr != null and crtdateto != null and crtdatefr != '' and crtdateto != ''" >
+           AND l59.CRT_DT between TO_DATE(TO_CHAR(TO_DATE(#{crtdatefr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                              AND TO_DATE(TO_CHAR(TO_DATE(#{crtdateto},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss')
+       </if>
+        and l59.matrl_doc_no = l60.matrl_doc_no
+        <if test="sdocno !=null and sdocno !=''">
+            and l59.REF_DOC_NO = #{sdocno}
+        </if>
+        <if test="sreqstno !=null and sreqstno !=''">
+            and l60.STOCK_TRNSFR_REQST = #{sreqstno}
+        </if>
+        <if test="sdelvno !=null and sdelvno !=''">
+            and l60.DELVRY_NO = #{sdelvno}
+        </if>
+          <if test="sam !=null and sam !=''">
+            and  l60.AUTO_CRT_ITM= #{sam}
+        </if>
+        <if test="sordno !=null and sordno !=''">
+            and l60.SALES_ORD_NO = #{sordno}
+        </if>
+         <if test="mainloc !=null and mainloc !=''">
+            and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC)
+        </if>
+        <if test="ordno !=null and ordno != ''">
+            AND l59.MAIN_SALES_ORD_NO = #{ordno}
+        </if>
+        <!-- <if test="serialNo !=null and serialNo !=''">
+            AND EXISTS (SELECT 1
+                                 FROM LOG0099D T
+                               WHERE T.REQST_NO = l60.STOCK_TRNSFR_REQST
+                                   AND T.SERIAL_NO = #{serialNo}
+
+                                   union
+                                    select 1 from log0100m where HS_NO = l60.sales_ord_no AND SERIAL_NO = #{serialNo}
+                             )
+        </if> -->
+        order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+    </select>
+
+</mapper>

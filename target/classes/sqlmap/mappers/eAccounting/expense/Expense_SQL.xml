@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.expense.impl.ExpenseMapper">
+<!--                  ,(select user_name from SYS0047M where user_id = CRT_USER_ID)   -->
+    <select id="selectExpenseList" parameterType="Map" resultType="egovMap">
+        SELECT
+            CLM_TYPE
+          , FN_GET_CODENAME('343', CLM_TYPE) CLM_TYPE_NAME
+          , EXP_TYPE
+          , EXP_TYPE_NAME
+          , GL_ACC_CODE
+          , GL_ACC_CODE_NAME
+          , BUDGET_CODE
+          , BUDGET_CODE_NAME
+          , DISAB_FLAG
+          , TO_CHAR(DISAB_DT, 'dd-mm-yyyy') DISAB_DT
+          , DISAB_USER_ID
+          , TO_CHAR(CRT_DT, 'dd-mm-yyyy') CRT_DT
+          , (SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = CRT_USER_ID) AS CRT_USER_ID
+          , TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
+          , (SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = UPD_USER_ID) AS UPD_USER_ID
+          , CNTRL_EXP
+          , DISAB_FLAG
+        FROM FCM0001M
+       WHERE DISAB_FLAG IS NULL
+            <if test="claimType != null and claimType != ''">
+                AND CLM_TYPE IN
+                <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="popClaimType != null and popClaimType != ''">
+                AND CLM_TYPE = #{popClaimType}
+            </if>
+            <if test="claimTypeCombo != null and claimTypeCombo != ''">
+                AND CLM_TYPE = #{claimTypeCombo}
+            </if>
+            <if test="expType != null and expType != ''">
+                AND EXP_TYPE IN
+                <foreach item="item" collection="expType" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        ORDER BY CLM_TYPE, EXP_TYPE
+    </select>
+
+    <select id="selectMaxExpType" parameterType="Map" resultType="String">
+        SELECT #{clmType} || NVL(TO_CHAR(MAX(REPLACE(EXP_TYPE, #{clmType}, '')) + 1, 'FM000'), '001') EXP_TYPE
+        FROM FCM0001M
+        WHERE CLM_TYPE = #{clmType}
+    </select>
+
+    <insert id="insertExpenseInfo" parameterType="Map">
+        INSERT INTO FCM0001M (
+            CLM_TYPE
+          , EXP_TYPE
+          , EXP_TYPE_NAME
+          , GL_ACC_CODE
+          , GL_ACC_CODE_NAME
+          , BUDGET_CODE
+          , BUDGET_CODE_NAME
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , CNTRL_EXP
+        ) values (
+            #{clmType}
+          , #{expType}
+          , #{expTypeName}
+          , #{glAccCode}
+          , #{glAccCodeName}
+          , #{budgetCode}
+          , #{budgetCodeName}
+          , SYSDATE
+          , #{userId}
+          , SYSDATE
+          , #{userId}
+          , #{cntrlExp}
+        )
+    </insert>
+
+    <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+            BUDGET_CODE
+          , TO_CHAR(START_DT, 'dd-mm-yyyy') START_DT
+          , TO_CHAR(END_DT, 'dd-mm-yyyy') END_DT
+          , BUDGET_CODE_TEXT
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT
+         FROM FCM0010M
+         WHERE 1=1
+            <![CDATA[
+            AND START_DT <= SYSDATE
+            AND END_DT  >= SYSDATE
+            ]]>
+            <if test="budgetCode != null and budgetCode != ''">
+                AND BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+            </if>
+            <if test="budgetCodeText != null and budgetCodeText != ''">
+                AND LOWER(BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+            </if>
+    </select>
+
+     <select id="selectCodeListAll" parameterType="Map" resultType="egovMap">
+     <!--  DATE : 070423 -->
+
+              SELECT DISTINCT F10.BUDGET_CODE, F10.BUDGET_CODE_TEXT, F9.GL_ACC_CODE, F9.GL_ACC_DESC,
+              TO_CHAR(F10.START_DT, 'DD-MM-YYYY') START_DT, TO_CHAR(F10.END_DT, 'DD-MM-YYYY') END_DT
+              FROM FCM0010M F10
+              LEFT JOIN FCM0101M F01 ON F01.BUDGET_CODE = F10.BUDGET_CODE
+              LEFT JOIN FCM0104D F4 ON F4.BUDGET_CODE = F01.BUDGET_CODE AND F4.GL_ACC_CODE = F01.GL_ACC_CODE AND F01.COST_CENTR = F4.COST_CENTR
+              LEFT JOIN FCM0009M F9 ON F9.GL_ACC_CODE = F4.GL_ACC_CODE
+              WHERE F01.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+              AND F4.CNTRL_TYPE IS NOT NULL
+			 <if test="searchCostCenter != null and searchCostCenter != ''">
+                AND F01.COST_CENTR = #{searchCostCenter}
+                </if>
+                <if test="searchBudgetCode != null and searchBudgetCode != ''">
+                AND F10.BUDGET_CODE = #{searchBudgetCode}
+                </if>
+                <if test="budgetCode != null and budgetCode != ''">
+                AND F10.BUDGET_CODE LIKE '%'|| #{budgetCode} || '%'
+                </if>
+                <if test="budgetCodeText != null and budgetCodeText != ''">
+                AND LOWER(F10.BUDGET_CODE_TEXT) LIKE  LOWER('%'|| #{budgetCodeText} || '%')
+                </if>
+                <if test="glAccCode != null and glAccCode != ''">
+                AND F9.GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
+                </if>
+                <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
+                AND LOWER(F9.GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+                </if>
+    </select>
+
+    <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+            GL_ACC_CODE
+          , GL_ACC_DESC
+          , GL_ACC_CRT_DT
+          , CRT_USER_ID
+          , CRT_DT
+          , UPD_USER_ID
+          , UPD_DT
+        FROM FCM0009M
+        WHERE 1=1
+            <if test="glAccCode != null and glAccCode != ''">
+                AND GL_ACC_CODE LIKE '%'|| #{glAccCode} || '%'
+            </if>
+            <if test="glAccCodeDesc != null and glAccCodeDesc != ''">
+                AND LOWER(GL_ACC_DESC) LIKE  LOWER('%'|| #{glAccCodeDesc} || '%')
+            </if>
+    </select>
+
+    <update id="updateExpenseInfo" parameterType="Map">
+        UPDATE FCM0001M
+            SET
+            <if test ="disabFlag != null and disabFlag != '' ">
+             <if test="disabFlag == 'Y'.toString()">
+                DISAB_FLAG = #{disabFlag}
+              , DISAB_USER_ID = #{userId}
+              , DISAB_DT = SYSDATE
+             </if>
+             <if test="disabFlag == 'N'.toString()">
+                DISAB_FLAG = ''
+              , DISAB_USER_ID = NULL
+              , DISAB_DT = NULL
+             </if>
+            </if>
+              , GL_ACC_CODE = #{glAccCode}
+              , GL_ACC_CODE_NAME = #{glAccCodeName}
+              , BUDGET_CODE = #{budgetCode}
+              , BUDGET_CODE_NAME = #{budgetCodeName}
+            <if test="cntrlFlag != null and cntrlFlag != '' ">
+              , CNTRL_EXP = #{cntrlFlag}
+            </if>
+              , UPD_USER_ID = #{userId}
+              , UPD_DT = SYSDATE
+        WHERE CLM_TYPE = #{clmType}
+            AND EXP_TYPE = #{expType}
+    </update>
+
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+            CODE_ID,
+            CODE,
+            CODE_NAME,
+            DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+            AND CODE != 'J1'
+            AND CODE != 'R1'
+            <if test="groupCode != null and groupCode !=''">
+                AND CODE_MASTER_ID = #{groupCode}
+            </if>
+            <if test="Codeval != null and Codeval !=''">
+                AND CODE = #{Codeval}
+            </if>
+            <if test="likeValue != null and likeValue !=''">
+                AND CODE LIKE #{likeValue}||'%'
+            </if>
+            <if test="notlike != null and notlike !=''">
+                AND CODE NOT LIKE #{notlike}||'%'
+            </if>
+            <if test="notin != null and notin !=''">
+                AND CODE IN
+                <foreach item="item" collection="notin" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <choose>
+                <when test="orderValue !=null and orderValue !=''">
+                    ORDER BY ${orderValue}
+                </when>
+                <otherwise>
+                    ORDER BY CODE_NAME
+                </otherwise>
+            </choose>
+        </select>
+
+         <select id="selectExpenseCodeList" parameterType="Map" resultType="egovMap">
+              SELECT F1.CLM_TYPE, F1.EXP_TYPE, F1.EXP_TYPE_NAME, F1.DISAB_FLAG
+              FROM FCM0001M F1
+              LEFT JOIN FCM0010M F01 ON F01.BUDGET_CODE = F1.BUDGET_CODE
+              WHERE 1=1
+              <!-- F1.DISAB_FLAG IS NULL -->
+              AND F01.START_DT <![CDATA[ <= ]]>  SYSDATE
+              AND F01.END_DT <![CDATA[ >= ]]>  SYSDATE
+              <if test="expenseCode != null and expenseCode !=''">
+                AND F1.EXP_TYPE LIKE '%'|| #{expenseCode} ||'%'
+              </if>
+               <if test="expenseCodeText != null and expenseCodeText !=''">
+                AND F1.EXP_TYPE_NAME LIKE  '%'|| #{expenseCodeText} ||'%'
+              </if>
+        </select>
+
+        <select id="selectExpenseListMain" parameterType="Map" resultType="egovMap">
+        SELECT
+            CLM_TYPE
+          , FN_GET_CODENAME('343', CLM_TYPE) CLM_TYPE_NAME
+          , EXP_TYPE
+          , EXP_TYPE_NAME
+          , GL_ACC_CODE
+          , GL_ACC_CODE_NAME
+          , BUDGET_CODE
+          , BUDGET_CODE_NAME
+          , DISAB_FLAG
+          , TO_CHAR(DISAB_DT, 'dd-mm-yyyy') DISAB_DT
+          , DISAB_USER_ID
+          , TO_CHAR(CRT_DT, 'dd-mm-yyyy') CRT_DT
+          , (SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = CRT_USER_ID) AS CRT_USER_ID
+          , TO_CHAR(UPD_DT, 'dd-mm-yyyy') UPD_DT
+          , (SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = UPD_USER_ID) AS UPD_USER_ID
+          , CNTRL_EXP
+          , DISAB_FLAG
+        FROM FCM0001M
+        WHERE 1=1
+            <if test="claimType != null and claimType != ''">
+                AND CLM_TYPE IN
+                <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="popClaimType != null and popClaimType != ''">
+                AND CLM_TYPE = #{popClaimType}
+            </if>
+            <if test="claimTypeCombo != null and claimTypeCombo != ''">
+                AND CLM_TYPE = #{claimTypeCombo}
+            </if>
+            <if test="expType != null and expType != ''">
+                AND EXP_TYPE IN
+                <foreach item="item" collection="expType" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="expenseCd != null and expenseCd != ''">
+                AND EXP_TYPE = #{expenseCd}
+            </if>
+            <if test="budgetCd != null and budgetCd != ''">
+                AND BUDGET_CODE = #{budgetCd}
+            </if>
+            <if test="glAcc != null and glAcc != ''">
+                AND GL_ACC_CODE = #{glAcc}
+            </if>
+             <if test="status != null and status != ''">
+                <if test="status == 1">
+                AND (DISAB_FLAG = 'N' OR DISAB_FLAG IS NULL)
+                </if>
+                <if test="status == 8">
+                AND DISAB_FLAG = 'Y'
+                </if>
+            </if>
+
+        ORDER BY CLM_TYPE, EXP_TYPE
+    </select>
+</mapper>

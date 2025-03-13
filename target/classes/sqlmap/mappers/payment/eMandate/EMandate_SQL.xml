@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.eMandate.service.impl.EMandateMapper">
+
+  <select id="getOrderByCustomer" parameterType="Map" resultType="egovMap">
+        SELECT S.SALES_ORD_ID, C.CUST_ID, S.MTH_RENT_AMT FROM SAL0001D S
+                JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
+        WHERE TRIM(C.NRIC) = #{nric}
+        AND TRIM(UPPER(C.NAME)) = #{name}
+        AND S.SALES_ORD_NO = #{orderNo}
+        AND S.STUS_CODE_ID = 4
+        AND C.STUS_CODE_ID = 1
+        AND ROWNUM = 1
+  </select>
+
+  <select id="getNextPaymentId" parameterType="Map" resultType="egovMap">
+        SELECT 'CDD' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (PAY0353M_PAY_ID_SEQ.NEXTVAL, 7, '0') PAY_ID
+              FROM DUAL
+    </select>
+
+    <insert id="insertDDRequest" parameterType="Map">
+        INSERT INTO PAY0353M(
+            PAYMENT_ID,
+            PAYMENT_MODE,
+            CUST_ID,
+            SALES_ORD_ID,
+            REQ_STUS_ID,
+            CRT_DT,
+            CRT_USER_ID,
+            AMT,
+            EFFECTIVE_DT,
+            HASH_KEY
+        ) values (
+            #{paymentId}
+            ,#{paymentMode}
+            ,#{custId}
+            ,#{salesOrdId}
+            ,#{stus}
+            ,sysdate
+            ,#{userId}
+            ,#{amt}
+            ,#{effectDate}
+            ,UTL_RAW.CAST_TO_RAW(#{hashKey})
+        )
+    </insert>
+
+    <update id="updateStatusDDRequest" parameterType="Map">
+        UPDATE PAY0353M SET REQ_STUS_ID = #{status}
+            , UPD_DT = sysdate
+            , UPD_USER_ID = #{userId}
+       <if test="apiId != null and apiId != '' ">
+            ,RESPOND_REQ_ID = #{apiId}
+            ,RESPOND_DT = sysdate
+       </if>
+        WHERE PAYMENT_ID = #{paymentId}
+    </update>
+
+     <select id="getEnrollInfoByPaymentId" parameterType="Map" resultType="EgovMap">
+            SELECT S.SALES_ORD_NO, D.CRT_DT AS SUBMIT_DATE FROM PAY0353M D JOIN SAL0001D S ON D.SALES_ORD_ID = S.SALES_ORD_ID WHERE D.PAYMENT_ID =#{paymentId}
+     </select>
+
+  </mapper>

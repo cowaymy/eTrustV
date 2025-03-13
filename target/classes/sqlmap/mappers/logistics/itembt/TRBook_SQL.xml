@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.itembt.impl.TRBookMapper">
+     <select id="selectTrBookManagement" parameterType="map" resultType="EgovMap">
+        SELECT 
+					TR_BOOK_ID,
+					TR_BOOK_NO,
+					TR_BOOK_STUS_ID,
+					TR_BOOK_STUS_CODE,
+					TR_HOLDER,
+					TR_HOLDER_TYPE,
+					TR_BOOK_PREFIX,
+					TR_BOOK_NO_START,
+					TR_BOOK_NO_END,
+					TR_BOOK_PGE,
+					TR_BOOK_CRT_DT,
+					TR_BOOK_CRT_USER_ID,
+					TR_BOOK_CRT_USER_NAME,
+					BOX_ID,
+					BOX_NO
+		FROM MSC1001V 
+					WHERE 1=1 
+					AND (TR_HOLDER = #{branch} OR TR_HOLDER_TYPE ='Member')
+					<if test="txtTRBookNo != null and txtTRBookNo != ''">
+					AND TR_BOOK_NO = #{txtTRBookNo}
+					</if>
+					<if test="txtTRNo != null and txtTRNo != ''">
+					<![CDATA[
+					AND (#{txtTRNo} >= TR_BOOK_NO_START AND #{txtTRNo} <= TR_BOOK_NO_END) 
+					]]>
+					</if>
+					<if test="dpCreateDate != null and dpCreateDate != ''">
+					AND TR_BOOK_CRT_DT = #{dpCreateDate}
+					</if>
+					<if test="txtCreateBy != null and txtCreateBy != ''">
+					AND TR_BOOK_CRT_USER_NAME = #{txtCreateBy}
+					</if>
+					<if test="txtTRBookHolder != null and txtTRBookHolder != ''">
+					AND TR_HOLDER = #{txtTRBookHolder}
+					</if>
+					<if test="ddlHolderType != null and ddlHolderType != ''">
+					AND TR_HOLDER_TYPE = #{ddlHolderType}
+					</if>
+					<if test="stutus.size != 0">
+					AND TR_BOOK_STUS_ID IN
+					   <choose>
+					       <when test="Close != null and Close != ''">
+					          <foreach item="item" collection="stutus" index="index" open="(" separator="," close=" ">
+					            #{item}
+					            </foreach>
+					            ,68)
+					       </when>
+					       <otherwise>
+					          <foreach item="item" collection="stutus" index="index" open="(" separator="," close=")">
+                                #{item}
+                                </foreach>
+					       </otherwise>
+					   </choose>
+					</if>
+			     ORDER BY TR_BOOK_ID 	
+     </select>
+</mapper>

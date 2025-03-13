@@ -1,0 +1,2854 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.PaymentListMapper">
+
+    <select id="selectGroupPaymentList" parameterType="Map" resultType="egovMap">
+        WITH pay AS (
+    SELECT
+        pay_id,
+        group_seq
+    FROM
+        pay0252t
+    WHERE
+        group_seq IN (
+            SELECT DISTINCT
+                a.group_seq
+            FROM
+                     pay0252t a
+                JOIN pay0064d b ON a.pay_id = b.pay_id
+                JOIN pay0065d c ON a.pay_itm_id = c.pay_itm_id
+                LEFT JOIN sal0001d d ON b.sales_ord_id = d.sales_ord_id
+                LEFT JOIN pay0007d e ON b.bill_id = e.bill_id
+                LEFT JOIN sal0001d f ON e.bill_so_id = f.sales_ord_id
+           WHERE 1=1
+                            <if test="ordNo != '' ">
+                            AND (D.SALES_ORD_NO = #{ordNo})
+                            </if>
+                            <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
+                            AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
+                            AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
+                            </if>
+                            <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
+                            AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
+                            AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
+                            </if>
+                            <if test="orNo != null and orNo != '' ">
+                            AND B.OR_NO = #{orNo}
+                            </if>
+                             <if test="trxId != null and trxId != '' ">
+                                    AND A.BANK_STATE_MAPPING_ID = #{trxId}
+                             </if>
+            UNION
+            SELECT DISTINCT
+                a.group_seq
+            FROM
+                     pay0252t a
+                JOIN pay0064d b ON a.pay_id = b.pay_id
+                JOIN pay0065d c ON a.pay_itm_id = c.pay_itm_id
+                LEFT JOIN sal0001d d ON b.sales_ord_id = d.sales_ord_id
+                LEFT JOIN pay0007d e ON b.bill_id = e.bill_id
+            WHERE 1=1
+                                <if test="ordNo != '' ">
+                                     AND E.BILL_SO_ID IN (SELECT F.SALES_ORD_ID FROM SAL0001D F WHERE  F.SALES_ORD_NO = #{ordNo} UNION
+                                     SELECT F1.SRV_ORD_ID FROM SAL0225D F1 WHERE F1.SRV_ORD_NO  = #{ordNo})
+                                </if>
+                                <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
+                                AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
+                                AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
+                                </if>
+                                <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
+                                AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY')
+                                AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
+                                </if>
+                                <if test="orNo != null and orNo != '' ">
+                                AND B.OR_NO = #{orNo}
+                                </if>
+
+                                <if test="trxId != null and trxId != '' ">
+                                        AND A.BANK_STATE_MAPPING_ID = #{trxId}
+                                </if>
+        )
+)
+
+        SELECT
+            GROUP_SEQ,
+            APP_TYPE,
+            PAY_ITM_MODE_ID,
+            PAY_ITM_MODE_NM,
+            CUST_ID,
+            SALES_ORD_NO,
+            OR_NO,
+            BRNCH_ID,
+            CRC_STATE_MAPPING_ID,
+            CRC_STATE_MAPPING_DT,
+            BANK_STATE_MAPPING_ID,
+            BANK_STATE_MAPPING_DT,
+            REV_STUS_ID,
+            FT_STUS_ID,
+            REV_STUS_NM,
+            CASE WHEN REV_STUS_NM IN ('Approved', 'Refund') THEN REV_DT ELSE NULL END AS REV_DT,
+            PAY_ID,
+            TOT_AMT,
+            PAY_ITM_REF_DT,
+            PAY_ITM_BANK_ACC_ID,
+            BANK_ACC
+            , EXTRACT(YEAR FROM TRX_DT) AS PAY_DATA
+            , REGEXP_REPLACE(OR_NO, '[^A-Za-z]') OR_TYPE
+        FROM (
+            SELECT
+                GROUP_SEQ,
+				APP_TYPE,
+				PAY_ITM_MODE_ID,
+				PAY_ITM_MODE_NM,
+				CUST_ID,
+				SALES_ORD_NO,
+				OR_NO,
+				BRNCH_ID,
+				CRC_STATE_MAPPING_ID,
+				CRC_STATE_MAPPING_DT,
+				BANK_STATE_MAPPING_ID,
+				BANK_STATE_MAPPING_DT,
+				REV_STUS_ID,
+				FT_STUS_ID,
+				REV_STUS_NM,
+				REV_DT,
+				PAY_ID,
+				TOT_AMT,
+				PAY_ITM_REF_DT,
+				PAY_ITM_BANK_ACC_ID,
+				BANK_ACC,
+				TRX_DT,
+                ROW_NUMBER() OVER (PARTITION BY OR_NO ORDER BY CASE WHEN STUS = 6 THEN -1 ELSE STUS END DESC) R
+            FROM (
+		        SELECT
+		            A.GROUP_SEQ,
+		            (CASE
+		                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+		                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+		                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+		                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+		                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+		                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+		                ELSE ' ' END
+		            )  AS APP_TYPE,
+		            MAX(D.PAY_ITM_MODE_ID) AS PAY_ITM_MODE_ID,
+		            F.CODE_NAME AS PAY_ITM_MODE_NM,
+		            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+		            --(CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+		            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO
+		            WHEN I.SALES_ORD_NO IS NOT NULL THEN I.SALES_ORD_NO ELSE I2.SRV_ORD_NO END) AS SALES_ORD_NO,
+		            MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
+		            C.OR_NO,
+		            J.CODE AS BRNCH_ID,
+		            A.CRC_STATE_MAPPING_ID,
+		            A.CRC_STATE_MAPPING_DT,
+		            A.BANK_STATE_MAPPING_ID,
+		            A.BANK_STATE_MAPPING_DT,
+<!-- 		            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID, -->
+		            NVL(K.STUS,0) AS REV_STUS_ID,
+		            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
+		            CASE WHEN K.STUS = 999
+		            THEN
+		              'Refund'
+		            WHEN K.STUS = 6
+		            THEN
+		              ' '
+		            ELSE
+		              G.NAME
+		            END AS REV_STUS_NM,
+		            K.STUS,
+		            K.DT AS REV_DT,
+		            C.PAY_ID,
+		            A.TOT_AMT,
+		            D.PAY_ITM_BANK_ACC_ID,
+                    NVL(L.ACC_CODE,0) BANK_ACC
+                    , M.TRX_DT
+		        FROM
+		            PAY0252T A
+		            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+		            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+		            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+		            JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
+		            LEFT JOIN (
+		                SELECT DISTINCT Z.PAY_ID ,DCF_STUS_ID STUS, DCF_APPV_DT DT FROM PAY0252T Z
+		                JOIN PAY0258D X ON Z.GROUP_SEQ = X.GRP_SEQ
+		                JOIN pay ON pay.pay_id = z.pay_id
+		                UNION
+		                SELECT SRC_PAY_ID PAY_ID, FT_STUS_ID STUS, FT_APPV_DT DT FROM PAY0260D
+		                JOIN pay ON pay.pay_id = src_pay_id
+		                UNION
+		                SELECT b.pay_id, 999 STUS, A.UPD_DT DT FROM PAY0045D A
+		                JOIN PAY0064D B ON A.WOR_NO = B.OR_NO
+		                JOIN PAY0046D C ON C.BATCH_ID = A.BATCH_ID
+		                JOIN pay ON pay.pay_id = b.pay_id
+		                WHERE C.BATCH_STUS_ID IN (1, 4)
+		                UNION
+                        <!-- SELECT A.PAY_ID AS PAY_ID,
+                             CASE WHEN  C.APPV_PRCSS_STUS = 'P' THEN 1
+                                    WHEN  C.APPV_PRCSS_STUS = 'A' THEN 5
+                                    WHEN  C.APPV_PRCSS_STUS = 'J' THEN 6
+                             END  AS STUS,
+                             C.APPV_PRCSS_DT AS DT
+                         FROM PAY0252T A
+                         JOIN PAY0345D B ON A.GROUP_SEQ = B.GROUP_SEQ
+                          JOIN PAY0344M D ON B.REQ_ID = D.REQ_ID AND D.REQ_TYPE IN ('DCF','FT')
+                         JOIN PAY0347M C ON B.REQ_ID = C.REQ_ID -->
+                          SELECT A.PAY_ID AS PAY_ID,
+                             CASE WHEN  B.APPV_PRCSS_STUS = 'P' THEN 1
+                                    WHEN  B.APPV_PRCSS_STUS = 'A' THEN 5
+                                    WHEN  B.APPV_PRCSS_STUS = 'J' THEN 6
+                             END  AS STUS,
+                             B.APPV_PRCSS_DT AS DT
+                         FROM PAY0345D A
+                         JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID
+                         JOIN pay ON pay.pay_id = a.pay_id
+		            ) K ON C.PAY_ID = K.PAY_ID
+		            LEFT JOIN SYS0038M G ON K.STUS = G.STUS_CODE_ID
+		            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+		            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+		            LEFT JOIN SAL0225D I2 ON H.BILL_SO_ID = I2.SRV_ORD_ID
+		            LEFT JOIN SYS0005M J ON C.BRNCH_ID = J.BRNCH_ID
+		            LEFT JOIN SYS0001M L ON D.PAY_ITM_BANK_ACC_ID = L.ACC_ID
+		            JOIN PAY0069D M ON M.TRX_ID = C.TRX_ID
+		        WHERE
+		            A.GROUP_SEQ IN (
+		                SELECT
+                            pay.group_seq
+                        FROM
+                            pay
+		            )
+		        GROUP BY
+		            A.GROUP_SEQ,
+		            A.LDGR_TYPE,
+		            F.CODE_NAME,
+		            E.SALES_ORD_NO,
+		            E.CUST_ID,
+		            I.CUST_ID,
+		            I.SALES_ORD_NO,
+		            I2.SRV_ORD_NO ,
+		            C.OR_NO,
+		            J.CODE,
+		            A.CRC_STATE_MAPPING_ID,
+		            A.CRC_STATE_MAPPING_DT,
+		            A.BANK_STATE_MAPPING_ID,
+		            A.BANK_STATE_MAPPING_DT,
+		            A.REV_STUS_ID,
+		            A.FT_STUS_ID,
+		            G.NAME,
+		            K.DT,
+		            C.PAY_ID,
+		            A.TOT_AMT,
+		            K.STUS,
+		            D.PAY_ITM_BANK_ACC_ID,
+                    L.ACC_CODE
+                    ,M.TRX_DT
+		        ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
+		    ) GRP
+	    ) WHERE R = 1
+    </select>
+
+    <select id="selectPaymentListByGroupSeq" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            (CASE
+                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+                ELSE ' ' END
+            )  AS APP_TYPE,
+            MAX(D.PAY_ITM_MODE_ID) AS PAY_ITM_MODE_ID,
+            F.CODE_NAME AS PAY_ITM_MODE_NM,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID,
+            G.NAME AS REV_STUS_NM,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT,
+            E.SALES_ORD_ID,
+            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
+            REGEXP_REPLACE(C.OR_NO, '[^A-Za-z]') OR_TYPE,
+            EXTRACT(YEAR FROM J.TRX_DT) AS PAY_DATA,
+            NVL(K.ACC_CODE,0) BANK_ACC
+        FROM
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
+            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            JOIN PAY0069D J ON C.TRX_ID = J.TRX_ID
+            LEFT JOIN SYS0001M K ON D.PAY_ITM_BANK_ACC_ID = K.ACC_ID
+        WHERE 1=1
+        <if test="groupSeq != null and groupSeq != ''">
+              AND A.GROUP_SEQ IN
+              <foreach item="item" collection="groupSeq" index="index"
+                open="(" separator="," close=")">
+                #{item}
+              </foreach>
+        </if>
+            AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
+         GROUP BY
+            A.GROUP_SEQ,
+            A.LDGR_TYPE,
+            F.CODE_NAME,
+            E.SALES_ORD_NO,
+            E.CUST_ID,
+            I.CUST_ID,
+            I.SALES_ORD_NO,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            A.REV_STUS_ID,
+            G.NAME,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT,
+            E.SALES_ORD_ID,
+            A.FT_STUS_ID,
+            J.TRX_DT,
+            K.ACC_CODE
+        ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
+
+    </select>
+
+    <select id="selectRequestDCFByGroupSeq" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            (CASE
+                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+                ELSE ' ' END
+            )  AS APP_TYPE,
+            MAX(D.PAY_ITM_MODE_ID) AS PAY_ITM_MODE_ID,
+            F.CODE_NAME AS PAY_ITM_MODE_NM,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID,
+            G.NAME AS REV_STUS_NM,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT
+        FROM
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
+            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+        WHERE
+	   <if test="groupSeq != null and groupSeq != ''">
+	              A.GROUP_SEQ IN
+	              <foreach item="item" collection="groupSeq" index="index"
+	                open="(" separator="," close=")">
+	                #{item}
+	              </foreach>
+	        </if>
+            AND NVL(A.FT_STUS_ID, '0') <![CDATA[   <> ]]> '5'
+        GROUP BY
+            A.GROUP_SEQ,
+            A.LDGR_TYPE,
+            F.CODE_NAME,
+            E.SALES_ORD_NO,
+            E.CUST_ID,
+            I.CUST_ID,
+            I.SALES_ORD_NO,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            A.REV_STUS_ID,
+            G.NAME,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT
+        ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
+
+    </select>
+
+    <select id="selectReqDcfInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GRP_SEQ,
+            A.DCF_RESN,
+            B.CODE_NAME AS DCF_RESN_CODE,
+            A.DCF_AMT,
+            A.DCF_REM,
+            A.DCF_STUS_ID,
+            C.CODE AS DCF_STUS_CODE,
+            A.DCF_CRT_USER_ID,
+            D.USER_NAME AS DCF_CRT_USER_NM,
+            TO_CHAR(A.DCF_CRT_DT,'DD/MM/YYYY') AS DCF_CRT_DT,
+            A.DCF_APPV_REM
+        FROM
+            PAY0258D A
+            JOIN SYS0013M B ON A.DCF_RESN = B.CODE_ID
+            JOIN SYS0038M C ON A.DCF_STUS_ID = C.STUS_CODE_ID
+            JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID
+        WHERE
+            DCF_REQ_ID = #{reqNo}
+    </select>
+
+    <select id="invalidReverse" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM (
+            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1,5) AND GRP_SEQ = #{groupSeq}
+            AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
+            UNION ALL
+            SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID IN (1,5) AND SRC_GRP_SEQ = #{groupSeq}
+            <if test="payId == null or payId == ''">
+	            AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
+            </if>
+            <if test="payId != null and payId != ''">
+                AND SRC_PAY_ID = #{payId}
+            </if>
+        )
+    </select>
+
+    <select id="invalidDCF" parameterType="Map" resultType="int">
+       SELECT
+            COUNT(*)
+        FROM PAY0064D A
+        JOIN PAY0252T B ON A.PAY_ID = B.PAY_ID
+        WHERE 1=1
+        <if test="groupSeq != null and groupSeq != ''">
+              AND GROUP_SEQ IN
+              <foreach item="item" collection="groupSeq" index="index"
+                open="(" separator="," close=")">
+                #{item}
+              </foreach>
+        </if>
+        AND REGEXP_SUBSTR(OR_NO, '\D+') NOT IN (
+            SELECT CODE FROM SYS0094M WHERE IND = 'DCF_ALLOW'
+        )
+    </select>
+
+     <insert id="requestDCF" parameterType="Map">
+        <selectKey keyProperty="dcfReqId" resultType="int" order="BEFORE">
+            SELECT PAY0258D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+            INSERT INTO PAY0258D (
+                DCF_REQ_ID,
+				GRP_SEQ,
+				DCF_RESN,
+				DCF_AMT,
+				DCF_REM,
+				DCF_STUS_ID,
+				DCF_CRT_USER_ID,
+				DCF_CRT_DT
+            ) VALUES (
+                #{dcfReqId},
+                #{groupSeq},
+                #{reason},
+                TO_NUMBER(#{totalAmt}),
+                #{remark},
+                1,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <update id="updateGroupPaymentRevStatus" parameterType="Map">
+        <if test="groupSeq != null and groupSeq != ''">
+	        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId},
+            REV_DT = SYSDATE
+	        WHERE
+              GROUP_SEQ IN
+	              <foreach item="item" collection="groupSeq" index="index"
+	                open="(" separator="," close=")">
+	                #{item}
+	              </foreach>
+              AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
+        </if>
+    </update>
+
+    <update id="rejectGroupPaymentRevStatus" parameterType="Map">
+        <if test="groupSeq != null and groupSeq != ''">
+	        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId},
+	        REV_DT = SYSDATE
+	        WHERE 1=1
+	              AND GROUP_SEQ IN
+	              <foreach item="item" collection="groupSeq" index="index"
+	                open="(" separator="," close=")">
+	                #{item}
+	              </foreach>
+	        AND REV_STUS_ID = 1
+        </if>
+    </update>
+
+    <select id="selectRequestDCFList" parameterType="Map" resultType="egovMap">
+		SELECT
+		    A.*,
+		    A.REQ_TYPE || A.DCF_REQ_ID AS DCF_REQ_ID_TYPE
+		FROM (
+		    SELECT
+		        A.DCF_REQ_ID
+		        , '-' AS REQ_TYPE
+		        , CAST(A.GRP_SEQ AS VARCHAR2(20)) GRP_SEQ
+		        , A.DCF_RESN
+		        , C.CODE_NAME AS DCF_RESN_NM
+		        , A.DCF_STUS_ID
+		        , B.NAME AS DCF_STUS_NM
+		        , A.DCF_CRT_USER_ID
+		        , D.USER_NAME AS DCF_CRT_USER_NM
+		        , A.DCF_CRT_DT
+		        , NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO
+		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
+		        , I.USER_NAME AS DCF_APPV_USER_NM
+		        , '-' AS APPV_STUS
+		    FROM PAY0258D A
+		    INNER JOIN PAY0252T E ON A.GRP_SEQ = E.GROUP_SEQ
+		    INNER JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID
+		    LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
+		    LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]> 0
+		    LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
+		    LEFT JOIN SYS0038M B ON A.DCF_STUS_ID = B.STUS_CODE_ID
+		    LEFT JOIN SYS0013M C ON A.DCF_RESN = C.CODE_ID
+		    LEFT JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID
+		    LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
+		    LEFT JOIN SYS0047M I ON A.DCF_APPV_USER_ID = I.USER_ID
+		    WHERE 1=1
+		    <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+		        AND A.DCF_CRT_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+		        AND A.DCF_CRT_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+		    </if>
+		    <if test="status != null and status != '' ">
+		        AND A.DCF_STUS_ID = #{status}
+		    </if>
+		    <if test="reason != null and reason != '' ">
+		        AND A.DCF_RESN = #{reason}
+		    </if>
+		    <if test="reqNo != null and reqNo != '' ">
+		        AND A.DCF_REQ_ID = #{reqNo}
+		    </if>
+
+		    <if test="branchId != null and branchId != '' ">
+		    	AND H.BRNCH_ID = #{branchId}
+		    </if>
+		    <if test="userId != null and userId != '' ">
+		    	AND A.DCF_CRT_USER_ID = #{userId}
+		    </if>
+
+		    <if test="salesOrdNo != null and salesOrdNo != '' ">
+		        AND A.GRP_SEQ IN (
+		            SELECT
+		                DISTINCT A.GROUP_SEQ
+		            FROM PAY0252T A
+		            INNER JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+		            LEFT JOIN SAL0001D S1 ON B.SALES_ORD_ID = S1.SALES_ORD_ID AND B.BILL_ID = 0
+		            LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID AND B.BILL_ID <![CDATA[ <> ]]> 0
+		            LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
+		            WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
+		            <!-- AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo}) -->
+		            AND S1.SALES_ORD_NO = #{salesOrdNo}
+		    )
+
+		      UNION
+
+		    SELECT
+		        A.DCF_REQ_ID
+		        , '-' AS REQ_TYPE
+		        , CAST(A.GRP_SEQ AS VARCHAR2(20)) GRP_SEQ
+		        , A.DCF_RESN
+		        , C.CODE_NAME AS DCF_RESN_NM
+		        , A.DCF_STUS_ID
+		        , B.NAME AS DCF_STUS_NM
+		        , A.DCF_CRT_USER_ID
+		        , D.USER_NAME AS DCF_CRT_USER_NM
+		        , A.DCF_CRT_DT
+		        , NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO
+		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
+		        , I.USER_NAME AS DCF_APPV_USER_NM
+		        , '-' AS APPV_STUS
+		    FROM PAY0258D A
+		    INNER JOIN PAY0252T E ON A.GRP_SEQ = E.GROUP_SEQ
+		    INNER JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID
+		    LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
+		    LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]> 0
+		    LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
+		    LEFT JOIN SYS0038M B ON A.DCF_STUS_ID = B.STUS_CODE_ID
+		    LEFT JOIN SYS0013M C ON A.DCF_RESN = C.CODE_ID
+		    LEFT JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID
+		    LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
+		    LEFT JOIN SYS0047M I ON A.DCF_APPV_USER_ID = I.USER_ID
+		    WHERE 1=1
+		    <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+		        AND A.DCF_CRT_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+		        AND A.DCF_CRT_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+		    </if>
+		    <if test="status != null and status != '' ">
+		        AND A.DCF_STUS_ID = #{status}
+		    </if>
+		    <if test="reason != null and reason != '' ">
+		        AND A.DCF_RESN = #{reason}
+		    </if>
+		    <if test="reqNo != null and reqNo != '' ">
+		        AND A.DCF_REQ_ID = #{reqNo}
+		    </if>
+		    <if test="branchId != null and branchId != '' ">
+		        AND H.BRNCH_ID = #{branchId}
+		    </if>
+		    <if test="userId != null and userId != '' ">
+		        AND A.DCF_CRT_USER_ID = #{userId}
+		    </if>
+		    <if test="salesOrdNo != null and salesOrdNo != '' ">
+		        AND A.GRP_SEQ IN (
+		            SELECT
+		                DISTINCT A.GROUP_SEQ
+		            FROM PAY0252T A
+		            INNER JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+		            LEFT JOIN SAL0001D S1 ON B.SALES_ORD_ID = S1.SALES_ORD_ID AND B.BILL_ID = 0
+		            LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID AND B.BILL_ID <![CDATA[ <> ]]> 0
+		            LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
+		            WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
+		            <!-- AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo}) -->
+		            AND S2.SALES_ORD_NO = #{salesOrdNo}
+		    )
+		    </if>
+
+		    </if>
+
+		    UNION
+
+		    SELECT
+		        A.REQ_ID
+		        , A.REQ_TYPE
+		        ,B.GROUP_SEQ
+		        , CAST(A.REASON_ID AS NUMBER(10)) REASON_ID
+		        , F.CODE_NAME AS DCF_RESN_NM
+		        , CASE WHEN C.APPV_PRCSS_STUS = 'P' THEN 44
+		            WHEN C.APPV_PRCSS_STUS = 'J' THEN 6
+		            WHEN C.APPV_PRCSS_STUS = 'A' THEN 5
+		        END AS STUS_ID
+		        , I.CODE_NAME DCF_STUS_NM
+		        , A.CRT_USER_ID
+                , C.REQST_USER_ID REQUESTER
+		        , A.CRT_DT
+		        , B.SALES_ORD_NO
+		        , H.CODE || ' - ' || H.NAME REQST_BRNCH
+		        <!-- , CASE WHEN C.APPV_PRCSS_STUS IN ('A','J') THEN E.USER_NAME
+		            ELSE ''
+		        END APPROVAL -->
+		        , CASE WHEN D.APPV_STUS IN ('A','J') THEN E.USER_NAME
+                    ELSE ''
+                END APPROVAL
+		        , C.APPV_PRCSS_STUS
+		    FROM PAY0344M A
+		    JOIN PAY0345D B ON B.REQ_ID = A.REQ_ID
+		    JOIN PAY0347M C ON C.REQ_ID = A.REQ_ID
+<!-- 		    JOIN PAY0348D D ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO -->
+			<if test='adminRole !="Y" '>
+			     JOIN PAY0348D D ON C.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+			</if>
+            <if test='adminRole != null and adminRole == "Y" '>
+	            LEFT JOIN (
+	                    SELECT * FROM (SELECT
+	                      ROW_NUMBER() OVER(PARTITION BY A.APPV_PRCSS_NO ORDER BY A.APPV_LINE_SEQ DESC) AS row_number, A.*
+	                    FROM PAY0348D A
+	                    WHERE A.APPV_STUS IN ('A', 'J')
+	                    ) WHERE ROW_NUMBER = 1
+	            ) D ON D.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+            </if>
+		    LEFT JOIN SYS0047M E ON E.HR_CODE = D.APPV_LINE_USER_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.REASON_ID
+		    LEFT JOIN SYS0005M H ON H.BRNCH_ID = A.KEY_IN_BRNCH
+		    LEFT JOIN SYS0013M I ON I.CODE = C.APPV_PRCSS_STUS AND I.CODE_MASTER_ID = 508
+		    WHERE 1=1
+		    AND A.REQ_TYPE = 'DCF'
+		    <if test='adminRole !="Y" '>
+			    AND (C.APPV_PRCSS_STUS = 'R' OR C.APPV_PRCSS_STUS = 'P' OR C.APPV_PRCSS_STUS = 'A' or C.APPV_PRCSS_STUS = 'J')
+			    AND (D.APPV_STUS = 'R' OR D.APPV_STUS = 'A' OR D.APPV_STUS = 'J')
+	            <if test="memCode != null and memCode != '' ">
+	                AND D.APPV_LINE_USER_ID = #{memCode}
+	            </if>
+            </if>
+		    <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+                AND C.REQST_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+                AND C.REQST_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+            </if>
+            <if test="status != null and status != '' ">
+                <if test='status == "1"'>
+                    AND C.APPV_PRCSS_STUS = 'P'
+                </if>
+                <if test='status == "5" '>
+                    AND C.APPV_PRCSS_STUS = 'A'
+                </if>
+                <if test='status == "6" '>
+                    AND C.APPV_PRCSS_STUS = 'J'
+                </if>
+            </if>
+            <if test="reason != null and reason != '' ">
+                AND A.REASON_ID = #{reason}
+            </if>
+            <if test="reqNo != null and reqNo != '' ">
+                AND A.REQ_ID = #{reqNo}
+            </if>
+            <if test="salesOrdNo != null and salesOrdNo != '' ">
+                AND B.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+            <if test="branchId != null and branchId != '' ">
+                AND H.BRNCH_ID = #{branchId}
+            </if>
+            <if test="userId != null and userId != '' ">
+                AND C.CRT_USER_ID = #{userId}
+            </if>
+		) A
+		ORDER BY A.DCF_REQ_ID
+    </select>
+
+
+    <update id="updateStatusDCF" parameterType="Map">
+        UPDATE PAY0258D SET
+            DCF_APPV_DT = SYSDATE,
+            DCF_APPV_USER_ID = #{userId},
+            DCF_APPV_REM = #{remark},
+            DCF_STUS_ID = #{dcfStusId}
+        WHERE
+            DCF_REQ_ID = #{reqNo}
+    </update>
+
+    <select id="dcfDuplicates" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM PAY0064D WHERE MTCH_ID IN (SELECT PAY_ID FROM PAY0252T WHERE GROUP_SEQ = #{groupSeq} AND REV_STUS_ID = 1)
+    </select>
+
+   <resultMap id="resultDCFMap" type="egovMap" />
+  <select id="approvalDCF" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_INST_PAYMENT_REVRS(#{reqNo},#{groupSeq},#{remark}, #{userId}, #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultDCFMap})
+    }
+  </select>
+
+
+    <select id="selectFTOldData" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            (CASE
+                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+                ELSE ' ' END
+            )  AS APP_TYPE,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN J.NAME ELSE K.NAME END) AS CUST_NM,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            C.OR_NO,
+            A.TOT_AMT
+        FROM
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
+            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            LEFT JOIN SAL0029D J ON E.CUST_ID = J.CUST_ID
+            LEFT JOIN SAL0029D K ON I.CUST_ID = K.CUST_ID
+        WHERE
+            A.GROUP_SEQ = #{groupSeq}
+            AND C.PAY_ID = #{payId}
+            AND ROWNUM <![CDATA[   <= ]]> 1
+        ORDER BY A.RSLT_SEQ DESC
+
+    </select>
+
+    <select id="invalidFT" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM PAY0064D
+        WHERE PAY_ID = #{payId}
+        AND REGEXP_SUBSTR(OR_NO, '\D+') NOT IN (
+            SELECT CODE FROM SYS0094M WHERE IND = 'FT_ALLOW'
+        )
+    </select>
+
+    <insert id="requestFT" parameterType="Map">
+        <selectKey keyProperty="ftReqId" resultType="int" order="BEFORE">
+            SELECT PAY0260D_FT_REQ_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+            INSERT INTO PAY0260D (
+                FT_REQ_ID,
+				SRC_GRP_SEQ,
+				SRC_AMT,
+				SRC_ORD_NO,
+				SRC_CUST_NAME,
+				SRC_PAY_ID,
+				FT_GRP_SEQ,
+				FT_AMT,
+				FT_ORD_NO,
+				FT_CUST_NAME,
+				FT_RESN,
+				FT_REM,
+				FT_STUS_ID,
+				FT_CRT_USER_ID,
+				FT_CRT_DT
+            ) VALUES (
+                #{ftReqId},
+                #{groupSeq},
+                TO_NUMBER(#{oldAmt}),
+                #{oldOrdNo},
+                #{oldCustNm},
+                #{payId},
+                #{seq},
+                TO_NUMBER(#{newAmt}),
+                #{newOrdNo},
+                #{newCustNm},
+                #{newReason},
+                #{newRemark},
+                1,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <update id="updateGroupPaymentFTStatus" parameterType="Map">
+        UPDATE PAY0252T SET FT_STUS_ID = #{ftStusId} WHERE GROUP_SEQ = #{groupSeq} AND PAY_ID = #{payId}
+    </update>
+
+    <select id="selectRequestFTList" parameterType="Map" resultType="egovMap">
+        SELECT
+             A.FT_REQ_ID,
+		    A.FT_RESN,
+		    C.CODE_NAME AS FT_RESN_NM,
+		    A.FT_STUS_ID,
+		    B.NAME AS FT_STUS_NM,
+		    A.FT_CRT_USER_ID,
+		    D.USER_NAME AS FT_CRT_USER_NM,
+		    A.FT_CRT_DT,
+		    A.SRC_GRP_SEQ AS GROUP_SEQ,
+		    A.SRC_PAY_ID AS PAY_ID,
+		    A.FT_GRP_SEQ AS FT_GRP_SEQ,
+		    A.FT_ORD_NO AS FT_ORD_NO,
+		    A.SRC_ORD_NO AS SRC_ORD_NO,
+		    H.CODE  AS CODE,
+		    I.USER_NAME AS  FT_APPV_USER
+        FROM
+            PAY0260D A
+            LEFT JOIN SYS0038M B ON A.FT_STUS_ID = B.STUS_CODE_ID
+            LEFT JOIN SYS0013M C ON A.FT_RESN = C.CODE_ID
+            LEFT JOIN SYS0047M D ON A.FT_CRT_USER_ID = D.USER_ID
+            LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID   = H.BRNCH_ID
+            LEFT JOIN SYS0047M I ON A.FT_APPV_USER_ID = I.USER_ID
+        WHERE
+            1=1
+            <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+                AND FT_CRT_DT <![CDATA[   >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+                AND FT_CRT_DT <![CDATA[   < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+            </if>
+            <if test="status != null and status != '' ">
+            AND FT_STUS_ID = #{status}
+            </if>
+            <if test="reason != null and reason != '' ">
+            AND FT_RESN = #{reason}
+            </if>
+            <if test="reqNo != null and reqNo != '' ">
+            AND FT_REQ_ID = #{reqNo}
+            </if>
+
+           <if test="ordNo != null and ordNo != '' ">
+            AND A.SRC_ORD_NO = #{ordNo}
+            </if>
+
+            <if test="salesOrdNo2 != null and salesOrdNo2 != '' " >
+            AND A.FT_ORD_NO = #{salesOrdNo2}
+            </if>
+
+                <if test="branchId != null and branchId != '' ">
+            AND H.BRNCH_ID = #{branchId}
+            </if>
+            <if test="userId != null and userId != '' ">
+            AND A.FT_CRT_USER_ID = #{userId}
+            </if>
+
+
+        ORDER BY A.FT_REQ_ID
+
+    </select>
+
+    <select id="selectReqFTInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.FT_REQ_ID,
+            A.SRC_AMT,
+			A.SRC_ORD_NO,
+			A.SRC_CUST_NAME,
+			A.FT_AMT,
+			A.FT_ORD_NO,
+			A.FT_CUST_NAME,
+            A.FT_RESN,
+            C.CODE_NAME AS FT_RESN_NM,
+            A.FT_STUS_ID,
+            B.NAME AS FT_STUS_NM,
+            A.FT_CRT_USER_ID,
+            D.USER_NAME AS FT_CRT_USER_NM,
+            TO_CHAR(A.FT_CRT_DT,'DD/MM/YYYY') AS FT_CRT_DT,
+            A.FT_REM,
+            A.FT_APPV_REM,
+            (SELECT OR_NO FROM PAY0064D WHERE PAY_ID = A.SRC_PAY_ID )SRC_OR_NO
+        FROM
+            PAY0260D A
+            LEFT JOIN SYS0038M B ON A.FT_STUS_ID = B.STUS_CODE_ID
+            LEFT JOIN SYS0013M C ON A.FT_RESN = C.CODE_ID
+            LEFT JOIN SYS0047M D ON A.FT_CRT_USER_ID = D.USER_ID
+        WHERE
+            FT_REQ_ID = #{ftReqId}
+    </select>
+
+      <update id="updateStatusFT" parameterType="Map">
+        UPDATE PAY0260D SET
+            FT_APPV_DT = SYSDATE,
+            FT_APPV_USER_ID = #{userId},
+            FT_APPV_REM = #{appvRemark},
+            FT_STUS_ID = #{ftStusId}
+        WHERE
+            FT_REQ_ID = #{ftReqId}
+    </update>
+
+    <select id="ftDuplicates" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM PAY0064D WHERE MTCH_ID = (
+		    SELECT SRC_PAY_ID FROM PAY0260D WHERE FT_REQ_ID = #{ftReqId}
+		)
+    </select>
+
+    <update id="approvalFT" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_FUND_TRNSFR(#{ftReqId},#{appvRemark}, #{userId} )}
+    </update>
+
+    <select id="selectRefundOldData" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            (CASE
+                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+                ELSE ' ' END
+            )  AS APP_TYPE,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN J.NAME ELSE K.NAME END) AS CUST_NM,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            C.OR_NO,
+            A.TOT_AMT,
+            <!-- C.PAY_DATA PAY_ITM_REF_DT, -->
+            D.PAY_ITM_REF_DT AS PAY_ITM_REF_DT,
+            L.CODE_NAME AS PAY_ITM_MODE_NM,
+            L.CODE_ID AS PAY_ITM_MODE_ID,
+            C.PAY_ID PAY_ID
+        FROM
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
+            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            LEFT JOIN SAL0029D J ON E.CUST_ID = J.CUST_ID
+            LEFT JOIN SAL0029D K ON I.CUST_ID = K.CUST_ID
+            JOIN SYS0013M L ON C.TYPE_ID = L.CODE_ID
+        WHERE
+            A.GROUP_SEQ IN
+            <foreach item="item" collection="groupSeq" index="index" open="(" separator="," close=")">
+                                 #{item}
+            </foreach>
+            AND C.PAY_ID IN
+            <foreach item="item" collection="payId" index="index" open="(" separator="," close=")">
+                                 #{item}
+            </foreach>
+            <!-- AND ROWNUM <![CDATA[   <= ]]> 1 -->
+        ORDER BY A.RSLT_SEQ DESC
+
+    </select>
+
+     <select id="invalidRefund" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM PAY0064D A
+        JOIN PAY0252T B ON A.PAY_ID = B.PAY_ID
+        WHERE GROUP_SEQ IN
+        <foreach item="item" collection="groupSeq" index="index" open="(" separator="," close=")">
+                                 #{item}
+        </foreach>
+        AND REGEXP_SUBSTR(OR_NO, '\D+') NOT IN (
+            SELECT CODE FROM SYS0094M WHERE IND = 'REFD_ALLOW' AND DISB = 0
+        )
+    </select>
+
+    <select id="selectInvalidORType" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT SUBSTR(OR_NO,0,3) CODE
+        FROM PAY0064D A
+        JOIN PAY0252T B ON A.PAY_ID = B.PAY_ID
+        WHERE GROUP_SEQ IN
+        <foreach item="item" collection="groupSeq" index="index" open="(" separator="," close=")">
+                                 #{item}
+        </foreach>
+        AND REGEXP_SUBSTR(OR_NO, '\D+') NOT IN (
+            <if test="ind != '' and ind == 'DCF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'DCF_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'FT' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'FT_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'REF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'REFD_ALLOW' AND DISB = 0
+            </if>
+        )
+    </select>
+
+    <select id="getNextSeq" resultType="int">
+        SELECT PAY0344M_REQ_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="invalidStatus" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM (
+            SELECT DCF_REQ_ID FROM PAY0258D WHERE DCF_STUS_ID IN (1,5) AND GRP_SEQ IN
+                <foreach item="item" collection="groupSeq" index="index"
+                    open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            AND (
+                <!-- To check PAY0252T should not have the same group seq with rev_stus_id equals null or 6
+                this is to allow payment that has been FT before to perform DCF -->
+                SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
+	                <foreach item="item" collection="groupSeq" index="index"
+	                    open="(" separator="," close=")">
+	                    #{item}
+	                </foreach>
+                AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
+                ) = 0
+
+            UNION ALL
+            SELECT FT_REQ_ID FROM PAY0260D WHERE FT_STUS_ID IN (1,5) AND SRC_GRP_SEQ IN
+                 <foreach item="item" collection="groupSeq" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+           <if test="payId == null or payId == ''">
+			    AND (SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
+				    <foreach item="item" collection="groupSeq" index="index"
+	                   open="(" separator="," close=")">
+	                   #{item}
+	                 </foreach>
+                AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)) = 0
+			</if>
+			<if test="payId != null and payId != ''">
+			    <!-- AND SRC_PAY_ID = #{payId} -->
+			    AND SRC_PAY_ID IN
+                <foreach item="item" collection="payId" index="index"
+                       open="(" separator="," close=")">
+                       #{item}
+                     </foreach>
+			</if>
+
+             UNION ALL
+
+             SELECT A.REQ_ID FROM PAY0344M A
+                JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID
+                JOIN PAY0345D C ON B.REQ_ID = C.REQ_ID
+             WHERE B.APPV_PRCSS_STUS <![CDATA[  <> ]]> 'J' AND B.REQ_ID IS NOT NULL
+              AND C.GROUP_SEQ IN
+                <foreach item="item" collection="groupSeq" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+                </foreach>
+             <if test='type != null and type != "DCF"'>
+                <if test="payId != null or payId != ''">
+                    AND C.PAY_ID IN
+                    <foreach item="item" collection="payId" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+                </foreach>
+                </if>
+             </if>
+              <!--  AND (
+	                SELECT COUNT(1) FROM PAY0252T WHERE GROUP_SEQ IN
+	                    <foreach item="item" collection="groupSeq" index="index"
+	                        open="(" separator="," close=")">
+	                        #{item}
+	                    </foreach>
+	                AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
+                ) = 0 -->
+        )
+    </select>
+
+    <insert id="requestRefundM" parameterType="Map">
+            INSERT INTO PAY0344M (
+                REQ_ID,
+                REQ_TYPE,
+                REASON_ID,
+                ATCH_FILE_GRP_ID,
+                ATCH_FILE_ID,
+                REQ_REMARK,
+                OLD_TOTAL_AMT,
+                NEW_PAY_TYPE,
+                NEW_TOTAL_AMT,
+                BANK_ACC,
+                CARD_NO,
+                CARD_APPROVAL_NO,
+                ISSUE_BANK,
+                CARD_HOLDER,
+                KEY_IN_BRNCH,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{refundReqId},
+                'REF',
+                #{newReason},
+                #{fileGroupKey},
+                #{atchFileId},
+                #{newRemark},
+                #{oldAmt},
+                #{refundMode},
+                <!-- #{newAmt}, -->
+                REGEXP_REPLACE(#{newAmt}, '[^0-9.]+', NULL),
+                #{bankAccNo},
+                #{keyInCardNo1} || #{keyInCardNo2} || #{keyInCardNo3} || #{keyInCardNo4},
+                #{apprNo},
+                #{issueBank},
+                #{beneficiaryName},
+                #{branch},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <insert id="requestRefundDOld" parameterType="Map">
+            INSERT INTO PAY0345D (
+                REQ_ID,
+                SEQ,
+                GROUP_SEQ,
+                OR_NO,
+                SALES_ORD_NO,
+                SALES_ORD_ID,
+                APP_TYPE,
+                PAY_TYPE_ID,
+                CUST_ID,
+                AMT,
+                TRANS_DT,
+                PAY_ID,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{refundReqId},
+                #{refundSeq},
+                #{groupSeq},
+                #{orNo},
+                #{salesOrdNo},
+                #{salesOrdId},
+                #{appType},
+                #{payItmModeId},
+                #{userId},
+                #{totAmt},
+                <!-- TO_DATE(#{payItemRefDt}, 'YYYYMMDD'), -->
+                #{payItmRefDt},
+                #{payId},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <insert id="requestRefundDNew" parameterType="Map">
+            INSERT INTO PAY0346D (
+                REQ_ID,
+                SEQ,
+                APP_TYPE,
+                SALES_ORD_ID,
+                SALES_ORD_NO,
+                AMT,
+                PAID_AMT,
+                TARGET_AMT,
+                CUST_NM,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{refundReqId},
+                #{refundSeq},
+                #{ldgrType},
+                #{salesOrdId},
+                #{salesOrdNo},
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                REGEXP_REPLACE(#{totalAmt}, '[^0-9.]+', NULL),
+                <!-- #{totalAmt},
+                #{totalAmt},
+                #{totalAmt}, -->
+                #{custNm},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <insert id="insertFileGroup" parameterType="Map">
+      INSERT INTO SYS0070M (ATCH_FILE_GRP_ID
+                                       , ATCH_FILE_ID
+                                       , CHENAL_TYPE
+                                       , CRT_USER_ID
+                                       , CRT_DT
+                                       , UPD_USER_ID
+                                       , UPD_DT
+      ) VALUES ( #{atchFileGrpId}
+                    , #{atchFileId}
+                    , #{chenalType}
+                    , #{crtUserId}
+                    , SYSDATE
+                    , #{updUserId}
+                    , SYSDATE
+      )
+    </insert>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <select id="getNextApprSeq" resultType="String">
+        SELECT TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (PAY0347M_APPV_PRCSS_NO_SEQ.NEXTVAL, 6, '0') AS APPR_PRCSS_NO
+        FROM DUAL
+    </select>
+
+    <insert id="insertApproveMaster" parameterType="Map">
+        INSERT INTO PAY0347M
+        (
+            APPV_PRCSS_NO,
+            REQ_ID,
+            REQST_DT,
+            REQST_USER_ID,
+            APPV_PRCSS_STUS,
+            APPV_PRCSS_DT,
+            APPV_LINE_CNT,
+            APPV_LINE_PRCSS_CNT,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT
+        )
+        VALUES
+        (
+            #{appvPrcssNo}
+           ,#{refundReqId}
+           ,SYSDATE
+           ,#{userName}
+           ,#{appvPrcssStus}
+           , SYSDATE
+           ,#{appvLineCnt}
+           ,#{appvLinePrcssCnt}
+           ,#{userId}
+           ,SYSDATE
+           ,#{userId}
+           ,SYSDATE
+        )
+    </insert>
+
+    <insert id="insertApproveDetail" parameterType="Map">
+        INSERT INTO PAY0348D
+        (
+            APPV_PRCSS_NO,
+            APPV_LINE_SEQ,
+            APPV_LINE_USER_ID,
+            APPV_DT,
+            APPV_STUS,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT
+        )
+        VALUES
+        (
+            #{appvPrcssNo}
+           ,#{approveNo}
+           ,#{memCode}
+           ,SYSDATE
+           <choose>
+               <when test="approveNo == 1">
+               ,'R'
+               </when>
+               <otherwise>
+               ,'T'
+               </otherwise>
+           </choose>
+           ,#{userId}
+           ,SYSDATE
+           ,#{userId}
+           ,SYSDATE
+        )
+    </insert>
+
+    <select id="getNtfUser" parameterType="Map" resultType="egovMap">
+    SELECT USER_NAME, USER_ID
+    FROM SYS0047M
+    WHERE
+    <if test="memCode != null and memCode != '' ">
+        HR_CODE = #{memCode}
+    </if>
+    <if test="memCode == null or memCode == '' ">
+        HR_CODE = (
+            SELECT
+                APPV_LINE_USER_ID
+            FROM PAY0348D
+            WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+        AND APPV_LINE_SEQ = #{appvLineSeq}
+        )
+    </if>
+    </select>
+
+    <insert id="insertNotification" parameterType="Map">
+    INSERT INTO SYS0092M VALUES (
+        SYS0092M_ID_SEQ.NEXTVAL,
+        #{code},
+        #{codeName},
+        #{refundReqId},
+        #{appvStus},
+        #{rejctResn},
+        #{reqstUserId},
+        '1',
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    )
+    </insert>
+
+  <select id="selectRequestRefundList" parameterType="Map" resultType="egovMap">
+    SELECT Rownum rnum,
+               T.* FROM ( SELECT A.REQ_ID AS REF_REQ_ID,
+                                          DT.GROUP_SEQ GRP_SEQ,
+                                          A.REASON_ID,
+                                          C.RESN_DESC AS REF_RESN_NM,
+                                          APPR.APPV_PRCSS_STUS REF_STUS_ID,
+                                          B.CODE_DESC AS REF_STUS_NM,
+                                          <!-- B.NAME AS REF_STUS_NM, -->
+                                          A.CRT_USER_ID,
+                                          D.USER_NAME AS REF_CRT_USER_NM,
+                                          A.CRT_DT REF_CRT_DT,
+                                          NVL((CASE WHEN S1.SALES_ORD_NO IS NULL THEN S2.SALES_ORD_NO ELSE S1.SALES_ORD_NO END), '') SALES_ORD_NO,
+                                          H.CODE || ' - ' || H.NAME REQST_BRNCH,
+                                          <!-- I.USER_NAME AS REF_APPV_USER_NM -->
+                                          <!-- CASE WHEN APPR.APPV_PRCSS_STUS IN ('A','J') THEN I.USER_NAME
+                                                   ELSE '' END REF_APPV_USER_NM -->
+                                          CASE WHEN APPRDT.appv_stus IN ('A','J') THEN I.USER_NAME
+                                            ELSE '' END REF_APPV_USER_NM,
+                                          CASE WHEN APPR.APPV_PRCSS_STUS  = 'A' THEN 5
+                                          WHEN APPR.APPV_PRCSS_STUS = 'J' THEN 6
+                                          WHEN APPR.APPV_PRCSS_STUS = 'P' THEN 1 END AS APPV_STUS
+                               FROM PAY0344M A
+                               JOIN PAY0345D DT ON A.REQ_ID = DT.REQ_ID
+                               JOIN PAY0347M APPR ON APPR.REQ_ID = A.REQ_ID
+
+                               <if test='adminRole !="Y" '>
+                                 JOIN ( SELECT PAY0348D.*
+                                           <!-- CASE WHEN APPV_STUS = 'A' THEN 5
+                                                  WHEN APPV_STUS = 'J' THEN 6
+                                                  WHEN APPV_STUS = 'R' THEN 1 END AS APPV_PRCSS_STUS -->
+                                           FROM PAY0348D
+                                 ) APPRDT ON APPR.APPV_PRCSS_NO = APPRDT.APPV_PRCSS_NO AND APPV_LINE_USER_ID = #{memCode}
+                               </if>
+
+                               <if test='adminRole != null and adminRole == "Y"'>
+                                 LEFT JOIN ( SELECT APDT.*,
+                                                             CASE WHEN APDT.APPV_STUS = 'A' THEN 5
+                                                             WHEN APDT.APPV_STUS = 'J' THEN 6
+                                                             WHEN APDT.APPV_STUS = 'R' THEN 1 END AS APPV_PRCSS_STUS
+                                                  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY APPV_PRCSS_NO ORDER BY APPV_LINE_SEQ DESC) AS row_number,
+                                                                       PAY0348D.*
+                                                            FROM PAY0348D
+                                                            WHERE PAY0348D.APPV_STUS IN ('A', 'J')
+                                                  ) APDT WHERE ROW_NUMBER = 1
+                                 ) APPRDT ON APPRDT.APPV_PRCSS_NO = APPR.APPV_PRCSS_NO
+                               </if>
+
+                               LEFT JOIN PAY0252T E ON DT.GROUP_SEQ = E.GROUP_SEQ
+                               JOIN PAY0064D F ON E.PAY_ID = F.PAY_ID AND DT.OR_NO = F.OR_NO
+                               LEFT JOIN SAL0001D S1 ON F.SALES_ORD_ID = S1.SALES_ORD_ID AND F.BILL_ID = 0
+                               LEFT JOIN PAY0007D G ON F.BILL_ID = G.BILL_ID AND F.BILL_ID <![CDATA[ <> ]]>0
+                               LEFT JOIN SAL0001D S2 ON G.BILL_SO_ID = S2.SALES_ORD_ID
+                               LEFT JOIN SYS0013M B ON APPR.APPV_PRCSS_STUS = B.CODE AND B.CODE_MASTER_ID = 508
+                               <!-- LEFT JOIN SYS0038M  B ON APPRDT.APPV_PRCSS_STUS = B.STUS_CODE_ID -->
+                               LEFT JOIN SYS0032M C ON A.REASON_ID = C.RESN_ID
+                               LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
+                               LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID = H.BRNCH_ID
+                               LEFT JOIN SYS0047M I ON APPRDT.APPV_LINE_USER_ID = I.HR_CODE
+                               WHERE 1=1
+                                   AND A.REQ_TYPE = 'REF'
+
+                               <if test='adminRole !="Y" '>
+                                 AND (APPR.APPV_PRCSS_STUS = 'R' OR APPR.APPV_PRCSS_STUS = 'P' OR APPR.APPV_PRCSS_STUS = 'A' or APPR.APPV_PRCSS_STUS = 'J')
+                                 AND (APPRDT.APPV_STUS = 'R' OR APPRDT.APPV_STUS = 'A' OR APPRDT.APPV_STUS = 'J')
+                               </if>
+
+                               <!-- <if test="salesOrdNo != null and salesOrdNo != '' ">
+                                 AND APPRDT.APPV_LINE_USER_ID = #{memCode}
+                               </if> -->
+
+                               <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
+                                 AND A.CRT_DT <![CDATA[ >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
+                                 AND A.CRT_DT <![CDATA[ < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
+                               </if>
+
+                               <if test="status != null and status != '' ">
+                                 <!-- AND APPRDT.APPV_STUS = #{status} -->
+                                 <if test='status == 1'>
+                                   AND APPR.APPV_PRCSS_STUS = 'P'
+                                 </if>
+                                 <if test='status == 5'>
+                                   AND APPR.APPV_PRCSS_STUS = 'A'
+                                 </if>
+                                 <if test='status == 6'>
+                                   AND APPR.APPV_PRCSS_STUS = 'J'
+                                 </if>
+                               </if>
+
+                               <if test="reason != null and reason != '' ">
+                                 AND A.REASON_ID = #{reason}
+                               </if>
+
+                               <if test="reqNo != null and reqNo != '' ">
+                                 AND A.REQ_ID = #{reqNo}
+                               </if>
+
+                               <if test="salesOrdNo != null and salesOrdNo != '' ">
+                                 AND <!-- DT.GROUP_SEQ IN ( SELECT DISTINCT A.GROUP_SEQ  -->
+                                        (SELECT COUNT(A.GROUP_SEQ)
+                                                                     FROM PAY0252T A
+                                                                     INNER JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                                                                     LEFT JOIN SAL0001D S1 ON B.SALES_ORD_ID = S1.SALES_ORD_ID
+                                                                                                     AND B.BILL_ID = 0
+                                                                     LEFT JOIN PAY0007D C ON B.BILL_ID = C.BILL_ID
+                                                                                                    AND B.BILL_ID <![CDATA[ <> ]]> 0
+                                                                     LEFT JOIN SAL0001D S2 ON C.BILL_SO_ID = S2.SALES_ORD_ID
+                                                                     WHERE (S1.SALES_ORD_NO IS NOT NULL OR S2.SALES_ORD_NO IS NOT NULL)
+                                                                         AND (S1.SALES_ORD_NO = #{salesOrdNo} OR S2.SALES_ORD_NO = #{salesOrdNo})
+                                                                         AND A.GROUP_SEQ = DT.GROUP_SEQ
+                                        ) > 0
+                                 <!-- ) -->
+                               </if>
+
+                               <if test="branchId != null and branchId != '' ">
+                                 AND H.BRNCH_ID = #{branchId}
+                               </if>
+
+                               <if test="userId != null and userId != '' ">
+                                 AND A.CRT_USER_ID = #{userId}
+                               </if>
+                               ORDER BY A.REQ_ID
+    ) T
+  </select>
+
+    <select id="selectRequestRefundByGroupSeq" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            (CASE
+                WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
+                WHEN A.LDGR_TYPE = 2 THEN 'OUT'
+                WHEN A.LDGR_TYPE = 3 THEN 'MEMBERSHIP'
+                WHEN A.LDGR_TYPE = 4 THEN 'AS'
+                WHEN A.LDGR_TYPE = 5 THEN 'OUT_MEM'
+                WHEN A.LDGR_TYPE = 0 THEN 'HP'
+                ELSE ' ' END
+            )  AS APP_TYPE,
+            MAX(D.PAY_ITM_MODE_ID) AS PAY_ITM_MODE_ID,
+            F.CODE_NAME AS PAY_ITM_MODE_NM,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            NVL(A.REV_STUS_ID,0) AS REV_STUS_ID,
+            G.NAME AS REV_STUS_NM,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT
+            ,DET.REQ_ID
+            <!-- APPVM.APPV_PRCSS_NO,
+            APPVD.APPV_LINE_SEQ -->
+        FROM
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+            LEFT JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
+            LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            JOIN PAY0345d DET ON DET.GROUP_SEQ = A.GROUP_SEQ AND DET.PAY_ID = A.PAY_ID
+            <!--JOIN PAY0347M APPVM ON DET.REQ_ID = APPVM.REQ_ID
+            JOIN PAY0348D APPVD ON APPVD.APPV_PRCSS_NO = APPVM.APPV_PRCSS_NO -->
+        WHERE
+            A.GROUP_SEQ IN
+            <foreach item="item" collection="groupSeq" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+            <!-- AND NVL(A.FT_STUS_ID, '0') <![CDATA[ <> ]]> '5' -->
+            <if test="reqNo != null and reqNo != '' ">
+            AND DET.REQ_ID IN
+                <foreach item="item" collection="reqNo" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+            </if>
+
+            <if test="reqId != null and reqId != '' ">
+            AND DET.REQ_ID = #{reqId}
+            </if>
+
+        GROUP BY
+            A.GROUP_SEQ,
+            A.LDGR_TYPE,
+            F.CODE_NAME,
+            E.SALES_ORD_NO,
+            E.CUST_ID,
+            I.CUST_ID,
+            I.SALES_ORD_NO,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            A.REV_STUS_ID,
+            G.NAME,
+            A.REV_DT,
+            C.PAY_ID,
+            A.TOT_AMT
+           ,DET.REQ_ID
+            <!--APPVM.APPV_PRCSS_NO,
+            APPVD.APPV_LINE_SEQ -->
+        ORDER BY A.GROUP_SEQ DESC, C.PAY_ID DESC
+
+    </select>
+
+    <select id="selectRequestRefundAppvDetails" parameterType="Map" resultType="egovMap">
+        SELECT DET.*
+        FROM PAY0347M MAS
+        JOIN PAY0348D DET ON MAS.APPV_PRCSS_NO = DET.APPV_PRCSS_NO
+        WHERE MAS.REQ_ID = #{reqId}
+        AND DET.APPV_LINE_USER_ID = #{memCode}
+    </select>
+
+    <select id="selectReqRefundInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.REASON_ID,
+            C.RESN_DESC,
+            A.IS_REKEY_IN,
+            A.ATCH_FILE_GRP_ID,
+            A.ATCH_FILE_ID,
+            A.REQ_REMARK,
+            A.OLD_TOTAL_AMT,
+            A.NEW_TOTAL_AMT,
+            A.NEW_PAY_TYPE,
+            PT.CODE_DESC REFUND_TYPE,
+            A.CARD_MODE,
+            A.ISSUE_BANK,
+            BK.NAME ISSUE_BANK_NAME,
+            A.TRX_DATE,
+            <!-- A.CARD_NO, -->
+            CASE WHEN LENGTH(A.CARD_NO) >= 13 THEN SUBSTR(A.CARD_NO,0,6) || '******' || SUBSTR(A.CARD_NO,13,LENGTH(A.CARD_NO))
+            ELSE ''
+            END AS CARD_NO,
+            A.CARD_TYPE,
+            A.CARD_BRAND,
+            A.CARD_APPROVAL_NO,
+            A.EXP_DT,
+            A.TENURE,
+            A.REF_NO,
+            A.BANK_CHRG_AMT,
+            A.CARD_HOLDER,
+            A.RUNNG_NO,
+            A.BANK_ACC,
+            A.ITEM_REM,
+            A.TRX_ID,
+            A.TR_NO,
+            A.TR_ISSU_DT,
+            A.COLL_MEM_ID,
+            A.PAY_DT,
+            A.IS_ONLINE,
+            A.IS_LOCK,
+            A.IS_3PARTY,
+            A.STUS_ID,
+            A.IS_FUND_TRNSF,
+            A.SKIP_RECON,
+            A.PAY_ITM_CARD_TYPE,
+            A.PAY_ITM_CARD_MODE,
+            A.CHQ_NO,
+            A.CHQ_DEP_RECIPT_NO,
+            A.SLIP_NO,
+            A.EFT,
+            A.THRD_PARTY_IC,
+            A.BANK_BRNCH_ID,
+            A.GRP_ID,
+            A.PAYER_NM,
+            A.REF_DTL,
+            A.BANK_TYPE,
+            A.VA_ACC,
+            A.IS_COMM_CHK,
+            A.MERCHANT_BANK,
+            A.DCF_ECC_IF_DT,
+            A.KEY_IN_BRNCH,
+            B.APPV_PRCSS_NO AS APPV_PRCSS_NO,
+            B.REQST_USER_ID,
+            D.USER_FULL_NAME,
+            D.USER_NAME,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') AS REF_CRT_DT
+        FROM PAY0344M A
+        JOIN PAY0347M B ON A.REQ_ID = B.REQ_ID
+        JOIN SYS0032M C ON C.RESN_ID = A.REASON_ID
+        LEFT JOIN SYS0047M D ON D.USER_NAME = B.REQST_USER_ID
+        LEFT JOIN SYS0013M PT ON PT.CODE = A.NEW_PAY_TYPE AND PT.CODE_MASTER_ID = 395
+        LEFT JOIN SYS0004M BK ON BK.BANK_ID = A.ISSUE_BANK AND BK.STUS_CODE_ID = 1
+        WHERE 1=1
+        <if test="reqNo != null and reqNo != '' ">
+            AND A.REQ_ID = #{reqNo}
+           <!--  <foreach item="item" collection="reqNo" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach> -->
+        </if>
+    </select>
+
+    <select id="selectReqRefundApprovalItem" parameterType="Map" resultType="egovMap">
+        SELECT T1.APPV_LINE_SEQ,
+        T1.APPV_LINE_USER_ID,
+        T2.NAME AS APPV_LINE_USER_NAME,
+        TO_CHAR(T1.APPV_DT, 'DD/MM/YYYY') APPV_DT,
+        T1.APPV_STUS,
+        T1.REJCT_RESN,
+        T1.APPR_REMARK,
+        TO_CHAR(SYSDATE, 'DD/MM/YYYY') AS CURR_DT
+        FROM PAY0348D T1
+        LEFT JOIN ORG0001D T2  ON T1.APPV_LINE_USER_ID = T2.MEM_CODE
+        WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
+        ORDER BY T1.APPV_LINE_SEQ
+
+    </select>
+    <update id="updateAppvInfo" parameterType="Map">
+       UPDATE PAY0347M
+       SET APPV_PRCSS_STUS = #{appvPrcssStus}
+           ,APPV_PRCSS_DT = SYSDATE
+           ,APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt}
+           ,UPD_DT = SYSDATE
+           ,UPD_USER_ID = #{userId}
+           ,IS_RESUBMIT_ALLOWED = TO_NUMBER(#{isResubmitAllowed})
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </update>
+
+    <update id="updateAppvLine" parameterType="Map">
+       UPDATE PAY0348D
+       SET APPV_STUS = #{appvStus}
+           ,APPV_DT = SYSDATE
+           ,REJCT_RESN = #{rejctResn}
+           ,UPD_DT = SYSDATE
+           ,UPD_USER_ID = #{userId}
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+        AND APPV_LINE_SEQ = #{appvLineSeq}
+    </update>
+
+    <update id="updateLastAppvLine" parameterType="Map">
+       UPDATE PAY0347M
+       SET APPV_PRCSS_STUS = 'A'
+           ,APPV_PRCSS_DT = SYSDATE
+           ,UPD_DT = SYSDATE
+           ,UPD_USER_ID = #{userId}
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </update>
+
+    <select id="selectAppvLineCnt" parameterType="String" resultType="int">
+        SELECT APPV_LINE_CNT FROM PAY0347M WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <select id="selectAppvLinePrcssCnt" parameterType="String" resultType="int">
+        SELECT APPV_LINE_PRCSS_CNT FROM PAY0347M WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <update id="updateStatusRefundM" parameterType="Map">
+        UPDATE PAY0347M SET
+            APPV_PRCSS_STUS = #{appvPrcssStus},
+            APPV_PRCSS_DT = SYSDATE,
+            APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt},
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE
+            APPV_PRCSS_NO = #{appvPrcssNo}
+    </update>
+
+    <update id="updateStatusRefundD" parameterType="Map">
+        UPDATE PAY0348D SET
+            APPV_STUS = #{appvStus},
+            APPV_DT = SYSDATE,
+            REJCT_RESN = #{remark},
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE
+            APPV_PRCSS_NO = #{appvPrcssNo}
+            AND APPV_LINE_SEQ = #{appvLineSeq}
+    </update>
+
+    <select id="selectRefundReqId" parameterType="String" resultType="String">
+        SELECT REQ_ID FROM pay0347M WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </select>
+
+    <select id="getSalesOrdId" parameterType="String" resultType="String">
+        SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrdNo}
+    </select>
+
+    <select id="refundDuplicates" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM PAY0064D WHERE MTCH_ID IN (SELECT PAY_ID FROM PAY0252T
+        <!-- WHERE GROUP_SEQ = #{groupSeq}) -->
+        WHERE GROUP_SEQ
+        IN
+            <foreach item="item" collection="groupSeq" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+            )
+         AND PAY_ID IN (SELECT PAY_ID FROM PAY0345D WHERE REQ_ID = #{reqNo}
+         )
+    </select>
+
+    <resultMap id="resultRefundMap" type="egovMap" />
+    <select id="approvalRefund" statementType="CALLABLE" parameterType="Map">
+    <!-- {call SP_INST_PAYMENT_REVRS(#{reqNo},#{groupSeq},#{remark}, #{userId}, #{p1, mode=OUT, jdbcType=CURSOR,javaType=ResultSet, resultMap=resultRefundMap})} -->
+    </select>
+
+    <select id="selectAttachList" parameterType="String" resultType="egovMap">
+	            SELECT T1.ATCH_FILE_GRP_ID
+	                   ,T1.ATCH_FILE_ID
+	                   ,T2.ATCH_FILE_NAME
+	                   ,T2.FILE_SUB_PATH
+	                   ,T2.PHYSICL_FILE_NAME
+	                   ,T2.FILE_EXTSN
+	                   ,T2.FILE_SIZE
+	          FROM SYS0070M T1
+	          LEFT JOIN SYS0071D T2
+	          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+	          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+	          ORDER BY T1.ATCH_FILE_ID
+	</select>
+
+	<select id="selectAttachmentInfo" parameterType="Map" resultType="egovMap">
+
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          AND T1.ATCH_FILE_ID = #{atchFileId}
+    </select>
+
+    <select id="selectAllowFlg" parameterType="Map" resultType="EgovMap">
+
+            SELECT
+            <if test="type != '' and type == 'DCF' ">
+                DCF_BK_CRC_STATE_FLG FLG,
+                ALLOW_DCF ALLOW
+            </if>
+            <if test="type != '' and type == 'FT' ">
+                FT_BK_CRC_STATE_FLG FLG,
+                ALLOW_FT ALLOW
+            </if>
+            <if test="type != '' and type == 'REF' ">
+                REF_BK_CRC_STATE_FLG FLG,
+                ALLOW_REF ALLOW
+           </if>
+            FROM PAY0351C
+            WHERE 1=1
+            AND OR_TYPE = #{orType}
+            AND MODE_ID = #{payItmModeId}
+            AND BANK_CODE = #{bankAcc}
+<!--             AND REF_BK_CRC_STATE_FLG = #{bkCrcFlg} -->
+
+            <!-- <if test="type != '' and type == 'DCF' ">
+                AND DCF_BK_CRC_STATE_FLG = #{bkCrcFlg}
+            </if>
+
+            <if test="type != '' and type == 'FT' ">
+                AND FT_BK_CRC_STATE_FLG = #{bkCrcFlg}
+            </if>
+
+            <if test="type != '' and type == 'REF' ">
+                AND REF_BK_CRC_STATE_FLG = #{bkCrcFlg}
+            </if> -->
+    </select>
+
+    <select id="selectReqDcfNewInfo" parameterType="Map" resultType="egovMap">
+       SELECT
+            A.REASON_ID,
+            F.CODE_NAME AS DCF_RESN_CODE,
+            A.OLD_TOTAL_AMT,
+            A.REQ_REMARK,
+            CASE WHEN D.APPV_PRCSS_STUS = 'P' THEN 44
+                WHEN D.APPV_PRCSS_STUS = 'J' THEN 6
+                WHEN D.APPV_PRCSS_STUS = 'A' THEN 5
+            END AS STUS_ID,
+            G.CODE AS DCF_STUS_CODE,
+            H.USER_ID DCF_CRT_USER_ID,
+            H.USER_FULL_NAME AS DCF_CRT_USER_NM,
+            TO_CHAR(D.REQST_DT,'DD/MM/YYYY') AS REQST_DT,
+            D.APPV_PRCSS_NO,
+            A.ATCH_FILE_GRP_ID,
+            I.ATCH_FILE_ID,
+            I.ATCH_FILE_NAME,
+            A.IS_REKEY_IN,
+            CASE WHEN A.IS_REKEY_IN = 0 THEN 'NO'
+                  WHEN A.IS_REKEY_IN = 1 THEN  'YES'
+            END REKEY_IN_STUS,
+            A.NEW_PAY_TYPE,
+            A.NEW_TOTAL_AMT,
+            A.BANK_TYPE,
+            A.BANK_ACC_ID,
+            A.VA_ACC,
+            TO_CHAR(A.TRX_DATE,'DD/MM/YYYY') AS TRX_DT,
+            A.SLIP_NO,
+            A.CHQ_NO,
+            A.TRX_ID,
+            A.EFT,
+<!--             A.BANK_CHRG_AMT, -->
+            NVL(A.BANK_CHRG_AMT,0) BANK_CHRG_AMT,
+            A.CARD_TYPE,
+            A.CARD_MODE,
+            A.CARD_BRAND,
+            A.CARD_NO,
+            A.CARD_APPROVAL_NO,
+            A.ISSUE_BANK,
+            A.CARD_HOLDER,
+            A.EXP_DT,
+            A.MERCHANT_BANK,
+            A.TENURE
+        FROM PAY0344M A
+        JOIN PAY0347M D ON D.REQ_ID = A.REQ_ID
+<!--         JOIN PAY0348D E ON E.APPV_PRCSS_NO = D.APPV_PRCSS_NO -->
+        LEFT JOIN SYS0013M F ON F.CODE_ID = A.REASON_ID
+        LEFT JOIN SYS0013M G ON G.CODE = D.APPV_PRCSS_STUS AND G.CODE_MASTER_ID = 508
+        LEFT JOIN SYS0047M H ON H.USER_NAME = D.REQST_USER_ID
+        LEFT JOIN SYS0071D I ON A.ATCH_FILE_ID = I.ATCH_FILE_ID
+        WHERE 1=1
+            AND A.REQ_TYPE = 'DCF'
+<!--             AND (D.APPV_PRCSS_STUS = 'R' OR D.APPV_PRCSS_STUS = 'P' OR D.APPV_PRCSS_STUS = 'A' or D.APPV_PRCSS_STUS = 'J') -->
+<!--             AND (E.APPV_STUS = 'R' OR E.APPV_STUS = 'A' OR E.APPV_STUS = 'J') -->
+<!--             <if test="memCode != null and memCode != '' "> -->
+<!--                 AND E.APPV_LINE_USER_ID = #{memCode} -->
+<!--             </if> -->
+            AND A.REQ_ID = #{reqNo}
+    </select>
+
+    <select id="selectReqDcfNewAppv" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.APPV_LINE_SEQ,
+            D.FULL_NAME AS APPV_LINE_USER_NAME,
+            TO_CHAR(B.APPV_DT,'DD/MM/YYYY') AS APPV_DT,
+            B.APPV_STUS,
+            CASE WHEN B.APPV_STUS = 'A' THEN B.APPR_REMARK
+                WHEN B.APPV_STUS = 'J' THEN B.REJCT_RESN
+            END APPV_REM
+        FROM PAY0347M A
+        JOIN PAY0348D B ON B.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+        LEFT JOIN SYS0013M C ON C.CODE = A.APPV_PRCSS_STUS AND C.CODE_MASTER_ID = 508
+        LEFT JOIN ORG0001D D  ON B.APPV_LINE_USER_ID = D.MEM_CODE
+        WHERE 1=1
+            AND A.APPV_PRCSS_NO = #{appvNo}
+<!--             AND B.APPV_STUS <![CDATA[  <> ]]> 'T' -->
+        ORDER BY B.APPV_LINE_SEQ
+    </select>
+
+    <select id="selectRequestNewDCFByGroupSeq" parameterType="Map" resultType="egovMap">
+       SELECT
+            SEQ,
+            APP_TYPE,
+            ADV_MONTH,
+            BILL_GRP_ID,
+            BILL_ID,
+            SALES_ORD_ID,
+            RPF,
+            RPF_PAID,
+            BILL_NO,
+            SALES_ORD_NO,
+            BILL_TYPE,
+            BILL_TYPE_NM,
+            INSTLMT,
+            AMT,
+            PAID_AMT,
+            TARGET_AMT,
+            BILL_DT,
+            ASIGN_AMT,
+            BILL_STUS,
+            CUST_NM,
+            SRV_LDGR_CNTRCT_ID,
+            BILL_AS_ID,
+            DSCNT_AMT,
+            SRV_MEM_ID,
+            REF_DETAILS,
+            TR_NO,
+            TR_ISSUE_DT,
+            COLL_MEM_ID,
+            ALLOW_COMM
+       FROM PAY0346D
+       WHERE REQ_ID = #{reqNo}
+       ORDER BY SEQ
+    </select>
+
+    <select id="selectDcfInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.APPV_PRCSS_NO,
+            A.APPV_LINE_CNT,
+            A.APPV_LINE_PRCSS_CNT,
+            C.USER_NAME AS REQ_USER_NAME,
+            C.USER_ID AS REQ_USER_ID,
+            B.APPV_LINE_USER_ID
+        FROM PAY0347M A
+        LEFT JOIN PAY0348D B ON B.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+        LEFT JOIN SYS0047M C ON C.USER_NAME = A.REQST_USER_ID
+        WHERE 1=1
+            AND A.REQ_ID = #{reqNo}
+            AND B.APPV_STUS = 'R'
+    </select>
+
+    <select id="selectDcfCount" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(B.REQ_ID)
+        FROM PAY0344M A
+        LEFT JOIN PAY0345D B ON B.REQ_ID = A.REQ_ID
+        WHERE A.REQ_ID = #{reqNo}
+    </select>
+
+    <select id="getDcfMaxCount" parameterType="Map" resultType="int">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'PAYMENT'
+        AND DISB = '0'
+        AND PARAM_CODE = 'DCF_MAX_COUNT'
+    </select>
+
+    <update id="updateStatusNewDCF" parameterType="Map">
+        UPDATE PAY0347M SET
+            APPV_PRCSS_STUS = #{dcfStusId},
+            APPV_PRCSS_DT = SYSDATE,
+            APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt},
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE
+            REQ_ID = #{reqNo}
+    </update>
+
+    <update id="updateStatusNewDCFDet" parameterType="Map">
+        UPDATE PAY0348D SET
+            APPV_DT = SYSDATE,
+            APPV_STUS = #{appvStus},
+            REJCT_RESN = #{rejctResn},
+            APPR_REMARK = #{appvResn},
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE
+            APPV_PRCSS_NO = #{appvPrcssNo}
+            AND APPV_LINE_USER_ID = #{userMemCode}
+    </update>
+
+    <select id="selectDcfAppvInfo" parameterType="Map" resultType="egovMap">
+       SELECT
+            A.REQ_REMARK AS REM,
+            C.APPV_LINE_USER_ID AS MEM_CODE,
+            B.APPV_PRCSS_NO
+        FROM PAY0344M A
+        LEFT JOIN PAY0347M B ON B.REQ_ID = A.REQ_ID
+        LEFT JOIN PAY0348D C ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+        WHERE B.REQ_ID = #{reqNo}
+        AND C.APPV_LINE_SEQ = B.APPV_LINE_PRCSS_CNT + 1
+    </select>
+
+    <select id="dcfDuplicates2" parameterType="Map" resultType="int">
+      <if test="groupSeq != null and groupSeq != ''">
+	        SELECT COUNT(*) FROM PAY0064D
+	        WHERE MTCH_ID IN (
+	            SELECT PAY_ID FROM PAY0252T
+	            WHERE 1=1
+                AND GROUP_SEQ IN
+	                 <foreach item="item" collection="groupSeq" index="index"
+	                   open="(" separator="," close=")">
+	                   #{item}
+	                 </foreach>
+	            AND REV_STUS_ID = 1
+	        )
+        </if>
+    </select>
+
+    <resultMap id="resultNewDCFMap" type="egovMap" ></resultMap>
+    <select id="approvalNewDCF" statementType="CALLABLE" parameterType="Map" resultType="EgovMap">
+       {
+           call SP_INST_BULK_PAYMENT_REVRS(TO_NUMBER(#{reqNo}),#{remark}, #{userId},
+           #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultNewDCFMap},
+           #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultNewDCFMap})
+       }
+    </select>
+
+    <insert id="requestDcfInfo" parameterType="Map">
+        INSERT INTO PAY0344M (
+                REQ_ID,
+                REQ_TYPE,
+                REASON_ID,
+                IS_REKEY_IN,
+                ATCH_FILE_GRP_ID,
+                ATCH_FILE_ID,
+                REQ_REMARK,
+                OLD_TOTAL_AMT,
+         <!-- when rekey in status = 1 -->
+                NEW_PAY_TYPE,
+                NEW_TOTAL_AMT,
+                BANK_CHRG_AMT,
+                SLIP_NO,
+                CHQ_NO,
+                TRX_ID,
+                BANK_TYPE,
+                BANK_ACC_ID,
+                VA_ACC,
+                TRX_DATE,
+                EFT,
+                IS_LOCK,
+                IS_3PARTY,
+                STUS_ID,
+                IS_FUND_TRNSF,
+                SKIP_RECON,
+                PAY_ITM_CARD_TYPE,
+                PAY_ITM_CARD_MODE,
+         <!-- if payType = credit card -->
+                CARD_MODE,
+                ISSUE_BANK,
+                CARD_NO,
+                CARD_TYPE,
+                CARD_BRAND,
+                CARD_APPROVAL_NO,
+                EXP_DT,
+                TENURE,
+                MERCHANT_BANK,
+                CARD_HOLDER,
+                IS_ONLINE,
+         <!-- end if payType = credit card -->
+                PAY_ROUTE,
+                KEY_IN_SCRN,
+         <!-- end when rekey in status = 1 -->
+                KEY_IN_BRNCH,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{nextSeq},
+                'DCF',
+                #{reason},
+                #{rekeyStus},
+                #{atchGrpId},
+                #{atchFileId},
+                #{remark},
+                TO_NUMBER(#{oldTotalAmt}),
+         <!-- when rekey in status = 1 -->
+                #{payType},
+                TO_NUMBER(#{newTotalAmtTxt}),
+                TO_NUMBER(#{bankChargeAmt}),
+                #{slipNo},
+                #{chqNo},
+                #{trxId},
+                #{bankType},
+                #{bankAcc},
+                #{vaAcc},
+                TO_DATE(#{trxDate}, 'DD/MM/YYYY'),
+                #{eft},
+                #{payItemIsLock},
+                #{payItemIsThirdParty},
+                #{payItemStatusId},
+                #{isFundTransfer},
+                #{skipRecon},
+                #{payItemCardTypeId},
+                #{payItmCardMode},
+         <!-- if payType = credit card -->
+                #{cardMode},
+                #{issueBank},
+                #{cardNo},
+                #{cardType},
+                #{cardBrand},
+                #{cardApprovalNo},
+                #{expDt},
+                #{tenure},
+                #{merchantBank},
+                #{cardHolder},
+                #{isOnline},
+         <!-- end if payType = credit card -->
+                #{payRoute},
+                #{keyInScrn},
+         <!-- end when rekey in status = 1 -->
+                #{keyInBranch},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+     <insert id="insertOldDcf" parameterType="Map">
+        INSERT INTO PAY0345D (
+                REQ_ID,
+                SEQ,
+                GROUP_SEQ,
+                OR_NO,
+                SALES_ORD_NO,
+                SALES_ORD_ID,
+                APP_TYPE,
+                PAY_TYPE_ID,
+                CUST_ID,
+                AMT,
+                TRANS_DT,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT,
+                PAY_ID
+            ) VALUES (
+                #{nextSeq},
+                #{seq},
+                #{groupSeq},
+                #{orNo},
+                #{salesOrdNo},
+                #{salesOrdId},
+                #{appType},
+                #{payItmModeId},
+                #{custId},
+                TO_NUMBER(#{totAmt}),
+                #{trxDt},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{payId}
+            )
+    </insert>
+
+     <insert id="insertNewDcf" parameterType="Map">
+        INSERT INTO PAY0346D (
+                REQ_ID,
+                SEQ,
+                APP_TYPE,
+                ADV_MONTH,
+                SALES_ORD_ID,
+                BILL_GRP_ID,
+                BILL_ID,
+                RPF,
+                RPF_PAID,
+                BILL_NO,
+                SALES_ORD_NO,
+                BILL_TYPE,
+                BILL_TYPE_NM,
+                INSTLMT,
+                AMT,
+                PAID_AMT,
+                TARGET_AMT,
+                BILL_DT,
+                ASIGN_AMT,
+                BILL_STUS,
+                CUST_NM,
+                DSCNT_AMT,
+                SRV_LDGR_CNTRCT_ID,
+                BILL_AS_ID,
+                SRV_MEM_ID,
+                TR_NO,
+                COLL_MEM_ID,
+                ALLOW_COMM,
+                TR_ISSUE_DT,
+                REF_DETAILS,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{nextSeq},
+                #{seq},
+                #{appType},
+                #{advMonth},
+                #{ordId},
+                #{billGrpId},
+                #{billId},
+                #{mstRpf},
+                #{mstRpfPaid},
+                #{billNo},
+                #{ordNo},
+                #{billTypeId},
+                #{billTypeNm},
+                #{installment},
+                #{billAmt},
+                #{paidAmt},
+                #{targetAmt},
+                TO_DATE(#{billDt},'YYYY-MM-DD'),
+                #{assignAmt},
+                #{billStatus},
+                #{custNm},
+                #{discountAmt},
+                #{srvcContractID},
+                #{billAsId},
+                #{srvMemId},
+                REGEXP_REPLACE(#{trNo}, '[[:space:]]', ''),
+                #{collectorId},
+                #{allowComm},
+                TO_DATE(#{trDt}, 'DD/MM/YYYY'),
+                #{refDtlsJPayRef},
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <insert id="insertDcfApprMas" parameterType="Map">
+        INSERT INTO PAY0347M (
+                APPV_PRCSS_NO,
+                REQ_ID,
+                REQST_DT,
+                REQST_USER_ID,
+                APPV_PRCSS_STUS,
+                APPV_LINE_CNT,
+                APPV_LINE_PRCSS_CNT,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+            ) VALUES (
+                #{nextApprSeq},
+                #{nextSeq},
+                SYSDATE,
+                #{userName},
+                'P',
+                #{appvLineCnt},
+                0,
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+    <insert id="insertDcfApprDet" parameterType="Map">
+        INSERT INTO PAY0348D(
+                APPV_PRCSS_NO,
+                APPV_LINE_SEQ,
+                APPV_LINE_USER_ID,
+                APPV_STUS,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT
+        ) VALUES (
+                #{nextApprSeq},
+                #{approveNo},
+                #{memCode},
+                <choose>
+                   <when test="approveNo == 1">
+                   'R',
+                   </when>
+                   <otherwise>
+                   'T',
+                   </otherwise>
+               </choose>
+                #{userId},
+                SYSDATE,
+                #{userId},
+                SYSDATE
+            )
+    </insert>
+
+<!--     <select id="getNextNotiSeq" resultType="int"> -->
+<!--         SELECT SYS0092M_ID_SEQ.NEXTVAL FROM DUAL -->
+<!--     </select> -->
+
+<!--     <insert id="insertDcfNoti" parameterType="Map"> -->
+<!--         INSERT INTO SYS0092M( -->
+<!--                NTF_ID, -->
+<!--                NTF_TYPE, -->
+<!--                NTF_TYPE_DESC, -->
+<!--                NTF_KEY, -->
+<!--                NTF_KEY_STUS, -->
+<!--                NTF_REM, -->
+<!--                NTF_USER_ID, -->
+<!--                NTF_FLAG, -->
+<!--                CRT_DT, -->
+<!--                CRT_USER, -->
+<!--                UPD_DT, -->
+<!--                UPD_USER -->
+<!--         ) VALUES ( -->
+<!--                 #{nextNotiSeq}, -->
+<!--                 'DCF', -->
+<!--                 'Data Change Request', -->
+<!--                 #{key}, -->
+<!--                 #{keyStus}, -->
+<!--                 #{rem}, -->
+<!--                 #{userNameNoti}, -->
+<!--                 1, -->
+<!--                 SYSDATE, -->
+<!--                 #{userIdNoti}, -->
+<!--                 SYSDATE, -->
+<!--                 #{userIdNoti} -->
+<!--             ) -->
+<!--     </insert> -->
+
+    <select id="getPayInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            IS_REKEY_IN,
+            NEW_TOTAL_AMT,
+            TO_NUMBER(NEW_PAY_TYPE) AS NEW_PAY_TYPE,
+            CARD_MODE,
+            ISSUE_BANK,
+            TO_CHAR(TRX_DATE,'DD/MM/YYYY') AS TRX_DATE,
+            CARD_NO,
+            CARD_TYPE,
+            CARD_BRAND,
+            CARD_APPROVAL_NO,
+            EXP_DT,
+            TENURE
+            REF_NO,
+            BANK_CHRG_AMT,
+            CARD_HOLDER,
+            RUNNG_NO,
+            BANK_ACC_ID,
+            ITEM_REM,
+            TRX_ID,
+            TR_NO,
+            TO_CHAR(TR_ISSU_DT, 'DD/MM/YYYY') AS TR_ISSU_DT,
+            COLL_MEM_ID,
+            TO_CHAR(PAY_DT,'DD/MM/YYYY') AS PAY_DT,
+            IS_ONLINE,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+            PAY_ITM_CARD_MODE,
+            CHQ_NO,
+            CHQ_DEP_RECIPT_NO,
+            SLIP_NO,
+            EFT,
+            THRD_PARTY_IC,
+            BANK_BRNCH_ID,
+            GRP_ID,
+            PAYER_NM,
+            REF_DTL,
+            BANK_TYPE,
+            VA_ACC,
+            TO_NUMBER(IS_COMM_CHK) AS IS_COMM_CHK,
+            MERCHANT_BANK,
+            PAY_ROUTE,
+            KEY_IN_SCRN
+        FROM PAY0344M WHERE REQ_ID = #{reqNo}
+    </select>
+
+    <select id="getNewDcfInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_NUMBER(SEQ) AS SEQ,
+            APP_TYPE,
+            ADV_MONTH,
+            SALES_ORD_ID,
+            BILL_GRP_ID,
+            BILL_ID,
+            RPF,
+            RPF_PAID,
+            BILL_NO,
+            SALES_ORD_NO,
+            BILL_TYPE,
+            BILL_TYPE_NM,
+            INSTLMT,
+            AMT,
+            PAID_AMT,
+            TARGET_AMT,
+            TO_CHAR(BILL_DT,'YYYY-MM-DD') AS BILL_DT,
+            ASIGN_AMT,
+            BILL_STUS,
+            CUST_NM,
+            DSCNT_AMT,
+            SRV_LDGR_CNTRCT_ID,
+            BILL_AS_ID,
+            SRV_MEM_ID,
+            TR_NO,
+            COLL_MEM_ID,
+            ALLOW_COMM,
+            TO_CHAR(TR_ISSUE_DT,'DD/MM/YYYY') AS TR_ISSUE_DT,
+            REF_DETAILS
+        FROM PAY0346D WHERE REQ_ID = #{reqNo}
+    </select>
+
+    <insert id="insertTmpPaymentInfo" parameterType="Map">
+        INSERT INTO PAY0240T
+        (
+            SEQ,
+            PAY_TYPE,
+            CARD_MODE_ID,
+            ISSU_BANK_ID,
+            TRNSC_DT,
+            CARD_NO,
+            CARD_TYPE,
+            CRDIT_CARD_TYPE,
+            AMT,
+            APPV_NO,
+            EXPR_DT,
+            TENURE,
+            REF_NO,
+            BANK_CHRG_AMT,
+            CC_HOLDER_NAME,
+            RUNNG_NO,
+            BANK_ACC_ID,
+            ITM_REM,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_ONLINE,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+            PAY_ITM_CARD_MODE,
+            CHQ_NO,
+            CHQ_DEP_RECIPT_NO,
+            BANK_SLIP_NO,
+            EFT_NO,
+            THRD_PARTY_IC,
+            BANK_BRNCH_ID,
+            IS_COMM_CHK
+        ) VALUES (
+<!--             #{nextSeq}, -->
+            #{nextTmpSeq},
+            TO_NUMBER(#{newPayType}),
+            #{cardMode},
+            #{issueBank},
+            TO_DATE(#{trxDate},'DD/MM/YYYY'),
+            #{cardNo},
+            #{cardType},
+            #{cardBrand},
+<!--             #{newTotalAmount}, -->
+            #{newTotalAmt},
+            #{cardApprovalNo},
+            #{expDt},
+            #{tenure},
+            #{refNo},
+            #{bankChrgAmt},
+            #{cardHolder},
+            #{runngNo},
+            #{merchantBank},
+            #{itemRem},
+            #{trNo},
+            TO_DATE(#{trIssuDt},'DD/MM/YYYY'),
+            TO_NUMBER(#{collMemId}),
+            TO_DATE(#{payDt},'DD/MM/YYYY'),
+            #{isOnline},
+            #{isLock},
+            #{is3party},
+            #{stusId},
+            #{isFundTrnsf},
+            #{skipRecon},
+            #{payItmCardType},
+            #{payItmCardMode},
+            #{chqNo},
+            #{chqDepReciptNo},
+            #{slipNo},
+            #{eft},
+            #{thrdPartyIc},
+            #{bankBrnchId},
+            #{isCommChk}
+        )
+    </insert>
+
+    <insert id="insertTmpNormalPaymentInfo" parameterType="Map">
+        INSERT INTO PAY0240T
+        (
+            SEQ,
+            PAY_TYPE,
+            AMT,
+            BANK_CHRG_AMT,
+            BANK_SLIP_NO,
+            CHQ_NO,
+            PAYER_NM,
+            REF_DTL,
+            BANK_TYPE_ID,
+            BANK_ACC_ID,
+            VA_ACC_NO,
+            TRNSC_DT,
+            ITM_REM,
+            EFT_NO,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+            IS_COMM_CHK
+        )
+        VALUES
+        (
+            #{nextTmpSeq},
+            TO_NUMBER(#{newPayType}),
+            #{newAmt},<!-- #{newTotalAmt}, -->
+            #{bankChrgAmt},
+            #{slipNo},
+            #{chqNo},
+            #{payerNm},
+            #{refDtl},
+            #{bankType},
+            #{bankAccId},
+            #{vaAcc},
+            TO_DATE(#{trxDate}, 'DD/MM/YYYY'),
+            #{itemRem},
+            #{eft},
+            #{trNo},
+            TO_DATE(#{trIssuDt}, 'DD/MM/YYYY'),
+            TO_NUMBER(#{collMemId}),
+            TO_DATE(#{payDt}, 'DD/MM/YYYY'),
+            #{isLock},
+            #{is3party},
+            #{stusId},
+            #{isFundTransfer},
+            #{skipRecon},
+            #{payItmCardType},
+            #{isCommChk}
+        )
+    </insert>
+
+    <insert id="insertTmpPaymentNoTrxIdInfo" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,
+            PAY_TYPE,
+            TRNSC_DT,
+            AMT,
+            BANK_ACC_ID,
+            BANK_SLIP_NO,
+            CHQ_NO,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE ,
+            PAYER_NM ,
+            REF_DTL ,
+            BANK_TYPE_ID ,
+            VA_ACC_NO,
+            IS_COMM_CHK
+        ) VALUES (
+            #{nextTmpSeq},
+            TO_NUMBER(#{newPayType}),
+            TO_DATE(#{trxDate},'DD/MM/YYYY'),
+            #{newTotalAmt},
+            #{bankAccId},
+            #{slipNo},
+            #{chqNo},
+            #{trNo},
+            null,
+            TO_NUMBER(#{collMemId}),
+            TO_DATE(#{payDt},'DD/MM/YYYY'),
+            #{isLock},
+            #{is3party},
+            #{stusId},
+            #{isFundTrnsf},
+            #{skipRecon},
+            #{payItmCardType},
+            #{payerNm},
+            #{refDtl},
+            #{bankType},
+            #{vaAcc},
+            #{isCommChk}
+        )
+    </insert>
+
+    <insert id="insertTmpPaymentOnlineInfo" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,
+            PAY_TYPE,
+            TRNSC_DT,
+            AMT,
+            BANK_ACC_ID,
+            BANK_CHRG_AMT,
+            EFT_NO,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+            PAYER_NM ,
+            REF_DTL ,
+            BANK_TYPE_ID ,
+            VA_ACC_NO,
+            IS_COMM_CHK
+        ) VALUES (
+            #{nextTmpSeq},
+            TO_NUMBER(#{newPayType}),
+            TO_DATE(#{trxDate},'DD/MM/YYYY'),
+            #{newAmt}, <!-- #{newTotalAmt}, -->
+            #{bankAccId},
+            #{bankChrgAmt},
+            #{eft},
+            #{trNo},
+            null,
+            TO_NUMBER(#{collMemId}),
+            TO_DATE(#{payDate},'DD/MM/YYYY'),
+            #{isLock},
+            #{is3party},
+            #{stusId},
+            #{isFundTrnsf},
+            #{skipRecon},
+            #{payItmCardType},
+            #{payerNm},
+            #{refDtl},
+            #{bankType},
+            #{vaAcc},
+            #{isCommChk}
+        )
+    </insert>
+
+    <insert id="insertTmpBillingInfo" parameterType="Map">
+        INSERT INTO PAY0241T
+        (
+            ITM_SEQ,
+            SEQ,
+            PRCSS_SEQ,
+            APP_TYPE,
+            ADV_MONTH,
+            BILL_GRP_ID,
+            BILL_ID,
+            ORD_ID,
+            RPF,
+            RPF_PAID,
+            BILL_NO,
+            ORD_NO,
+            BILL_TYPE_ID,
+            BILL_TYPE_NM,
+            INSTLMT,
+            AMT,
+            PAID_AMT,
+            TRGET_AMT,
+            BILL_DT,
+            ASIGN_AMT,
+            BILL_STUS,
+            CUST_NM,
+            DSCNT_AMT,
+            SRV_LDGR_CNTRCT_ID,
+            BILL_AS_ID,
+            SRV_MEM_ID,
+            TR_NO,
+            COLL_MEM_ID,
+            ALLOW_COMM,
+            TR_ISSU_DT,
+            REF_DTL
+        )
+        VALUES
+        (
+            PAY0241T_SEQ.NEXTVAL,
+            #{nextTmpSeq},
+            #{seq},
+            #{appType},
+            #{advMonth},
+            #{billGrpId},
+            #{billId},
+            #{salesOrdId},
+            #{rpf},
+            #{rpfPaid},
+            #{billNo},
+            #{salesOrdNo},
+            #{billType},
+            #{billTypeNm},
+            #{instlmt},
+            #{amt},
+            #{paidAmt},
+            #{targetAmt},
+            TO_DATE(#{billDt},'YYYY-MM-DD'),
+            #{asignAmt},
+            #{billStus},
+            #{custNm},
+            #{dscntAmt},
+            #{srvLdgrCntrctId},
+            #{billAsId},
+            #{srvMemId},
+            REGEXP_REPLACE(#{trNo}, '[[:space:]]', ''),
+            #{collMemId},
+            #{allowComm},
+            TO_DATE(#{trIssueDt}, 'DD/MM/YYYY'),
+            #{refDetails}
+        )
+    </insert>
+
+    <update id="processPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_PAYMENT_DCF(#{reqNo}, #{seq},#{userid},#{keyInPayRoute}, #{keyInScrn} )}
+    </update>
+
+    <resultMap id="normalDcfPayResultStus" type="egovMap"></resultMap>
+    <resultMap id="normalDcfPayResultMsg" type="egovMap"></resultMap>
+    <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_NORMAL_PAYMENT_DCF(TO_NUMBER(#{reqNo}), #{seq}, #{userid}, TO_NUMBER(#{key}), #{keyInPayRoute}, #{keyInScrn},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=normalDcfPayResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=normalDcfPayResultMsg})}
+    </update>
+
+    <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
+         SELECT
+            a.or_no,
+            CASE WHEN SALES_ORD_NO_1 IS NULL AND SALES_ORD_NO_3 IS NULL THEN SALES_ORD_NO_2
+                 WHEN SALES_ORD_NO_2 IS NULL AND SALES_ORD_NO_1 IS NULL THEN SALES_ORD_NO_3
+                 WHEN SALES_ORD_NO_3 IS NULL AND SALES_ORD_NO_2 IS NULL THEN SALES_ORD_NO_1
+                 ELSE SALES_ORD_NO_1
+                 END AS SALES_ORD_NO ,
+                 a.GROUP_SEQ,
+                 a.TOT_AMT
+        FROM
+            (
+                SELECT DISTINCT
+                    b.or_no,
+                    c.SALES_ORD_NO SALES_ORD_NO_1,
+                    d.SALES_ORD_NO SALES_ORD_NO_2,
+                    e.SRV_ORD_NO SALES_ORD_NO_3,
+                    a.group_seq,
+                    a.TOT_AMT
+                FROM
+                    pay0252t a
+                    JOIN pay0064d b ON a.pay_id = b.pay_id
+                    LEFT JOIN pay0007d t7 ON b.bill_id = t7.bill_id
+                    LEFT JOIN sal0001d c ON t7.bill_so_id = c.sales_ord_id
+                    LEFT JOIN sal0001d d ON d.sales_ord_id = b.sales_ord_id
+                    LEFT JOIN sal0225d e ON t7.bill_so_id = e.srv_ord_id
+            ) a
+        WHERE
+                    A.GROUP_SEQ = #{seq}
+        ORDER BY a.or_no
+    </select>
+
+    <select id="checkBankStateMapStus" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(OTH_KEYIN_STUS_ID,0) OTH_KEYIN_STUS_ID,
+            F_TRNSC_CRDIT_AMT
+        FROM PAY0081D WHERE F_TRNSC_ID = #{trxId}
+    </select>
+
+    <update id="updateDcfBatchStatus" parameterType="Map">
+        UPDATE PAY0344M
+        SET
+            BATCH_STUS = #{batchStus},
+            BATCH_DT = SYSDATE,
+            UPD_USER_ID = #{userid},
+            UPD_DT = SYSDATE
+        WHERE REQ_ID = #{reqNo}
+    </update>
+
+  	<select id="selectRefundCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE ,
+              CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0 AND CODE_MASTER_ID = 395
+        AND CODE IN ('107', '108')
+    </select>
+
+    <select id="selectBankListCode" resultType="egovMap">
+    SELECT BANK_ID AS CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1 AND IS_SAP = 1 ORDER BY NAME
+    </select>
+
+    <update id="insertErrorRem" parameterType="Map">
+        UPDATE PAY0344M
+        SET REM = #{message}
+        WHERE REQ_ID = #{reqId}
+    </update>
+
+     <select id="selectInvalidORCodeNm" parameterType="Map" resultType="egovMap">
+        SELECT CODE FROM (
+            <if test="ind != '' and ind == 'DCF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'DCF_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'FT' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'FT_ALLOW' AND DISB = 0
+            </if>
+            <if test="ind != '' and ind == 'REF' ">
+            SELECT CODE FROM SYS0094M WHERE IND = 'REFD_ALLOW' AND DISB = 0
+            </if>
+        )
+    </select>
+</mapper>

@@ -1,0 +1,1285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper">
+
+    <select id="selectQuotationList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectQuotationList] */
+        SELECT
+            A.SRV_MEM_QUOT_ID SVM_QUOT_ID,
+            E.PSM_ID,
+            B.SALES_ORD_ID,
+            C.NAME CUST_NAME,
+            B.SALES_ORD_NO,
+            TO_CHAR(A.SRV_CRT_DT, 'DD/MM/YYYY') REQST_DT,
+            A.SRV_MEM_QUOT_NO QUOT_NO,
+            NVL(E.PSM_NO, '-') PSM_NO,
+            DESC1.CODE_NAME ORDER_TYPE,
+            DESC2.CODE_NAME CUST_TYPE,
+            CASE WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.PSM_ID IS NULL) THEN 'Active Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.PSM_ID IS NULL) THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.STUS = 1) THEN 'Active Pre-Sales'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
+                 WHEN A.SRV_QUOT_STUS_ID = 8 THEN 'Inactive Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 10 THEN 'Cancelled Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 21 THEN 'Failed Quotation'
+            END STATUS,
+            CASE WHEN A.SRV_QUOT_STUS_ID = 1 AND E.PSM_ID IS NULL THEN 1
+                 WHEN A.SRV_QUOT_STUS_ID = 4 AND E.PSM_ID IS NULL THEN 4
+                 WHEN A.SRV_QUOT_STUS_ID = 1 AND E.STUS = 1 THEN 104
+                 WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5 THEN 4
+                 WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6 THEN 6
+                 WHEN A.SRV_QUOT_STUS_ID = 8 THEN 8
+                 WHEN A.SRV_QUOT_STUS_ID = 10 THEN 10
+                 WHEN A.SRV_QUOT_STUS_ID = 21 THEN 21
+            END STATUS_ID
+            /*
+            CASE WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.PSM_ID IS NULL) THEN 'Active Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.PSM_ID IS NULL) THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.STUS = 1) THEN 'Active Pre-Sales'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
+            */
+        FROM SAL0093D A
+        JOIN SAL0001D B
+            ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN SAL0029D C
+            ON B.CUST_ID = C.CUST_ID
+        JOIN SYS0026M D
+            ON A.SRV_ORD_STK_ID = D.STK_ID
+        LEFT JOIN SAL0298D E
+            ON A.SRV_MEM_QUOT_ID = E.SVM_QUOT_ID
+        JOIN SYS0013M DESC1
+            ON B.APP_TYPE_ID = DESC1.CODE_ID
+            AND DESC1.CODE_MASTER_ID = 10
+        JOIN SYS0013M DESC2
+            ON C.TYPE_ID = DESC2.CODE_ID
+            AND DESC2.CODE_MASTER_ID = 8
+        WHERE A.SRV_CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+        ]]>
+        <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+            AND TO_CHAR(A.SRV_CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+        </if>
+        <if test="selectType != null and selectType != '' ">
+            <choose>
+                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+                </when>
+                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NAME) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NRIC) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(A.SRV_QUOT_STUS_ID) = #{selectKeyword}
+                </when>
+                <when test='selectType.equals("5") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(E.STUS) = #{selectKeyword}
+                </when>
+            </choose>
+        </if>
+        ORDER BY A.SRV_MEM_QUOT_ID DESC
+    </select>
+
+    <select id="selectSvmOrdNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            A.SALES_ORD_NO,
+            B.ITM_STK_ID STK_ID
+        FROM SAL0001D A
+        LEFT JOIN SAL0002D B
+            ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE A.STUS_CODE_ID IN ('1','4')
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
+    <select id="checkActiveQuot" parameterType="Map" resultType="egovMap">
+        SELECT
+            COUNT(*) CNT
+        /*
+            S.SRV_MEM_QUOT_ID,
+            S.SRV_SALES_ORD_ID,
+            S.SRV_MEM_QUOT_NO,
+            S.SRV_MEM_PAC_ID,
+            S.SRV_MEM_PAC_NET_AMT,
+            S.SRV_MEM_PAC_TXS,
+            S.SRV_MEM_PAC_AMT,
+            S.SRV_MEM_BS_NET_AMT,
+            S.SRV_MEM_BS_TXS,
+            S.SRV_MEM_BS_AMT,
+            S.SRV_MEM_PV,
+            S.SRV_DUR SRV_DUR,
+            S.SRV_REM SRV_REM,
+            S.SRV_QUOT_VAL_ID,
+            S.SRV_CRT_DT,
+            S.SRV_CRT_USER_ID,
+            S.SRV_QUOT_STUS_ID,
+            S.SRV_UPD_USER_ID,
+            S.SRV_UPD_DT,
+            S.SRV_MEM_BS12_AMT,
+            S.SRV_QUOT_CUST_CNT_ID,
+            S.SRV_MEM_QTY,
+            S.SRV_PROMO_ID,
+            S.SRV_SALES_MEM_ID,
+            S.SRV_MEM_ID,
+            S.SRV_ORD_STK_ID,
+            S.SRV_FREQ,
+            S.SRV_PAC_PROMO_ID
+        */
+        FROM SAL0093D S
+        JOIN SAL0001D A
+            ON S.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE 1 = S.SRV_QUOT_STUS_ID
+            AND A.SALES_ORD_NO = #{ordNo}
+            <![CDATA[
+            AND TO_DATE(TO_CHAR(S.SRV_QUOT_VAL_ID, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD')
+            AND ROWNUM <= 1
+            ]]>
+    </select>
+
+    <select id="selectOrderMemInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            EXT.*,
+            <![CDATA[
+            CASE WHEN MEM_EXPR_DATE IS NOT NULL THEN (
+                CASE WHEN TO_NUMBER(EXT.EXPINT) <= 0 THEN 'Under membership'
+                     WHEN (TO_NUMBER(EXT.EXPINT) > 0 AND TO_NUMBER(EXT.COOLING_PRD) >= TO_NUMBER(EXT.EXPINT)) THEN 'Under cooling off period'
+                     ELSE 'Passed cooling off period'
+                END
+            ) ELSE ' '
+            END TRM,
+            CASE WHEN MEM_EXPR_DATE IS NOT NULL THEN (
+                CASE WHEN TO_NUMBER(EXT.EXPINT) <= 0 THEN 0
+                     WHEN (TO_NUMBER(EXT.EXPINT) > 0 AND TO_NUMBER(EXT.COOLING_PRD) >= TO_NUMBER(EXT.EXPINT)) THEN 0
+                     ELSE 1
+                END
+            ) ELSE 0
+            END HIDDEN_IS_CHARGE
+            ]]>
+        FROM (
+            SELECT
+                /* Order Info */
+                A.SALES_ORD_ID,
+                A.SALES_ORD_NO ORD_NO,
+                A.APP_TYPE_ID APP_TYPE_ID,
+                NVL(L.STUS_CODE_ID, ' ') RENTAL_STUS,
+                A.CUST_CNT_ID,
+                B.ITM_STK_ID STK_ID,
+                D.NAME CUST_NAME,
+                D.NRIC,
+                DESC1.CODE_DESC ORDER_TYPE,
+                UTILS.CONVERT_TO_NUMBER(
+                (CASE WHEN A.APP_TYPE_ID = 66 THEN H.ORD_OTDSTND
+                     WHEN (A.APP_TYPE_ID = 67 OR A.APP_TYPE_ID = 68) THEN I.ORD_OTDSTND
+                     ELSE 0
+                END), 12, 2) ORD_OTDSTND,
+                NVL(J.AS_OTSTND, 0) AS_OTSTND,
+                F.AREA_ID,
+                E.ADD1 || ' ' || E.ADD2 || ' ' || E.ADD3 || ' ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE INST_ADDRESS,
+                C.STK_DESC STK_NAME,
+                CASE WHEN G.LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') ELSE TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE) END MEM_EXPR_DATE,
+                CASE WHEN G.LAST_SRV_MEM_EXPR_DATE IS NOT NULL
+                    THEN TO_CHAR(MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(G.LAST_SRV_MEM_EXPR_DATE, 12), 'YYYYMM') || '01', 'YYYYMMDD')))
+                    ELSE ''
+                END EXPINT,
+                TO_CHAR(K.SRV_MEM_COOL_PRIOD_MTH) COOLING_PRD,
+                TO_CHAR(M.SRV_MEM_ITM_PRIOD) HS_FREQ,
+                TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'YYYYMMDD') CVT_LAST_SRV_MEM_EXPR_DATE,
+                TO_CHAR(SYSDATE, 'YYYYMMDD') CVT_NOW_DATE
+                ,D.TYPE_ID AS CUST_TYPE_ID
+            FROM SAL0001D A
+            JOIN SAL0002D B
+                ON A.SALES_ORD_ID = B.SALES_ORD_ID
+            JOIN SYS0026M C
+                ON B.ITM_STK_ID = C.STK_ID
+            JOIN SAL0029D D
+                ON A.CUST_ID = D.CUST_ID
+            JOIN SAL0045D M
+                ON A.SALES_ORD_ID = M.SALES_ORD_ID
+            JOIN SAL0023D E
+                ON M.ADD_ID = E.CUST_ADD_ID
+            JOIN SYS0064M F
+                ON E.AREA_ID = F.AREA_ID
+            LEFT JOIN SAL1014V G
+                ON A.SALES_ORD_ID = G.ORD_ID
+            LEFT JOIN ( /* Rental Outstanding */
+                SELECT
+                    RENT_SO_ID ORD_ID,
+                    SUM(RENT_AMT) ORD_OTDSTND
+                FROM PAY0022D
+                WHERE RENT_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+                GROUP BY RENT_SO_ID
+            ) H
+                ON A.SALES_ORD_ID = H.ORD_ID
+            LEFT JOIN ( /* Outright or Instalment Oustanding */
+                SELECT
+                    TRADE_SO_ID ORD_ID,
+                    SUM(TRADE_AMT) ORD_OTDSTND
+                FROM PAY0035D
+                WHERE TRADE_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+                GROUP BY TRADE_SO_ID
+            ) I
+                ON A.SALES_ORD_ID = I.ORD_ID
+            LEFT JOIN ( /* AS Outstanding */
+                SELECT
+                    AS_SO_NO ORD_NO,
+                    SUM(AS_LG_AMT) AS_OTSTND
+                FROM PAY0006D
+                WHERE AS_RESULT_NO LIKE 'ASR%'
+                AND AS_SO_NO = #{ordNo}
+                GROUP BY AS_SO_NO
+            ) J
+                ON A.SALES_ORD_NO = J.ORD_NO
+            LEFT JOIN SVC0010D K
+                ON K.CTGRY_ID = C.STK_CTGRY_ID
+                AND K.SRV_MEM_COOL_PRIOD_STUS_ID = 1
+            LEFT JOIN SAL0071D L
+                ON A.SALES_ORD_ID = L.SALES_ORD_ID
+            JOIN SAL0092M M
+                ON M.SRV_MEM_PAC_ID = 9
+                AND M.SRV_MEM_ITM_STUS_ID = 1
+                AND M.SRV_MEM_ITM_STK_ID = B.ITM_STK_ID
+            JOIN SYS0013M DESC1
+                ON A.APP_TYPE_ID = DESC1.CODE_ID
+                AND DESC1.CODE_MASTER_ID = 10
+            WHERE 1=1
+            AND ROWNUM = 1
+            <if test="salesOrdId != null and salesOrdId != '' ">
+                AND A.SALES_ORD_ID = #{salesOrdId}
+            </if>
+            <if test="ordNo != null and ordNo != '' ">
+                AND A.SALES_ORD_NO = #{ordNo}
+            </if>
+        ) EXT
+    </select>
+
+    <select id="getMaxPeriodEarlyBirdPromo" parameterType="Map" resultType="String">
+        SELECT
+            TO_CHAR(ADD_MONTHS(TO_DATE(#{memExprDt}, 'YYYYMM'), -3), 'YYYYMMDD') STRPRMODT
+        FROM DUAL
+    </select>
+
+    <select id="selectProductFilterList" parameterType="Map" resultType="egovMap">
+        <if test="flag != null and flag != '' ">
+            SELECT
+                TO_CHAR(HIDDEN_HAS_FILTER_CHARGE) HIDDEN_HAS_FILTER_CHARGE
+            FROM (
+        </if>
+        SELECT
+            SRV_FILTER_ID,
+            SRV_FILTER_STK_ID,
+            STK_CODE,
+            STK_DESC,
+            C2,
+            C3,
+            SRV_FILTER_STUS_ID,
+            SRV_FILTER_PRV_CHG_DT,
+            SRV_FILTER_PRIOD,
+            CODE,
+            C5,
+            C6,
+            EXPIREDATEINT,
+            TODAYDATEINT,
+            MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) EXPINT,
+            <![CDATA[
+            CASE WHEN (SRV_FILTER_PRIOD > 0 AND (MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) > SRV_FILTER_PRIOD)) THEN 1
+                ELSE 0
+            END HIDDEN_HAS_FILTER_CHARGE
+            ]]>
+        FROM
+            (
+                SELECT
+                    R.C1,
+                    R.SRV_FILTER_ID,
+                    R.SRV_FILTER_STK_ID,
+                    R.STK_CODE,
+                    R.STK_DESC,
+                    TO_CHAR(R.C2, 'dd-mm-yyyy') C2,
+                    R.C3,
+                    R.SRV_FILTER_STUS_ID,
+                    TO_CHAR(R.SRV_FILTER_PRV_CHG_DT, 'dd-mm-yyyy') SRV_FILTER_PRV_CHG_DT,
+                    R.SRV_FILTER_PRIOD,
+                    R.C4 CODE,
+                    R.C5,
+                    R.C6,
+                    TO_CHAR(ADD_MONTHS(R.SRV_FILTER_PRV_CHG_DT, 12), 'yyyymm') EXPIREDATEINT,
+                    TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'yyyymm') TODAYDATEINT
+                FROM
+                    (
+                        SELECT DISTINCT
+                            A87D.SRV_FILTER_ID,
+                            A87D.SRV_FILTER_STK_ID,
+                            A87D.SRV_FILTER_PRIOD,
+                            A87D.SRV_FILTER_PRV_CHG_DT,
+                            A87D.SRV_FILTER_STUS_ID,
+                            A26M.STK_CODE,
+                            A26M.STK_DESC,
+                            1 C1,
+                            CASE WHEN (A87D.SRV_FILTER_UPD_DT IS NOT NULL) THEN A87D.SRV_FILTER_UPD_DT END C2,
+                            CASE WHEN (S47M.USER_NAME IS NOT NULL) THEN S47M.USER_NAME ELSE ' - ' END C3,
+                            CASE WHEN (S13M.CODE IS NOT NULL) THEN S13M.CODE ELSE ' - ' END C4,
+                            UTILS.CONVERT_TO_NUMBER(0, 1, 0) C5,
+                            0 C6
+                        FROM
+                            SAL0090D S90D
+                            JOIN SAL0002D S02D
+                                ON S90D.SRV_SO_ID = S02D.SALES_ORD_ID
+                            JOIN SAL0087D A87D
+                                ON S90D.SRV_CONFIG_ID = A87D.SRV_CONFIG_ID
+                            JOIN SYS0026M A26M
+                                ON A87D.SRV_FILTER_STK_ID = A26M.STK_ID
+                            LEFT JOIN SYS0047M S47M
+                                ON A87D.SRV_FILTER_UPD_USER_ID = S47M.USER_ID
+                            LEFT JOIN LOG0001M SL01M
+                                ON (A87D.SRV_FILTER_STK_ID = SL01M.BOM_PART_ID)
+                                AND ((S02D.ITM_STK_ID = SL01M.BOM_STK_ID) OR ((S02D.ITM_STK_ID IS NULL) AND (SL01M.BOM_STK_ID IS NULL)))
+                            LEFT JOIN SYS0013M S13M
+                                ON SL01M.BOM_PART_TYPE_ID = S13M.CODE_ID
+                        WHERE 1 = S90D.SRV_STUS_ID
+                            AND 1 = A87D.SRV_FILTER_STUS_ID
+                            <if test="salesOrdId != null and salesOrdId != '' ">
+                                AND S90D.SRV_SO_ID = #{salesOrdId}
+                            </if>
+                            <if test="ordNo != null and ordNo != '' ">
+                                AND S90D.SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+                            </if>
+                    ) R
+            ) SEL
+        <if test="flag != null and flag != '' ">
+            )
+            WHERE HIDDEN_HAS_FILTER_CHARGE = 1
+            AND ROWNUM = 1
+        </if>
+    </select>
+
+    <select id="selectComboPackageList" parameterType="Map" resultType="egovMap">
+        SELECT
+            C.SRV_MEM_PAC_ID PKG_COMBO_ID,
+            C.SRV_MEM_DESC PKG_COMBO_NAME
+        FROM SAL0002D A, SAL0092M B, SAL0091M C
+        WHERE 1=1
+            AND A.ITM_STK_ID = B.SRV_MEM_ITM_STK_ID
+            AND B.SRV_MEM_PAC_ID = C.SRV_MEM_PAC_ID
+            AND B.SRV_MEM_ITM_STUS_ID = '1'
+            AND C.SRV_MEM_STUS_ID  = 1
+            AND C.PAC_TYPE = '1'
+            <if test="salesOrdId != null and salesOrdId != '' ">
+                AND A.SALES_ORD_ID = #{salesOrdId}
+            </if>
+            <if test="ordNo != null and ordNo != '' ">
+                AND A.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+            </if>
+        ORDER BY C. SRV_MEM_CODE ASC
+    </select>
+
+    <select id="selectPackagePromo" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+            A.PROMO_ID PACKAGE_PROMO_ID ,
+            A.PROMO_CODE || '-' || A.PROMO_DESC PACKAGE_PROMO_NAME,
+            A.PROMO_DISC_TYPE,
+            A.PROMO_RPF_DISC_AMT
+        FROM SAL0017D A, SAL0018D B, SAL0002D C, SAL0001D D, SAL0029D E, SAL0289T F
+        WHERE 1=1
+            AND A.PROMO_ID = B.PROMO_ID
+            AND A.PROMO_STUS_ID = '1'
+            AND B.PROMO_ITM_STUS_ID = '1'
+            AND A.PROMO_TYPE_ID = '2282'
+            AND A.PROMO_APP_TYPE_ID = '2288'
+            <![CDATA[
+            AND TO_CHAR(A.PROMO_DT_FROM,'yyyymmdd') <= TO_CHAR(SYSDATE,'yyyymmdd')
+            AND TO_CHAR(A.PROMO_DT_END,'yyyymmdd') >= TO_CHAR(SYSDATE ,'yyyymmdd')
+            ]]>
+            AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
+            <if test="salesOrdId != null and salesOrdId != '' ">
+                AND C.SALES_ORD_ID = #{salesOrdId}
+            </if>
+            <if test="ordNo != null and ordNo != '' ">
+                AND C.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+            </if>
+            AND A.PROMO_SRV_MEM_PAC_ID = '9'
+            AND C.SALES_ORD_ID = D.SALES_ORD_ID
+            AND D.CUST_ID = E.CUST_ID
+            AND (
+                    ((A.PROMO_ID in ('32295','32296')) AND (F.SALES_ORD_ID = D.SALES_ORD_ID))
+                    OR
+                    (F.SALES_ORD_ID not in D.SALES_ORD_ID and A.PROMO_ID not in ('32295','32296'))
+                )
+            AND (A.PROMO_CUST_TYPE = E.TYPE_ID OR A.PROMO_CUST_TYPE = 0)
+        <if test="employee != null and employee != '' ">
+            AND A.EMP_CHK = #{employee}
+        </if>
+    </select>
+
+    <select id="selectFilterPromo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT DISTINCT
+            A.PROMO_ID FILTER_PROMO_ID,
+            A.PROMO_CODE || '-' || A.PROMO_DESC FILTER_PROMO_NAME
+        FROM SAL0017D A
+        WHERE A.PROMO_SRV_MEM_PAC_ID = 9
+            AND A.PROMO_APP_TYPE_ID = '2290'
+            AND TO_CHAR( A.PROMO_DT_FROM, 'yyyymmdd') <= TO_CHAR(SYSDATE, 'yyyymmdd')
+            AND TO_CHAR(A.PROMO_DT_END, 'yyyymmdd') >= TO_CHAR(SYSDATE, 'yyyymmdd')
+            AND A.PROMO_STUS_ID = '1'
+        ]]>
+        <if test="employee != null and employee != ''">
+            AND A.EMP_CHK = #{employee}
+        </if>
+    </select>
+
+    <select id="selectGSTZeroRateLocation"  parameterType="Map" resultType="Integer">
+        SELECT
+            COUNT(-1) CNT
+        FROM SAL0001D A, SAL0023D B, SYS0064M C
+        WHERE 1=1
+            AND A.CUST_ADD_ID =  B.CUST_ADD_ID
+            AND B.AREA_ID = C.AREA_ID
+            AND C.GST_CHK =1
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
+    <select id="selectGSTEURCertificate"  parameterType="Map" resultType="Integer">
+        SELECT
+            COUNT(-1) CNT
+        FROM SAL0042D
+        WHERE EURC_SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+            AND  1 = EURC_STUS_CODE_ID
+    </select>
+
+    <select id="mPackageInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT
+            S.SRV_MEM_PAC_ID,
+            S.SRV_MEM_ITM_STK_ID,
+            S.SRV_MEM_ITM_PRIOD,
+            CASE WHEN (S.SRV_MEM_DUR IS NOT NULL) THEN S.SRV_MEM_DUR ELSE 0 END C1,
+            S.SRV_MEM_ITM_PRC,
+            S.SRV_MEM_ITM_PV
+        FROM (
+            SELECT
+                V.SRV_MEM_PAC_ID,
+                V.SRV_MEM_DUR,
+                M.SRV_MEM_ITM_STK_ID,
+                M.SRV_MEM_ITM_PRC,
+                M.SRV_MEM_ITM_PV,
+                M.SRV_MEM_ITM_PRIOD
+            FROM SAL0091M V
+            JOIN SAL0092M M
+                ON V.SRV_MEM_PAC_ID = M.SRV_MEM_PAC_ID
+                AND 1 = M.SRV_MEM_ITM_STUS_ID
+                AND M.SRV_MEM_ITM_STK_ID = (SELECT B.ITM_STK_ID FROM SAL0001D A, SAL0002D B WHERE A.SALES_ORD_ID = B.SALES_ORD_ID AND A.SALES_ORD_NO = #{ordNo})
+            WHERE V.SRV_MEM_PAC_ID = 9
+                AND ROWNUM <= 1
+        ) S
+        ]]>
+    </select>
+
+    <select id="getDfltPromo" parameterType="Map" resultType="Integer">
+        SELECT
+            CODE
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        AND CODE_NAME = #{codeName}
+    </select>
+
+    <select id="getTaxRate" parameterType="Map" resultType="Integer">
+      SELECT TAX_RATE
+      FROM FCM0007C
+      WHERE TAX_CODE = (SELECT PARAM_VAL
+                                     FROM SYS0098M
+                                     WHERE MODULE = 'PAYMENT'
+                                         AND SUB_MODULE = 'PAYMENT'
+                                         AND PARAM_CODE = 'PAY_TAX'
+                                         AND SYSDATE BETWEEN EFF_DT AND EXP_DT)
+    </select>
+
+    <resultMap id="svmFilterCharge" type="egovMap"></resultMap>
+    <select id="getSVMFilterCharge" parameterType="Map" statementType="CALLABLE">
+        <![CDATA[
+        {
+            call SP_GET_ORD_MBRSH_FILTER_CHRG (#{salesOrdId}, #{promoId}, '', #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=svmFilterCharge})
+        }
+        ]]>
+    </select>
+
+    <select id="getPromoDisc" parameterType="Map" resultType="egovMap">
+        SELECT
+            PROMO_PRC_PRCNT,
+            PROMO_DISC_TYPE,
+            PROMO_ADD_DISC_PRC
+        FROM SAL0017D
+        WHERE PROMO_ID = #{promoId}
+    </select>
+
+    <select id="getOrderCurrentBillMonth" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM (
+            SELECT
+                S.SALES_ORD_ID,
+                S.RENT_INST_NO,
+                TO_CHAR(S.RENT_INST_DT, 'yyyymmdd') RENT_INST_DT,
+                S.RENT_INST_TYPE_ID,
+                S.RENT_INST_AMT,
+                S.RENT_INST_INSERT_MONTH,
+                S.RENT_INST_INSERT_YEAR,
+                S.RENT_INST_ID,
+                TO_CHAR(SYSDATE,'yyyymm')||'01' NOW_DATE
+            FROM (
+                SELECT
+                    R.SALES_ORD_ID,
+                    R.RENT_INST_NO,
+                    R.RENT_INST_DT,
+                    R.RENT_INST_TYPE_ID,
+                    R.RENT_INST_AMT,
+                    R.RENT_INST_INSERT_MONTH,
+                    R.RENT_INST_INSERT_YEAR,
+                    R.RENT_INST_ID
+                FROM SAL0070D R
+                WHERE R.SALES_ORD_ID = #{salesOrdId}
+                <if test="RENT_INST_DT != null and RENT_INST_DT != ''">
+                    AND RENT_INST_DT = SYSDATE
+                </if>
+            ) S
+            ORDER BY S.RENT_INST_NO DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <resultMap id="OrdOtstnd" type="egovMap"></resultMap>
+    <select id="getOrdOtstnd" parameterType="Map" statementType="CALLABLE">
+        <![CDATA[
+        {
+            call SP_GET_ORD_OTSTND_INFO (#{salesOrdId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=OrdOtstnd})
+        }
+        ]]>
+    </select>
+
+    <select id="getOutrightMemLedge" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(ROUND(B.SRV_MEM_AMT, 2)), 0) AS AMT
+        FROM PAY0024D B
+        JOIN SAL0095D A
+            ON A.SRV_MEM_ID = B.SRV_MEM_ID
+        WHERE A.SRV_SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="getSMQDocNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            FN_GET_DOCNO(#{DOCNO}) DOCNO
+        FROM DUAL
+    </select>
+
+    <select id="getSAL0093D_SEQ" parameterType="Map" resultType="String">
+        SELECT
+            TO_CHAR(SAL0093D_SRV_MEM_QUOT_ID_SEQ.NEXTVAL)
+        FROM DUAL
+    </select>
+
+    <insert id="insertSal93D" parameterType="Map">
+        INSERT INTO SAL0093D
+        (
+            SRV_MEM_QUOT_ID ,
+            SRV_SALES_ORD_ID,
+            SRV_MEM_QUOT_NO,
+            SRV_MEM_PAC_ID,
+            SRV_MEM_PAC_NET_AMT,
+            SRV_MEM_PAC_TXS,
+            SRV_MEM_PAC_AMT,
+            SRV_MEM_BS_NET_AMT,
+            SRV_MEM_BS_TXS,
+            SRV_MEM_BS_AMT,
+            SRV_MEM_PV,
+            SRV_DUR,
+            SRV_REM,
+            SRV_QUOT_VAL_ID,
+            SRV_CRT_DT,
+            SRV_CRT_USER_ID,
+            SRV_QUOT_STUS_ID,
+            SRV_UPD_USER_ID,
+            SRV_UPD_DT,
+            SRV_MEM_BS12_AMT,
+            SRV_QUOT_CUST_CNT_ID,
+            SRV_MEM_QTY,
+            SRV_PROMO_ID,
+            SRV_SALES_MEM_ID,
+            SRV_MEM_ID,
+            SRV_ORD_STK_ID,
+            SRV_FREQ,
+            SRV_PAC_PROMO_ID,
+            EMP_CHK,
+            SRV_MEM_PAC_SST
+        ) VALUES (
+            #{sal93Seq},
+            #{srvSalesOrderId},
+            #{srvMemQuotNo},
+            #{srvMemPacId},
+            #{srvMemPacNetAmt},
+            #{srvMemPacTaxes},
+            #{srvMemPacAmt},
+            #{srvMemBSNetAmt},
+            #{srvMemBSTaxes},
+            #{srvMemBSAmt},
+            #{srvMemPv},
+            #{srvDuration},
+            #{srvRemark},
+            LAST_DAY(SYSDATE),
+            SYSDATE,
+            #{srvSalesMemId},
+            #{srvQuotStatusId},
+            #{srvSalesMemId},
+            SYSDATE,
+            #{srvMemBS12Amt},
+            #{srvQuotCustCntId},
+            #{srvMemQty},
+            #{srvPromoId},
+            (SELECT MEM_ID FROM SYS0047M A, ORG0001D B WHERE A.HR_CODE = B.MEM_CODE AND A.USER_ID = #{srvSalesMemId}),
+            #{srvMemId},
+            #{srvOrderStkId},
+            #{srvFreq},
+            #{srvPacPromoId},
+            #{empChk},
+            #{taxRate}
+        )
+    </insert>
+
+    <insert id="insertSal94D" parameterType="Map">
+        INSERT INTO SAL0094D
+        (
+            SRV_MEM_QUOT_FILTER_ID,
+            SRV_MEM_QUOT_ID,
+            STK_ID,
+            STK_PRIOD,
+            STK_LAST_CHNG_DT,
+            STK_FILTER_PRC,
+            STK_NET_AMT,
+            STK_TXS,
+            STK_CHRG_PRC
+        ) VALUES (
+            SAL0094D_SRV_MEM_QUOT_FILTER.NEXTVAL,
+            #{srvMemQuotFilterID},
+            #{stkID},
+            #{stkPeriod},
+            #{stkLastChangeDate},
+            #{stkFilterPrice},
+            #{stkNetAmt},
+            #{stkTaxes},
+            #{stkChargePrice}
+        )
+    </insert>
+
+    <select id="selectSmqDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            SRV_MEM_PAC_ID,
+            SRV_DUR/12 SRV_DUR,
+            CASE WHEN EMP_CHK = 1 THEN 'Yes' ELSE 'No' END EMP_CHK,
+            SRV_PAC_PROMO_ID,
+            SRV_PROMO_ID,
+            SRV_MEM_PAC_AMT,
+            SRV_MEM_PAC_TXS,
+            SRV_MEM_PAC_NET_AMT,
+            NVL(SRV_MEM_BS_AMT, 0) SRV_MEM_BS_AMT,
+            (NVL(SRV_MEM_PAC_AMT, 0) + NVL(SRV_MEM_BS_AMT, 0)) PAYMENT_AMT
+        FROM SAL0093D
+        WHERE SRV_MEM_QUOT_ID = #{svmQuotId}
+    </select>
+
+    <select id="selectPackageDesc" parameterType="Map" resultType="String">
+        SELECT
+            SRV_MEM_DESC
+        FROM SAL0091M
+        WHERE SRV_MEM_PAC_ID = #{srvMemPacId}
+    </select>
+
+    <select id="selectPackageInfoDesc" parameterType="Map" resultType="String">
+        SELECT
+            PROMO_CODE || ' - ' || PROMO_DESC
+        FROM SAL0017D
+        WHERE PROMO_ID = #{srvPacPromoId}
+            AND PROMO_TYPE_ID = '2282'
+            AND PROMO_APP_TYPE_ID = '2288'
+            AND PROMO_SRV_MEM_PAC_ID = '9'
+    </select>
+
+    <select id="selectFilterPromoDesc" parameterType="Map" resultType="String">
+        SELECT
+            A.PROMO_CODE || '-' || A.PROMO_DESC FILTER_PROMO_NAME
+        FROM SAL0017D A
+        WHERE A.PROMO_SRV_MEM_PAC_ID = 9
+            AND A.PROMO_APP_TYPE_ID = '2290'
+            AND PROMO_ID = #{srvPromoId}
+    </select>
+
+    <select id="selectSvmFilter" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.STK_CODE FILTER_CODE,
+            B.STK_DESC FILTER_DESC,
+            A.STK_PRIOD LIFE_PRIOD,
+            A.STK_FILTER_PRC ORI_PRC,
+            A.STK_CHRG_PRC PRC
+        FROM SAL0094D A
+        JOIN SYS0026M B
+        ON A.STK_ID = B.STK_ID
+        WHERE A.SRV_MEM_QUOT_ID = #{svmQuotId}
+    </select>
+
+    <update id="cancelSal93" parameterType="Map">
+        UPDATE SAL0093D
+        SET SRV_QUOT_STUS_ID = 8,
+            SRV_UPD_USER_ID = #{regId},
+            SRV_UPD_DT = SYSDATE
+        WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
+            AND SRV_QUOT_STUS_ID = 1
+    </update>
+
+    <update id="cancelSal298" parameterType="Map">
+        UPDATE SAL0093D
+        SET STUS = 21,
+            UPD_USER_ID = #{regId},
+            UPD_DT = SYSDATE
+        WHERE PSM_ID = #{psmId}
+            AND SRV_MEM_QUOT_ID = #{srvMemQuotId}
+            AND STUS = 1
+    </update>
+
+    <select id="selectFileGroupKey" resultType="int">
+        SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSYS0071D" parameterType="Map">
+        <selectKey keyProperty="atchFileId" resultType="int" order="BEFORE">
+            SELECT  SYS0071D_ATCH_FILE_ID_SEQ.NEXTVALFROM DUAL
+        </selectKey>
+        /* eSVMApi_SQL.xml :: insertSYS0071D */
+        INSERT INTO SYS0071D
+        (
+            ATCH_FILE_ID,
+            ATCH_FILE_NAME,
+            FILE_SUB_PATH,
+            PHYSICL_FILE_NAME,
+            FILE_EXTSN,
+            FILE_SIZE,
+            FILE_PASSWORD,
+            FILE_UNQ_KEY,
+            FILE_KEY_SEQ
+        ) VALUES (
+            #{atchFileId},
+            #{atchFileName},
+            #{fileSubPath},
+            #{physiclFileName},
+            #{fileExtsn},
+            #{fileSize},
+            #{filePassword},
+            #{fileUnqKey},
+            #{fileKeySeq}
+        )
+    </insert>
+
+    <insert id="insertSYS0070M" parameterType="Map">
+        /* eSVMApi_SQL.xml :: insertSYS0070M */
+        INSERT INTO SYS0070M
+        (
+            ATCH_FILE_GRP_ID
+            ATCH_FILE_ID
+            CHENAL_TYPE
+            CRT_USER_ID
+            CRT_DT
+            UPD_USER_ID
+            UPD_DT
+        ) VALUES (
+            #{atchFileGrpId}
+            #{atchFileId}
+            #{chenalType}
+            #{crtUserId}
+            SYSDATE
+            #{updUserId}
+            SYSDATE
+        )
+    </insert>
+
+    <select id="getSal298Seq" resultType="int">
+        SELECT SAL0298D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getPsmDocNo" resultType="String">
+        SELECT FN_GET_DOCNO('179') FROM DUAL
+    </select>
+
+    <insert id="insertSal298D" parameterType="Map">
+        INSERT INTO SAL0298D
+        (
+            PSM_ID,
+            PSM_NO,
+            SVM_QUOT_ID,
+            PSM_SALES_ORD_ID,
+            STUS,
+            STUS_PROGRESS,
+            ATCH_FILE_GRP_ID,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT
+        ) VALUES (
+            #{psmId},
+            #{psmNo},
+            #{srvMemQuotId},
+            #{salesOrdId},
+            1,
+            1,
+            #{atchFileGrpId},
+            #{regId},
+            SYSDATE,
+            #{regId},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateProgressStatusSal298D" parameterType="Map">
+            UPDATE SAL0298D SET
+	            UPD_USER_ID = #{regId},
+	            UPD_DT = SYSDATE,
+                STUS_PROGRESS = #{progressStatus}
+            WHERE PSM_ID = #{psmId}
+    </update>
+
+
+    <insert id="insertPay312D" parameterType="Map">
+        INSERT INTO PAY0312D
+        (
+            SVM_PAY_ID,
+            SRV_MEM_QUOT_ID,
+            PSM_ID,
+            SALES_ORD_NO,
+            PAY_MODE,
+            PAY_STUS_ID,
+            OTSTND_AMT,
+            PAY_AMT,
+            SLIP_NO,
+            ISSU_BANK_ID,
+            CHEQUE_DT,
+            CHEQUE_NO,
+            SMS_1,
+            SMS_2,
+            EMAIL_1,
+            EMAIL_2,
+            CARD_NO,
+            APPROVAL_NO,
+            CRC_NAME,
+            TRANSACTION_DATE,
+            EXPIRY_DATE,
+            CARD_MODE,
+            MERCHANT_BANK,
+            CARD_BRAND,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT
+        ) VALUES (
+            PAY0312D_ID_SEQ.NEXTVAL,
+            #{srvMemQuotId},
+            #{psmId},
+            #{salesOrdNo},
+            #{payMode},
+            1,
+            #{otstndAmt},
+            #{payAmt},
+            #{slipNo},
+            #{issuBankId},
+            #{chqDt},
+            #{chqNo},
+            #{sms1},
+            #{sms2},
+            #{email1},
+            #{email2},
+            #{cardNo},
+            #{approvalNo},
+            #{crcName},
+            #{transactionDate},
+            #{expiryDate},
+            #{cardMode},
+            #{merchantBank},
+            #{cardBrand},
+            #{regId},
+            SYSDATE,
+            #{regId},
+            SYSDATE
+        )
+    </insert>
+
+    <select id="getCustName" parameterType="Map" resultType="String">
+        SELECT
+            NVL(B.NAME, 'Valued Customers') CUSTNAME
+        FROM SAL0001D A
+        JOIN SAL0029D B
+            ON A.CUST_ID = B.CUST_ID
+        WHERE A.SALES_ORD_ID = #{salesOrdId}
+            AND B.STUS_CODE_ID = 1
+    </select>
+
+    <select id="getSmsTemplate" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'mobile.msg.esvm.payment'), '{1}', #{salesOrdNo}), '{2}', #{payAmt})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailTitle" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 13 AND MSG_TYPE_ID = 6507),'{1}', #{psmNo})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailDetails" parameterType="Map" resultType="egovMap">
+       SELECT
+            D.SALES_ORD_NO,
+            B.PSM_NO,
+            B.PSM_SRV_MEM_NO,
+            F.SRV_MEM_DESC PACKAGE_TYPE,
+            E.NAME CUST_NM,
+            C.SRV_DUR / 12 SUB_YEAR,
+            C.SRV_MEM_PAC_AMT PACKAGE_PRICE,
+            C.SRV_MEM_BS_AMT FILTER_PRICE,
+            A.PAY_AMT,
+            G.CODE_NAME PAY_MODE,
+            I.NAME COLLECTOR_NAME,
+            I.MEM_CODE COLLECTOR_CODE,
+            (
+                SELECT
+                    NVL (CA1.ADDR_DTL, ' ')  || ', ' ||
+                    NVL (CA1.STREET, ' ')  || ', ' ||
+                    NVL (MA1.AREA, ' ')  || ', ' ||
+                    NVL (MA1.POSTCODE, ' ')  || ', ' ||
+                    NVL (MA1.CITY, ' ')  || ', ' ||
+                    NVL (MA1.STATE, ' ')  || ', ' ||
+                    NVL (MA1.COUNTRY, ' ')
+                FROM SAL0001D SOM
+                JOIN SAL0045D I
+                    ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+                LEFT JOIN SAL0023D CA1
+                    ON CA1.CUST_ADD_ID = I.ADD_ID
+                LEFT JOIN SYS0064M MA1
+                    ON MA1.AREA_ID = CA1.AREA_ID
+                WHERE SOM.SALES_ORD_ID = D.SALES_ORD_ID
+            ) INST_ADDRESS,
+            TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') RECEIPT_DT
+        FROM PAY0312D A
+        JOIN SAL0298D B
+            ON A.PSM_ID = B.PSM_ID
+        JOIN SAL0093D C
+            ON A.SRV_MEM_QUOT_ID = C.SRV_MEM_QUOT_ID
+        JOIN SAL0001D D
+            ON C.SRV_SALES_ORD_ID = D.SALES_ORD_ID
+        JOIN SAL0029D E
+            ON D.CUST_ID = E.CUST_ID
+        JOIN SAL0091M F
+            ON C.SRV_MEM_PAC_ID = F.SRV_MEM_PAC_ID
+        JOIN SYS0013M G
+            ON A.PAY_MODE = G.CODE_ID
+        JOIN SYS0047M H
+            ON A.CRT_USER_ID = H.USER_ID
+        JOIN ORG0001D I
+            ON H.HR_CODE = I.MEM_CODE
+        WHERE A.SRV_MEM_QUOT_ID = #{srvMemQuotId}
+    </select>
+
+    <select id="selectPsmDetail" parameterType="Map" resultType="egovMap">
+    </select>
+
+  <select id="selectPSMList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectPSMList] */
+    SELECT A.PSM_ID,
+               A.PSM_NO,
+               B.SALES_ORD_NO,
+               A.SVM_QUOT_ID,
+               A.STUS,
+               CASE WHEN A.STUS = 1 THEN 'Active'
+                       WHEN A.STUS = 5 THEN 'Complete'
+                       WHEN A.STUS = 6 THEN  'Rejected'
+               END STUS_NAME,
+               TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') REQST_DT,
+               B.PAY_AMT TOTAL_AMT,
+               B.PAY_MODE,
+               A.ATCH_FILE_GRP_ID,
+               D.NAME CUST_NAME,
+               NVL(A.APPV_INSTRCT, 0) RESN_ID,
+               NVL((E.CODE || ' - ' || E.RESN_DESC), '') RESN,
+               NVL(A.APPV_REM, '-') APPV_REM,
+               --'['||F.USER_NAME||']'||  ' ' ||TO_CHAR(A.UPD_DT,'DD/MM/YYYY HH:MM AM') || ' -  ' || NVL(A.APPV_REM, '-') APPV_REM,
+               A.SA_REF,
+               TO_CHAR(F.USER_NAME) as UPD_BY,
+               TO_CHAR(A.UPD_DT, 'MM/DD/YY HH:MI:SS A.M.') AS UPD_DT
+    FROM SAL0298D A
+    JOIN PAY0312D B ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
+    JOIN SAL0001D C ON B.SALES_ORD_NO = C.SALES_ORD_NO
+    JOIN SAL0029D D ON C.CUST_ID = D.CUST_ID
+    LEFT JOIN SYS0032M E ON A.APPV_INSTRCT = E.RESN_ID
+    LEFT JOIN SYS0047M F ON A.UPD_USER_ID = F.USER_ID
+    WHERE A.CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+
+    <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+      AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+    </if>
+
+    <if test="selectType != null and selectType != '' ">
+      <choose>
+        <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+        </when>
+        <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(A.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
+        </when>
+        <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(A.STUS) = #{selectKeyword}
+        </when>
+      </choose>
+    </if>
+    ORDER BY A.SVM_QUOT_ID DESC
+  </select>
+
+    <select id="selectESvmAttachment" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ATCH_FILE_GRP_ID AS ATCH_FILE_GRP_ID,
+            B.ATCH_FILE_ID AS ATCH_FILE_ID,
+            B.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+            B.FILE_SUB_PATH AS FILE_SUB_PATH,
+            B.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+            B.FILE_EXTSN AS FILE_EXTSN,
+            B.FILE_KEY_SEQ AS FILE_KEY_SEQ
+        FROM SYS0070M A
+        INNER JOIN SYS0071D B
+            ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+        WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+
+    <delete id="deleteSYS0070M" parameterType="Map">
+        DELETE FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{eAtchFileGrpId}
+            AND ATCH_FILE_ID = #{atchFileId}
+    </delete>
+
+    <delete id="deleteSYS0071D" parameterType="Map">
+        DELETE FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </delete>
+
+    <select id="getNewUploads" parameterType="Integer" resultType="egovMap">
+        SELECT
+            ATCH_FILE_ID,
+            FILE_KEY_SEQ
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT
+                ATCH_FILE_ID
+            FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{curAtchFileGrpId}
+        )
+    </select>
+
+    <select id="getOldUploads" parameterType="Map" resultType="egovMap">
+        SELECT
+            ATCH_FILE_ID
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT
+                ATCH_FILE_ID
+            FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{eAtchFileGrpId}
+        )
+        AND FILE_KEY_SEQ = #{fileSeq}
+    </select>
+
+    <update id="updateSYS0071D" parameterType="Map">
+        UPDATE SYS0071D A
+        SET A.ATCH_FILE_NAME = #{atchFileName},
+            A.FILE_SUB_PATH = #{fileSubPath},
+            A.PHYSICL_FILE_NAME = #{physiclFileName},
+            A.FILE_EXTSN = #{fileExtsn},
+            A.FILE_SIZE = #{fileSize}
+        WHERE A.ATCH_FILE_ID = #{atchFileId}
+      </update>
+
+    <update id="updateSYS0070M" parameterType="Map">
+        UPDATE SYS0070M
+        SET ATCH_FILE_GRP_ID = #{eAtchFileGrpId},
+            UPD_DT = SYSDATE
+        WHERE ATCH_FILE_GRP_ID = #{nAtchFileGrpId}
+            AND ATCH_FILE_ID = #{nAtchFileId}
+    </update>
+
+    <select id="getMemberLevel" parameterType="Map" resultType="egovMap">
+        SELECT C.MEM_LVL AS MEM_LVL FROM GBSLCVD.SYS0047M A
+		INNER JOIN ORG0001D B
+		ON A.USER_NAME = B.MEM_CODE
+		INNER JOIN ORG0005D C
+		ON B.MEM_ID = C.MEM_ID
+		WHERE A.USER_NAME = #{regId}
+    </select>
+
+    <!-- CELESTE [S] SVM SUBSCRIPTION ELIGIBILITY -->
+    <select id="selectEomDt" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            A.SALES_ORD_NO,
+            B.ITM_STK_ID STK_ID,
+            TO_CHAR(C.EOS_DATE, 'YYYY-MM-DD') EOS_DATE,<!-- End of Sales -->
+            TO_CHAR(C.EOM_DATE, 'YYYY-MM-DD') EOM_DATE, <!-- End of Membership -->
+            A.APP_TYPE_ID APP_TYPE
+        FROM SAL0001D A
+        LEFT JOIN SAL0002D B
+            ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
+        WHERE A.STUS_CODE_ID IN ('1','4')
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
+    <select id="selectConfigEomDur" parameterType="Map" resultType="egovMap">
+        SELECT
+	    NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOS'), '0') SVM_MEM_EXP,
+	    NVL((SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'SALES' AND DISB = '0' AND PARAM_CODE = 'SVM_EOM'), '0') SVM_EOM
+	    FROM DUAL
+    </select>
+
+  <!-- <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
+    SELECT MAX(TO_CHAR(LAST_SRV_MEM_EXPR_DATE, 'YYYY-MM-DD')) AS SRV_MEM_EXPR_DT
+    FROM SAL1014V
+    WHERE ORD_ID =  #{salesOrdId}
+        GROUP BY ORD_ID
+  </select> -->
+
+  <select id="selectMembershipExpiryDt" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(MAX(MBRSH_EXPR_DT),'YYYY-MM-DD') AS SRV_MEM_EXPR_DT
+    FROM ( SELECT TO_DATE(A.MBRSH_EXPR_DT,'DD-MM-RRRR HH24:MI:SS') MBRSH_EXPR_DT
+               FROM SAL1003V A
+               LEFT JOIN SAL0091M B ON B.SRV_MEM_DESC = A.PAC_NAME AND SRV_MEM_PAC_ID  =  27
+               WHERE A.SALES_ORD_ID = #{salesOrdId}
+                   AND A.MBRSH_STUS_CODE = 'COM'
+                   AND B.SRV_MEM_PAC_ID IS NULL
+    )
+  </select>
+
+     <select id="getServicePacIdExist" parameterType="String" resultType="String">
+           SELECT CASE
+                        WHEN EXISTS (SELECT 1
+                                     FROM SAL0095D
+                                     WHERE SRV_MEM_PAC_ID = '9'
+                                     AND SRV_STUS_CODE_ID    <![CDATA[ <> ]]>  '8'
+                                     AND SRV_SALES_ORD_ID = #{salesOrdId})
+                        THEN 'Y'
+                        ELSE 'N'
+                    END AS PAC_EXIST
+            FROM DUAL
+       </select>
+    <!-- CELESTE [E] SVM SUBSCRIPTION ELIGIBILITY -->
+
+	  <select id="selectSystemConfigurationParamVal" parameterType="Map" resultType="egovMap">
+	  		SELECT PARAM_VAL
+	      FROM SYS0098M
+	      WHERE
+	      MODULE = #{module}
+	      AND SUB_MODULE = #{subModule}
+	      AND PARAM_CODE = #{paramCode}
+	      AND DISB = 0
+	  </select>
+
+    <select id="selectSalesPerson" parameterType="Map" resultType="egovMap">
+    	SELECT T1.MEM_ID
+    		,T1.MEM_CODE
+    		,T1.NAME
+    		,T1.NRIC
+    		,T1.MEM_TYPE
+    		,T2.CODE_NAME
+
+    	FROM ORG0001D T1
+    	LEFT JOIN SYS0013M T2
+    	ON T1.MEM_TYPE = T2.CODE_ID
+    	WHERE 1=1
+    	<if test='memId != null and memId !=""'>
+			AND T1.MEM_ID = #{memId}
+    	</if>
+    	<if test='memCode != null and memCode !=""'>
+			AND T1.MEM_CODE = #{memCode}
+    	</if>
+    	<if test='memType != null and !memType.isEmpty()'>
+			AND T1.MEM_TYPE IN
+			<foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+				#{item.paramVal, jdbcType=INTEGER}
+            </foreach>
+    	</if>
+    </select>
+
+    <select id="selectConfigurationSalesPerson" parameterType="Map" resultType="egovMap">
+       SELECT T2.MEM_ID
+             , T2.MEM_CODE
+             , T2.NAME
+             , T2.NRIC
+             , T2.MEM_TYPE
+             , T3.CODE_NAME
+             , T5.SALES_ORD_ID
+             , T5.SALES_ORD_NO
+             , MAX(T4.SRV_EXPR_DT) SRV_EXPR_DT
+      FROM SAL0090D T1
+      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
+      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
+      LEFT JOIN SAL0095D T4 ON T1.SRV_SO_ID = T4.SRV_SALES_ORD_ID
+      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
+      WHERE
+      T1.SRV_STUS_ID = 1
+      AND T4.SRV_STUS_CODE_ID = 4
+      <if test='salesOrdId != null and salesOrdId !=0'>
+                AND T5.SALES_ORD_ID = #{salesOrdId}
+      </if>
+      <if test='salesOrdNo != null and salesOrdNo !=""'>
+                AND T5.SALES_ORD_NO = #{salesOrdNo}
+      </if>
+      <if test='memId != null and memId !=0'>
+                AND T2.MEM_ID = #{memId}
+      </if>
+      <if test='memCode != null and memCode !=""'>
+                AND T2.MEM_CODE = #{memCode}
+      </if>
+      <if test='memType != null and !memType.isEmpty()'>
+      			AND T2.MEM_TYPE IN
+      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+                #{item.paramVal, jdbcType=INTEGER}
+      </foreach>
+      </if>
+       GROUP BY T2.MEM_ID, T2.MEM_CODE, T2.NAME, T2.NRIC, T2.MEM_TYPE,
+		T3.CODE_NAME, T5.SALES_ORD_ID, T5.SALES_ORD_NO
+    </select>
+
+    <select id="selectSvcExpire" parameterType="Map" resultType="egovMap">
+		    SELECT T.SRV_PRD_START_DT
+		             , T.SRV_PRD_START_DT_MMYY
+		             , T.SRV_PRD_START_DT_MMYY_ADD
+		             , T.SRV_PRD_EXPR_DT
+		             , T.SRV_PRD_EXPR_DT_MMYY
+		             , T.SRV_PRD_EXPR_DT_MMYY_ADD
+		             , T.EXTRADE_ALLOW_FLG
+		             , T.MONTH_EXPIRED
+		    FROM ( SELECT T1.SRV_START_DT SRV_PRD_START_DT
+		                        , TO_CHAR(T1.SRV_START_DT, 'MM/YY') SRV_PRD_START_DT_MMYY
+		                        , TO_CHAR(ADD_MONTHS(T1.SRV_START_DT, 1),'MM/YY') SRV_PRD_START_DT_MMYY_ADD
+		                        , T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
+		                        , TO_CHAR(T1.SRV_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
+		                        , TO_CHAR(ADD_MONTHS(T1.SRV_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
+		                        , CASE WHEN (TO_CHAR(SYSDATE, 'YYYYMM') >= TO_CHAR(ADD_MONTHS(SRV_EXPR_DT, 1), 'YYYYMM')) THEN 'Y' ELSE 'N' END EXTRADE_ALLOW_FLG
+		                        , MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(T1.SRV_EXPR_DT))) AS MONTH_EXPIRED
+		               FROM SAL0095D T1
+		               WHERE T1.SRV_SALES_ORD_ID = #{salesOrdId}
+		                  AND 4 = T1.SRV_STUS_CODE_ID
+		                  AND SRV_EXPR_DT IS NOT NULL
+		               ORDER BY T1.SRV_EXPR_DT DESC
+		    ) T WHERE ROWNUM &lt;= 1
+  	</select>
+
+  	<select id="checkActiveESvm" parameterType="Map" resultType="egovMap">
+        SELECT
+            COUNT(*) CNT
+        FROM SAL0298D S
+        JOIN SAL0001D A
+            ON S.PSM_SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE 1 = S.STUS
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+</mapper>

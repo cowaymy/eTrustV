@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.design.impl.ArtworkRequestMapper">
+    <select id="selectArtworkCategoryList" parameterType="Map" resultType="egovMap">
+        SELECT ARTWORK_CTGRY_ID CODE_ID , ARTWORK_CTGRY_CODE CODE , ARTWORK_CTGRY_DESC CODE_NAME  FROM MSC0002D
+	     WHERE 1 = 1
+	       <if test='grp == "cate"'>
+	           AND PARENT_CTGRY_ID = 0 
+	       </if>
+	       <if test='grp == "type"'>
+	           AND PARENT_CTGRY_ID <![CDATA[<>]]> 0
+	           <if test='cate != null and cate != "" '>
+                   AND PARENT_CTGRY_ID = #{cate}
+               </if> 
+           </if>
+	       AND ARTWORK_CTGRY_STUS_ID = 1
+    </select>
+    <select id="selectArtworkList" parameterType="Map" resultType="egovMap">
+    select m01.ARTWORK_APLCTN_ID       applicationid
+	     , m02.ARTWORK_CTGRY_ID        cateid 
+	     , m01.ARTWORK_MODE_ID         modeid
+	     , m02.ARTWORK_CTGRY_DESC      catedesc
+	     , m02d.ARTWORK_CTGRY_DESC     modedesc
+	     , m02.PARENT_CTGRY_ID         parentcateid
+	     , m01.ARTWORK_LANG_ID         langid
+	     , lang.CODE_DESC              langdesc
+	     , m01.ARTWORK_DMN_UOM         dmnuom
+	     , uom.code                    uomcode
+	     , m01.ARTWORK_DMN_LEN         dmnleng
+	     , m01.ARTWORK_DMN_WIDTH       dmnwidth
+	     , m01.ARTWORK_DMN_WIDTH_SD_L  dmnwidthsdl
+	     , m01.ARTWORK_DMN_LEN_SD_L    dmnlengsdl
+	     , m01.ARTWORK_DMN_WIDTH_SD_R  dmnwidthsdr
+	     , m01.ARTWORK_DMN_LEN_SD_R    dmnlengsdr
+	     , m01.ARTWORK_COLOR_TYPE_ID   colortypeid
+	     , color.code_desc             colordesc
+	     , m01.ARTWORK_SPEC            spec
+	     , m01.ARTWORK_REQSTER_ID      reqid
+	     , s47.USER_FULL_NAME          reqnm
+	     , m01.ARTWORK_REQST_DT        reqdt
+	     , m01.ARTWORK_REQST_DEPT_CODE reqdeptcd
+	     , m01.ARTWORK_REQST_ORG_CODE  reqorgcd
+	     , m01.ARTWORK_REQST_GRP_CODE  reqgrpcd
+	     , m01.ARTWORK_STUS_ID         statusid
+	     , s38.NAME                    statusnm
+	     , m01.ARTWORK_SD              artworksd
+	     , side.code_desc              sidedesc
+	     , m01.ARTWORK_MEDIUM_ID       mediumid
+	     , m01.ARTWORK_MEDIUM_DESC     mediumdesc
+	     , m01.ARTWORK_REM             rem
+	     , m01.ARTWORK_RESPNDER_ID     respid
+	     , m01.ARTWORK_REQSTER_EMAIL   reqeremail
+	     , m01.ARTWORK_RESPNS_DT       respdt
+	     , m01.ARTWORK_RESPNS_NOTE     respnote
+	     , m01.ARTWORK_REQST_SIZE_ID   reqsizeid
+	     , m03d.SIZE_DESC              sizedesc
+	     , m03d.SIZE_PAPER_WT          sizeppwt
+	     , m02.ARTWORK_ATTACH_IMG_LOC  attcimgloc
+	     , M02.ARTWORK_CTGRY_VER       catever
+	  from MSC0001D m01
+	     , MSC0002D m02 
+	     , MSC0002D m02d
+	     , MSC0003D m03
+	     , MSC0003D m03d
+	     , (select * from sys0013m where code_master_id = 104) lang
+	     , (select * from sys0013m where code_master_id = 101) uom
+	     , (select * from sys0013m where code_master_id = 106) side
+	     , (select * from sys0013m where code_master_id = 99) color
+	     , SYS0038M s38
+	     , SYS0047M s47
+	 where 1 = 1
+	   and m01.ARTWORK_CTGRY_ID  = m02.ARTWORK_CTGRY_ID
+	   and m01.ARTWORK_MODE_ID   = m02d.ARTWORK_CTGRY_ID
+	   and m01.ARTWORK_CTGRY_ID  = m03.SIZE_ARTWORK_CHLD_ID
+	   and m01.ARTWORK_REQST_SIZE_ID = m03d.SIZE_ID
+	   and m01.ARTWORK_LANG_ID   = lang.code_id
+	   and m01.ARTWORK_DMN_UOM   = uom.code_id
+	   and m01.ARTWORK_SD        = side.code_id
+	   and m01.ARTWORK_COLOR_TYPE_ID = color.code_id
+	   and m01.ARTWORK_STUS_ID   = s38.STUS_CODE_ID
+	   and m01.ARTWORK_REQSTER_ID = s47.USER_ID
+	   and m01.ARTWORK_APLCTN_ID <![CDATA[<>]]> 15
+	 ORDER BY ARTWORK_APLCTN_ID asc
+	</select>
+</mapper>

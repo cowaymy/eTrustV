@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.KeyinConfigMapper">
+	<select id="selectkeyinConfigList" parameterType="Map"
+		resultType="egovMap">
+        <![CDATA[
+			SELECT
+			    Project1.StkID AS StkID,
+			    Project1.StkCode AS StkCode,
+			    Project1.StkDesc AS StkDesc,
+			    Project1.StkCategoryID AS StkCategoryID,
+			    Project1.CodeName AS CodeName,
+			    Project1.StkTypeID AS StkTypeID,
+			    Project1.CodeName1 AS CodeName1,
+			    Project1.StatusCodeID AS StatusCodeID,
+			    project1.allow_sales,
+			    CASE WHEN project1.allow_sales = '1' THEN 'ALLOW SALES'
+                ELSE 'DISALLOW SALES'
+                END AS Allow_Sales_Status,
+                project1.name AS name,
+			    Project1.Name AS Name,
+			    Project1.IsSirim AS IsSirim,
+			    Project1.IsNCV AS IsNCV,
+			    Project1.serialchk AS serialchk,
+			    Project1.QtyPerCarton AS QtyPerCarton,
+			    Project1.Updator AS Updator,
+			    Project1.C1 AS C1,
+			    Project1.Updated AS Updated,
+			    Project1.NetWeight AS NetWeight,
+			    Project1.GrossWeight AS GrossWeight,
+			    Project1.MeasurementCBM AS MeasurementCBM,
+			    Project1.StkGrade AS StkGrade,
+			    Project1.BSPoint AS BSPoint,
+			    Project1.UnitValue AS UnitValue,
+			    Project1.StkOldCd as StkOldCd ,
+			    project1.stkexttype AS stkexttype,
+    			TO_CHAR(TO_DATE(project1.stklchdt,'YYYYMMDD'),'DD/MM/YYYY') stklchdt,
+    			project1.isstockaudit,
+    			project1.stk_size,
+    			project1.is_smo,
+    			project1.is_serial_replc,
+                Project1.C2 AS C2,
+			    Project1.C3 AS C3,
+			    Project1.C4 AS C4,
+			    Project1.C5 AS C5,
+			    Project1.C6 AS C6,
+			    Project1.C7 AS C7,
+			    Project1.C8 AS C8,
+			    Project1.C9 AS C9,
+			    Project1.C10 AS C10,
+			    Project1.C11 AS C11
+			    FROM (
+			SELECT stk.STK_ID AS StkID,
+			       stk.STK_CODE AS StkCode,
+			       stk.STK_DESC AS StkDesc,
+			       stk.STK_CTGRY_ID AS StkCategoryID,
+			       stk.STK_TYPE_ID AS StkTypeID,
+			       stk.STUS_CODE_ID AS StatusCodeID,
+			       stk.ALLOW_SALES,
+			       stk.IS_SIRIM AS IsSirim,
+			       stk.IS_NCV AS IsNCV,
+			       stk.SERIAL_CHK AS serialchk,
+			       stk.QTY_PER_CARTON AS QtyPerCarton,
+			       stk.UPD_USER_ID AS Updator,
+			       stk.UPD_DT AS Updated,
+			       stk.NET_WT AS NetWeight,
+			       stk.GROS_WT AS GrossWeight,
+			       stk.MEASURE_CBM AS MeasurementCBM,
+			       stk.STK_GRAD AS StkGrade,
+			       stk.BS_POINT AS BSPoint,
+			       stk.UNIT_VALU AS UnitValue,
+			       stk.STK_OLD_CODE AS StkOldCd,
+			       stk.stk_ext_type AS stkexttype,
+                   stk.stk_lch_dt AS stklchdt,
+                   stk.is_stock_audit AS isstockaudit,
+                   stk.stk_size,
+                   stk.is_smo,
+                   stk.is_serial_replc,
+                   (SELECT CODE_NAME
+			          FROM SYS0013M
+			         WHERE CODE_ID = stk.STK_CTGRY_ID)
+			          CodeName,
+			       (SELECT CODE_NAME
+			          FROM SYS0013M
+			         WHERE CODE_ID = stk.STK_TYPE_ID)
+			          CodeName1,
+			       (SELECT NAME
+			          FROM SYS0038M
+			         WHERE STUS_CODE_ID = stk.STUS_CODE_ID)
+			          Name,
+			       CASE WHEN (usr.USER_ID IS NOT NULL) THEN usr.USER_NAME ELSE 'N' END
+			          AS C1,
+                   (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=stk.UOM) C2,
+                   (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=stk.UOM) C3,
+			       CASE
+			          WHEN (61 = stk.STK_TYPE_ID)
+			          THEN
+			             CASE
+			                WHEN (sp1.AMT IS NOT NULL) THEN sp1.AMT
+			                ELSE CAST (0 AS FLOAT (53))
+			             END
+			          WHEN (sp2.AMT IS NOT NULL)
+			          THEN
+			             sp2.AMT
+			          ELSE
+			             CAST (0 AS FLOAT (53))
+			       END
+			          AS C4,
+			       CASE
+			          WHEN (stk.MASTER_STK_ID IS NOT NULL) THEN stk.MASTER_STK_ID
+			          ELSE 0
+			       END
+			          AS C5,
+			       CASE
+			          WHEN (stk.STK_COMM_AS IS NOT NULL) THEN stk.STK_COMM_AS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C6,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_AS IS NOT NULL) THEN stk.STK_COMM_OS_AS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C7,
+			       CASE
+			          WHEN (stk.STK_COMM_BS IS NOT NULL) THEN stk.STK_COMM_BS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C8,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_BS IS NOT NULL) THEN stk.STK_COMM_OS_BS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C9,
+			       CASE
+			          WHEN (stk.STK_COMM_INS IS NOT NULL) THEN stk.STK_COMM_INS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C10,
+			       CASE
+			          WHEN (stk.STK_COMM_OS_INS IS NOT NULL) THEN stk.STK_COMM_OS_INS
+			          ELSE CAST (0 AS FLOAT (53))
+			       END
+			          AS C11
+			  FROM SYS0026M stk
+			       LEFT OUTER JOIN SYS0047M usr
+			          ON usr.USER_ID = stk.UPD_USER_ID
+			       LEFT OUTER JOIN SAL0016M sp1
+			          ON     (67 = sp1.APP_TYPE_ID)
+			             AND (61 = stk.STK_TYPE_ID)
+			             AND (sp1.STK_ID = stk.STK_ID)
+			             AND (0 = sp1.MEM_PAC_ID)
+			             AND (1 = sp1.STUS_CODE_ID)
+			       LEFT OUTER JOIN SAL0016M sp2
+			          ON     (61 <> stk.STK_TYPE_ID)
+			             AND (sp2.STK_ID = stk.STK_ID)
+			             AND (0 = sp2.MEM_PAC_ID)
+			             AND (1 = sp2.STUS_CODE_ID)
+			    )  Project1
+			    ]]>
+		WHERE 1 = 1
+		AND StkTypeID = '61'
+		<if test="cateList != null and cateList != ''">
+			AND stkCategoryID in
+			<foreach item="item" collection="cateList" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="statList != null and statList != ''">
+			AND StatusCodeID in
+			<foreach item="item" collection="statList" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="stkNm !=null and stkNm != ''">
+			AND StkDesc like '%'|| #{stkNm} || '%'
+		</if>
+		<if test="stkCd !=null and stkCd != ''">
+			AND StkCode like #{stkCd} || '%'
+		</if>
+		ORDER BY StkCode
+	</select>
+
+
+	<update id="updateAllowSalesStatus" parameterType="Map">
+		UPDATE SYS0026M SET
+		ALLOW_SALES = #{alwSales} ,
+		UPD_DT = SYSDATE ,
+		UPD_USER_ID = #{updUserId}
+		WHERE STK_CODE = #{stkcode}
+		and STK_ID = #{stkid}
+	</update>
+
+</mapper>

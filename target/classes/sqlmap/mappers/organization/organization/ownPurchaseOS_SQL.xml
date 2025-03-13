@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.OwnPurchaseOSMapper">
+
+    <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_ID,
+            B.MEM_CODE,
+            C.LAST_ORG_CODE ORG_CODE,
+            C.LAST_GRP_CODE GRP_CODE,
+            C.LAST_DEPT_CODE DEPT_CODE
+        FROM SYS0047M A
+        JOIN ORG0001D B
+            ON A.HR_CODE = B.MEM_CODE
+        JOIN ORG0005D C
+            ON B.MEM_ID = C.MEM_ID
+        WHERE A.USER_ID = #{userId}
+    </select>
+
+    <select id="searchOwnPurchase" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            A.SALES_ORD_NO,
+            C.MEM_CODE,
+            C.NAME MEM_NAME,
+            NVL((
+                SELECT
+                    ROUND(SUM(RENT_AMT),2) OS
+                    FROM PAY0022D
+                 WHERE
+                    RENT_SO_ID = A.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID
+            ),0) OS,
+            ROUND(NVL(I.UN_BILL_AMT,0),2) UNBILL,
+            NVL((
+                SELECT
+                    ROUND(SUM(RENT_AMT),2) OS
+                    FROM PAY0022D
+                 WHERE
+                        RENT_SO_ID = A.SALES_ORD_ID
+                    AND RENT_DOC_TYPE_ID = 162
+                    GROUP BY RENT_SO_ID
+            ),0) PENALTY,
+            D.LAST_ORG_CODE ORG_CODE,
+            D.LAST_GRP_CODE GRP_CODE,
+            D.LAST_DEPT_CODE DEPT_CODE,
+            H.STK_DESC AS PRODUCT_NAME,
+            I.ACC_DEBT_SUB_OPNG_COLCT_TRGET AS TARGET,
+            J.CODE_NAME MEM_TYPE,
+            K.CODE MEM_STUS,
+            L.CODE ORD_STUS,
+            N.CODE PAY_MODE
+        FROM SAL0001D A
+        JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+        JOIN ORG0001D C  ON B.NRIC = C.NRIC AND C.STUS = 1
+        JOIN ORG0005D D ON C.MEM_ID = D.MEM_ID
+        JOIN SAL0002D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
+        LEFT JOIN SYS0026M H ON H.STK_ID = E.ITM_STK_ID
+        JOIN PAY0053S I ON I.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SYS0013M J ON J.CODE_ID = C.MEM_TYPE AND J.CODE_MASTER_ID = 1
+        LEFT JOIN SYS0038M K ON K.STUS_CODE_ID = C.STUS
+        LEFT JOIN SYS0038M L ON L.STUS_CODE_ID = A.STUS_CODE_ID
+        LEFT JOIN SAL0074D M ON M.SALES_ORD_ID = A.SALES_ORD_ID AND M.SVC_CNTRCT_ID = 0
+        LEFT JOIN SYS0013M N ON N.CODE_ID = M.MODE_ID
+<!--         LEFT JOIN (
+            SELECT
+                RENT_SO_ID,
+                SUM(RENT_AMT) OS
+            FROM PAY0022D
+            GROUP BY RENT_SO_ID
+        ) F　ON A.SALES_ORD_ID = F.RENT_SO_ID -->
+        JOIN SAL0071D G ON A.SALES_ORD_ID = G.SALES_ORD_ID AND G.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
+<!--        LEFT JOIN (
+            SELECT
+                RENT_SO_ID,
+                SUM(RENT_AMT) TOT_CHRG
+            FROM PAY0022D
+            WHERE RENT_DOC_TYPE_ID = 162
+            GROUP BY RENT_SO_ID
+        ) H　ON A.SALES_ORD_ID = H.RENT_SO_ID　 -->
+        LEFT JOIN SAL0149D I on I.SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE 1=1
+        AND A.APP_TYPE_ID = 66
+        <if test="staffOwnPurch == 'false'">
+            AND D.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="groupCode != null and groupCode != ''">
+            AND D.LAST_GRP_CODE = #{groupCode}
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND D.LAST_DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != ''">
+            AND C.MEM_CODE = #{memCode}
+        </if>
+        <if test="keyinMemTypeId != null ">
+        <choose>
+            <when test="keyinMemTypeId == 7284">
+              AND EXISTS (SELECT * FROM ORG0001D J WHERE J.NRIC = C.NRIC AND J.STUS = 3 AND J.TRM_REJOIN = 1)
+            </when>
+            <otherwise>
+              AND C.MEM_TYPE = #{keyinMemTypeId}
+            </otherwise>
+         </choose>
+        </if>
+        <if test="keyinOrdStusId != null and keyinOrdStusId != ''">
+            AND A.STUS_CODE_ID = #{keyinOrdStusId}
+        </if>
+        <if test="keyinMemStusId != null and keyinMemStusId != ''">
+            AND C.STUS = #{keyinMemStusId}
+        </if>
+        <if test="keyinPayModeId != null and keyinPayModeId != ''">
+            AND M.MODE_ID = #{keyinPayModeId}
+        </if>
+        ORDER BY C.MEM_CODE
+    </select>
+
+</mapper>

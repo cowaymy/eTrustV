@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.sms.impl.SmsMapper">
+
+
+<select id="selectLiveSmsList" parameterType="Map" resultType="EgovMap">
+SELECT
+    SMSENTRY.SMS_ID,
+    SMSENTRY.SMS_MSISDN,
+    SMSENTRY.SMS_MSG,
+    SMSENTRY.SMS_TYPE_ID,
+    SMSENTRY.SMS_PRIO,
+    SMSENTRY.SMS_REF_NO,
+    TO_CHAR(SMSENTRY.SMS_START_DT, 'DD-MM-YYYY') SMS_START_DT,
+    TO_CHAR(SMSENTRY.SMS_EXPR_DT, 'DD-MM-YYYY') SMS_EXPR_DT,
+    CASE WHEN SMSENTRY.SMS_STUS_ID = 0 THEN 21 ELSE SMSENTRY.SMS_STUS_ID END AS SMS_STATUS_ID,
+    NVL(STATUSCODE.NAME,'Failed') AS SMS_STATUS_CODE,
+    SMSENTRY.SMS_RETRY,
+    TO_CHAR(SMSENTRY.SMS_CRT_DT, 'DD-MM-YYYY') SMS_CRT_DT,
+    SMSENTRY.SMS_CRT_USER_ID,
+    CREATOR.USER_NAME,
+    SMSENTRY.SMS_BATCH_UPLOAD_ID
+FROM
+    MSC0015D SMSENTRY
+    LEFT JOIN SYS0038M STATUSCODE ON SMSENTRY.SMS_STUS_ID = STATUSCODE.STUS_CODE_ID
+    LEFT JOIN SYS0047M CREATOR ON SMSENTRY.SMS_CRT_USER_ID = CREATOR.USER_ID
+WHERE
+    1 = 1
+    <if test="smsPrio != null and smsPrio !=''">
+               AND SMSENTRY.SMS_PRIO = #{smsPrio}
+    </if>
+    <if test="searchMsisdn != null and searchMsisdn !=''">
+               AND  ( SMSENTRY.SMS_MSISDN = #{searchMsisdn})
+    </if>
+     <if test="searchRefNo != null and searchRefNo !=''">
+               AND  ( SMSENTRY.SMS_REF_NO = #{searchRefNo})
+    </if>
+    <if test="searchCreateUser != null and searchCreateUser !=''">
+               AND  ( CREATOR.USER_NAME LIKE '%'||UPPER(#{searchCreateUser})||'%')
+    </if>
+    <if test='cmbStatus != null and cmbStatus != ""'>
+                  AND SMSENTRY.SMS_STUS_ID IN
+                  <foreach item="item" collection="arrCmbStatus" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+    </if>
+    <if test="searchCrtStartDt != null and searchCrtStartDt != '' and searchCrtEndDt != null and searchCrtEndDt != '' ">
+           AND SMSENTRY.SMS_CRT_DT between to_date(#{searchCrtStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchCrtEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    <if test="searchExpStartDt != null and searchExpStartDt != '' and searchExpEndDt != null and searchExpEndDt != '' ">
+         AND SMSENTRY.SMS_EXPR_DT between to_date(#{searchExpStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchExpEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+        <if test="smsUploadId != null and smsUploadId !=''">
+               AND  ( SMSENTRY.SMS_BATCH_UPLOAD_ID = #{smsUploadId})
+    </if>
+    ORDER BY SMSENTRY.SMS_ID DESC
+</select>
+
+<select id="selectBulkSmsList" parameterType="Map" resultType="EgovMap">
+	SELECT
+		T1.SMS_UPLOAD_ID,
+		T1.SMS_UPLOAD_REF_NO,
+		TO_CHAR(T2.SMS_EXPR_DT, 'DD-MM-YYYY') SMS_EXPR_DT,
+		COUNT(T2.SMS_ID) TOTAL_SMS,
+		TO_CHAR(T1.SMS_UPLOAD_CRT_DT, 'DD-MM-YYYY') SMS_UPLOAD_CRT_DT,
+		T1.SMS_UPLOAD_CRT_USER_ID,
+		T3.USER_FULL_NAME
+	FROM MSC0014D T1
+	JOIN MSC0015D T2 ON T1.SMS_UPLOAD_ID = T2.SMS_BATCH_UPLOAD_ID
+	JOIN SYS0047M T3 ON T1.SMS_UPLOAD_CRT_USER_ID = T3.USER_ID
+	WHERE
+    1 = 1
+    AND ( T3.USER_ID NOT IN ('40784','207511'))
+    <if test="smsUploadId != null and smsUploadId !=''">
+               AND  ( T1.SMS_UPLOAD_ID = #{smsUploadId})
+    </if>
+    <if test="searchRefNo != null and searchRefNo !=''">
+               AND  ( T1.SMS_UPLOAD_REF_NO = #{searchRefNo})
+    </if>
+    <if test="searchCreateUser != null and searchCreateUser !=''">
+               AND  ( T3.USER_FULL_NAME LIKE '%'||UPPER(#{searchCreateUser})||'%')
+    </if>
+    <if test="searchCrtStartDt != null and searchCrtStartDt != '' and searchCrtEndDt != null and searchCrtEndDt != '' ">
+           AND T1.SMS_UPLOAD_CRT_DT between to_date(#{searchCrtStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchCrtEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    <if test="searchExpStartDt != null and searchExpStartDt != '' and searchExpEndDt != null and searchExpEndDt != '' ">
+         AND T2.SMS_EXPR_DT between to_date(#{searchExpStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchExpEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+	GROUP BY T1.SMS_UPLOAD_ID,T1.SMS_UPLOAD_REF_NO,TO_CHAR(T2.SMS_EXPR_DT,'DD-MM-YYYY'),TO_CHAR(T1.SMS_UPLOAD_CRT_DT,'DD-MM-YYYY'),T1.SMS_UPLOAD_CRT_USER_ID,T3.USER_FULL_NAME
+    ORDER BY T1.SMS_UPLOAD_ID DESC
+</select>
+
+<select id="selectBulkSmsListException" parameterType="Map" resultType="EgovMap">
+    SELECT
+        T1.SMS_UPLOAD_ID,
+        T1.SMS_UPLOAD_REF_NO,
+        TO_CHAR(T2.SMS_EXPR_DT, 'DD-MM-YYYY') SMS_EXPR_DT,
+        COUNT(T2.SMS_ID) TOTAL_SMS,
+        TO_CHAR(T1.SMS_UPLOAD_CRT_DT, 'DD-MM-YYYY') SMS_UPLOAD_CRT_DT,
+        T1.SMS_UPLOAD_CRT_USER_ID,
+        T3.USER_FULL_NAME
+    FROM MSC0014D T1
+    JOIN MSC0015D T2 ON T1.SMS_UPLOAD_ID = T2.SMS_BATCH_UPLOAD_ID
+    JOIN SYS0047M T3 ON T1.SMS_UPLOAD_CRT_USER_ID = T3.USER_ID
+    WHERE
+    1 = 1
+    <if test="smsUploadId != null and smsUploadId !=''">
+               AND  ( T1.SMS_UPLOAD_ID = #{smsUploadId})
+    </if>
+    <if test="searchRefNo != null and searchRefNo !=''">
+               AND  ( T1.SMS_UPLOAD_REF_NO = #{searchRefNo})
+    </if>
+    <if test="searchCreateUser != null and searchCreateUser !=''">
+               AND  ( T3.USER_FULL_NAME LIKE '%'||UPPER(#{searchCreateUser})||'%')
+    </if>
+    <if test="searchCrtStartDt != null and searchCrtStartDt != '' and searchCrtEndDt != null and searchCrtEndDt != '' ">
+           AND T1.SMS_UPLOAD_CRT_DT between to_date(#{searchCrtStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchCrtEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    <if test="searchExpStartDt != null and searchExpStartDt != '' and searchExpEndDt != null and searchExpEndDt != '' ">
+         AND T2.SMS_EXPR_DT between to_date(#{searchExpStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchExpEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    GROUP BY T1.SMS_UPLOAD_ID,T1.SMS_UPLOAD_REF_NO,TO_CHAR(T2.SMS_EXPR_DT,'DD-MM-YYYY'),TO_CHAR(T1.SMS_UPLOAD_CRT_DT,'DD-MM-YYYY'),T1.SMS_UPLOAD_CRT_USER_ID,T3.USER_FULL_NAME
+    ORDER BY T1.SMS_UPLOAD_ID DESC
+</select>
+
+<insert id="insertSmsView" parameterType="smsVO">
+      <!-- <selectKey keyProperty="cnvrId" resultType="Integer" order="BEFORE">
+        SELECT SAL0013D_CNVR_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey> -->
+	INSERT
+	INTO MSC0046T
+	( SMS_MSG
+    , SMS_MSISDN
+	, SMS_TYPE_ID
+	, SMS_PRIO
+	, SMS_REF_NO
+	, SMS_BATCH_UPLOAD_ID
+	, SMS_REM
+	, SMS_START_DT
+	, SMS_EXPR_DT
+	, SMS_STUS_ID
+	, SMS_RETRY
+	, SMS_CRT_DT
+	, SMS_CRT_USER_ID
+	, SMS_UPD_DT
+	, SMS_UPD_USER_ID
+	, SMS_VENDOR_ID
+	)
+	VALUES
+	( #{message}
+	, #{mobile}
+	, #{smsType}
+	, #{priority}
+	, #{refNo}
+	, 0
+	, #{remark}
+	, SYSDATE
+	, SYSDATE+1
+	, #{stusId}
+	, #{retryNo}
+	, SYSDATE
+	, #{userId}
+	, SYSDATE
+	, #{userId}
+	, #{vendorId}
+	)
+    </insert>
+
+    <update id="deleteSmsTemp" parameterType="Map">
+        DELETE FROM MSC0046T
+    </update>
+
+    <select id="selectBatchSmsList" parameterType="Map" resultType="EgovMap">
+    SELECT
+		SMS_MSG ,
+		SMS_MSISDN ,
+		SMS_TYPE_ID ,
+		SMS_PRIO ,
+		SMS_REF_NO ,
+		SMS_BATCH_UPLOAD_ID ,
+		SMS_REM ,
+		SMS_START_DT ,
+		SMS_EXPR_DT ,
+		SMS_STUS_ID ,
+		SMS_RETRY ,
+		SMS_CRT_DT ,
+		SMS_CRT_USER_ID ,
+		SMS_UPD_DT ,
+		SMS_UPD_USER_ID ,
+		SMS_VENDOR_ID
+	FROM MSC0046T
+    </select>
+
+<insert id="insertBatchSmsItem" parameterType="map">
+	    INSERT INTO msc0015d
+			( sms_id
+   			, sms_msg
+			, sms_msisdn
+			, sms_type_id
+			, sms_prio
+			, sms_ref_no
+			, sms_batch_upload_id
+			, sms_rem
+			, sms_start_dt
+			, sms_expr_dt
+			, sms_stus_id
+			, sms_retry
+			, sms_crt_dt
+			, sms_crt_user_id
+			, sms_upd_dt
+			, sms_upd_user_id
+			, sms_vendor_id)
+	    SELECT
+			MSC0015D_SEQ.NEXTVAL
+			, SMS_MSG
+			, SMS_MSISDN
+			, SMS_TYPE_ID
+			, SMS_PRIO
+			, SMS_REF_NO
+			, #{batchUploadId}
+			, SMS_REM
+			, SMS_START_DT
+			, SMS_EXPR_DT
+			, SMS_STUS_ID
+			, SMS_RETRY
+			, SMS_CRT_DT
+			, SMS_CRT_USER_ID
+			, SMS_UPD_DT
+			, SMS_UPD_USER_ID
+			, SMS_VENDOR_ID
+		FROM MSC0046T
+    </insert>
+
+    <select id="getSmsUploadId" parameterType="int" resultType="int">
+        select MSC0014D_SEQ.NEXTVAL from DUAL
+    </select>
+
+    <select id="selectDocNo" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO ELSE '' END C1  ,
+               CASE WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX ELSE '' END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <update id="updateDocNo" parameterType="Map">
+     <![CDATA[UPDATE SYS0022C SET DOC_NO = #{nextDocNo} WHERE  ( DOC_NO_ID = #{docNoId} ) ]]>
+    </update>
+
+    <insert id="insertBatchSms" parameterType="Map">
+        INSERT INTO MSC0014D values
+        (#{batchUploadId},#{smsUploadRefNo},#{creator},SYSDATE)
+    </insert>
+
+    <select id="selectEnrolmentFilter" parameterType="Map" resultType="EgovMap">
+        SELECT 1 as CODE_ID, '1' as CODE, 'True (reject with date)' as CODE_NAME, 'True (reject with date)' as DESCRIPTION FROM DUAL
+        UNION ALL
+        SELECT 2 as CODE_ID, '2' as CODE, 'False (no reject date)' as CODE_NAME, 'False (no reject date)' as DESCRIPTION FROM DUAL
+    </select>
+
+
+    <insert id="insertSmsViewBulk" parameterType="java.util.List" >
+        INSERT INTO MSC0046T
+    ( SMS_MSG, SMS_MSISDN, SMS_TYPE_ID, SMS_PRIO, SMS_REF_NO
+    , SMS_BATCH_UPLOAD_ID, SMS_REM, SMS_START_DT, SMS_EXPR_DT, SMS_STUS_ID
+    , SMS_RETRY, SMS_CRT_DT, SMS_CRT_USER_ID, SMS_UPD_DT, SMS_UPD_USER_ID, SMS_VENDOR_ID)
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+          #{item.msg}
+        , #{item.msisdn}
+	    , #{item.smsType}
+	    , #{item.priority}
+	    , #{item.ordNo}
+	    , 0
+	    , #{item.remark}
+	    , SYSDATE
+	    , SYSDATE+1
+	    , #{item.stusId}
+	    , #{item.retryNo}
+	    , SYSDATE
+	    , #{item.userId}
+	    , SYSDATE
+	    , #{item.userId}
+	    , #{item.vendorId}
+        FROM DUAL
+        </foreach>
+    </insert>
+</mapper>

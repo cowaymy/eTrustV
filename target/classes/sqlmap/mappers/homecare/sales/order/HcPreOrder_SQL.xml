@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcPreOrderMapper">
+
+    <!-- Search Homecare Pre OrderList -->
+    <select id="selectHcPreOrderList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcPreOrderMapper.selectHcPreOrderList */
+        SELECT T2.CODE_NAME AS CHANNEL
+                 , T1.SOF_NO
+                 , T3.CODE_NAME AS APP_TYPE
+                 , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
+                 , TO_CHAR(T1.REQST_DT, 'HH:MI:SS AM') AS REQUEST_TM
+                 , T19.CODE || ' ' || T19.NAME AS DT_BRANCH
+                 , T4.STK_ID AS STK_ID
+                 , T4.STK_DESC AS PRODUCT
+                 , T14.PROMO_CODE AS PROMO_CODE
+                 , T14.PROMO_DESC AS PROMO_DESC
+                 , T5.NAME AS CUST_NM
+                 , T6.CODE_NAME AS CUST_TYPE
+                 , T5.NRIC
+                 , T7.USER_NAME CRT_NAME
+                 , TO_CHAR(T1.UPD_DT, 'DD/MM/YYYY HH:MI:SS AM') || ' (' || T10.USER_NAME || ')' LAST_UPD
+                 , T8.NAME AS STUS_NAME
+                 , T1.STUS_ID
+                 , T1.PRE_ORD_ID
+                 , T20.REM1
+                 , T20.REM2
+                 , CASE
+                    WHEN ( T17.mem_type =  2) THEN 'Cody'
+                    WHEN ( T17.mem_type =  1) THEN 'HP'
+                    WHEN ( T17.mem_type =  7) THEN 'HT'
+                   ELSE ''
+                    END SALES_USER_ID
+                 , T9.Org_Code
+                 , T9.Grp_Code
+                 , T9.Dept_Code
+                 , T11.SALES_ORD_NO
+                 , T13.AREA
+                 , T13.SO_BRNCH_CODE
+                 , T12.AREA_ID
+                 <!-- , T14.PV_MONTH
+                 , T14.PV_YEAR
+                 , T14.PROMO_CODE
+                 , T14.PROMO_DESC
+                 , T14.SALES_USER_ID
+                 , T14.HP_NAME
+                 , T14.ORG_CODE
+                 , T14.GRP_CODE
+                 , T14.DEPT_CODE -->
+                 , DECODE(DOC.DOC_SO_ID,NULL,'N','Y') DOC_SUBMIT
+                 , BRNCH.CODE SUBMIT_BRANCH
+                 , BRNCH.NAME BRANCH_LOCATION
+                 , T16.BNDL_NO
+                 --, TO_CHAR(T1.UPD_DT,'YYYY/MM/DD HH24:MI:SS') UPD_DT
+                 , TO_CHAR(T1.UPD_DT,'YYYYMMDDHH24MISS') UPD_DT
+                 ,T18.CODE || ' - ' || T18.NAME BRANCH_NAME
+                 , RGN.CODE_NAME REGION_NAME
+                 ,T13.STATE
+                 , CASE
+                    WHEN ( SYC.BLCK_AREA_GRP_ID = T13.BLCK_AREA_GRP_ID ) THEN 'Yes'
+                   ELSE 'No'
+                    END INST_STATUS
+         FROM SAL0213M T1
+    JOIN SYS0013M T2   ON T2.CODE = T1.CHNNL AND T2.CODE_MASTER_ID = 350
+    JOIN SYS0013M T3   ON T3.CODE_ID = T1.APP_TYPE_ID AND T3.CODE_MASTER_ID = 10
+    JOIN SYS0026M T4   ON T4.STK_ID = T1.ITM_STK_ID AND GET_HOMECARE_FLAG_YN(t4.stk_ctgry_id) = 1
+    JOIN SAL0029D T5   ON T5.CUST_ID = T1.CUST_ID
+    LEFT JOIN SYS0013M T6   ON T6.CODE_ID = T5.TYPE_ID AND T6.CODE_MASTER_ID = 8
+    LEFT JOIN SYS0047M T7   ON T7.USER_ID = T1.CRT_USER_ID
+    LEFT JOIN SYS0038M T8   ON T8.STUS_CODE_ID = T1.STUS_ID
+    LEFT JOIN ORG0001D T17 ON T17.MEM_CODE = T1.MEM_CODE
+    LEFT JOIN ORG1001V T9 ON T9.MEM_ID = T17.MEM_ID
+    LEFT JOIN SYS0047M T10  ON T10.USER_ID = T1.UPD_USER_ID
+    LEFT JOIN SAL0001D T11  ON T1.SALES_ORD_ID = T11.SALES_ORD_ID
+    LEFT JOIN SAL0023D T12  ON T12.CUST_ADD_ID = T1.INST_ADD_ID
+    LEFT JOIN SYS0064M T13 ON T13.AREA_ID = T12.AREA_ID
+    LEFT JOIN SAL0017D T14 ON T14.PROMO_ID = T1.PROMO_ID
+    <!-- LEFT JOIN REP0011S T14  ON T14.ORD_NO = T11.SALES_ORD_NO -->
+    <!-- LEFT JOIN ( SELECT DOC.DOC_SO_ID ,BRNCH.CODE SUBMIT_BRANCH, BRNCH.NAME BRANCH_LOCATION
+                      FROM ORG0010D DOC
+                        JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
+                     WHERE DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1
+                   ) T15 ON T15.DOC_SO_ID = T11.SALES_ORD_ID -->
+    LEFT JOIN ORG0010D DOC ON DOC.DOC_SO_ID = T11.SALES_ORD_ID AND DOC.DOC_TYPE_ID = 3198 AND DOC.STUS_ID = 1
+    LEFT JOIN SYS0005M BRNCH ON DOC.DOC_SUB_BRNCH_ID = BRNCH.BRNCH_ID
+    LEFT JOIN HMC0011D T16 ON ORD_SEQ_NO = T1.BNDL_ID
+    LEFT JOIN SYS0005M T18 ON T18.BRNCH_ID = T17.BRNCH
+    LEFT JOIN SYS0005M T19 ON T19.CODE = CASE WHEN STK_CTGRY_ID IN (7233,7240,7237,7241) THEN T13.AC_BRNCH_CODE  ELSE T13.DT_BRNCH_CODE END AND T19.STUS_ID = 1
+    LEFT JOIN SYS0013M RGN   ON RGN.CODE_ID = T18.REGN_ID
+    LEFT JOIN SAL0302D T20 ON T20.PRE_ORD_ID = T1.PRE_ORD_ID AND T20.FAIL_REM_ID = (SELECT MAX(FAIL_REM_ID) FROM SAL0302D WHERE PRE_ORD_ID = T20.PRE_ORD_ID)
+    LEFT JOIN SYS0121D SYC ON SYC.BLCK_AREA_GRP_ID = T13.BLCK_AREA_GRP_ID AND SYC.CAT_CODE_ID = T4.STK_CTGRY_ID
+    WHERE 1=1
+        <if test='_memCode != null and _memCode != ""'>
+            AND T1.MEM_CODE = #{_memCode}
+        </if>
+        <if test='arrAppType != null and arrAppType != ""'>
+            AND T1.APP_TYPE_ID IN
+            <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+        <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
+            AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')+1
+        </if>
+        <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
+            AND T8.CODE IN
+            <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
+            AND T1.KEYIN_BRNCH_ID IN
+            <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test='_nric != null and _nric != ""'>
+            AND T5.NRIC = #{_nric}
+        </if>
+        <if test='_sofNo != null and _sofNo != ""'>
+            AND T1.SOF_NO = #{_sofNo}
+        </if>
+        <if test='arrCustType != null and arrCustType != ""'>
+            AND T5.TYPE_ID IN
+            <foreach item="item" collection="arrCustType" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test='_name != null and _name != ""'>
+            AND T5.NAME LIKE #{_name}||'%'
+        </if>
+        <if test="orgCode != '' ">
+            AND T9.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != '' ">
+            AND T9.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != '' ">
+            AND T9.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="_ordNo != '' ">
+           AND T11.SALES_ORD_NO = #{_ordNo}
+         </if>
+         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
+           AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
+         </if>
+         <if test='pdpaMonth != null and pdpaMonth != 0'>
+		   AND T1.REQST_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+         </if>
+         <if test='arrOrdProudctList != null and arrOrdProudctList != ""'>
+          <!--   AND T4.STK_ID  = #{ordProudctList} -->
+           AND T4.STK_ID  IN
+            <foreach item="item" collection="arrOrdProudctList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+         </if>
+        <if test='bndlNo != null and bndlNo != ""'>
+            AND UPPER(T16.BNDL_NO) = UPPER(#{bndlNo})
+        </if>
+        <if test='memType != null and memType != ""'>
+            AND T7.USER_TYPE_ID = #{memType}
+        </if>
+       <if test='arrDtBranch != null and arrDtBranch != ""'>
+           AND T19.BRNCH_ID IN
+            <foreach item="item" collection="arrDtBranch" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+         </if>
+         <if test='entryPoint != null and entryPoint != ""'>
+            AND T1.CHNNL = #{entryPoint}
+         </if>
+         <if test='promoCode != null and promoCode != ""'>
+             AND T14.PROMO_CODE = #{promoCode}
+         </if>
+       ORDER BY T1.PRE_ORD_ID ASC
+    </select>
+
+    <!-- Homecare Pre Order 정보 조회(매핑테이블 조회) -->
+    <select id="selectHcPreOrderInfo" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcPreOrderMapper.selectHcPreOrderInfo */
+        SELECT H1.ORD_SEQ_NO
+                 , H1.CUST_ID
+                 , H1.SALES_DT
+                 , TO_CHAR(H1.SALES_DT, 'MM/dd/YYYY') AS SALES_DT_STR
+                 , H1.MAT_PRE_ORD_ID
+                 , H1.FRA_PRE_ORD_ID
+                 , DECODE(#{preOrdId}, H1.FRA_PRE_ORD_ID, H1.MAT_PRE_ORD_ID, H1.MAT_PRE_ORD_ID, H1.FRA_PRE_ORD_ID) AS ANO_PRE_ORD_ID
+                 , (SELECT SYS2.CODE FROM SYS0026M SYS1, SYS0013M SYS2 WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID
+                      AND SYS1.STK_ID = T1.ITM_STK_ID)  AS ORD_CTGRY_CD
+                 , T1.CW_STORE_ID
+         FROM HMC0011D H1
+                 , SAL0213M T1
+
+        WHERE T1.PRE_ORD_ID = #{preOrdId}
+           AND (H1.MAT_PRE_ORD_ID = #{preOrdId} OR H1.FRA_PRE_ORD_ID = #{preOrdId})
+    </select>
+
+    <!-- Update(Fail Status) - Homecare Pre Order -->
+    <update id="updateHcPreOrderFailStatus" parameterType="Map">
+        UPDATE SAL0213M SET
+               STUS_ID                  = #{stusId}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+             , REM1                      = #{failCode}
+             , REM2                      = #{remark}
+         WHERE PRE_ORD_ID        = #{preOrdId}
+    </update>
+
+</mapper>

@@ -1,0 +1,1862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderCancelMapper">
+  <!--
+    CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+    <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+     resultMap="clobMap" 을 사용해야 함.
+  -->
+
+  <select id="orderCancellationList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+         SELECT A.REQ_ID REQ_ID ,
+					A.REQ_NO REQ_NO ,
+					A.ORD_ID ORD_ID ,
+					A.REQ_STUS_ID REQ_STUS_ID ,
+					A.REQ_STUS_CODE REQ_STUS_CODE ,
+					A.REQ_STUS_NAME REQ_STUS_NAME ,
+					A.REQ_RESN_ID REQ_RESN_ID ,
+					A.REQ_RESN_CODE REQ_RESN_CODE ,
+					A.REQ_RESN_DESC REQ_RESN_DESC ,
+					A.PREV_CALL_ENTRY_ID PREV_CALL ,
+					A.CALL_ENTRY_ID CALL_ENTRY_ID ,
+					A.REQ_STAGE_ID REQ_STAGE_ID ,
+					A.REQ_STAGE REQ_STAGE ,
+					A.STOCK_ID STOCK_ID ,
+					A.STOCK_CODE STOCK_CODE ,
+					A.STOCK_NAME STOCK_NAME ,
+					A.CRT_USER_ID_ID CRT_USER_ID_ID ,
+					A.CRT_USER_ID CRT_USER_ID ,
+					A.UPD_USER_ID_ID UPD_USER_ID_ID ,
+					A.UPD_USER_ID UPD_USER_ID ,
+					A.APP_TYPE_ID APP_TYPE_ID ,
+					A.APP_TYPE_CODE APP_TYPE_CODE ,
+					A.APP_TYPE_NAME APP_TYPE_NAME ,
+					A.ORD_AMT ORD_AMT ,
+					A.ORD_PV ORD_PV ,
+					A.ORD_RENT_AMT ORD_RENT_AMT ,
+					A.ORD_OTSTND ORD_OTSTND ,
+					A.PNALTY_AMT PNALTY_AMT ,
+					A.ADJ_AMT ADJ_AMT ,
+					A.GRAND_TOT GRAND_TOT ,
+					A.OBLIGT_MTH OBLIGT_MTH ,
+					A.USED_MTH USED_MTH ,
+					A.IS_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD ,
+					A.REQSTER_ID REQSTER_ID ,
+					A.REQSTER REQSTER ,
+					A.CALL_STUS_ID CALL_STUS_ID ,
+					A.CALL_STUS_CODE CALL_STUS_CODE ,
+					A.CALL_STUS_NAME CALL_STUS_NAME ,
+					A.CUST_ID CUST_ID ,
+					A.CUST_NAME CUST_NAME ,
+					A.CUST_IC CUST_IC ,
+					A.ORD_NO ORD_NO ,
+					A.REQ_REM REQ_REM ,
+					A.BANK_ACC BANK_ACC ,
+					A.ISS_BANK ISS_BANK ,
+					A.ACC_NAME ACC_NAME ,
+					A.ATTACH ATTACH ,
+					CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
+					   THEN A.ACTUAL_CANCL_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END ACTUAL_CANCL_DT ,
+					CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
+					   THEN A.APP_RETN_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END APP_RETN_DT ,
+					CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
+					   THEN A.CALL_RECALL_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END CALL_RECALL_DT ,
+					CASE WHEN ( A.CRT_DT IS NOT NULL )
+					   THEN A.CRT_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END CRT_DT ,
+					CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
+					   THEN A.DSC_BRNCH_ID
+					ELSE 0 END DSC_BRNCH_ID ,
+					CASE WHEN ( A.UPD_DT IS NOT NULL )
+					   THEN A.UPD_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END UPD_DT,
+					A.TYPE_ID,
+					A.DOC_ID,
+					A.REF_ID,
+					(   SELECT CODE
+    					FROM SYS0038M
+    					WHERE STUS_CODE_ID = A.RSO_STUS
+					) RSO_STUS,
+					A.PRD_RTN_LST_UPD,
+					CASE WHEN ( A.APP_DT IS NOT NULL )
+					   THEN A.APP_DT
+					ELSE TO_DATE('01/01/1900', 'DD/MM/YYYY') END APP_DT,
+					A.ASSIGN_CT,
+					A.PARTNER_CODE,
+					A.RCD_TMS,
+					B.CODE AS DSC ,
+					A.ATCH_FILE_GRP_ID ,
+					A.ATTCHMENT_DOWNLOAD ,
+					A.FILE_SUB_PATH ,
+					A.ATCH_FILE_NAME ,
+					A.PHYSICL_FILE_NAME,
+					A.RESULT_REP_EMAIL_NO,
+					A.EMAIL_SENT_COUNT,
+                    A.SO_REQ_FOLLOW_UP,
+                    A.FOLLOW_UP_PIC,
+                    A.KEYIN_DT
+					FROM (
+						SELECT  V.REQ_ID ,
+            						V.REQ_NO ,
+            						V.ORD_ID ,
+            						V.REQ_STUS_ID ,
+            						V.REQ_STUS_CODE ,
+            						V.REQ_STUS_NAME ,
+            						V.REQ_RESN_ID ,
+            						V.REQ_RESN_CODE ,
+            						V.REQ_RESN_DESC ,
+            						V.PREV_CALL_ENTRY_ID ,
+            						V.CALL_ENTRY_ID ,
+            						V.REQ_STAGE_ID ,
+            						V.REQ_STAGE ,
+            						V.STOCK_ID ,
+            						V.STOCK_CODE ,
+            						V.STOCK_NAME ,
+            						V.CRT_DT ,
+            						V.CRT_USER_ID_ID ,
+            						V.CRT_USER_ID ,
+            						V.UPD_DT ,
+            						V.UPD_USER_ID_ID ,
+            						V.UPD_USER_ID ,
+            						V.APP_TYPE_ID ,
+            						V.APP_TYPE_CODE ,
+            						V.APP_TYPE_NAME ,
+            						V.ORD_AMT ,
+            						V.ORD_PV ,
+            						V.ORD_RENT_AMT ,
+            						V.ORD_OTSTND ,
+            						V.PNALTY_AMT ,
+            						V.ADJ_AMT ,
+            						V.GRAND_TOT ,
+            						V.OBLIGT_MTH ,
+            						V.USED_MTH ,
+            						V.IS_UNDER_COOL_PRIOD ,
+            						V.ACTUAL_CANCL_DT ,
+            						V.REQSTER_ID ,
+            						V.REQSTER ,
+            						V.APP_RETN_DT ,
+            						V.CALL_STUS_ID ,
+            						V.CALL_STUS_CODE ,
+            						V.CALL_STUS_NAME ,
+            						V.CALL_RECALL_DT ,
+            						V.DSC_BRNCH_ID ,
+            						V.CUST_ID ,
+            						V.CUST_NAME ,
+            						V.CUST_IC ,
+            						V.ORD_NO ,
+            						V.REQ_REM ,
+            						V.BANK_ACC ,
+            						V.ISS_BANK ,
+            						V.ACC_NAME ,
+            						V.ATTACH ,
+            						V.TYPE_ID ,
+            						V.DOC_ID ,
+            						V.REF_ID ,
+            						V.RSO_STUS,
+            						NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
+            						V.APP_DT AS APP_DT,
+            						V.ASSIGN_CT,
+            						V.PARTNER_CODE,
+            						V.RCD_TMS,
+            						V.STK_CTGRY_ID ,
+            						V.ATCH_FILE_GRP_ID ,
+            						V.ATTCHMENT_DOWNLOAD ,
+            						V.FILE_SUB_PATH ,
+            						V.ATCH_FILE_NAME ,
+            						V.PHYSICL_FILE_NAME,
+            						V.RESULT_REP_EMAIL_NO,
+            						V.EMAIL_SENT_COUNT,
+                                    V.SO_REQ_FOLLOW_UP,
+                                    V.FOLLOW_UP_PIC,
+                                    V.KEYIN_DT
+						FROM (( SELECT DISTINCT R.SO_REQ_ID REQ_ID,
+                        						R.SO_REQ_NO REQ_NO,
+                        						R.SO_REQ_SO_ID ORD_ID,
+                        						R.SO_REQ_STUS_ID REQ_STUS_ID,
+                        						S1.CODE REQ_STUS_CODE,
+                        						S1.NAME REQ_STUS_NAME,
+                        						NVL (R.SO_REQ_RESN_ID, 0) REQ_RESN_ID,
+                        						NVL (RC.CODE, ' ') REQ_RESN_CODE,
+                        						NVL (TO_CHAR (RC.RESN_DESC), ' ') REQ_RESN_DESC,
+                        						NVL (R.SO_REQ_PREV_CALL_ENTRY_ID, 0) PREV_CALL_ENTRY_ID,
+                        						NVL (R.SO_REQ_CUR_CALL_ENTRY_ID, 0) CALL_ENTRY_ID,
+                        						R.SO_REQ_CUR_STUS_ID REQ_STAGE_ID,
+                        						S2.NAME REQ_STAGE,
+                        						R.SO_REQ_CUR_STK_ID STOCK_ID,
+                        						STK.STK_CODE STOCK_CODE,
+                        						STK.STK_DESC STOCK_NAME,
+                        						R.SO_REQ_CRT_DT AS CRT_DT,
+                        						NVL (R.SO_REQ_CRT_USER_ID, 0) CRT_USER_ID_ID,
+                        						NVL (U1.USER_NAME, ' ') CRT_USER_ID,
+                        						R.SO_REQ_UPD_DT AS UPD_DT,
+                        						NVL (R.SO_REQ_UPD_USER_ID, 0) UPD_USER_ID_ID,
+                        						NVL (U2.USER_NAME, ' ') UPD_USER_ID,
+                        						R.SO_REQ_CUR_APP_TYPE_ID APP_TYPE_ID,
+                        						APPTYPE.CODE APP_TYPE_CODE,
+                        						APPTYPE.CODE_NAME APP_TYPE_NAME,
+                        						R.SO_REQ_CUR_AMT ORD_AMT,
+                        						R.SO_REQ_CUR_PV ORD_PV,
+                        						R.SO_REQ_CURR_AMT ORD_RENT_AMT,
+                        						R.SO_REQ_CANCL_RENTAL_OTSTND ORD_OTSTND,
+                        						R.SO_REQ_CANCL_PNALTY_AMT PNALTY_AMT,
+                        						R.SO_REQ_CANCL_ADJ_AMT ADJ_AMT,
+                        						R.SO_REQ_CANCL_TOT_OTSTND GRAND_TOT,
+                        						R.SO_REQ_CANCL_OB_PRIOD OBLIGT_MTH,
+                        						R.SO_REQ_CANCL_TOT_USED_PRIOD USED_MTH,
+                        						R.SO_REQ_CANCL_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD,
+                        						R.SO_REQ_ACTUAL_CANCL_DT ACTUAL_CANCL_DT,
+                        						R.SO_REQSTER REQSTER_ID,
+                        						NVL (REQUESTOR.CODE_NAME, ' ') REQSTER,
+                        						R.SO_REQ_PRE_RETN_DT APP_RETN_DT,
+                        						CE.STUS_CODE_ID CALL_STUS_ID,
+                        						S3.CODE CALL_STUS_CODE,
+                        						S3.NAME CALL_STUS_NAME,
+                        						CE.CALL_DT CALL_RECALL_DT,
+                        						I.BRNCH_ID DSC_BRNCH_ID,
+                        						CUST.CUST_ID CUST_ID,
+                        						CUST.NAME CUST_NAME,
+                        						CUST.NRIC CUST_IC,
+                        						SOM.SALES_ORD_NO ORD_NO,
+                        						NVL (TO_CHAR (R.SO_REQ_REM), ' ') REQ_REM,
+                        						NVL (R.SO_REQ_BANK_ACC, ' ') BANK_ACC,
+                        						NVL (R.SO_REQ_ISS_BANK, ' ') ISS_BANK,
+                        						NVL (R.SO_REQ_ACC_NAME, ' ') ACC_NAME,
+                        						NVL (R.SO_REQ_ATTACH, ' ') ATTACH,
+                        						RE.TYPE_ID,
+                        						CE.DOC_ID,
+                        						RE.REF_ID,
+                        						RE.STUS_CODE_ID RSO_STUS,
+                        						CE.TYPE_ID CALL_TYPE_ID,
+                        						CASE WHEN ORG.MEM_CODE IS NOT NULL THEN
+                        						    ORG.MEM_CODE
+                        						ELSE ORG2.USER_NAME END PRD_RTN_LST_UPD,
+                        						RE.APP_DT AS APP_DT,
+                        						ORG3.MEM_CODE AS ASSIGN_CT,
+                        						ORG4.MEM_CODE AS PARTNER_CODE,
+                        						R.RCD_TMS AS RCD_TMS,
+                        						STK.STK_CTGRY_ID STK_CTGRY_ID,
+                        						SOM.BNDL_ID,
+                        						RE.RETN_NO,
+                        						R.ATCH_FILE_GRP_ID ,
+                        						CASE WHEN R.ATCH_FILE_GRP_ID IS NOT NULL OR R.ATCH_FILE_GRP_ID != 0
+                        						    THEN 'DOWN'
+                        						ELSE NULL END AS ATTCHMENT_DOWNLOAD,
+                        						CASE WHEN R.ATCH_FILE_GRP_ID IS NOT NULL OR R.ATCH_FILE_GRP_ID != 0
+                        						    THEN F.FILE_SUB_PATH
+                        						ELSE NULL END AS FILE_SUB_PATH,
+                        						F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+                        						F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+                                                CUST.EMAIL AS RESULT_REP_EMAIL_NO,
+                                                --CASE WHEN RER.RESULT_RPT_EMAIL_NO IS NOT NULL THEN RER.RESULT_RPT_EMAIL_NO ELSE CUST.EMAIL END AS RESULT_REP_EMAIL_NO,
+                                                R.EMAIL_SENT_COUNT,
+                                                R.SO_REQ_FOLLOW_UP,
+                                                FU.CODE_NAME FOLLOW_UP_PIC,
+                                                DECODE(K.SALES_ORD_ID, SOM.SALES_ORD_ID, K.REQST_DT, SOM.SALES_DT) AS KEYIN_DT
+            						FROM SAL0020D R
+            						JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = R.SO_REQ_SO_ID AND R.SO_REQ_STUS_ID <> 8
+            						JOIN SAL0045D I ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+            						JOIN SAL0029D CUST ON CUST.CUST_ID = SOM.CUST_ID
+            						JOIN SYS0038M S1 ON S1.STUS_CODE_ID = R.SO_REQ_STUS_ID
+            						JOIN SYS0038M S2 ON S2.STUS_CODE_ID = R.SO_REQ_CUR_STUS_ID
+            						JOIN SYS0026M STK ON STK.STK_ID = R.SO_REQ_CUR_STK_ID
+            						JOIN SYS0013M APPTYPE ON APPTYPE.CODE_ID = R.SO_REQ_CUR_APP_TYPE_ID
+            						JOIN CCR0006D CE ON CE.CALL_ENTRY_ID = R.SO_REQ_CUR_CALL_ENTRY_ID
+            						JOIN SYS0038M S3 ON S3.STUS_CODE_ID = CE.STUS_CODE_ID
+            						LEFT JOIN SYS0032M RC ON RC.RESN_ID = R.SO_REQ_RESN_ID
+            						LEFT JOIN SYS0047M U1 ON U1.USER_ID = R.SO_REQ_CRT_USER_ID
+            						LEFT JOIN SYS0047M U2 ON U2.USER_ID = R.SO_REQ_UPD_USER_ID
+            						LEFT JOIN SYS0013M REQUESTOR ON REQUESTOR.CODE_ID = R.SO_REQSTER
+            						LEFT JOIN LOG0038D RE ON RE.CALL_ENTRY_ID = R.SO_REQ_CUR_CALL_ENTRY_ID
+            						LEFT JOIN LOG0039D RER ON RE.STK_RETN_ID = RER.STK_RETN_ID
+            						LEFT JOIN ORG0001D ORG ON ORG.MEM_ID = RE.UPD_USER_ID AND ORG.MEM_TYPE > 2
+            						LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = RE.UPD_USER_ID AND ORG2.USER_TYPE_ID > 2
+            						LEFT JOIN ORG0001D ORG3 ON ORG3.MEM_ID = RE.CT_ID
+            						LEFT JOIN SYS0070M E ON R.ATCH_FILE_GRP_ID = E.ATCH_FILE_GRP_ID
+            						LEFT JOIN SYS0071D F ON E.ATCH_FILE_ID = F.ATCH_FILE_ID
+                                    LEFT JOIN SYS0013M FU ON FU.CODE_ID = R.SO_REQ_FOLLOW_UP
+                                    LEFT JOIN SAL0213M K ON K.SALES_ORD_ID = SOM.SALES_ORD_ID
+                                    LEFT JOIN ORG0001d ORG4 ON ORG4.mem_id = RER.PARTNER_CODE
+                        ) V) ) A
+				LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
+				 ]]>
+                WHERE A.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID
+                                                                FROM SYS0013M AA,
+                                                                         SYS0094M BB
+                                                                WHERE AA.CODE = BB.CODE
+                                                                AND AA.CODE_MASTER_ID = 11
+                                                                AND BB.IND = 'HOMECARE') -- Mattress, Frame
+    <if test="typeIdList != null and typeIdList != ''">
+      AND A.APP_TYPE_ID IN
+      <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="stusIdList != null and stusIdList != ''">
+       AND A.CALL_STUS_ID IN
+         <foreach item="item" collection="stusIdList" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+    </if>
+
+    <if test="reqStageList != null and reqStageList != ''">
+      AND A.REQ_STAGE_ID IN
+        <foreach item="item" collection="reqStageList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+
+    <if test="branchList != null and branchList != ''">
+      AND A.DSC_BRNCH_ID IN
+        <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+     </if>
+     <if test="productRetReasonList != null and productRetReasonList != ''">
+      AND A.REQ_RESN_ID IN
+        <foreach item="item" collection="productRetReasonList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+     <if test="rsoStatusList != null and rsoStatusList != ''">
+      AND A.RSO_STUS IN
+        <foreach item="item" collection="rsoStatusList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+
+    <if test="ordNo != null and ordNo != ''">
+      AND A.ORD_NO = #{ordNo}
+    </if>
+
+    <if test="reqNo != null and reqNo != ''">
+      AND UPPER(A.REQ_NO) = UPPER(#{reqNo})
+    </if>
+
+    <if test="crtUserId != null and crtUserId != ''">
+      AND UPPER(A.CRT_USER_ID) like '%'|| UPPER(#{crtUserId}) ||'%'
+    </if>
+
+    <if test="custId != null and custId != ''">
+      AND A.CUST_ID = #{custId}
+    </if>
+
+    <if test="custName != null and custName != ''">
+      AND UPPER(A.CUST_NAME) like '%'|| UPPER(#{custName}) ||'%'
+    </if>
+
+    <if test="custIc != null and custIc != ''">
+      AND UPPER(A.CUST_IC) = UPPER(#{custIc})
+    </if>
+
+    <if test="startCrtDt != null and startCrtDt != '' ">
+      <!-- AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') -->
+      AND TRUNC(CRT_DT) <![CDATA[ >= ]]> TO_DATE(#{startCrtDt}, 'YYYY-MM-DD')
+    </if>
+
+    <if test="endCrtDt != null and endCrtDt != ''">
+      <!-- AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') -->
+      AND TRUNC(CRT_DT) <![CDATA[ <= ]]> TO_DATE(#{endCrtDt}, 'YYYY-MM-DD')
+    </if>
+
+    <if test="startRecallDt != null and startRecallDt != '' ">
+      AND CALL_RECALL_DT <![CDATA[ >= ]]>  TO_DATE(#{startRecallDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test="endRecallDt != null and endRecallDt != '' ">
+      AND CALL_RECALL_DT <![CDATA[ <= ]]>  TO_DATE(#{endRecallDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+
+    <if test="startAppDt != null and startAppDt != '' ">
+      AND APP_DT <![CDATA[ >= ]]>  TO_DATE(#{startAppDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test="endAppDt != null and endAppDt != '' ">
+      AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+
+    <if test="cmbFollowUp != null and cmbFollowUp != ''">
+      AND SO_REQ_FOLLOW_UP = #{cmbFollowUp}
+    </if>
+  </select>
+
+  <!-- KV cancellation status-->
+  <select id="orderCancelStatus" parameterType="Map" resultType="egovMap">
+   SELECT FBC.CODE AS CODE_ID,
+          FBC.CODE_NAME AS CODE_NAME
+   FROM SYS0094M  FBC
+   WHERE FBC.IND= 'CALL_STUS'
+     AND FBC.DISB= 0
+  </select>
+
+  <!-- KV cancellation Feedback-->
+  <select id="orderCancelFeedback" parameterType="Map" resultType="egovMap">
+    SELECT D.RESN_ID AS CODE_ID ,
+           D.CODE || ' - ' || INITCAP(D.RESN_DESC) AS CODE_NAME
+    FROM  SYS0013M A
+    JOIN SYS0033M B ON B.RESN_TYPE_ID = A.CODE_ID
+    JOIN SYS0034M C ON C.PARENT_RESN_ID = B.RESN_GRP_ID
+    JOIN SYS0032M D ON D.RESN_ID = C.RESN_ID
+    WHERE A.CODE_ID = #{groupCode} AND D.STUS_CODE_ID=1
+  </select>
+
+  <select id="dscBranch" parameterType="Map" resultType="egovMap">
+    SELECT Project1.BRNCH_ID,
+           Project1.BRNCH_NAME
+    FROM ( SELECT Extent1.BRNCH_ID,
+                  Extent1.CODE || ' - ' || Extent1.NAME BRNCH_NAME
+           FROM SYS0005M Extent1
+           WHERE ( 1 = Extent1.STUS_ID )
+             AND ( Extent1.TYPE_ID IN ( 40,43 )
+    ) ) Project1
+    ORDER BY Project1.BRNCH_NAME ASC
+  </select>
+
+    <select id="productRetReason" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID,
+        CODE,
+        RESN_DESC
+    FROM SYS0032M
+    WHERE RESN_TYPE_ID IN (536,5785)
+    AND STUS_CODE_ID =1
+    ORDER BY RESN_DESC
+  </select>
+
+     <select id="rsoStatus" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID,
+        CODE,
+        NAME
+    FROM SYS0038M
+    WHERE STUS_CODE_ID in (SELECT DISTINCT STUS_CODE_ID FROM LOG0038D)
+    ORDER by NAME
+  </select>
+
+  <select id="callLogStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE,
+           CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'CAN_STAT'
+      AND DISB = '0'
+    ORDER BY CODE
+  </select>
+
+  <select id="reqStg" parameterType="Map" resultType="egovMap">
+    SELECT CODE,
+           CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'REQ_STG'
+      AND DISB = '0'
+    ORDER BY CODE
+  </select>
+
+  <select id="cancelReqInfo" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT A.REQ_ID ,
+                    A.REQ_NO ,
+                    A.ORD_ID ,
+                    A.REQ_STUS_ID ,
+                    A.REQ_STUS_CODE ,
+                    A.REQ_STUS_NAME ,
+                    A.REQ_RESN_ID ,
+                    A.REQ_RESN_CODE ,
+                    A.REQ_RESN_DESC ,
+                    A.PREV_CALL_ENTRY_ID ,
+                    A.CALL_ENTRY_ID ,
+                    A.REQ_STAGE_ID ,
+                    A.REQ_STAGE ,
+                    A.STOCK_ID ,
+                    A.STOCK_CODE ,
+                    A.STOCK_NAME ,
+                    A.CRT_USER_ID_ID ,
+                    A.CRT_USER_ID ,
+                    A.UPD_USER_ID_ID  ,
+                    A.UPD_USER_ID ,
+                    A.APP_TYPE_ID ,
+                    A.APP_TYPE_CODE ,
+                    A.APP_TYPE_NAME ,
+                    A.ORD_AMT ,
+                    A.ORD_PV ,
+                    A.ORD_RENT_AMT ,
+                    A.ORD_OTSTND ,
+                    A.PNALTY_AMT ,
+                    A.ADJ_AMT ,
+                    A.GRAND_TOT ,
+                    A.OBLIGT_MTH ,
+                    A.USED_MTH ,
+                    A.IS_UNDER_COOL_PRIOD ,
+                    A.REQSTER_ID ,
+                    A.REQSTER ,
+                    A.CALL_STUS_ID ,
+                    A.CALL_STUS_CODE ,
+                    A.CALL_STUS_NAME ,
+                    A.CUST_ID ,
+                    A.CUST_NAME ,
+                    A.CUST_IC ,
+                    A.ORD_NO ,
+                    A.REQ_REM ,
+                    A.BANK_ACC ,
+                    A.ISS_BANK ,
+                    A.ACC_NAME ,
+                    A.ATTACH ,
+                    CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
+                      THEN TO_CHAR(A.ACTUAL_CANCL_DT, 'DD/MM/YYYY')
+                      ELSE '01/01/1900' END ACTUAL_CANCL_DT ,
+                    CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
+                      THEN TO_CHAR(A.APP_RETN_DT, 'DD/MM/YYYY')
+                      ELSE '01/01/1900' END APP_RETN_DT ,
+                    CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
+                      THEN TO_CHAR(A.CALL_RECALL_DT, 'DD/MM/YYYY')
+                      ELSE '01/01/1900' END CALL_RECALL_DT ,
+                    CASE WHEN ( A.CRT_DT IS NOT NULL )
+                      THEN A.CRT_DT
+                      ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT ,
+                    CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
+                      THEN A.DSC_BRNCH_ID
+                      ELSE 0 END DSC_BRNCH_ID  ,
+                    CASE WHEN ( A.UPD_DT IS NOT NULL )
+                      THEN A.UPD_DT
+                      ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT ,
+                    A.SO_REQ_FOLLOW_UP
+    FROM ( SELECT V.REQ_ID ,
+                  V.REQ_NO ,
+                  V.ORD_ID ,
+                  V.REQ_STUS_ID ,
+                  V.REQ_STUS_CODE ,
+                  V.REQ_STUS_NAME ,
+                  V.REQ_RESN_ID ,
+                  V.REQ_RESN_CODE ,
+                  V.REQ_RESN_DESC ,
+                  V.PREV_CALL_ENTRY_ID ,
+                  V.CALL_ENTRY_ID ,
+                  V.REQ_STAGE_ID ,
+                  V.REQ_STAGE ,
+                  V.STOCK_ID ,
+                  V.STOCK_CODE ,
+                  V.STOCK_NAME ,
+                  V.CRT_DT CRT_DT  ,
+                  V.CRT_USER_ID_ID ,
+                  V.CRT_USER_ID ,
+                  V.UPD_DT ,
+                  V.UPD_USER_ID_ID ,
+                  V.UPD_USER_ID ,
+                  V.APP_TYPE_ID ,
+                  V.APP_TYPE_CODE ,
+                  V.APP_TYPE_NAME ,
+                  V.ORD_AMT ,
+                  V.ORD_PV ,
+                  V.ORD_RENT_AMT ,
+                  V.ORD_OTSTND ,
+                  V.PNALTY_AMT ,
+                  V.ADJ_AMT ,
+                  V.GRAND_TOT ,
+                  V.OBLIGT_MTH ,
+                  V.USED_MTH ,
+                  V.IS_UNDER_COOL_PRIOD ,
+                  V.ACTUAL_CANCL_DT ,
+                  V.REQSTER_ID ,
+                  V.REQSTER ,
+                  V.APP_RETN_DT ,
+                  V.CALL_STUS_ID ,
+                  V.CALL_STUS_CODE ,
+                  V.CALL_STUS_NAME ,
+                  V.CALL_RECALL_DT ,
+                  V.DSC_BRNCH_ID ,
+                  V.CUST_ID ,
+                  V.CUST_NAME ,
+                  V.CUST_IC ,
+                  V.ORD_NO ,
+                  V.REQ_REM ,
+                  V.BANK_ACC ,
+                  V.ISS_BANK ,
+                  V.ACC_NAME ,
+                  V.ATTACH ,
+                  V.SO_REQ_FOLLOW_UP
+           FROM SAL1007V V ) A
+    WHERE A.REQ_ID = #{reqId}
+  </select>
+
+  <resultMap id="callLogClobMap" type="egovMap">
+    <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB" javaType="string" />
+  </resultMap>
+
+  <select id="cancelLogTransctionList" parameterType="Map" resultMap="callLogClobMap">
+    SELECT Filter1.CALL_ENTRY_ID ,
+           Filter1.SALES_ORD_ID ,
+           Filter1.TYPE_ID ,
+           Filter1.STUS_CODE_ID ,
+           Filter1.RESULT_ID ,
+           Filter1.DOC_ID ,
+           Filter1.CRT_USER_ID ,
+           TO_CHAR(Filter1.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+           Filter1.IS_WAIT_FOR_CANCL ,
+           TO_CHAR(Filter1.UPD_DT,'DD/MM/YYYY') AS UPD_DT,
+           Filter1.UPD_USER_ID ,
+           Filter1.CODE2 CODE  ,
+           Filter1.NAME ,
+           Filter1.CODE3 CODE1  ,
+           Filter1.CODE_NAME ,
+           CASE
+                WHEN ( Filter1.CALL_DT IS NOT NULL ) THEN Filter1.CALL_DT
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CALL_DT  ,
+           CASE
+                WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
+           ELSE '' END CALLENTRY_USER_NAME  ,
+           CASE
+                WHEN ( Filter1.HAPY_CALLER_ID IS NOT NULL ) THEN Filter1.HAPY_CALLER_ID
+           ELSE 0 END HAPY_CALLER_ID  ,
+           CASE
+                WHEN ( Filter1.ORI_CALL_DT IS NOT NULL ) THEN Filter1.ORI_CALL_DT
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ORI_CALL_DT  ,
+           CASE
+                WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+           ELSE '' END USER_NAME,
+           Filter1.CALL_REM
+    FROM ( SELECT Extent1.CALL_ENTRY_ID ,
+                  Extent1.SALES_ORD_ID ,
+                  Extent1.TYPE_ID ,
+                  Extent1.STUS_CODE_ID ,
+                  Extent1.RESULT_ID ,
+                  Extent1.DOC_ID ,
+                  Extent1.CRT_USER_ID ,
+                  Extent1.CRT_DT ,
+                  Extent1.CALL_DT ,
+                  Extent1.IS_WAIT_FOR_CANCL ,
+                  Extent1.HAPY_CALLER_ID ,
+                  Extent1.UPD_DT ,
+                  Extent1.UPD_USER_ID ,
+                  Extent1.ORI_CALL_DT ,
+                  Extent2.CODE CODE2  ,
+                  Extent2.NAME ,
+                  Extent3.CODE CODE3  ,
+                  Extent3.CODE_NAME ,
+                  Extent4.USER_ID ,
+                  Extent4.USER_NAME,
+                  NVL(EXTENT5.CALL_REM,'') CALL_REM
+                   FROM CCR0006D Extent1
+                    JOIN SYS0038M Extent2
+                      ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                    JOIN SYS0013M Extent3
+                      ON Extent3.CODE_ID = Extent1.TYPE_ID
+                    LEFT JOIN SYS0047M Extent4
+                      ON Extent4.USER_ID = Extent1.CRT_USER_ID
+                    LEFT JOIN CCR0007D Extent5
+                      ON EXTENT5.CALL_ENTRY_ID = EXTENT1.CALL_ENTRY_ID AND EXTENT5.CALL_RESULT_ID = EXTENT1.RESULT_ID
+           <![CDATA[
+             WHERE 8 <> Extent1.STUS_CODE_ID ) Filter1
+           ]]>
+    LEFT JOIN SYS0047M Extent5 ON Extent5.USER_ID = Filter1.UPD_USER_ID
+    WHERE Filter1.SALES_ORD_ID = #{salesOrdId}
+     AND Filter1.TYPE_ID = #{typeId}
+  </select>
+
+  <select id="productReturnTransctionList" parameterType="Map" resultType="egovMap">
+    SELECT Filter1.STK_RETN_ID ,
+           Filter1.STATUSCODEID1 STUS_CODE_ID  ,
+           Filter1.TYPE_ID ,
+           Filter1.SALES_ORD_ID ,
+           Filter1.MOV_ID1 ,
+           Filter1.CREATOR1 CRT_USER_ID  ,
+           Filter1.UPDATOR1 UPD_USER_ID  ,
+           Filter1.REF_ID ,
+           Filter1.STOCK_ID ,
+           Filter1.RETN_NO ,
+           Filter1.APP_DT ,
+           Filter1.CT_ID ,
+           Filter1.CT_GRP ,
+           Filter1.CALL_ENTRY_ID ,
+           Filter1.CODE1 CODE  ,
+           Filter1.NAME1 NAME  ,
+           Filter1.STK_CODE ,
+           Filter1.STK_DESC ,
+           Filter1.CODE_DESC,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE
+           ELSE ''
+              END MEM_CODE  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NAME2
+           ELSE ''
+              END NAME2  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE || ' - ' || Filter1.NAME2
+           ELSE ''
+              END MEM_CODE_NAME2  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NRIC
+           ELSE ''
+              END NRIC  ,
+           CASE
+                WHEN (Filter1.CREATED1 IS NOT NULL) THEN TO_CHAR(Filter1.CREATED1, 'DD/MM/YYYY')
+           ELSE '01/01/1900'
+              END CREATED1  ,
+           CASE
+                WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
+           ELSE ''
+              END USERNAME1  ,
+           CASE
+                WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+              END REQST_DT  ,
+           CASE
+                WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+              END UPDATED1  ,
+           CASE
+                WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
+           ELSE ''
+              END USERNAME2  ,
+           filter1.mov_to_loc_id mov_to_loc_id,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE
+           ELSE ''
+              END WH_LOC_CODE  ,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_DESC
+           ELSE null
+              END WH_LOC_DESC  ,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE || ' - ' || Extent9.WH_LOC_DESC
+           ELSE null
+              END WH_LOC_CODE_DESC,
+           Filter1.STK_RETN_REM,
+           CASE
+             WHEN (Filter1.STK_RETN_DT IS NOT NULL) THEN TO_CHAR(Filter1.STK_RETN_DT, 'DD/MM/YYYY')
+             ELSE ''
+             END STK_RETN_DT
+    FROM ( SELECT Extent1.STK_RETN_ID ,
+                  Extent1.STUS_CODE_ID STATUSCODEID1  ,
+                  Extent1.TYPE_ID ,
+                  Extent1.SALES_ORD_ID ,
+                  Extent1.MOV_ID MOV_ID1 ,
+                  Extent1.REQST_DT ,
+                  Extent1.CRT_DT CREATED1  ,
+                  Extent1.CRT_USER_ID CREATOR1  ,
+                  Extent1.UPD_DT UPDATED1  ,
+                  Extent1.UPD_USER_ID UPDATOR1  ,
+                  Extent1.REF_ID,
+                  Extent1.STOCK_ID ,
+                  Extent1.RETN_NO ,
+                  Extent1.APP_DT ,
+                  Extent1.CT_ID ,
+                  Extent1.CT_GRP ,
+                  Extent1.CALL_ENTRY_ID ,
+                  Extent2.CODE CODE1  ,
+                  Extent2.NAME NAME1  ,
+                  Extent3.STK_CODE ,
+                  Extent3.STK_DESC ,
+                  Extent4.CODE_DESC ,
+                  Extent5.MEM_ID ,
+                  Extent5.MEM_CODE ,
+                  Extent5.NAME NAME2  ,
+                  Extent5.NRIC ,
+                  Extent6.USER_ID USERID1  ,
+                  Extent6.USER_NAME USERNAME1  ,
+                  Extent7.USER_ID USERID2  ,
+                  Extent7.USER_NAME USERNAME2  ,
+                  Extent8.REQST_CDC_RDC MOV_TO_LOC_ID,
+                  Extent10.STK_RETN_REM,
+                  Extent10.STK_RETN_DT
+           FROM LOG0038D Extent1
+           JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+           JOIN SYS0026M Extent3 ON Extent3.STK_ID = Extent1.STOCK_ID
+           JOIN SYS0013M Extent4 ON Extent4.CODE_ID = Extent1.TYPE_ID
+           LEFT JOIN LOG0039D Extent10 ON Extent10.STK_RETN_ID = Extent1.STK_RETN_ID and Extent10.STK_RETN_STUS_ID   <![CDATA[ <> ]]> 8
+           LEFT JOIN ORG0001D Extent5 ON Extent5.MEM_ID = Extent1.CT_ID
+           LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CRT_USER_ID
+           LEFT JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent1.UPD_USER_ID
+           LEFT JOIN LOG0047M Extent8 ON ( extent8.REF_DOC_NO = extent1.RETN_NO ) and NVL(Extent8.REQST_DEL,'N') = 'N'
+           <![CDATA[
+             WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
+           ]]>
+    LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
+    WHERE Filter1.TYPE_ID = #{typeId}
+      AND Filter1.REF_ID = #{refId}
+  </select>
+
+  <select id="ctAssignmentInfo" parameterType="Map" resultType="egovMap">
+    SELECT Filter1.STK_RETN_ID ,
+           Filter1.STATUSCODEID1 STUS_CODE_ID  ,
+           Filter1.TYPE_ID ,
+           Filter1.SALES_ORD_ID ,
+           Filter1.MOV_ID1 ,
+           Filter1.CREATOR1 CRT_USER_ID  ,
+           Filter1.UPDATOR1 UPD_USER_ID  ,
+           Filter1.REF_ID ,
+           Filter1.STOCK_ID ,
+           Filter1.RETN_NO ,
+           Filter1.APP_DT ,
+           Filter1.CT_ID ,
+           Filter1.CT_GRP ,
+           Filter1.CALL_ENTRY_ID ,
+           Filter1.CODE1 CODE  ,
+           Filter1.NAME1 NAME  ,
+           Filter1.STK_CODE ,
+           Filter1.STK_DESC ,
+           Filter1.CODE_DESC ,
+           Filter1.MEM_ID,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE
+           ELSE ''
+                END MEM_CODE  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NAME2
+           ELSE ''
+                END MEM_NAME  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE || ' - ' || Filter1.NAME2
+           ELSE ''
+                END MEM_CODE_NAME  ,
+           CASE
+                WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NRIC
+           ELSE ''
+                END NRIC  ,
+           CASE
+                WHEN ( Filter1.CREATED1 IS NOT NULL ) THEN Filter1.CREATED1
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+                END CREATED1  ,
+           CASE
+                WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
+           ELSE ''
+                END USERNAME1  ,
+           CASE
+                WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+                END REQST_DT  ,
+           CASE
+                WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
+           ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+                END UPDATED1  ,
+           CASE
+                WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
+           ELSE ''
+              END USERNAME2  ,
+           CASE
+                WHEN ( Filter1.MOV_ID1 IS NOT NULL ) THEN Filter1.MOV_TO_LOC_ID
+           ELSE 0
+                END MOV_TO_LOC_ID  ,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE
+           ELSE ''
+                END WH_LOC_CODE  ,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_DESC
+           ELSE null
+                END WH_LOC_DESC  ,
+           CASE
+                WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE || ' - ' || Extent9.WH_LOC_DESC
+           ELSE null
+                END WH_LOC_CODE_DESC
+    FROM ( SELECT Extent1.STK_RETN_ID ,
+                  Extent1.STUS_CODE_ID STATUSCODEID1  ,
+                  Extent1.TYPE_ID ,
+                  Extent1.SALES_ORD_ID ,
+                  Extent1.MOV_ID MOV_ID1 ,
+                  Extent1.REQST_DT ,
+                  Extent1.CRT_DT CREATED1  ,
+                  Extent1.CRT_USER_ID CREATOR1  ,
+                  Extent1.UPD_DT UPDATED1  ,
+                  Extent1.UPD_USER_ID UPDATOR1  ,
+                  Extent1.REF_ID ,
+                  Extent1.STOCK_ID ,
+                  Extent1.RETN_NO ,
+                  Extent1.APP_DT ,
+                  Extent1.CT_ID ,
+                  Extent1.CT_GRP ,
+                  Extent1.CALL_ENTRY_ID ,
+                  Extent2.CODE CODE1  ,
+                  Extent2.NAME NAME1  ,
+                  Extent3.STK_CODE ,
+                  Extent3.STK_DESC ,
+                  Extent4.CODE_DESC ,
+                  Extent5.MEM_ID ,
+                  Extent5.MEM_CODE ,
+                  Extent5.NAME NAME2  ,
+                  Extent5.NRIC ,
+                  Extent6.USER_ID USERID1  ,
+                  Extent6.USER_NAME USERNAME1  ,
+                  Extent7.USER_ID USERID2  ,
+                  Extent7.USER_NAME USERNAME2  ,
+                  Extent8.MOV_ID MOV_ID8,
+                  Extent8.MOV_TO_LOC_ID
+           FROM LOG0038D Extent1
+           JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+           JOIN SYS0026M Extent3 ON Extent3.STK_ID = Extent1.STOCK_ID
+           JOIN SYS0013M Extent4 ON Extent4.CODE_ID = Extent1.TYPE_ID
+           LEFT JOIN ORG0001D Extent5 ON Extent5.MEM_ID = Extent1.CT_ID
+           LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CRT_USER_ID
+           LEFT JOIN SYS0047M Extent7 ON Extent7.USER_ID = Extent1.UPD_USER_ID
+           LEFT JOIN LOG0013D Extent8 ON ( Extent8.MOV_ID = Extent1.MOV_ID )
+                                     AND ( 4 = Extent8.MOV_STUS_ID )
+                                     AND ( 1 = Extent8.MOV_CNFM )
+           <![CDATA[
+            WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
+           ]]>
+    LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
+    WHERE Filter1.TYPE_ID = #{typeId}
+      AND Filter1.REF_ID = #{refId}
+      <if test='stusCodeId != null and stusCodeId !=""'>
+        AND  Filter1.STATUSCODEID1 = #{stusCodeId}
+      </if>
+      AND ROWNUM &lt;= 1
+  </select>
+
+  <select id="selectAssignCT" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID ,
+           MEM_ID AS MEM_ID_COMBO,
+           MEM_CODE ,
+           NAME as MEM_NAME,
+           MEM_CODE || ' - ' || NAME AS MEM_CODE_NAME,
+           MEM_CODE || ' - ' || NAME AS MEM_CODE_NAME_COMBO
+    FROM ORG0001D
+    WHERE STUS = 1
+      AND MEM_TYPE = 3
+  </select>
+
+  <select id="selectFeedback" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID ,
+           CODE ,
+           CODE || ' - ' || RESN_DESC CODE_RESN_DESC
+    FROM SYS0032M
+    WHERE RESN_TYPE_ID = 537
+      AND STUS_CODE_ID = 1
+  </select>
+
+  <select id="getRetReasonList" parameterType="Map" resultType="egovMap">
+    SELECT TT.CODE_ID
+         , TT.CODE_NAME
+    FROM ( SELECT DISTINCT T.C1
+                         , T.CODE_ID
+                         , T.CODE_NAME
+           FROM ( SELECT 1 C1
+                       , T1.RESN_ID CODE_ID
+                       , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                  FROM SYS0032M T1
+                  WHERE T1.RESN_TYPE_ID IN (#{typeId})
+                    AND 1 = T1.STUS_CODE_ID
+                  UNION ALL
+                  SELECT 1 C1
+                       , T1.RESN_ID CODE_ID
+                       , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                  FROM SYS0032M T1
+                  WHERE T1.RESN_TYPE_ID IN (#{typeId1})
+                    AND 1 = T1.STUS_CODE_ID
+                  UNION ALL
+                  SELECT 1 C1
+                       , T1.RESN_ID CODE_ID
+                       , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                  FROM SYS0032M T1
+                  WHERE T1.RESN_TYPE_ID IN (#{typeId2})
+                    AND 1 = T1.STUS_CODE_ID
+                  UNION ALL
+                  SELECT 1 C1
+                       , T2.RESN_ID CODE_ID
+                       , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                  FROM SYS0032M T2
+                  WHERE T2.RESN_ID = #{inputId}
+           ) T
+    ) TT ORDER BY CODE_NAME
+  </select>
+
+  <select id="getBranchList" parameterType="Map" resultType="egovMap">
+    SELECT T.CODE_ID
+         , T.CODE_NAME
+    FROM ( SELECT BRNCH_ID CODE_ID
+                , CODE ||'-'|| NAME AS CODE_NAME
+            FROM SYS0005M
+            WHERE TYPE_ID IN (#{typeId})
+              AND 1 = STUS_ID
+    ) T
+    ORDER BY CODE_NAME
+  </select>
+
+  <select id="selRcdTms" parameterType="Map" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM SAL0020D
+    WHERE SO_REQ_SO_ID = #{orderId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryId}
+      AND RCD_TMS = #{rcdTms}
+  </select>
+
+  <update id="chkRcdTms" parameterType="Map">
+    UPDATE SAL0020D SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE SO_REQ_SO_ID = #{paramOrdId}
+      AND SO_REQ_CUR_CALL_ENTRY_ID = #{paramCallEntryId}
+      AND RCD_TMS = #{rcdTms}
+  </update>
+
+  <update id="updateCancelCCR0006D" parameterType="Map">
+    UPDATE CCR0006D SET STUS_CODE_ID = #{callStusId},
+                        RESULT_ID = #{resultId},
+                        CALL_DT = TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+                        UPD_DT = SYSDATE,
+                        UPD_USER_ID = #{callCrtUserId}
+    WHERE CALL_ENTRY_ID = #{callEntryId}
+  </update>
+
+  <select id="newSearchCancelSAL0020D" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SO_REQ_ID SO_REQ_ID  ,
+           Extent1.SO_REQ_SO_ID SO_REQ_SO_ID  ,
+           Extent1.SO_REQ_STUS_ID SO_REQ_STUS_ID  ,
+           Extent1.SO_REQ_RESN_ID SO_REQ_RESN_ID  ,
+           Extent1.SO_REQ_PREV_CALL_ENTRY_ID SO_REQ_PREV_CALL_ENTRY_ID  ,
+           Extent1.SO_REQ_CUR_CALL_ENTRY_ID SO_REQ_CUR_CALL_ENTRY_ID  ,
+           Extent1.SO_REQ_CUR_STUS_ID SO_REQ_CUR_STUS_ID  ,
+           Extent1.SO_REQ_CRT_DT SO_REQ_CRT_DT  ,
+           Extent1.SO_REQ_CRT_USER_ID SO_REQ_CRT_USER_ID  ,
+           Extent1.SO_REQ_UPD_DT SO_REQ_UPD_DT  ,
+           Extent1.SO_REQ_UPD_USER_ID SO_REQ_UPD_USER_ID  ,
+           Extent1.SO_REQ_CUR_STK_ID SO_REQ_CUR_STK_ID  ,
+           Extent1.SO_REQ_CUR_APP_TYPE_ID SO_REQ_CUR_APP_TYPE_ID  ,
+           Extent1.SO_REQ_CUR_AMT SO_REQ_CUR_AMT  ,
+           Extent1.SO_REQ_CUR_PV SO_REQ_CUR_PV  ,
+           Extent1.SO_REQ_CURR_AMT SO_REQ_CURR_AMT  ,
+           Extent1.SO_REQ_ACTUAL_CANCL_DT SO_REQ_ACTUAL_CANCL_DT  ,
+           Extent1.SO_REQ_CANCL_TOT_OTSTND SO_REQ_CANCL_TOT_OTSTND  ,
+           Extent1.SO_REQ_CANCL_PNALTY_AMT SO_REQ_CANCL_PNALTY_AMT  ,
+           Extent1.SO_REQ_CANCL_OB_PRIOD SO_REQ_CANCL_OB_PRIOD  ,
+           Extent1.SO_REQ_CANCL_UNDER_COOL_PRIOD SO_REQ_CANCL_UNDER_COOL_PRIOD  ,
+           Extent1.SO_REQ_CANCL_RENTAL_OTSTND SO_REQ_CANCL_RENTAL_OTSTND  ,
+           Extent1.SO_REQ_CANCL_TOT_USED_PRIOD SO_REQ_CANCL_TOT_USED_PRIOD  ,
+           Extent1.SO_REQ_NO SO_REQ_NO  ,
+           Extent1.SO_REQ_CANCL_ADJ_AMT SO_REQ_CANCL_ADJ_AMT  ,
+           Extent1.SO_REQSTER SO_REQSTER  ,
+           Extent1.SO_REQ_PRE_RETN_DT SO_REQ_PRE_RETN_DT  ,
+           Extent1.SO_REQ_REM SO_REQ_REM  ,
+           Extent1.SO_REQ_BANK_ACC SO_REQ_BANK_ACC  ,
+           Extent1.SO_REQ_ISS_BANK SO_REQ_ISS_BANK  ,
+           Extent1.SO_REQ_ACC_NAME SO_REQ_ACC_NAME  ,
+           Extent1.SO_REQ_ATTACH SO_REQ_ATTACH
+    FROM SAL0020D Extent1
+    WHERE Extent1.SO_REQ_ID = #{soReqId}
+    <![CDATA[
+      AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <update id="updateCancelSAL0020D" parameterType="Map">
+    UPDATE SAL0020D SET SO_REQ_UPD_DT = SYSDATE,
+                        <if test="reqStageId == 24">
+                          SO_REQ_STUS_ID = #{resultId},
+                        </if>
+                        SO_REQ_UPD_USER_ID = #{callCrtUserId}
+    WHERE SO_REQ_ID = #{soReqId}
+  </update>
+
+  <update id="updReservalCancelSAL0020D" parameterType="Map">
+    UPDATE SAL0020D SET SO_REQ_UPD_DT = SYSDATE,
+                        SO_REQ_UPD_USER_ID = #{callCrtUserId},
+                        SO_REQ_STUS_ID = #{callStusId}
+                        <if test="_cmbFollowUp != null and _cmbFollowUp != ''">
+                          , SO_REQ_FOLLOW_UP = #{_cmbFollowUp}
+                        </if>
+
+    WHERE SO_REQ_ID = #{soReqId}
+  </update>
+
+  <select id="newSearchCancelSAL0001D" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SALES_ORD_ID SALES_ORD_ID ,
+           Extent1.SALES_ORD_NO SALES_ORD_NO ,
+           Extent1.REF_NO REF_NO ,
+           Extent1.SALES_DT SALES_DT ,
+           Extent1.CUST_ID CUST_ID ,
+           Extent1.CUST_CNT_ID CUST_CNT_ID ,
+           Extent1.CUST_ADD_ID CUST_ADD_ID ,
+           Extent1.MEM_ID MEM_ID ,
+           Extent1.BRNCH_ID BRNCH_ID ,
+           Extent1.APP_TYPE_ID APP_TYPE_ID ,
+           Extent1.TOT_AMT TOT_AMT ,
+           Extent1.PROMO_ID PROMO_ID ,
+           Extent1.BINDING_NO BINDING_NO ,
+           Extent1.CC_PROMO_ID CC_PROMO_ID ,
+           Extent1.TOT_PV TOT_PV ,
+           Extent1.REM REM ,
+           Extent1.PV_MONTH PV_MONTH ,
+           Extent1.PV_YEAR PV_YEAR ,
+           Extent1.STUS_CODE_ID STUS_CODE_ID ,
+           Extent1.UPD_DT UPD_DT ,
+           Extent1.UPD_USER_ID UPD_USER_ID ,
+           Extent1.SYNC_CHK SYNC_CHK ,
+           Extent1.CUST_PO_NO CUST_PO_NO ,
+           Extent1.REN_CHK_ID REN_CHK_ID ,
+           Extent1.INST_PRIOD INST_PRIOD ,
+           Extent1.DO_NO DO_NO ,
+           Extent1.DEPT_CODE DEPT_CODE ,
+           Extent1.GRP_CODE GRP_CODE ,
+           Extent1.ORG_CODE ORG_CODE ,
+           Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD ,
+           Extent1.EDIT_TYPE_ID EDIT_TYPE_ID ,
+           Extent1.CUST_BILL_ID CUST_BILL_ID ,
+           Extent1.MTH_RENT_AMT MTH_RENT_AMT ,
+           Extent1.LOK LOK ,
+           Extent1.AEON_STUS_ID AEON_STUS_ID ,
+           Extent1.COMM_DT COMM_DT ,
+           Extent1.CRT_USER_ID CRT_USER_ID ,
+           Extent1.CRT_DT CRT_DT ,
+           Extent1.PAY_COM_DT PAY_COM_DT ,
+           Extent1.DEF_RENT_AMT DEF_RENT_AMT ,
+           Extent1.REF_DOC_ID REF_DOC_ID ,
+           Extent1.SALES_HM_ID SALES_HM_ID ,
+           Extent1.SALES_SM_ID SALES_SM_ID ,
+           Extent1.SALES_GM_ID SALES_GM_ID ,
+           Extent1.ADV_BILL ADV_BILL ,
+           Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID ,
+           Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID ,
+           Extent1.PCKAGE_BINDING_NO ,
+           Extent1.SRV_PAC_ID ,
+           Extent2.ITM_STK_ID ITM_STK_ID
+    FROM SAL0001D Extent1
+    JOIN SAL0002D Extent2 ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+    <![CDATA[
+      AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="newSearchCancelSAL0046D" parameterType="Map" resultType="egovMap">
+    SELECT * FROM
+     (
+	     SELECT Extent1.INSTALL_ENTRY_ID   ,
+	           Extent1.INSTALL_ENTRY_NO   ,
+	           Extent1.SALES_ORD_ID   ,
+	           Extent1.STUS_CODE_ID   ,
+	           Extent1.CT_ID   ,
+	           Extent1.INSTALL_DT   ,
+	           Extent1.CALL_ENTRY_ID   ,
+	           Extent1.INSTALL_STK_ID   ,
+	           Extent1.INSTALL_RESULT_ID   ,
+	           Extent1.CRT_USER_ID   ,
+	           Extent1.CRT_DT   ,
+	           Extent1.ALLOW_COMM   ,
+	           Extent1.IS_TRADE_IN   ,
+	           Extent1.CT_GRP   ,
+	           Extent1.UPD_DT UP_DT  ,
+	           Extent1.UPD_USER_ID   ,
+	           Extent1.REV_ID
+	    FROM SAL0046D Extent1
+	    WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
+	    AND 4 = Extent1.STUS_CODE_ID
+	    ORDER BY Extent1.INSTALL_ENTRY_ID DESC
+    ) WHERE 1=1 AND ROWNUM  <![CDATA[<= ]]>1
+  </select>
+
+  <update id="updateCancelSAL0001D" parameterType="Map">
+    UPDATE SAL0001D SET REM = #{callRem},
+                        STUS_CODE_ID = #{salesMstusCodeId},
+                        UPD_DT = SYSDATE,
+                        UPD_USER_ID = #{userId}
+   WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+  <update id="updateCancelSAL0071D" parameterType="Map">
+    UPDATE SAL0071D SET STUS_CODE_ID = #{rentalSchemeStusId},
+                    REN_SCH_DT = SYSDATE
+    WHERE REN_SCH_ID = #{renSchId}
+  </update>
+
+  <select id="insertOrdReactiveFee" parameterType="Map"  statementType="CALLABLE">
+  {
+    call  SP_INSERT_ORD_REACT_FEES(#{salesOrdId},#{callCrtUserId})
+  }
+  </select>
+
+  <select id="crtSeqLOG0031D"  resultType="java.lang.String">
+    SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertCancelLOG0013D" parameterType="Map">
+    INSERT INTO LOG0013D (MOV_ID,
+                          INSTALL_ENTRY_ID,
+                          MOV_FROM_LOC_ID,
+                          MOV_TO_LOC_ID,
+                          MOV_TYPE_ID,
+                          MOV_STUS_ID,
+                          MOV_CNFM,
+                          MOV_CRT_DT,
+                          MOV_UPD_DT,
+                          MOV_CRT_USER_ID,
+                          MOV_UPD_USER_ID,
+                          STK_CRD_POST,
+                          STK_CRD_POST_DT,
+                          STK_CRD_POST_TO_WEB_ON_TM
+                          ) VALUES (
+                          #{movId},
+                          #{installEntryId},
+                          #{movFromLocId},
+                          #{movToLocId},
+                          #{movTypeId},
+                          #{movStusId},
+                          #{movCnfm},
+                          SYSDATE,
+                          SYSDATE,
+                          #{userId},
+                          #{userId},
+                          #{stkCrdPost},
+                          TO_DATE(#{stkCrdPostDt}, 'DD/MM/YYYY'),
+                          #{stkCrdPostToWebOnTm})
+    </insert>
+
+  <select id="crtSeqLOG0038D"  resultType="java.lang.String">
+    SELECT LOG0038D_STK_RETN_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertCancelLOG0038D" parameterType="Map">
+    INSERT INTO LOG0038D (STK_RETN_ID,
+                          STUS_CODE_ID,
+                          TYPE_ID,
+                          SALES_ORD_ID,
+                          MOV_ID,
+                          REQST_DT,
+                          CRT_DT,
+                          CRT_USER_ID,
+                          UPD_DT,
+                          UPD_USER_ID,
+                          REF_ID,
+                          STOCK_ID,
+                          IS_SYNCH,
+                          RETN_NO,
+                          APP_DT,
+                          CT_ID,
+                          CT_GRP,
+                          CALL_ENTRY_ID,
+                          RT_SESION_CODE,
+                          SEGMENT_TYPE
+    ) VALUES (#{stkRetnId},
+              #{stusCodeId},
+              #{typeId},
+              #{salesOrdId},
+              #{movId},
+              TO_DATE(#{requestDate}, 'DD/MM/YYYY'),
+              SYSDATE,
+              #{userId},
+              SYSDATE,
+              #{userId},
+              #{refId},
+              #{stockId},
+              #{isSynch},
+              #{retnNo},
+              TO_DATE(#{appDt}, 'DD/MM/YYYY'),
+              #{ctId},
+              #{ctGrp},
+              #{callEntryId},
+              #{cTSSessionCode},
+              #{segmentType}
+    )
+  </insert>
+
+  <insert id="insertCancelCCR0006D" parameterType="Map">
+    INSERT INTO CCR0006D ( CALL_ENTRY_ID,
+                           SALES_ORD_ID,
+                           TYPE_ID,
+                           STUS_CODE_ID,
+                           RESULT_ID,
+                           DOC_ID,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           CALL_DT,
+                           IS_WAIT_FOR_CANCL,
+                           HAPY_CALLER_ID,
+                           UPD_DT,
+                           UPD_USER_ID,
+                           ORI_CALL_DT
+    ) VALUES ( #{getCallEntryIdMaxSeq},
+               #{salesOrdId},
+               #{typeId},
+               #{stusCodeId},
+               #{resultId},
+               #{docId},
+               #{callCrtUserId},
+               SYSDATE,
+               TO_DATE(#{callDt}, 'DD/MM/YYYY'), #{isWaitForCancl},
+               #{hapyCallerId}, SYSDATE, #{callCrtUserId}, TO_DATE(#{callDt}, 'DD/MM/YYYY') )
+  </insert>
+
+  <select id="crtSeqLOG0037D"  resultType="java.lang.String">
+    SELECT LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertCancelLOG0037D" parameterType="Map">
+    INSERT INTO LOG0037D ( STK_RETN_CT_EXCHG_SEQ_ID,
+                           STK_RETN_ID,
+                           STK_RETN_CT_FROM,
+                           STK_RETN_CT_TO,
+                           STK_RETN_CT_EXCHG_CRT_DT,
+                           STK_RETN_CT_EXCHG_CRT_USER_ID,
+                           STK_RETN_CT_GRP_TO,
+                           STK_RETN_CT_GRP_FROM
+                         ) VALUES (
+                           #{crtSeqLOG0037D},
+                           #{stkRetnId},
+                           #{stkRetnCtFrom},
+                           #{salesmanId},
+                           SYSDATE,
+                           #{userId},
+                           #{saveCtGroup},
+                           #{stkRetnCtGrpFrom}
+                         )
+  </insert>
+
+  <update id="updateCancelLOG0038D" parameterType="Map">
+    UPDATE LOG0038D SET UPD_DT = SYSDATE,
+                        UPD_USER_ID = #{userId},
+                        CT_ID = #{salesmanId},
+                        CT_GRP = #{saveCtGroup}
+    WHERE STK_RETN_ID = #{stkRetnId}
+  </update>
+
+  <select id="cancelCtLOG0038D" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STK_RETN_ID   ,
+           Extent1.STUS_CODE_ID   ,
+           Extent1.TYPE_ID   ,
+           Extent1.SALES_ORD_ID   ,
+           Extent1.MOV_ID   ,
+           Extent1.REQST_DT   ,
+           Extent1.CRT_DT   ,
+           Extent1.CRT_USER_ID   ,
+           Extent1.UPD_DT   ,
+           Extent1.UPD_USER_ID   ,
+           Extent1.REF_ID   ,
+           Extent1.STOCK_ID   ,
+           Extent1.IS_SYNCH   ,
+           Extent1.RETN_NO   ,
+           Extent1.APP_DT   ,
+           Extent1.CT_ID   ,
+           Extent1.CT_GRP   ,
+           Extent1.CALL_ENTRY_ID
+    FROM LOG0038D Extent1
+    WHERE Extent1.STK_RETN_ID = #{stkRetnId}
+
+    <![CDATA[
+      AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="ctAssignBulkList" parameterType="Map" resultType="egovMap">
+    SELECT Filter2.STK_RETN_ID STK_RETN_ID  ,
+           Filter2.STATUSCODEID1 STUS_CODE_ID  ,
+           Filter2.TYPEID1 TYPE_ID  ,
+           Filter2.SALESORDERID1 SALES_ORD_ID  ,
+           Filter2.MOV_ID MOV_ID  ,
+           Filter2.CREATOR1 CRT_USER_ID  ,
+           Filter2.UPDATOR1 UPD_USER_ID  ,
+           Filter2.REF_ID REF_ID  ,
+           Filter2.STOCK_ID STOCK_ID  ,
+           Filter2.RETN_NO RETN_NO  ,
+           Filter2.APP_DT APP_DT  ,
+           Filter2.CT_ID CT_ID  ,
+           Filter2.CT_GRP CT_GRP  ,
+           Filter2.CALLENTRYID1 CALL_ENTRY_ID  ,
+           Filter2.CODE1 CODE  ,
+           Filter2.NAME1 NAME  ,
+           Filter2.STK_CODE STK_CODE  ,
+           Filter2.STK_DESC STK_DESC  ,
+           Filter2.CODE3 CODE1  ,
+           Filter2.CODE_DESC CODE_DESC  ,
+           Filter2.SALES_ORD_NO SALES_ORD_NO  ,
+           Filter2.APP_TYPE_ID APP_TYPE_ID  ,
+           Filter2.BRANCHID1 BRNCH_ID  ,
+           Extent15.NAME NAME1  ,
+           CASE
+                WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE
+           ELSE ' '
+              END MEM_CODE  ,
+           CASE
+                WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NAME2
+           ELSE ' '
+              END MEM_ID_NAME  ,
+           CASE
+                WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE || ' - ' || Filter2.NAME2
+           ELSE ' '
+              END MEM_CODE_NAME  ,
+           CASE
+                WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NRIC
+           ELSE ' '
+              END NRIC  ,
+           CASE
+                WHEN ( Filter2.MOV_ID13 IS NOT NULL ) THEN Filter2.MOV_TO_LOC_ID
+           ELSE 0
+              END MOV_TO_LOC_ID  ,
+           CASE
+                WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE
+           ELSE ' '
+              END WH_LOC_CODE  ,
+           CASE
+                WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_DESC
+           ELSE ' '
+              END WH_LOC_DESC  ,
+           CASE
+                WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE || ' - ' || Filter2.WH_LOC_DESC
+           ELSE ' '
+              END WH_LOC_CODE_DESC,
+              Filter2.CUST_ID
+    FROM ( SELECT Filter1.STK_RETN_ID ,
+                  Filter1.STATUSCODEID1 ,
+                  Filter1.TYPEID1 ,
+                  Filter1.SALESORDERID1 ,
+                  Filter1.MOV_ID ,
+                  Filter1.CREATOR1 ,
+                  Filter1.UPDATOR1 ,
+                  Filter1.REF_ID ,
+                  Filter1.STOCK_ID ,
+                  Filter1.RETN_NO ,
+                  Filter1.APP_DT ,
+                  Filter1.CT_ID ,
+                  Filter1.CT_GRP ,
+                  Filter1.CALLENTRYID1 ,
+                  Filter1.CODE1 ,
+                  Filter1.NAME1 ,
+                  Filter1.STK_CODE ,
+                  Filter1.STK_DESC ,
+                  Filter1.CODE3 ,
+                  Filter1.CODE_DESC ,
+                  Extent7.MEM_ID MEMBERID1  ,
+                  Extent7.MEM_CODE MEM_CODE  ,
+                  Extent7.NAME NAME2  ,
+                  Extent7.NRIC NRIC  ,
+                  Extent10.MOV_ID MOV_ID13  ,
+                  Extent10.MOV_TO_LOC_ID MOV_TO_LOC_ID  ,
+                  Extent11.WH_LOC_ID WH_LOC_ID  ,
+                  Extent11.WH_LOC_CODE WH_LOC_CODE  ,
+                  Extent11.WH_LOC_DESC WH_LOC_DESC  ,
+                  Extent12.SALES_ORD_NO SALES_ORD_NO  ,
+                  Extent12.CUST_ID CUST_ID  ,
+                  Extent12.APP_TYPE_ID APP_TYPE_ID  ,
+                  Extent13.BRNCH_ID BRANCHID1
+           FROM ( SELECT Extent1.STK_RETN_ID STK_RETN_ID  ,
+                         Extent1.STUS_CODE_ID STATUSCODEID1  ,
+                         Extent1.TYPE_ID TYPEID1  ,
+                         Extent1.SALES_ORD_ID SALESORDERID1  ,
+                         Extent1.MOV_ID MOV_ID  ,
+                         Extent1.CRT_USER_ID CREATOR1  ,
+                         Extent1.UPD_USER_ID UPDATOR1  ,
+                         Extent1.REF_ID REF_ID  ,
+                         Extent1.STOCK_ID STOCK_ID  ,
+                         Extent1.RETN_NO RETN_NO  ,
+                         Extent1.APP_DT APP_DT  ,
+                         Extent1.CT_ID CT_ID  ,
+                         Extent1.CT_GRP CT_GRP  ,
+                         Extent1.CALL_ENTRY_ID CALLENTRYID1  ,
+                         Extent2.CODE CODE1  ,
+                         Extent2.NAME NAME1  ,
+                         Extent3.STK_CODE STK_CODE  ,
+                         Extent3.STK_DESC STK_DESC  ,
+                         Extent4.CODE CODE3  ,
+                         Extent4.CODE_DESC CODE_DESC
+                  FROM LOG0038D Extent1
+                  JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                  JOIN SYS0026M Extent3 ON Extent3.STK_ID = Extent1.STOCK_ID
+                  JOIN SYS0013M Extent4 ON Extent4.CODE_ID = Extent1.TYPE_ID
+                  JOIN SAL0020D Extent5 ON Extent5.SO_REQ_ID = Extent1.REF_ID
+                  WHERE 1 = Extent1.STUS_CODE_ID
+
+                  <if test="pRTypeList != null and pRTypeList != ''">
+                    AND Extent1.TYPE_ID IN
+
+                    <foreach item="item" collection="pRTypeList" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+
+                  </if>
+
+                    AND 25 = Extent5.SO_REQ_CUR_STUS_ID
+                    AND 1 = Extent5.SO_REQ_STUS_ID
+           ) Filter1
+           JOIN CCR0006D Extent6 ON Extent6.CALL_ENTRY_ID = Filter1.CALLENTRYID1
+           LEFT JOIN ORG0001D Extent7 ON Extent7.MEM_ID = Filter1.CT_ID
+           LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Filter1.CREATOR1
+           LEFT JOIN SYS0047M Extent9 ON Extent9.USER_ID = Filter1.UPDATOR1
+           LEFT JOIN LOG0013D Extent10 ON Extent10.MOV_ID = Filter1.MOV_ID
+           LEFT JOIN SYS0028M Extent11 ON Extent11.WH_LOC_ID = Extent10.MOV_TO_LOC_ID
+           LEFT JOIN SAL0001D Extent12 ON Extent12.SALES_ORD_ID = Filter1.SALESORDERID1
+           LEFT JOIN SAL0045D Extent13 ON Extent13.SALES_ORD_ID = Extent12.SALES_ORD_ID
+           LEFT JOIN SYS0005M Extent14 ON Extent14.BRNCH_ID = Extent13.BRNCH_ID
+           WHERE 32 = Extent6.STUS_CODE_ID
+
+           <if test="appTypeBulkList != null and appTypeBulkList != ''">
+             AND Extent12.APP_TYPE_ID IN
+
+             <foreach item="item" collection="appTypeBulkList" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+
+           </if>
+    ) Filter2
+    LEFT JOIN SAL0029D Extent15   ON Extent15.CUST_ID = Filter2.CUST_ID
+    WHERE 1=1
+
+    <if test="dpAppointmentDate != null and dpAppointmentDate != ''">
+      AND Filter2.APP_DT = TO_DATE(#{dpAppointmentDate}, 'DD/MM/YYYY')
+    </if>
+    <if test="cmbDscBranchBulk != null and cmbDscBranchBulk != ''">
+      AND Filter2.BRANCHID1 = #{cmbDscBranchBulk}
+    </if>
+    <if test="cmbCTGrpBulk != null and cmbCTGrpBulk != ''">
+      AND Filter2.CT_GRP = #{cmbCTGrpBulk}
+    </if>
+    <if test="cmbCtCodeBulk != null and cmbCtCodeBulk != ''">
+      AND Filter2.CT_ID = #{cmbCtCodeBulk}
+    </if>
+
+    <if test="sortBy == 0">
+      ORDER BY Filter2.STK_RETN_ID ASC
+    </if>
+    <if test="sortBy == 1">
+      ORDER BY Filter2.RETN_NO ASC, Filter2.STK_RETN_ID ASC
+    </if>
+    <if test="sortBy == 2">
+      ORDER BY Filter2.SALES_ORD_NO, Filter2.STK_RETN_ID ASC
+    </if>
+    <if test="sortBy == 3">
+      ORDER BY Filter2.MEM_CODE, Filter2.SALES_ORD_NO ASC
+    </if>
+
+  </select>
+
+  <update id="updateBulkLOG0038D" parameterType="Map">
+    UPDATE LOG0038D SET UPD_DT = SYSDATE,
+                        UPD_USER_ID = #{userId},
+                        CT_ID = #{salesmanId}
+    WHERE STK_RETN_ID = #{stkRetnId}
+  </update>
+
+  <insert id="insertBulkLOG0037D" parameterType="Map">
+    INSERT INTO LOG0037D ( STK_RETN_CT_EXCHG_SEQ_ID,
+                           STK_RETN_ID,
+                           STK_RETN_CT_FROM,
+                           STK_RETN_CT_TO,
+                           STK_RETN_CT_EXCHG_CRT_DT,
+                           STK_RETN_CT_EXCHG_CRT_USER_ID,
+                           STK_RETN_CT_GRP_TO,
+                           STK_RETN_CT_GRP_FROM
+                         ) VALUES ( LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL,
+                                    #{stkRetnId},
+                                    #{stockId},
+                                    #{salesmanId},
+                                    SYSDATE,
+                                    #{userId},
+                                    #{ctGrp},
+                                    #{ctGrp}
+                         )
+  </insert>
+
+  <select id="chkSubPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{itmStkId}
+      AND SUB_PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkMainPromo" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{itmStkId}
+      AND PROMO_ID = #{promoId}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="revSubCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT A.SALES_ORD_ID AS ORD_ID,
+                             A.SALES_ORD_NO AS ORD_NO,
+                             A.PROMO_ID AS OLD_PROMO,
+                             C.PROMO_CAN_ID AS NEW_PROMO,
+                             A.TOT_PV AS OLD_PV,
+                             D.PROMO_ITM_PV AS NEW_PV,
+                             A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+                             CASE WHEN C.CHG_RENT_AMT = 1
+                               THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+                               THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+                               ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+                               ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+                             C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0252M C ON A.PROMO_ID = C.PROMO_ID AND B.ITM_STK_ID = C.PROD_CDE
+    JOIN SAL0018D D ON C.PROMO_CAN_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.PROMO_CAN_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.SALES_ORD_ID = ( SELECT PCKAGE_BINDING_NO
+                             FROM SAL0001D
+                             WHERE SALES_ORD_ID = #{salesOrdId} )
+      AND D.PROMO_ITM_STUS_ID = 1
+      AND ROWNUM = 1
+  </select>
+
+  <select id="revMainCboPckage" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_ID AS ORD_ID,
+           A.SALES_ORD_NO AS ORD_NO,
+           A.PROMO_ID AS OLD_PROMO,
+           C.PROMO_CAN_ID AS NEW_PROMO,
+           A.TOT_PV AS OLD_PV,
+           D.PROMO_ITM_PV AS NEW_PV,
+           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+           CASE WHEN C.CHG_RENT_AMT = 1
+           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+           C.CHG_RENT_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN SAL0253D C ON A.PROMO_ID = C.SUB_PROMO_ID AND B.ITM_STK_ID = C.SUB_PROD_ID
+    JOIN SAL0018D D ON C.PROMO_CAN_ID = D.PROMO_ID AND B.ITM_STK_ID = D.PROMO_ITM_STK_ID
+    JOIN SAL0017D E ON C.PROMO_CAN_ID = E.PROMO_ID
+    LEFT OUTER JOIN SAL0016M F ON F.STK_ID = D.PROMO_ITM_STK_ID
+                              AND F.APP_TYPE_ID = DECODE(E.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+                              AND F.MEM_PAC_ID = A.SRV_PAC_ID
+    WHERE A.PCKAGE_BINDING_NO = #{salesOrdId}
+      AND D.PROMO_ITM_STUS_ID = 1
+      AND ROWNUM = 1
+  </select>
+
+  <insert id="insertSAL0254D" parameterType="Map">
+    INSERT INTO SAL0254D (SEQ_NO,
+                          SALES_ORD_ID,
+                          PROMO_OLD,
+                          PROMO_NEW,
+                          PV_OLD,
+                          PV_NEW,
+                          MTH_RENT_AMT_OLD,
+                          MTH_RENT_AMT_NEW,
+                          REMARK,
+                          DISB,
+                          CRT_DT,
+                          UPD_DT,
+                          CRT_BY,
+                          UPD_BY,
+                          CHG_RENT_AMT
+    ) VALUES (SAL0254D_SEQ_ID.NEXTVAL,
+              #{ordId},
+              #{oldPromo},
+              #{newPromo},
+              #{oldPv},
+              #{newPv},
+              #{oldMthRentAmt},
+              #{promoAmt},
+              #{reqStageId},
+              0,
+              SYSDATE,
+              SYSDATE,
+              349,
+              349,
+              #{chgRentAmt}
+    )
+  </insert>
+
+  <select id="select3MonthBlockList" parameterType="Map" resultType="egovMap">
+    SELECT
+      REF_ID ,
+      RETN_REF_ID ,
+      SALES_ORD_ID ,
+      APP_TYPE_ID ,
+      CUST_ID ,
+      STK_ID ,
+      STK_CTGRY_ID ,
+      UPD_USER_BRNCH_ID ,
+      UPD_USER_ID ,
+      STK_RETN_COOLING_START_DT ,
+      STK_RETN_COOLING_END_DT ,
+      REM ,
+      STUS_CODE_ID ,
+      CRT_USER_ID ,
+      CRT_DT
+    FROM SAL0299D
+    WHERE 1=1
+    AND SYSDATE BETWEEN STK_RETN_COOLING_START_DT AND STK_RETN_COOLING_END_DT
+    AND STUS_CODE_ID = 1
+    AND CUST_ID = #{custId}
+    AND STK_CTGRY_ID = #{stkCtgryId}
+    AND ROWNUM = 1
+  </select>
+
+   <select id="crtSeqSAL0346D"  resultType="int">
+    SELECT SAL0346D_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+   <insert id="insertCancelSAL0346D" parameterType="Map">
+    INSERT INTO SAL0346D ( ID,
+                           ORD_ID,
+                           PGM_PATH,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           UPD_USER_ID,
+                           UPD_DT
+                         ) VALUES ( SAL0346D_ID_SEQ.NEXTVAL,
+                                    #{salesOrderId},
+                                    #{pgmPath},
+                                    #{userId},
+                                    SYSDATE,
+                                    #{userId},
+                                    SYSDATE
+                         )
+  </insert>
+
+
+    <insert id="insertDeductSAL0236D" parameterType="Map">
+        INSERT INTO SAL0236D(DEDUCTION_ACC_ID, SALES_ORD_ID, SRV_CNTRCT_ID, CRC_ID, BANK_ID, ACC_ID, DD_APPLY_DT,
+        DD_SUBMIT_DT, DD_START_DT, DD_REJCT_DT, STUS_ID, REMARK, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT)
+        SELECT #{deductId},
+                   SALES_ORD_ID,
+                   SVC_CNTRCT_ID,
+                   CUST_CRC_ID,
+                   BANK_ID,
+                   CUST_ACC_ID,
+                   DD_APPLY_DT,
+                   DD_SUBMIT_DT,
+                   DD_START_DT,
+                   DD_REJCT_DT,
+                   STUS_CODE_ID,
+                   REM,
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE
+        FROM SAL0074D
+        WHERE RENT_PAY_ID = #{rentPayId}
+      </insert>
+
+    <select id="crtSeqSAL0236D" resultType="Integer">
+        SELECT SAL0236D_DEDUCTION_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <update id="updatePaymentChannelvRescue" parameterType="Map">
+        UPDATE SAL0074D
+           SET MODE_ID  = #{modeId},
+                   CUST_CRC_ID  = 0,
+                   CUST_ACC_ID  = 0,
+                   BANK_ID = 0,
+                   DD_APPLY_DT = SYSDATE,
+                   DD_SUBMIT_DT = null,
+                   DD_START_DT = null,
+                   DD_REJCT_DT = null,
+                   FAIL_RESN_ID = null,
+                   UPD_USER_ID     = #{userId},
+                   UPD_DT          = SYSDATE,
+                   GRACE_PERIOD = 1,
+                   DEDUCT_ACC_ID = #{deductId}
+         WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
+
+    <update id="updatePaymentChannel" parameterType="rentPaySetVO">
+        UPDATE SAL0074D
+           SET MODE_ID         = #{modeId}
+             , CUST_CRC_ID     = #{custCrcId}
+             , BANK_ID         = #{bankId}
+             , CUST_ACC_ID     = #{custAccId}
+             , DD_APPLY_DT     = TO_DATE(#{ddApplyDt}, 'DD/MM/YYYY')
+             , DD_SUBMIT_DT    = TO_DATE(#{ddSubmitDt}, 'DD/MM/YYYY')
+             , DD_START_DT     = TO_DATE(#{ddStartDt}, 'DD/MM/YYYY')
+             , DD_REJCT_DT     = TO_DATE(#{ddRejctDt}, 'DD/MM/YYYY')
+             , UPD_USER_ID     = #{updUserId}
+             , UPD_DT          = SYSDATE
+             , IS_3RD_PARTY    = #{is3rdParty}
+             , CUST_ID         = #{custId}
+             , NRIC_OLD        = #{nricOld}
+             , FAIL_RESN_ID    = #{failResnId}
+             , ISSU_NRIC       = #{issuNric}
+             , LAST_APPLY_USER = #{lastApplyUser}
+             , PAY_TRM         = #{payTrm}
+             , GRACE_PERIOD = 0
+         WHERE RENT_PAY_ID     = #{rentPayId}
+    </update>
+
+    <update id="updateECashInfo" parameterType="salesOrderMVO">
+        UPDATE SAL0001D
+           SET UPD_DT       = SYSDATE
+             , UPD_USER_ID  = #{updUserId}
+             , ECASH        = #{ecash}
+         WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+<update id="updateEmailSentCount" parameterType="Map">
+    UPDATE SAL0020D
+       SET EMAIL_SENT_COUNT = EMAIL_SENT_COUNT + 1
+     WHERE SO_REQ_ID = #{soReqId}
+</update>
+
+   <update id="updateCancelSAL0349D" parameterType="Map">
+        UPDATE SAL0349D SET UPD_DT = SYSDATE,
+                            UPD_BY = #{userId},
+                            DISB = 1
+        WHERE SUB_ORD_ID = #{salesOrdId}
+        AND DISB = 0
+   </update>
+
+   <select id="chkACBulkCancel" parameterType="Map" resultType="integer">
+    SELECT COUNT(*)
+    FROM SAL0349D T1
+    LEFT JOIN SAL0046D T2 ON T1.SUB_ORD_ID = T2.SALES_ORD_ID
+    LEFT JOIN SAL0001D T3 ON T1.SUB_ORD_ID = T3.SALES_ORD_ID
+    WHERE
+    T1.DISB = 0
+    AND T1.SUB_ORD_ID = #{salesOrderId}
+    AND T3.STUS_CODE_ID = 4
+    <![CDATA[
+    AND T2.INSTALL_DT <= SYSDATE - 60
+    ]]>
+  </select>
+
+  <update id="updateCancelSAL0424D" parameterType="Map">
+        MERGE INTO SAL0424D TRG
+		USING (
+			SELECT
+				A.COMBO_ID
+				, A.SEQ
+				, A.SALES_ORD_ID
+				, '30' STUS_ID
+				, '0' EXECUTE_FLAG
+				, CASE
+				    WHEN A.SALES_ORD_ID = B.SALES_ORD_ID
+				    THEN 'ORDER CANCELLED'
+				    ELSE 'COMBO CANCEL DUE TO ORDER ' || C.SALES_ORD_NO || ' CANCELLED'
+				  END REMARKS
+			FROM
+			SAL0424D A
+			JOIN (SELECT SALES_ORD_ID,COMBO_ID FROM SAL0424D WHERE SALES_ORD_ID = #{salesOrdId} AND STUS_ID =1 ) B
+			ON A.COMBO_ID = B.COMBO_ID
+			LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = A.SALES_ORD_ID
+		) SRC ON (SRC.COMBO_ID = TRG.COMBO_ID AND SRC.SALES_ORD_ID = TRG.SALES_ORD_ID)
+		WHEN MATCHED THEN
+		UPDATE SET
+			TRG.STUS_ID = SRC.STUS_ID
+			,TRG.EXECUTE_FLAG = SRC.EXECUTE_FLAG
+			,TRG.UPD_DT = SYSDATE
+			,TRG.UPD_USER_ID = 349
+			,TRG.REMARKS = SRC.REMARKS
+   </update>
+
+   <update id="updateCancelSAL0432D" parameterType="Map">
+        MERGE INTO SAL0432D TRG
+        USING (
+            SELECT #{salesOrdId} SALES_ORD_ID from dual
+        ) SRC ON (SRC.SALES_ORD_ID = TRG.SALES_ORD_ID)
+        WHEN MATCHED THEN
+        UPDATE SET
+            TRG.STUS_ID = 10
+            ,TRG.UPD_DT = SYSDATE
+            ,TRG.UPD_USER_ID = 349
+            ,TRG.REMARKS = 'Cancelled before installation.'
+   </update>
+
+   <update id="updateCancelSAL0408D" parameterType="Map">
+    UPDATE SAL0408D
+		SET STUS_ID = 8
+		,UPD_DT = SYSDATE
+		,UPD_USER_ID = 349
+	   ,REMARKS = 'Early extrade - Cancelled before installation.'
+	WHERE
+	STUS_ID = 1
+	AND SALES_ORD_ID IN (
+	   SELECT A.OLD_SALES_ORD_ID OLD_SALES_ORD_ID FROM SAL0432D A
+		LEFT JOIN SAL0408D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+		WHERE A.SALES_ORD_ID = #{salesOrdId} )
+   </update>
+
+</mapper>

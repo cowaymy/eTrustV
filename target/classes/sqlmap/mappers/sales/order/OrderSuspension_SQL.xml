@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderSuspensionMapper">
+	<select id="orderSuspensionList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT Filter1.SUS_ID   ,
+		       Filter1.SALESORDERID1 SALES_ORD_ID  ,
+		       Filter1.SUS_STUS_ID   ,
+		       Filter1.INVID1 INV_ID  ,
+		       Filter1.CALL_ENTRY_ID   ,
+		       Filter1.RAF_AMT   ,
+		       Filter1.SUS_CRT_USER_ID   ,
+		       Filter1.SUS_UPD_USER_ID   ,
+		       Filter1.SUS_NO   ,
+		       Filter1.SUS_LAST_BILL_MONTH   ,
+		       Filter1.SUS_LAST_BILL_YEAR   ,
+		       Filter1.SUS_LAST_BILL_INST_NO   ,
+		       Filter1.SUS_CURR_BILL_INST_NO   ,
+		       Filter1.SUS_FROM_FB   ,
+		       Filter1.FB_REF_NO   ,
+		       Filter1.SALES_ORD_NO   ,
+		       Filter1.CODE   ,
+		       Filter1.NAME   ,
+		       CASE
+		            WHEN ( Filter1.SUS_CRT_DT IS NOT NULL ) THEN TO_CHAR(Filter1.SUS_CRT_DT,'dd-MM-YYYY')
+		       ELSE '1900-01-01 00:00:00'
+		          END SUS_CRT_DT  ,
+		       CASE
+		            WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
+		       ELSE ''
+		          END SUS_CRT_USER_NAME  ,
+		       CASE
+		            WHEN ( Filter1.INVID2 IS NOT NULL ) THEN Filter1.INV_NO
+		       ELSE ''
+		          END INV_NO  ,
+		       CASE
+		            WHEN ( Filter1.SUS_UPD_DT IS NOT NULL ) THEN Filter1.SUS_UPD_DT
+		       ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+		          END SUS_UPD_DT  ,
+		       CASE
+		            WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		       ELSE ''
+		          END SUS_UPD_USER_NAME  ,
+		       REN_STUS
+		  FROM ( SELECT Extent1.SUS_ID   ,
+		                Extent1.SALES_ORD_ID SALESORDERID1  ,
+		                Extent1.SUS_STUS_ID   ,
+		                Extent1.INV_ID INVID1  ,
+		                Extent1.CALL_ENTRY_ID   ,
+		                Extent1.RAF_AMT   ,
+		                Extent1.SUS_CRT_DT   ,
+		                Extent1.SUS_CRT_USER_ID   ,
+		                Extent1.SUS_UPD_DT   ,
+		                Extent1.SUS_UPD_USER_ID   ,
+		                Extent1.SUS_NO   ,
+		                Extent1.SUS_LAST_BILL_MONTH   ,
+		                Extent1.SUS_LAST_BILL_YEAR   ,
+		                Extent1.SUS_LAST_BILL_INST_NO   ,
+		                Extent1.SUS_CURR_BILL_INST_NO   ,
+		                Extent1.SUS_FROM_FB   ,
+		                Extent1.FB_REF_NO   ,
+		                Extent2.SALES_ORD_NO   ,
+		                Extent3.CODE   ,
+		                Extent3.NAME   ,
+		                Extent4.INV_ID INVID2  ,
+		                Extent4.INV_NO   ,
+		                Extent5.USER_ID   ,
+		                Extent5.USER_NAME   ,
+		                Extent6.STUS_CODE_ID REN_STUS
+		         FROM SAL0096D Extent1
+		                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+		                JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.SUS_STUS_ID
+		                LEFT JOIN SAL0049D Extent4   ON Extent4.INV_ID = Extent1.INV_ID
+		                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.SUS_CRT_USER_ID
+		                JOIN SAL0071D Extent6 ON Extent6.SALES_ORD_ID = Extent2.SALES_ORD_ID
+		        WHERE  ( 8 <> Extent1.SUS_STUS_ID )
+		        ]]>
+		<if test="susStusList != null and susStusList != ''">
+			AND Extent1.SUS_STUS_ID IN
+			<foreach item="item" collection="susStusList" index="index"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		) Filter1
+		LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Filter1.SUS_UPD_USER_ID
+		WHERE 1=1
+		<if test="susNo != null and susNo != ''">
+			AND UPPER(Filter1.SUS_NO) = UPPER(#{susNo})
+		</if>
+		<if test="salesOrdNo != null and salesOrdNo != ''">
+			AND Filter1.SALES_ORD_NO = #{salesOrdNo}
+		</if>
+		<if test="susCrtUserName != null and susCrtUserName != ''">
+			AND UPPER(SUS_CRT_USER_NAME) = UPPER(#{susCrtUserName})
+		</if>
+		<if test="invNo != null and invNo != ''">
+			AND UPPER(Filter1.INV_NO) = UPPER(#{invNo})
+		</if>
+		<if test="startCrtDt != null and startCrtDt != '' ">
+			AND Filter1.SUS_CRT_DT <![CDATA[  >= ]]>
+			TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+		</if>
+		<if test="endCrtDt != null and endCrtDt != ''">
+			AND Filter1.SUS_CRT_DT <![CDATA[  <= ]]>
+			TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+		</if>
+	</select>
+
+	<select id="orderSuspendInfo" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.SUS_ID ,
+		Extent1.SALES_ORD_ID ,
+		Extent1.SUS_STUS_ID ,
+		Extent1.INV_ID ,
+		Extent1.CALL_ENTRY_ID ,
+		Extent1.RAF_AMT ,
+		Extent1.SUS_CRT_USER_ID ,
+		Extent1.SUS_UPD_USER_ID ,
+		Extent1.SUS_NO ,
+		Extent1.SUS_LAST_BILL_MONTH ,
+		Extent1.SUS_LAST_BILL_YEAR ,
+		Extent1.SUS_LAST_BILL_INST_NO ,
+		Extent1.SUS_CURR_BILL_INST_NO ,
+		Extent1.SUS_FROM_FB ,
+		Extent1.FB_REF_NO ,
+		Extent2.SALES_ORD_NO ,
+		Extent3.CODE ,
+		Extent3.NAME ,
+		CASE
+		WHEN ( Extent1.SUS_CRT_DT IS NOT NULL ) THEN Extent1.SUS_CRT_DT
+		ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+		END SUS_CRT_DT ,
+		CASE
+		WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+		ELSE ''
+		END SUS_CRT_USER_NAME ,
+		CASE
+		WHEN ( Extent4.INV_ID IS NOT NULL ) THEN Extent4.INV_NO
+		ELSE ''
+		END INV_NO ,
+		CASE
+		WHEN ( Extent1.SUS_UPD_DT IS NOT NULL ) THEN Extent1.SUS_UPD_DT
+		ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+		END SUS_UPD_DT ,
+		CASE
+		WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		ELSE ''
+		END SUS_UPD_USER_NAME
+		FROM SAL0096D Extent1
+		JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+		JOIN SYS0038M Extent3 ON Extent3.STUS_CODE_ID = Extent1.SUS_STUS_ID
+		LEFT JOIN SAL0049D Extent4 ON Extent4.INV_ID = Extent1.INV_ID
+		LEFT JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.SUS_CRT_USER_ID
+		LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID =
+		Extent1.SUS_UPD_USER_ID
+			 <![CDATA[
+			 WHERE  ( 8 <> Extent1.SUS_STUS_ID )
+		         AND ( Extent1.SUS_ID = #{susId} )
+		         AND ROWNUM <= 1
+			  ]]>
+	</select>
+
+	<select id="suspendInchargePerson" parameterType="Map"
+		resultType="egovMap">
+		SELECT Extent2.USER_ID ,
+		Extent2.USER_NAME ,
+		Extent2.USER_PASSWD ,
+		Extent2.USER_FULL_NAME ,
+		Extent2.USER_EMAIL ,
+		Extent2.USER_STUS_ID ,
+		Extent2.USER_BRNCH_ID ,
+		Extent2.USER_DEPT_ID ,
+		Extent2.USER_UPD_USER_ID ,
+		Extent2.USER_UPD_DT ,
+		Extent2.USER_SYNC_CHK ,
+		Extent2.USER_NRIC ,
+		Extent2.USER_DT_JOIN ,
+		Extent2.USER_GSEC_SYN_CHK ,
+		Extent2.USER_PASSWD_LAST_UPD_DT ,
+		Extent2.USER_TYPE_ID ,
+		Extent2.USER_DFLT_PASSWD ,
+		Extent2.USER_VAL_ID_FROM ,
+		Extent2.USER_VAL_ID_TO ,
+		Extent2.USER_SEC_QUES_ID ,
+		Extent2.USER_SEC_QUES_ANS ,
+		Extent2.USER_WORK_NO ,
+		Extent2.USER_MOBILE_NO ,
+		Extent2.USER_EXT_NO ,
+		Extent2.USER_IS_PART_TM ,
+		Extent2.USER_DEPT_ID ,
+		Extent2.USER_IS_EXTRNL
+		FROM SAL0097D Extent1
+		JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.USER_ID
+		WHERE ( Extent1.SUS_ID = #{susId} )
+		AND ( 1 = Extent1.SUS_IN_PERSON_STUS_ID )
+		ORDER BY USER_NAME
+	</select>
+
+	<select id="reAssignIncharge" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.SUS_IN_PERSON_ID ,
+		Extent1.SUS_ID ,
+		Extent1.USER_ID ,
+		Extent1.SUS_IN_PERSON_STUS_ID ,
+		Extent1.SUS_IN_PERSON_CRT_DT ,
+		Extent1.SUS_IN_PERSON_CRT_USER_ID ,
+		Extent1.SUS_IN_PERSON_UPD_DT ,
+		Extent1.SUS_IN_PERSON_UPD_USER_ID
+		FROM SAL0097D Extent1
+		WHERE Extent1.SUS_ID = #{susId}
+		AND 1 = Extent1.SUS_IN_PERSON_STUS_ID
+	</select>
+
+	<update id="updateSusInchargePerson" parameterType="Map">
+		UPDATE SAL0097D
+		SET SUS_IN_PERSON_STUS_ID = #{susInPersonStusId},
+		SUS_IN_PERSON_UPD_DT = SYSDATE
+		WHERE SUS_IN_PERSON_ID = #{susInPersonId}
+	</update>
+
+	<select id="reAssignSusUserId" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.SUS_IN_PERSON_ID ,
+		Extent1.SUS_ID ,
+		Extent1.USER_ID ,
+		Extent1.SUS_IN_PERSON_STUS_ID ,
+		Extent1.SUS_IN_PERSON_CRT_DT ,
+		Extent1.SUS_IN_PERSON_CRT_USER_ID ,
+		Extent1.SUS_IN_PERSON_UPD_DT ,
+		Extent1.SUS_IN_PERSON_UPD_USER_ID
+		FROM SAL0097D Extent1
+		WHERE Extent1.SUS_ID = #{susId}
+		AND Extent1.USER_ID = #{susUserId}
+		AND ROWNUM <![CDATA[<=]]>
+		1
+	</select>
+
+	<resultMap id="callLogClobMap" type="egovMap">
+		<result property="callRem" column="CALL_REM" jdbcType="CLOB"
+			javaType="string" />
+	</resultMap>
+
+	<select id="suspendCallResult" parameterType="Map" resultMap="callLogClobMap">
+		SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID ,
+		Project1.CALL_REM CALL_REM ,
+		Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID ,
+		Project1.CALL_CRT_DT CALL_CRT_DT ,
+		Project1.CALL_ROS_AMT CALL_ROS_AMT ,
+		Project1.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		Project1.SALES_ORD_ID SALES_ORD_ID ,
+		Project1.TYPE_ID TYPE_ID ,
+		Project1.CODE CODE ,
+		Project1.CODE_NAME CODE_NAME ,
+		Project1.CALL_FDBCK_ID ,
+		Project1.RESN_CODE ,
+		Project1.RESN_DESC ,
+		Project1.CALL_CRT_USER_NAME ,
+		Project1.STUS_CODE_ID ,
+		Project1.STUS_CODE ,
+		Project1.STUS_CODE_NAME ,
+		Project1.ROS_MONTH ,
+		Project1.ROS_YEAR ,
+		Project1.ROS_CALLER_USER_ID ,
+		Project1.ROS_CALLER_USER_NAME ,
+		Project1.recalldt
+		FROM ( SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID ,
+		Extent1.CALL_REM CALL_REM ,
+		Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID ,
+		Extent1.CALL_CRT_DT CALL_CRT_DT ,
+		Extent1.CALL_ROS_AMT CALL_ROS_AMT ,
+		Extent2.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		Extent2.SALES_ORD_ID SALES_ORD_ID ,
+		Extent2.TYPE_ID TYPE_ID ,
+		Extent3.CODE CODE ,
+		Extent3.CODE_NAME CODE_NAME ,
+		CASE
+		WHEN ( Extent1.CALL_FDBCK_ID IS NOT NULL ) THEN Extent1.CALL_FDBCK_ID
+		ELSE 0
+		END CALL_FDBCK_ID ,
+		CASE
+		WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.CODE
+		ELSE ''
+		END RESN_CODE ,
+		CASE
+		WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC
+		ELSE ''
+		END RESN_DESC ,
+		CASE
+		WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		ELSE ''
+		END CALL_CRT_USER_NAME ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.STUS_CODE_ID
+		ELSE 0
+		END STUS_CODE_ID ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.CODE
+		ELSE ''
+		END STUS_CODE ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.NAME
+		ELSE ''
+		END STUS_CODE_NAME ,
+		CASE
+		WHEN ( NOT ( ( Extent7.SALES_ORD_ID IS NULL )
+		AND ( Extent7.ROS_YEAR IS NULL )
+		AND ( Extent7.ROS_MONTH IS NULL ) ) ) THEN Extent7.ROS_MONTH
+		ELSE 0
+		END ROS_MONTH ,
+		CASE
+		WHEN ( NOT ( ( Extent7.SALES_ORD_ID IS NULL )
+		AND ( Extent7.ROS_YEAR IS NULL )
+		AND ( Extent7.ROS_MONTH IS NULL ) ) ) THEN Extent7.ROS_YEAR
+		ELSE 0
+		END ROS_YEAR ,
+		CASE
+		WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_ID
+		ELSE 0
+		END ROS_CALLER_USER_ID ,
+		CASE
+		WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+		ELSE ''
+		END ROS_CALLER_USER_NAME ,
+		'01/01/00' recalldt
+		FROM CCR0007D Extent1
+		JOIN CCR0006D Extent2 ON Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID
+		JOIN SYS0013M Extent3 ON Extent3.CODE_ID = Extent2.TYPE_ID
+		LEFT JOIN SYS0038M Extent4 ON Extent4.STUS_CODE_ID = Extent1.CALL_STUS_ID
+		LEFT JOIN SYS0032M Extent5 ON ( Extent5.RESN_ID =
+		Extent1.CALL_FDBCK_ID )
+		AND ( 439 = Extent5.RESN_TYPE_ID )
+		LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CALL_CRT_USER_ID
+		LEFT JOIN MSC0013D Extent7 ON ( Extent7.SALES_ORD_ID =
+		Extent2.SALES_ORD_ID )
+		AND ( Extent7.ROS_MONTH = substr(TO_CHAR(CALL_CRT_DT, 'YYYY-MM-DD'),
+		'6','2') )
+		AND ( Extent7.ROS_YEAR = substr(TO_CHAR(CALL_CRT_DT, 'YYYY-MM-DD'),
+		'1','4') )
+		LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Extent7.ROS_CALLER_USER_ID
+		WHERE ( 8 <![CDATA[<>]]>
+		Extent1.CALL_STUS_ID )
+		AND ( Extent2.SALES_ORD_ID = #{salesOrdId} )
+		ORDER BY Extent1.CALL_RESULT_ID DESC) Project1
+		where rownum <![CDATA[<=]]>1
+	</select>
+
+	<select id="callResultLog" parameterType="Map" resultMap="callLogClobMap">
+		SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID ,
+		Project1.CALL_REM CALL_REM ,
+		Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID ,
+		Project1.CALL_CRT_DT CALL_CRT_DT ,
+		Project1.CALL_ROS_AMT CALL_ROS_AMT ,
+		Project1.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		Project1.SALES_ORD_ID SALES_ORD_ID ,
+		Project1.TYPE_ID TYPE_ID ,
+		Project1.CODE CODE ,
+		Project1.CODE_NAME CODE_NAME ,
+		Project1.CALL_FDBCK_ID ,
+		Project1.RESN_CODE ,
+		Project1.RESN_DESC ,
+		Project1.CALL_CRT_USER_NAME ,
+		Project1.STUS_CODE_ID ,
+		Project1.STUS_CODE ,
+		Project1.STUS_CODE_NAME ,
+		Project1.ROS_MONTH ,
+		Project1.ROS_YEAR ,
+		Project1.ROS_CALLER_USER_ID ,
+		Project1.ROS_CALLER_USER_NAME
+		FROM ( SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID ,
+		Extent1.CALL_REM CALL_REM ,
+		Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID ,
+		Extent1.CALL_CRT_DT CALL_CRT_DT ,
+		Extent1.CALL_ROS_AMT CALL_ROS_AMT ,
+		Extent2.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		Extent2.SALES_ORD_ID SALES_ORD_ID ,
+		Extent2.TYPE_ID TYPE_ID ,
+		Extent3.CODE CODE ,
+		Extent3.CODE_NAME CODE_NAME ,
+		CASE
+		WHEN ( Extent1.CALL_FDBCK_ID IS NOT NULL ) THEN Extent1.CALL_FDBCK_ID
+		ELSE 0
+		END CALL_FDBCK_ID ,
+		CASE
+		WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.CODE
+		ELSE ''
+		END RESN_CODE ,
+		CASE
+		WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC
+		ELSE ''
+		END RESN_DESC ,
+		CASE
+		WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		ELSE ''
+		END CALL_CRT_USER_NAME ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.STUS_CODE_ID
+		ELSE 0
+		END STUS_CODE_ID ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.CODE
+		ELSE ''
+		END STUS_CODE ,
+		CASE
+		WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.NAME
+		ELSE ''
+		END STUS_CODE_NAME ,
+		CASE
+		WHEN ( NOT ( ( Extent7.SALES_ORD_ID IS NULL )
+		AND ( Extent7.ROS_YEAR IS NULL )
+		AND ( Extent7.ROS_MONTH IS NULL ) ) ) THEN Extent7.ROS_MONTH
+		ELSE 0
+		END ROS_MONTH ,
+		CASE
+		WHEN ( NOT ( ( Extent7.SALES_ORD_ID IS NULL )
+		AND ( Extent7.ROS_YEAR IS NULL )
+		AND ( Extent7.ROS_MONTH IS NULL ) ) ) THEN Extent7.ROS_YEAR
+		ELSE 0
+		END ROS_YEAR ,
+		CASE
+		WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_ID
+		ELSE 0
+		END ROS_CALLER_USER_ID ,
+		CASE
+		WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+		ELSE ''
+		END ROS_CALLER_USER_NAME
+		FROM CCR0007D Extent1
+		JOIN CCR0006D Extent2 ON Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID
+		JOIN SYS0013M Extent3 ON Extent3.CODE_ID = Extent2.TYPE_ID
+		LEFT JOIN SYS0038M Extent4 ON Extent4.STUS_CODE_ID = Extent1.CALL_STUS_ID
+		LEFT JOIN SYS0032M Extent5 ON ( Extent5.RESN_ID =
+		Extent1.CALL_FDBCK_ID )
+		AND ( 439 = Extent5.RESN_TYPE_ID )
+		LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.CALL_CRT_USER_ID
+		LEFT JOIN MSC0013D Extent7 ON ( Extent7.SALES_ORD_ID =
+		Extent2.SALES_ORD_ID )
+		AND ( Extent7.ROS_MONTH = substr(TO_CHAR(CALL_CRT_DT, 'YYYY-MM-DD'),
+		'6','2') )
+		AND ( Extent7.ROS_YEAR = substr(TO_CHAR(CALL_CRT_DT, 'YYYY-MM-DD'),
+		'1','4') )
+		LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Extent7.ROS_CALLER_USER_ID
+		WHERE ( 8 <![CDATA[<>]]>
+		Extent1.CALL_STUS_ID )
+		AND ( Extent2.SALES_ORD_ID = #{salesOrdId} ) ) Project1
+		ORDER BY Project1.CALL_RESULT_ID DESC
+	</select>
+
+	<select id="newSuspendSearch1" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.SUS_ID SUS_ID ,
+		Extent1.SALES_ORD_ID SALES_ORD_ID ,
+		Extent1.SUS_STUS_ID SUS_STUS_ID ,
+		Extent1.INV_ID INV_ID ,
+		Extent1.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		Extent1.RAF_AMT RAF_AMT ,
+		Extent1.SUS_CRT_DT SUS_CRT_DT ,
+		Extent1.SUS_CRT_USER_ID SUS_CRT_USER_ID ,
+		Extent1.SUS_UPD_DT SUS_UPD_DT ,
+		Extent1.SUS_UPD_USER_ID SUS_UPD_USER_ID ,
+		Extent1.SUS_NO SUS_NO ,
+		Extent1.SUS_LAST_BILL_MONTH SUS_LAST_BILL_MONTH ,
+		Extent1.SUS_LAST_BILL_YEAR SUS_LAST_BILL_YEAR ,
+		Extent1.SUS_LAST_BILL_INST_NO SUS_LAST_BILL_INST_NO ,
+		Extent1.SUS_CURR_BILL_INST_NO SUS_CURR_BILL_INST_NO ,
+		Extent1.SUS_FROM_FB SUS_FROM_FB ,
+		Extent1.FB_REF_NO FB_REF_NO
+		FROM SAL0096D Extent1
+		WHERE Extent1.SUS_ID = #{susId} AND ROWNUM <![CDATA[<=]]>
+		1
+	</select>
+
+	<insert id="insertCCR0007DSuspend" parameterType="Map">
+		INSERT INTO CCR0007D
+		( CALL_RESULT_ID, CALL_ENTRY_ID, CALL_STUS_ID, CALL_DT, CALL_ACTN_DT
+		, CALL_FDBCK_ID, CALL_CT_ID, CALL_REM, CALL_CRT_USER_ID, CALL_CRT_DT
+		, CALL_CRT_USER_ID_DEPT, CALL_HC_ID, CALL_ROS_AMT, CALL_SMS,
+		CALL_SMS_REM )
+		VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, #{callStusId}
+        , TO_DATE(#{callDt}, 'DD/MM/YYYY'), TO_DATE(#{callActnDt},
+        'DD/MM/YYYY')
+		, #{callFdbckId}, #{callCtId}, #{callRem}, #{callCrtUserId}, SYSDATE
+		, #{callCrtUserIdDept}, #{callHcId}, #{callRosAmt}, #{callSms},
+		#{callSmsRem} )
+	</insert>
+
+	<select id="newSuspendSearch2" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID ,
+		           Extent1.SALES_ORD_ID SALES_ORD_ID ,
+		           Extent1.TYPE_ID TYPE_ID ,
+		           Extent1.STUS_CODE_ID STUS_CODE_ID ,
+		           Extent2.CALL_RESULT_ID RESULT_ID ,
+		           Extent1.DOC_ID DOC_ID ,
+		           Extent1.CRT_USER_ID CRT_USER_ID ,
+		           Extent1.CRT_DT CRT_DT ,
+		           Extent1.CALL_DT CALL_DT ,
+		           Extent1.IS_WAIT_FOR_CANCL IS_WAIT_FOR_CANCL ,
+		           Extent1.HAPY_CALLER_ID HAPY_CALLER_ID ,
+		           Extent1.UPD_DT UPD_DT ,
+		           Extent1.UPD_USER_ID UPD_USER_ID ,
+		           Extent1.ORI_CALL_DT ORI_CALL_DT
+		FROM CCR0006D  Extent1
+		JOIN CCR0007D   Extent2 ON Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID AND
+		                       Extent2.CALL_RESULT_ID IN (
+		                                  SELECT MAX (CALL_RESULT_ID)
+		                                  FROM CCR0007D
+		                                  WHERE CALL_ENTRY_ID =#{callEntryId} GROUP BY CALL_ENTRY_ID)
+		WHERE Extent1.CALL_ENTRY_ID = #{callEntryId} AND ROWNUM <![CDATA[<=]]>	1
+	</select>
+
+	<update id="updateCCR0006DSuspend" parameterType="Map">
+		UPDATE CCR0006D
+		SET STUS_CODE_ID = #{stusCodeId},
+		RESULT_ID = #{resultId},
+		UPD_DT = SYSDATE,
+		UPD_USER_ID = #{updUserId}
+		WHERE CALL_ENTRY_ID = #{callEntryId}
+	</update>
+
+	<update id="updateSAL0096DSuspend" parameterType="Map">
+		UPDATE SAL0096D
+		SET SUS_STUS_ID = #{stusCodeId},
+		SUS_UPD_DT = SYSDATE,
+		SUS_UPD_USER_ID = #{updUserId}
+		WHERE SUS_ID = #{susId}
+	</update>
+
+	<select id="spInsertOrderReactiveFees" statementType="CALLABLE"
+		parameterType="Map">
+       <![CDATA[
+            {
+                  call SP_INSERT_ORD_REACT_FEES ( #{ORD_ID}, #{userId})
+            }
+         ]]>
+	</select>
+
+	<update id="updateAmtSAL0096D" parameterType="Map">
+		UPDATE SAL0096D
+		SET SUS_STUS_ID = #{stusCodeId},
+		RAF_AMT = #{rafAmt},
+		SUS_UPD_DT = SYSDATE,
+		SUS_LAST_BILL_MONTH = #{billMonth},
+		SUS_LAST_BILL_YEAR = #{billYear},
+		SUS_LAST_BILL_INST_NO = #{lastBillInstNo},
+		SUS_CURR_BILL_INST_NO = #{currBillInstNo}
+		WHERE SUS_ID = #{susId}
+	</update>
+
+</mapper>

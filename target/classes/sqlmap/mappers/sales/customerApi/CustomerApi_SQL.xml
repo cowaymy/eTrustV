@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper">
+
+  <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerList] 20190916 - KR JAEMAJEM */
+      SELECT CUST_ID
+               , NAME
+               , ADDR
+               , TYPE_ID_NAME
+               , CUST_ADD_ID
+      FROM ( SELECT A.CUST_ID AS CUST_ID
+                          , A.NAME AS NAME
+                          , B.ADDR_DTL ||' '||
+                            NVL(B.STREET, '') ||' '||
+                            NVL(C.AREA, '') ||' '||
+                            NVL(C.POSTCODE, '') ||' '||
+                            NVL(C.CITY,'') ||' '||
+                            NVL(C.STATE,'') ||' '||
+                            NVL(C.COUNTRY,'') AS ADDR
+                          , CASE WHEN E.CODE_NAME IS NOT NULL   THEN D.CODE_NAME||'('||E.CODE_NAME||')'
+                                    ELSE D.CODE_NAME END AS TYPE_ID_NAME
+                          , B.CUST_ADD_ID AS CUST_ADD_ID
+                          , ROW_NUMBER() OVER(PARTITION BY B.CUST_ID ORDER BY B.CUST_ADD_ID DESC)AS ROW_NUMBER
+                 FROM SAL0029D A
+                 INNER JOIN SAL0023D B ON A.CUST_ID = B.CUST_ID
+                                                  AND B.STUS_CODE_ID = 9
+                 INNER JOIN SYS0064M C ON B.AREA_ID = C.AREA_ID
+                 INNER JOIN SYS0013M D ON A.TYPE_ID = D.CODE_ID
+                 LEFT OUTER JOIN SYS0013M E ON A.CORP_TYPE_ID = E.CODE_ID
+                                                          AND A.CORP_TYPE_ID != 0
+                 WHERE A.STUS_CODE_ID != 8
+                     AND EXISTS ( SELECT 1
+                                         FROM ORG0001D AA
+                                         INNER JOIN SAL0090D BB ON AA.MEM_ID = BB.SRV_CODY_ID
+                                                                            AND BB.SRV_STUS_ID = 1
+                                         INNER JOIN SAL0001D CC ON BB.SRV_SO_ID = CC.SALES_ORD_ID
+                                                                            AND CC.STUS_CODE_ID = 4
+                                                                            AND CC.APP_TYPE_ID IN (66, 67, 68, 1412)
+                                         INNER JOIN SAL0095D DD ON CC.SALES_ORD_ID = DD.SRV_SALES_ORD_ID
+                                                                            AND DD.SRV_STUS_CODE_ID = 4
+                                         WHERE AA.MEM_ID = #{memId}
+                                             AND CC.CUST_ID = A.CUST_ID
+                            )
+    ]]>
+
+    <if test="typeId > 0">
+      AND A.TYPE_ID = #{typeId}
+    </if>
+
+    <if test="selectType != null and selectType != '' ">
+      <choose>
+        <when test='selectType.equals("1")'>
+          AND REPLACE(UPPER(A.NAME), ' ', '') = UPPER(#{selectKeyword})
+        </when>
+
+         <when test='selectType.equals("2")'>
+           AND UPPER(A.NRIC) = UPPER(#{selectKeyword})
+         </when>
+
+         <when test='selectType.equals("3")'>
+           AND UPPER(A.NRIC) = UPPER(#{selectKeyword})
+         </when>
+      </choose>
+    </if>
+
+    <![CDATA[
+      ) WHERE ROW_NUMBER = 1
+    ]]>
+  </select>
+
+  <select id="selectCustomerInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerInfo] 20190916 - KR JAEMAJEM */
+    SELECT TYPE_ID
+             , CUST_ID
+             , NAME
+             , TYPE_ID_NAME
+             , ADDR
+             , POSTCODE
+             , CUST_VA_NO
+             , NATION_NAME
+             , RACE_ID_NAME
+             , TEL_M1
+             , TEL_O
+             , TEL_R
+             , EMAIL
+             , CUST_CNTC_ID
+    FROM ( SELECT A.TYPE_ID AS TYPE_ID
+                        , A.CUST_ID AS CUST_ID
+                        , A.NAME AS NAME
+                        , CASE WHEN LEFT_A.CODE_NAME IS NOT NULL  THEN D.CODE_NAME||'('||LEFT_A.CODE_NAME||')'
+                                  ELSE D.CODE_NAME END AS TYPE_ID_NAME
+                        , B.ADDR_DTL ||' '||
+                          NVL(B.STREET, '') ||' '||
+                          NVL(C.AREA, '') ||' '||
+                          NVL(C.POSTCODE, '') ||' '||
+                          NVL(C.CITY,'') ||' '||
+                          NVL(C.STATE,'') ||' '||
+                          NVL(C.COUNTRY,'') AS ADDR
+                        , C.POSTCODE AS POSTCODE
+                        , A.CUST_VA_NO AS CUST_VA_NO
+                        , LEFT_B.CODE_DESC AS NATION_NAME
+                        , LEFT_C.CODE_NAME AS RACE_ID_NAME
+                        , E.TEL_M1 AS TEL_M1
+                        , E.TEL_O AS TEL_O
+                        , E.TEL_R AS TEL_R
+                        , E.EMAIL AS EMAIL
+                        , E.CUST_CNTC_ID AS CUST_CNTC_ID
+                        , ROW_NUMBER() OVER(PARTITION BY E.CUST_ID ORDER BY E.CUST_CNTC_ID DESC)  AS ROW_NUMBER
+               FROM SAL0029D A
+               INNER JOIN SAL0023D B ON A.CUST_ID = B.CUST_ID
+                                                AND B.STUS_CODE_ID = 9
+               INNER JOIN SYS0064M C ON B.AREA_ID = C.AREA_ID
+               INNER JOIN SYS0013M D ON A.TYPE_ID = D.CODE_ID
+               INNER JOIN SAL0027D E ON A.CUST_ID = E.CUST_ID
+                                                AND E.STUS_CODE_ID = 9
+               LEFT OUTER JOIN SYS0013M LEFT_A ON A.CORP_TYPE_ID = LEFT_A.CODE_ID
+                                                                 AND A.CORP_TYPE_ID != 0
+               LEFT OUTER JOIN SYS0013M LEFT_B ON A.NATION = LEFT_B.CODE_ID
+                                                                 AND LEFT_B.CODE_MASTER_ID = 338
+                                                                 AND LEFT_B.DISAB = 0
+               LEFT OUTER JOIN SYS0013M LEFT_C ON  A.RACE_ID = LEFT_C.CODE_ID
+               WHERE A.CUST_ID = #{custId}
+                   AND B.CUST_ADD_ID = #{custAddId}
+    )
+    WHERE ROW_NUMBER = 1
+    ]]>
+  </select>
+
+  <select id="selectCustomerOrder" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerOrder] 20190916 - KR JAEMAJEM */
+    SELECT A.SALES_ORD_ID AS SALES_ORD_ID
+             , A.SALES_ORD_NO AS SALES_ORD_NO
+             , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS SALES_DT
+             , C.NAME AS STUS_CODE_ID_NAME
+             , D.CODE_NAME AS APP_TYPE_ID_NAME
+             , F.STK_DESC AS STK_DESC_NAME
+             , CASE WHEN A.APP_TYPE_ID = 88 THEN NVL(AA1.ADDR_DTL, '')||' '||NVL(AA1.STREET, '')||' '||NVL(AA2.AREA, '')||' '||NVL(AA2.POSTCODE, '') ||' '||NVL(AA2.CITY,'')||' '||NVL(AA2.STATE,'')||' '|| NVL(AA2.COUNTRY,'')
+                       ELSE NVL(BB1.ADDR_DTL, '')||' '||NVL(BB1.STREET, '')||' '||NVL(BB2.AREA, '')||' '||NVL(BB2.POSTCODE, '') ||' '||NVL(BB2.CITY,'')||' '||NVL(BB2.STATE,'')||' '|| NVL(BB2.COUNTRY,'') END AS ADDR
+             , CASE WHEN A.APP_TYPE_ID = 88 THEN NVL(AA3.NAME, '')
+                       ELSE NVL(BB3.NAME, '') END AS NAME
+    FROM SAL0001D A
+    INNER JOIN SAL0045D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    INNER JOIN SYS0038M C ON A.STUS_CODE_ID = C.STUS_CODE_ID
+    INNER JOIN SYS0013M D ON A.APP_TYPE_ID = D.CODE_ID
+    INNER JOIN SAL0002D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
+    INNER JOIN SYS0026M F ON E.ITM_STK_ID = F.STK_ID
+    LEFT OUTER JOIN SAL0024D AA0 ON A.CUST_BILL_ID = AA0.CUST_BILL_ID
+    LEFT OUTER JOIN SAL0023D AA1 ON AA0.CUST_BILL_ADD_ID = AA1.CUST_ADD_ID
+    LEFT OUTER JOIN SYS0064M AA2 ON AA1.AREA_ID = AA2.AREA_ID
+    LEFT OUTER JOIN SAL0027D AA3 ON AA0.CUST_BILL_CNT_ID = AA3.CUST_CNTC_ID
+    LEFT OUTER JOIN SAL0023D BB1 ON A.CUST_ADD_ID = BB1.CUST_ADD_ID
+    LEFT OUTER JOIN SYS0064M BB2 ON BB1.AREA_ID = BB2.AREA_ID
+    LEFT OUTER JOIN SAL0027D BB3 ON  A.CUST_CNT_ID = BB3.CUST_CNTC_ID
+    WHERE A.CUST_ID = #{custId}
+    ORDER BY A.SALES_DT DESC
+    ]]>
+  </select>
+
+  <select id="selectCodeList" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCodeList] 20190916 - KR JAEMAJEM */
+    SELECT CODE_MASTER_ID
+             , CODE_ID
+             , CODE
+             , UPPER(CODE_NAME) AS CODE_NAME
+             , UPPER(CODE_DESC) AS CODE_DESC
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID IN (8, 95, 17, 338, 2)
+        AND DISAB = 0
+    ORDER BY CODE_MASTER_ID ASC
+        , CASE WHEN CODE_MASTER_ID = 8 THEN CODE_DESC
+                  ELSE NULL END DESC
+        , CASE WHEN CODE_MASTER_ID != 8 THEN CODE_DESC
+                  ELSE NULL END ASC
+    ]]>
+  </select>
+
+  <select id="selectNricNoCheck" parameterType="Map" resultType="Integer">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectNricNoCheck] 20190916 - KR JAEMAJEM */
+    SELECT COUNT(1)
+    FROM SAL0029D
+    WHERE STUS_CODE_ID IN ('1', '9')
+        AND TYPE_ID = #{typeId}
+        AND TRIM(NRIC) = TRIM(#{nric})
+    ]]>
+  </select>
+
+  <select id="selectTelCheck" parameterType="Map" resultType="Integer">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectTelCheck] 20190916 - KR JAEMAJEM */
+    SELECT COUNT(1)
+    FROM ORG0001D
+    WHERE MEM_TYPE IN (1,2)
+    AND '0342809553' IN (TEL_OFFICE, TEL_HUSE, TEL_MOBILE)
+    ]]>
+  </select>
+
+  <select id="getCustId" parameterType="Map" resultType="Integer">
+      SELECT SAL0029D_CUST_ID_SEQ.NEXTVAL AS custId
+      FROM DUAL
+  </select>
+
+  <select id="getTinId" parameterType="Map" resultType="Integer">
+      SELECT EIV0002M_TIN_ID.NEXTVAL AS tinId
+      FROM DUAL
+  </select>
+
+  <insert id="insertCustomerTin" parameterType="Map">
+    <![CDATA[
+    INSERT INTO EIV0002M ( TIN_ID
+                                      , CUST_ID
+                                      , CUST_TIN
+                                      , STATUS
+                                      , REM
+                                      , TIN_VALID_FR_DT
+                                      , TIN_VALID_TO_DT
+                                      , CRT_DT
+                                      , CRT_USER_ID
+                                      , UPD_DT
+                                      , UPD_USER_ID
+    ) VALUES ( #{tinId}
+                  , #{custId}
+                  , #{tinNo}
+                  , 1
+                  , ''
+                  , TRUNC(SYSDATE, 'MM')
+                  , (TO_DATE('99991231', 'YYYYMMDD'))
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+    )
+    ]]>
+  </insert>
+
+  <insert id="insertCustomer" parameterType="Map">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.insertCustomer] 20190919 - KR JAEMAJEM */
+    INSERT INTO SAL0029D ( CUST_ID
+                                      , NAME
+                                      , NRIC
+                                      , NATION
+                                      , DOB
+                                      , GENDER
+                                      , RACE_ID
+                                      , EMAIL
+                                      , REM
+                                      , STUS_CODE_ID
+                                      , UPD_USER_ID
+                                      , UPD_DT
+                                      , REN_GRP
+                                      , PST_TERMS
+                                      , ID_OLD
+                                      , CRT_USER_ID
+                                      , CRT_DT
+                                      , TYPE_ID
+                                      , PAS_SPORT_EXPR
+                                      , VISA_EXPR
+                                      , CUST_VA_NO
+                                      , CORP_TYPE_ID
+                                      , GST_RGIST_NO
+                                      , CTOS_DT
+                                      , FICO_SCRE
+                                      , OLD_IC
+                                      , RECEIVING_MARKETING_MSG_STATUS
+                                      , TIN_ID
+                                      , SST_RGIST_NO
+    ) VALUES ( #{custId}
+                  , #{name}
+                  , TRIM(#{nric})
+                  , NVL(#{nation}, 0)
+                  , TO_DATE(NVL(#{dob}, '1900/01/01'), 'YYYY/MM/DD')
+                  , #{gender}
+                  , NVL(#{raceId}, 0)
+                  , #{email}
+                  , #{rem}
+                  , 1
+                  , #{updUserId}
+                  , SYSDATE
+                  , NULL
+                  , 0
+                  , 0
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{typeId}
+                  , TO_DATE(NVL(#{pasSportExpr}, '1900/01/01'), 'YYYY/MM/DD')
+                  , TO_DATE(NVL(#{visaExpr}, '1900/01/01'), 'YYYY/MM/DD')
+                  , '98 9920 '||SUBSTR(LPAD(#{custId}, 8, 0), 1,4)||' '||SUBSTR(LPAD(#{custId}, 8, 0),5)
+                  , DECODE(#{typeId}, 965, #{corpTypeId}, 0)
+                  , #{gstRgistNo}
+                  , #{ctosDt}
+                  , NULL
+                  , #{oldIc}
+                  , #{receivingMarketingMsgStatus}
+                  , #{tinId}
+                  , #{sstRegNo}
+    )
+    ]]>
+  </insert>
+
+  <insert id="insertCustContact" parameterType="Map">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.insertCustContact] 20190919 - KR JAEMAJEM */
+    INSERT INTO SAL0027D ( CUST_CNTC_ID                                                        -- ASIS_COLUMN : CustContactID
+                                      , CUST_ID                                                                 -- ASIS_COLUMN : CustID
+                                      , NAME                                                                     -- ASIS_COLUMN : Name
+                                      , CUST_INITIAL                                                          -- ASIS_COLUMN : Initial
+                                      , NRIC                                                                      -- ASIS_COLUMN : NRIC
+                                      , POS                                                                       -- ASIS_COLUMN : Pos
+                                      , TEL_M1                                                                  -- ASIS_COLUMN : TelM1
+                                      , TEL_M2                                                                  -- ASIS_COLUMN : TelM2
+                                      , TEL_O                                                                    -- ASIS_COLUMN : TelO
+                                      , TEL_R                                                                    -- ASIS_COLUMN : TelR
+                                      , TELF                                                                      -- ASIS_COLUMN : TelF
+                                      , DOB                                                                       -- ASIS_COLUMN : DOB
+                                      , GENDER                                                                  -- ASIS_COLUMN : Gender
+                                      , RACE_ID                                                                 -- ASIS_COLUMN : RaceID
+                                      , EMAIL                                                                     -- ASIS_COLUMN : Email
+                                      , STUS_CODE_ID                                                        -- ASIS_COLUMN : StatusCodeID
+                                      , UPD_DT                                                                  -- ASIS_COLUMN : Updated
+                                      , UPD_USER_ID                                                          -- ASIS_COLUMN : Updator
+                                      , ID_OLD                                                                   -- ASIS_COLUMN : IDOld
+                                      , DEPT                                                                      -- ASIS_COLUMN : Dept
+                                      , DCM                                                                       -- ASIS_COLUMN : Dcm
+                                      , CRT_DT                                                                  -- ASIS_COLUMN : Created
+                                      , CRT_USER_ID                                                          -- ASIS_COLUMN : Creator
+                                      , EXT                                                                        -- ASIS_COLUMN : Ext
+    ) VALUES ( SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
+                 , #{custId}
+                 , #{contactName}
+                 , NVL(#{contactCustInitial}, 0)
+                 , TRIM(#{contactNric})
+                 , NULL
+                 , #{contactTelM1}
+                 , NULL
+                 , #{contactTelO}
+                 , #{contactTelR}
+                 , #{contactTelf}
+                 , TO_DATE(NVL(#{contactDob}, '1900/01/01'), 'YYYY/MM/DD')
+                 , #{contactGender}
+                 , NVL(#{contactRaceId}, 0)
+                 , #{contactEmail}
+                 , 9
+                 , SYSDATE
+                 , #{updUserId}
+                 , 0
+                 , NULL
+                 , 0
+                 , SYSDATE
+                 , #{crtUserId}
+                 , #{contactExt}
+    )
+    ]]>
+  </insert>
+
+  <insert id="insertCustCareContact" parameterType="Map">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.insertCustCareContact] 20190919 - KR JAEMAJEM */
+    INSERT INTO SAL0026D ( CUST_CARE_CNT_ID                                                 -- ASIS_COLUMN : CustCareCntID
+                                      , CUST_ID                                                                 -- ASIS_COLUMN : CustID
+                                      , NAME                                                                     -- ASIS_COLUMN : Name
+                                      , CUST_INITIAL                                                          -- ASIS_COLUMN : Initial
+                                      , TEL_M                                                                     -- ASIS_COLUMN : TelM
+                                      , TEL_O                                                                     -- ASIS_COLUMN : TelO
+                                      , TEL_R                                                                     -- ASIS_COLUMN : TelR
+                                      , EXT                                                                        -- ASIS_COLUMN : Ext
+                                      , EMAIL                                                                     -- ASIS_COLUMN : Email
+                                      , STUS_CODE_ID                                                        -- ASIS_COLUMN : StatusCodeID
+                                      , CRT_USER_ID                                                          -- ASIS_COLUMN : Creator
+                                      , CRT_DT                                                                  -- ASIS_COLUMN : Created
+                                      , UPD_USER_ID                                                         -- ASIS_COLUMN : Updator
+                                      , UPD_DT                                                                  -- ASIS_COLUMN : Updated
+                                      , TELF                                                                       -- ASIS_COLUMN : TelF
+    ) VALUES ( SAL0026D_CUST_CARE_CNT_ID_SEQ.NEXTVAL                                   -- ASIS_COLUMN : CustCareCntID
+                 , #{custId}
+                 , #{careCntName}
+                 , NVL(#{careCntCustInitial}, 0)
+                 , #{careCntTelM}
+                 , #{careCntTelO}
+                 , #{careCntTelR}
+                 , #{careCntExt}
+                 , #{careCntEmail}
+                 , 9
+                 , #{crtUserId}
+                 , SYSDATE
+                 , #{updUserId}
+                 , SYSDATE
+                 , #{careCntTelf}
+    )
+    ]]>
+  </insert>
+
+  <insert id="insertCustAddress" parameterType="Map">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customer.impl.CustomerApiMapper.insertCustAddress] 20190919 - KR JAEMAJEM */
+    INSERT INTO SAL0023D ( CUST_ADD_ID                                                             -- ASIS_COLUMN : CustAddID
+                                      , CUST_ID                                                                    -- ASIS_COLUMN : CustomerID
+                                      , NRIC                                                                          -- ASIS_COLUMN : NRIC
+                                      , TEL                                                                            -- ASIS_COLUMN : Tel
+                                      , FAX                                                                            -- ASIS_COLUMN : Fax
+                                      , STUS_CODE_ID                                                            -- ASIS_COLUMN : StatusCodeID
+                                      , REM                                                                           -- ASIS_COLUMN : Remark
+                                      , UPD_USER_ID                                                             -- ASIS_COLUMN : Updator
+                                      , UPD_DT                                                                      -- ASIS_COLUMN : Updated
+                                      , ID_OLD                                                                      -- ASIS_COLUMN : IDOld
+                                      , SO_ID                                                                        -- ASIS_COLUMN : SOID
+                                      , IDCM                                                                          -- ASIS_COLUMN : IDcm
+                                      , CRT_USER_ID                                                              -- ASIS_COLUMN : Creator
+                                      , CRT_DT                                                                      -- ASIS_COLUMN : Created
+                                      , AREA_ID                                                                     -- Area ID
+                                      , ADDR_DTL                                                                  -- Address Detail
+                                      , STREET                                                                      -- Street
+                                      , ADD1                                                                         -- ASIS_COLUMN : Add1
+                                      , ADD2                                                                         -- ASIS_COLUMN : Add2
+                                      , ADD3                                                                         -- ASIS_COLUMN : Add3
+                                      , ADD4                                                                          -- ASIS_COLUMN : Add4
+                                      , POSTCODEID                                                                --
+                                      , POSTCODE                                                                   --
+                                      , AREAID                                                                        --
+                                      , AREA                                                                           -- ASIS_COLUMN : Area
+                                      , STATEID                                                                       --
+                                      , COUNTRYID                                                                  --
+    ) VALUES ( SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL
+                  , #{custId}
+                  , TRIM(#{addressNric})
+                  , NULL
+                  , NULL
+                  , 9
+                  , #{addressRem}
+                  , #{updUserId}
+                  , SYSDATE
+                  , 0
+                  , 0
+                  , 0
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{addressAreaId}
+                  , #{addressAddrDtl}
+                  , #{addressStreet}
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+                  , NULL
+    )
+    ]]>
+  </insert>
+
+<select id="selectCustCheck" parameterType="Map" resultType="Integer">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustCheck] 20221205 - MY HLTANG */
+        select count(1) from SAL0029D where cust_id = #{custId} and TYPE_ID = 964
+    ]]>
+  </select>
+
+  <select id="selectCustomerTierMaster" parameterType="Map" resultType="egovMap">
+
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
+    WITH REN_PRC AS (
+        SELECT AA.CUST_ID,SUM(BB.ORD_MTH_RENTAL) ORD_MTH_RENTAL FROM SAL0330D AA
+        JOIN SAL1006V BB ON AA.SALES_ORD_ID = BB.ORD_ID
+        WHERE AA.CUST_ID = #{custId}
+        AND BB.APP_TYPE_ID = 66
+        GROUP BY AA.CUST_ID
+        )
+
+        SELECT
+        Q1.CUST_ID, Q1.CUST_TIER,NVL(oriTier.code ,Q1.CUST_TIER) ORI_TIER, Q1.TIER_SCORE, Q1.TOT_SALES_CNT,Q1.TIER_COLC_SCORE, Q1.TIER_REWD_SCORE
+    ,Q1.T_CUR_POINT, Q1.T_ONHOLD_POINT, Q1.T_EXPIRING_POINT, Q1.T_EXPIRED_POINT
+        , FLOOR(NEWCD.MIN_NEXT_POINT - Q1.TIER_SCORE) PT_TO_ACH_NX_LVL
+    , ceil((NEWCD.MIN_NEXT_POINT - Q1.TIER_SCORE)/REN_PRC.ORD_MTH_RENTAL) MTH_TO_ACH_NX_LVL
+        FROM (
+    SELECT
+    A.CUST_ID, CD.CODE CUST_TIER, A.TIER_SCORE, A.TOT_SALES_CNT,A.TIER_COLC_SCORE, A.TIER_REWD_SCORE
+    ,NVL(B.CUR_POINT,0) T_CUR_POINT, NVL(B.ONHOLD_POINT,0) T_ONHOLD_POINT, NVL(B.EXPING_POINT,0) T_EXPIRING_POINT, NVL(B.EXPIRED_POINT,0) T_EXPIRED_POINT
+    , CASE WHEN (TIERDROP.CUST_ID IS NOT NULL AND A.TIER_SCORE > 799) THEN A.TIER_RANK+1 ELSE A.TIER_RANK END TIER_RANK
+    FROM
+    SAL0333M A
+    LEFT JOIN SYS0013M CD ON CD.CODE_ID = A.TIER_RANK
+    LEFT JOIN (select cust_id from SAL0334D group by cust_id) TIERDROP ON TIERDROP.CUST_ID = A.CUST_ID
+    LEFT JOIN(
+    SELECT * FROM (
+                SELECT subQ1.CUST_ID,subQ1.SALES_TIER_STUS
+                ,CASE WHEN subQ1.SALES_TIER_STUS = Q2.MIN_STATUS
+                THEN SUM(subQ1.SALES_TOT_SCORE) + SUM(NVL(Q3.REWRD_POINT,0))
+                ELSE SUM(subQ1.SALES_TOT_SCORE)
+                END SALES_TOT_SCORE
+                FROM (
+                SELECT CUST_ID,SALES_TIER_STUS SALES_TIER_STUS
+                ,CASE WHEN SALES_TIER_STUS = 7082 THEN SUM(SALES_EXP_SCORE)
+                ELSE SUM(SALES_TOT_SCORE) END SALES_TOT_SCORE
+                FROM SAL0330D
+                GROUP BY CUST_ID,SALES_TIER_STUS
+                ) subQ1
+                LEFT JOIN (SELECT CUST_ID, MIN(SALES_TIER_STUS) MIN_STATUS FROM SAL0330D GROUP BY  CUST_ID) Q2 ON subQ1.CUST_ID = Q2.CUST_ID
+                LEFT JOIN (SELECT CUST_ID,SUM(REWRD_POINT)REWRD_POINT FROM SAL0332D GROUP BY CUST_ID) Q3 ON subQ1.CUST_ID = Q3.CUST_ID
+                GROUP BY subQ1.CUST_ID,subQ1.SALES_TIER_STUS,Q2.MIN_STATUS
+                )
+                PIVOT
+                (
+                    SUM(SALES_TOT_SCORE)
+                    FOR SALES_TIER_STUS IN (
+                    7079 CUR_POINT,7080 ONHOLD_POINT,7081 EXPING_POINT,7082 EXPIRED_POINT
+                    )
+                )
+                WHERE CUST_ID = #{custId}
+    ) B ON B.CUST_ID = A.CUST_ID
+    ) Q1
+    LEFT JOIN (SELECT CODE
+    ,CODE_ID
+    ,CASE WHEN CODE_ID = 7204 THEN 800
+    WHEN CODE_ID = 7205 THEN 1800
+    WHEN CODE_ID = 7206 THEN 3800
+    WHEN CODE_ID = 7207 THEN 6800
+    WHEN CODE_ID = 7208 THEN 10800
+    END MIN_NEXT_POINT
+    FROM SYS0013M WHERE CODE_MASTER_ID = 538) NEWCD ON NEWCD.CODE_ID = Q1.TIER_RANK+1
+    LEFT JOIN SYS0013M oriTier ON oriTier.CODE_ID = Q1.TIER_RANK
+    LEFT JOIN REN_PRC ON REN_PRC.CUST_ID = Q1.CUST_ID
+    WHERE
+    Q1.CUST_ID = #{custId}
+
+  </select>
+
+  <select id="selectCustomerTierOrderList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierMaster] 20221205 - MY HLTANG */
+       SELECT
+            D.STK_DESC prod_name,
+            B.SALES_ORD_NO ref_no,
+            CASE WHEN SALES_TIER_STUS = 7082 THEN to_char(NVL(A.SALES_EXP_SCORE,0)) ELSE to_char(NVL(A.SALES_TOT_SCORE,0)) END t_point,
+            E.CODE_NAME point_status,
+            TO_CHAR(A.SALES_LST_EXPY_DT,'YYYY/MM/DD') point_expiry_dt
+        FROM SAL0330D A
+        JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        join SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN SYS0026M D ON D.STK_ID = C.ITM_STK_ID
+        JOIN SYS0013M E ON E.CODE_ID = A.SALES_TIER_STUS
+        WHERE A.CUST_ID =  #{custId}
+        AND (A.SALES_TOT_SCORE <![CDATA[ > ]]> 0 OR SALES_EXP_SCORE <![CDATA[ > ]]> 0 )
+  </select>
+
+  <select id="selectCustomerTierOtherDet" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierOtherDet] 20221205 - MY HLTANG */
+    SELECT A.CUST_ID,B.CODE_id,B.CODE_NAME , sum(A.REWRD_POINT) t_bday_point,'Active' bday_point_status, '' bday_point_expiry_dt
+        FROM SAL0332D A
+        JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+        WHERE A.CUST_ID =   #{custId}
+        AND A.FORFEIT = 0
+		group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+		order by case when B.CODE_id = 7198 then 1
+                when B.CODE_id = 7199 then 2
+                else 3
+                end
+                ,a.CUST_ID
+    ]]>
+  </select>
+
+<select id="selectCustomerTierCatgryList" parameterType="Map" resultType="egovMap">
+
+ /* [com.coway.trust.biz.sales.customerApi.impl.CustomerApiMapper.selectCustomerTierCatgryList] 20221205 - MY HLTANG */
+       select 1 CODE_ID, 'Orders' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+		union
+		select 2 CODE_ID, 'Care Service' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+		union
+		select CODE_id,category_Name,sum(Total_POINT),point_status from (
+        SELECT B.CODE_id,'Birthday' category_Name , sum(A.REWRD_POINT) Total_POINT,'Active' point_status
+                FROM SAL0332D A
+                JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+                WHERE A.CUST_ID = #{custId}
+                AND A.FORFEIT = 0
+                and REWRD_TYPE in ('7202','7198')
+                group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+
+                union
+                select 7198 CODE_ID, 'Birthday' category_Name, 0 Total_POINT, 'Active' POINT_STATUS from dual
+                )group by CODE_id,category_Name,point_status
+
+        union
+        select CODE_id,category_Name,sum(Total_POINT),point_status from (
+        SELECT B.CODE_id, 'Others Points' category_Name , sum(A.REWRD_POINT) Total_POINT,'Active' point_status
+                FROM SAL0332D A
+                JOIN SYS0013M B ON B.CODE_ID = A.REWRD_TYPE
+                WHERE A.CUST_ID = #{custId}
+                AND A.FORFEIT = 0
+                and REWRD_TYPE in ('7199')
+                group by a.CUST_ID,B.CODE_id,B.CODE_NAME
+                union
+                select 7199 CODE_ID, 'Others Points' category_Name, 0 Total_POINT, 'Active' POINT_STATUS from dual
+                )group by CODE_id,category_Name,point_status
+		union
+		select 9999 CODE_ID, 'Survey Points' category_Name, 0 Total_POINT, '' POINT_STATUS from dual
+
+
+  </select>
+</mapper>

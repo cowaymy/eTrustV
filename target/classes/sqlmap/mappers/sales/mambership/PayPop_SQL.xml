@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.PayPopMapper">
+
+    <select id="selectTransferHistoryList" parameterType="Map" resultType="egovMap">
+	  SELECT C.CODE_NAME
+	           , D.CODE
+	           , A.SALES_ORD_NO
+	           , A.CRT_DT,
+		       (SELECT NAME FROM SAL0029D WHERE CUST_ID = B.SO_EXCHG_OLD_CUST_ID) AS OLD_CUST, 
+		       (SELECT NAME FROM SAL0029D WHERE CUST_ID = B.SO_EXCHG_NW_CUST_ID) AS NEW_CUST,
+		       (SELECT NRIC FROM SAL0029D WHERE CUST_ID = B.SO_EXCHG_NW_CUST_ID) AS NRIC,
+		       SO_EXCHG_CRT_DT
+		       , E.USER_NAME
+			FROM SAL0001D A
+			       , SAL0004D B
+			       , SYS0013M C
+			       , SYS0038M D
+			       , SYS0047M E
+			WHERE B.SO_EXCHG_TYPE_ID = 284                                                        -- FIXED VALUE
+			AND B.SO_EXCHG_STUS_ID = D.STUS_CODE_ID
+			AND A.SALES_ORD_ID = B.SO_ID
+			AND A.SALES_ORD_NO = #{ordNo}                                                        -- Input Parameter : Sales Order No
+			AND B.SO_EXCHG_TYPE_ID = C.CODE_ID
+			AND B.SO_EXCHG_CRT_USER_ID = E.USER_ID
+    </select>
+</mapper>

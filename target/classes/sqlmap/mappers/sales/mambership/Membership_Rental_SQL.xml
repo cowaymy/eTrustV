@@ -1,0 +1,1743 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRentalMapper">
+
+
+    <select id="selectList" parameterType="Map" resultType="egovMap">
+
+        SELECT  DISTINCT FL.SRVCONTRACTID1 SRV_CNTRCT_ID  ,
+		            FL.SRV_CNTRCT_REF_NO   ,
+		            FL.SRV_CNTRCT_ORD_ID   ,
+		            FL.SRV_CNTRCT_STUS_ID   ,
+		            FL.SRV_CNTRCT_PCKG_ID   ,
+		            FL.SRV_CNTRCT_NET_MONTH   ,
+		            FL.SRV_CNTRCT_NET_YEAR   ,
+		            FL.SRV_CNTRCT_RENTAL   ,
+		            FL.SRV_CNTRCT_CRT_DT   ,
+		            FL.SRV_CNTRCT_SALESMAN,
+		            FL.CNTRCT_RENTAL_STUS   ,
+		            FL.SRV_CNTRCT_PAC_DESC   ,
+		            FL.PO_REF_NO   ,
+		            FL.USERNAME1 USER_NAME  ,
+		            FL.USERNAME2 USERNAME1  ,
+		            FL.SRV_PRD_START_DT   ,
+		            FL.SRV_PRD_EXPR_DT   ,
+		            FL.CODE1 CODE  ,
+		            FL.MEM_CODE   ,
+		            FL.NAME1 NAME  ,
+		            FL.QOTAT_REF_NO   ,
+		            FL.QOTAT_CNTRCT_DUR   ,
+		            FL.QOTAT_CNTRCT_FREQ   ,
+		            FL.QOTAT_CRT_DT   ,
+		            FL.CNFM_REM   ,
+		            FL.CODE_NAME   ,
+		            FL.RESN_DESC   ,
+		            FL.SALES_ORD_NO   ,
+		            FL.NAME2 NAME1  ,
+		            Extent18.USER_NAME USERNAME2  ,
+		            1 C1  ,
+		            FL.SRV_CNTRCT_UPD_DT  C2  ,
+		            CASE WHEN ( FL.SRV_CNTRCT_PROMO_ID IS NOT NULL ) THEN FL.SRV_CNTRCT_PROMO_ID ELSE 0 END C3  ,
+		            CASE WHEN ( FL.PROMOID1 IS NOT NULL ) THEN FL.PROMODESC1 ELSE '-' END C4  ,
+		            CASE WHEN ( FL.PROMOID2 IS NOT NULL ) THEN FL.PROMODESC2 ELSE '-' END C5  ,
+		            FL.CUST_ID
+		FROM ( SELECT E.SRV_CNTRCT_ID SRVCONTRACTID1  ,
+					          E.SRV_CNTRCT_REF_NO   ,
+					          E.SRV_CNTRCT_ORD_ID   ,
+					          E.SRV_CNTRCT_STUS_ID   ,
+					          E.SRV_CNTRCT_PCKG_ID   ,
+					          E.SRV_CNTRCT_NET_MONTH   ,
+					          E.SRV_CNTRCT_NET_YEAR   ,
+					          E.SRV_CNTRCT_RENTAL   ,
+					          E.SRV_CNTRCT_CRT_DT   ,
+					          E.SRV_CNTRCT_UPD_DT   ,
+					          E.SRV_CNTRCT_PROMO_ID   ,
+					          E.SRV_CNTRCT_SALESMAN,
+					          E2.CNTRCT_RENTAL_STUS   ,
+					          E3.SRV_CNTRCT_PAC_DESC   ,
+					          E4.PO_REF_NO   ,
+					          E5.USER_NAME USERNAME1  ,
+					          E6.USER_NAME USERNAME2  ,
+					          CASE WHEN TO_CHAR(E7.SRV_PRD_START_DT, 'yyyymmdd') = '19000101' THEN '' ELSE TO_CHAR(E7.SRV_PRD_START_DT, 'dd/mm/yyyy') END SRV_PRD_START_DT  ,
+					          E7.SRV_PRD_EXPR_DT   ,
+					          E8.CODE CODE1  ,
+					          E9.MEM_CODE   ,
+					          E9.MEM_ID   ,
+					          E9.NAME NAME1  ,
+					          E10.QOTAT_REF_NO   ,
+					          E10.QOTAT_CNTRCT_DUR   ,
+					          E10.QOTAT_CNTRCT_FREQ   ,
+					          E10.QOTAT_CRT_DT   ,
+					          E10.QOTAT_CRT_USER_ID   ,
+					          E11.PROMO_ID PROMOID1  ,
+					          E11.PROMO_DESC PROMODESC1  ,
+					          E12.PROMO_ID PROMOID2  ,
+					          E12.PROMO_DESC PROMODESC2  ,
+					          E13.CNFM_REM   ,
+					          E14.CODE_NAME   ,
+					          E15.RESN_DESC   ,
+					          E16.SALES_ORD_NO   ,
+					          E16.SALES_DT   ,
+					          E17.NAME NAME2   ,
+					          E17.CUST_ID
+					   FROM SAL0077D E
+					          JOIN SAL0078D E2   ON E2.SRV_CNTRCT_ID = E.SRV_CNTRCT_ID
+					          JOIN SAL0081D E3   ON E3.SRV_CNTRCT_PAC_ID = E.SRV_CNTRCT_PCKG_ID
+					          LEFT JOIN PAY0015D E4   ON E4.PO_CNTRCT_ID = E.SRV_CNTRCT_ID
+					          JOIN SYS0047M E5   ON E5.USER_ID = E.SRV_CNTRCT_CRT_USER_ID
+					          JOIN SYS0047M E6   ON E6.USER_ID = E.SRV_CNTRCT_UPD_USER_ID
+					          left JOIN SAL0088D E7   ON E7.SRV_PRD_CNTRCT_ID = E.SRV_CNTRCT_ID
+					          JOIN SYS0038M E8   ON E8.STUS_CODE_ID = E.SRV_CNTRCT_STUS_ID
+					          LEFT JOIN ORG0001D E9   ON E9.MEM_ID = E.SRV_CNTRCT_SALESMAN
+					          JOIN SAL0083D E10   ON E10.QOTAT_ID = E.SRV_CNTRCT_QUOT_ID
+					          LEFT JOIN SAL0017D E11   ON E11.PROMO_ID = E10.QOTAT_PAC_PROMO_ID
+					          LEFT JOIN SAL0017D E12   ON E12.PROMO_ID = E10.QOTAT_FIL_PROMO_ID
+					          JOIN SAL0079D E13   ON E13.CNFM_CNTRCT_ID = E.SRV_CNTRCT_ID
+					          LEFT JOIN SYS0013M E14   ON E14.CODE_ID = E13.CNFM_TYPE_ID
+					          LEFT JOIN SYS0032M E15   ON E15.RESN_ID = E13.CNFM_FDBCK_ID
+					          JOIN SAL0001D E16   ON E16.SALES_ORD_ID = E.SRV_CNTRCT_ORD_ID
+					          JOIN SAL0029D E17   ON E17.CUST_ID = E16.CUST_ID
+                    WHERE  1=1
+                    <if test="cmbStatus != null and cmbStatus != ''">
+                        AND   E.SRV_CNTRCT_STUS_ID IN
+                        <foreach item="item" collection="cmbStatus" index="index" open="(" separator="," close=")">
+                        #{item}
+                        </foreach>
+                    </if>
+
+                    <if test="cmbSRVCStatus != null and cmbSRVCStatus != ''">
+                        AND     E2.CNTRCT_RENTAL_STUS IN
+                        <foreach item="item" collection="cmbSRVCStatus" index="index" open="(" separator="," close=")">
+                         #{item}
+                        </foreach>
+                    </if>
+
+                    <if test="custId != null and custId != ''">
+                        AND  E17.CUST_ID =  #{custId}
+                    </if>
+
+                   <if test="custNRIC != null and custNRIC != ''">
+                            AND UPPER(E17.NRIC) LIKE '%'||UPPER(#{custNRIC})||'%'
+                   </if>
+                ) FL
+                JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID
+
+           <if test='userTypeId =="1" or userTypeId == "2" '>
+                JOIN ORG1001V B ON FL.SRV_CNTRCT_SALESMAN = B.MEM_ID
+                                        <if test="memCode != null and memCode != '' ">
+                                            AND B.MEM_CODE = #{memCode}
+                                        </if>
+                                        <if test="orgCode != null and orgCode != '' ">
+                                          AND B.ORG_CODE = #{orgCode}
+                                          </if>
+                                          <if test="grpCode != null and grpCode != '' ">
+                                          AND B.GRP_CODE = #{grpCode}
+                                          </if>
+                                          <if test="deptCode != null and deptCode != '' ">
+                                          AND B.DEPT_CODE = #{deptCode}
+                                          </if>
+            </if>
+            WHERE 1=1
+                <if test="sRVContrtNo != null and sRVContrtNo != ''">
+                    AND FL.SRV_CNTRCT_REF_NO = UPPER(#{sRVContrtNo})
+                </if>
+
+                <if test="salesDate != null and salesDate != ''">
+                    AND to_char(FL.SRV_CNTRCT_CRT_DT ,'yyyymmdd') =  to_char( to_date(#{salesDate},'dd/mm/yyyy'),'yyyymmdd' )
+                </if>
+
+                <if test='pdpaMonth != null and pdpaMonth != 0'>
+                    AND FL.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+                </if>
+
+                <if test="orderNo != null and orderNo != ''">
+                    AND FL.SALES_ORD_NO = #{orderNo}
+                </if>
+
+                <if test="creator != null and creator != ''">
+                    AND UPPER(FL.USERNAME1) =  UPPER(#{creator})
+                </if>
+
+                <if test="custName != null and custName != ''">
+                    AND  UPPER(FL.NAME2) LIKE  UPPER(#{custName})||'%'
+                </if>
+            ORDER BY FL.SRVCONTRACTID1 ASC
+    </select>
+
+<!--     <select id="selectList" parameterType="Map" resultType="egovMap">
+
+					SELECT              SRV_CNTRCT_ID   ,
+                                            SRV_CNTRCT_REF_NO   ,
+                                            SRV_CNTRCT_ORD_ID   ,
+                                            SRV_CNTRCT_STUS_ID   ,
+                                            SRV_CNTRCT_PCKG_ID   ,
+                                            SRV_CNTRCT_NET_MONTH   ,
+                                            SRV_CNTRCT_NET_YEAR   ,
+                                            SRV_CNTRCT_RENTAL   ,
+                                            SRV_CNTRCT_CRT_DT   ,
+                                            CNTRCT_RENTAL_STUS   ,
+                                            SRV_CNTRCT_PAC_DESC   ,
+                                            PO_REF_NO   ,
+                                            USER_NAME   ,
+                                            USERNAME1   ,
+                                            SRV_PRD_START_DT   ,
+                                            SRV_PRD_EXPR_DT   ,
+                                            CODE   ,
+                                            MEM_CODE   ,
+                                            NAME   ,
+                                            QOTAT_REF_NO   ,
+                                            QOTAT_CNTRCT_DUR   ,
+                                            QOTAT_CNTRCT_FREQ   ,
+                                            QOTAT_CRT_DT   ,
+                                            CNFM_REM   ,
+                                            CODE_NAME   ,
+                                            RESN_DESC   ,
+                                            SALES_ORD_NO   ,
+                                            NAME1   ,
+                                            USERNAME2   ,
+                                            C1   ,
+                                            C2   ,
+                                            C3   ,
+                                            C4   ,
+                                            C5
+							  FROM ( SELECT DL.SRV_CNTRCT_ID   ,
+							                DL.SRV_CNTRCT_REF_NO   ,
+							                DL.SRV_CNTRCT_ORD_ID   ,
+							                DL.SRV_CNTRCT_STUS_ID   ,
+							                DL.SRV_CNTRCT_PCKG_ID   ,
+							                DL.SRV_CNTRCT_NET_MONTH   ,
+							                DL.SRV_CNTRCT_NET_YEAR   ,
+							                DL.SRV_CNTRCT_RENTAL   ,
+							                DL.SRV_CNTRCT_CRT_DT   ,
+							                DL.CNTRCT_RENTAL_STUS   ,
+							                DL.SRV_CNTRCT_PAC_DESC   ,
+							                DL.PO_REF_NO   ,
+							                DL.USER_NAME   ,
+							                DL.USERNAME1   ,
+							                DL.SRV_PRD_START_DT   ,
+							                DL.SRV_PRD_EXPR_DT   ,
+							                DL.CODE   ,
+							                DL.MEM_CODE   ,
+							                DL.NAME   ,
+							                DL.QOTAT_REF_NO   ,
+							                DL.QOTAT_CNTRCT_DUR   ,
+							                DL.QOTAT_CNTRCT_FREQ   ,
+							                DL.QOTAT_CRT_DT   ,
+							                DL.CNFM_REM   ,
+							                DL.CODE_NAME   ,
+							                DL.RESN_DESC   ,
+							                DL.SALES_ORD_NO   ,
+							                DL.NAME1   ,
+							                DL.USERNAME2   ,
+							                DL.C1   ,
+							                DL.C2   ,
+							                DL.C3   ,
+							                DL.C4   ,
+							                DL.C5
+							         FROM ( SELECT DISTINCT FL.SRVCONTRACTID1 SRV_CNTRCT_ID  ,
+							                                FL.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+							                                FL.SRV_CNTRCT_ORD_ID SRV_CNTRCT_ORD_ID  ,
+							                                FL.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+							                                FL.SRV_CNTRCT_PCKG_ID SRV_CNTRCT_PCKG_ID  ,
+							                                FL.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+							                                FL.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+							                                FL.SRV_CNTRCT_RENTAL SRV_CNTRCT_RENTAL  ,
+							                                FL.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+							                                FL.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+							                                FL.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+							                                FL.PO_REF_NO PO_REF_NO  ,
+							                                FL.USERNAME1 USER_NAME  ,
+							                                FL.USERNAME2 USERNAME1  ,
+							                                FL.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+							                                FL.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+							                                FL.CODE1 CODE  ,
+							                                FL.MEM_CODE MEM_CODE  ,
+							                                FL.NAME1 NAME  ,
+							                                FL.QOTAT_REF_NO QOTAT_REF_NO  ,
+							                                FL.QOTAT_CNTRCT_DUR QOTAT_CNTRCT_DUR  ,
+							                                FL.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+							                                FL.QOTAT_CRT_DT QOTAT_CRT_DT  ,
+							                                FL.CNFM_REM CNFM_REM  ,
+							                                FL.CODE_NAME CODE_NAME  ,
+							                                FL.RESN_DESC RESN_DESC  ,
+							                                FL.SALES_ORD_NO SALES_ORD_NO  ,
+							                                FL.NAME2 NAME1  ,
+							                                Extent18.USER_NAME USERNAME2  ,
+							                                1 C1  ,
+							                                FL.SRV_CNTRCT_UPD_DT  C2  ,
+							                                CASE
+							                                     WHEN ( FL.SRV_CNTRCT_PROMO_ID IS NOT NULL ) THEN FL.SRV_CNTRCT_PROMO_ID
+							                                ELSE 0
+							                                   END C3  ,
+							                                CASE
+							                                     WHEN ( FL.PROMOID1 IS NOT NULL ) THEN FL.PROMODESC1
+							                                ELSE '-'
+							                                   END C4  ,
+							                                CASE
+							                                     WHEN ( FL.PROMOID2 IS NOT NULL ) THEN FL.PROMODESC2
+							                                ELSE '-'
+							                                   END C5
+							                FROM ( SELECT E.SRV_CNTRCT_ID SRVCONTRACTID1  ,
+							                              E.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+							                              E.SRV_CNTRCT_ORD_ID SRV_CNTRCT_ORD_ID  ,
+							                              E.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+							                              E.SRV_CNTRCT_PCKG_ID SRV_CNTRCT_PCKG_ID  ,
+							                              E.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+							                              E.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+							                              E.SRV_CNTRCT_RENTAL SRV_CNTRCT_RENTAL  ,
+							                              E.SRV_CNTRCT_CRT_DT SRV_CNTRCT_CRT_DT  ,
+							                              E.SRV_CNTRCT_UPD_DT SRV_CNTRCT_UPD_DT  ,
+							                              E.SRV_CNTRCT_PROMO_ID SRV_CNTRCT_PROMO_ID  ,
+							                              E2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+							                              E3.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+							                              E4.PO_REF_NO PO_REF_NO  ,
+							                              E5.USER_NAME USERNAME1  ,
+							                              E6.USER_NAME USERNAME2  ,
+							                              CASE WHEN TO_CHAR(E7.SRV_PRD_START_DT, 'yyyymmdd') = '19000101' THEN '' ELSE TO_CHAR(E7.SRV_PRD_START_DT, 'dd/mm/yyyy') END SRV_PRD_START_DT  ,
+							                              E7.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
+							                              E8.CODE CODE1  ,
+							                              E9.MEM_CODE MEM_CODE  ,
+							                              E9.NAME NAME1  ,
+							                              E10.QOTAT_REF_NO QOTAT_REF_NO  ,
+							                              E10.QOTAT_CNTRCT_DUR QOTAT_CNTRCT_DUR  ,
+							                              E10.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+							                              E10.QOTAT_CRT_DT QOTAT_CRT_DT  ,
+							                              E10.QOTAT_CRT_USER_ID QOTAT_CRT_USER_ID  ,
+							                              E11.PROMO_ID PROMOID1  ,
+							                              E11.PROMO_DESC PROMODESC1  ,
+							                              E12.PROMO_ID PROMOID2  ,
+							                              E12.PROMO_DESC PROMODESC2  ,
+							                              E13.CNFM_REM CNFM_REM  ,
+							                              E14.CODE_NAME CODE_NAME  ,
+							                              E15.RESN_DESC RESN_DESC  ,
+							                              E16.SALES_ORD_NO SALES_ORD_NO  ,
+							                              E17.NAME NAME2
+							                       FROM SAL0077D E
+							                              JOIN SAL0078D E2   ON E2.SRV_CNTRCT_ID = E.SRV_CNTRCT_ID
+							                              JOIN SAL0081D E3   ON E3.SRV_CNTRCT_PAC_ID = E.SRV_CNTRCT_PCKG_ID
+							                              LEFT JOIN PAY0015D E4   ON E4.PO_CNTRCT_ID = E.SRV_CNTRCT_ID
+							                              JOIN SYS0047M E5   ON E5.USER_ID = E.SRV_CNTRCT_CRT_USER_ID
+							                              JOIN SYS0047M E6   ON E6.USER_ID = E.SRV_CNTRCT_UPD_USER_ID
+							                              JOIN SAL0088D E7   ON E7.SRV_PRD_CNTRCT_ID = E.SRV_CNTRCT_ID
+							                              JOIN SYS0038M E8   ON E8.STUS_CODE_ID = E.SRV_CNTRCT_STUS_ID
+							                              LEFT JOIN ORG0001D E9   ON E9.MEM_ID = E.SRV_CNTRCT_SALESMAN
+							                              JOIN SAL0083D E10   ON E10.QOTAT_ID = E.SRV_CNTRCT_QUOT_ID
+							                              LEFT JOIN SAL0017D E11   ON E11.PROMO_ID = E10.QOTAT_PAC_PROMO_ID
+							                              LEFT JOIN SAL0017D E12   ON E12.PROMO_ID = E10.QOTAT_FIL_PROMO_ID
+							                              JOIN SAL0079D E13   ON E13.CNFM_CNTRCT_ID = E.SRV_CNTRCT_ID
+							                              LEFT JOIN SYS0013M E14   ON E14.CODE_ID = E13.CNFM_TYPE_ID
+							                              LEFT JOIN SYS0032M E15   ON E15.RESN_ID = E13.CNFM_FDBCK_ID
+							                              JOIN SAL0001D E16   ON E16.SALES_ORD_ID = E.SRV_CNTRCT_ORD_ID
+							                              JOIN SAL0029D E17   ON E17.CUST_ID = E16.CUST_ID
+							                        WHERE  1=1
+								                             <if test="cmbStatus != null and cmbStatus != ''">
+									                             AND   E.SRV_CNTRCT_STUS_ID IN
+										                          <foreach item="item" collection="cmbStatus" index="index" open="(" separator="," close=")">
+										                            #{item}
+										                          </foreach>
+									                         </if>
+
+									                         <if test="cmbSRVCStatus != null and cmbSRVCStatus != ''">
+                                                                AND     E2.CNTRCT_RENTAL_STUS IN
+                                                                  <foreach item="item" collection="cmbSRVCStatus" index="index" open="(" separator="," close=")">
+                                                                    #{item}
+                                                                  </foreach>
+                                                             </if>
+
+			                                                <if test="custId != null and custId != ''">
+			                                                  AND ( E17.CUST_ID =  #{custId} )
+			                                                </if>
+
+			                                              <if test="custNRIC != null and custNRIC != ''">
+			                                                       AND (E17.NRIC LIKE '%'||#{NRIC}||'%')
+			                                              </if>
+							                       ) FL
+							                       JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID
+							                 WHERE 1=1
+							                  <if test="sRVContrtNo != null and sRVContrtNo != ''">
+							                          AND ( FL.SRV_CNTRCT_REF_NO = #{sRVContrtNo} )
+							                  </if>
+
+							                   <if test="salesDate != null and salesDate != ''">
+                                                      AND to_char(FL.SRV_CNTRCT_CRT_DT ,'yyyymmdd') =  to_char( to_date(#{salesDate},'dd/mm/yyyy'),'yyyymmdd' )
+                                              </if>
+
+                                               <if test="orderNo != null and orderNo != ''">
+                                                     AND ( FL.SALES_ORD_NO = #{orderNo} )
+                                              </if>
+
+                                               <if test="creator != null and creator != ''">
+                                                    AND ( FL.USERNAME1 =  #{creator} )
+                                              </if>
+
+                                              <if test="custName != null and custName != ''">
+                                                  AND ( FL.NAME2 LIKE  #{custName}||'%' )
+                                              </if>
+
+							                ) DL
+							             ) SL
+							  ORDER BY SL.SRV_CNTRCT_ID ASC
+		 </select> -->
+
+
+	     <select id="selectCcontactSalesInfo" parameterType="Map" resultType="egovMap">
+						  <![CDATA[
+						     SELECT L.SRV_CNTRCT_ID   ,
+                                           L.SRV_CNTRCT_REF_NO   ,
+                                           L.SRV_CNTRCT_NET_MONTH   ,
+                                           L.SRV_CNTRCT_NET_YEAR   ,
+                                           L.SRV_CNTRCT_PAC_DESC   ,
+                                           L.SRV_CNTRCT_ORD_ID   ,
+                                           L.SALES_ORD_NO   ,
+                                           to_char(L.SRV_PRD_START_DT,'dd-mm-yyyy' ) SRV_PRD_START_DT ,
+                                           to_char(L.SRV_PRD_EXPR_DT,'dd-mm-yyyy' ) SRV_PRD_EXPR_DT  ,
+                                           L.CNTRCT_RENTAL_STUS   ,
+                                           L.SRV_CNTRCT_STUS_ID   ,
+                                           L.CODE   ,
+                                           L.USER_NAME   ,
+                                           to_char(L.SRV_CNTRCT_CRT_DT,'dd-mm-yyyy')   SRV_CNTRCT_CRT_DT ,
+                                           L.USERNAME1   ,
+                                           to_char(L.C1,'dd-mm-yyyy') c1   ,
+                                           L.QOTAT_CNTRCT_DUR   ,
+                                           L.QOTAT_CNTRCT_FREQ   ,
+                                           L.SRV_CNTRCT_RENTAL   ,
+                                           L.CNFM_REM   ,
+                                           L.RESN_DESC   ,
+                                           L.C2   ,
+                                           L.C3   ,
+                                           L.C4   ,
+                                           L.MEM_CODE   ,
+                                           L.NAME  NAME ,
+                                           L.PO_REF_NO   ,
+                                           L.CODE_NAME   ,
+                                           L.NAME1   ,
+                                           L.QOTAT_REF_NO   ,
+                                           to_char(L.QOTAT_CRT_DT,'dd-mm-yyyy' ) QOTAT_CRT_DT ,
+                                           L.USERNAME2   ,
+                                           L.SRV_CNTRCT_PCKG_ID
+                                      FROM ( SELECT E1.SRV_CNTRCT_ID   ,
+                                                    E1.SRV_CNTRCT_REF_NO   ,
+                                                    E1.SRV_CNTRCT_ORD_ID   ,
+                                                    E1.SRV_CNTRCT_STUS_ID   ,
+                                                    E1.SRV_CNTRCT_PCKG_ID   ,
+                                                    E1.SRV_CNTRCT_NET_MONTH   ,
+                                                    E1.SRV_CNTRCT_NET_YEAR   ,
+                                                    E1.SRV_CNTRCT_RENTAL   ,
+                                                    E1.SRV_CNTRCT_CRT_DT   ,
+                                                    E2.CNTRCT_RENTAL_STUS   ,
+                                                    E3.SRV_CNTRCT_PAC_DESC   ,
+                                                    E4.PO_REF_NO   ,
+                                                    E5.USER_NAME   ,
+                                                    E6.USER_NAME  USERNAME1 ,
+                                                    E7.SRV_PRD_START_DT   ,
+                                                    E7.SRV_PRD_EXPR_DT   ,
+                                                    E8.CODE   ,
+                                                    E9.MEM_CODE   ,
+                                                    E9.NAME    ,
+                                                    E10.QOTAT_REF_NO   ,
+                                                    E10.QOTAT_CNTRCT_DUR   ,
+                                                    E10.QOTAT_CNTRCT_FREQ   ,
+                                                    E10.QOTAT_CRT_DT   ,
+                                                    E13.CNFM_REM   ,
+                                                    E14.CODE_NAME   ,
+                                                    E15.RESN_DESC   ,
+                                                    E16.SALES_ORD_NO   ,
+                                                    E17.NAME NAME1  ,
+                                                    E18.USER_NAME  USERNAME2  ,
+                                                    E1.SRV_CNTRCT_UPD_DT C1  ,
+                                                    CASE WHEN ( E1.SRV_CNTRCT_PROMO_ID IS NOT NULL ) THEN E1.SRV_CNTRCT_PROMO_ID   ELSE 0 END C2  ,
+                                                    CASE WHEN ( Extent11.PROMO_ID IS NOT NULL ) THEN Extent11.PROMO_DESC  ELSE '-'     END C3  ,
+                                                    CASE WHEN ( Extent12.PROMO_ID IS NOT NULL ) THEN Extent12.PROMO_DESC  ELSE '-' END C4
+                                             FROM SAL0077D E1
+                                                        JOIN SAL0078D E2   ON E2.SRV_CNTRCT_ID = E1.SRV_CNTRCT_ID
+                                                        JOIN SAL0081D E3   ON E3.SRV_CNTRCT_PAC_ID = E1.SRV_CNTRCT_PCKG_ID
+                                                        LEFT JOIN PAY0015D E4   ON E4.PO_CNTRCT_ID = E1.SRV_CNTRCT_ID
+                                                        JOIN SYS0047M E5   ON E5.USER_ID = E1.SRV_CNTRCT_CRT_USER_ID
+                                                        JOIN SYS0047M E6   ON E6.USER_ID = E1.SRV_CNTRCT_UPD_USER_ID
+                                                        JOIN SAL0088D E7   ON E7.SRV_PRD_CNTRCT_ID = E1.SRV_CNTRCT_ID
+                                                        JOIN SYS0038M E8   ON E8.STUS_CODE_ID = E1.SRV_CNTRCT_STUS_ID
+                                                        LEFT JOIN ORG0001D E9   ON E9.MEM_ID = E1.SRV_CNTRCT_SALESMAN
+                                                        JOIN SAL0083D E10   ON E10.QOTAT_ID = E1.SRV_CNTRCT_QUOT_ID
+                                                        LEFT JOIN SAL0017D Extent11   ON Extent11.PROMO_ID = E10.QOTAT_PAC_PROMO_ID
+                                                        LEFT JOIN SAL0017D Extent12   ON Extent12.PROMO_ID = E10.QOTAT_FIL_PROMO_ID
+                                                        JOIN SAL0079D E13   ON E13.CNFM_CNTRCT_ID = E1.SRV_CNTRCT_ID
+                                                        LEFT JOIN SYS0013M E14   ON E14.CODE_ID = E13.CNFM_TYPE_ID
+                                                        LEFT JOIN SYS0032M E15   ON E15.RESN_ID = E13.CNFM_FDBCK_ID
+                                                        JOIN SAL0001D E16   ON E16.SALES_ORD_ID = E1.SRV_CNTRCT_ORD_ID
+                                                        JOIN SAL0029D E17   ON E17.CUST_ID = E16.CUST_ID
+                                                        JOIN SYS0047M E18   ON E18.USER_ID = E10.QOTAT_CRT_USER_ID
+                                              WHERE  E1.SRV_CNTRCT_ID = #{SRV_CNTRCT_ID}
+                                               AND ROWNUM  <= 1
+                                           ) L
+
+	               ]]>
+	     </select>
+
+	   <select id="selectConfigInfo" parameterType="Map" resultType="egovMap">
+	               <![CDATA[
+							   SELECT S.SRV_CONFIG_ID   ,
+									       S.SRV_PRD_ID   ,
+									       to_char(S.SRV_PRD_EXPR_DT,'dd-mm-yyyy')   SRV_PRD_EXPR_DT,
+									       S.C1 C1
+									  FROM ( SELECT E.SRV_CONFIG_ID   ,
+									                E2.SRV_PRD_ID   ,
+									                E2.SRV_PRD_EXPR_DT   ,
+									                CASE  WHEN ( ( E3.SRV_MEM_ID IS NOT NULL ) AND ( E5.SRV_MEM_PAC_ID IS NOT NULL ) ) THEN E5.SRV_MEM_DESC
+									                      WHEN ( ( E4.SRV_CNTRCT_ID IS NOT NULL )AND ( E6.SRV_CNTRCT_PAC_ID IS NOT NULL ) ) THEN E6.SRV_CNTRCT_PAC_DESC
+									                      ELSE ' '
+									                END C1
+									         FROM SAL0090D E
+									                JOIN SAL0088D E2   ON ( E2.SRV_CONFIG_ID = E.SRV_CONFIG_ID )
+									                AND ( E2.SRV_PRD_EXPR_DT > to_date('1900-01-01','yyyy-mm-dd' ) )
+									                AND ( 1 = E2.SRV_PRD_STUS_ID )
+									                LEFT JOIN SAL0095D E3   ON ( E3.SRV_MEM_ID = E2.SRV_MBRSH_ID )
+									                AND ( 4 = E3.SRV_STUS_CODE_ID )
+									                LEFT JOIN SAL0077D E4   ON ( E4.SRV_CNTRCT_ID = E2.SRV_PRD_CNTRCT_ID )
+									                AND ( 4 = E4.SRV_CNTRCT_STUS_ID )
+									                LEFT JOIN SAL0091M E5   ON E5.SRV_MEM_PAC_ID = E3.SRV_MEM_PAC_ID
+									                LEFT JOIN SAL0081D E6   ON E6.SRV_CNTRCT_PAC_ID = E4.SRV_CNTRCT_PCKG_ID
+									          WHERE  1=1
+									                AND( E.SRV_SO_ID = #{ORD_ID})
+									                AND ( 1 = E.SRV_STUS_ID )
+							          ) S WHERE ROWNUM <= 1
+	                ]]>
+	     </select>
+
+	        <select id="selectPatsetInfo" parameterType="Map" resultType="egovMap">
+                   <![CDATA[
+
+									     SELECT S.SALES_ORD_ID   ,
+												       S.SVC_CNTRCT_ID   ,
+												       S.MODE_ID   ,
+												       S.CODE   ,
+												       S.CODE_DESC   ,
+												       to_char(S.DD_APPLY_DT, 'yyyymmdd') CV_DD_APPLY_DT,
+												       to_char(S.DD_SUBMIT_DT,'yyyymmdd') CV_DD_SUBMIT_DT,
+												       to_char(S.DD_START_DT, 'yyyymmdd') CV_DD_START_DT,
+												       to_char(S.DD_REJCT_DT, 'yyyymmdd') CV_DD_REJCT_DT,
+												       to_char(SYSDATE, 'yyyymmdd') CV_DD_NOW_DT,
+        										       to_char(S.DD_APPLY_DT,'dd/mm/yyyy') DD_APPLY_DT ,
+												       to_char(S.DD_SUBMIT_DT,'dd/mm/yyyy' ) DD_SUBMIT_DT ,
+												       to_char(S.DD_START_DT,'dd/mm/yyyy' ) DD_START_DT   ,
+												       to_char(S.DD_REJCT_DT,'dd/mm/yyyy' ) DD_REJCT_DT   ,
+												       S.DD_APPLY_DT2  ,
+												       S.DD_SUBMIT_DT2  ,
+												       S.DD_START_DT2  ,
+												       S.DD_REJCT_DT2  ,
+												       S.FAIL_RESN_ID   ,
+												       S.RESN_ID   ,
+												       S.BANK_ID   ,
+												       S.C9   ,
+												       S.C10   ,
+												       S.CUST_ACC_BANK_BRNCH  ,
+												       S.CUST_ACC_ID   ,
+												       S.CUST_ACC_NO   ,
+												       S.CUST_ACC_OWNER   ,
+												       S.CUST_ACC_TYPE_ID   ,
+												       S.CODE_NAME3   ,
+												       S.CUST_CRC_ID   ,
+												       S.CUST_CRC_NO   ,
+												       S.CUST_CRC_OWNER   ,
+												       S.CUST_CRC_EXPR   ,
+												       S.CUST_CRC_TYPE_ID   ,
+												       S.CODE_NAME1   ,
+												       S.CARD_TYPE_ID   ,
+												       S.CODE_NAME   ,
+												       S.ISSU_NRIC   ,
+												       nvl(S.NRIC_OLD,'   ') NRIC_OLD,
+												       S.ACC_CL_CLM_LIMIT   ,
+												       S.ACC_CL_BILL_DT   ,
+												       S.IS_3RD_PARTY   ,
+												       S.CUST_ID   ,
+												       S.PAY_TRM
+											  FROM ( SELECT E1.SALES_ORD_ID   ,
+											                E1.NRIC_OLD   ,
+											                E1.ISSU_NRIC   ,
+											                E1.SVC_CNTRCT_ID   ,
+											                E3.CODE   ,
+											                E3.CODE_DESC   ,
+											                CASE  WHEN ( E1.MODE_ID IS NOT NULL ) THEN E1.MODE_ID ELSE 0 END MODE_ID  ,
+											                 CASE
+											                      WHEN ( (E1.DD_APPLY_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_APPLY_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                          E1.DD_APPLY_DT
+											                      ELSE
+											                         to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_APPLY_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_SUBMIT_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_SUBMIT_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                          E1.DD_SUBMIT_DT
+											                      ELSE
+											                          to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                       DD_SUBMIT_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_START_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_START_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                         E1.DD_START_DT
+											                      ELSE
+											                          to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_START_DT,
+											                   CASE
+											                      WHEN ( (E1.DD_REJCT_DT IS NOT NULL)
+											                            AND (TO_CHAR (E1.DD_REJCT_DT, 'yyyymmdd') >
+											                                    '19000101'))
+											                      THEN
+											                         E1.DD_REJCT_DT
+											                      ELSE
+											                         to_date ('1900-01-01','yyyy/mm/dd')
+											                   END
+											                      DD_REJCT_DT,
+											                CASE
+                                                                  WHEN ( (E1.DD_APPLY_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_APPLY_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                      TO_CHAR(E1.DD_APPLY_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                     '-'
+                                                               END
+                                                                  DD_APPLY_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_SUBMIT_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_SUBMIT_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                      TO_CHAR(E1.DD_SUBMIT_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                      '-'
+                                                               END
+                                                                   DD_SUBMIT_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_START_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_START_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                     TO_CHAR(E1.DD_START_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                      '-'
+                                                               END
+                                                                  DD_START_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_REJCT_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_REJCT_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                     TO_CHAR(E1.DD_REJCT_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                     '-'
+                                                               END
+                                                                  DD_REJCT_DT2,
+											                CASE
+											                     WHEN ( E1.FAIL_RESN_ID IS NOT NULL ) THEN E1.FAIL_RESN_ID
+											                     ELSE 0
+											                END FAIL_RESN_ID  ,
+											                CASE
+											                     WHEN ( E4.RESN_ID IS NOT NULL ) THEN E4.CODE||'-'||E4.RESN_DESC
+											                     ELSE ' '
+											                END RESN_ID  ,
+											                CASE
+											                     WHEN ( E1.BANK_ID IS NOT NULL ) THEN E1.BANK_ID
+											                     ELSE 0
+											                END BANK_ID  ,
+											                CASE
+											                     WHEN ( E5.BANK_ID IS NOT NULL ) THEN E5.CODE
+											                     ELSE ' '
+											                END C9  ,
+											                CASE
+											                     WHEN ( E5.BANK_ID IS NOT NULL ) THEN E5.NAME
+											                     ELSE ' '
+											                END C10  ,
+											                CASE
+                                                                 WHEN ( E6.CUST_ACC_BANK_BRNCH IS NOT NULL ) THEN E6.CUST_ACC_BANK_BRNCH
+                                                                 ELSE ' '
+                                                            END CUST_ACC_BANK_BRNCH  ,
+											                CASE
+											                     WHEN ( E1.CUST_ACC_ID IS NOT NULL ) THEN E1.CUST_ACC_ID
+											                     ELSE 0
+											                END CUST_ACC_ID  ,
+											                CASE
+											                     WHEN ( E6.CUST_ACC_ID IS NOT NULL ) THEN E6.CUST_ACC_NO
+											                     ELSE ' '
+											                END CUST_ACC_NO  ,
+											                CASE
+											                     WHEN ( E6.CUST_ACC_ID IS NOT NULL ) THEN E6.CUST_ACC_OWNER
+											                     ELSE ' '
+											                END CUST_ACC_OWNER  ,
+											                CASE
+                                                                 WHEN ( E6.CUST_ACC_TYPE_ID IS NOT NULL ) THEN E6.CUST_ACC_TYPE_ID
+                                                                 ELSE 0
+                                                            END CUST_ACC_TYPE_ID  ,
+                                                            CASE
+                                                                 WHEN ( E10.CODE_ID IS NOT NULL ) THEN E10.CODE_NAME
+                                                                 ELSE ' '
+                                                            END CODE_NAME3  ,
+											                CASE
+											                     WHEN ( E1.CUST_CRC_ID IS NOT NULL ) THEN E1.CUST_CRC_ID
+											                     ELSE 0
+											                END CUST_CRC_ID  ,
+											                CASE
+											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_ORI_CRC_NO
+											                     ELSE ' '
+											                END CUST_CRC_NO,
+											                CASE
+											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_CRC_OWNER
+											                     ELSE ' '
+											                END CUST_CRC_OWNER  ,
+											                CASE
+											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_CRC_EXPR
+											                     ELSE ' '
+											                END CUST_CRC_EXPR  ,
+											                CASE
+                                                                 WHEN ( E7.CUST_CRC_TYPE_ID IS NOT NULL ) THEN E7.CUST_CRC_TYPE_ID
+                                                                 ELSE 0
+                                                            END CUST_CRC_TYPE_ID  ,
+                                                            CASE
+                                                                 WHEN ( E9.CODE_ID IS NOT NULL ) THEN E9.CODE_NAME
+                                                                 ELSE ' '
+                                                            END CODE_NAME1  ,
+											                CASE
+											                     WHEN ( E7.CARD_TYPE_ID IS NOT NULL ) THEN E7.CARD_TYPE_ID
+											                     ELSE 0
+											                END CARD_TYPE_ID  ,
+											                CASE
+											                     WHEN ( E8.CODE_ID IS NOT NULL ) THEN E8.CODE_NAME
+											                     ELSE ' '
+											                END CODE_NAME  ,
+											                CASE
+											                     WHEN ( E2.ACC_CL_CLM_LIMIT IS NOT NULL ) THEN E2.ACC_CL_CLM_LIMIT
+											                     ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+											                END ACC_CL_CLM_LIMIT  ,
+											                CASE
+											                     WHEN ( E2.ACC_CL_BILL_DT IS NOT NULL ) THEN E2.ACC_CL_BILL_DT
+											                     ELSE 0
+											                END ACC_CL_BILL_DT  ,
+											                CASE
+											                     WHEN ( E1.IS_3RD_PARTY IS NOT NULL ) THEN E1.IS_3RD_PARTY
+											                     ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+											                END IS_3RD_PARTY  ,
+											                CASE
+											                     WHEN ( E1.CUST_ID IS NOT NULL ) THEN E1.CUST_ID
+											                     ELSE 0
+											                END CUST_ID  ,
+											                UTILS.CONVERT_TO_NUMBER(E1.PAY_TRM,10,0) PAY_TRM
+											         FROM SAL0074D E1
+											                JOIN PAY0008M E2   ON ( E2.ACC_CL_SO_ID = E1.SALES_ORD_ID )  AND ( E2.ACC_CL_SVC_CNTRCT_ID = E1.SVC_CNTRCT_ID )
+											                JOIN SYS0013M E3   ON E3.CODE_ID = E1.MODE_ID
+											                LEFT JOIN SYS0032M E4   ON ( E4.RESN_ID = E1.FAIL_RESN_ID )  AND ( 0 <> E1.FAIL_RESN_ID )
+											                LEFT JOIN SYS0004M E5   ON E5.BANK_ID = E1.BANK_ID
+											                LEFT JOIN SAL0022D E6   ON ( E6.CUST_ACC_ID = E1.CUST_ACC_ID )  AND ( 0 <> E1.CUST_ACC_ID )
+											                LEFT JOIN SAL0028D E7   ON ( E7.CUST_CRC_ID = E1.CUST_CRC_ID )  AND ( 0 <> E1.CUST_CRC_ID )
+											                LEFT JOIN SYS0013M E8   ON E8.CODE_ID = E7.CARD_TYPE_ID
+											                LEFT JOIN SYS0013M E9   ON E9.CODE_ID = E7.CUST_CRC_TYPE_ID
+											                LEFT JOIN SYS0013M E10   ON E10.CODE_ID = E6.CUST_ACC_TYPE_ID
+											          WHERE 1=1
+											                   AND ( E1.SALES_ORD_ID = #{ORD_ID})
+											                   AND ( E1.SVC_CNTRCT_ID = #{SRV_CNTRCT_ID} )
+											                   AND ROWNUM <= 1
+											 ) S
+	            ]]>
+         </select>
+
+         <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+						            SELECT S.PAY_ID   ,
+										       S.OR_NO   ,
+										       S.SALES_ORD_ID   ,
+										       S.C1   ,
+										       S.SRV_CNTRCT_REF_NO   ,
+										       S.BILL_ID   ,
+										       S.TR_NO   ,
+										       S.TYPE_ID   ,
+										       S.CODE_DESC   ,
+										       S.PAY_DATA   ,
+										       S.BANK_CHG_ACC_ID   ,
+										       S.C2   ,
+										       S.COLL_MEM_ID   ,
+										       S.NAME   ,
+										       S.BRNCH_ID   ,
+										       S.CODE   ,
+										       S.NAME1   ,
+										       S.BANK_ACC_ID   ,
+										       S.ACC_DESC   ,
+										       S.ACC_CODE   ,
+										       S.STUS_CODE_ID   ,
+										       S.NAME2   ,
+										       S.UPD_USER_ID   ,
+										       S.NAME3   ,
+										       S.UPD_DT   ,
+										       S.SYNC_HECK   ,
+										       S.CUST_ID_3PARTY   ,
+										       S.TOT_AMT   ,
+										       S.MTCH_ID   ,
+										       S.CRT_USER_ID   ,
+										       S.USER_NAME   ,
+										       S.CRT_DT   ,
+										       S.IS_ALLOW_REV_MULTI   ,
+										       S.IS_GL_POST_CLM   ,
+										       S.GL_POST_CLM_DT   ,
+										       S.C3   ,
+										       S.TRX_ID
+										  FROM ( SELECT E1.PAY_ID   ,
+										                E1.OR_NO   ,
+										                E1.SALES_ORD_ID   ,
+										                E1.BILL_ID   ,
+										                E1.TR_NO   ,
+										                E1.TYPE_ID   ,
+										                E1.PAY_DATA   ,
+										                E1.BANK_CHG_ACC_ID   ,
+										                E1.COLL_MEM_ID   ,
+										                E1.BRNCH_ID   ,
+										                E1.BANK_ACC_ID   ,
+										                E1.STUS_CODE_ID   ,
+										                E1.UPD_USER_ID   ,
+										                E1.UPD_DT   ,
+										                E1.SYNC_HECK   ,
+										                E1.CUST_ID_3PARTY   ,
+										                E1.TOT_AMT   ,
+										                E1.MTCH_ID   ,
+										                E1.CRT_USER_ID   ,
+										                E1.CRT_DT   ,
+										                E1.IS_ALLOW_REV_MULTI   ,
+										                E1.IS_GL_POST_CLM   ,
+										                E1.GL_POST_CLM_DT   ,
+										                E1.TRX_ID   ,
+										                E2.CODE_DESC   ,
+										                E3.SRV_CNTRCT_REF_NO   ,
+										                E4.NAME   ,
+										                E5.CODE   ,
+										                E5.NAME NAME1  ,
+										                E6.ACC_CODE   ,
+										                E6.ACC_DESC   ,
+										                E7.NAME NAME2  ,
+										                E8.NAME NAME3  ,
+										                E9.USER_NAME   ,
+										                CASE
+										                     WHEN ( E1.SVC_CNTRCT_ID IS NOT NULL ) THEN E1.SVC_CNTRCT_ID
+										                ELSE 0
+										                   END C1  ,
+										                ' ' C2  ,
+										                CASE
+										                     WHEN ( Extent10.PAY_ID IS NOT NULL ) THEN Extent10.OR_NO
+										                ELSE ' '
+										                   END C3
+										         FROM PAY0064D E1
+										                LEFT JOIN SYS0013M E2   ON E2.CODE_ID = E1.TYPE_ID
+										                LEFT JOIN SAL0077D E3   ON E3.SRV_CNTRCT_ID = E1.SVC_CNTRCT_ID
+										                LEFT JOIN ORG0001D E4   ON E4.MEM_ID = E1.COLL_MEM_ID
+										                LEFT JOIN SYS0005M E5   ON E5.BRNCH_ID = E1.BRNCH_ID
+										                LEFT JOIN SYS0001M E6   ON E6.ACC_ID = E1.BANK_ACC_ID
+										                LEFT JOIN SYS0038M E7   ON E7.STUS_CODE_ID = E1.STUS_CODE_ID
+										                LEFT JOIN ORG0001D E8   ON E8.MEM_ID = E1.UPD_USER_ID
+										                LEFT JOIN SYS0047M E9   ON E9.USER_ID = E1.CRT_USER_ID
+										                LEFT JOIN PAY0064D Extent10   ON ( Extent10.PAY_ID = E1.MTCH_ID )
+										                AND ( 101 = E1.TYPE_ID )
+										          WHERE   1=1
+										               AND  E1.SVC_CNTRCT_ID  = #{SVC_CNTRCT_ID}
+										       ) S
+										           ORDER BY S.PAY_ID DESC
+                ]]>
+         </select>
+
+         <select id="selectCallLogList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+					            SELECT S.CNFM_LOG_ID   ,
+										       S.CNFM_LOG_MSG   ,
+										       S.CNFM_LOG_SMS_MSG   ,
+										       S.CNFM_LOG_CRT_DT   ,
+										       S.USER_NAME   ,
+										       S.CODE CODE,
+										       ROWNUM NUM
+										  FROM ( SELECT Extent2.CNFM_LOG_ID   ,
+										                Extent2.CNFM_LOG_MSG   ,
+										                Extent2.CNFM_LOG_SMS_MSG   ,
+										                Extent2.CNFM_LOG_CRT_DT   ,
+										                Extent3.USER_NAME   ,
+										                Extent4.CODE
+										         FROM SAL0079D Extent1
+										                JOIN SAL0080D Extent2   ON Extent2.CNFM_ID = Extent1.CNFM_ID
+										                JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent2.CNFM_LOG_CRT_USER_ID
+										                JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent2.CNFM_LOG_STUS_ID
+										          WHERE  Extent1.CNFM_CNTRCT_ID = #{CNFM_CNTRCT_ID}
+										) S
+                ]]>
+         </select>
+
+         <select id="selectPayThirdPartyInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+	                   SELECT S.CUST_ID   ,
+								       S.C1   ,
+								       S.C2   ,
+								       S.C3   ,
+								       S.C4   ,
+								       S.C5   ,
+								       S.C6   ,
+								       S.NAME   ,
+								       S.NRIC   ,
+								       S.C7   ,
+								       S.TYPE_ID   ,
+								       S.C8   ,
+								       S.C9   ,
+								       S.C10   ,
+								       S.C11   ,
+								       S.C12   ,
+								       S.C13   ,
+								       S.C14   ,
+								       S.REM   ,
+								       S.C15   ,
+								       S.C16   ,
+								       S.C17   ,
+								       S.C18   ,
+								       S.C19   ,
+								       S.C20   ,
+								       S.C21   ,
+								       S.PAS_SPORT_EXPR   ,
+								       S.VISA_EXPR   ,
+								       S.C22 C22  ,
+								       S.C23 C23
+								  FROM ( SELECT E1.CUST_ID CUST_ID  ,
+								                E1.NAME NAME  ,
+								                E1.NRIC NRIC  ,
+								                E1.REM REM  ,
+								                E1.TYPE_ID TYPE_ID  ,
+								                E1.PAS_SPORT_EXPR PAS_SPORT_EXPR  ,
+								                E1.VISA_EXPR VISA_EXPR  ,
+								                CASE
+								                     WHEN ( E1.CRT_USER_ID IS NOT NULL ) THEN E1.CRT_USER_ID
+								                ELSE 0
+								                   END C1  ,
+								                CASE
+								                     WHEN ( E2.USER_ID IS NOT NULL ) THEN E2.USER_NAME
+								                ELSE ' '
+								                   END C2  ,
+								                CASE
+								                     WHEN ( ( E1.CRT_DT IS NOT NULL )
+								                       AND ( to_char( E1.CRT_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.CRT_DT,'yyyymmdd')
+								                ELSE NULL
+								                   END C3  ,
+								                CASE
+								                     WHEN ( E1.CORP_TYPE_ID IS NOT NULL ) THEN E1.CORP_TYPE_ID
+								                ELSE 0
+								                   END C4  ,
+								                CASE
+								                     WHEN ( E10.CODE_ID IS NOT NULL ) THEN E10.CODE
+								                ELSE ' '
+								                   END C5  ,
+								                CASE
+								                     WHEN ( E10.CODE_ID IS NOT NULL ) THEN E10.CODE_NAME
+								                ELSE ' '
+								                   END C6  ,
+								                CASE
+								                     WHEN ( E9.CODE_ID IS NOT NULL ) THEN E9.CODE_NAME
+								                ELSE ' '
+								                   END C7  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN   NULL
+								                     WHEN ( ( E1.DOB IS NOT NULL )
+								                       AND (  to_char(E1.DOB ,'yyyymmdd')  > '19000101' ) ) THEN  to_char(E1.DOB ,'yyyymmdd')
+								                ELSE NULL
+								                   END C8  ,
+								                CASE
+								                     WHEN ( E1.EMAIL IS NOT NULL ) THEN E1.EMAIL
+								                ELSE ' '
+								                   END C9  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN ' '
+								                     WHEN ( E1.GENDER IS NOT NULL ) THEN E1.GENDER
+								                ELSE ' '
+								                   END C10  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN 0
+								                     WHEN ( E1.NATION IS NOT NULL ) THEN  E1.NATION
+								                ELSE 0
+								                   END C11  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN ' '
+								                     WHEN ( E4.CNTY_ID IS NOT NULL ) THEN E4.NAME
+								                ELSE ' '
+								                   END C12  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN 0
+								                     WHEN ( E1.RACE_ID IS NOT NULL ) THEN  E1.RACE_ID
+								                ELSE 0
+								                   END C13  ,
+								                CASE
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN ' '
+								                     WHEN ( E5.CODE_ID IS NOT NULL ) THEN E5.CODE_NAME
+								                ELSE ' '
+								                   END C14  ,
+								                CASE
+								                     WHEN ( E1.STUS_CODE_ID IS NOT NULL ) THEN  E1.STUS_CODE_ID
+								                ELSE 0
+								                   END C15  ,
+								                CASE
+								                     WHEN ( E1.UPD_USER_ID IS NOT NULL ) THEN E1.UPD_USER_ID
+								                ELSE 0
+								                   END C16  ,
+								                CASE
+								                     WHEN ( ( E1.UPD_DT IS NOT NULL )
+								                       AND ( to_char(E1.UPD_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.UPD_DT,'yyyymmdd')
+								                ELSE  NULL
+								                   END C17  ,
+								                CASE
+								                     WHEN ( E3.USER_ID IS NOT NULL ) THEN E3.USER_NAME
+								                ELSE ' '
+								                   END C18  ,
+								                CASE
+								                     WHEN ( E6.CUST_ADD_ID IS NOT NULL ) THEN E6.CUST_ADD_ID
+								                ELSE 0
+								                   END C19  ,
+								                CASE
+								                     WHEN ( E7.CUST_CNTC_ID IS NOT NULL ) THEN E7.CUST_CNTC_ID
+								                ELSE 0
+								                   END C20  ,
+								                CASE
+								                     WHEN ( E8.CUST_CARE_CNT_ID IS NOT NULL ) THEN E8.CUST_CARE_CNT_ID
+								                ELSE 0
+								                   END C21  ,
+								                CASE
+								                     WHEN ( E1.CUST_VA_NO IS NOT NULL ) THEN E1.CUST_VA_NO
+								                ELSE ' '
+								                   END C22  ,
+								                CASE
+								                     WHEN ( E1.GST_RGIST_NO IS NOT NULL ) THEN E1.GST_RGIST_NO
+								                ELSE ' '
+								                   END C23
+								         FROM SAL0029D E1
+								                LEFT JOIN SYS0047M E2   ON E2.USER_ID = E1.CRT_USER_ID
+								                LEFT JOIN SYS0047M E3   ON E3.USER_ID = E1.UPD_USER_ID
+								                LEFT JOIN SYS0015M E4   ON E4.CNTY_ID = UTILS.CONVERT_TO_NUMBER(E1.NATION,10,0)
+								                LEFT JOIN SYS0013M E5   ON E5.CODE_ID = UTILS.CONVERT_TO_NUMBER(E1.RACE_ID,10,0)
+								                LEFT JOIN SAL0023D E6   ON ( E6.CUST_ID = E1.CUST_ID )
+								                AND ( 9 = UTILS.CONVERT_TO_NUMBER(E6.STUS_CODE_ID,10,0) )
+								                LEFT JOIN SAL0027D E7   ON ( E7.CUST_ID = E1.CUST_ID )
+								                AND ( 9 = UTILS.CONVERT_TO_NUMBER(E7.STUS_CODE_ID,10,0) )
+								                LEFT JOIN SAL0026D E8   ON ( E8.CUST_ID = E1.CUST_ID )
+								                AND ( 9 = UTILS.CONVERT_TO_NUMBER(E8.STUS_CODE_ID,10,0) )
+								                LEFT JOIN SYS0013M E9   ON E9.CODE_ID = E1.TYPE_ID
+								                LEFT JOIN SYS0013M E10   ON ( E10.CODE_ID = E1.CORP_TYPE_ID )
+								                AND ( E1.CORP_TYPE_ID IS NOT NULL )
+								          WHERE  ( 8 <> UTILS.CONVERT_TO_NUMBER(E1.STUS_CODE_ID,10,0) )
+								                   AND ( E1.CUST_ID = #{CUST_ID} ) AND ROWNUM <= 1 ) S
+
+                ]]>
+         </select>
+
+         <select id="selectPaymentDetailList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+					            SELECT E1.PAY_ITM_ID   ,
+									       E1.PAY_ID   ,
+									       E1.PAY_ITM_MODE_ID   ,
+									       E2.CODE_NAME   ,
+									       E1.PAY_ITM_REF_NO   ,
+									       E1.PAY_ITM_CC_NO   ,
+									       E1.PAY_ITM_ORI_CC_NO   ,
+									       --E1.PAY_ITM_ENCRYPT_CC_NO   ,
+									       E1.PAY_ITM_CC_TYPE_ID   ,
+									       E3.CODE_NAME CODENAME1  ,
+									       E1.PAY_ITM_CC_HOLDER_NAME  ,
+									       E1.PAY_ITM_CC_EXPR_DT   ,
+									       E1.PAY_ITM_CHQ_NO   ,
+									       E1.PAY_ITM_ISSU_BANK_ID   ,
+									       CASE
+									            WHEN ( E4.BANK_ID IS NOT NULL ) THEN E4.CODE
+									       ELSE ' '
+									          END C1  ,
+									       E4.NAME NAME  ,
+									       E1.PAY_ITM_AMT   ,
+									       E1.PAY_ITM_IS_ONLINE   ,
+									       E1.PAY_ITM_BANK_ACC_ID   ,
+									       CASE
+									            WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE
+									       ELSE ' '
+									          END C2  ,
+									       Extent5.ACC_DESC   ,
+									       E1.PAY_ITM_REF_DT   ,
+									       E1.PAY_ITM_APPV_NO   ,
+									       E1.PAY_ITM_REM   ,
+									       E1.PAY_ITM_STUS_ID   ,
+									       E6.NAME NAME1  ,
+									       E1.PAY_ITM_IS_LOK   ,
+									       E1.PAY_ITM_BANK_CHRG_AMT   ,
+									       E1.PAY_ITM_IS_THRD_PARTY   ,
+									       E1.PAY_ITM_THRD_PARTY_IC   ,
+									       E1.PAY_ITM_MID   ,
+									       E1.PAY_ITM_GRP_ID   ,
+									       E1.PAY_ITM_REF_ITM_ID   ,
+									       E1.ETC3   ,
+									       CASE
+									            WHEN ( E1.PAY_ITM_EFT_NO IS NOT NULL ) THEN E1.PAY_ITM_EFT_NO
+									       ELSE ' '
+									          END C3  ,
+									       CASE
+									            WHEN ( E1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN E1.PAY_ITM_RUNNG_NO
+									       ELSE ' '
+									          END C4  ,
+									       CASE
+									            WHEN ( E1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN E1.PAY_ITM_CARD_TYPE_ID
+									       ELSE 0
+									          END C5  ,
+									       CASE
+									            WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME
+									       ELSE ' '
+									          END C6
+									  FROM PAY0065D E1
+									         LEFT JOIN SYS0013M E2   ON E2.CODE_ID = E1.PAY_ITM_MODE_ID
+									         LEFT JOIN SYS0013M E3   ON E3.CODE_ID = E1.PAY_ITM_CC_TYPE_ID
+									         LEFT JOIN SYS0004M E4   ON E4.BANK_ID = E1.PAY_ITM_ISSU_BANK_ID
+									         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = E1.PAY_ITM_BANK_ACC_ID
+									         LEFT JOIN SYS0038M E6   ON E6.STUS_CODE_ID = E1.PAY_ITM_STUS_ID
+									         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = E1.PAY_ITM_CARD_TYPE_ID
+									 WHERE  ( 1 = E1.PAY_ITM_STUS_ID )
+									          AND ( E1.PAY_ID = #{PAY_ID} )
+               ]]>
+         </select>
+
+
+         <select id="selectPayBillingInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+
+
+                    ]]>
+         </select>
+
+
+         <select id="selectPayUnbillInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+			            SELECT S.SRV_PAY_SCHDUL_ID   ,
+							       S.SRV_PAY_CNTRCT_ID   ,
+							       S.SRV_PAY_SCHDUL_ORD_ID   ,
+							       S.SRV_PAY_SCHDUL_NO   ,
+							       S.SRV_PAY_SCHDUL_MONTH   ,
+							       S.SRV_PAY_SCHDUL_YEAR   ,
+							       S.SRV_PAY_SCHDUL_TYPE_ID   ,
+							       S.SRV_PAY_SCHDUL_AMT   ,
+							       S.SRV_PAY_SCHDUL_STUS_ID   ,
+							       S.SRV_PAY_SCHDUL_REM
+							  FROM SAL0085D S
+							 WHERE  ( S.SRV_PAY_CNTRCT_ID = #{CNTRCT_ID} )
+							          AND ( S.SRV_PAY_SCHDUL_MONTH =  (utils.datepart('MONTH', SYSDATE)) )
+							          AND ( S.SRV_PAY_SCHDUL_YEAR = (utils.datepart('YEAR', SYSDATE)) ) AND ROWNUM <= 1
+                    ]]>
+         </select>
+
+          <select id="accServiceContractLedgers" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+                            SELECT  MAX(SRV_LDGR_CNTRCT_SCHDUL_NO) SRV_LDGR_CNTRCT_SCHDUL_NO,
+                                        SUM(SRV_LDGR_AMT) SRV_LDGR_AMT
+							    FROM(    SELECT S.SRV_LDGR_ID   ,
+							               S.SRV_SALES_ORD_ID   ,
+							               S.SRV_LDGR_CNTRCT_ID   ,
+							               S.SRV_LDGR_REF_NO   ,
+							               S.SRV_LDGR_TYPE_ID   ,
+							               S.SRV_LDGR_REF_DT   ,
+							               S.SRV_LDGR_AMT   ,
+							               S.SRV_LDGR_CNTRCT_SCHDUL_ID   ,
+							               S.SRV_LDGR_CNTRCT_SCHDUL_NO   ,
+							               S.SRV_LDGR_REM   ,
+							               S.SRV_LDGR_CRT_DT   ,
+							               S.SRV_LDGR_CRT_USER_ID   ,
+							               S.SRV_LDGR_PAY_TYPE
+							          FROM ( SELECT E1.SRV_LDGR_ID   ,
+							                        E1.SRV_SALES_ORD_ID   ,
+							                        E1.SRV_LDGR_CNTRCT_ID   ,
+							                        E1.SRV_LDGR_REF_NO   ,
+							                        E1.SRV_LDGR_TYPE_ID   ,
+							                        E1.SRV_LDGR_REF_DT   ,
+							                        E1.SRV_LDGR_AMT   ,
+							                        E1.SRV_LDGR_CNTRCT_SCHDUL_ID   ,
+							                        E1.SRV_LDGR_CNTRCT_SCHDUL_NO   ,
+							                        E1.SRV_LDGR_REM   ,
+							                        E1.SRV_LDGR_CRT_DT   ,
+							                        E1.SRV_LDGR_CRT_USER_ID   ,
+							                        E1.SRV_LDGR_PAY_TYPE
+							                 FROM PAY0023D E1
+							                        LEFT JOIN PAY0017D E2   ON E2.ACC_INV_VOID_INVC_NO = E1.SRV_LDGR_REF_NO
+							                  WHERE  ( E1.SRV_LDGR_CNTRCT_ID = #{CNTRCT_ID} )
+							                           AND ( 160 <> E1.SRV_LDGR_TYPE_ID )
+							                           AND ( 1307 <> E1.SRV_LDGR_TYPE_ID )
+							                           AND ( E2.ACC_INV_VOID_ID IS NULL ) ) S
+							          ORDER BY S.SRV_LDGR_REF_DT ASC )
+                    ]]>
+         </select>
+
+
+
+   <resultMap id="mLedger_INFO" type="egovMap" ></resultMap>
+
+    <select id="usp_SELECT_ServiceContract_Ledger"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[
+            {
+                  call SP_SELT_SVC_CNTRCT_LDGR ( #{CutOffDate} , #{ContractID}  , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedger_INFO})
+            }
+         ]]>
+      </select>
+
+
+   <resultMap id="mLedgerOMap" type="egovMap" ></resultMap>
+
+   <select id="usp_SELECT_ServiceContract_LedgerOutstanding"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[
+            {
+                  call SP_SELT_SVC_CNTRCT_LDGR_OTSTND ( #{ContractID} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mLedgerOMap})
+            }
+         ]]>
+      </select>
+
+
+
+     <select id="selectOrderMailingInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+					      SELECT   S.ORD_ID   ,
+								       S.ADDR_DTL   ,
+								       S.STREET   ,
+								       S.MAIL_AREA   ,
+								       S.MAIL_CITY   ,
+								       S.MAIL_STATE   ,
+								       S.MAIL_POST_CODE   ,
+								       S.MAIL_CNTY   ,
+								       S.MAIL_CNT_NAME   ,
+								       S.MAIL_CNT_NRIC   ,
+								       S.MAIL_CNT_EMAIL   ,
+								       S.MAIL_CNT_TEL_M   ,
+								       S.MAIL_CNT_TEL_O   ,
+								       S.MAIL_CNT_TEL_R   ,
+								       S.MAIL_CNT_TEL_F   ,
+								       S.MAIL_CNT_GENDER   ,
+								       S.BILL_GRP_NO   ,
+								       S.BILL_STATE_EMAIL   ,
+								       S.BILL_STATE   ,
+								       S.BILL_SMS   ,
+								       S.BILL_POST   ,
+								       S.MAIL_CNTC_ID   ,
+								       S.MAIL_ADDR_ID   ,
+								       S.MAIL_CNT_DEPT   ,
+								       S.MAIL_CNT_POST ,
+								       S.MAIL_ADDRESS1 ,
+                                       S.MAIL_ADDRESS2 ,
+                                       S.MAIL_ADDRESS3
+								  FROM ( SELECT V.ORD_ID   ,
+								                ' ' MAIL_ADDRESS1 ,
+								                ' ' MAIL_ADDRESS2 ,
+								                ' ' MAIL_ADDRESS3 ,
+								                upper(V.ADDR_DTL)  ADDR_DTL  ,
+								                upper(V.STREET) STREET  ,
+								                upper(V.MAIL_CNTY)  MAIL_CNTY  ,
+								                upper(V.MAIL_STATE) MAIL_STATE  ,
+								                upper(V.MAIL_AREA)   MAIL_AREA ,
+								                upper(V.MAIL_CITY)  MAIL_CITY  ,
+								                V.MAIL_POST_CODE   ,
+								                V.MAIL_CNT_NAME  ,
+								                V.MAIL_CNT_NRIC   ,
+								                V.MAIL_CNT_EMAIL   ,
+								                V.MAIL_CNT_TEL_M   ,
+								                V.MAIL_CNT_TEL_O   ,
+								                V.MAIL_CNT_TEL_R   ,
+								                V.MAIL_CNT_TEL_F   ,
+								                V.MAIL_CNT_GENDER   ,
+								                V.BILL_GRP_NO   ,
+								                V.BILL_STATE_EMAIL   ,
+								                V.BILL_STATE   ,
+								                V.BILL_SMS   ,
+								                V.BILL_POST   ,
+								                V.MAIL_CNTC_ID   ,
+								                V.MAIL_ADDR_ID   ,
+								                V.MAIL_CNT_DEPT   ,
+								                V.MAIL_CNT_POST
+								         FROM SAL1011V V ) S
+								 WHERE  S.ORD_ID = #{ORD_ID}
+								    AND ROWNUM <= 1
+
+         ]]>
+         </select>
+
+
+ <select id="getLoadRejectReasonList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+						SELECT  RESN_ID  code_Id ,
+						        CODE||'-'||RESN_DESC  code_Name ,
+						        CODE
+						 FROM  SYS0032M
+						WHERE  RESN_TYPE_ID = #{RESN_TYPE_ID}
+						  AND  STUS_CODE_ID ='1'
+						UNION
+						SELECT RESN_ID  code_Id ,
+						       CODE||'-'||RESN_DESC  code_Name ,
+						       CODE
+						 FROM SYS0032M
+						WHERE   RESN_ID = #{RESN_ID}
+            ]]>
+  </select>
+
+
+      <select id="selectQuotInfoInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+                     SELECT S.QOTAT_ID   ,
+							       S.QOTAT_REF_NO   ,
+							       S.QOTAT_ORD_ID   ,
+							       to_char(S.QOTAT_CRT_DT,'dd/mm/yyyy') QOTAT_CRT_DT  ,
+							       S.USER_NAME   ,
+							       to_char(S.QOTAT_VAL_ID_DT ,'dd/mm/yyyy') QOTAT_VAL_ID_DT ,
+							       S.QOTAT_CNTRCT_DUR   ,
+							       S.QOTAT_PCKG_ID   ,
+							       S.SRV_CNTRCT_PAC_DESC   ,
+							       S.QOTAT_RENTAL_AMT   ,
+							       S.QOTAT_EXP_FILTER_AMT   ,
+							       S.QOTAT_PAC_PROMO_ID   ,
+							       CASE
+							            WHEN ( S.PROMO_ID IS NOT NULL ) THEN S.PROMO_DESC
+							       ELSE '-'
+							          END C1  ,
+							       S.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+							       CASE
+							            WHEN ( S.PROMOID1 IS NOT NULL ) THEN S.PROMODESC1
+							       ELSE '-'
+							          END C2  ,
+							       S.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+							       CASE
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.MEM_CODE
+							       ELSE ' '
+							          END C3  ,
+							       CASE
+							            WHEN ( S.MEM_ID IS NOT NULL ) THEN S.NAME
+							       ELSE ' '
+							          END C4  ,
+							       S.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+							       CASE
+							            WHEN ( S.QOTAT_VAL_ID_DT < to_date( SYSDATE ) ) THEN 82
+							            WHEN ( 4 = S.QOTAT_STUS_ID ) THEN 81
+							       ELSE S.QOTAT_STUS_ID
+							          END C5  ,
+							       CASE
+							            WHEN ( S.QOTAT_VAL_ID_DT < to_date( SYSDATE ) ) THEN 'EXP'
+							            WHEN ( 4 = S.QOTAT_STUS_ID ) THEN 'CON'
+							            WHEN ( 1 = S.QOTAT_STUS_ID ) THEN 'ACT'
+							            WHEN ( 8 = S.QOTAT_STUS_ID ) THEN 'DEA'
+							       ELSE ' '
+							          END C6  ,
+							       CASE
+							            WHEN ( S.SRV_CNTRCT_FORM_NO IS NOT NULL ) THEN S.SRV_CNTRCT_FORM_NO
+							       ELSE '-'
+							          END C7
+						  FROM ( SELECT E1.QOTAT_ID QOTAT_ID  ,
+								                E1.QOTAT_REF_NO QOTAT_REF_NO  ,
+								                E1.QOTAT_ORD_ID QOTAT_ORD_ID  ,
+								                E1.QOTAT_STUS_ID QOTAT_STUS_ID  ,
+								                E1.QOTAT_PAC_PROMO_ID QOTAT_PAC_PROMO_ID  ,
+								                E1.QOTAT_FIL_PROMO_ID QOTAT_FIL_PROMO_ID  ,
+								                E1.QOTAT_PCKG_ID QOTAT_PCKG_ID  ,
+								                E1.QOTAT_RENTAL_AMT QOTAT_RENTAL_AMT  ,
+								                E1.QOTAT_EXP_FILTER_AMT QOTAT_EXP_FILTER_AMT  ,
+								                E1.QOTAT_CNTRCT_DUR QOTAT_CNTRCT_DUR  ,
+								                E1.QOTAT_CNTRCT_FREQ QOTAT_CNTRCT_FREQ  ,
+								                E1.QOTAT_VAL_ID_DT QOTAT_VAL_ID_DT  ,
+								                E1.QOTAT_SALESMAN_ID QOTAT_SALESMAN_ID  ,
+								                E1.QOTAT_CRT_DT QOTAT_CRT_DT  ,
+								                E2.SRV_CNTRCT_PAC_DESC SRV_CNTRCT_PAC_DESC  ,
+								                E3.USER_NAME USER_NAME  ,
+								                E4.MEM_ID MEM_ID  ,
+								                E4.MEM_CODE MEM_CODE  ,
+								                E4.NAME NAME  ,
+								                E5.PROMO_ID PROMO_ID  ,
+								                E5.PROMO_DESC PROMO_DESC  ,
+								                E6.PROMO_ID PROMOID1  ,
+								                E6.PROMO_DESC PROMODESC1  ,
+								                E7.SRV_CNTRCT_FORM_NO SRV_CNTRCT_FORM_NO
+								         FROM SAL0083D E1
+								                JOIN SAL0081D E2   ON E2.SRV_CNTRCT_PAC_ID = E1.QOTAT_PCKG_ID
+								                JOIN SYS0047M  E3   ON E3.USER_ID = E1.QOTAT_CRT_USER_ID
+								                LEFT JOIN ORG0001D E4   ON E4.MEM_ID = E1.QOTAT_SALESMAN_ID
+								                LEFT JOIN SAL0017D E5   ON E5.PROMO_ID = E1.QOTAT_PAC_PROMO_ID
+								                LEFT JOIN SAL0017D E6   ON E6.PROMO_ID = E1.QOTAT_FIL_PROMO_ID
+								                LEFT JOIN SAL0077D E7   ON E7.SRV_CNTRCT_QUOT_ID = E1.QOTAT_ID
+								          WHERE  E1.QOTAT_ID = #{QOTAT_ID} AND ROWNUM <= 1 ) S
+
+            ]]>
+  </select>
+
+  <select id="paymentViewHistory" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+
+                     SELECT  0 HIST_REN_PAY_ID,
+							    Extent1.SALES_ORD_ID,
+							    Extent1.ISSU_NRIC ,
+						        Extent2.CODE,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL)
+						                             OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
+						                  THEN
+						                     Extent3.CUST_ACC_NO
+						                  ELSE
+						                     ' '
+						               END
+						            ELSE
+						               '************' || SUBSTR (Extent4.CUST_ORI_CRC_NO, 13, 4)
+						         END
+						            CUST_ACC_NO,
+						         CASE
+						            WHEN (Extent1.DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_APPLY_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_APPLY_DT,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent5.BANK_ID IS NOT NULL) THEN Extent5.CODE
+						                  ELSE ' '
+						               END
+						            WHEN (Extent6.BANK_ID IS NOT NULL)
+						            THEN
+						               Extent6.CODE
+						            ELSE
+						               ' '
+						         END
+						            BANK_CODE_ID,
+						         CASE
+						            WHEN (131 = Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent4.CUST_CRC_EXPR IS NOT NULL)
+						                  THEN
+						                     Extent4.CUST_CRC_EXPR
+						                  ELSE
+						                     ' '
+						               END
+						            ELSE
+						               ' '
+						         END
+						            CUST_CRC_EXPR,
+						         0 C5,
+						         CASE
+						            WHEN (Extent1.MODE_ID IS NOT NULL) THEN Extent1.MODE_ID
+						            ELSE 0
+						         END
+						            MODE_ID,
+						     'Current' C6,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent3.CUST_ACC_OWNER IS NOT NULL)
+						                  THEN
+						                     Extent3.CUST_ACC_OWNER
+						                  ELSE
+						                     ' '
+						               END
+						            WHEN (Extent4.CUST_CRC_OWNER IS NOT NULL)
+						            THEN
+						               Extent4.CUST_CRC_OWNER
+						            ELSE
+						               ' '
+						         END
+						            CUST_CRC_OWNER,
+						         CASE
+						            WHEN (Extent1.DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_REJCT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_REJCT_DT,
+						         CASE
+						            WHEN (Extent7.RESN_ID IS NOT NULL) THEN Extent7.CODE
+						            ELSE ' '
+						         END
+						            RESN_CODE_ID,
+						         CASE
+						            WHEN (Extent1.DD_START_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_START_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_START_DT,
+						         CASE
+						            WHEN (Extent1.DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_SUBMIT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_SUBMIT_DT,
+						         CASE
+						            WHEN (1 = Extent1.IS_3RD_PARTY)
+						            THEN
+						               CASE
+						                  WHEN (Extent8.CUST_ID IS NOT NULL) THEN Extent8.NAME
+						                  ELSE ' '
+						               END
+						            ELSE
+						               ' '
+						         END
+						            CUST_NAME,
+						         CASE
+						            WHEN (Extent1.UPD_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            UPD_DT,
+						         CASE
+						            WHEN (Extent9.USER_ID IS NOT NULL) THEN Extent9.USER_NAME
+						            ELSE ' '
+						         END
+						            USER_NAME,
+						            Extent1.UPD_DT UPD_DT_1,
+						         CASE
+                                    WHEN (Extent4.CUST_CRC_TOKEN IS NOT NULL) THEN Extent4.CUST_CRC_TOKEN
+                                  ELSE ' '
+                                END
+                                  TOKEN_ID
+						  FROM                           SAL0074D Extent1
+						                              JOIN
+						                                 SYS0013M Extent2
+						                              ON Extent2.CODE_ID = Extent1.MODE_ID
+						                           LEFT JOIN
+						                              SAL0022D Extent3
+						                           ON     (Extent3.CUST_ACC_ID = Extent1.CUST_ACC_ID)
+						                              AND (131 <> Extent1.MODE_ID)
+						                              AND (Extent1.CUST_ACC_ID > 0)
+						                        LEFT JOIN
+						                           SAL0028D Extent4
+						                        ON     (Extent4.CUST_CRC_ID = Extent1.CUST_CRC_ID)
+						                           AND (131 = Extent1.MODE_ID)
+						                           AND (Extent1.CUST_CRC_ID > 0)
+						                     LEFT JOIN
+						                        SYS0004M Extent5
+						                     ON     (Extent5.BANK_ID = Extent3.CUST_ACC_BANK_ID)
+						                        AND (131 <> Extent1.MODE_ID)
+						                        AND (Extent1.CUST_ACC_ID > 0)
+						                        AND (Extent3.CUST_ACC_ID > 0)
+						                  LEFT JOIN
+						                     SYS0004M Extent6
+						                  ON     (Extent6.BANK_ID = Extent4.CUST_CRC_BANK_ID)
+						                     AND (131 = Extent1.MODE_ID)
+						                     AND (Extent1.CUST_CRC_ID > 0)
+						                     AND (Extent4.CUST_CRC_ID > 0)
+						               LEFT JOIN
+						                  SYS0032M Extent7
+						               ON (Extent7.RESN_ID = Extent1.FAIL_RESN_ID)
+						                  AND (Extent1.FAIL_RESN_ID > 0)
+						            LEFT JOIN
+						               SAL0029D Extent8
+						            ON (Extent8.CUST_ID = Extent1.CUST_ID)
+						               AND (1 = Extent1.IS_3RD_PARTY)
+						         LEFT JOIN
+						            SYS0047M Extent9
+						         ON Extent9.USER_ID = Extent1.UPD_USER_ID
+						 WHERE (Extent1.SALES_ORD_ID = #{salesOrdId})
+						     AND (Extent1.SVC_CNTRCT_ID = #{srvCntrctId})
+					UNION
+						  SELECT   Ext1.HIST_REN_PAY_ID,
+						           Ext1.SALES_ORD_ID,
+						           Ext1.ISSU_NRIC,
+						           Ext2.CODE,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL)
+						                               OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0)))
+						                    THEN
+						                       Ext3.CUST_ACC_NO
+						                    ELSE
+						                       ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_ACC_NO,
+						           CASE
+						              WHEN (Ext1.DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_APPLY_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_APPLY_DT,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext5.BANK_ID IS NOT NULL) THEN Ext5.CODE
+						                    ELSE ' '
+						                 END
+						              WHEN (Ext6.BANK_ID IS NOT NULL)
+						              THEN
+						                 Ext6.CODE
+						              ELSE
+						                 ' '
+						           END
+						              BANK_CODE_ID,
+						           CASE
+						              WHEN (131 = Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext4.CUST_CRC_EXPR IS NOT NULL)
+						                    THEN
+						                       Ext4.CUST_CRC_EXPR
+						                    ELSE
+						                       ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_CRC_EXPR,
+						           0 C5,
+						           CASE
+						              WHEN (Ext1.MODE_ID IS NOT NULL) THEN Ext1.MODE_ID
+						              ELSE 0
+						           END
+						           MODE_ID,
+						            'Old'  C6,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext3.CUST_ACC_OWNER IS NOT NULL)
+						                    THEN
+						                       Ext3.CUST_ACC_OWNER
+						                    ELSE
+						                       ' '
+						                 END
+						              WHEN (Ext4.CUST_CRC_OWNER IS NOT NULL)
+						              THEN
+						                 Ext4.CUST_CRC_OWNER
+						              ELSE
+						                 ' '
+						           END
+						              CUST_CRC_OWNER,
+						           CASE
+						              WHEN (Ext1.DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_REJCT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_REJCT_DT,
+						           CASE
+						              WHEN (Ext7.RESN_ID IS NOT NULL) THEN Ext7.CODE
+						              ELSE ' '
+						           END
+						              RESN_CODE_ID,
+						           CASE
+						              WHEN (Ext1.DD_START_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_START_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_START_DT,
+						           CASE
+						              WHEN (Ext1.DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+						                 TO_CHAR(Ext1.DD_SUBMIT_DT, 'DD-MM-YYYY')
+						              ELSE
+						                 '-'
+						           END
+						              DD_SUBMIT_DT,
+						           CASE
+						              WHEN (1 = Ext1.IS_3RD_PARTY)
+						              THEN
+						                 CASE
+						                    WHEN (Ext8.CUST_ID IS NOT NULL) THEN Ext8.NAME
+						                    ELSE ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_NAME,
+						           CASE
+						              WHEN (Ext1.UPD_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.UPD_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              UPD_DT,
+						           CASE
+						              WHEN (Ext9.USER_ID IS NOT NULL) THEN Ext9.USER_NAME
+						              ELSE ' '
+						           END
+						              USER_NAME,
+						              Ext1.UPD_DT UPD_DT_1,
+						          CASE
+                                      WHEN (Ext4.CUST_CRC_TOKEN IS NOT NULL) THEN Ext4.CUST_CRC_TOKEN
+                                      ELSE ' '
+                                  END
+                                      TOKEN_ID
+						    FROM                           SAL0076D Ext1
+						                                JOIN
+						                                   SYS0013M Ext2
+						                                ON Ext2.CODE_ID = Ext1.MODE_ID
+						                             LEFT JOIN
+						                                SAL0022D Ext3
+						                             ON     (Ext3.CUST_ACC_ID = Ext1.CUST_ACC_ID)
+						                                AND (131 <> Ext1.MODE_ID)
+						                                AND (Ext1.CUST_ACC_ID > 0)
+						                          LEFT JOIN
+						                             SAL0028D Ext4
+						                          ON     (Ext4.CUST_CRC_ID = Ext1.CUST_CRC_ID)
+						                             AND (131 = Ext1.MODE_ID)
+						                             AND (Ext1.CUST_CRC_ID > 0)
+						                       LEFT JOIN
+						                          SYS0004M Ext5
+						                       ON     (Ext5.BANK_ID = Ext3.CUST_ACC_BANK_ID)
+						                          AND (131 <> Ext1.MODE_ID)
+						                          AND (Ext1.CUST_ACC_ID > 0)
+						                          AND (Ext3.CUST_ACC_ID > 0)
+						                    LEFT JOIN
+						                       SYS0004M Ext6
+						                    ON     (Ext6.BANK_ID = Ext4.CUST_CRC_BANK_ID)
+						                       AND (131 = Ext1.MODE_ID)
+						                       AND (Ext1.CUST_CRC_ID > 0)
+						                       AND (Ext4.CUST_CRC_ID > 0)
+						                 LEFT JOIN
+						                    SYS0032M Ext7
+						                 ON (Ext7.RESN_ID = Ext1.FAIL_RESN_ID)
+						                    AND (Ext1.FAIL_RESN_ID > 0)
+						              LEFT JOIN
+						                 SAL0029D Ext8
+						              ON (Ext8.CUST_ID = Ext1.CUST_ID)
+						                 AND (1 = Ext1.IS_3RD_PARTY)
+						           LEFT JOIN
+						              SYS0047M Ext9
+						           ON Ext9.USER_ID = Ext1.UPD_USER_ID
+						   WHERE (Ext1.SALES_ORD_ID = #{salesOrdId})
+						       AND (Ext1.SVC_CNTRCT_ID = #{srvCntrctId})
+                ORDER BY UPD_DT_1 DESC
+            ]]>
+  </select>
+
+  <select id="viewHistPaySetting" statementType="CALLABLE" parameterType="Map">
+        {
+            CALL SP_UPD_PAY_REACTVT_PAY_SETNG_H(#{histRenPayId}, #{userId})
+        }
+      </select>
+
+</mapper>

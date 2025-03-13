@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.CustomerMobileContactUpdateMapper">
+
+  <!-- CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후 <select id="selectClobData"
+    parameterType="Map" resultMap="clobMap"> 와 같이 resultMap="clobMap" 을 사용해야
+    함. -->
+
+  <select id="selectMobileUpdateJsonList" parameterType="Map" resultType="egovMap">
+
+  SELECT A.TICKET_NO,
+             A.ORDER_ID,
+             A.ORDER_NO,
+             A.CUST_ID,
+             A.CUST_NAME,
+             CASE WHEN (A.STATUS = 'P') THEN 'Active'
+                     WHEN (A.STATUS = 'A') THEN 'Approve'
+                     WHEN (A.STATUS = 'J') THEN 'Rejected'
+             END AS STATUS,
+             A.STATUS STATUS_CODE,
+             A.CNTC_ID,
+             A.REQST_DT,
+             A.OLD_HP_NO,
+             A.OLD_HOME_NO,
+             A.OLD_OFFICE_NO,
+             A.OLD_EMAIL,
+             A.NEW_HP_NO,
+             A.NEW_HOME_NO,
+             A.NEW_OFFICE_NO,
+             A.NEW_EMAIL,
+             BRCH.NAME POSTING_BRCH,
+             A.DEPT_CODE,
+             A.ORG_CODE,
+             A.GRP_CODE,
+             A.REM,
+             A.CRT_DT,
+             CUSR.USER_NAME CRT_USER_ID,
+             A.UPD_DT,
+             TO_CHAR( A.UPD_DT, 'dd/mm/yyyy HH24:MI:SS AM') || ' (' || UUSR.USER_NAME || ')' UPD_USER_ID
+  FROM SAL0329D A
+  JOIN SYS0047M CUSR ON CUSR.USER_ID = A.CRT_USER_ID
+  JOIN SYS0047M UUSR ON UUSR.USER_ID = A.UPD_USER_ID
+  JOIN SYS0005M BRCH ON BRCH.BRNCH_ID = A.POSTING_BRCH
+  WHERE 1=1
+  <if test="statusList != null and statusList != ''">
+      AND A.STATUS IN
+      <foreach item="item" collection="statusList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+  </if>
+  <if test="branch != null and branch != ''">
+      AND A.POSTING_BRCH = #{branch}
+  </if>
+  <if test="custName != null and custName != ''">
+      AND UPPER(A.CUST_NAME) like '%'|| UPPER(#{custName}) || '%'
+  </if>
+  <if test="ordNo != null and ordNo != ''">
+      AND A.ORDER_NO = #{ordNo}
+  </if>
+  <if test="deptCode != null and deptCode != ''">
+      AND A.DEPT_CODE = #{deptCode}
+  </if>
+  <if test="orgCode != null and orgCode != ''">
+      AND A.ORG_CODE = #{orgCode}
+  </if>
+  <if test="grpCode != null and grpCode != ''">
+      AND A.GRP_CODE = #{grpCode}
+  </if>
+  <if test="reqStartDt != null and reqStartDt != ''">
+    <![CDATA[
+      AND A.CRT_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+    ]]>
+  </if>
+  <if test="reqEndDt != null and reqEndDt != ''">
+    <![CDATA[
+      AND A.CRT_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
+    ]]>
+    ORDER BY A.TICKET_NO
+  </if>
+
+  </select>
+
+  <select id="selectMobileUpdateDetail" parameterType="Map" resultType="egovMap">
+
+  SELECT A.TICKET_NO,
+             A.ORDER_ID,
+             A.ORDER_NO,
+             A.CUST_ID,
+             A.CUST_NAME,
+             A.CNTC_ID,
+             A.REQST_DT,
+             A.OLD_HP_NO,
+             A.OLD_HOME_NO,
+             A.OLD_OFFICE_NO,
+             A.OLD_EMAIL,
+             CASE WHEN (A.NEW_HP_NO = A.OLD_HP_NO OR A.NEW_HP_NO IS NULL) THEN '-'
+                      ELSE A.NEW_HP_NO
+             END AS NEW_HP_NO,
+             CASE WHEN (A.NEW_HOME_NO = A.OLD_HOME_NO OR A.NEW_HOME_NO IS NULL) THEN '-'
+                      ELSE A.NEW_HOME_NO
+             END AS NEW_HOME_NO,
+             CASE WHEN (A.NEW_OFFICE_NO = A.OLD_OFFICE_NO OR A.NEW_OFFICE_NO IS NULL) THEN '-'
+                      ELSE A.NEW_OFFICE_NO
+             END AS NEW_OFFICE_NO,
+             CASE WHEN (A.NEW_EMAIL = A.OLD_EMAIL OR A.NEW_EMAIL IS NULL) THEN '-'
+                      ELSE A.NEW_EMAIL
+             END AS NEW_EMAIL,
+             A.STATUS STATUS_CODE,
+             A.CNTC_ID
+  FROM SAL0329D A
+  WHERE A.TICKET_NO = #{ticketNo}
+
+  </select>
+
+  <update id="updateAppvStatusSAL0329D" parameterType="Map">
+
+  UPDATE SAL0329D SET
+  STATUS = #{statusCode} ,
+  UPD_DT = SYSDATE,
+  UPD_USER_ID = #{userId}
+  WHERE TICKET_NO = #{ticketNo}
+
+  </update>
+
+  <update id="updateAppvStatusSAL0027D" parameterType="egovMap">
+
+  UPDATE SAL0027D SET
+  <if test="newHpNo != null and newHpNo != ''">
+  TEL_M1 = #{newHpNo} ,
+  </if>
+  <if test="newHomeNo != null and newHomeNo != ''">
+  TEL_R = #{newHomeNo},
+  </if>
+  <if test="newOfficeNo != null and newOfficeNo != ''">
+  TEL_O = #{newOfficeNo},
+  </if>
+  <if test="newEmail != null and newEmail != ''">
+  EMAIL = #{newEmail},
+  </if>
+  UPD_DT = SYSDATE,
+  UPD_USER_ID = #{userId}
+  WHERE CUST_CNTC_ID = #{cntcId}
+  AND CUST_ID = #{custId}
+
+  </update>
+
+</mapper>

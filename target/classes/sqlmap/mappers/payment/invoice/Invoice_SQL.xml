@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoiceMapper">
+
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+
+    <!-- Reconciliation 리스트 조회 -->
+	<select id="selectInvoiceList" parameterType="Map" resultType="egovMap">
+		SELECT GroupBy1.ACC_BILL_NET_AMT ACC_BILL_NET_AMT  ,
+		       GroupBy1.SUM SUM  ,
+		       GroupBy1.TASK_ID TASK_ID  ,
+		       GroupBy1.TASK_TYPE TASK_TYPE  ,
+		       GroupBy1.BILLING_YEAR BILLING_YEAR  ,
+		       GroupBy1.BILLING_MONTH BILLING_MONTH  ,
+		       GroupBy1.START_DT START_DT  ,
+		       GroupBy1.END_DT END_DT  ,
+		       GroupBy1.IS_INVC_GENRT IS_INVC_GENRT,
+               GroupBy1.USER_NAME USERNAME
+		  FROM ( SELECT Extent1.TASK_ID TASK_ID  ,
+		              Extent1.TASK_TYPE TASK_TYPE  ,
+		                Extent1.BILLING_YEAR BILLING_YEAR  ,
+		                Extent1.BILLING_MONTH BILLING_MONTH  ,
+		                Extent1.START_DT START_DT  ,
+		                Extent1.END_DT END_DT  ,
+		                Extent1.IS_INVC_GENRT IS_INVC_GENRT  ,
+		                SUM(Extent2.ACC_BILL_NET_AMT)  ACC_BILL_NET_AMT  ,
+		                SUM(1)  SUM,
+                        Extent3.USER_NAME USER_NAME
+		         FROM PAY0047D Extent1
+		                JOIN PAY0016D Extent2   ON Extent1.TASK_ID = Extent2.ACC_BILL_TASK_ID
+		                LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.CRT_USER_ID
+		          WHERE  1 = Extent1.IS_CNFM
+		           GROUP BY Extent1.TASK_ID,Extent1.TASK_TYPE,Extent1.BILLING_YEAR,Extent1.BILLING_MONTH,Extent1.START_DT,Extent1.END_DT,Extent1.IS_INVC_GENRT,Extent3.USER_NAME  ) GroupBy1
+	   WHERE ( GroupBy1.BILLING_YEAR = #{year} )
+		   AND ( GroupBy1.BILLING_MONTH = #{month} )
+   ORDER BY GroupBy1.TASK_ID DESC
+	</select>
+
+	<select id="selectInvoiceMaster" parameterType="Map" resultType="egovMap">
+	   SELECT Extent1.TASK_ID TASK_ID  ,
+			      Extent1.BILLING_YEAR BILLING_YEAR  ,
+			      Extent1.BILLING_MONTH BILLING_MONTH  ,
+			      Extent1.START_DT START_DT  ,
+			      Extent1.END_DT END_DT  ,
+			      Extent1.IS_INVC_GENRT IS_INVC_GENRT  ,
+			      SUM(Extent2.ACC_BILL_NET_AMT)  ACC_BILL_NET_AMT  ,
+			      SUM(1)  SUM
+		 FROM PAY0047D Extent1
+		  JOIN PAY0016D Extent2   ON Extent1.TASK_ID = Extent2.ACC_BILL_TASK_ID
+	   WHERE 1 = Extent1.IS_CNFM
+		   AND ( Extent1.TASK_ID = #{taskId} )
+   GROUP BY Extent1.TASK_ID,
+			      Extent1.BILLING_YEAR,
+			      Extent1.BILLING_MONTH,
+			      Extent1.START_DT,
+			      Extent1.END_DT,
+			      Extent1.IS_INVC_GENRT
+	</select>
+
+
+    <select id="selectInvoiceDetail" parameterType="Map" resultType="egovMap">
+    <include refid="pagingStart" />
+        SELECT Extent1.ACC_BILL_TASK_ID ACC_BILL_TASK_ID  ,
+			       Extent1.ACC_BILL_REF_NO ACC_BILL_REF_NO  ,
+			       Extent1.ACC_BILL_ORD_ID ACC_BILL_ORD_ID  ,
+			       Extent1.ACC_BILL_MODE_ID ACC_BILL_MODE_ID  ,
+			       Extent1.ACC_BILL_GRP_ID ACC_BILL_GRP_ID  ,
+			       Extent2.CODE_NAME CODE_NAME  ,
+			       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent5.NAME NAME  ,
+			       0 C1  ,
+			       TO_NUMBER(Extent1.ACC_BILL_SCHDUL_AMT) ACC_BILL_SCHDUL_AMT  ,
+			       TO_NUMBER(Extent1.ACC_BILL_ADJ_AMT) ACC_BILL_ADJ_AMT  ,
+			       TO_NUMBER(Extent1.ACC_BILL_TXS_AMT) ACC_BILL_TXS_AMT  ,
+			       TO_NUMBER(Extent1.ACC_BILL_NET_AMT) ACC_BILL_NET_AMT  ,
+			       TO_DATE(Extent1.ACC_BILL_REF_DT) ACC_BILL_REF_DT  ,
+			       TO_NUMBER(Extent1.ACC_BILL_SCHDUL_PRIOD) ACC_BILL_SCHDUL_PRIOD
+		   FROM PAY0016D Extent1
+			JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.ACC_BILL_MODE_ID
+			JOIN PAY0047D Extent3   ON Extent3.TASK_ID = Extent1.ACC_BILL_TASK_ID
+			JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.ACC_BILL_ORD_ID
+			JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+	     WHERE  Extent1.ACC_BILL_TASK_ID = #{taskId}
+	      <if test="orderNo != null and orderNo != '' ">
+	         AND Extent4.SALES_ORD_NO = #{orderNo}
+	      </if>
+	      <if test="billNo != null and billNo != '' ">
+	          AND Extent1.ACC_BILL_REF_NO = #{billNo}
+	      </if>
+	      <if test="custName != null and custName != '' ">
+	          AND Extent5.NAME LIKE '%' || #{custName} || '%'
+	      </if>
+	      <if test="group != null and group != '' ">
+	          AND Extent1.ACC_BILL_GRP_ID = #{group}
+	      </if>
+	      <if test="billType != null and billType != '' ">
+	           AND ACC_BILL_MODE_ID = #{billType}
+	      </if>
+	 ORDER BY Extent1.ACC_BILL_ORD_ID ASC
+	 <include refid="pagingEnd" />
+	</select>
+
+	<select id="selectInvoiceDetailCount" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(1) AS CNT
+           FROM PAY0016D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.ACC_BILL_MODE_ID
+            JOIN PAY0047D Extent3   ON Extent3.TASK_ID = Extent1.ACC_BILL_TASK_ID
+            JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.ACC_BILL_ORD_ID
+            JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+         WHERE  Extent1.ACC_BILL_TASK_ID = #{taskId}
+          <if test="orderNo != null and orderNo != '' ">
+             AND Extent4.SALES_ORD_NO = #{orderNo}
+          </if>
+          <if test="billNo != null and billNo != '' ">
+              AND Extent1.ACC_BILL_REF_NO = #{billNo}
+          </if>
+          <if test="custName != null and custName != '' ">
+              AND Extent5.NAME LIKE '%' || #{custName} || '%'
+          </if>
+          <if test="group != null and group != '' ">
+              AND Extent1.ACC_BILL_GRP_ID = #{group}
+          </if>
+          <if test="billType != null and billType != '' ">
+               AND ACC_BILL_MODE_ID = #{billType}
+          </if>
+    </select>
+
+	<select id="selecteStatementRawList" parameterType="Map"
+		resultType="egovMap">
+		WITH
+            R99 AS (
+                SELECT * FROM REP0099D WHERE TAX_INVC_YEAR = #{year} AND TAX_INVC_MONTH = #{month}
+            ),
+            P47 AS (
+                SELECT * FROM PAY0047D WHERE TASK_TYPE IN ( 'BILL', 'EARLY BILL')
+            ),
+            S24 AS (
+                SELECT * FROM SAL0024D WHERE CUST_BILL_IS_ESTM = 1 AND CUST_BILL_EMAIL IS NOT NULL
+            )
+            SELECT
+                INVC_ID
+                , CUST_NAME
+                , CUST_EMAIL
+                , INVC_DATE
+                , TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS  CURR_CHARG
+                , TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS PREV_BAL
+                , TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS TOT_OUT
+                , VIRTUAL_ACC
+                , INVC_NO
+                , BILL_CODE
+                , REF_NO_1
+                , REF_NO_2
+                , COWAY_EMAIL
+            FROM (
+                SELECT
+                    TAX_INVC_ID AS INVC_ID
+                    , TAX_INVC_CUST_NAME AS CUST_NAME
+                    , CASE WHEN S24.CUST_BILL_EMAIL_ADD IS NOT NULL THEN
+                    CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
+                    S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL
+                    ELSE S24.CUST_BILL_EMAIL END
+                    ELSE S24.CUST_BILL_EMAIL END AS CUST_EMAIL
+                    , TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON YYYY') AS INVC_DATE
+                    , TAX_INVC_CHRG
+                    , TAX_INVC_OVERDU
+                    , TAX_INVC_AMT_DUE
+                    , TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+                    , TAX_INVC_REF_NO AS INVC_NO
+                    , '9928' AS BILL_CODE
+                    , TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+                    , TAX_INVC_REF_NO AS REF_NO_2
+                    , 'billing@coway.com.my' AS COWAY_EMAIL
+                FROM R99
+                    JOIN S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+                    JOIN P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
+                    LEFT JOIN (
+                        SELECT
+                            CUST_BILL_ID,
+                            CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
+                        FROM SAL0024D_VERIFICATION
+                        GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL
+                    ) A ON A.CUST_BILL_ID = S24.CUST_BILL_ID
+                WHERE (A.RES <![CDATA[<>]]> 0 OR A.RES IS NULL)
+
+                UNION ALL
+
+                SELECT
+                    TAX_INVC_ID AS INVC_ID
+                    , TAX_INVC_CUST_NAME AS CUST_NAME
+                    , CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]>
+                    S24.CUST_BILL_EMAIL THEN S24.CUST_BILL_EMAIL_ADD END AS CUST_EMAIL
+                    , TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON YYYY') AS INVC_DATE
+                    , TAX_INVC_CHRG
+                    , TAX_INVC_OVERDU
+                    , TAX_INVC_AMT_DUE
+                    , TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+                    , TAX_INVC_REF_NO AS INVC_NO
+                    , '9928' AS BILL_CODE
+                    , TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+                    , TAX_INVC_REF_NO AS REF_NO_2
+                    , 'billing@coway.com.my' AS COWAY_EMAIL
+                FROM R99
+                    JOIN S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+                    JOIN P47 ON P47.TASK_ID = R99.TAX_INVC_TASK_ID
+                    LEFT JOIN (
+                        SELECT
+                            CUST_BILL_ID,
+                            CASE WHEN VALID_EMAIL = 'VALID' THEN 1 ELSE 0 END AS RES
+                        FROM SAL0024D_VERIFICATION
+                        GROUP BY CUST_BILL_ID, CUST_BILL_GRP_NO, VALID_EMAIL
+                    ) A ON A.CUST_BILL_ID = S24.CUST_BILL_ID
+                WHERE S24.CUST_BILL_EMAIL_ADD IS NOT NULL
+                    AND (A.RES <![CDATA[<>]]> 0 OR A.RES IS NULL)
+            ) WHERE
+                CUST_EMAIL IS NOT NULL
+                ORDER BY INVC_ID
+	</select>
+
+	<select id="getUploadSeq" parameterType="Map" resultType="egovMap">
+        SELECT FCM0107T_BATCHID_SEQ.nextval SEQ FROM DUAL
+
+    </select>
+
+    <insert id="insertBulkInvc" parameterType="java.util.List">
+        INSERT INTO FCM0107T (
+            BATCH_ID,
+            BATCH_SEQ,
+            INVC_NO,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+                #{seq},
+                #{item.grpSeq},
+                #{item.invcNo},
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{userId}
+            FROM DUAL
+        </foreach>
+    </insert>
+
+    <select id="selectUploadResultList" parameterType="Map" resultType="egovMap">
+        SELECT
+            BATCH_SEQ, INVC_NO
+            FROM FCM0107T
+            WHERE BATCH_ID = #{seq}
+            ORDER BY BATCH_SEQ
+    </select>
+
+    <select id="selecteStatementRawListbyBatch" parameterType="Map"
+	resultType="egovMap">
+	SELECT
+	INVC_ID
+	, CUST_NAME
+	, CUST_EMAIL
+	, INVC_DATE
+	, TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS 	CURR_CHARG
+	, TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS PREV_BAL
+	, TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS TOT_OUT
+	, VIRTUAL_ACC
+	, INVC_NO
+	, BILL_CODE
+	, REF_NO_1
+	, REF_NO_2
+	, COWAY_EMAIL
+	FROM (
+	SELECT
+	BATCH_ID
+	, TAX_INVC_ID AS INVC_ID
+	, TAX_INVC_CUST_NAME AS CUST_NAME
+	, CASE WHEN S24.CUST_BILL_EMAIL_ADD IS NOT NULL THEN
+	CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]> S24.CUST_BILL_EMAIL THEN
+	S24.CUST_BILL_EMAIL
+	ELSE S24.CUST_BILL_EMAIL END
+	ELSE S24.CUST_BILL_EMAIL END AS CUST_EMAIL
+	, TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON') || ' ' ||
+	EXTRACT (YEAR FROM TAX_INVC_REF_DT) AS INVC_DATE
+	, TAX_INVC_CHRG
+	, TAX_INVC_OVERDU
+	, TAX_INVC_AMT_DUE
+	, TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+	, TAX_INVC_REF_NO AS INVC_NO
+	, '9928' AS BILL_CODE
+	, TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+	, TAX_INVC_REF_NO AS REF_NO_2
+	, 'billing@coway.com.my' AS COWAY_EMAIL
+	FROM REP0099D R99
+	JOIN SAL0024D S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+	JOIN FCM0107T F107 ON F107.INVC_NO = R99.TAX_INVC_REF_NO
+	WHERE
+	CUST_BILL_IS_ESTM = 1
+	AND CUST_BILL_EMAIL IS NOT NULL
+
+	UNION ALL
+
+	SELECT
+	BATCH_ID
+	, TAX_INVC_ID AS INVC_ID
+	, TAX_INVC_CUST_NAME AS CUST_NAME
+	, CASE WHEN S24.CUST_BILL_EMAIL_ADD <![CDATA[<>]]> S24.CUST_BILL_EMAIL THEN
+	S24.CUST_BILL_EMAIL_ADD END AS CUST_EMAIL
+	, TO_CHAR(TO_DATE(TAX_INVC_REF_DT, 'DD/MM/YYYY'), 'MON') || ' ' ||
+	EXTRACT (YEAR FROM TAX_INVC_REF_DT) AS INVC_DATE
+	, TAX_INVC_CHRG
+	, TAX_INVC_OVERDU
+	, TAX_INVC_AMT_DUE
+	, TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
+	, TAX_INVC_REF_NO AS INVC_NO
+	, '9928' AS BILL_CODE
+	, TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
+	, TAX_INVC_REF_NO AS REF_NO_2
+	, 'billing@coway.com.my' AS COWAY_EMAIL
+	FROM REP0099D R99
+	JOIN SAL0024D S24 ON S24.CUST_BILL_ID = R99.TAX_INVC_GRP_ID
+	JOIN FCM0107T F107 ON F107.INVC_NO = R99.TAX_INVC_REF_NO
+	WHERE
+	CUST_BILL_IS_ESTM = 1
+	AND CUST_BILL_EMAIL IS NOT NULL
+	AND CUST_BILL_EMAIL_ADD IS NOT NULL
+	)
+	WHERE
+	CUST_EMAIL IS NOT NULL
+	AND BATCH_ID = #{batchInvcSeq}
+	ORDER BY INVC_ID
+</select>
+
+</mapper>

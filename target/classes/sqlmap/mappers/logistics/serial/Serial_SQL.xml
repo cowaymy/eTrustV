@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serial.impl.SerialMapper">
+	<select id="searchSeialList" parameterType="Map"  resultType="EgovMap">
+    SELECT 
+                lg62m.SERIAL_NO,
+                lg62m.MATNR,
+                sy26m.STK_DESC,
+                sy26m.STK_CTGRY_ID,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = sy26m.STK_CTGRY_ID) STK_CTGRY_NM ,
+                lg62m.LATRANSIT,
+                lg62m.GLTRI,
+                lg62m.BOX_NO,
+                lg62m.LVORM,
+                TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT,
+                lg62m.CRT_USER_ID,
+                NVL ( S47.USER_NAME , lg62m.CRT_USER_ID ) CRT_USER_NAME,
+                lg63d.SERIAL_NO   AS  used_SERIAL_NO,       
+                lg63d.MATNR       AS  used_MATNR,     
+                lg63d.LOC_ID      AS  used_LOC_ID,    
+                lg63d.GLTRI       AS  used_GLTRI,     
+                lg63d.LWEDT       AS  used_LWEDT,     
+                lg63d.SWAOK       AS  used_SWAOK,     
+                TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')      AS  used_CRT_DT,    
+                lg63d.CRT_USER_ID AS  used_CRT_USER_ID
+        FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m , SYS0047M S47
+        WHERE lg62m.SERIAL_NO    = lg63d.SERIAL_NO (+)
+              AND sy26m.STk_CODE = lg62m.MATNR
+              AND DECODE (NVL(TRANSLATE(LG62M.CRT_USER_ID , '0123456789' , '          '), 9999999999),NULL,LG62M.CRT_USER_ID , 9999999999) = S47.USER_ID(+)    
+	       <if test="srchmaterial !=null and srchmaterial !=''">
+	          AND lg62m.MATNR  LIKE #{srchmaterial} || '%'
+		</if>     
+		<if test="srchserial !=null and srchserial !=''">
+			AND lg62m.SERIAL_NO LIKE '%' || #{srchserial} || '%'
+		</if> 
+		 <if test="srchcatagorytype != null">
+                    AND sy26m.STK_CTGRY_ID IN
+                    <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+         </if>
+         <if test="materialtype != null">
+                    AND sy26m.STK_TYPE_ID IN
+                    <foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+         </if>
+		<if test="srchcrtdtfrom !=null and srchcrtdtfrom !='' and srchcrtdtto !=null and srchcrtdtto !=''">
+		    AND TO_CHAR(lg62m.CRT_DT, 'YYYYMMDD') 
+		         BETWEEN TO_CHAR(TO_DATE(#{srchcrtdtfrom},'DD/MM/YYYY'),'YYYYMMDD')
+		         AND TO_CHAR(TO_DATE(#{srchcrtdtto},'DD/MM/YYYY'),'YYYYMMDD')
+		</if> 
+		<if test="delfg !=null and delfg !=''">
+            AND lg62m.LVORM = #{delfg}
+        </if> 
+		ORDER BY lg62m.SERIAL_NO
+    </select>
+        <select id="searchSeialListPop" parameterType="Map"  resultType="EgovMap">
+    SELECT 
+                lg62m.SERIAL_NO SERIAL_NO_POP,
+                lg62m.MATNR MATNR_POP,
+                lg62m.LATRANSIT LATRANSIT_POP,
+                lg62m.GLTRI GLTRI_POP,
+                lg62m.LVORM LVORM_POP,
+                TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT_POP,
+                lg62m.CRT_USER_ID CRT_USER_ID_POP,
+                lg63d.SERIAL_NO   AS  used_SERIAL_NO_POP,       
+                lg63d.MATNR       AS  used_MATNR_POP,     
+                lg63d.LOC_ID      AS  used_LOC_ID_POP,    
+                lg63d.GLTRI       AS  used_GLTRI_POP,     
+                lg63d.LWEDT       AS  used_LWEDT_POP,     
+                lg63d.SWAOK       AS  used_SWAOK_POP,     
+                TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')      AS  used_CRT_DT_POP,    
+                lg63d.CRT_USER_ID AS  used_CRT_USER_ID_POP
+        FROM LOG0062M lg62m left outer join LOG0063D lg63d
+        ON  lg62m.SERIAL_NO = lg63d.SERIAL_NO
+            WHERE lg62m.SERIAL_NO =  #{serialNo}
+        ORDER BY lg62m.SERIAL_NO
+    </select>
+    <select id="selectSerialDetails" parameterType="Map"  resultType="EgovMap">
+		    SELECT 
+                lg62m.SERIAL_NO  RDC_SERIAL_NO,
+                lg62m.MATNR  RDC_MATNR,
+                lg62m.LATRANSIT  RDC_LATRANSIT,
+                lg62m.GLTRI  RDC_GLTRI,
+                lg62m.LVORM  RDC_LVORM,
+                TO_CHAR(lg62m.CRT_DT, 'DD/MM/YYYY')  RDC_CRT_DT,
+                lg62m.CRT_USER_ID  RDC_CRT_USER_ID,
+                
+                lg61d.SERIAL_NO    USED_SERIAL_NO  ,
+                lg61d.DELVRY_NO  USED_DELVRY_NO,
+                lg61d.PDELVRY_NO_ITM  USED_PDELVRY_NO_ITM,
+                lg61d.TTYPE  USED_TTYPE,
+                TO_CHAR(lg61d.CRT_DT, 'DD/MM/YYYY')    USED_CRT_DT  ,
+                lg61d.CRT_USER_ID    USED_CRT_USER_ID  ,
+                lg63d.SERIAL_NO    USED_SERIAL_NO2,
+                lg63d.MATNR  USED_MATNR,
+                lg63d.LOC_ID  USED_LOC_ID,
+                lg63d.GLTRI  USED_GLTRI,
+                lg63d.LWEDT  USED_LWEDT,
+                lg63d.SWAOK  USED_SWAOK,
+                TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY')    USED_CRT_DT2 ,
+                lg63d.CRT_USER_ID    USED_CRT_USER_ID2 ,
+                
+                lg59m.MATRL_DOC_NO  DOC_MATRL_DOC_NO,
+                lg59m.MATRL_DOC_YEAR  DOC_MATRL_DOC_YEAR,
+                lg59m.TRNSC_TYPE_CODE  DOC_TRNSC_TYPE_CODE,
+                lg59m.DOC_DT  DOC_DOC_DT,
+                lg59m.USNAM  DOC_USNAM,
+                lg59m.PGM  DOC_PGM,
+                lg59m.REF_DOC_NO  DOC_REF_DOC_NO,
+                lg59m.DOC_HDER_TXT  DOC_DOC_HDER_TXT,
+                lg59m.MAIN_SALES_ORD_NO  DOC_MAIN_SALES_ORD_NO,
+                lg59m.CRT_USER_ID    DOC_CRT_USER_ID  ,
+                TO_CHAR(lg59m.CRT_DT, 'DD/MM/YYYY')  DOC_CRT_DT,
+                lg60d.MATRL_DOC_NO    DOC_MATRL_DOC_NO2  ,
+                lg60d.MATRL_DOC_YEAR    DOC_MATRL_DOC_YEAR2  ,
+                lg60d.MATRL_DOC_ITM  DOC_MATRL_DOC_ITM,
+                lg60d.UNIQ_IDNTFC_DOC_LNE  DOC_UNIQ_IDNTFC_DOC_LNE,
+                lg60d.IDNTFC_IMDAT_SUPIR_LNE  DOC_IDNTFC_IMDAT_SUPIR_LNE,
+                lg60d.INVNTRY_MOV_TYPE  DOC_INVNTRY_MOV_TYPE,
+                lg60d.AUTO_CRT_ITM  DOC_AUTO_CRT_ITM,
+                lg60d.DEBT_CRDIT_INDICT  DOC_DEBT_CRDIT_INDICT,
+                lg60d.MATRL_NO  DOC_MATRL_NO,
+                lg60d.STORG_LOC  DOC_STORG_LOC,
+                lg60d.VENDOR_ACC_NO  DOC_VENDOR_ACC_NO,
+                lg60d.CUST_ACC_NO  DOC_CUST_ACC_NO,
+                lg60d.PURCHS_STOCK_TRNSFR_ORD  DOC_PURCHS_STCK_TRNSFR_ORD,
+                lg60d.PURCHS_STOCK_TRNSFR_ORD_ITM  DOC_PURCHS_STCK_TRNSFR_ORD_ITM,
+                lg60d.SALES_ORD_NO  DOC_SALES_ORD_NO,
+                lg60d.SALES_ORD_IN_ITM  DOC_SALES_ORD_IN_ITM,
+                lg60d.DELVRY_NO  DOC_DELVRY_NO,
+                lg60d.DELVRY_ITM_NO  DOC_DELVRY_ITM_NO,
+                lg60d.STOCK_TRNSFR_REQST  DOC_STCK_TRNSFR_REQ,
+                lg60d.STOCK_TRNSFR_REQST_ITM_NO  DOC_STCK_TRNSFR_REQ_ITM_NO,
+                lg60d.OTR_GR_REQST  DOC_OTR_GR_REQ,
+                lg60d.OTR_GR_REQST_ITM  DOC_OTR_GR_REQ_ITM,
+                lg60d.RESVTN_HAND_STOCK_REQST_NO  DOC_RESVTN_HND_STCK_REQ_NO,
+                lg60d.RESVTN_HAND_STOCK_REQST_NO_ITM  DOC_RESVTN_HND_STCK_REQ_NO_ITM,
+                lg60d.PHYSICL_INVNTRY_DOC  DOC_PHYSICL_INVNTRY_DOC,
+                lg60d.PHYSICL_INVNTRY_DOC_LNE_NO  DOC_PHYSICL_INVNTRY_DOC_LNE_NO,
+                lg60d.QTY  DOC_QTY,
+                lg60d.MEASURE_BAS_UNIT  DOC_MEASURE_BAS_UNIT,
+                lg60d.MATRL_DOC_ORGN_YEAR  DOC_MATRL_DOC_ORGN_YEAR,
+                lg60d.MATRL_DOC_NO_ORGN  DOC_MATRL_DOC_NO_ORGN,
+                lg60d.MATRL_DOC_ITM_ORGN  DOC_MATRL_DOC_ITM_ORGN,
+                lg60d.ITM_TXT  DOC_ITM_TXT,
+                lg60d.GOODS_RCIPT_SHIP_TO_PARTY  DOC_GOODS_RCIPT_SHIP_TO_PARTY,
+                lg60d.RCIV_ISSU_MATRL  DOC_RCIV_ISSU_MATRL,
+                lg60d.RCIV_ISSU_STORG_LOC  DOC_RCIV_ISSU_STORG_LOC,
+                lg60d.TRNSC_EVENT_TYPE  DOC_TRNSC_EVENT_TYPE,
+                lg60d.DOC_POSTNG_DT  DOC_DOC_POSTNG_DT,
+                lg60d.REF_DOC_NO  DOC_REF_DOC_NO2,
+                lg60d.MAIN_ORD_NO  DOC_MAIN_ORD_NO,
+                lg60d.TRNSC_CODE  DOC_TRNSC_CODE,
+                lg60d.COST_CENTR  DOC_COST_CENTR,
+                lg60d.PRJCT_NO  DOC_PRJCT_NO,
+                lg60d.ORD_NO  DOC_ORD_NO,
+                lg60d.MAIN_ASSET_NO  DOC_MAIN_ASSET_NO,
+                lg60d.GL_ACC_NO  DOC_GL_ACC_NO,
+                lg60d.CRT_USER_ID    DOC_CRT_USER_ID2  ,
+                TO_CHAR(lg60d.CRT_DT, 'DD/MM/YYYY')   DOC_CRT_DT2   
+		FROM 
+			LOG0062M lg62m JOIN LOG0061D lg61d
+			 ON lg62m.SERIAL_NO  = lg61d.SERIAL_NO
+			JOIN LOG0063D lg63d
+			 ON lg61d.SERIAL_NO  = lg63d.SERIAL_NO
+			LEFT OUTER JOIN  LOG0060D lg60d
+			 ON  lg61d.DELVRY_NO=lg60d.DELVRY_NO 
+			JOIN LOG0059M lg59m  
+			 ON lg59m.MATRL_DOC_NO  =  lg60d.MATRL_DOC_NO
+		WHERE  lg62m.SERIAL_NO  = #{serialNo}	 
+    
+    </select>
+    
+    <update id="updateSerial"  parameterType="Map">
+        MERGE INTO LOG0062M 
+        USING DUAL
+         ON ( SERIAL_NO= #{serialNo}) 
+               
+        WHEN MATCHED THEN
+            UPDATE 
+                SET  MATNR= #{matnr}, 
+                GLTRI  = TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),
+                LVORM  = #{lvorm},
+                CRT_DT = SYSDATE,
+                CRT_USER_ID  =  #{loginId}  
+             WHERE SERIAL_NO= #{serialNo}     
+                 
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
+                SERIAL_NO,
+                MATNR,
+                GLTRI,  
+                LVORM,
+                CRT_DT,
+                CRT_USER_ID                            
+                )        
+                VALUES
+                (
+                #{serialNo},
+                #{matnr},
+                 TO_CHAR(TO_DATE(#{gltri},'YYYY/MM/DD'), 'YYYYMMDD'),  
+                #{lvorm},
+                SYSDATE,
+                #{loginId}    
+                )    
+    </update>
+    
+    <select id="selectSerialExist" parameterType="Map"  resultType="EgovMap">
+        SELECT 
+                SERIAL_NO,MATNR, COUNT(SERIAL_NO) CNT
+        FROM LOG0062M
+        WHERE SERIAL_NO = #{serialChck}
+		    AND MATNR       = #{matrChck}
+				GROUP BY SERIAL_NO, MATNR
+    </select>
+    <insert id="insertExcelSerial" parameterType="Map">
+          INSERT INTO LOG0062M
+                (
+                SERIAL_NO,
+                MATNR,
+                GLTRI, 
+                CRT_DT,
+                CRT_USER_ID               
+                )        
+                VALUES
+                (
+                #{serialNo},
+                #{matnr},
+                  TO_CHAR(TO_DATE(#{gltri},'DD/MM/YYYY'), 'YYYYMMDD'), 
+                SYSDATE,
+                #{loginId} 
+                )    
+    </insert>
+</mapper>

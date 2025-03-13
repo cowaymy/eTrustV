@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpUploadAssignUserMapper">
+
+    <select id="selectNextBatchId" resultType="int">
+        SELECT NVL(MAX(UPLOAD_BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0290M
+    </select>
+
+    <select id="selectUploadAssignUserList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+            M.UPLOAD_BATCH_ID BATCH_ID, M.FILE_NAME, S.NAME STATUS, M.QTY, U.USER_NAME CRT_USER, M.CRT_DT, D.REMARKS
+        FROM SAL0290M M
+            JOIN SYS0038M S ON M.STUS_CODE_ID = S.STUS_CODE_ID
+            JOIN SYS0047M U ON M.CRT_USER_ID = U.USER_ID
+            JOIN SAL0291D D ON D.UPLOAD_BATCH_ID = M.UPLOAD_BATCH_ID
+        WHERE 1=1
+        <if test="srBatchId != null and srBatchId != ''">
+            AND M.UPLOAD_BATCH_ID = #{srBatchId}
+        </if>
+        <if test="srCrtUserName != null and srCrtUserName != ''">
+		    AND U.USER_NAME LIKE '%'||#{srCrtUserName}||'%'
+		</if>
+		<if test="srBatchStatus != null and srBatchStatus != ''">
+            AND M.STUS_CODE_ID = #{srBatchStatus}
+        </if>
+        <if test=" '' != srCrtStDate and null != srCrtStDate">
+            AND  M.CRT_DT <![CDATA[>=]]> TO_DATE(#{srCrtStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+        </if>
+        <if test=" '' != srCrtEnDate and null != srCrtEnDate">
+            AND  M.CRT_DT <![CDATA[<=]]> TO_DATE(#{srCrtEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        </if>
+        ORDER BY M.UPLOAD_BATCH_ID DESC
+
+    </select>
+
+    <select id="selectUploadCcpUsertList" parameterType="Map" resultType="egovMap">
+	   SELECT OM.USER_NAME as CODE_NAME, OM.USER_NAME as CODE_ID FROM SYS0045M OD
+	   JOIN SYS0047M OM ON OM.USER_ID = OD.USER_ID WHERE USER_STUS_ID = 1 and OD.ROLE_ID IN (206,210,254)
+    </select>
+
+      <update id="updateUploadCcpUsertList" parameterType="Map">
+       UPDATE SAL0291D SET ASSIGN_PIC =  #{ccpUser} WHERE UPLOAD_BATCH_ID = #{batchId}  AND ORDER_NO IN
+       <foreach item="item" collection="orderNoList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+      </update >
+
+      <update id="updateCcpCalculationPageUser" parameterType="Map">
+        MERGE INTO SAL0102D T
+	        USING (
+	            SELECT B.SALES_ORD_ID
+	            ,(SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{ccpUser}) USER_ID
+	            FROM SAL0291D A, SAL0001D B
+	            WHERE A.ORDER_NO = B.SALES_ORD_NO
+	            AND A.UPLOAD_BATCH_ID = #{batchId}
+	            AND A.ORDER_NO IN <foreach item="item" collection="orderNoList" index="index"
+	        open="(" separator="," close=")">
+	        #{item}
+    </foreach>
+        ) S
+        ON (T.CCP_SALES_ORD_ID = S.SALES_ORD_ID)
+        WHEN MATCHED THEN UPDATE
+        SET CCP_ASSIGN_USER_ID = S.USER_ID
+        ,CCP_ASSIGN_USER_DT = SYSDATE
+       </update >
+    <select id="selectViewHeaderInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            M.UPLOAD_BATCH_ID BATCH_ID, S.NAME STATUS, M.QTY
+        FROM SAL0290M M
+            JOIN SYS0038M S ON M.STUS_CODE_ID = S.STUS_CODE_ID
+        WHERE
+            M.UPLOAD_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectUploadAssignUserDtlList" parameterType="Map" resultType="egovMap">
+        SELECT
+            ORDER_NO, ASSIGN_PIC, REMARKS, NVL(RESULT, '') RESULT
+        FROM SAL0291D
+        WHERE
+            UPLOAD_BATCH_ID = #{batchId}
+        ORDER BY BATCH_ITM_NO ASC
+    </select>
+
+        <select id="selectUploadReAssignUserDtlList" parameterType="Map" resultType="egovMap">
+		      SELECT
+		            OD.ORDER_NO
+		            , OD.ASSIGN_PIC
+		            , OD.REMARKS
+		            , NVL(OD.RESULT, '') RESULT
+		            , SYS.NAME AS CCP_STUS_ID
+		            , OM.CCP_REM
+		        FROM SAL0291D OD
+		        JOIN SAL0001D OE ON OE.SALES_ORD_NO = OD.ORDER_NO
+		        JOIN SAL0102D OM ON OM.CCP_SALES_ORD_ID = OE.SALES_ORD_ID
+		        JOIN SYS0038M SYS ON SYS.STUS_CODE_ID = OM.CCP_STUS_ID
+		        WHERE 1 = 1
+		            AND OD.UPLOAD_BATCH_ID = #{batchId}
+		            AND OM.CCP_STUS_ID = 1
+		            AND OM.CCP_REM IS NULL
+		        ORDER BY BATCH_ITM_NO ASC
+    </select>
+
+    <insert id="insertUploadAssignUserMst" parameterType="Map">
+        INSERT INTO SAL0290M (
+                UPLOAD_BATCH_ID
+                , FILE_NAME
+                , STUS_CODE_ID
+                , QTY
+                , FAIL_QTY
+                , SUCCESS_QTY
+                , CRT_USER_ID
+                , CRT_DT
+          ) VALUES (
+                #{batchId}
+                , #{filename}
+                , #{status}
+                , #{qty}
+                , #{failQty}
+                , #{successQty}
+                , #{crtUserId}
+                , SYSDATE
+           )
+    </insert>
+
+    <insert id="insertUploadAssignUserDtl" parameterType="Map">
+        INSERT INTO SAL0291D (
+                UPLOAD_BATCH_ID
+                , BATCH_ITM_NO
+                , ORDER_NO
+                , ASSIGN_PIC
+                , REMARKS
+                , RESULT
+                , CRT_DT
+                , UPT_DT
+         )
+         SELECT batchId, batchItmNo, orderNo, assignPic, remarks, null as result, sysdate, null as updDt FROM (
+            <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+	            SELECT
+	            #{batchId} batchId
+	            , #{item.itmNo} batchItmNo
+	            , #{item.orderNo} orderNo
+	            , #{item.memberCode} assignPic
+	            , #{item.remarks} remarks
+
+	            FROM DUAL
+            </foreach>
+         )
+
+    </insert>
+
+    <update id="callBatchCcpAssignUser" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_CCP_ASSIGN_USER(#{batchId})}
+    </update>
+
+</mapper>

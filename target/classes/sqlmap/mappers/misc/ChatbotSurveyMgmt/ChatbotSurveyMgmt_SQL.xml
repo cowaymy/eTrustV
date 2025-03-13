@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.misc.chatbotSurveyMgmt.impl.ChatbotSurveyMgmtMapper">
+
+    <select id="selectChatbotSurveyType" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.CODE_ID,
+            B.CODE_NAME
+        FROM CBT0001M A
+        LEFT JOIN SYS0013M B ON B.CODE_ID = A.CTRL_TYPE AND B.CODE_MASTER_ID = 80
+    </select>
+
+<!--     <select id="selectChatbotSurveyMgmtList" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!--             A.CTRL_TYPE, -->
+<!--             A.CTRL_ID, -->
+<!--             B.CODE_NAME AS SURV_TYPE, -->
+<!--             A.CTRL_REM, -->
+<!--             A.CTRL_STR_YYYYMM, -->
+<!--             A.CTRL_END_YYYYMM, -->
+<!--             A.CTRL_USE_YN, -->
+<!--             C.USER_NAME, -->
+<!--             C.UPD_DT -->
+<!--         FROM CBT0001M A -->
+<!--         LEFT JOIN SYS0013M B ON A.CTRL_TYPE  = B.CODE_ID AND B.CODE_MASTER_ID = 80 -->
+<!--         LEFT JOIN ( -->
+<!--             SELECT -->
+<!--                 A.CTRL_ID, -->
+<!--                 TO_CHAR(MAX(A.UPD_DT),'DD/MM/YYYY') UPD_DT, -->
+<!--                 B.USER_NAME -->
+<!--             FROM CBT0002M A -->
+<!--             LEFT JOIN SYS0047M B ON A.UPD_USER_ID = B.USER_ID -->
+<!--             WHERE SURV_QUES_YN = 'Y' -->
+<!--             GROUP BY A.CTRL_ID, B.USER_NAME -->
+<!--         )C ON A.CTRL_ID = C.CTRL_ID -->
+<!--         WHERE 1=1 -->
+
+<!--         <if test="surveyType != null and surveyType != '' "> -->
+<!--             AND A.CTRL_TYPE = #{surveyType} -->
+<!--         </if> -->
+<!--         <if test="useYN != null and useYN != '' "> -->
+<!--             AND A.CTRL_USE_YN = #{useYN} -->
+<!--         </if> -->
+<!--         <if test="surveyStartDt != null and surveyStartDt != '' "> -->
+<!--             AND A.CTRL_STR_YYYYMM <![CDATA[   = ]]> #{surveyStartDt} -->
+<!--         </if> -->
+<!--         <if test="surveyEndDt != null and surveyEndDt != '' "> -->
+<!--             AND A.CTRL_END_YYYYMM <![CDATA[   = ]]> #{surveyEndDt} -->
+<!--         </if> -->
+<!--     </select> -->
+
+    <select id="selectChatbotSurveyMgmtList" parameterType="Map" resultType="egovMap">
+       SELECT
+            A.CTRL_TYPE,
+            A.CTRL_ID,
+            B.CODE_NAME AS SURV_TYPE,
+            A.CTRL_REM,
+            C.SURV_QUES_STR ,
+            C.SURV_QUES_END,
+            CASE WHEN C.SURV_STUS = 8 THEN 'Inactive'
+            WHEN C.SURV_STUS = 1 THEN 'Active'
+            END SURV_STUS,
+            D.USER_NAME,
+            TO_CHAR(MAX(C.UPD_DT),'DD/MM/YYYY') UPD_DT,
+            C.SURV_GRP_ID,
+            CASE WHEN (SURV_QUES_END <![CDATA[ >= ]]> TO_CHAR(LAST_DAY(SYSDATE),'YYYYMMDD')
+                                AND SURV_QUES_STR <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(SYSDATE),'YYYYMMDD'))
+                                THEN 'IN USE'
+            ELSE 'NOT IN USE' END FLAG
+        FROM CBT0001M A
+        LEFT JOIN SYS0013M B ON A.CTRL_TYPE  = B.CODE_ID AND B.CODE_MASTER_ID = 80
+        LEFT JOIN CBT0002M C ON A.CTRL_ID = C.CTRL_ID
+        LEFT JOIN SYS0047M D ON C.UPD_USER_ID = D.USER_ID
+        WHERE 1=1
+        <if test="surveyType != null and surveyType != '' ">
+            AND A.CTRL_TYPE = #{surveyType}
+        </if>
+        <if test="surveyStatus != null and surveyStatus != '' ">
+            AND C.SURV_STUS = #{surveyStatus}
+        </if>
+        <if test="surveyFrDt != null and surveyFrDt != '' ">
+            AND C.SURV_QUES_STR <![CDATA[   >= ]]> TO_CHAR(TO_DATE(#{surveyFrDt}, 'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+        <if test="surveyToDt != null and surveyToDt != '' ">
+            AND C.SURV_QUES_END <![CDATA[   <= ]]> TO_CHAR(TO_DATE(#{surveyToDt}, 'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+        GROUP BY
+            A.CTRL_TYPE,
+            A.CTRL_ID,
+            B.CODE_NAME,
+            A.CTRL_REM,
+            C.SURV_QUES_STR,
+            C.SURV_QUES_END,
+            C.SURV_STUS,
+            D.USER_NAME,
+            C.SURV_GRP_ID
+        ORDER BY C.SURV_GRP_ID DESC
+    </select>
+
+    <select id="selectChatbotSurveyDesc" parameterType="Map" resultType="egovMap">
+        SELECT
+            CODE_ID,
+            CODE_NAME
+        FROM SYS0013M
+        WHERE 1=1
+        AND CODE_MASTER_ID = 557
+        AND DISAB = 0
+    </select>
+
+    <select id="getCategoryDate" parameterType="String" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM CBT0001M
+        WHERE CTRL_ID = #{ctrlId}
+        AND TO_CHAR(SYSDATE, 'YYYYMM') BETWEEN CTRL_STR_YYYYMM AND CTRL_END_YYYYMM
+    </select>
+
+    <select id="selectChatbotSurveyMgmtEdit" parameterType="Map" resultType="egovMap">
+        SELECT
+				A.SURV_SEQ,
+				A.SURV_QUES_1,
+				A.SURV_QUES_YN,
+				A.SURV_STUS,
+				B.*
+		FROM CBT0002M A
+		LEFT JOIN (
+	            SELECT AA.*, BB.CODE_NAME, BB.CODE_ID
+	            FROM
+	            (
+	                SELECT
+	                    SURV_ID,
+	                    TMPL_ANSW_OPT_1 || ',' || TMPL_ANSW_OPT_2 AS TMPL_ANS,
+	                    TMPL_TYPE
+	                FROM CBT0003D
+	                WHERE TMPL_TYPE = 7361
+	                GROUP BY SURV_ID, TMPL_ANSW_OPT_1, TMPL_ANSW_OPT_2,TMPL_TYPE
+
+	                UNION
+
+	                SELECT
+	                    SURV_ID,
+	                    LISTAGG(TMPL_ANSW_OPT_1, ',') WITHIN GROUP (ORDER BY TMPL_ANSW_SEQ) AS TMPL_ANS,
+	                    TMPL_TYPE
+	                FROM CBT0003D
+	                WHERE TMPL_TYPE  <![CDATA[ <> ]]>  7361
+	                GROUP BY SURV_ID,TMPL_TYPE
+	            )AA
+	            LEFT JOIN SYS0013M BB ON AA.TMPL_TYPE = BB.CODE_ID AND BB.CODE_MASTER_ID = 557
+	        )B ON A.SURV_ID = B.SURV_ID
+		WHERE 1=1
+			AND A.CTRL_ID = #{ctrlId}
+			AND A.SURV_GRP_ID = #{survGrpId}
+    </select>
+
+    <select id="getTargetQuestionSurvID" parameterType="String" resultType="String">
+        SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId}
+    </select>
+
+<!--     <select id="getExistTargetQuestion" parameterType="String" resultType="String"> -->
+<!--         SELECT -->
+<!-- 				A.SURV_ID -->
+<!-- 		FROM CBT0002M A -->
+<!-- 	    WHERE A.CTRL_ID = #{ctrlId} -->
+<!--         AND A.SURV_QUES_STR <![CDATA[ <= ]]> #{strDt} -->
+<!--         AND A.SURV_QUES_END <![CDATA[ = ]]> #{endDt} -->
+<!--     </select> -->
+
+    <select id="getExistTargetQuestion" parameterType="String" resultType="String">
+        SELECT
+            A.SURV_ID
+		FROM CBT0002M A
+	    WHERE A.CTRL_ID = #{ctrlId}
+	    AND A.SURV_STUS = 1
+	    AND A.SURV_GRP_ID = #{survGrpId}
+    </select>
+
+    <select id="getTargetQuesStrDt" parameterType="String" resultType="String">
+        SELECT
+				DISTINCT SURV_QUES_STR
+		FROM CBT0002M
+	    WHERE SURV_ID IN
+        <foreach item="item" collection="survIdArray" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+         </foreach>
+    </select>
+
+    <select id="getSurveyEndDate" parameterType="String" resultType="String">
+        SELECT CTRL_END_YYYYMM FROM CBT0001M WHERE CTRL_ID = #{ctrlId}
+    </select>
+
+    <update id="updateExistTargetQues" parameterType="Map">
+        UPDATE CBT0002M
+        SET
+            SURV_QUES_END = #{lastDay},
+            SURV_STUS = 8,
+            IS_SYNC = 0,
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE SURV_ID IN
+        <foreach item="item" collection="survIdArray" index="index"
+                   open="(" separator="," close=")">
+                   #{item}
+         </foreach>
+    </update>
+
+<!--     <update id="updateExistTargetQues" parameterType="Map"> -->
+<!--         UPDATE CBT0002M -->
+<!--         SET -->
+<!--             SURV_QUES_END = #{lastDay}, -->
+<!--             SURV_QUES_YN = 'N', -->
+<!--             UPD_DT = SYSDATE, -->
+<!--             UPD_USER_ID = #{userId} -->
+<!--         WHERE SURV_ID IN -->
+<!--         <foreach item="item" collection="survIdArray" index="index" -->
+<!--                    open="(" separator="," close=")"> -->
+<!--                    #{item} -->
+<!--          </foreach> -->
+<!--     </update> -->
+
+<!--     <select id="getTargetQuestionSurvID" parameterType="String" resultType="String"> -->
+<!--         SELECT SURV_ID FROM CBT0002M WHERE CTRL_ID = #{ctrlId} AND SURV_QUES_YN = 'Y' -->
+<!--     </select> -->
+
+<!--     <update id="updateTargetAnsYn" parameterType="Map"> -->
+<!--        UPDATE CBT0003D -->
+<!--        SET -->
+<!--             USE_YN = 'N', -->
+<!--             UPD_DT = SYSDATE, -->
+<!--             UPD_USER_ID = #{userId} -->
+<!--        WHERE SURV_ID IN -->
+<!--         <foreach item="item" collection="survIdArray" index="index" -->
+<!--                    open="(" separator="," close=")"> -->
+<!--                    #{item} -->
+<!--          </foreach> -->
+<!--     </update> -->
+
+
+   <select id="getNextSurvSeq" resultType="int">
+        SELECT CBT0002M_RUN_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+   <select id="getNextSurvGrpId" resultType="int">
+        SELECT MAX(SURV_GRP_ID) SURV_GRP_ID
+        FROM CBT0002M
+        WHERE CTRL_ID = #{ctrlId}
+   </select>
+
+    <insert id="insertNewSurveyQues" parameterType="Map">
+        INSERT INTO CBT0002M (
+            SURV_ID,
+            CTRL_ID,
+            SURV_QUES_STR,
+            SURV_QUES_END,
+            SURV_SEQ,
+            SURV_QUES_1,
+            SURV_GD_CATG,
+            SURV_GD_ID,
+            SURV_QUES_YN,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            SURV_STUS,
+            SURV_GRP_ID,
+            IS_SYNC
+        ) VALUES (
+            #{nextSurvSeq},
+            #{ctrlId},
+            #{newStartDt},
+            #{newEndDt},
+            #{survSeq},
+            #{survQues1},
+            0,
+            0,
+            #{survQuesYn},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            1,
+            #{nextSurvGrpId},
+            0
+        )
+    </insert>
+
+    <insert id="insertNewSurveyAns" parameterType="Map">
+        INSERT INTO CBT0003D (
+            TMPL_ID,
+            SURV_ID,
+            TMPL_ANSW_SEQ,
+            TMPL_TYPE,
+            TMPL_ANSW_OPT_1,
+            TMPL_ANSW_OPT_2,
+            USE_YN,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            CBT0003D_RUN_ID_SEQ.NEXTVAL,
+            #{nextSurvSeq},
+            #{ansSeq},
+            #{codeId},
+            #{ans1},
+            #{ans2},
+            #{survQuesYn},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <!-- API PART -->
+    <select id="getSurveyCategoryList" parameterType="Map" resultType="egovMap">
+        SELECT
+		    CTRL_ID,
+		    CTRL_CODE,
+		    CTRL_NM,
+		    CTRL_TYPE,
+		    CTRL_REM,
+		    CTRL_STR_YYYYMM,
+		    CTRL_END_YYYYMM,
+		    CTRL_USE_YN
+		FROM CBT0001M
+		WHERE 1=1
+<!-- 		AND CTRL_USE_YN = 'Y' -->
+		AND CTRL_END_YYYYMM <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMM')
+    </select>
+
+    <select id="getSurveyTargetQuesList" parameterType="Map" resultType="egovMap">
+       SELECT
+		    SURV_ID,
+		    CTRL_ID,
+		    SURV_QUES_STR,
+		    SURV_QUES_END,
+		    SURV_SEQ,
+		    SURV_QUES_1,
+		    SURV_QUES_2,
+		    SURV_QUES_3,
+		    NVL(SURV_QUES_2, '') AS SURV_QUES_2,
+		    NVL(SURV_QUES_3,'') AS SURV_QUES_3,
+		    SURV_GD_CATG,
+		    SURV_GD_ID,
+		    SURV_QUES_YN
+		FROM CBT0002M
+		WHERE 1=1
+<!-- 		AND SURV_QUES_YN = 'Y' -->
+<!-- 		AND SURV_QUES_END <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD') -->
+        AND TO_CHAR(UPD_DT, 'YYYYMMDD') <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+		AND IS_SYNC = 0
+    </select>
+
+<!--     <select id="getSurveyTargetAnsList" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- 		    TMPL_ID, -->
+<!-- 		    SURV_ID, -->
+<!-- 		    TMPL_ANSW_SEQ, -->
+<!-- 		    TMPL_TYPE, -->
+<!-- 		    TMPL_ANSW_OPT_1, -->
+<!-- 		    TMPL_ANSW_OPT_2, -->
+<!-- 		    TMPL_REM, -->
+<!-- 		    USE_YN -->
+<!-- 		FROM CBT0003D -->
+<!-- 		WHERE 1=1 -->
+<!--     </select> -->
+
+    <select id="getSurveyTargetAnsList" parameterType="Map" resultType="egovMap">
+        <if test="array != null and array != ''">
+	        SELECT
+			    TMPL_ID,
+			    SURV_ID,
+			    TMPL_ANSW_SEQ,
+			    TMPL_TYPE,
+			    TMPL_ANSW_OPT_1,
+			    TMPL_ANSW_OPT_2,
+			    TMPL_REM,
+			    USE_YN
+			FROM CBT0003D
+			WHERE 1=1
+			AND SURV_ID IN
+              <foreach item="item" collection="array" index="index"
+                open="(" separator="," close=")">
+                #{item}
+              </foreach>
+        </if>
+    </select>
+
+    <update id="updateSync" parameterType="Map" >
+        UPDATE CBT0002M
+           SET IS_SYNC = 1
+                ,UPD_DT = SYSDATE
+                ,UPD_USER_ID = #{userId}
+          WHERE SURV_ID = #{survId}
+    </update>
+    <!-- END API PART -->
+</mapper>

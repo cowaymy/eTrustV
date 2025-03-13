@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper">
+
+   <select id="selectSerialLastInfoListCnt" parameterType="Map"  resultType="int">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectSerialLastInfoListCnt] 20191125 - KR OHK */
+    SELECT COUNT(1) AS CNT
+      FROM LOG0100M A
+       LEFT OUTER JOIN SYS0028M B ON B.WH_LOC_ID = A.LAST_LOC_ID
+       LEFT OUTER JOIN SYS0013M C ON C.CODE = B.WH_LOC_GB AND C.CODE_MASTER_ID = '339'
+       LEFT OUTER JOIN SYS0026M D ON D.STK_CODE = A.ITM_CODE
+       LEFT OUTER JOIN SAL0029D E ON E.CUST_ID = A.LAST_CUST_ID
+       LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
+       LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
+       LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
+    WHERE --A.STUS_CODE <![CDATA[<>]]> 'N'
+    A.STUS_CODE is not null
+    <if test='serialNo != null and serialNo != ""'>
+         AND A.SERIAL_NO = #{serialNo}
+    </if>
+    <if test='itmCode != null and itmCode != ""'>
+        AND A.ITM_CODE = #{itmCode}
+    </if>
+    <if test='requestNo != null and requestNo != ""'>
+        AND A.LAST_REQST_NO = #{requestNo}
+    </if>
+    <if test='custId != null and custId != ""'>
+        AND A.LAST_CUST_ID = #{custId}
+    </if>
+    <if test='orderNo != null and orderNo != ""'>
+        AND F.SALES_ORD_NO = #{orderNo}
+    </if>
+    <if test='deliveryNo != null and deliveryNo != ""'>
+        AND A.LAST_DELVRY_NO = #{deliveryNo}
+    </if>
+    <if test='(serialNo == null or serialNo == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
+        <if test='grSDate != null and grSDate != "" and grEDate != null and grEDate != ""'>
+            AND A.LAST_DELVRY_GR_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{grSDate} , 'DD/MM/YYYY'), 'YYYYMMDD')
+            AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
+        </if>
+        <if test="locCode != null">
+            AND (1, B.WH_LOC_ID) IN
+                <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                  (1,#{item})
+                </foreach>
+        </if>
+        <if test='stusCode != null and stusCode != ""'>
+            AND A.STUS_CODE = #{stusCode}
+        </if>
+    </if>
+    </select>
+
+    <select id="selectSerialLastInfoList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectSerialLastInfoList] 20191125 - KR OHK*/
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+                  FROM (
+                              SELECT A.SERIAL_NO
+								        ,A.STUS_CODE
+                                        ,A.LAST_LOC_ID
+                                        ,C.CODE_NAME LAST_LOC_TYPE
+                                        ,B.WH_LOC_DESC LAST_LOC_CODE
+                                        ,A.ITM_CODE
+								        ,D.STK_DESC
+                                        ,A.LAST_LOC_STK_GRAD
+                                        ,A.LAST_DELVRY_GR_DT
+								        ,A.LAST_CUST_ID
+								        ,E.NAME LAST_CUST_NAME
+								        ,A.LAST_SALES_ORD_ID
+								        ,F.SALES_ORD_NO LAST_SALES_ORD_NO
+								        ,A.LAST_REQST_NO
+								        ,A.LAST_REQST_NO_ITM
+								        ,A.LAST_DELVRY_NO
+								        ,A.LAST_DELVRY_NO_ITM
+								        ,A.TEMP_SCAN_NO
+								        ,A.CRT_USER_ID
+								        ,G.USER_NAME CRT_USER_NAME
+                                        ,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH24:MI') CRT_DT
+								        ,A.UPD_USER_ID
+								        ,H.USER_NAME UPD_USER_NAME
+								        ,TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI') UPD_DT
+								        ,A.SERIAL_NO HID_SERIAL_NO
+							    FROM LOG0100M A
+								 LEFT OUTER JOIN SYS0028M B ON B.WH_LOC_ID = A.LAST_LOC_ID
+								 LEFT OUTER JOIN SYS0013M C ON C.CODE = B.WH_LOC_GB AND C.CODE_MASTER_ID = '339'
+								 LEFT OUTER JOIN SYS0026M D ON D.STK_CODE = A.ITM_CODE
+								 LEFT OUTER JOIN SAL0029D E ON E.CUST_ID = A.LAST_CUST_ID
+								 LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
+								 LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
+								 LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
+                              WHERE --A.STUS_CODE <![CDATA[<>]]> 'N'
+                              A.STUS_CODE is not null
+                              <if test='serialNo != null and serialNo != ""'>
+                                   AND A.SERIAL_NO = #{serialNo}
+                              </if>
+                              <if test='itmCode != null and itmCode != ""'>
+                                  AND A.ITM_CODE = #{itmCode}
+                              </if>
+                              <if test='requestNo != null and requestNo != ""'>
+                                  AND A.LAST_REQST_NO = #{requestNo}
+                              </if>
+                              <if test='custId != null and custId != ""'>
+                                  AND A.LAST_CUST_ID = #{custId}
+                              </if>
+                              <if test='orderNo != null and orderNo != ""'>
+                                  AND F.SALES_ORD_NO = #{orderNo}
+                              </if>
+                              <if test='deliveryNo != null and deliveryNo != ""'>
+                                  AND A.LAST_DELVRY_NO = #{deliveryNo}
+                              </if>
+                              <if test='(serialNo == null or serialNo == "") and (requestNo == null or requestNo == "") and (custId == null or custId == "")  and (orderNo == null or orderNo == "")  and (deliveryNo == null or deliveryNo == "")'>
+                                  <if test='grSDate != null and grSDate != "" and grEDate != null and grEDate != ""'>
+                                      AND A.LAST_DELVRY_GR_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{grSDate} , 'DD/MM/YYYY'), 'YYYYMMDD')
+                                      AND A.LAST_DELVRY_GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{grEDate}, 'DD/MM/YYYY'), 'YYYYMMDD')
+                                  </if>
+                                  <if test="locCode != null">
+                                      AND (1, B.WH_LOC_ID) IN
+                                          <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                                             (1,#{item})
+                                          </foreach>
+                                  </if>
+                                  <if test='stusCode != null and stusCode != ""'>
+                                      AND A.STUS_CODE = #{stusCode}
+                                  </if>
+                              </if>
+                              ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "lastDelvryGrDt"'>A.SERIAL_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.SERIAL_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.SERIAL_NO DESC
+                        </otherwise>
+                    </choose>
+                    ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOrderBasicInfoByOrderId" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectOrderBasicInfoByOrderId] 20191125 - KR OHK*/
+    SELECT A.SALES_ORD_ID ORD_ID
+		      ,A.SALES_ORD_NO ORD_NO
+		      ,D.STK_CODE
+		      ,D.STK_DESC
+		      ,D.STK_GRAD
+		      ,A.CUST_ID
+		      ,C.NAME CUST_NAME
+	   FROM SAL0001D A
+	    JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+	    JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+	    JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
+	 WHERE A.SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="checkSerialLastInfoValid" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialLastInfoMgmtMapper.checkSerialLastInfoValid] 20191125 - KR OHK*/
+	SELECT A.DUP_CNT, B.VALID_REQST_CNT, C.VALID_DELVRY_CNT, D.VALID_SCAN_CNT
+	  FROM (SELECT COUNT(1) AS DUP_CNT
+		          FROM LOG0100M
+		        WHERE SERIAL_NO = #{serialNo}) A,
+		      (SELECT SUM(CNT) VALID_REQST_CNT
+		          FROM (SELECT COUNT(1) AS CNT
+		                     FROM LOG0047M
+		                   WHERE REQST_NO = #{lastReqstNo}
+		                    UNION ALL
+		                   SELECT COUNT(1) AS CNT
+		                     FROM HMC0009M
+		                   WHERE HMC_GR_NO = #{lastReqstNo}
+		                 )) B,
+		      (SELECT COUNT(1) AS VALID_DELVRY_CNT
+		          FROM LOG0055D
+		        WHERE DELVRY_NO = #{lastDelvryNo}) C,
+		      (SELECT COUNT(1) AS VALID_SCAN_CNT
+		          FROM LOG0099D
+		        WHERE SCAN_NO = #{tempScanNo}
+		            AND SERIAL_NO = #{serialNo}) D
+    </select>
+
+    <insert id="saveSerialLastInfo" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialLastInfoMgmtMapper.saveSerialLastInfo] 20191125 - KR OHK*/
+        MERGE INTO LOG0100M A
+        USING(SELECT #{serialNo} AS SERIAL_NO
+		                   , #{lastLocId} AS LAST_LOC_ID
+		                   , #{itmCode} AS ITM_CODE
+		                   , TO_CHAR(TO_DATE(#{lastDelvryGrDt}, 'YYYY/MM/DD'), 'YYYYMMDD') AS LAST_DELVRY_GR_DT
+		                   , #{lastLocStkGrad} AS LAST_LOC_STK_GRAD
+		                   , #{lastCustId} AS LAST_CUST_ID
+		                   , #{lastSalesOrdId} AS LAST_SALES_ORD_ID
+		                   , #{stusCode} AS STUS_CODE
+		                   , #{lastReqstNo} AS LAST_REQST_NO
+		                   , #{lastReqstNoItm} AS LAST_REQST_NO_ITM
+		                   , #{lastDelvryNo} AS LAST_DELVRY_NO
+		                   , #{lastDelvryNoItm} AS LAST_DELVRY_NO_ITM
+		                   , #{tempScanNo} AS TEMP_SCAN_NO
+		                   , #{userId} AS CRT_USER_ID
+		                   , SYSDATE AS CRT_DT
+		                   , #{userId} AS UPD_USER_ID
+		                   , SYSDATE AS UPD_DT
+                    FROM DUAL) B ON(A.SERIAL_NO = B.SERIAL_NO)
+        WHEN MATCHED THEN
+               UPDATE SET A.LAST_LOC_ID = B.LAST_LOC_ID
+		                      , A.ITM_CODE = B.ITM_CODE
+		                      , A.LAST_DELVRY_GR_DT = B.LAST_DELVRY_GR_DT
+		                      , A.LAST_LOC_STK_GRAD = B.LAST_LOC_STK_GRAD
+		                      , A.LAST_CUST_ID = B.LAST_CUST_ID
+		                      , A.LAST_SALES_ORD_ID = B.LAST_SALES_ORD_ID
+		                      , A.STUS_CODE = B.STUS_CODE
+		                      , A.LAST_REQST_NO = B.LAST_REQST_NO
+		                      , A.LAST_REQST_NO_ITM = B.LAST_REQST_NO_ITM
+		                      , A.LAST_DELVRY_NO = B.LAST_DELVRY_NO
+		                      , A.LAST_DELVRY_NO_ITM = B.LAST_DELVRY_NO_ITM
+		                      , A.TEMP_SCAN_NO = B.TEMP_SCAN_NO
+		                      , A.UPD_USER_ID = B.UPD_USER_ID
+		                      , A.UPD_DT = B.UPD_DT
+        WHEN NOT MATCHED THEN
+             INSERT(A.SERIAL_NO
+	                  , A.LAST_LOC_ID
+	                  , A.ITM_CODE
+	                  , A.LAST_DELVRY_GR_DT
+	                  , A.LAST_LOC_STK_GRAD
+	                  , A.LAST_CUST_ID
+	                  , A.LAST_SALES_ORD_ID
+	                  , A.STUS_CODE
+	                  , A.LAST_REQST_NO
+	                  , A.LAST_REQST_NO_ITM
+	                  , A.LAST_DELVRY_NO
+	                  , A.LAST_DELVRY_NO_ITM
+	                  , A.TEMP_SCAN_NO
+	                  , A.CRT_USER_ID
+	                  , A.CRT_DT
+	                  , A.UPD_USER_ID
+	                  , A.UPD_DT
+             )VALUES(
+	                    B.SERIAL_NO
+	                  , B.LAST_LOC_ID
+	                  , B.ITM_CODE
+	                  , B.LAST_DELVRY_GR_DT
+	                  , B.LAST_LOC_STK_GRAD
+	                  , B.LAST_CUST_ID
+	                  , B.LAST_SALES_ORD_ID
+	                  , B.STUS_CODE
+	                  , B.LAST_REQST_NO
+	                  , B.LAST_REQST_NO_ITM
+	                  , B.LAST_DELVRY_NO
+	                  , B.LAST_DELVRY_NO_ITM
+	                  , B.TEMP_SCAN_NO
+	                  , B.CRT_USER_ID
+	                  , B.CRT_DT
+	                  , B.UPD_USER_ID
+	                  , B.UPD_DT
+             )
+    </insert>
+
+    <insert id="insertSerialLastInfoHistory" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialLastInfoMgmtMapper.insertSerialLastInfoHistory] 20191125 - KR OHK*/
+        INSERT
+          INTO LOG0101H    --Serial Numbers Info Master History
+        (
+               SERIAL_NO                     --serial number
+             , SEQ                              --seq
+             , LAST_LOC_ID                  --Last location id
+             , ITM_CODE                      --Material code
+             , LAST_DELVRY_GR_DT       --Last Delivery GR Date
+             , LAST_LOC_STK_GRAD       --Stock Grade
+             , LAST_CUST_ID                --customerid
+             , LAST_SALES_ORD_ID        --SalesOrderID
+             , STUS_CODE                    --Status Code
+             , LAST_REQST_NO
+             , LAST_REQST_NO_ITM
+             , LAST_DELVRY_NO            --delivery
+             , LAST_DELVRY_NO_ITM      --delivery item
+             , TEMP_SCAN_NO               --temp mapping scan number
+             , CRT_USER_ID                  --name of person who created the object
+             , CRT_DT                         --date on which record was created
+             , UPD_USER_ID                  --update User id
+             , UPD_DT                         --update date
+        )
+        SELECT SERIAL_NO                   --serial number
+	             , (SELECT NVL(MAX(SEQ), 0)+1 AS SEQ FROM LOG0101H WHERE SERIAL_NO = #{serialNo})
+	             , LAST_LOC_ID                --Last location id
+	             , ITM_CODE                    --Material code
+	             , LAST_DELVRY_GR_DT      --Last Delivery GR Date
+	             , LAST_LOC_STK_GRAD     --Stock Grade
+	             , LAST_CUST_ID              --customerid
+	             , LAST_SALES_ORD_ID      --SalesOrderID
+	             , STUS_CODE                  --Status Code
+	             , LAST_REQST_NO
+	             , LAST_REQST_NO_ITM
+	             , LAST_DELVRY_NO           --delivery
+	             , LAST_DELVRY_NO_ITM    --delivery item
+	             , TEMP_SCAN_NO             --temp mapping scan number
+	             , #{userId}                     --name of person who created the object
+	             , SYSDATE
+	             , #{userId}                     --update User id
+	             , SYSDATE
+          FROM LOG0100M
+         WHERE SERIAL_NO = #{serialNo}
+    </insert>
+
+    <select id="selectSerialLastInfoHistoryList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialLastInfoMgmtMapper.selectSerialLastInfoHistoryList] 20200116 - KR OHK*/
+     SELECT A.SERIAL_NO
+               ,A.SEQ
+               ,A.STUS_CODE
+               ,A.LAST_LOC_ID
+               ,C.CODE_NAME LAST_LOC_TYPE
+               ,B.WH_LOC_DESC LAST_LOC_CODE
+               ,A.ITM_CODE
+               ,D.STK_DESC
+               ,A.LAST_LOC_STK_GRAD
+               ,A.LAST_DELVRY_GR_DT
+               ,A.LAST_CUST_ID
+               ,E.NAME LAST_CUST_NAME
+               ,A.LAST_SALES_ORD_ID
+               ,F.SALES_ORD_NO LAST_SALES_ORD_NO
+               ,A.LAST_REQST_NO
+               ,A.LAST_REQST_NO_ITM
+               ,A.LAST_DELVRY_NO
+               ,A.LAST_DELVRY_NO_ITM
+               ,A.TEMP_SCAN_NO
+               ,A.CRT_USER_ID
+               ,G.USER_NAME CRT_USER_NAME
+               ,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH24:MI') CRT_DT
+               ,A.UPD_USER_ID
+               ,H.USER_NAME UPD_USER_NAME
+               ,TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI') UPD_DT
+       FROM LOG0101H A
+        LEFT OUTER JOIN SYS0028M B ON B.WH_LOC_ID = A.LAST_LOC_ID
+        LEFT OUTER JOIN SYS0013M C ON C.CODE = B.WH_LOC_GB AND C.CODE_MASTER_ID = '339'
+        LEFT OUTER JOIN SYS0026M D ON D.STK_CODE = A.ITM_CODE
+        LEFT OUTER JOIN SAL0029D E ON E.CUST_ID = A.LAST_CUST_ID
+        LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
+        LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
+        LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
+     WHERE A.SERIAL_NO = #{serialNo}
+     ORDER BY SEQ DESC
+    </select>
+</mapper>

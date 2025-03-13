@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.LMSApiMapper">
+
+<!--
+**************************************
+ * Date                Author         Description
+ * 2021. 08. 19.    MY-HLTANG   API for LMS
+**************************************
+ -->
+
+<select id="selectCourseId" parameterType="Map" resultType="egovMap">
+    SELECT COURS_ID FROM MSC0008D WHERE COURS_CODE = #{coursCode}
+    <if test="status != null and status != ''">
+        AND COURS_STUS_ID = #{status}
+    </if>
+</select>
+
+<select id="selectActiveMemberByMemId" parameterType="Map" resultType="egovMap">
+    SELECT
+	    MEM_ID
+	    ,MEM_CODE
+	    ,FULL_NAME
+	    ,NRIC
+	    ,MEM_TYPE
+    FROM ORG0001D
+    WHERE
+    1= 1
+    <if test="memCode != null and memCode != ''">
+        AND MEM_CODE = #{memCode}
+    </if>
+    AND STUS = 1
+</select>
+
+<select id="selectMemIdByCourse" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID,MEM_CODE,FULL_NAME,NRIC,MEM_TYPE, COURSE.*
+    FROM ORG0001D O LEFT JOIN
+        (SELECT D.COURS_ID, COURS_CODE, COURS_NAME, COURS_LOC, COURS_STUS_ID, COURS_MEM_TYPE_ID, COURS_ITM_ID,
+            COURS_MEM_ID, COURS_TEST_RESULT, COURS_MEM_STUS_ID, COURS_D_MEM_NAME, COURS_D_MEM_NRIC, COURS_CDP_POINT
+            FROM MSC0008D D JOIN MSC0009D C ON D.COURS_ID = C.COURS_ID
+            WHERE
+            COURS_TEST_RESULT IS NULL
+            <if test="coursMemStatus != null and coursMemStatus != ''">
+		        and COURS_MEM_STUS_ID = #{coursMemStatus}
+		    </if>
+            ) COURSE
+    ON O.MEM_ID = COURSE.COURS_MEM_ID
+    WHERE 1=1
+    <if test="memCode != null and memCode != ''">
+        AND O.MEM_CODE = #{memCode}
+    </if>
+
+</select>
+
+<select id="selectAplicantId" parameterType="Map" resultType="egovMap">
+    SELECT APLCTN_ID MEM_ID,APLICNT_FULL_NAME FULL_NAME, APLICNT_NRIC NRIC,COLLCT_BRNCH
+     FROM ORG0003D WHERE APLICNT_CODE = #{memCode}
+</select>
+
+<select id="selectCourseByMem" parameterType="Map" resultType="egovMap">
+    SELECT C.COURS_ID, C.COURS_ITM_ID, C.COURS_MEM_ID, O.MEM_CODE, C.COURS_MEM_STUS_ID, CM.COURS_CODE
+    FROM MSC0009D C
+        JOIN MSC0008D CM ON C.COURS_ID = CM.COURS_ID
+        JOIN ORG0001D O ON O.MEM_ID = C.COURS_MEM_ID
+    WHERE 1 = 1
+
+    <if test="coursCode != null and coursCode != ''">
+        AND CM.COURS_CODE = #{coursCode}
+    </if>
+
+    <if test="memId != null and memId != ''">
+        AND C.COURS_MEM_ID = #{memId}
+    </if>
+
+    <if test="memCode != null and memCode != ''">
+        AND O.MEM_CODE = #{memCode}
+    </if>
+</select>
+
+<update id="registerCourse" parameterType="Map">
+        MERGE
+         INTO MSC0009D
+        USING DUAL
+           ON (COURS_ID = #{coursId} AND COURS_MEM_ID = #{coursMemId})
+         WHEN MATCHED THEN
+              UPDATE
+                 SET COURS_MEM_STUS_ID = 1
+                 <if test="coursMemShirtSize != null and coursMemShirtSize != ''">
+		            , COURS_MEM_SHIRT_SIZE = #{coursMemShirtSize}
+		        </if>
+         WHEN NOT MATCHED THEN
+              INSERT
+                   ( COURS_ITM_ID,
+                        COURS_ID,
+                        COURS_MEM_ID,
+                        COURS_MEM_STUS_ID,
+                        COURS_D_UPD_USER_ID,
+                        COURS_D_UPD_DT,
+                        COURS_D_MEM_NAME,
+                        COURS_D_MEM_NRIC,
+                        COURS_MEM_SHIRT_SIZE
+                   )
+              VALUES
+                   ( MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL ,
+                        #{coursId} ,
+                        #{coursMemId} ,
+                        1 ,
+                        #{userId} ,
+                        SYSDATE ,
+                        #{coursDMemName} ,
+                        #{coursDMemNric} ,
+                        #{coursMemShirtSize}
+                   )
+</update>
+
+<update id="updateAttendee" parameterType="Map">
+    /* trainingMapper.updateAttendee */
+    UPDATE MSC0009D
+    SET
+        COURS_D_UPD_USER_ID = #{userId}
+       ,COURS_D_UPD_DT = SYSDATE
+
+        <!-- COURS_MEM_ID = #{coursMemId} -->
+       <if test="coursMemStusId != null and coursMemStusId != ''">
+       ,COURS_MEM_STUS_ID = #{coursMemStusId}
+       </if>
+
+       <!-- ,COURS_ITM_MEM_IS_VEGE = #{coursItmMemIsVege}
+       ,COURS_ITM_MEM_PUP = #{coursItmMemPup}
+       ,COURS_D_MEM_NAME = #{coursDMemName}
+       ,COURS_D_MEM_NRIC = #{coursDMemNric}
+        -->
+
+       <if test="coursTestResult != null and coursTestResult != ''">
+       ,COURS_TEST_RESULT = #{coursTestResult}
+       </if>
+
+       <if test="coursCdpPoint != null and coursCdpPoint != ''">
+       ,COURS_CDP_POINT = #{coursCdpPoint}
+       </if>
+       <if test="coursAttendDay != null and coursAttendDay != ''">
+           , COURS_ATTEND_DAY = #{coursAttendDay}
+       </if>
+       <if test="shirtSize != null and shirtSize != ''">
+       , COURS_MEM_SHIRT_SIZE = #{shirtSize}
+       </if>
+       <if test="supplementInd != null and supplementInd != ''">
+       , IS_SUPPL = #{supplementInd}
+       </if>
+
+    WHERE 1 = 1
+
+    AND COURS_ID = #{coursId}
+    AND COURS_MEM_ID = #{coursMemId}
+</update>
+
+<select id="selectDocNoMap" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+
+    </select>
+
+
+<select id="cntCourseCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt FROM MSC0008D WHERE COURS_CODE = #{coursCode}
+</select>
+
+<update id="updateRookieForHp" parameterType="Map">
+        update org0001d set rookie = '1' where mem_id = #{MemberID}
+</update>
+
+<update id="updateMemSupplimentFlag" parameterType="Map">
+        update org0001d set IS_SUPPL = #{supplementInd} where mem_id = #{MemberID}
+</update>
+</mapper>

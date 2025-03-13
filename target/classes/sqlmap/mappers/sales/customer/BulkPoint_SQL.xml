@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.RewardPointMapper">
+
+    <select id="getSAL0400MSEQ" resultType="int">
+        SELECT SAL0400M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSAL0401DSEQ" resultType="int" flushCache="true">
+        SELECT SAL0401D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="saveRewardBulkPointMaster" parameterType="Map">
+        INSERT INTO SAL0400M
+         (
+        TIER_UPLOAD_ID,
+        TIER_TOTAL_RECORD,
+        TIER_UPLOAD_STUS_ID,
+        TIER_UPLOAD_CRT_USER_ID,
+        TIER_UPLOAD_CRT_DT,
+        TIER_UPLOAD_UPD_USER_ID,
+        TIER_UPLOAD_UDT_DT,
+        UPLOAD_REM
+        ) VALUES
+        (
+        #{tierId},
+        #{totalRecord},
+        #{tierStatusID},
+        #{creator},
+        SYSDATE,
+        #{updater},
+        SYSDATE,
+        #{remark}
+        )
+    </insert>
+
+    <insert id="saveRewardBulkPointDetail" parameterType="Map">
+         INSERT INTO SAL0401D
+        (
+        TIER_UPLOAD_DET_ID,
+        TIER_UPLOAD_ID,
+        TIER_CUST_NRIC,
+        REW_TYPE,
+        REMARK,
+        REW_POINT,
+        TIER_DET_STUS_ID,
+        TIER_UPLOAD_CRT_USER_ID,
+        TIER_UPLOAD_CRT_DT,
+        TIER_UPLOAD_UPD_USER_ID,
+        TIER_UPLOAD_UDT_DT
+        )
+     <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+        #{item.detId},
+        #{item.tierId},
+        #{item.custNRIC},
+        (SELECT CODE_ID FROM SYS0013M where CODE = UPPER(#{item.rewardType})),
+        #{item.remark},
+        #{item.rewardPoint},
+        #{item.stusId},
+        #{item.creator},
+        SYSDATE,
+        #{item.updater},
+        SYSDATE
+        FROM DUAL
+        </foreach>
+    </insert>
+
+    <select id="selectRewardBulkPointList" parameterType="Map" resultType="EgovMap">
+      SELECT
+          A.TIER_UPLOAD_ID,
+          A.TIER_TOTAL_RECORD,
+          B.NAME,
+          C1.USER_FULL_NAME AS CREATOR,
+          TO_CHAR(A.TIER_UPLOAD_CRT_DT,'DD-MM-YYYY') TIER_UPLOAD_CRT_DT,
+          A.TIER_UPLOAD_STUS_ID,
+          A.UPLOAD_REM,
+          A.APP_REM,
+          C2.USER_FULL_NAME AS APPROVER,
+          TO_CHAR(A.TIER_UPLOAD_APP_DT,'DD-MM-YYYY') TIER_UPLOAD_APP_DT
+      FROM SAL0400M A
+          LEFT JOIN SYS0038M B
+              ON A.TIER_UPLOAD_STUS_ID = B.STUS_CODE_ID
+          LEFT JOIN SYS0047M C1
+              ON C1.USER_ID = A.TIER_UPLOAD_CRT_USER_ID
+          LEFT JOIN SYS0047M C2
+              ON C2.USER_ID = A.TIER_UPLOAD_APP_USER_ID
+       WHERE 1 = 1
+       <if test="searchTierId != null and searchTierId !=''">
+                 AND  ( A.TIER_UPLOAD_ID = #{searchTierId})
+      </if>
+      <if test="searchCreateUser != null and searchCreateUser !=''">
+                 AND  ( C.USER_FULL_NAME LIKE UPPER('%'||#{searchCreateUser}||'%'))
+      </if>
+      <if test="searchCrtStartDt != null and searchCrtStartDt != '' and searchCrtEndDt != null and searchCrtEndDt != '' ">
+             AND A.TIER_UPLOAD_CRT_DT between to_date(#{searchCrtStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchCrtEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+      </if>
+      <if test="searchPointStatus != null and searchPointStatus != ''">
+        AND A.TIER_UPLOAD_STUS_ID IN
+            <foreach collection="searchPointStatus" item="item" open="(" close=")" separator="," >
+                #{item}
+            </foreach>
+      </if>
+      <if test="pointUploadId != null and pointUploadId !=''">
+             AND  ( A.TIER_UPLOAD_ID = #{pointUploadId})
+      </if>
+      ORDER BY A.TIER_UPLOAD_ID DESC
+    </select>
+
+    <select id="selectRewardBulkPointItem" parameterType="Map" resultType="EgovMap">
+        SELECT
+          A.TIER_UPLOAD_DET_ID,
+          A.TIER_CUST_NRIC,
+          B.CODE,
+          A.REMARK,
+          A.REW_POINT,
+          C.NAME,
+          D.USER_FULL_NAME,
+          TO_CHAR(A.TIER_UPLOAD_CRT_DT,'DD-MM-YYYY') TIER_UPLOAD_CRT_DT,
+          A.TIER_DET_STUS_ID
+        FROM SAL0401D A
+          LEFT JOIN SYS0013M B ON A.REW_TYPE = B.CODE_ID
+          LEFT JOIN SYS0038M C ON A.TIER_DET_STUS_ID = C.STUS_CODE_ID
+          LEFT JOIN SYS0047M D ON A.TIER_UPLOAD_CRT_USER_ID = D.USER_ID
+        WHERE
+            1 = 1
+        <if test="pointUploadId != null and pointUploadId !=''">
+             AND   A.TIER_UPLOAD_ID = #{pointUploadId}
+        </if>
+        ORDER BY A.TIER_UPLOAD_DET_ID ASC
+    </select>
+
+    <update id="callRewardBulkPointValidateDet" statementType="CALLABLE" parameterType="Map">
+        {call SP_REWARD_BULK_POINT_VALIDATE_DET(#{tierId})}
+    </update>
+
+    <update id="confirmRewardBulkPointMaster" parameterType="Map">
+          UPDATE SAL0400M
+          SET
+          TIER_UPLOAD_STUS_ID = #{status},
+          TIER_UPLOAD_APP_USER_ID = #{userId},
+          TIER_UPLOAD_APP_DT = SYSDATE,
+          TIER_UPLOAD_UPD_USER_ID = #{userId},
+          TIER_UPLOAD_UDT_DT = SYSDATE,
+          APP_REM = #{reason}
+          WHERE 1 = 1
+          <if test='tierUploadId != null and tierUploadId != ""'>
+                 AND TIER_UPLOAD_ID IN
+                 <foreach item="item" collection="tierUploadId" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+           </if>
+    </update>
+
+    <update id="confirmRewardBulkPointDetail" parameterType="Map">
+          UPDATE SAL0401D
+          SET
+          TIER_DET_STUS_ID = #{status},
+          TIER_UPLOAD_UPD_USER_ID = #{userId},
+          TIER_UPLOAD_UDT_DT = SYSDATE
+          WHERE 1 = 1
+          <if test='tierUploadId != null and tierUploadId != ""'>
+                 AND TIER_UPLOAD_ID IN
+                 <foreach item="item" collection="tierUploadId" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+           </if>
+    </update>
+</mapper>

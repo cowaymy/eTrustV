@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.HappyCallPlanningMapper">
+
+    <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
+       SELECT 
+            <choose>
+                <when test=" groupCode != null and groupCode == '386' ">
+                CODE_ID, CODE || ' : ' || CODE_NAME CODE_NAME
+                </when>
+                <otherwise>
+                CODE_ID, CODE_NAME
+                </otherwise>
+            </choose>
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = #{groupCode}
+    </select>
+    
+    <select id="selectHappyCallList" parameterType="Map" resultType="egovMap">
+        SELECT A.HC_DEF_ID HC_ID, B.CODE_NAME CALL_TYPE, A.HC_DEF_ITM_NO QUESTION_NUMBER, C.CODE_NAME FEEDBACK_TYPE
+        , D.CODE_NAME EVALUATION_CRITERIA, A.HC_DEF_DESC QUESTION
+        , TO_CHAR(A.PRIOD_FROM ,'yyyy-mm-dd') PERIOD_FROM 
+        , TO_CHAR(A.PRIOD_TO ,'yyyy-mm-dd')  PERIOD_TO
+        , E.NAME STATUS
+		FROM CCR0003M A
+		JOIN SYS0013M B ON A.HC_DEF_TYPE_ID = B.CODE_ID
+		JOIN SYS0013M C ON A.HC_DEF_CTGRY_ID = C.CODE_ID
+		JOIN SYS0013M D ON A.HC_DEF_QUES_TYPE_ID = D.CODE_ID
+		JOIN SYS0038M E ON A.HC_DEF_STUS_ID = E.STUS_CODE_ID
+		WHERE 1=1
+		<if test="cmbCallType != null and cmbCallType != '' ">
+			AND A.HC_DEF_TYPE_ID = #{cmbCallType}
+		</if>
+		<if test="cmbFeedbackType != null and cmbFeedbackType != '' ">
+			AND A.HC_DEF_CTGRY_ID = #{cmbFeedbackType}
+		</if>
+		<if test="cmbEvalCriteria != null and cmbEvalCriteria != '' ">
+		    <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2755' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1184'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2756' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1183'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2757' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1185'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2758' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1186'
+            </if>
+		</if>
+		<if test="cmbStatus != null and cmbStatus != '' ">
+            AND A.HC_DEF_STUS_ID = #{cmbStatus}
+        </if>
+		<if test="periodMonth != null and periodMonth != '' ">
+            AND TO_DATE(#{periodMonth}, 'MM/YYYY') BETWEEN A.PRIOD_FROM AND A.PRIOD_TO
+        </if>
+    </select>
+    
+    <insert id="insertHappyCall" parameterType="Map">
+	    INSERT INTO CCR0003M (
+	       HC_DEF_ID, 
+	       HC_DEF_TYPE_ID, 
+	       HC_DEF_ITM_NO, 
+	       HC_DEF_DESC, 
+	       HC_DEF_STUS_ID, 
+	       HC_DEF_CTGRY_ID, 
+	       CRT_DT, 
+	       CRT_USER_ID, 
+	       UPD_DT, 
+	       UPD_USER_ID, 
+	       HC_DEF_QUES_TYPE_ID, 
+	       PRIOD_FROM, 
+	       PRIOD_TO,
+	       EVT_ID
+	    )
+		VALUES (
+		   CCR0003M_HC_DEF_ID_SEQ.NEXTVAL,
+		   (SELECT CODE_ID
+	        FROM SYS0013M 
+	        WHERE CODE_MASTER_ID = 80
+	        AND CODE_NAME = #{callType}), 
+           TO_NUMBER(#{questionNumber}), 
+           #{question}, 
+           (SELECT STUS_CODE_ID 
+		    FROM SYS0038M 
+		    WHERE NAME = #{status}), 
+           (SELECT CODE_ID
+            FROM SYS0013M 
+            WHERE CODE_MASTER_ID = 102
+            AND CODE_NAME = #{feedbackType}), 
+           SYSDATE, 
+           #{userId}, 
+           SYSDATE, 
+           #{userId}, 
+           (SELECT CODE_ID
+            FROM SYS0013M 
+            WHERE CODE_MASTER_ID = 103
+            AND CODE_NAME = #{evaluationCriteria}), 
+           TO_DATE(#{periodFrom}, 'YYYY/MM/DD'), 
+           TO_DATE(#{periodTo}, 'YYYY/MM/DD'),
+           1
+		)
+    </insert>
+    
+    <delete id="deleteHappyCall" parameterType="Map">
+        DELETE FROM CCR0003M 
+        WHERE HC_DEF_ID = #{hcId}
+    </delete>
+    
+    <!-- <update id="updateStatus" parameterType="Map">
+		UPDATE CCR0003M
+		SET HC_DEF_STUS_ID = 8
+		WHERE 1=1
+		AND HC_DEF_TYPE_ID = (SELECT CODE_ID
+							               FROM SYS0013M 
+							               WHERE CODE_MASTER_ID = 80
+							               AND CODE_NAME = #{callType})
+		AND HC_DEF_STUS_ID = 1
+		AND HC_DEF_ITM_NO = TO_NUMBER(#{questionNumber})
+		AND (TO_DATE(#{periodFrom}, 'MM/YYYY') 
+		      BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD')
+		OR TO_DATE(#{periodFrom}, 'MM/YYYY') 
+              BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD'))
+    </update> -->
+    
+    <update id="updateHappyCall" parameterType="Map">
+	    UPDATE CCR0003M
+		SET HC_DEF_QUES_TYPE_ID = (SELECT CODE_ID
+						                          FROM SYS0013M 
+						                          WHERE CODE_MASTER_ID = 103
+						                          AND CODE_NAME = #{evaluationCriteria}),
+		    HC_DEF_DESC = #{question},
+		    PRIOD_FROM = TO_DATE(#{periodFrom}, 'YYYY/MM/DD'),
+		    PRIOD_TO = TO_DATE(#{periodTo}, 'YYYY/MM/DD'),
+		    HC_DEF_STUS_ID = (SELECT STUS_CODE_ID 
+				                      FROM SYS0038M 
+				                      WHERE NAME = #{status}),
+		    UPD_DT = SYSDATE,
+		    UPD_USER_ID = #{userId}
+		WHERE HC_DEF_ID = #{hcId}
+    </update>
+
+    <insert id="insertHappyCallSub" parameterType="Map">
+        INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          ,  (select MAX(HC_DEF_ID) FROM CCR0003M)
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Yes'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'No'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Excellent'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'Good'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Average'">
+          , 3
+          </if>
+          <if test="hcAnsDesc == 'Poor'">
+          , 4
+          </if>
+          <if test="hcAnsDesc == 'Bad'">
+          , 5
+          </if>          
+          , 1
+          , #{userId}
+          , SYSDATE
+          , #{userId}
+          , SYSDATE
+      )
+    </insert>
+    
+    <delete id="deleteHappyCallSub" parameterType="Map">
+        DELETE FROM CCR0004M 
+        WHERE HC_DEF_ID = #{hcId}
+    </delete>
+
+</mapper>

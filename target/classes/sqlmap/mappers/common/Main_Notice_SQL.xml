@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.MainNoticeMapper">
+
+	<select id="selectDailyCount" parameterType="Map" resultType="egovMap">
+	<![CDATA[
+
+WITH VIEW_COUNT AS
+(SELECT /* view [Vw_NeoSales] */
+        (SELECT  /* use_nl( SAL1058V.M SAL1058V.D) */  COUNT(1)
+         FROM SAL1058V) NEO_SALES ,/*(rental) (66)*/
+
+         (SELECT COUNT(A.SALES_ORD_ID)
+            FROM SAL0001D A, SAL0002D B
+           WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+             AND B.ITM_STK_ID = 1735
+             AND A.SALES_DT BETWEEN (
+                   SELECT CASE WHEN START_DT IS NULL THEN TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM'), 'YYYYMM') ELSE START_DT END
+                     FROM REP0110T
+                    WHERE SYSDATE BETWEEN START_DT AND END_DT
+                 )
+               AND (
+                   SELECT CASE WHEN END_DT IS NULL THEN LAST_DAY(SYSDATE) ELSE END_DT END
+                     FROM REP0110T
+                    WHERE SYSDATE BETWEEN START_DT AND END_DT
+                 )
+         ) KECIL,
+
+        (SELECT  /*+ index(salesorderm_idx13) */  COUNT(SALES_ORD_ID)
+         FROM SAL0001D
+         WHERE PV_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL)
+           AND PV_MONTH = (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL)
+            AND APP_TYPE_ID=66) RENTAL ,/*OUTRIGHT (67)*/
+
+        (SELECT /*+ index(salesorderm_idx13) */  COUNT(SALES_ORD_ID)
+         FROM SAL0001D
+         WHERE PV_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE)  FROM DUAL)
+           AND PV_MONTH =  (SELECT EXTRACT(MONTH FROM SYSDATE)  FROM DUAL)
+           AND APP_TYPE_ID=67 ) OUT_RIGHT ,/* Installment (68) */
+
+       (SELECT /*+ index(salesorderm_idx13) */ COUNT(SALES_ORD_ID)
+          FROM SAL0001D
+         WHERE PV_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL)
+           AND PV_MONTH = (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL)
+           AND APP_TYPE_ID= 68 ) INSTALLMENT
+                                          ,/*SALES(Key_in)*/
+
+     (SELECT /*+ index(salesorderm_idx14) */ COUNT(SALES_ORD_ID)
+        FROM SAL0001D
+       WHERE CRT_DT >= (select to_date('01/' || EXTRACT(MONTH FROM SYSDATE) || '/' || EXTRACT(YEAR FROM SYSDATE) , 'DD/MM/YYYY' ) from dual)
+         AND CRT_DT < (select ADD_MONTHS(to_date('01/' || EXTRACT(MONTH FROM SYSDATE) || '/' || EXTRACT(YEAR FROM SYSDATE) , 'DD/MM/YYYY' ) ,1) from dual)
+         AND 8 <> STUS_CODE_ID
+         AND APP_TYPE_ID IN (66,67,68) ) SALES,
+
+     (SELECT CUST_ACC_QTY
+        FROM SAL0222M )  ACC_ACT_ACCOUNT,
+]]>
+     (SELECT COUNT(*)
+         FROM SYS0092M
+       WHERE
+       <if test="apprGrp == null or apprGrp == '' ">
+           NTF_USER_ID = #{userId}
+       </if>
+       <if test="apprGrp == 1 ">
+           NTF_USER_ID IN (#{userId}, (SELECT APPR_GRP FROM FCM0023M WHERE APPR_MEM_NAME = #{userId} and GRP_NTF = '1'))
+       </if>
+           AND NTF_FLAG = '1') NTF_CNT
+FROM DUAL )
+
+SELECT
+       NEO_SALES ,
+       KECIL ,
+       SALES ,
+       RENTAL ,
+       OUT_RIGHT ,
+       INSTALLMENT ,
+       (RENTAL + OUT_RIGHT + INSTALLMENT) TOTAL,
+       ACC_ACT_ACCOUNT,
+       NTF_CNT
+FROM VIEW_COUNT
+
+	</select>
+
+
+	<select id="selectMainNotice" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+		SELECT *
+		FROM (
+				SELECT   NTCE_NO
+						,NTCE_SUBJECT
+						,RGST_USER_NM
+						,READ_CNT
+						,CRT_DT
+						,EMGNCY_FLAG
+						,SYSDATE
+						,CASE
+							WHEN SYSDATE - CRT_DT >= 1
+							   THEN 'N'
+							ELSE 'Y'
+						 END IMG_FLAG
+					FROM SYS0069M
+				   WHERE STUS_FLAG = 'N'
+					 AND (    SYSDATE >= NVL (NTCE_START_DT, TO_DATE ('19900101', 'YYYYMMDD') )
+						  AND SYSDATE < NVL (NTCE_END_DT, TO_DATE ('29900101', 'YYYYMMDD') ) + 1
+						 )
+				ORDER BY NVL (EMGNCY_FLAG, 'N') DESC, NTCE_NO DESC
+		) TBL
+		WHERE ROWNUM < 5
+		]]>
+	</select>
+
+	<select id="selectTagStatus" parameterType="Map" resultType="egovMap">
+	SELECT Z.customer,
+               Z.main_inquiry,
+               Z.sub_inquiry,
+               Z.main_department,
+               Z.sub_department,
+               Z.claim_note,
+               Z.status,
+               z.Ord_no sales_order
+ FROM (SELECT A.CUR_SEQNO
+			, A.CUST_NO as Customer
+			, DECODE(GBSLCVD.FN_GET_COMMCD(1, TGT_DVCD), '', GBSLCVD.FN_GET_COMMCD(8, TGT_DVCD), GBSLCVD.FN_GET_COMMCD(1, TGT_DVCD)) AS TGT_DVNM
+			, A.CUST_NM
+			, CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS main_inquiry
+			, CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS sub_inquiry
+			, CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS claim_note
+			, CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS main_department
+			, CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS sub_department
+			, A.DEPT_CODE
+			, A.SUB_DEPT_CDE
+			, DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
+			, to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+			, A.Ord_no
+			FROM CALLCENTERUSER.T_CUR_HIST A
+			LEFT OUTER JOIN GBSLCVD.CCR0006D B
+			ON A.CUR_SEQNO = B.CUR_SEQ_NO
+			WHERE A.TR_DVCD         = 'T'
+			AND CUR_SEQNO NOT IN (
+			SELECT CUR_SEQ_NO
+			FROM GBSLCVD.CCR0006D
+			WHERE CUR_SEQ_NO IS NOT NULL
+			AND STUS_CODE_ID NOT IN (1, 35, 44)
+	     ) )Z
+     WHERE 1=1
+	         <if test="initYn != null and initYn !=''">
+	         <![CDATA[
+	         AND ROWNUM < 5
+		     ]]>
+	     </if>
+	     order by z.Reg_date desc
+    </select>
+
+    <select id="selectDailyPerformance" parameterType="Map" resultType="egovMap">
+        SELECT A.DIV_CODE
+				 , A.DIV_NAME
+				 , A.PERIOD
+                 , A.KEY_IN_QTY_TODAY
+				 , A.KEY_IN_QTY_ACCUM
+				 , A.KEY_IN_QTY_MONTH_END
+				 , A.BY_PRD_CTGRY_WPURIFIER
+				 , A.BY_PRD_CTGRY_APURIFIER
+				 , A.BY_PRD_CTGRY_BIDET
+				 , A.BY_PRD_CTGRY_SOFTNER
+				 , A.BY_SALES_CTGRY_RENTAL
+				 , A.BY_SALES_CTGRY_OUT_INS
+				 , A.BY_SALES_CTGRY_MBR_SHIP
+				 , A.BY_SALES_CTGRY_EXTRADE
+				 , A.NET_SALES_ACCUM
+				 , A.NET_SALES_MONTH_END
+          FROM SYS0083S A
+    </select>
+
+    <select id="selectSalesOrgPerf" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT * FROM (
+	            SELECT
+				    CASE WHEN TO_DATE(YEAR||MONTH, 'YYYYMM') = TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM'), 'YYYYMM') THEN 'CURRENT' ELSE YEAR || '/' || MONTH END PERIOD,
+				    RANKING,
+				    SPONSOR,
+				    RECRUIT,
+				    ACT_MEM,
+				    PRODUCTIVITY,
+				    SALES,
+				    PV_VALUE,
+				    ACT_ORD,
+				    YS,
+				    NVL(ROUND(RC_RATE, 2),0) RC,
+				    NVL(ROUND(IND_RC_RATE, 2),0) IND_RC,
+				    NVL(ROUND(COM_RC_RATE, 2),0) COM_RC,
+				    NVL(ROUND(HA_RC_RATE, 2),0) HA_RC,
+				    NVL(ROUND(HC_RC_RATE, 2),0) HC_RC,
+				    NVL(ROUND(OPC_RATE, 2),0) OPC
+				FROM REP0080D
+				WHERE MEM_ID = #{memId}
+				ORDER BY YEAR DESC, MONTH DESC
+			) WHERE ROWNUM <= 4
+        ]]>
+    </select>
+
+    <select id="getCustomerBday" parameterType="Map" resultType="egovMap">
+	        SELECT * FROM (
+			    SELECT A.CUST_ID, A.NAME, TO_CHAR(A.DOB, 'DD/MM') BDATE
+			    <if test="roleId == 115">
+			    , A.SALES_ORD_NO
+			    </if>
+			    <if test="roleId == 111 or roleId == 112 or roleId == 113 or roleId == 114">
+                , MAX(A.SALES_ORD_NO) AS SALES_ORD_NO
+                </if>
+				FROM (
+				    SELECT A2.CUST_ID, MAX(A1.SALES_ORD_NO) AS SALES_ORD_NO, A2.NAME, A2.DOB, A1.MEM_ID
+				    FROM SAL0001D A1, SAL0029D A2
+				    WHERE A1.CUST_ID = A2.CUST_ID
+				    AND A1.STUS_CODE_ID = '4'
+				    AND A2.TYPE_ID = 964
+				    AND EXTRACT(MONTH FROM A2.DOB) = EXTRACT(MONTH FROM SYSDATE)
+				    <if test="roleId == 111">
+				    AND EXTRACT(DAY FROM A2.DOB) = EXTRACT(DAY FROM SYSDATE)
+				    </if>
+				    GROUP BY A2.CUST_ID, A2.NAME, A2.DOB, A1.MEM_ID
+
+				) A
+				JOIN ORG1001V B
+				    ON A.MEM_ID = B.MEM_ID
+				<if test="roleId == 114">
+				    AND B.DEPT_CODE IN (
+				        SELECT LAST_DEPT_CODE
+				        FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+				        WHERE X1.MEM_ID = X2.MEM_ID
+				        AND X1.MEM_CODE = X3.HR_CODE
+				        AND X3.USER_ID = #{userId}
+				    )
+				</if>
+				<if test="roleId == 113">
+				    AND B.GRP_CODE IN (
+		                SELECT LAST_GRP_CODE
+		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+		                WHERE X1.MEM_ID = X2.MEM_ID
+		                AND X1.MEM_CODE = X3.HR_CODE
+		                AND X3.USER_ID = #{userId}
+		            )
+		        </if>
+		        <if test="roleId == 112">
+		            AND B.ORG_CODE IN (
+		                SELECT LAST_ORG_CODE
+		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+		                WHERE X1.MEM_ID = X2.MEM_ID
+		                AND X1.MEM_CODE = X3.HR_CODE
+		                AND X3.USER_ID = #{userId}
+		            )
+		        </if>
+				<if test="roleId == 115">
+				JOIN SYS0047M C
+				    ON B.MEM_CODE = C.HR_CODE
+				    AND C.USER_TYPE_ID = 1
+				    AND C.USER_ID = #{userId}
+				</if>
+				JOIN ORG0001D D
+				    ON B.MEM_ID = D.MEM_ID
+				    AND D.MEM_TYPE = 1
+				<if test="roleId == 111 or roleId == 112 or roleId == 113 or roleId == 114">
+				GROUP BY A.CUST_ID, A.NAME, TO_CHAR(A.DOB, 'DD/MM')
+				</if>
+	        )
+	        ORDER BY TO_NUMBER(SUBSTR(BDATE, 1, 2)),
+	                 CUST_ID
+    </select>
+
+    <select id="getAccRewardPoints" parameterType="Map" resultType="egovMap">
+        SELECT
+                ORG_CODE ,
+                GRP_CODE ,
+                DEPT_CODE ,
+                MEM_CODE ,
+                RPT_YEAR ,
+                NS_M1 ,
+                RP_M1 ,
+                NS_M2 ,
+                RP_M2 ,
+                NS_M3 ,
+                RP_M3 ,
+                NS_M4 ,
+                RP_M4 ,
+                NS_M5 ,
+                RP_M5 ,
+                NS_M6 ,
+                RP_M6 ,
+                NS_M7 ,
+                RP_M7 ,
+                NS_M8 ,
+                RP_M8 ,
+                NS_M9 ,
+                RP_M9 ,
+                NS_M10 ,
+                RP_M10 ,
+                NS_M11 ,
+                RP_M11 ,
+                NS_M12 ,
+                RP_M12
+        FROM REP0124S
+        WHERE RPT_YEAR = EXTRACT(YEAR FROM SYSDATE)
+        AND MEM_CODE = #{userName}
+
+    </select>
+
+    <select id="getHPBirthday" parameterType="Map" resultType="egovMap">
+    WITH MEM_INFO AS (
+    SELECT
+        A.FULL_NAME, A.MEM_CODE, A.DOB, B.ORG_CODE, B.DEPT_CODE, B.GRP_CODE, B.MEM_ID
+    FROM ORG0001D A
+    JOIN ORG1001V B ON B.MEM_ID = A.MEM_ID
+    WHERE
+    A.STUS = 1
+    AND A.MEM_TYPE = 1
+    AND TO_CHAR(A.DOB,'MM') = TO_CHAR(SYSDATE,'MM')
+    <if test="isHmBday == 'false' and (roleId == 111 or roleId == 112 or roleId == 113)">
+    AND TO_CHAR(A.DOB,'DD') = TO_CHAR(SYSDATE,'DD')
+    </if>
+    )
+    SELECT
+        MI.MEM_CODE, MI.FULL_NAME, TO_CHAR(MI.DOB, 'DD/MM') AS DOB
+    <if test="roleId == 111 and isHmBday == 'true'">
+    , ORGD.MEM_LVL
+    , CASE WHEN ORGD.MEM_LVL = 3
+    THEN 'HM'
+    WHEN ORGD.MEM_LVL = 2
+    THEN 'SM'
+    ELSE 'GM' END AS TITLE
+    , '2' AS HEADER
+    </if>
+    FROM ORG0001D ORGM
+    JOIN ORG0005D ORGD ON ORGD.MEM_ID = ORGM.MEM_ID
+    <if test="roleId != 111">
+    JOIN SYS0047M USRINFO ON USRINFO.HR_CODE = ORGM.MEM_CODE
+    </if>
+    <if test="roleId == 114">
+    JOIN MEM_INFO MI ON MI.DEPT_CODE = ORGD.LAST_DEPT_CODE
+    </if>
+    <if test="roleId == 113">
+    JOIN MEM_INFO MI ON MI.GRP_CODE = ORGD.LAST_GRP_CODE
+    </if>
+    <if test="roleId == 112">
+    JOIN MEM_INFO MI ON MI.ORG_CODE = ORGD.LAST_ORG_CODE
+    </if>
+    <if test="roleId == 111">
+    JOIN MEM_INFO MI ON MI.MEM_ID = ORGM.MEM_ID
+    </if>
+    WHERE
+    <if test="roleId != 111">
+    USRINFO.USER_ID = #{userId}
+    </if>
+    <if test="roleId == 111 and isHmBday == 'false'">
+    ORGD.MEM_LVL = '4'
+    </if>
+    <if test="roleId == 111 and isHmBday == 'true'">
+    ORGD.MEM_LVL IN ('1', '2', '3')
+    </if>
+    ORDER BY TO_NUMBER(SUBSTR(MI.DOB, 1,2))
+    <if test="roleId == 111 and isHmBday == 'true'">
+    , ORGD.MEM_LVL ASC
+    </if>
+    </select>
+
+</mapper>

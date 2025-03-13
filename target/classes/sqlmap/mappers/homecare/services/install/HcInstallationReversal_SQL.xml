@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper">
+
+    <select id="selectReverseReason" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectReverseReason] */
+	    SELECT RESN_ID,CODE,RESN_DESC
+	      FROM SYS0032M
+	      WHERE RESN_TYPE_ID = 726
+	        AND STUS_CODE_ID = 1
+    </select>
+
+    <select id="selectFailReason" parameterType="Map" resultType="egovMap">
+	/* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectFailReason] */
+	    SELECT RESN_ID,CODE,RESN_DESC
+	      FROM SYS0032M
+	      WHERE RESN_TYPE_ID = 172
+	        AND STUS_CODE_ID = 1
+    </select>
+
+
+    <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectOrderList] */
+        SELECT *
+		  FROM ( SELECT ROWNUM RNUM,Project1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+		                Project1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
+		                Project1.SALES_ORD_ID SALES_ORD_ID  ,
+		                Project1.SALES_ORD_NO SALES_ORD_NO  ,
+		                Project1.REF_NO REF_NO  ,
+		                Project1.CUST_PO_NO CUST_PO_NO  ,
+		                Project1.SALES_DT SALES_DT  ,
+		                Project1.C1 C1  ,
+		                Project1.STK_DESC STK_DESC  ,
+		                Project1.NAME NAME  ,
+		                Project1.CODEID1 CODE_ID  ,
+		                Project1.CODE_NAME CODE_NAME  ,
+		                Project1.CODE_ID CODEID1  ,
+		                Project1.CODE CODE  ,
+		                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+		                Project1.CODE1 CODE1  ,
+		                Project1.BRNCH_ID BRNCH_ID  ,
+		                Project1.CUST_ID CUST_ID  ,
+		                Project1.NRIC NRIC  ,
+		                Project1.SIRIM_NO SIRIM_NO  ,
+		                Project1.SERIAL_NO SERIAL_NO
+		          FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+				                Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
+				                Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+				                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+				                Extent3.REF_NO REF_NO  ,
+				                TO_CHAR(Extent3.SALES_DT,'dd/mm/yyyy') SALES_DT  ,
+				                Extent3.CUST_PO_NO CUST_PO_NO  ,
+				                Extent10.BRNCH_ID BRNCH_ID  ,
+				                TO_CHAR(Extent1.INSTALL_DT,'dd/mm/yyyy') C1  ,
+				                Extent2.SIRIM_NO SIRIM_NO  ,
+				                Extent2.SERIAL_NO SERIAL_NO  ,
+				                Extent5.CODE_ID CODE_ID  ,
+				                Extent5.CODE CODE  ,
+				                Extent6.CODE_ID CODEID1  ,
+				                Extent6.CODE_NAME CODE_NAME  ,
+				                NVL2(Extent7.STK_DESC, '['||Extent7.STK_CODE||'] '||Extent7.STK_DESC, Extent7.STK_CODE) AS STK_DESC ,
+				                Extent8.CUST_ID CUST_ID  ,
+				                Extent8.NAME NAME  ,
+				                Extent8.NRIC NRIC  ,
+				                Extent9.STUS_CODE_ID STUS_CODE_ID  ,
+				                Extent9.CODE CODE1
+				           FROM SAL0046D Extent1
+		                   LEFT JOIN SAL0047D Extent2   ON Extent1.CALL_ENTRY_ID = Extent2.ENTRY_ID
+		                   JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
+		                   JOIN CCR0006D Extent4   ON Extent1.CALL_ENTRY_ID = Extent4.CALL_ENTRY_ID
+		                   LEFT JOIN SYS0013M Extent5   ON Extent4.TYPE_ID = Extent5.CODE_ID
+		                   LEFT JOIN SYS0013M Extent6   ON Extent3.APP_TYPE_ID = Extent6.CODE_ID
+		                   LEFT JOIN SYS0026M Extent7   ON Extent1.INSTALL_STK_ID = Extent7.STK_ID
+		                   LEFT JOIN SAL0029D Extent8   ON Extent3.CUST_ID = Extent8.CUST_ID
+		                   LEFT JOIN SYS0038M Extent9   ON Extent1.STUS_CODE_ID = Extent9.STUS_CODE_ID
+		                   JOIN SAL0045D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
+		                   JOIN ORG1001V Extent11 ON Extent1.CT_ID = Extent11.MEM_ID
+		                  WHERE  ( NOT ( LTRIM(RTRIM(UPPER(Extent3.SALES_ORD_NO))) LIKE '%C%')
+		                           AND ( Extent3.SALES_ORD_NO = #{orderNo} )
+									<if test="isAC != null and isAC == 1">
+								       <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+							           	AND Extent11.DEPT_CODE = #{deptCode}
+							           </if>
+							           <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+							           	AND Extent11.GRP_CODE = #{grpCode}
+							           </if>
+							           <if test='orgCode != null and orgCode != " "  and orgCode != ""'>
+							          	AND Extent11.ORG_CODE = #{orgCode}
+							           </if>
+									</if>
+		                         )
+		                    AND Extent3.BNDL_ID IS NOT NULL
+		                    AND EXISTS ( SELECT 1
+                                           FROM SAL0001D A, SAL0002D B, SYS0026M C
+                                          WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+                                            AND B.ITM_STK_ID = C.STK_ID
+                                            <!-- AND C.STK_CTGRY_ID IN (5706, 7177) -->
+                                            AND (C.STK_CTGRY_ID IN (5706, 7177)
+                                            OR C.STK_CTGRY_ID in (select CODE_ID from SYS0013M where code in ('ACI','ACO'))
+                                            )
+                                            AND A.SALES_ORD_NO = #{orderNo}
+                                       )
+		               ) Project1
+		        ORDER BY Project1.INSTALL_ENTRY_ID DESC
+		       )
+		  WHERE ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectOrderListDetail1" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectOrderListDetail1] */
+        SELECT Extent1.install_entry_id                       INSTALL_ENTRY_ID,
+		       Extent1.install_entry_no                       INSTALL_ENTRY_NO,
+		       Extent3.sales_ord_id                           SALES_ORD_ID,
+		       Extent3.sales_ord_no                           SALES_ORD_NO,
+		       Extent3.ref_no                                 REF_NO,
+		       Extent3.cust_po_no                             CUST_PO_NO,
+		       TO_CHAR(Extent3.sales_dt,'dd/mm/yyyy')           SALES_DT,
+		       TO_CHAR(Extent1.install_dt,'dd/mm/yyyy') C1,
+		       Extent1.install_stk_id                         INSTALL_STK_ID,
+		       Extent9.stk_code                               STK_CODE,
+		       Extent9.stk_desc                               STK_DESC,
+		       Extent10.name                                  NAME,
+		       Extent8.code_id                                CODE_ID,
+		       Extent8.code_name                              CODE_NAME,
+		       Extent7.code_id                                CODEID1,
+		       Extent7.code                                   CODE,
+		       Extent7.code_name                              CODENAME1,
+		       Extent13.stus_code_id                          STUS_CODE_ID,
+		       Extent13.code                                  CODE1,
+		       Extent13.name                                  NAME1,
+		       Extent14.brnch_id                              BRNCH_ID,
+		       Extent10.cust_id                               CUST_ID,
+		       Extent10.nric                                  NRIC,
+		       CASE
+		         WHEN ( Extent3.cust_add_id IS NOT NULL ) THEN Extent3.cust_add_id
+		         ELSE 0
+		       END                                            C2,
+		       Extent3.cust_cnt_id                            CUST_CNT_ID,
+		       Extent2.sirim_no                               SIRIM_NO,
+		       Extent2.serial_no                              SERIAL_NO,
+		       Extent11.user_name                             USER_NAME,
+		       Extent9.is_sirim                               IS_SIRIM,
+		       Extent9.stk_grad                               STK_GRAD,
+		       TO_CHAR(Extent2.crt_dt,'dd/mm/yyyy')     C3,
+		       TO_CHAR(Extent2.crt_dt,'mmyyyy')     INS_MON_YR, <!--  Added for Pre-Com. To allow installation reversal within same month of installation completion, Hui Ding, 20/06/2024 -->
+		       Extent9.stk_ctgry_id                           STK_CTGRY_ID,
+		       Extent2.doc_ref_no1                            DOC_REF_NO1,
+		       Extent2.doc_ref_no2                            DOC_REF_NO2,
+		       Extent2.allow_comm                             ALLOW_COMM,
+		       Extent2.is_trade_in                            IS_TRADE_IN,
+		       Extent2.require_sms                            REQUIRE_SMS,
+		       CASE
+		         WHEN ( Extent12.user_id IS NOT NULL ) THEN Extent12.user_name
+		         ELSE 'N'
+		       END                                            C4,
+		       TO_CHAR(Extent2.crt_dt,'dd/mm/yyyy')     C5,
+		       CASE
+		         WHEN ( Extent2.result_id IS NOT NULL ) THEN Extent2.ct_id
+		         ELSE 0
+		       END                                            C6,
+		       Extent15.mem_code                              MEM_CODE,
+		       Extent15.name                                  NAME2,
+		       Extent16.wh_loc_id                             WH_LOC_ID,
+		       Extent4.doc_id                                 DOC_ID,
+		       Extent2.install_dt                             INSTALL_DT,
+		       Extent2.next_call_dt                           NEXT_CALL_DT,
+		       Extent2.rem                                    REM,
+		       CASE
+		         WHEN ( Extent3.cust_bill_id IS NOT NULL ) THEN Extent3.cust_bill_id
+		         ELSE 0
+		       END                                            C7,
+		       Extent6.code_name                              CODENAME2,
+		       TO_CHAR(sysdate,'MM') c8,
+		       TO_CHAR(Extent2.crt_dt,'MM')     C39,
+		       Extent16.SERIAL_REQUIRE_CHK_YN ,
+		       Extent3.BNDL_ID ,
+               COUNT(EXTENT3.BNDL_ID)OVER(PARTITION BY BNDL_ID) AS BNDL_COUNT
+		FROM   sal0046d Extent1
+		       left join sal0047d Extent2
+		              ON Extent1.install_entry_id = Extent2.entry_id
+		       join sal0001d Extent3
+		         ON Extent1.sales_ord_id = Extent3.sales_ord_id
+		       left join ccr0006d Extent4
+		              ON Extent1.call_entry_id = Extent4.call_entry_id
+		       left join sal0074d Extent5
+		              ON Extent3.sales_ord_id = Extent5.sales_ord_id
+		       left join sys0013m Extent6
+		              ON Extent5.mode_id = Extent6.code_id
+		       left join sys0013m Extent7
+		              ON Extent4.type_id = Extent7.code_id
+		       left join sys0013m Extent8
+		              ON Extent3.app_type_id = Extent8.code_id
+		       left join sys0026m Extent9
+		              ON Extent1.install_stk_id = Extent9.stk_id
+		       left join sal0029d Extent10
+		              ON Extent3.cust_id = Extent10.cust_id
+		       left join sys0047m Extent11
+		              ON Extent3.upd_user_id = Extent11.user_id
+		       left join sys0047m Extent12
+		              ON Extent2.crt_user_id = Extent12.user_id
+		       left join sys0038m Extent13
+		              ON Extent1.stus_code_id = Extent13.stus_code_id
+		       join sal0045d Extent14
+		         ON Extent3.sales_ord_id = Extent14.sales_ord_id
+		       left join org0001d Extent15
+		              ON Extent2.ct_id = Extent15.mem_id
+		       left join sys0028m Extent16
+		              ON ( Extent15.mem_code = Extent16.wh_loc_code )
+		                  OR ( ( Extent15.mem_code IS NULL )
+		                       AND ( Extent16.wh_loc_code IS NULL )
+		                     )
+		WHERE  Extent1.install_entry_id = #{installEntryId}
+		  AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectBndlInfoList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectBndlInfoList] */
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+             , B.INSTALL_ENTRY_NO AS EINSTALL_ENTRY_NO
+		  FROM SAL0001D a
+		     , SAL0046D b
+		  WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+		    AND A.BNDL_ID IS NOT NULL
+		    AND A.BNDL_ID = #{bndlId}
+		    AND A.SALES_ORD_ID != #{hidSalesOrderId}
+    </select>
+
+    <select id="selectReversalStockState" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.services.install.impl.HcInstallationReversalMapper.selectReversalStockState] */
+        SELECT S1.SALES_ORD_NO
+             , L47.REQST_NO
+             , NVL (L54.DELVRY_GR_CMPLT , 'N') AS GR_CMPLT
+             , NVL (L54.DELVRY_GI_CMPLT , 'N') AS GI_CMPLT
+          FROM LOG0047M L47
+             , LOG0048D L48
+             , LOG0054M L54
+             , LOG0055D L55
+             , SYS0026M S26
+             , SAL0046D S46
+             , SAL0001D S1
+         WHERE 1 = 1
+           AND L48.ITM_CODE  = L55.ITM_CODE
+           AND L48.ITM_CODE = S26.STK_CODE
+           AND L54.DELVRY_NO = L55.DELVRY_NO
+           AND L48.REQST_NO  = L55.REQST_NO
+           AND L47.REQST_NO  = L48.REQST_NO
+           AND L47.REQST_TYPE   <![CDATA[<>]]>  'PO'
+           AND NVL(L54.DEL_FLAG,'N')  <![CDATA[<>]]> 'Y'
+           AND L47.REF_DOC_NO = S46.INSTALL_ENTRY_NO
+           AND S46.SALES_ORD_ID = S1.SALES_ORD_ID
+           AND NVL(L47.REQST_DEL , 'N') = 'N'
+           AND NVL(l48.REQST_DEL , 'N') = 'N'
+           AND S1.SALES_ORD_NO = #{esalesOrdNo}
+    </select>
+
+</mapper>

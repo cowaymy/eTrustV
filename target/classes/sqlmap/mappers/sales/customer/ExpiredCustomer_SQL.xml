@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.ExpiredCustomerMapper">
+
+  <select id="selectExpiredCustomerList" parameterType="Map" resultType="egovMap">
+    SELECT
+        S.SALES_ORD_NO
+        , T.CODE_NAME MEM_TYPE
+        , STK.STK_DESC
+        , STKD.CODE_NAME STK_CAT
+        , S.CUST_ID
+        , I.CODE Title
+        , C.NAME
+        , P.STUS_CODE_ID AS REN_STUS
+        , G.MEM_CODE HP_CODE
+        , G.NAME AS HP_NAME
+        , CH.CHS_STUS
+        , UPPER(MA.STATE) AS INSTL_STATE
+        , ABS(X.DIFF_MTHS) AS USED_MTH
+        , V.DEPT_CODE
+        , V.GRP_CODE
+        , V.ORG_CODE
+        , NVL(Y.OUTSTD,0) OUTSTD
+    FROM SAL0001D S
+    JOIN SAL0029D C ON C.CUST_ID = S.CUST_ID
+    JOIN SAL0027D CN ON CN.CUST_CNTC_ID = S.CUST_CNT_ID
+    LEFT JOIN SYS0013M I ON I.CODE_ID = CN.CUST_INITIAL AND I.CODE_MASTER_ID = 17
+    JOIN ORG0001D G ON G.MEM_ID = S.MEM_ID
+    JOIN SAL0071D P ON P.SALES_ORD_ID = S.SALES_ORD_ID
+    JOIN SAL0262D CH ON CH.CHS_ID = (SELECT MAX(CHS_ID) FROM SAL0262D WHERE CUST_ID = S.CUST_ID   )
+    JOIN SAL0045D INS ON INS.SALES_ORD_ID = S.SALES_ORD_ID AND INS.STUS_CODE_ID = 1
+    JOIN SAL0023D ADDS ON ADDS.CUST_ADD_ID = INS.ADD_ID
+    JOIN SYS0064M MA ON MA.AREA_ID = ADDS.AREA_ID
+    JOIN ( SELECT SRV_SALES_ORD_ID, CEIL(MONTHS_BETWEEN( MAX(SRV_EXPR_DT), SYSDATE )) DIFF_MTHS
+       FROM SAL0095D
+       WHERE SRV_STUS_CODE_ID = 4
+       GROUP BY SRV_SALES_ORD_ID
+       HAVING ( CEIL(MONTHS_BETWEEN( MAX(SRV_EXPR_DT), SYSDATE ))) BETWEEN  '-10'  AND '-4' ) X ON X.SRV_SALES_ORD_ID = S.SALES_ORD_ID
+    LEFT JOIN ( SELECT RENT_SO_ID, SUM(RENT_AMT) OUTSTD
+            FROM PAY0022D
+            GROUP BY RENT_SO_ID
+            HAVING SUM(RENT_AMT) <![CDATA[>]]> 0 ) Y ON Y.RENT_SO_ID = S.SALES_ORD_ID
+    LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+    JOIN SYS0013M T ON T.CODE_ID = G.MEM_TYPE AND T.CODE_MASTER_ID = 1
+    JOIN SAL0002D D ON D.SALES_ORD_ID = S.SALES_ORD_ID
+    JOIN SYS0026M STK ON STK.STK_ID = D.ITM_STK_ID
+    JOIN SYS0013M STKD ON STKD.CODE_ID = STK.STK_CTGRY_ID AND STKD.CODE_MASTER_ID = 11
+    WHERE S.APP_TYPE_ID = 66 AND C.TYPE_ID = 964
+    --AND G.MEM_TYPE = 1
+    AND S.STUS_CODE_ID = 4
+         <if test="salesOrdNo != null and salesOrdNo !=''">
+           AND S.SALES_ORD_NO = #{salesOrdNo}
+         </if>
+         <if test="custId != null and custId !=''">
+           AND C.CUST_ID = #{custId}
+         </if>
+         <if test="name != null and name !=''">
+           AND UPPER(C.NAME) LIKE '%'||UPPER(#{name})||'%'
+         </if>
+         <if test="arrRentStus !=null and arrRentStus !=''">
+           AND P.STUS_CODE_ID IN
+           <foreach item="status" collection="arrRentStus" index="index" open="(" separator="," close=")">
+                #{status}
+           </foreach>
+         </if>
+         <if test="arrExpMth !=null and arrExpMth !=''">
+            AND X.DIFF_MTHS IN
+            <foreach item="month" collection="arrExpMth" index="index" open="(" separator="," close=")">
+                #{month}
+            </foreach>
+         </if>
+  </select>
+
+</mapper>

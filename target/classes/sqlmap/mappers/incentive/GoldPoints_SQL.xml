@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.incentive.goldPoints.impl.GoldPointsMapper">
+
+    <select id="selectNextBatchId" resultType="int">
+        SELECT ICR0001M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertGoldPointsMst" parameterType="Map">
+        INSERT INTO ICR0001M (
+            GP_BATCH_ID,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{goldPtsBatchId},
+            1,
+            null,
+            SYSDATE,
+            #{crtUserId},
+            SYSDATE,
+            #{updUserId}
+        )
+    </insert>
+
+    <insert id="insertGoldPointsDtl" parameterType="Map">
+        INSERT INTO ICR0002D (
+            GP_BATCH_DTL_ID,
+            GP_BATCH_ID,
+            MEM_CODE,
+            MEM_NAME,
+            GP_DESC,
+            GP_UPL_PTS,
+            GP_START_DT,
+            GP_END_DT,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) SELECT
+                ICR0002D_SEQ.NEXTVAL,
+                goldPtsBatchId,
+                memCode,
+                memName,
+                gpDesc,
+                gpUplPts,
+                gpStartDt,
+                gpEndDt,
+                stusId,
+                rem,
+                crtDt,
+                crtUserId,
+                updDt,
+                updUserId
+            FROM (
+            <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+                SELECT
+                    #{goldPtsBatchId} goldPtsBatchId,
+                    #{item.memCode} memCode,
+                    #{item.memName} memName,
+                    #{item.ptsDesc} gpDesc,
+                    #{item.ptsEarned} gpUplPts,
+                    TO_DATE(#{item.startDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') gpStartDt,
+                    TO_DATE(#{item.endDate}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') gpEndDt,
+                    1 stusId,
+                    NULL rem,
+                    SYSDATE crtDt,
+                    #{item.crtUserId} crtUserId,
+                    SYSDATE updDt,
+                    #{item.updUserId} updUserId
+                FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="callPointsUploadConfirm" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_CONFIRM(#{gpBatchId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})}
+    </update>
+
+    <select id="selectNextRedemptionItemsBatchId" resultType="int">
+        SELECT ICR0004M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertRedemptionItemsMst" parameterType="Map">
+        INSERT INTO ICR0004M (
+            RI_BATCH_ID,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{riBatchId},
+            1,
+            null,
+            SYSDATE,
+            #{crtUserId},
+            SYSDATE,
+            #{updUserId}
+        )
+    </insert>
+
+    <insert id="insertRedemptionItemsDtl" parameterType="Map">
+        INSERT INTO ICR0005D (
+            RI_BATCH_DTL_ID,
+            RI_BATCH_ID,
+            ITM_CODE,
+            ITM_CAT,
+            ITM_DESC,
+            GP_PER_UNIT,
+            RI_START_DT,
+            RI_END_DT,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) SELECT
+                ICR0005D_SEQ.NEXTVAL,
+                riBatchId,
+                itmCode,
+                itmCat,
+                itmDesc,
+                gpPerUnit,
+                riStartDt,
+                riEndDt,
+                stusId,
+                rem,
+                crtDt,
+                crtUserId,
+                updDt,
+                updUserId
+            FROM (
+            <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+                SELECT
+                    #{riBatchId} riBatchId,
+                    #{item.itmCode} itmCode,
+                    #{item.itmCat} itmCat,
+                    #{item.itmDesc} itmDesc,
+                    #{item.gpPerUnit} gpPerUnit,
+                    TO_DATE(#{item.startDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') riStartDt,
+                    TO_DATE(#{item.endDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') riEndDt,
+                    1 stusId,
+                    NULL rem,
+                    SYSDATE crtDt,
+                    #{item.crtUserId} crtUserId,
+                    SYSDATE updDt,
+                    #{item.updUserId} updUserId
+                FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="callRedemptionItemsConfirm" statementType="CALLABLE" parameterType="Map">
+        {call SP_REDEMPTN_ITEMS_CONFIRM(#{riBatchId})}
+    </update>
+
+    <select id="selectPointsSummaryList" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                I.MEM_CODE,
+                I.MEM_NAME,
+                T.NAME STATUS,
+                S.CODE_NAME POSITION_DESC,
+                CASE WHEN (SUM(U.GP_BAL_PTS) > 0 ) THEN SUM(U.GP_BAL_PTS)
+                    ELSE 0 END TOT_BAL_PTS
+            FROM ICR0003D I
+            JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
+            JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
+            JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
+            LEFT JOIN (
+                SELECT GP_ITM_ID, GP_BAL_PTS FROM ICR0003D
+                WHERE (SYSDATE <![CDATA[<=]]> GP_END_DT)
+                ) U ON U.GP_ITM_ID = I.GP_ITM_ID
+            JOIN ORG0005D O5 ON O5.MEM_ID = O.MEM_ID
+            WHERE 1=1
+            <if test=" null != memCode and '' != memCode">
+                AND I.MEM_CODE = #{memCode}
+            </if>
+            <if test="status != null and status != ''">
+                AND O.STUS = #{status}
+            </if>
+            <if test="icNum != null and icNum != ''">
+                AND O.NRIC LIKE   '%' || #{icNum} || '%'
+            </if>
+            <if test="memName != null and memName != ''">
+                AND UPPER(O.NAME) LIKE UPPER('%' || #{memName} || '%')
+            </if>
+            <if test="deptCode != null and deptCode != ''">
+                AND O5.LAST_DEPT_CODE = #{deptCode}
+            </if>
+            <if test="grpCode != null and grpCode != ''">
+                AND O5.LAST_GRP_CODE = #{grpCode}
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                AND O5.LAST_ORG_CODE = #{orgCode}
+            </if>
+            <if test="cmbMemType != null and cmbMemType != ''">
+                AND O.MEM_TYPE = #{cmbMemType}
+            </if>
+
+            AND S.CODE_MASTER_ID = 1
+            GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
+        )
+    </select>
+
+    <select id="selectMemInfo" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                I.MEM_CODE,
+                I.MEM_NAME,
+                T.NAME STATUS,
+                S.CODE_NAME POSITION_DESC,
+                CASE WHEN (SUM(U.GP_BAL_PTS) > 0 ) THEN SUM(U.GP_BAL_PTS)
+                    ELSE 0 END TOT_BAL_PTS
+            FROM ICR0003D I
+            JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
+            JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
+            JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
+            LEFT JOIN (
+                SELECT GP_ITM_ID, GP_BAL_PTS FROM ICR0003D
+                WHERE (SYSDATE <![CDATA[<=]]> GP_END_DT)
+                ) U ON U.GP_ITM_ID = I.GP_ITM_ID
+            WHERE
+            I.MEM_CODE = #{memCode}
+            AND S.CODE_MASTER_ID = 1
+            GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
+        )
+    </select>
+
+    <select id="selectPointsExpiryList" parameterType="Map" resultType="egovMap">
+        SELECT
+            GP_DESC,
+            GP_UPL_PTS,
+            GP_BAL_PTS,
+            TO_CHAR(GP_END_DT, 'DD-MM-YYYY') GP_END_DT
+        FROM ICR0003D
+        WHERE MEM_CODE = #{memCode}
+        AND (SYSDATE <![CDATA[<=]]> GP_END_DT)
+        ORDER BY GP_ITM_ID
+    </select>
+
+    <select id="selectTransactionHistoryList" parameterType="Map" resultType="egovMap">
+        SELECT
+            T2.*, SUM(BAL_FOR_ROW) OVER (ORDER BY ROWNUM) AS RUNNING_BAL FROM (
+
+                SELECT T.*,
+                           TO_CHAR(T.TRX_DT, 'DD/MM/YYYY') AS TRX_DT_DISPLAY,
+                           (EARNED - REDEEMED_OR_EXPIRED) AS BAL_FOR_ROW FROM (
+
+                    ( SELECT
+                        A.GP_START_DT AS TRX_DT,
+                        '-' AS REDEMPTION_NO,
+                        A.GP_DESC AS ITEMS_DESC,
+                        TO_CHAR(A.GP_UPL_PTS) AS EARNED_DISPLAY,
+                        CASE WHEN SYSDATE <![CDATA[>]]> A.GP_END_DT THEN
+                            TO_CHAR(A.GP_BAL_PTS)
+                        ELSE
+                            '-'
+                        END AS RDM_OR_EXP_DISPLAY,
+                        A.GP_UPL_PTS AS EARNED,
+                        CASE WHEN SYSDATE <![CDATA[>]]> A.GP_END_DT THEN
+                            A.GP_BAL_PTS
+                        ELSE
+                            0
+                        END AS REDEEMED_OR_EXPIRED
+                    FROM ICR0003D A
+                    WHERE A.MEM_CODE = #{memCode} )
+
+                    UNION ALL
+
+                    ( SELECT
+                        B.CRT_DT AS TRX_DT,
+                        B.RDM_NO AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        '-' AS EARNED_DISPLAY,
+                        TO_CHAR(B.QTY * C.GP_PER_UNIT) AS RDM_OR_EXP_DISPLAY,
+                        0 AS EARNED,
+                        (B.QTY * C.GP_PER_UNIT)  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    WHERE B.MEM_CODE = #{memCode} )
+
+                    UNION ALL
+
+                    ( SELECT
+                        D.CRT_DT AS TRX_DT,
+                        B.RDM_NO || '-CNCL'  AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        TO_CHAR(B.QTY * C.GP_PER_UNIT) AS EARNED_DISPLAY,
+                        '-' AS RDM_OR_EXP_DISPLAY,
+                        (B.QTY * C.GP_PER_UNIT)  AS EARNED,
+                        0  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    JOIN (SELECT
+                                RDM_ID,
+                                MAX(CRT_DT) AS CRT_DT
+                            FROM ICR0008D
+                            WHERE TRN_TYPE = '2'
+                            GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
+                    WHERE B.MEM_CODE = #{memCode} )
+
+                     UNION ALL
+                     ( SELECT
+                        D.CRT_DT AS TRX_DT,
+                        B.RDM_NO || '-FF'  AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        '-' AS EARNED_DISPLAY,
+                        '-' AS RDM_OR_EXP_DISPLAY,
+                        0  AS EARNED,
+                        0  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    JOIN (SELECT
+                                RDM_ID,
+                                MAX(CRT_DT) AS CRT_DT
+                            FROM ICR0008D
+                            WHERE TRN_TYPE = '3'
+                            GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
+                    WHERE B.MEM_CODE = #{memCode})
+
+                ) T ORDER BY TRX_DT, REDEMPTION_NO
+
+            ) T2
+    </select>
+
+    <select id="selectRedemptionBasicInfo" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                O.MEM_CODE,
+                O.NAME MEM_NAME,
+                O.TEL_MOBILE,
+                O.EMAIL,
+                SUM(I.GP_BAL_PTS) TOT_BAL_PTS
+            FROM SYS0047M S
+            JOIN ORG0001D O ON O.MEM_CODE = S.HR_CODE
+            JOIN ICR0003D I ON I.MEM_CODE = O.MEM_CODE
+            WHERE S.USER_ID = #{userId}
+            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<=]]> I.GP_END_DT)
+            GROUP BY O.MEM_CODE, O.NAME, O.TEL_MOBILE, O.EMAIL
+        )
+    </select>
+
+    <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_ID,
+            B.MEM_CODE,
+            C.LAST_ORG_CODE ORG_CODE,
+            C.LAST_GRP_CODE GRP_CODE,
+            C.LAST_DEPT_CODE DEPT_CODE
+        FROM SYS0047M A
+        JOIN ORG0001D B
+            ON A.HR_CODE = B.MEM_CODE
+        JOIN ORG0005D C
+            ON B.MEM_ID = C.MEM_ID
+        WHERE A.USER_ID = #{userId}
+    </select>
+
+    <select id="searchItemCategoryList" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT UPPER(ITM_CAT) ITM_CAT
+        FROM ICR0006D
+        WHERE SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<=]]> RI_END_DT
+    </select>
+
+    <select id="searchRedemptionItemList" parameterType="Map" resultType="egovMap">
+        SELECT
+            RI_ITM_ID,
+            UPPER(ITM_CODE) || ' - ' || UPPER(ITM_DESC) AS ITM_DISPLAY_NAME,
+            GP_PER_UNIT
+        FROM ICR0006D
+        WHERE (SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<=]]> RI_END_DT)
+        <if test=" null != category and '' != category">
+            AND UPPER(ITM_CAT) = #{category}
+        </if>
+    </select>
+
+    <select id="selectNextRedemptionId" resultType="int">
+            SELECT ICR0007M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getNextRedemptionNo" resultType="String">
+            SELECT FN_GET_DOCNO('178') FROM DUAL
+    </select>
+
+    <insert id="insertNewRedemption" parameterType="Map">
+        INSERT INTO ICR0007M (
+            RDM_ID,
+            RDM_NO,
+            RDM_ITM_ID,
+            QTY,
+            COLLECT_BRNCH_ID,
+            MEM_CODE,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            STUS_ID
+        ) VALUES (
+            #{redemptionId},
+            #{redemptionNo},
+            #{rdmItm},
+            #{rdmQty},
+            #{rdmColBrnch},
+            #{rdmMemCode},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId},
+            1
+        )
+    </insert>
+
+    <resultMap id="processRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="processRdmptnResultMsg" type="egovMap"></resultMap>
+
+    <update id="processRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_REDEEM(#{redemptionId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=processRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=processRdmptnResultMsg})}
+    </update>
+
+    <select id="selectRedemptionList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.RDM_ID,
+            A.RDM_NO,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:MI:SS AM') AS CRT_DT,
+            B.NAME AS STATUS,
+            A.MEM_CODE,
+            C.NAME AS MEM_NAME,
+            D.ITM_CODE || '-' || D.ITM_DESC AS RDM_ITEM,
+            A.QTY,
+            E.TOTAL_PTS,
+            F.CODE || '-' || F.NAME AS COLLECT_BRNCH,
+            TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH:MI:SS AM') AS UPD_DT,
+            G.USER_NAME AS UPDATOR_USER_NAME,
+            A.REM
+        FROM ICR0007M A
+            JOIN SYS0038M B ON A.STUS_ID = B.STUS_CODE_ID
+            JOIN ORG0001D C ON C.MEM_CODE = A.MEM_CODE
+            JOIN ICR0006D D ON D.RI_ITM_ID = A.RDM_ITM_ID
+            JOIN (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+                ) E ON E.RDM_ID = A.RDM_ID
+            JOIN SYS0005M F ON F.BRNCH_ID = A.COLLECT_BRNCH_ID
+            JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
+            JOIN ORG0005D H ON H.MEM_ID = C.MEM_ID
+        WHERE 1=1
+
+        <if test=" null != memCode and '' != memCode">
+            AND A.MEM_CODE = #{memCode}
+        </if>
+        <if test=" null != cmbMemType and '' != cmbMemType">
+            AND C.MEM_TYPE = #{cmbMemType}
+        </if>
+        <if test="memName != null and memName != ''">
+            AND UPPER(C.NAME) LIKE UPPER('%' || #{memName} || '%')
+        </if>
+        <if test="icNum != null and icNum != ''">
+            AND C.NRIC LIKE   '%' || #{icNum} || '%'
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND H.LAST_DEPT_CODE = #{deptCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND H.LAST_GRP_CODE = #{grpCode}
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND H.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="arrRdmStatus != null and arrRdmStatus != '' ">
+            AND A.STUS_ID IN
+            <foreach item="status" collection="arrRdmStatus" index="index" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        <if test="redemptionNo != null and redemptionNo != ''">
+            AND A.RDM_NO = #{redemptionNo}
+        </if>
+        <if test="redeemStDate != null and redeemStDate != '' ">
+            <![CDATA[
+            AND A.CRT_DT >= TO_DATE(#{redeemStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+            ]]>
+        </if>
+        <if test="redeemEnDate != null and redeemEnDate != '' ">
+            <![CDATA[
+            AND A.CRT_DT <= TO_DATE(#{redeemEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+            ]]>
+        </if>
+        <if test="arrCollectionBrnch != null and arrCollectionBrnch != '' ">
+            AND A.COLLECT_BRNCH_ID IN
+            <foreach item="item" collection="arrCollectionBrnch" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="arrRedemptionItem != null and arrRedemptionItem != '' ">
+            AND D.ITM_CODE IN
+            <foreach item="item" collection="arrRedemptionItem" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+         <if test="itemCode != null and itemCode != ''">
+            AND UPPER(D.ITM_CODE) || '-' || UPPER(D.ITM_DESC) LIKE UPPER('%' || #{itemCode} || '%')
+        </if>
+
+        ORDER BY A.RDM_ID DESC
+    </select>
+
+    <resultMap id="cancelRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="cancelRdmptnResultMsg" type="egovMap"></resultMap>
+    <resultMap id="forfeitRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="forfeitRdmptnResultMsg" type="egovMap"></resultMap>
+
+    <update id="cancelRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_CANCEL_REDEMPTN(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cancelRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
+    </update>
+
+    <update id="adminCancelRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_ADM_CANCEL_RDM(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cancelRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
+    </update>
+
+    <update id="adminForfeitRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_ADM_FORFEIT_RDM(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=forfeitRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=forfeitRdmptnResultMsg})}
+    </update>
+
+    <select id="selectRedemptionDetails" parameterType="Map" resultType="egovMap">
+        WITH TOTALPTS AS (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+        )
+        SELECT
+            A.RDM_ID,
+            A.RDM_NO,
+            A.MEM_CODE,
+            B.NAME AS MEM_NAME,
+            B.NRIC,
+            C.ITM_CAT,
+            UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
+            A.QTY,
+            D.TOTAL_PTS
+        FROM ICR0007M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
+        JOIN ICR0006D C ON C.RI_ITM_ID = A.RDM_ITM_ID
+        JOIN TOTALPTS D ON D.RDM_ID = A.RDM_ID
+        WHERE A.RDM_ID in
+        <foreach collection="rdmId" item="item" open="(" separator="," close=")">
+            #{item}
+         </foreach>
+    </select>
+
+    <update id="updateRedemption" parameterType="Map">
+        UPDATE ICR0007M
+            SET STUS_ID = #{rdmStatus},
+                REM = #{rdmRemark},
+                UPD_DT = SYSDATE,
+                UPD_USER_ID = #{userId}
+        WHERE RDM_ID in
+        <foreach collection="rdmId" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getEmailTitle" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 12 AND MSG_TYPE_ID = 6431),
+            '{1}',
+             #{redemptionNo})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailDetails" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE(
+                REPLACE(
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                REPLACE(
+                                    REPLACE(
+                                        REPLACE(
+                            (SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 12 AND MSG_TYPE_ID = 6431),
+                            '{1}',#{memName}),
+                            '{2}',#{redemptionNo}),
+                            '{3}',#{memCode}),
+                            '{4}',#{memName}),
+                            '{5}',#{itmDisplayName}),
+                            '{6}',#{qty}),
+                            '{7}',#{totalPts}),
+                            '{8}',#{collectBrnch})
+        FROM DUAL
+    </select>
+
+    <select id="selectRedemptionDetailsEmail" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.MEM_CODE,
+            B.NAME AS MEM_NAME,
+            UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
+            A.QTY,
+            D.CODE || ' - ' || D.NAME AS COLLECT_BRNCH,
+            E.TOTAL_PTS
+        FROM ICR0007M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
+        JOIN ICR0006D C ON C.RI_ITM_ID = A.RDM_ITM_ID
+        JOIN SYS0005M D ON D.BRNCH_ID = A.COLLECT_BRNCH_ID
+        JOIN (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+        ) E ON E.RDM_ID = A.RDM_ID
+        WHERE A.RDM_NO = #{redemptionNo}
+    </select>
+
+    <select id="selectPointsUploadList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GP_BATCH_ID,
+            B.NAME AS STUS_CODE,
+            A.CRT_DT,
+            C.USER_NAME CRT_USER_NAME
+        FROM ICR0001M A
+        JOIN SYS0038M B ON B.STUS_CODE_ID = A.STUS_ID
+        JOIN SYS0047M C ON C.USER_ID = A.CRT_USER_ID
+        WHERE  1=1
+
+        <if test="gpBatchId != null and gpBatchId != ''">
+        AND A.GP_BATCH_ID = #{gpBatchId}
+        </if>
+
+        <if test="crtUserName != null and crtUserName != ''">
+        AND C.USER_NAME LIKE '%'||#{crtUserName}||'%'
+        </if>
+
+        <if test="gpUploadCreateStDate != null and gpUploadCreateStDate != '' ">
+        <![CDATA[
+        AND A.CRT_DT >= TO_DATE(#{gpUploadCreateStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+        </if>
+
+        <if test="gpUploadCreateEnDate != null and gpUploadCreateEnDate != '' ">
+        <![CDATA[
+        AND A.CRT_DT <= TO_DATE(#{gpUploadCreateEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+        </if>
+
+        <if test="arrBatchStatus != null and arrBatchStatus != '' ">
+        AND A.STUS_ID IN
+            <foreach item="status" collection="arrBatchStatus" index="index" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+
+        ORDER BY A.CRT_DT DESC
+    </select>
+
+    <select id="selectPointsBatchMaster" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GP_BATCH_ID,
+            B.USER_NAME,
+            C.NAME STUS_NAME
+        FROM
+        ICR0001M A
+        LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+        LEFT JOIN SYS0038M C ON A.STUS_ID = C.STUS_CODE_ID
+        WHERE
+        A.GP_BATCH_ID = #{gpBatchId}
+    </select>
+
+    <select id="selectPointsBatchDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            GP_BATCH_ID,
+            MEM_CODE,
+            MEM_NAME,
+            GP_DESC,
+            GP_UPL_PTS,
+            TO_CHAR(GP_START_DT, 'DD/MM/YYYY') GP_START_DT,
+            TO_CHAR(GP_END_DT, 'DD/MM/YYYY') GP_END_DT
+        FROM
+        ICR0002D WHERE
+        GP_BATCH_ID = #{gpBatchId}
+    </select>
+
+    <update id = "updPointsUploadReject" parameterType="Map">
+        UPDATE ICR0001M
+        SET STUS_ID = 8
+              ,UPD_USER_ID = #{loginId}
+              ,UPD_DT = SYSDATE
+         WHERE GP_BATCH_ID = #{gpBatchId}
+    </update>
+
+    <select id="selectRedemptionItemList" parameterType="Map" resultType="egovMap">
+         SELECT DISTINCT
+            ITM_CODE AS CODE_ID,
+            ITM_CODE ||#{separator}|| ITM_DESC  AS CODE_NAME,
+            ITM_DESC
+         FROM ICR0006D
+         WHERE STUS_ID = 1
+         ORDER BY ITM_CODE, ITM_DESC
+    </select>
+
+</mapper>

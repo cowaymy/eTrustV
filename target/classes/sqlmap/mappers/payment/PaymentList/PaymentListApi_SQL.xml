@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.PaymentListApiMapper">
+
+    <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+		SELECT   /* [com.coway.trust.biz.payment.payment.service.impl.PaymentListApiMapper.selectPaymentList] 20191019 - KR HAN */
+					 Extent1.MOB_PAY_NO MOB_PAY_NO
+					,Extent1.SALES_ORD_NO SALES_ORD_NO
+					,Extent1.PAY_MODE PAY_MODE
+					,Extent2.CODE_NAME PAY_MODE_NM
+					,Extent1.PAY_AMT PAY_AMT
+					,NVL(Extent1.SLIP_NO, Extent1.CHEQUE_NO) SERIAL_NO
+					,DECODE( Extent1.UPLOAD_IMG, '', 'N', 'Y') IMG_YN
+					,Extent1.SLIP_NO SLIP_NO
+					,Extent1.CHEQUE_NO CHEQUE_NO
+                    ,Extent3.NAME STUS
+		FROM    PAY0297D Extent1
+                        LEFT JOIN SYS0038M Extent3 ON Extent1.PAY_STUS_ID = Extent3.STUS_CODE_ID
+		                LEFT JOIN SYS0013M Extent2 ON Extent1.PAY_MODE = Extent2.CODE_ID
+
+                              AND Extent2.CODE_MASTER_ID = 439
+        <where>
+        AND      Extent1.CRT_USER_ID = #{userId}
+        <if test="fromDate != null and fromDate != '' ">
+            AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
+        </if>
+        <if test="toDate != null and toDate != '' ">
+            AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
+         </if>
+         <if test="ticketType != null and ticketType != '' ">
+            AND  Extent1.PAY_STUS_ID = #{ticketType}
+         </if>
+         <if test="payMode != null and payMode != '' ">
+            AND  Extent1.PAY_MODE = #{payMode}
+         </if>
+         <if test="searchKeyword != null and searchKeyword != '' ">
+            AND ( Extent1.SLIP_NO LIKE  #{searchKeyword} || '%' OR Extent1.CHEQUE_NO LIKE #{searchKeyword} || '%' )
+         </if>
+         </where>
+         ORDER BY Extent1.CRT_DT DESC
+    </select>
+
+</mapper>

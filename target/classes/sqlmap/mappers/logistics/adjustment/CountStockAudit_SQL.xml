@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper">
+
+   <select id="selectCountStockAuditListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectCountStockAuditListCnt] 20191007 - KR OHK*/
+    SELECT COUNT(1) AS CNT
+     FROM (
+                <include refid="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListMain"/>
+             )
+    </select>
+
+    <select id="selectCountStockAuditList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditList] 20191007 - KR OHK */
+         SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+                  FROM (
+                            <include refid="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListMain"/>
+                                ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "stockAuditNo"'>A.STOCK_AUDIT_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locCode"'>E.WH_LOC_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locDesc"'>E.WH_LOC_DESC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locType"'>G.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locStusName"'>F.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStusName"'>D.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStartDt"'>A.DOC_START_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docEndDt"'>A.DOC_END_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locStkGrad"'>A.LOC_STK_GRAD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docLocTypeNm"'>A.LOC_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "ctgryTypeNm"'>A.CTGRY_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "itmTypeNm"'>A.ITM_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.STOCK_AUDIT_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.STOCK_AUDIT_NO DESC
+                        </otherwise>
+                    </choose>
+                    ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCountStockAuditListExcel" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListExcel] 20191007 - KR OHK */
+         <include refid="com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectCountStockAuditListMain"></include>
+            ORDER BY A.STOCK_AUDIT_NO DESC
+    </select>
+
+    <sql id="selectCountStockAuditListMain">
+    SELECT A.STOCK_AUDIT_NO
+              ,A.DOC_START_DT
+              ,A.DOC_END_DT
+              ,A.DOC_STUS_CODE_ID
+              ,D.CODE_NAME DOC_STUS_NAME
+              ,A.REUPLOAD_YN
+              ,A.APPV_3_REQST_USER_ID
+              ,A.APPV_3_REQST_DT
+              ,A.APPV_3_REQST_OPINION
+              ,A.APPV_ATCH_FILE_GRP_ID
+              ,A.APPV_3_USER_ID
+              ,A.APPV_3_DT
+              ,A.APPV_3_OPINION
+              ,A.STOCK_AUDIT_REASON
+              ,A.LOC_TYPE DOC_LOC_TYPE
+              ,A.LOC_TYPE_NM DOC_LOC_TYPE_NM
+              ,A.LOC_STK_GRAD
+              ,A.CTGRY_TYPE
+              ,A.CTGRY_TYPE_NM
+              ,A.ITM_TYPE
+              ,A.ITM_TYPE_NM
+              ,A.REM
+              ,A.USE_YN
+              ,A.SERIAL_CHK_YN
+              ,A.CRT_USER_ID
+              ,C.USER_NAME UPD_USER_NM
+              ,A.CRT_DT
+              ,A.UPD_USER_ID
+              ,A.UPD_DT
+              ,G.CODE_NAME LOC_TYPE
+              ,E.WH_LOC_CODE LOC_CODE
+              ,E.WH_LOC_DESC LOC_DESC
+              ,B.WH_LOC_ID
+              ,B.LOC_STUS_CODE_ID
+              ,F.CODE_NAME LOC_STUS_NAME
+              ,B.APPV_1_REQST_USER_ID
+              ,H.USER_NAME APPV_1_REQST_USER_NM
+              ,B.APPV_1_REQST_DT
+              ,B.APPV_1_USER_ID
+              ,I.USER_NAME APPV_1_USER_NM
+              ,B.APPV_1_DT
+              ,B.APPV_1_OPINION
+              ,B.APPV_2_USER_ID
+              ,J.USER_NAME APPV_2_USER_NM
+              ,B.APPV_2_DT
+              ,B.APPV_2_OPINION
+         FROM LOG0094M A
+          LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+          LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
+          LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
+          LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
+          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = B.LOC_STUS_CODE_ID AND F.CODE_MASTER_ID = '437'
+          LEFT OUTER JOIN SYS0013M G ON G.CODE = E.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
+          LEFT OUTER JOIN SYS0047M H ON H.USER_ID = B.APPV_1_REQST_USER_ID
+          LEFT OUTER JOIN SYS0047M I ON I.USER_ID = B.APPV_1_USER_ID
+          LEFT OUTER JOIN SYS0047M J ON J.USER_ID = B.APPV_2_USER_ID
+       WHERE 1 = 1
+          AND A.USE_YN = 'Y'
+          AND A.DOC_STUS_CODE_ID > 5678
+       <if test='stockAuditNo != null and stockAuditNo != ""'>
+           AND A.STOCK_AUDIT_NO = #{stockAuditNo}
+       </if>
+       <if test='stockAuditNo == null or stockAuditNo == ""'>
+           <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
+               AND (A.DOC_START_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD') OR
+                   A.DOC_END_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD'))
+           </if>
+           <if test="listLocType != null">
+               AND E.WH_LOC_GB IN
+                 <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+           </if>
+           <if test="locCode != null">
+               AND (1, E.WH_LOC_ID) IN
+                 <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                   (1, #{item})
+                 </foreach>
+           </if>
+           <if test='locStatus != null and locStatus != ""'>
+               AND B.LOC_STUS_CODE_ID = #{locStatus}
+           </if>
+           <if test="branchId != null">
+               AND (E.WH_LOC_BRNCH_ID IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID2 IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID3  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID4  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       OR E.WH_LOC_BRNCH_ID5  IN
+                             <foreach item="item" collection="branchId" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                      )
+           </if>
+       </if>
+    </sql>
+
+    <select id="selectStockAuditDocInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditDocInfo] 20191014 - KR OHK */
+         SELECT  A.STOCK_AUDIT_NO
+	                ,TO_CHAR(TO_DATE(A.DOC_START_DT, 'YYYYMMDD'), 'DD/MM/YYYY') DOC_START_DT
+	                ,TO_CHAR(TO_DATE(A.DOC_END_DT, 'YYYYMMDD'), 'DD/MM/YYYY') DOC_END_DT
+	                ,A.DOC_STUS_CODE_ID
+	                ,E.CODE_NAME DOC_STUS_NM
+	                ,A.REUPLOAD_YN
+	                ,A.STOCK_AUDIT_REASON
+	                ,A.LOC_TYPE
+	                ,A.LOC_STK_GRAD
+	                ,A.CTGRY_TYPE
+	                ,A.ITM_TYPE
+	                ,A.REM
+	                ,A.USE_YN
+	                ,A.SERIAL_CHK_YN
+	                ,A.CRT_USER_ID
+	                ,C.USER_NAME CRT_USER_NM
+	                ,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH24:MI') CRT_DT
+	                ,A.UPD_USER_ID
+	                ,D.USER_NAME UPD_USER_NM
+                    ,TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI') UPD_DT
+                    ,B.LOC_STUS_CODE_ID
+                    ,F.CODE_NAME LOC_STUS_NM
+                    ,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
+                     ELSE B.ATCH_FILE_GRP_ID
+                     END ATCH_FILE_GRP_ID
+                    ,B.WH_LOC_ID
+                    ,B.APPV_1_REQST_USER_ID
+                    ,G.USER_NAME APPV_1_REQST_USER_NM
+                    ,TO_CHAR(B.APPV_1_REQST_DT, 'DD/MM/YYYY HH24:MI') APPV_1_REQST_DT
+                    ,B.APPV_1_USER_ID
+                    ,H.USER_NAME APPV_1_USER_NM
+                    ,TO_CHAR(B.APPV_1_DT, 'DD/MM/YYYY HH24:MI') APPV_1_DT
+                    ,B.APPV_1_OPINION
+                    ,B.APPV_2_USER_ID
+                    ,I.USER_NAME APPV_2_USER_NM
+                    ,TO_CHAR(B.APPV_2_DT, 'DD/MM/YYYY HH24:MI') APPV_2_DT
+                    ,B.APPV_2_OPINION
+                    ,A.APPV_3_USER_ID
+                    ,J.USER_NAME APPV_3_USER_NM
+                    ,TO_CHAR(A.APPV_3_DT, 'DD/MM/YYYY HH24:MI') APPV_3_DT
+                    ,A.APPV_3_OPINION
+                    ,TO_CHAR(B.UPD_DT, 'YYYYMMDDHH24MISS') UPD_DT_TIME
+         FROM LOG0094M A
+          JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+          LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.CRT_USER_ID
+          LEFT OUTER JOIN SYS0047M D ON D.USER_ID = A.UPD_USER_ID
+          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = A.DOC_STUS_CODE_ID AND E.CODE_MASTER_ID = '436'
+          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = B.LOC_STUS_CODE_ID AND F.CODE_MASTER_ID = '437'
+          LEFT OUTER JOIN SYS0047M G ON G.USER_ID = B.APPV_1_REQST_USER_ID
+          LEFT OUTER JOIN SYS0047M H ON H.USER_ID = B.APPV_1_USER_ID
+          LEFT OUTER JOIN SYS0047M I ON I.USER_ID = B.APPV_2_USER_ID
+          LEFT OUTER JOIN SYS0047M J ON J.USER_ID = A.APPV_3_USER_ID
+       WHERE A.USE_YN = 'Y'
+           AND A.STOCK_AUDIT_NO = #{stockAuditNo}
+           AND B.WH_LOC_ID = #{whLocId}
+    </select>
+
+    <select id="selectStockAuditItemList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditItemList] 20191014 - KR OHK */
+         SELECT  A.STOCK_AUDIT_NO
+					,A.WH_LOC_ID
+					,A.ITM_ID
+					,A.WH_LOC_STK_GRAD
+					,A.SYS_QTY
+					,NVL(A.CNT_QTY,0) CNT_QTY
+					,A.DIFF_QTY
+					,A.DED_QTY
+					,A.OTHER_QTY
+					,A.DED_REASON
+                    ,A.OTHER_REASON
+					,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
+                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
+                     END REM
+					,A.OTHER_REQST_NO
+					,A.OTHER_REQST_REQUIRE_DT
+					,A.OTHER_TRNSC_TYPE
+					,A.OTHER_TRNSC_TYPE_DTL
+					,A.OTHER_REM
+					,A.CRT_USER_ID
+					,A.CRT_DT
+					,A.UPD_USER_ID
+					,A.UPD_DT
+					,C.STK_CODE
+					,C.STK_DESC
+					,C.STK_GRAD
+					,C.STK_TYPE_ID
+					,F.CODE_NAME STK_TYPE
+					,C.STK_CTGRY_ID
+					,E.CODE_NAME STK_CTGRY_TYPE
+					,D.WH_LOC_CODE WH_LOC_CODE
+                    ,D.WH_LOC_DESC WH_LOC_DESC
+                    ,G.CODE_NAME LOC_TYPE
+                    ,X.SERIAL_CHK_YN
+                    ,D.WH_LOC_GB
+                    ,D.SERIAL_REQUIRE_CHK_YN
+                    ,CASE WHEN C.STK_TYPE_ID= 61 THEN CASE WHEN C.SERIAL_CHK = 'Y' AND D.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                             WHEN C.STK_TYPE_ID= 62 THEN CASE WHEN C.SERIAL_CHK = 'Y' AND D.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                             WHEN C.STK_TYPE_ID= 63 THEN CASE WHEN C.SERIAL_CHK = 'Y' AND D.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+                     ELSE 'N'
+                     END AS ITEM_SERIAL_CHK_YN
+	     FROM LOG0096D A
+	      JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+	      JOIN LOG0094M X ON X.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+	      LEFT OUTER JOIN SYS0026M C ON C.STK_ID = A.ITM_ID
+	      LEFT OUTER JOIN SYS0028M D ON D.WH_LOC_ID = B.WH_LOC_ID
+	      LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = C.STK_CTGRY_ID AND E.CODE_MASTER_ID = '11'
+          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = C.STK_TYPE_ID AND F.CODE_MASTER_ID = '15'
+          LEFT OUTER JOIN SYS0013M G ON G.CODE = D.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
+       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+	   <if test='whLocId != null and whLocId != ""'>
+	       AND A.WH_LOC_ID = #{whLocId}
+	   </if>
+	    ORDER BY A.WH_LOC_ID, A.ITM_ID
+    </select>
+
+    <update id="updateCountStockAuditLoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.updateCountStockAuditLoc] 20191014 - KR OHK */
+        UPDATE LOG0095M
+             SET LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </update>
+
+    <update id="updateCountStockAuditItem" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.updateCountStockAuditItem] 20191014 - KR OHK */
+        UPDATE LOG0096D
+             SET CNT_QTY = #{cntQty}
+                  ,DIFF_QTY = #{diffQty}
+                  ,DED_QTY = #{dedQty}
+                  ,OTHER_QTY = #{otherQty}
+                  ,REM = #{rem}
+                  ,CRT_USER_ID  = #{userId}
+                  ,CRT_DT = SYSDATE
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+            AND ITM_ID = #{itmId}
+    </update>
+
+    <update id="updateCountStockAuditApprItem" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.updateCountStockAuditApprItem] 20191104 - KR OHK */
+        UPDATE LOG0096D
+             SET DED_QTY = #{dedQty}
+                  ,OTHER_QTY = #{otherQty}
+                  ,DED_REASON = #{dedReason}
+                  ,OTHER_REASON = #{otherReason}
+                  ,REM = #{rem}
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+            AND ITM_ID = #{itmId}
+    </update>
+
+    <update id="clear1stApprovalDoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.clear1stApprovalDoc] 20191014 - KR OHK */
+        UPDATE LOG0094M
+             SET APPV_3_REQST_USER_ID = ''
+                  ,APPV_3_REQST_DT = ''
+                  ,APPV_3_REQST_OPINION = ''
+                   ,APPV_3_USER_ID= ''
+                  ,APPV_3_DT= ''
+                  ,APPV_3_OPINION= ''
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </update>
+
+    <update id="clear1stApprovalLoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.clear1stApprovalLoc] 20191014 - KR OHK */
+        UPDATE LOG0095M
+             SET APPV_1_USER_ID = ''
+                  ,APPV_1_DT = ''
+                  ,APPV_1_OPINION = ''
+                  ,APPV_2_USER_ID = ''
+                  ,APPV_2_DT= ''
+                  ,APPV_2_OPINION = ''
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </update>
+
+    <update id="clear1stApprovalItem" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.clear1stApprovalItem] 20191104 - KR OHK */
+        UPDATE LOG0096D
+             SET DED_REASON = ''
+                  ,OTHER_REASON = ''
+                  ,REM = ''
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </update>
+
+    <update id="saveAppvInfo" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.saveAppvInfo] 20191014 - KR OHK */
+        UPDATE LOG0095M
+             SET UPD_USER_ID = #{userId}
+                  ,UPD_DT = SYSDATE
+             <if test="appvType eq 'save'.toString()">
+                  ,LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+             </if>
+             <if test="appvType eq 'reqAprv'.toString()">
+                  ,LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                  ,APPV_1_REQST_USER_ID = #{userId}
+                  ,APPV_1_REQST_DT = SYSDATE
+             </if>
+             <if test="appvType eq 'aprv1Save'.toString()">
+                  ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                  ,APPV_1_OPINION = #{appv1Opinion}
+             </if>
+             <if test="appvType eq 'aprv1'.toString() or appvType eq 'rejt1'.toString()">
+                  ,LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                  ,APPV_1_USER_ID = #{userId}
+                  ,APPV_1_DT = SYSDATE
+                  ,APPV_1_OPINION = #{appv1Opinion}
+             </if>
+             <if test="appvType eq 'aprv2'.toString() or appvType eq 'rejt2'.toString()">
+                  ,LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,APPV_2_USER_ID = #{userId}
+                  ,APPV_2_DT = SYSDATE
+                  ,APPV_2_OPINION = #{appv2Opinion}
+             </if>
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </update>
+
+    <insert id="insertStockAuditLocHistory" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditLocHistory] 20191024 - KR OHK */
+        <selectKey keyProperty="seq" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(SEQ),0)+1 FROM LOG0097H WHERE STOCK_AUDIT_NO = #{stockAuditNo} AND WH_LOC_ID = #{whLocId}
+        </selectKey>
+        INSERT INTO LOG0097H(
+                 STOCK_AUDIT_NO
+                ,WH_LOC_ID
+                ,SEQ
+                ,LOC_STUS_CODE_ID
+                ,ATCH_FILE_GRP_ID
+                ,APPV_1_REQST_USER_ID
+                ,APPV_1_REQST_DT
+                ,APPV_1_USER_ID
+                ,APPV_1_DT
+                ,APPV_1_OPINION
+                ,APPV_2_USER_ID
+                ,APPV_2_DT
+                ,APPV_2_OPINION
+                ,CRT_USER_ID
+                ,CRT_DT
+                ,UPD_USER_ID
+                ,UPD_DT
+              )
+          SELECT STOCK_AUDIT_NO
+                ,WH_LOC_ID
+                ,#{seq}
+                ,LOC_STUS_CODE_ID
+                ,ATCH_FILE_GRP_ID
+                ,APPV_1_REQST_USER_ID
+                ,APPV_1_REQST_DT
+                ,APPV_1_USER_ID
+                ,APPV_1_DT
+                ,APPV_1_OPINION
+                ,APPV_2_USER_ID
+                ,APPV_2_DT
+                ,APPV_2_OPINION
+                ,#{userId}
+                ,SYSDATE
+                ,UPD_USER_ID
+                ,UPD_DT
+           FROM LOG0095M
+          WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </insert>
+
+    <insert id="insertStockAuditItemHistory" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditItemHistory] 20191024 - KR OHK */
+        <selectKey keyProperty="seq" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(SEQ),0)+1 FROM LOG0098H WHERE STOCK_AUDIT_NO = #{stockAuditNo} AND WH_LOC_ID = #{whLocId}
+        </selectKey>
+        INSERT INTO LOG0098H(
+                 STOCK_AUDIT_NO
+                ,WH_LOC_ID
+                ,ITM_ID
+                ,SEQ
+                ,WH_LOC_STK_GRAD
+                ,SYS_QTY
+                ,CNT_QTY
+                ,DIFF_QTY
+                ,DED_QTY
+                ,OTHER_QTY
+                ,DED_REASON
+                ,OTHER_REASON
+                ,REM
+                ,OTHER_REQST_NO
+                ,OTHER_REQST_REQUIRE_DT
+                ,OTHER_TRNSC_TYPE
+                ,OTHER_TRNSC_TYPE_DTL
+                ,OTHER_REM
+                ,CRT_USER_ID
+                ,CRT_DT
+                ,UPD_USER_ID
+                ,UPD_DT
+              )
+          SELECT STOCK_AUDIT_NO
+                ,WH_LOC_ID
+                ,ITM_ID
+                ,#{seq}
+                ,WH_LOC_STK_GRAD
+                ,SYS_QTY
+                ,CNT_QTY
+                ,DIFF_QTY
+                ,DED_QTY
+                ,OTHER_QTY
+                ,DED_REASON
+                ,OTHER_REASON
+                ,REM
+                ,OTHER_REQST_NO
+                ,OTHER_REQST_REQUIRE_DT
+                ,OTHER_TRNSC_TYPE
+                ,OTHER_TRNSC_TYPE_DTL
+                ,OTHER_REM
+                ,#{userId}
+                ,SYSDATE
+                ,UPD_USER_ID
+                ,UPD_DT
+           FROM LOG0096D
+         WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+             AND WH_LOC_ID = #{whLocId}
+    </insert>
+
+    <select id="selectMobileNo" parameterType="Map" resultType="egovMap">
+    SELECT B.USER_MOBILE_NO
+	  FROM LOG0095M A
+	   LEFT OUTER JOIN SYS0047M B ON B.USER_ID = A.APPV_1_REQST_USER_ID
+	WHERE STOCK_AUDIT_NO =#{stockAuditNo}
+	  <if test='whLocId != null and whLocId != ""'>
+        AND WH_LOC_ID = #{whLocId}
+      </if>
+    </select>
+
+    <select id="selectStockAuditLocStatus" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditLocStatus] 20191118 - KR OHK */
+        SELECT A.LOC_STUS_CODE_ID
+                  ,B.CODE_NAME LOC_STUS_CODE_NAME
+          FROM LOG0095M A
+           LEFT OUTER JOIN SYS0013M B ON B.CODE_ID = A.LOC_STUS_CODE_ID AND B.CODE_MASTER_ID = 437
+        WHERE STOCK_AUDIT_NO =  #{stockAuditNo}
+            AND WH_LOC_ID = #{whLocId}
+    </select>
+
+    <select id="selectOtherReasonCodeList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectOtherReasonCodeList] 20191118 - KR OHK */
+    SELECT CODE
+              ,CODE_NAME
+              ,IND
+      FROM SYS0094M
+    WHERE IND IN ('DED_RSN', 'O_GI_RSN', 'O_GR_RSN')
+        AND DISB = 0
+    ORDER BY IND, CODE
+    </select>
+
+    <select id="selectStockAuditLocDtTime" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditLocDtTime] 20191120 - KR OHK*/
+         SELECT TO_CHAR(UPD_DT, 'YYYYMMDDHH24MISS') UPD_DT_TIME
+           FROM LOG0095M
+         WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+             AND WH_LOC_ID =  #{whLocId}
+    </select>
+
+    <select id="selectStockAuditProcCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectStockAuditProcCnt] 20191121 - KR OHK*/
+    SELECT COUNT(1) PROC_CNT
+      FROM LOG0094M T
+      INNER JOIN LOG0095M A ON A.STOCK_AUDIT_NO = T.STOCK_AUDIT_NO
+	  INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+	   LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+	WHERE B.WH_LOC_ID = #{whLocId}
+	    AND (1,B.ITM_ID) IN (SELECT 1, B.ITM_ID
+			                            FROM LOG0095M A
+			                           INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+			                          WHERE B.STOCK_AUDIT_NO = #{stockAuditNo}
+			                              AND B.WH_LOC_ID = #{whLocId}
+	                       )
+	   AND A.LOC_STUS_CODE_ID IN (5685, 5686, 5687, 5688, 5690, 5712)
+	   AND T.USE_YN = 'Y'
+    </select>
+
+    <select id="checkRejetCountStockAudit" parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.checkRejetCountStockAudit] 20200108 - KR OHK*/
+    SELECT MAX(B.STOCK_AUDIT_NO) STOCK_AUDIT_NO
+      FROM LOG0095M A
+      INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+       LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+    WHERE B.WH_LOC_ID = #{whLocId}
+        AND (1,B.ITM_ID) IN (SELECT 1, B.ITM_ID
+                                        FROM LOG0095M A
+                                       INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+                                      WHERE B.STOCK_AUDIT_NO = #{stockAuditNo}
+                                          AND B.WH_LOC_ID = #{whLocId}
+                           )
+       AND A.LOC_STUS_CODE_ID IN (5689, 5691, 5713)
+    </select>
+
+    <select id="selectAttachmentFileInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.CountStockAuditMapper.selectAttachmentFileInfo] 20191014 - KR OHK */
+         SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+           LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+        WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+</mapper>

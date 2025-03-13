@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.autodebit.service.impl.EnrollResultMapper">
+
+    <select id="selectEnrollmentResultList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.ENROLLUPDATEID as enrollUpdateId ,
+           TO_CHAR(Project1.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') as createDate,
+           Project1.CRT_USER_ID as userId,
+           Project1.C1 as creator,
+           Project1.TOT_FAIL as totalFail,
+           Project1.TOT_SUCCES as totalSuccess,
+           Project1.TOT_UP_DT as totalUpdate,
+           Project1.TYPE_ID as typeId,
+           Project1.CODE_NAME as type
+        FROM ( SELECT Project1.ENROLLUPDATEID ENROLLUPDATEID  ,
+                Project1.TYPE_ID TYPE_ID  ,
+                Project1.CRT_DT CRT_DT  ,
+                Project1.CRT_USER_ID CRT_USER_ID  ,
+                Project1.TOT_UP_DT TOT_UP_DT  ,
+                Project1.TOT_SUCCES TOT_SUCCES  ,
+                Project1.TOT_FAIL TOT_FAIL  ,
+                Project1.CODE_NAME CODE_NAME  ,
+                Project1.C1 C1  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.ENROLLUPDATEID ASC  ) ROW_NUMBER
+         FROM ( SELECT Extent1.ENRL_UPD_ID ENROLLUPDATEID  ,
+                       Extent1.TYPE_ID TYPE_ID  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.CRT_USER_ID CRT_USER_ID  ,
+                       Extent1.TOT_UP_DT TOT_UP_DT  ,
+                       Extent1.TOT_SUCCES TOT_SUCCES  ,
+                       Extent1.TOT_FAIL TOT_FAIL  ,
+                       Extent2.CODE_NAME CODE_NAME  ,
+                       CASE
+                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                       ELSE ' '
+                          END C1
+                FROM PAY0058D Extent1
+                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
+                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID ) Project1 ) Project1
+        WHERE  Project1.ROW_NUMBER > 0
+        <if test="udtBatchId != '' ">
+            AND Project1.ENROLLUPDATEID = #{udtBatchId}
+        </if>
+        <if test="creator != '' ">
+            AND Project1.C1 = #{creator}
+        </if>
+        <if test="createDate1 != '' and createDate2 != '' ">
+            AND Project1.CRT_DT &gt;= TO_DATE(#{createDate1}, 'DD-MM-YYYY hhmiss')
+            AND Project1.CRT_DT &lt; TO_DATE(#{createDate2}, 'DD-MM-YYYY hhmiss') + 1
+        </if>
+        <if test="updateType != '' and updateType != null">
+            AND Project1.TYPE_ID = #{updateType}
+        </if>
+        ORDER BY Project1.ENROLLUPDATEID ASC
+    </select>
+
+    <select id="selectEnrollmentInfo" parameterType="java.lang.Integer" resultType="egovMap">
+        SELECT Limit1.ENRL_UPD_ID EnrollUpdateID  ,
+       TO_CHAR(Limit1.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') Created  ,
+       Limit1.CRT_USER_ID CreateUId  ,
+       Limit1.C1 Creator ,
+       Limit1.TOT_FAIL TotalFail ,
+       Limit1.TOT_SUCCES TotalSuccess  ,
+       Limit1.TOT_UP_DT TotalUpdate ,
+       Limit1.TYPE_ID TypeID  ,
+       Limit1.CODE_NAME CodeName
+  FROM ( SELECT Extent1.ENRL_UPD_ID ENRL_UPD_ID  ,
+                Extent1.TYPE_ID TYPE_ID  ,
+                Extent1.CRT_DT CRT_DT  ,
+                Extent1.CRT_USER_ID CRT_USER_ID  ,
+                Extent1.TOT_UP_DT TOT_UP_DT  ,
+                Extent1.TOT_SUCCES TOT_SUCCES  ,
+                Extent1.TOT_FAIL TOT_FAIL  ,
+                Extent2.CODE_NAME CODE_NAME  ,
+                CASE
+                     WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                ELSE ' '
+                   END C1
+         FROM PAY0058D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
+                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+          WHERE  Extent1.ENRL_UPD_ID = #{value} AND ROWNUM <![CDATA[ < ]]>= 1 ) Limit1
+    </select>
+
+    <select id="selectEnrollmentItem" parameterType="java.lang.Integer" resultType="egovMap">
+        SELECT Project1.ENRL_UPD_DET_ID EnrollUpdateDetID  ,
+       Project1.APP_TYPE_ID AppTypeID  ,
+       Project1.CRT_DT Created  ,
+       Project1.CRT_USER_ID Creator  ,
+       Project1.ENRL_UPD_ID EnrollUpdateID  ,
+       TO_CHAR(Project1.INPUT_DAY) InputDay  ,
+       TO_CHAR(Project1.INPUT_MONTH) InputMonth  ,
+       TO_CHAR(Project1.INPUT_YEAR) InputYear  ,
+       TO_CHAR(Project1.INPUT_REJCT_CODE) InputRejectCode  ,
+       Project1.REJCT_CODE_ID RejectCodeID  ,
+       TO_CHAR(Project1.MSG) Message ,
+       Project1.SALES_ORD_ID SalesOrderID,
+       Project1.RESULT_DT ResultDate ,
+       Project1.STUS_CODE_ID Status  ,
+       TO_CHAR(Project1.ORD_NO) OrderNo ,
+       Project1.NAME Name
+  FROM ( SELECT Project1.ENRL_UPD_DET_ID ENRL_UPD_DET_ID  ,
+                Project1.ENRL_UPD_ID ENRL_UPD_ID  ,
+                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+                Project1.ORD_NO ORD_NO  ,
+                Project1.SALES_ORD_ID SALES_ORD_ID  ,
+                Project1.APP_TYPE_ID APP_TYPE_ID  ,
+                Project1.INPUT_MONTH INPUT_MONTH  ,
+                Project1.INPUT_DAY INPUT_DAY  ,
+                Project1.INPUT_YEAR INPUT_YEAR  ,
+                Project1.RESULT_DT RESULT_DT  ,
+                Project1.CRT_DT CRT_DT  ,
+                Project1.CRT_USER_ID CRT_USER_ID  ,
+                Project1.MSG MSG  ,
+                Project1.INPUT_REJCT_CODE INPUT_REJCT_CODE  ,
+                Project1.REJCT_CODE_ID REJCT_CODE_ID  ,
+                Project1.NAME NAME  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.ENRL_UPD_DET_ID ASC  ) ROW_NUMBER
+         FROM ( SELECT Extent1.ENRL_UPD_DET_ID ENRL_UPD_DET_ID  ,
+                       Extent1.ENRL_UPD_ID ENRL_UPD_ID  ,
+                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                       Extent1.ORD_NO ORD_NO  ,
+                       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+                       Extent1.INPUT_MONTH INPUT_MONTH  ,
+                       Extent1.INPUT_DAY INPUT_DAY  ,
+                       Extent1.INPUT_YEAR INPUT_YEAR  ,
+                       Extent1.RESULT_DT RESULT_DT  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.CRT_USER_ID CRT_USER_ID  ,
+                       Extent1.MSG MSG  ,
+                       Extent1.INPUT_REJCT_CODE INPUT_REJCT_CODE  ,
+                       Extent1.REJCT_CODE_ID REJCT_CODE_ID  ,
+                       Extent2.NAME NAME
+                FROM PAY0059D Extent1
+                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                 WHERE  Extent1.ENRL_UPD_ID = #{value} ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER <![CDATA[ > ]]> 0
+  ORDER BY Project1.ENRL_UPD_DET_ID ASC
+
+    </select>
+
+    <update id="insertUpdateMaster" parameterType="EnrollmentUpdateMVO">
+            INSERT INTO PAY0058D(
+                ENRL_UPD_ID,
+                TYPE_ID,
+                CRT_DT,
+                CRT_USER_ID,
+                TOT_UP_DT,
+                TOT_SUCCES,
+                TOT_FAIL,
+                ENRL_TYPE_ID
+            )VALUES
+            (
+                #{enrollUpdateId},
+                #{typeId},
+                SYSDATE,
+                #{creator},
+                #{totalUpdate},
+                #{totalSuccess},
+                #{totalFail},
+                #{enrollTypeId}
+            )
+    </update>
+
+    <select id="getPAY0058DSEQ" resultType="int">
+        SELECT PAY0058D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="insertUpdateGrid" parameterType="EnrollmentUpdateDVO">
+        <selectKey keyProperty="enrollUpdateDetId" resultType="int" order="BEFORE">
+            SELECT PAY0059D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+            INSERT INTO PAY0059D
+            (
+                ENRL_UPD_DET_ID,
+                ENRL_UPD_ID,
+                STUS_CODE_ID,
+                ORD_NO,
+                SALES_ORD_ID,
+                APP_TYPE_ID,
+                INPUT_MONTH,
+                INPUT_DAY,
+                INPUT_YEAR,
+                RESULT_DT,
+                CRT_DT,
+                CRT_USER_ID,
+                MSG,
+                INPUT_REJCT_CODE,
+                SVC_CNTRCT_ID,
+                DD_PAYMENT_ID,
+                ACC_NO,
+		        ACC_TYPE,
+		        ACC_HOLDER_NAME,
+		        ISSUE_BANK_ID,
+		        START_DATE,
+		        <if test="rejectDate != '' and rejectDate != null">
+                     REJECT_DATE,
+                 </if>
+		        SUBMIT_DATE
+            )
+            VALUES(
+                 #{enrollUpdateDetId},
+                 #{enrollUpdateId},
+                 #{statusCodeId},
+                 #{orderNo},
+                 #{salesOrderId},
+                 #{appTypeId},
+                 #{inputMonth},
+                 #{inputDay},
+                 #{inputYear},
+                 TO_DATE('19000101','YYYYMMDD'),
+                 SYSDATE,
+                 #{creator},
+                 #{message},
+                 #{inputRejectCode},
+                 #{serviceContractId},
+                 #{ddPaymentId},
+                 <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
+                 #{accNo},
+                 #{accType},
+                 #{accHolder},
+                 #{issueBank},
+                 TO_DATE(#{startDate},'YYYYMMDD'),
+                 <if test="rejectDate != '' and rejectDate != null">
+                     TO_DATE(#{rejectDate},'YYYYMMDD'),
+                 </if>
+                 TO_DATE(#{submitDate},'YYYYMMDD')
+            )
+    </update>
+
+    <update id="callEnrollProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_RSC_ENRL_RESULT(#{enrollId},
+                                                        #{enrollTypeId},
+                                                        #{ddType} )}
+    </update>
+
+
+
+    <select id="selectSuccessInfo" parameterType="java.lang.Integer" resultType="egovMap">
+      SELECT Limit1.ENRL_UPD_ID ENRL_UPD_ID  ,
+           Limit1.CRT_DT CRT_DT  ,
+           Limit1.CRT_USER_ID CRT_USER_ID  ,
+           Limit1.C1 C1  ,
+           Limit1.TOT_FAIL TOT_FAIL  ,
+           Limit1.TOT_SUCCES TOT_SUCCES  ,
+           Limit1.TOT_UP_DT TOT_UP_DT  ,
+           Limit1.TYPE_ID TYPE_ID  ,
+           Limit1.CODE_NAME CODE_NAME
+      FROM ( SELECT Extent1.ENRL_UPD_ID ENRL_UPD_ID  ,
+                    Extent1.TYPE_ID TYPE_ID  ,
+                    Extent1.CRT_DT CRT_DT  ,
+                    Extent1.CRT_USER_ID CRT_USER_ID  ,
+                    Extent1.TOT_UP_DT TOT_UP_DT  ,
+                    Extent1.TOT_SUCCES TOT_SUCCES  ,
+                    Extent1.TOT_FAIL TOT_FAIL  ,
+                    Extent2.CODE_NAME CODE_NAME  ,
+                    CASE
+                         WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                    ELSE ' '
+                       END C1
+             FROM PAY0058D Extent1
+                    JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
+                    LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+              WHERE  Extent1.ENRL_UPD_ID = #{value} AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
+    </select>
+
+    <!-- Added for eMandate-paperless bug fixes by Hui Ding - ticket no: #24033069 -->
+    <select id="selectActiveBankCode" parameterType="java.lang.String" resultType="egovMap">
+        SELECT * FROM SYS0004M WHERE STUS_CODE_ID = 1 AND CODE = #{bankCode}
+    </select>
+
+    <select id="selectAutoDebitDeptUserId"  parameterType="Map" resultType="egovMap">
+      SELECT
+        USER_ID CODE_ID,
+        USER_NAME CODE_NAME
+      FROM SYS0047M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.HR_CODE
+        JOIN SVC0063C C ON C.MAIN_DEPT_CODE = B.MAIN_DEPT AND C.SUB_DEPT_CODE = B.SUB_DEPT
+       WHERE
+            C.COST_CENTR = #{groupCode}
+       ORDER BY 1 DESC
+    </select>
+
+    <select id="selectDdaCsvDailySeqCount" parameterType="Map" resultType="EgovMap">
+        SELECT LPAD(DOC_NO, 2, '0') AS DOC_NO
+      FROM SYS0022C
+     WHERE  DOC_NO_ID = '204' AND ROWNUM <![CDATA[<= ]]> 1
+
+
+    </select>
+
+    <update id="updateDdaCsvDailySeqCount" parameterType="Map">
+       UPDATE SYS0022C
+                               SET DOC_NO = #{nextDocNo}
+                             WHERE   DOC_NO_ID = '204'
+    </update>
+
+    <resultMap id="ddaCsvData" type="egovMap" ></resultMap>
+    <select id="SP_CR_DDA_CSV" parameterType="Map"  statementType="CALLABLE">
+     {
+       call SP_CR_DDA_CSV ( #{V_USERID},#{V_DATE} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=ddaCsvData})
+     }
+    </select>
+
+</mapper>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.eGhlPaymentCollection.service.impl.EGhlPaymentCollectionMapper">
+	<select  id="orderNumberBillMobileSearch" parameterType="Map" resultType="egovMap">
+		SELECT
+			    V.ORD_ID SALES_ORD_ID,
+			    V.ORD_NO SALES_ORD_NO,
+			    V.PRD_OTSTND_AMT PRODUCT_OUTSTANDING_AMOUNT,
+			    V.TYPE_ID PRODUCT_TYPE_ID,
+			    Z.CODE_NAME PRODUCT_TYPE_NAME,
+			    Z.CODE PRODUCT_TYPE_CODE,
+			    V.MEMSHIP_OTSTND_AMT MEMBERSHIP_OUTSTANDING_AMOUNT,
+			    V.MEMBERSHIP,
+			    V.CUST_ID,
+			    V.NRIC,
+			    Y.NAME CUSTOMER_NAME,
+			    Y.EMAIL,
+			    Y.TEL_M1 TEL_NO,
+			    W.ITM_STK_ID PRODUCT_ID,
+			    X.STK_CODE PRODUCT_CODE,
+			    X.STK_DESC PRODUCT_NAME
+			FROM (
+			    <!-- Merge same Order ID together-->
+			     SELECT
+			        U.ORD_NO,
+			        U.ORD_ID,
+			        SUM(U.PRD_OTSTND_AMT) PRD_OTSTND_AMT,
+			        MAX(U.TYPE_ID) TYPE_ID,
+			        SUM(U.MEMSHIP_OTSTND_AMT) MEMSHIP_OTSTND_AMT,
+			        MAX(U.MEMBERSHIP) MEMBERSHIP,
+			        U.CUST_ID,
+			        U.NRIC
+			     FROM(
+			        <!-- RENTAL MEMBERSHIP [SP_SELT_SVC_CNTRCT_LDGR_OTSTND - OUTSTANDING AMOUNT] -->
+			        SELECT
+			            C.SALES_ORD_NO ORD_NO,
+			            C.SALES_ORD_ID ORD_ID,
+			            0 PRD_OTSTND_AMT,
+			            0 TYPE_ID,
+			            ROUND(SUM(A.SRV_LDGR_AMT),2)  MEMSHIP_OTSTND_AMT,
+			            'RENTAL MEMBERSHIP' MEMBERSHIP,
+			            C.CUST_ID,
+			            D.NRIC
+			        FROM PAY0023D A
+			        LEFT JOIN SAL0077D B ON B.SRV_CNTRCT_ID  = A.SRV_LDGR_CNTRCT_ID
+			        LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+			        LEFT JOIN SAL0029D D ON D.CUST_ID = C.CUST_ID
+			        WHERE 1=1
+	                    <if test='custId != null and custId != ""'>
+		                   AND C.CUST_ID = #{custId}
+		               </if>
+		               <if test='custIc != null and custIc != ""'>
+		                   AND D.NRIC = #{custIc}
+		               </if>
+			        GROUP BY
+			            A.SRV_LDGR_CNTRCT_ID,
+			            C.SALES_ORD_NO, C.SALES_ORD_ID,
+			            0,0,'RENTAL MEMBERSHIP',
+			            C.CUST_ID, D.NRIC
+			        HAVING NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) > 0
+
+			        UNION
+
+			        <!--  OUTRIGHT MEMBERSHIP [SAL1002V a] -->
+			        SELECT
+			            B.SALES_ORD_NO ORD_NO,
+			            B.SALES_ORD_ID ORD_ID,
+			            0 PRD_OTSTND_AMT,
+			            0 TYPE_ID,
+			            NVL (ROUND(SUM (D.SRV_MEM_AMT),2), 0.00) MEMSHIP_OTSTND_AMT,
+			             'OUTRIGHT MEMBERSHIP' MEMBERSHIP,
+			            B.CUST_ID,
+			            C.NRIC
+			        FROM SAL0095D A
+			        JOIN SAL0001D B ON B.SALES_ORD_ID = A.SRV_SALES_ORD_ID
+			        JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+			        LEFT JOIN PAY0024D D ON D.SRV_MEM_ID = A.SRV_MEM_ID
+			        WHERE 1=1
+			           <if test='custId != null and custId != ""'>
+                           AND B.CUST_ID = #{custId}
+                       </if>
+                       <if test='custIc != null and custIc != ""'>
+                           AND C.NRIC = #{custIc}
+                       </if>
+			        GROUP BY
+			            A.SRV_MEM_ID,
+			            A.SRV_MEM_NO,
+			            B.SALES_ORD_ID,
+			            B.SALES_ORD_NO,
+			            0,0,'OUTRIGHT MEMBERSHIP',
+			            B.CUST_ID,
+			            C.NRIC
+			        HAVING NVL(ROUND(SUM (D.SRV_MEM_AMT), 0), 0.00) > 0
+
+			        UNION
+
+			        <!-- Product : Rental [[SP_GET_ORD_OTSTND_INFO] 1st ORD_TOT_OTSTND] -->
+			        SELECT
+			             D.ORD_NO ORD_NO,
+			             D.ORD_ID ORD_ID,
+			             NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) PRD_OTSTND_AMT,
+			             D.TYPE_ID,
+			             0 MEMSHIP_OTSTND_AMT,
+			             '' MEMBERSHIP,
+			             D.CUST_ID,
+			             D.NRIC
+			        FROM(
+			            SELECT
+			                A.SALES_ORD_ID ORD_ID,
+			                A.SALES_ORD_NO ORD_NO,
+			                A.APP_TYPE_ID TYPE_ID,
+			                A.CUST_ID,
+			                C.NRIC
+			            FROM SAL0001D A
+			            LEFT JOIN PAY0286D B ON B.ORD_ID = A.SALES_ORD_ID AND B.STUS_ID = 1 AND B.CNTRCT_ID = 0
+			            LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+			            WHERE 1=1
+			               <if test='custId != null and custId != ""'>
+	                           AND A.CUST_ID = #{custId}
+	                       </if>
+	                       <if test='custIc != null and custIc != ""'>
+	                           AND C.NRIC = #{custIc}
+	                       </if>
+			        )D
+			        JOIN PAY0022D E ON D.ORD_ID = E.RENT_SO_ID
+			        WHERE 1=1
+			            AND D.TYPE_ID = 66
+			        GROUP BY
+			            D.ORD_ID, D.ORD_NO, D.TYPE_ID,
+			            0,'',
+			            D.CUST_ID, D.NRIC
+			        HAVING NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) > 0
+
+			        UNION
+
+			        <!-- Product : OutRight [[SP_GET_ORD_OTSTND_INFO] 2nd ORD_TOT_OTSTND] -->
+			        SELECT
+			             D.ORD_NO ORD_NO,
+			             D.ORD_ID ORD_ID,
+			             NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) PRD_OTSTND_AMT,
+			             D.TYPE_ID,
+			             0 MEMSHIP_OTSTND_AMT,
+			             '' MEMBERSHIP,
+			             D.CUST_ID,
+			             D.NRIC
+			        FROM(
+			            SELECT
+			                A.SALES_ORD_ID ORD_ID,
+			                A.SALES_ORD_NO ORD_NO,
+			                A.APP_TYPE_ID TYPE_ID,
+			                A.CUST_ID,
+			                C.NRIC
+			            FROM SAL0001D A
+			            LEFT JOIN PAY0286D B ON B.ORD_ID = A.SALES_ORD_ID AND B.STUS_ID = 1 AND B.CNTRCT_ID = 0
+			            LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+			            WHERE 1=1
+			               <if test='custId != null and custId != ""'>
+	                           AND A.CUST_ID = #{custId}
+	                       </if>
+	                       <if test='custIc != null and custIc != ""'>
+	                           AND C.NRIC = #{custIc}
+	                       </if>
+			        )D
+			        JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
+			        WHERE  D.TYPE_ID IN (67) <!--  remove 1412 for outplus order -->
+			        GROUP BY
+			            D.ORD_ID, D.ORD_NO, D.TYPE_ID,
+			            0,'',
+			            D.CUST_ID, D.NRIC
+			        HAVING NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) > 0
+			    ) U
+			    GROUP BY
+			        U.ORD_NO, U.ORD_ID, U.CUST_ID, U.NRIC
+			)V
+			LEFT JOIN SAL0002D W ON W.SALES_ORD_ID = V.ORD_ID
+			LEFT JOIN SYS0026M X ON X.STK_ID = W.ITM_STK_ID
+			LEFT JOIN SAL0027D Y ON Y.CUST_ID = V.CUST_ID AND Y.STUS_CODE_ID = 9
+			LEFT JOIN SYS0013M Z ON Z.CODE_ID = V.TYPE_ID
+	</select>
+
+	<select id="selectNextPay0336mId" resultType="int">
+		SELECT PAY0336M_ID_SEQ.NEXTVAL FROM DUAL
+	</select>
+
+	<insert id="insertPaymentCollectionMaster" parameterType="Map">
+		INSERT INTO PAY0336M (ID,PAY_NO,CUST_ID,CUST_EMAIL,CUST_CONTACT,PAYMENT_LINK,STATUS_CODE_ID,ORDER_DESC,TOT_AMT,
+		EXP_DT,CRT_DT,CRT_BY)
+		VALUES
+		(#{id},#{paymentRunningNumber},TO_NUMBER(#{custId}), #{email},#{telNo},#{paymentLink},44,#{orderDescription},
+		#{totalAmountPayable},SYSDATE+7,SYSDATE,#{userId})
+	</insert>
+
+		<insert id="insertPaymentCollectionDetail" parameterType="Map">
+		INSERT INTO PAY0337D (DETAIL_ID,ID,SALES_ORD_ID,SALES_ORD_NO,PRODUCT_TYPE_CODE,PRODUCT_TYPE_NAME,AMOUNT,CRT_DT,CRT_BY)
+		VALUES
+		(PAY0337D_ID_SEQ.NEXTVAL, #{id},#{salesOrdId},#{salesOrdNo},#{productTypeCode},#{productTypeName},#{amount},SYSDATE,#{userId})
+	</insert>
+
+	 <select id="getUserByUserName" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM
+            SYS0047M
+        WHERE
+        	USER_NAME = #{userName}
+    </select>
+
+    <select  id="paymentCollectionMobileHistoryGet" parameterType="Map" resultType="egovMap">
+	    SELECT E.ID,E.PAY_NO,E.PAYMENT_LINK,E.ORDER_DESC,E.STATUS_CODE_ID,F.NAME AS STATUS_CODE_DESC,TO_CHAR(E.CRT_DT,'DD/MM/YYYY HH24:MM') AS CRT_DT,TO_CHAR(E.EXP_DT) AS EXP_DT FROM (
+			    SELECT D.ID,D.PAY_NO,D.PAYMENT_LINK,
+			    CASE
+			        WHEN  D.STATUS_CODE_ID = 44 THEN
+			               (CASE
+			                   WHEN ((TO_DATE(TO_CHAR(D.EXP_DT,'DD/MM/YYYY'),'DD/MM/YYYY') + 1) <![CDATA[ <= ]]> TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY'))
+			                        THEN 82
+			                   ELSE 44 END)
+			        ELSE D.STATUS_CODE_ID END STATUS_CODE_ID,
+			    D.ORDER_DESC,
+			    D.CRT_DT,
+			    D.EXP_DT FROM (
+			        SELECT A.ID,A.PAY_NO,A.PAYMENT_LINK,
+			        A.STATUS_CODE_ID,
+			        A.ORDER_DESC,
+			        A.CRT_DT,
+			        A.EXP_DT
+			        FROM PAY0336M A
+			        LEFT JOIN PAY0337D B
+			        ON A.ID = B.ID
+					LEFT JOIN SYS0047M G
+					ON G.USER_ID = A.CRT_BY
+			        WHERE 1=1
+			        <if test='salesOrdNo != null and salesOrdNo != ""'>
+				        AND B.SALES_ORD_NO = #{salesOrdNo}
+				    </if>
+				    <if test='transactionDateFrom != null and transactionDateFrom != "" and transactionDateTo != null and transactionDateTo != ""'>
+				        AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE(#{transactionDateFrom},'DD/MM/YYYY') AND TO_DATE(#{transactionDateTo},'DD/MM/YYYY')
+				    </if>
+			        <if test='userName != null and userName != ""'>
+			        	AND G.USER_NAME = #{userName}
+			        </if>
+			        GROUP BY A.ID,A.PAY_NO,A.PAYMENT_LINK,A.STATUS_CODE_ID,A.ORDER_DESC,A.CRT_DT,A.EXP_DT,A.CRT_BY
+			    ) D
+			) E
+			LEFT JOIN SYS0038M F
+			ON F.STUS_CODE_ID = E.STATUS_CODE_ID
+    </select>
+
+    <select id="selectPaymentCollectionList" parameterType="Map" resultType="egovMap">
+	   SELECT
+	           E.*,
+	           F.NAME STATUS
+	    FROM (
+	       SELECT
+	           A.ID,
+	           A.CUST_ID,
+	           B.SALES_ORD_NO ORD_NO,
+               B.PRODUCT_TYPE_CODE PAY_TYPE,
+	           TO_CHAR(B.AMOUNT, 'FM99,990.00') AMOUNT,
+	           TO_CHAR(A.CRT_DT,'DD/MM/YYYY HH12:MI:SS AM') CRT_DT,
+	           C.USER_NAME CRT_USERNAME,
+	           CASE
+	               WHEN  A.STATUS_CODE_ID = '44'  THEN
+	                      CASE
+	                           WHEN ((TO_DATE(TO_CHAR(A.EXP_DT,'DD/MM/YYYY'),'DD/MM/YYYY') + 1) <![CDATA[ <= ]]> (TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')))
+	                           THEN 82
+	                      ELSE 44 END
+	               ELSE A.STATUS_CODE_ID END STATUS_CODE_ID,
+	           A.PAY_NO,
+	           A.PAYMENT_LINK,
+	           G.PAY_RECEIPT
+	       FROM PAY0336M A
+	       JOIN PAY0337D B ON B.ID = A.ID
+	       LEFT JOIN SYS0047M C ON C.USER_ID = A.CRT_BY
+	       LEFT JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+	       LEFT JOIN PAY0352D G ON G.DETAIL_ID = B.DETAIL_ID
+	       WHERE 1=1
+	       <if test='trxDtFrom != null and trxDtTo != null'>
+	          <if test='trxDtFrom != "" and trxDtTo != ""'>
+	                   AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ >= ]]> TO_DATE(#{trxDtFrom},'DD/MM/YYYY')
+	                   AND TO_DATE(TO_CHAR(A.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') <![CDATA[ <= ]]> TO_DATE(#{trxDtTo},'DD/MM/YYYY')
+	           </if>
+	       </if>
+	       <if test='orderNo != null and orderNo != ""'>
+	           AND B.SALES_ORD_NO = #{orderNo}
+	       </if>
+	       <if test='custID != null and custID != ""'>
+	           AND A.CUST_ID = #{custID}
+	       </if>
+	       <if test='custIC != null and custIC != ""'>
+	           AND D.NRIC = #{custIC}
+	       </if>
+	       ORDER BY A.ID DESC
+	   ) E
+	   LEFT JOIN SYS0038M F ON F.STUS_CODE_ID = E.STATUS_CODE_ID
+	   WHERE 1=1
+	       <if test='statusList != null and statusList != ""'>
+	             AND E.STATUS_CODE_ID IN
+	             <foreach item="item" collection="statusList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+    </select>
+</mapper>

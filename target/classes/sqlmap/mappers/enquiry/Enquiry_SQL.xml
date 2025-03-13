@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.enquiry.impl.EnquiryMapper">
+
+    <select id="getCustomerLoginInfo"  parameterType="Map" resultType="egovMap">
+           SELECT
+                    A.CUST_ID, A.NAME, A.TYPE_ID
+		   FROM SAL0029D A
+		   JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
+		   WHERE A.STUS_CODE_ID = 1
+		   AND A.NRIC = #{nricPass}
+		   AND B.TEL_M1 = #{mobileNo}
+		   AND B.STUS_CODE_ID = 9
+    </select>
+
+    <update id="updateLoginSession" parameterType="Map">
+           MERGE INTO SAL0335D A USING
+		   (
+			       SELECT * FROM SAL0029D WHERE CUST_ID = #{custId}
+		   ) SRC ON (A.CUST_ID = SRC.CUST_ID)
+		   WHEN MATCHED THEN UPDATE SET A.LOGIN_DT = SYSDATE, LOGIN_IND = 1, A.PHONE_NO = #{mobileNo}
+		   WHEN NOT MATCHED THEN  INSERT ( CUST_ID , LOGIN_DT, LOGIN_IND, PHONE_NO) VALUES(SRC.CUST_ID, SYSDATE, 1, #{mobileNo})
+    </update>
+
+    <insert id="insertErrorLog" parameterType="Map">
+	       INSERT INTO SAL0336D
+	        (
+	              PGM_PATH
+	            , FUNCTION_NAME
+	            , ERROR_MSG
+	            , CRT_DT
+	        ) VALUES (
+	              #{pgmPath}
+	            , #{functionName}
+	            , #{errorMsg}
+	            , SYSDATE
+	        )
+    </insert>
+
+    <select id="checkDuplicatedLoginSession"  parameterType="Map" resultType="int">
+           SELECT
+                    COUNT(CUST_ID) CUST_ID
+           FROM SAL0335D
+           WHERE CUST_ID = #{custId}
+    </select>
+
+
+    <select id="getCustomerInfo" parameterType="Map" resultType="customerLoginVO">
+            SELECT
+                      CUST_ID custId
+                    , NAME custName
+            FROM SAL0029D WHERE CUST_ID = #{custId}
+    </select>
+
+
+    <select id="selectCustomerInfoList"  parameterType="Map" resultType="egovMap">
+                SELECT DISTINCT
+                             som.*
+			               , pd.STK_DESC
+                           , CASE WHEN TRUNC(SYSDATE) BETWEEN srv.SRV_PRD_START_DT AND srv.SRV_PRD_EXPR_DT THEN 1 ELSE 0 END CHK_SERVICE
+                           , NVL(rs.STUS_CODE_ID,'0') RENTAL_STUS
+		        FROM  SAL1010V som
+		        join sal0002d sod on som.ord_id = sod.sales_ord_id
+		        JOIN SYS0026M pd ON sod.ITM_STK_ID = pd.STK_ID
+		        LEFT JOIN SAL0090D config on config.srv_so_id = som.ORD_ID
+                LEFT JOIN SAL0088D srv on config.SRV_CONFIG_ID = srv.SRV_CONFIG_ID  AND TRUNC(SYSDATE) BETWEEN TRUNC(srv.SRV_PRD_START_DT) AND TRUNC(srv.SRV_PRD_EXPR_DT)
+                LEFT JOIN SAL0071D rs on rs.SALES_ORD_ID = som.ORD_ID
+		    WHERE som.STUS_CODE_ID = 4
+            AND som.CUST_ID = #{custId}
+		    <if test="orderNo != null and orderNo != ''">
+            AND  som.SALES_ORD_NO = #{orderNo}
+            </if>
+    </select>
+
+
+    <select id="selectMagicAddressComboList" parameterType="Map" resultType="egovMap">
+            SELECT DISTINCT
+
+		    <if test=" null != colState and '' != colState">
+		      STATE AS CODE_ID,
+		      STATE AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colCity and '' != colCity">
+		      CITY AS CODE_ID,
+		      CITY AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colPostCode and '' != colPostCode">
+		      POSTCODE AS CODE_ID,
+		      POSTCODE AS CODE_NAME
+		    </if>
+
+		    <if test=" null != colArea and '' != colArea">
+		      AREA AS CODE_ID,
+		      AREA AS CODE_NAME
+		    </if>
+
+		    FROM
+		    SYS0064M
+		    WHERE STATUS_ID = 1 <!-- state -->
+		    AND COUNTRY = 'Malaysia'
+
+		    <if test="null != state and '' != state"> <!-- city -->
+		      AND STATE = #{state}
+		    </if>
+
+		    <if test="null != city and '' != city"> <!-- post code -->
+		      AND CITY = #{city}
+		    </if>
+
+		    <if test="null != postcode and '' != postcode"> <!-- area -->
+		      AND POSTCODE = #{postcode}
+		    </if>
+              AND AREA_ID NOT LIKE 'DM%'
+
+		    <!-- Sorting -->
+		    <if test=" null != colState and '' != colState">
+		      ORDER BY STATE
+		    </if>
+
+		    <if test=" null != colCity and '' != colCity">
+		      ORDER BY CITY
+		    </if>
+
+		    <if test=" null != colPostCode and '' != colPostCode">
+		      ORDER BY POSTCODE
+		    </if>
+
+		    <if test=" null != colArea and '' != colArea">
+		      ORDER BY AREA
+		    </if>
+
+     </select>
+
+     <select id="getAreaId" parameterType="Map" resultType="egovMap">
+		    SELECT
+		        AREA_ID
+		    FROM SYS0064M
+		    WHERE STATE = #{statValue}
+		    AND CITY = #{cityValue}
+		    AND POSTCODE = #{postCodeValue}
+		    AND AREA = #{areaValue}
+    </select>
+
+    <select id="searchMagicAddressPop" parameterType="Map" resultType="egovMap">
+		    <![CDATA[
+		            SELECT
+		                 AREA_ID,
+		                 ISO,
+		                 COUNTRY,
+		                 STATE,
+		                 CITY,
+		                 POSTCODE,
+		                 AREA,
+		                 AREA || ' ' || POSTCODE || ' ' ||  CITY || ' ' || STATE || ' ' || COUNTRY AS FULL_ADDRESS
+		            FROM
+		                SYS0064M
+		            WHERE ISO = 'MY'
+		            AND UPPER(AREA) LIKE UPPER('%'|| #{searchStreet} || '%')
+		            AND STATUS_ID = 1
+		      ]]>
+		      <if test="state != null and state != '' ">
+		           AND UPPER(STATE) LIKE UPPER('%'|| #{state} || '%')
+		      </if>
+		      <if test="city != null and city != '' ">
+		           AND UPPER(CITY) LIKE UPPER('%'|| #{city} || '%')
+		      </if>
+		      <if test="postCode != null and postCode != '' ">
+		           AND POSTCODE = #{postCode}
+		      </if>
+		      <if test=" null != searchState and '' != searchState">
+		           AND STATE = #{searchState}
+		       </if>
+		       <if test=" null != searchCity and '' != searchCity">
+		           AND CITY   = #{searchCity}
+		       </if>
+    </select>
+
+
+    <insert id="insertNewInstallationAddress" parameterType="Map">
+		    INSERT INTO SAL0339D (
+				  CUST_ADD_ID
+				, CUST_ID
+				, STUS_CODE_ID
+				, AREA_ID
+				, ADDR_DTL
+				, STREET
+				, CRT_DT
+				, PHONE_NO
+				, ORDER_NO
+				, REMARK
+				, SOURCE
+		    )
+		    VALUES (
+			    SAL0339D_CUST_ADD_ID_SEQ.NEXTVAL,
+			    #{insCustId},
+			    #{stusId},
+			    #{areaId},
+			    UPPER(#{addrDtl}),
+			    UPPER(#{streetDtl}),
+			    SYSDATE,
+			    #{phoneNo},
+			    #{orderNo},
+			    #{remark},
+			    'TrueAddress'
+            )
+		    <selectKey keyProperty="custAddId" resultType="Integer"
+		      order="AFTER">
+		      SELECT SAL0339D_CUST_ADD_ID_SEQ.CURRVAL FROM DUAL
+		    </selectKey>
+     </insert>
+
+	 <select id="getCurrentPhoneNo"  parameterType="Map" resultType="egovMap">
+	           SELECT
+	                    PHONE_NO, ORDER_NO
+	           FROM SAL0335D
+	           WHERE 1=1
+	           AND CUST_ID = #{custId}
+	 </select>
+
+	 <select id="checkExistRequest"  parameterType="Map" resultType="egovMap">
+               SELECT
+                        COUNT(*) RESULT
+				FROM SAL0339D
+				WHERE CUST_ID = #{custId}
+				AND ORDER_NO = #{orderNo}
+				AND STUS_CODE_ID =1
+     </select>
+
+     <update id="updateTacInfo" parameterType="Map">
+            UPDATE
+                    SAL0335D
+            SET
+                    TAC_GEN_DATE = SYSDATE,
+                    TAC_NO = #{tacNo},
+                    ORDER_NO  = #{orderNo}
+            WHERE CUST_ID = #{custId}
+            AND PHONE_NO  = #{mobileNo}
+    </update>
+
+    <select id="verifyTacNo"  parameterType="Map" resultType="egovMap">
+            SELECT
+	                CASE WHEN #{tacNo} = TAC_NO THEN '1' ELSE '0' END CHK_TAC ,
+	                CASE WHEN (TO_CHAR(SYSDATE -  TAC_GEN_DATE) * 24 * 60 * 60) > 180 THEN '0' ELSE '1' END CHK_TIME
+            FROM SAL0335D WHERE CUST_ID = #{custId} AND ORDER_NO = #{orderNo}
+     </select>
+
+     <update id="disabledPreviousRequest" parameterType="Map">
+            UPDATE
+                    SAL0339D
+            SET
+                    STUS_CODE_ID = 8,
+                    UPD_DT = SYSDATE
+            WHERE CUST_ID = #{custId}
+            AND ORDER_NO  = #{orderNo}
+            AND STUS_CODE_ID = 1
+    </update>
+
+    <select id="getEmailDetails"  parameterType="Map" resultType="egovMap">
+           SELECT
+				      A.CUST_ID
+				    , C.NAME
+				    , C.NRIC
+				    , A.AREA_ID
+				    , A.PHONE_NO
+				    , A.ORDER_NO
+				    , A.ADDR_DTL
+				    , CASE WHEN A.STREET IS NULL THEN '0' ELSE  A.STREET END STREET
+				    , B.POSTCODE
+				    , B.CITY
+				    , B.AREA
+				    , B.STATE
+				    , B.COUNTRY
+				    , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REQUEST_DT
+			FROM SAL0339D  A
+			JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+			JOIN SAL0029D C ON A.CUST_ID =C.CUST_ID
+			WHERE A.CUST_ID = #{custId}
+			AND A.ORDER_NO = #{orderNo}
+			AND A.STUS_CODE_ID = 1
+			AND ROWNUM = 1
+     </select>
+
+     <select id="getSubmissionTimes"  parameterType="Map" resultType="egovMap">
+			SELECT
+			         ORDER_NO,
+			         COUNT(ORDER_NO) AS VALID_CHK
+			FROM SAL0339D
+			WHERE ORDER_NO = #{orderNo}
+			AND EXTRACT(YEAR FROM UPD_DT) = EXTRACT(YEAR FROM SYSDATE)
+			AND STUS_CODE_ID = 4
+			GROUP BY ORDER_NO
+     </select>
+
+  </mapper>

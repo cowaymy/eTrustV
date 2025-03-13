@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.ChatbotInboundApiMapper">
+
+    <select id="checkAccess" parameterType="Map" resultType="egovMap">
+        SELECT *
+        FROM API0001M
+        WHERE API_USER_STUS_ID = 1
+            AND API_USER_NAME = #{userName}
+            AND API_KEY = #{key}
+    </select>
+
+    <select id="verifyCustIdentity" parameterType="Map" resultType="egovMap">
+        SELECT
+		    B.CUST_ID,
+		    B.NAME AS CUST_NAME,
+		    B.NRIC AS CUST_NRIC,
+		    B.NATION AS CUST_NATION,
+		    C.CODE AS CUST_TYPE
+		FROM SAL0027D A
+		JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+		LEFT JOIN SYS0013M C ON C.CODE_ID = B.TYPE_ID
+		WHERE A.STUS_CODE_ID = 9
+		AND B.STUS_CODE_ID = 1
+		AND (A.TEL_M1 = #{custPhoneNo} OR A.TEL_M1 = #{custPhoneNoWoutCode})
+		ORDER BY C.CODE_ID
+    </select>
+
+    <select id="isCustExist" parameterType="Map" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM SAL0029D
+        WHERE
+        CUST_ID = #{custId}
+        AND NRIC = #{custNric}
+    </select>
+
+    <select id="getOrderList" parameterType="Map" resultType="egovMap">
+        SELECT S01.SALES_ORD_ID order_id
+        , S01.SALES_ORD_NO order_no
+        , S01.CUST_ADD_ID CUST_ADD_ID
+        , S26.STK_CODE product_code
+        , S26.STK_DESC product_name
+        , S64.AREA area
+        , S13.CODE_NAME APP_TYPE
+        , S13CAT.CODE_NAME product_cat_name
+		  FROM SAL0001D S01
+		  JOIN SAL0002D S02 ON S01.SALES_ORD_ID = S02.SALES_ORD_ID
+		  JOIN SAL0029D S29 ON S29.CUST_ID = S01.CUST_ID
+		  LEFT JOIN SYS0026M S26 ON S02.ITM_STK_ID  = S26.STK_ID
+		  LEFT JOIN SAL0023D S23 ON S23.CUST_ADD_ID = S01.CUST_ADD_ID
+		  LEFT JOIN SYS0064M S64 ON S64.AREA_ID  =S23.AREA_ID
+		  LEFT JOIN SYS0013M S13 ON S13.CODE_ID = S01.APP_TYPE_ID AND S13.CODE_MASTER_ID = 10
+		  LEFT JOIN SYS0013M S13cat ON S13cat.CODE_ID = S26.STK_CTGRY_ID AND S13cat.CODE_MASTER_ID = 11
+		  WHERE S29.CUST_ID = #{custId}
+		  AND S29.NRIC = #{custNric}
+		  AND S01.STUS_CODE_ID = 4
+    </select>
+
+      <insert id="CBT0006M_insert" parameterType="Map">
+        INSERT INTO CBT0006M (
+            REQ_ID
+            ,STATE_ID
+            ,STATE_TYPE
+            ,ORDER_NO
+            ,RPT_NAME
+            ,FILE_NAME
+            ,STUS
+            ,STUS_REM
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,RPT_PARAMS
+            )
+            VALUES (
+            CBT0006M_REQ_ID_SEQ.nextval
+            ,#{stateId}
+            ,#{stateType}
+            ,#{orderNo}
+            ,#{rptName}
+            ,#{fileName}
+            ,1
+            ,NULL
+            ,#{userId}
+            ,SYSDATE
+            ,#{rptParams}
+            )
+     </insert>
+
+    <select id="getSoaDet" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT(Extent1.STATE_ID) AS STATE_ID
+            FROM
+                PAY0025D Extent1
+                INNER JOIN PAY0026D Extent2 ON Extent2.STATE_ID = Extent1.STATE_ID
+                LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_NO = Extent2.STATE_ITM_ORD_NO
+            WHERE
+                1=1
+                AND Extent2.STATE_ITM_ORD_NO = #{orderNo}
+                 AND Extent1.STATE_MONTH  = #{month}
+           AND Extent1.STATE_YEAR = #{year}
+            ORDER BY Extent2.STATE_ITM_ORD_NO DESC
+    </select>
+
+    <select id="getInvoiceDet" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT(Filter1.TAXINVOICEID1) AS STATE_ID
+            ,TO_CHAR(Filter1.TAX_INVC_REF_DT,'DD/MM/YYYY') AS INVC_DT
+        FROM
+                (
+                SELECT
+                    Extent1.TAX_INVC_ID TAXINVOICEID1  ,
+                    Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+                    Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
+                    Extent1.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+                    Extent1.TAX_INVC_MONTH TAX_INVC_MONTH  ,
+                    Extent1.TAX_INVC_YEAR TAX_INVC_YEAR  ,
+                    Extent1.TAX_INVC_TYPE TAX_INVC_TYPE  ,
+                    Extent2.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
+                    Extent2.INVC_ITM_RENTAL_FEE INVC_ITM_RENTAL_FEE  ,
+                    Extent2.INVC_ITM_INSTLMT_NO INVC_ITM_INSTLMT_NO ,
+                    Extent4.CUST_ID TAX_INVC_CUST_ID
+                FROM
+                    PAY0029D Extent1
+                    JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+                    LEFT JOIN SAL0001D Extent4 ON Extent4.SALES_ORD_NO = Extent2.INVC_ITM_ORD_NO
+                WHERE
+                    Extent1.TAX_INVC_BILL_TYPE = 133) Filter1
+                LEFT JOIN PAY0017D Extent3   ON Filter1.TAX_INVC_REF_NO = Extent3.ACC_INV_VOID_INVC_NO
+        WHERE
+            Extent3.ACC_INV_VOID_ID IS NULL
+            AND  Filter1.TAX_INVC_TYPE = '1268'
+             AND  Filter1.INVC_ITM_ORD_NO = #{orderNo}
+             AND Filter1.TAX_INVC_MONTH  = #{month}
+           AND Filter1.TAX_INVC_YEAR = #{year}
+            and rownum =1
+    </select>
+
+    <select id="getGenPdfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            REQ_ID
+            ,STATE_ID
+            ,STATE_TYPE
+            ,ORDER_NO
+            ,RPT_NAME
+            ,FILE_NAME
+            ,STUS
+            ,STUS_REM
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,RPT_PARAMS
+        FROM CBT0006M WHERE STUS = 1
+        and TRUNC(crt_dt) <![CDATA[ < ]]> TRUNC(SYSDATE)
+    </select>
+
+<insert
+        id="insertBatchEmailSender"
+        parameterType="Map">
+        INSERT INTO MSC0059D
+        (
+        MAIL_ID,
+        EMAIL_TYPE,
+        EMAIL_SUBJECT,
+        EMAIL_PARAMS,
+        TEMPLATE_NAME,
+        EMAIL,
+        NAME,
+        EMAIL_SENT_STUS,
+        CRT_DT,
+        CRT_BY,
+        CATEGORY_ID,
+        ATTACHMENT
+        )
+        VALUES
+        (
+        MSC0059D_MAIL_ID_SEQ.NEXTVAL,
+        #{emailType},
+        #{emailSubject},
+        #{emailParams},
+        #{templateName},
+        #{email},
+        #{name},
+        #{emailSentStus},
+        SYSDATE,
+        #{userId},
+        #{categoryId},
+        #{attachment}
+        )
+    </insert>
+
+    <insert id="update_CBT0006M_Stus" parameterType="Map" >
+            UPDATE CBT0006M
+                   SET  STUS  = #{stusUpdate},
+                          UPD_DT  = SYSDATE,
+                          UPD_USER_ID = 349
+             WHERE  REQ_ID   =#{reqId}
+     </insert>
+
+    <select id="getPaymentMtd" parameterType="Map" resultType="egovMap">
+<!--         SELECT   -->
+<!-- 			A.ORD_ID, -->
+<!-- 			A.RENT_PAY_MODE_CODE,  -->
+<!-- 			A.RENT_PAY_MODE_DESC  -->
+<!-- 		FROM PAY1009V A -->
+<!-- 		WHERE A.ORD_ID = #{orderId} -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+        SELECT
+            A.APP_TYPE_ID,
+            C.CODE AS RENT_PAY_MODE_CODE,
+		    C.CODE_NAME AS RENT_PAY_MODE_DESC
+		FROM SAL0001D A
+		LEFT JOIN SAL0074D B ON B.SALES_ORD_ID = A.SALES_ORD_ID <!-- CUSTOMER REGISTERED PAYMENT CHANNEL -->
+		LEFT JOIN SYS0013M C ON C.CODE_ID = B.MODE_ID
+		WHERE
+		      A.STUS_CODE_ID <![CDATA[ <> ]]> 8
+		  AND B.SVC_CNTRCT_ID = 0
+		  AND A.SALES_ORD_ID = #{orderId}
+		  AND A.SALES_ORD_NO = #{orderNo}
+		FETCH FIRST ROWS ONLY
+    </select>
+
+    <select id="getDeductionResult" parameterType="Map" resultType="egovMap">
+		SELECT
+		     T.BANK_DTL_ID
+		     , T.CTRL_STUS_ID
+		     , T.LAST_PAY_DT
+		     , T.BANK_APPV
+		     , CASE WHEN T.CTRL_STUS_ID <![CDATA[ <> ]]> 4 THEN '-'
+		            ELSE T.CODE_NAME END AS IS_APPROVE_STR
+		FROM (
+		    SELECT
+		        T1.BANK_DTL_ID
+		        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+		        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') LAST_PAY_DT
+		        , NVL(T1.BANK_APPV, 0) BANK_APPV
+		        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+		        , GBSLCVD.FN_GET_DDT_RMK(T1.BANK_DTL_APPR_CODE,1) CODE_NAME
+		    FROM PAY0042D T1
+		    JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID AND T2.CTRL_STUS_ID NOT IN (8,10)
+		    WHERE T1.SALES_ORD_ID = #{orderId}
+		) T ORDER BY T.BANK_DTL_ID DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+<!--     <select id="getOutrightPayResult" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- 		    A.TRX_ID, -->
+<!-- 		    A.TRX_DT, -->
+<!-- 		    A.PAY_CRT_DT, -->
+<!-- 		    B.STUS_CODE_ID -->
+<!-- 		FROM PAY1001V A -->
+<!-- 		JOIN PAY0064D B ON B.PAY_ID = A.PAY_ID -->
+<!-- 		WHERE -->
+<!-- 		    A.SALES_ORD_NO = #{orderNo} -->
+<!-- 		AND A.SALES_ORD_ID = #{orderId} -->
+<!-- 		ORDER BY TRX_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
+    <select id="getJomPayStatus" parameterType="Map" resultType="egovMap">
+	    SELECT
+		    B.CUST_BILL_PAY_REF_NO1 AS REF1,
+		    A.SALES_ORD_NO AS REF2
+		FROM SAL0001D A
+		JOIN SAL0024D B ON B.CUST_BILL_ID = A.CUST_BILL_ID
+		WHERE A.SALES_ORD_ID = #{orderId}
+		      AND A.SALES_ORD_NO = #{orderNo}
+		      AND A.APP_TYPE_ID <![CDATA[ <> ]]> 5764
+    </select>
+
+    <select id="getAccStus" parameterType="Map" resultType="egovMap">
+	    SELECT
+		    T1.PRGRS_ID,
+		    T2.PRGRS
+		FROM SAL0009D T1
+		JOIN SAL0010M T2 ON T2.PRGRS_ID = T1.PRGRS_ID
+		WHERE T1.SALES_ORD_ID = #{orderId}
+		ORDER BY T1.LOG_ID DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+    <resultMap id="outStndData" type="egovMap" ></resultMap>
+    <select id="getOderOutsInfo"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+         {
+               call SP_GET_ORD_OTSTND_INFO ( #{orderId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStndData})
+         }
+         ]]>
+    </select>
+
+    <select id="getAppTypeId" parameterType="Map" resultType="String">
+        SELECT APP_TYPE_ID FROM SAL0001D WHERE SALES_ORD_ID = #{orderId} AND SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="getRentalLastPayInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+		    NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT,
+		    (CASE
+		      WHEN A.RENT_AMT <![CDATA[ < ]]> 0 THEN (CASE
+<!-- 		                                   WHEN A.RENT_DOC_NO LIKE '%OR%' THEN (NVL(C.PAY_ITM_AMT, 0) * -1) -->
+		                                   WHEN A.RENT_DOC_NO LIKE '%OR%' THEN TO_CHAR(NVL(C.PAY_ITM_AMT, 0), 'FM9999990.00')
+		                                   ELSE TO_CHAR((NVL(A.RENT_AMT, 0) * -1), 'FM9999990.00')
+		                                 END)
+		      ELSE '0.00'
+		    END) LAST_PAYMENT_AMT
+		FROM PAY0022D A
+		LEFT JOIN PAY0064D B ON B.OR_NO = A.RENT_DOC_NO
+<!-- 		AND (rl.RENT_DOC_NO LIKE '%OR%' OR rl.RENT_DOC_NO LIKE '%BR%')                                                                    -->
+		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID AND C.PAY_ITM_STUS_ID = 1
+		WHERE  TO_CHAR(A.RENT_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR(TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd')
+		AND A.RENT_SO_ID = #{orderId}
+		AND A.RENT_AMT <![CDATA[ <> ]]> 0
+		AND C.PAY_ITM_REF_DT IS NOT NULL
+		ORDER BY A.RENT_RUN_ID  DESC
+		FETCH FIRST ROWS ONLY
+    </select>
+
+<!--     <select id="getOutPlusLastPayInfo" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- // 		     NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     NVL(TO_CHAR(A.INSTLMT_DT_TM, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     (CASE -->
+<!-- 		      WHEN A.INSTLMT_AMT <![CDATA[ < ]]> 0 THEN (CASE -->
+<!-- 		                                   WHEN A.INSTLMT_DOC_NO LIKE '%OR%' THEN TO_CHAR((NVL(C.PAY_ITM_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- // 		                                   WHEN A.INSTLMT_DOC_NO LIKE '%OR%' THEN NVL(C.PAY_ITM_AMT, 0) -->
+<!-- 		                                   ELSE TO_CHAR((NVL(A.INSTLMT_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- 		                                 END) -->
+<!-- 		      ELSE '0.00' -->
+<!-- 		    END) LAST_PAYMENT_AMT -->
+<!-- 		FROM PAY0010D A -->
+<!-- 		LEFT JOIN PAY0064D B ON B.OR_NO = A.INSTLMT_DOC_NO -->
+<!-- // 		AND A.INSTLMT_DOC_NO LIKE '%OR%' -->
+<!-- 		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID AND C.PAY_ITM_STUS_ID = 1 -->
+<!-- 		WHERE  TO_CHAR(A.INSTLMT_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR( TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd') -->
+<!-- 		AND A.INSTLMT_SO_ID = #{orderId} -->
+<!-- 		AND A.INSTLMT_AMT <![CDATA[ <> ]]> 0 -->
+<!-- 		ORDER BY A.INSTLMT_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
+<!--     <select id="getOthersLastPayInfo" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!-- // 		     NVL(TO_CHAR(C.PAY_ITM_REF_DT, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     NVL(TO_CHAR(A.TRADE_DT_TM, 'dd/mm/yyyy'), '-') LAST_PAYMENT_DT, -->
+<!-- 		     (CASE -->
+<!-- 		      WHEN A.TRADE_AMT <![CDATA[ < ]]> 0 THEN (CASE -->
+<!-- // 		                                   WHEN A.TRADE_DOC_NO LIKE '%OR%' THEN (NVL(C.PAY_ITM_AMT, 0) * -1) -->
+<!-- 		                                   WHEN A.TRADE_DOC_NO LIKE '%OR%' THEN TO_CHAR(NVL(C.PAY_ITM_AMT, 0) , 'FM9999990.00') -->
+<!-- 		                                   ELSE TO_CHAR((NVL(A.TRADE_AMT, 0) * -1), 'FM9999990.00') -->
+<!-- 		                                 END) -->
+<!-- 		      ELSE '0.00' -->
+<!-- 		    END) LAST_PAYMENT_AMT -->
+<!-- 		FROM PAY0035D A -->
+<!-- 		LEFT JOIN PAY0064D B ON B.SALES_ORD_ID = A.TRADE_SO_ID -->
+<!-- 		LEFT JOIN PAY0065D C ON C.PAY_ID = B.PAY_ID -->
+<!-- 		WHERE  TO_CHAR(A.TRADE_DT_TM, 'yyyymmdd') <![CDATA[ >= ]]> TO_CHAR( TO_DATE('01/01/1900', 'dd/mm/yyyy'), 'yyyymmdd') -->
+<!-- 		AND A.TRADE_SO_ID = #{orderId} -->
+<!-- 		AND A.TRADE_AMT <![CDATA[ <> ]]> 0 -->
+<!-- 		ORDER BY A.TRADE_RUN_ID DESC -->
+<!-- 		FETCH FIRST ROWS ONLY -->
+<!--     </select> -->
+
+
+    <select id="checkRenEInv" resultType="EgovMap">
+        SELECT
+            CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+                ELSE 'N'
+            END AS GEN_E_INV,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'YYYY')) AS year
+        FROM PAY0029D A
+        LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+        WHERE A.TAX_INVC_ID = #{stateId}
+    </select>
+
+    <select id="getEInvStrDt" resultType="EgovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'BILLING'
+        AND DISB = '0'
+        AND PARAM_CODE = 'E_INV_STR_DT'
+    </select>
+</mapper>

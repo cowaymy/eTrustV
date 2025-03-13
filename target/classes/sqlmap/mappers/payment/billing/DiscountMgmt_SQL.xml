@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.DiscountMgmtMapper">
+
+    <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
+       SELECT
+		       Extent1.ORD_ID ORD_ID  ,
+		       Extent1.ORD_NO ORD_NO  ,
+		       Extent1.RENTAL_STUS RENTAL_STUS  ,
+		       Extent1.ORD_STUS_ID ORD_STUS_ID  ,
+		       Extent1.ORD_STUS_CODE ORD_STUS_CODE  ,
+		       Extent1.ORD_STUS_NAME ORD_STUS_NAME  ,
+		       Extent1.ORD_DT ORD_DT  ,
+		       Extent1.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+		       Extent1.ORD_AMT ORD_AMT  ,
+		       Extent1.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+		       Extent1.ORD_PV ORD_PV  ,
+		       Extent1.ORD_PV_MONTH ORD_PV_MONTH  ,
+		       Extent1.ORD_PV_YEAR ORD_PV_YEAR  ,
+		       Extent1.ORD_REF_NO ORD_REF_NO  ,
+		       Extent1.ORD_PO_NO ORD_PO_NO  ,
+		       Extent1.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+		       Extent1.ORD_GRP_CODE ORD_GRP_CODE  ,
+		       Extent1.ORD_ORG_CODE ORD_ORG_CODE  ,
+		       Extent1.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+		       Extent1.ORD_CRT_DT ORD_CRT_DT  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
+		       Extent1.APP_TYPE_DESC APP_TYPE_DESC  ,
+		       Extent1.STOCK_ID STOCK_ID  ,
+		       Extent1.STOCK_CODE STOCK_CODE  ,
+		       Extent1.STOCK_DESC STOCK_DESC  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_TYPE CUST_TYPE  ,
+		       Extent1.CUST_NAME CUST_NAME  ,
+		       Extent1.CUST_NRIC CUST_NRIC  ,
+		       Extent1.CUST_DOB CUST_DOB  ,
+		       Extent1.CUST_NATION CUST_NATION  ,
+		       Extent1.CUST_GENDER CUST_GENDER  ,
+		       Extent1.CUST_RACE CUST_RACE  ,
+		       Extent1.CUST_EMAIL CUST_EMAIL  ,
+		       Extent1.CUST_VA_NO CUST_VA_NO  ,
+		       Extent1.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+		       Extent1.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+		       Extent1.ORD_PROMO_ID ORD_PROMO_ID  ,
+		       Extent1.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+		       Extent1.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+		       Extent1.ORD_MEM_ID ORD_MEM_ID  ,
+		       Extent1.ORD_MEM_CODE ORD_MEM_CODE  ,
+		       Extent1.ORD_MEM_NAME ORD_MEM_NAME  ,
+		       Extent1.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+		       Extent1.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+		       Extent1.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+		       Extent1.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+		       Extent1.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+		       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+		       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+		       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+		       Extent1.ORD_REM ORD_REM  ,
+		       Extent1.RENT_CHK_ID RENT_CHK_ID  ,
+		       Extent1.ORD_HM_ID ORD_HM_ID  ,
+		       Extent1.ORD_SM_ID ORD_SM_ID  ,
+		       Extent1.ORD_GM_ID ORD_GM_ID  ,
+		       Extent1.ORD_ADDR_ID ORD_ADDR_ID  ,
+		       Extent1.ORD_CNTC_ID ORD_CNTC_ID  ,
+		       Extent1.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.JOM_PAY_REF JOM_PAY_REF  ,
+		       Extent1.STK_CTGRY_ID STK_CTGRY_ID  ,
+		       Extent1.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+		       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+		       Extent1.OBLIGT_YEAR OBLIGT_YEAR
+		  FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
+		                vOrderBasicInfo.ORD_NO ORD_NO  ,
+		                vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
+		                vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID  ,
+		                vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE  ,
+		                vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME  ,
+		                vOrderBasicInfo.ORD_DT ORD_DT  ,
+		                vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+		                vOrderBasicInfo.ORD_AMT ORD_AMT  ,
+		                vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+		                vOrderBasicInfo.ORD_PV ORD_PV  ,
+		                vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH  ,
+		                vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR  ,
+		                vOrderBasicInfo.ORD_REF_NO ORD_REF_NO  ,
+		                vOrderBasicInfo.ORD_PO_NO ORD_PO_NO  ,
+		                vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+		                vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE  ,
+		                vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE  ,
+		                vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+		                vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT  ,
+		                vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID  ,
+		                vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE  ,
+		                vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC  ,
+		                vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+		                vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+		                vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+		                vOrderBasicInfo.CUST_ID CUST_ID  ,
+		                vOrderBasicInfo.CUST_TYPE CUST_TYPE  ,
+		                vOrderBasicInfo.CUST_NAME CUST_NAME  ,
+		                vOrderBasicInfo.CUST_NRIC CUST_NRIC  ,
+		                vOrderBasicInfo.CUST_DOB CUST_DOB  ,
+		                vOrderBasicInfo.CUST_NATION CUST_NATION  ,
+		                vOrderBasicInfo.CUST_GENDER CUST_GENDER  ,
+		                vOrderBasicInfo.CUST_RACE CUST_RACE  ,
+		                vOrderBasicInfo.CUST_EMAIL CUST_EMAIL  ,
+		                vOrderBasicInfo.CUST_VA_NO CUST_VA_NO  ,
+		                vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+		                vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+		                vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID  ,
+		                vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+		                vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+		                vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID  ,
+		                vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE  ,
+		                vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME  ,
+		                vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+		                vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+		                vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+		                vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+		                vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+		                vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+		                vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+		                vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+		                vOrderBasicInfo.ORD_REM ORD_REM  ,
+		                vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID  ,
+		                vOrderBasicInfo.ORD_HM_ID ORD_HM_ID  ,
+		                vOrderBasicInfo.ORD_SM_ID ORD_SM_ID  ,
+		                vOrderBasicInfo.ORD_GM_ID ORD_GM_ID  ,
+		                vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID  ,
+		                vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID  ,
+		                vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+		                vOrderBasicInfo.UPD_DT UPD_DT  ,
+		                vOrderBasicInfo.UPD_USER_ID UPD_USER_ID  ,
+		                vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF  ,
+		                vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID  ,
+		                vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+		                vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID  ,
+		                vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
+		                vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+		         FROM SAL1006V vOrderBasicInfo ) Extent1
+		 WHERE  Extent1.ORD_ID = #{salesOrdId}
+		 AND ROWNUM <![CDATA[<= ]]>  1
+    </select>
+
+    <select id="selectSalesOrderMById" parameterType="Map" resultType="egovMap">
+
+       SELECT
+		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Extent1.REF_NO REF_NO  ,
+		       Extent1.SALES_DT SALES_DT  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_CNT_ID CUST_CNT_ID  ,
+		       Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+		       Extent1.MEM_ID MEM_ID  ,
+		       Extent1.BRNCH_ID BRNCH_ID  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       <!-- Extent1.DSCNT_AMT DSCNT_AMT  , -->
+		       <!-- Extent1.TAX_AMT TAX_AMT  , -->
+		       Extent1.TOT_AMT TOT_AMT  ,
+		       Extent1.PROMO_ID PROMO_ID  ,
+		       Extent1.BINDING_NO BINDING_NO  ,
+		       Extent1.CC_PROMO_ID CC_PROMO_ID  ,
+		       Extent1.TOT_PV TOT_PV  ,
+		       Extent1.REM REM  ,
+		       Extent1.PV_MONTH PV_MONTH  ,
+		       Extent1.PV_YEAR PV_YEAR  ,
+		       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.SYNC_CHK SYNC_CHK  ,
+		       Extent1.CUST_PO_NO CUST_PO_NO  ,
+		       Extent1.REN_CHK_ID REN_CHK_ID  ,
+		       Extent1.INST_PRIOD INST_PRIOD  ,
+		       Extent1.DO_NO DO_NO  ,
+		       Extent1.DEPT_CODE DEPT_CODE  ,
+		       Extent1.GRP_CODE GRP_CODE  ,
+		       Extent1.ORG_CODE ORG_CODE  ,
+		       Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+		       Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+		       Extent1.MTH_RENT_AMT MTH_RENT_AMT  ,
+		       Extent1.LOK LOK  ,
+		       Extent1.AEON_STUS_ID AEON_STUS_ID  ,
+		       Extent1.COMM_DT COMM_DT  ,
+		       Extent1.CRT_USER_ID CRT_USER_ID  ,
+		       Extent1.CRT_DT CRT_DT  ,
+		       Extent1.PAY_COM_DT PAY_COM_DT  ,
+		       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
+		       Extent1.REF_DOC_ID REF_DOC_ID  ,
+		       <!-- Extent1.RENT_PROMO_ID RENT_PROMO_ID  , -->
+		       Extent2.MEM_CODE MEM_CODE  ,
+		       CASE
+		            WHEN ( Extent1.CNVR_SCHEME_ID IS NULL ) THEN 0
+		       ELSE Extent1.CNVR_SCHEME_ID
+		          END CNVR_SCHEME_ID,
+		       Extent3.GST_REBATE_ID GST_REBATE_ID,
+               Extent3.REBATE_AMT_PER_INSTLMT REBATE_AMT_PER_INSTLMT,
+               Extent3.REBATE_START_INSTLMT REBATE_START_INSTLMT,
+               Extent3.REBATE_END_INSTLMT REBATE_END_INSTLMT,
+               Extent3.STUS_ID REBATESTUSID
+		  FROM SAL0001D Extent1
+		       LEFT JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+		       LEFT JOIN PAY0286D Extent3 ON Extent1.SALES_ORD_ID = Extent3.ORD_ID
+		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
+		 AND (Extent3.STUS_ID <![CDATA[ <> ]]> '8' OR Extent3.STUS_ID IS NULL)
+
+    </select>
+
+    <select id="selectDiscountList" parameterType="Map" resultType="egovMap">
+       SELECT
+	       Extent1.DSCNT_ENTRY_ID DSCNT_ENTRY_ID  ,
+	       Extent1.ORD_ID ORD_ID  ,
+	       Extent5.SALES_ORD_NO SALES_ORD_NO  ,
+	       Extent8.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+	       Extent6.CUST_ID CUST_ID  ,
+	       Extent6.NAME NAME  ,
+	       Extent1.DC_TYPE DC_TYPE  ,
+	       Extent2.CODE_DESC CODE_DESC  ,
+	       Extent1.DC_AMT_PER_INSTLMT DC_AMT_PER_INSTLMT  ,
+	       Extent1.DC_START_INSTLMT DC_START_INSTLMT  ,
+	       Extent1.DC_END_INSTLMT DC_END_INSTLMT  ,
+	       TO_CHAR(Extent1.CRT_DT , 'DD/MM/YYYY') CRT_DT ,
+	       Extent1.CRT_USER_ID CRT_USER_ID  ,
+	       Extent4.USER_NAME CRT_USER_NAME  ,
+	       TO_CHAR(Extent1.UPD_DT , 'DD/MM/YYYY') UPD_DT ,
+	       Extent1.UPD_USER_ID UPD_USER_ID  ,
+	       Extent3.USER_NAME UPD_USER_NAME  ,
+	       Extent1.DC_STUS_ID DC_STUS_ID  ,
+	       Extent7.NAME NAME1  ,
+	       Extent1.DC_START_INSTLMT ||' ~ '|| Extent1.DC_END_INSTLMT AS DISCOUNT_PERIOD
+	    FROM PAY0054D Extent1
+	         LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DC_TYPE
+	         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.UPD_USER_ID
+	         LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+	         LEFT JOIN SAL0001D Extent5   ON Extent5.SALES_ORD_ID = Extent1.ORD_ID
+	         LEFT JOIN SAL0029D Extent6   ON Extent6.CUST_ID = Extent5.CUST_ID
+	         JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.DC_STUS_ID
+	         LEFT JOIN SAL0077D Extent8   ON Extent1.CNTRCT_ID = Extent8.SRV_CNTRCT_ID
+	   WHERE  Extent1.ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="selectContractServiceId" parameterType="Map" resultType="java.lang.String">
+        <![CDATA[
+       SELECT GroupBy1.A1 C1
+            FROM ( SELECT COUNT(1)  A1
+		         FROM SAL0077D Extent1
+		          WHERE  ( Extent1.SRV_CNTRCT_ORD_ID = #{salesOrdId} )
+		          AND ( 4 = Extent1.SRV_CNTRCT_STUS_ID )
+		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_MONTH )
+		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_YEAR ) ) GroupBy1
+		]]>
+    </select>
+
+    <insert id="saveAddDiscount" parameterType="Map">
+        INSERT INTO PAY0054D
+		(
+		DSCNT_ENTRY_ID,
+		ORD_ID,
+		DC_TYPE,
+		DC_AMT_PER_INSTLMT,
+		DC_START_INSTLMT,
+		DC_END_INSTLMT,
+		REM,
+		CRT_DT,
+		CRT_USER_ID,
+		UPD_DT,
+		UPD_USER_ID,
+		DC_STUS_ID,
+		CNTRCT_ID )
+		VALUES
+		(
+		PAY0054D_SEQ.NEXTVAL,
+		#{salesOrdId},
+		#{discountType},
+		#{discountAmount},
+		#{startPeriod},
+		#{endPeriod},
+		#{remarks},
+		SYSDATE,
+		#{userId},
+		SYSDATE,
+		#{userId},
+		#{dcStatusId},
+		#{contractId}
+		)
+    </insert>
+
+    <select id="selectDiscountEntries" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+       SELECT
+	       Extent1.DSCNT_ENTRY_ID DSCNT_ENTRY_ID  ,
+	       Extent1.ORD_ID ORD_ID  ,
+	       Extent1.DC_TYPE DC_TYPE  ,
+	       Extent1.DC_AMT_PER_INSTLMT DC_AMT_PER_INSTLMT  ,
+	       Extent1.DC_START_INSTLMT DC_START_INSTLMT  ,
+	       Extent1.DC_END_INSTLMT DC_END_INSTLMT  ,
+	       Extent1.REM REM  ,
+	       Extent1.CRT_DT CRT_DT  ,
+	       Extent1.CRT_USER_ID CRT_USER_ID  ,
+	       Extent1.UPD_DT UPD_DT  ,
+	       Extent1.UPD_USER_ID UPD_USER_ID  ,
+	       Extent1.DC_STUS_ID DC_STUS_ID  ,
+	       Extent1.CNTRCT_ID CNTRCT_ID
+        FROM PAY0054D Extent1
+        WHERE  Extent1.DSCNT_ENTRY_ID = #{dscntEntryId}
+        AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <update id="updDiscountEntry" parameterType="Map">
+        UPDATE PAY0054D
+        SET DC_STUS_ID = '8'
+        WHERE  DSCNT_ENTRY_ID = #{dscntEntryId}
+    </update>
+
+</mapper>

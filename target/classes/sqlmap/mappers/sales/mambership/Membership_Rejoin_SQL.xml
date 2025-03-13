@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRejoinMapper">
+
+
+    <select id="selectRejoinList" parameterType="Map" resultType="egovMap">
+
+		SELECT
+            T0.ORG_CODE ,
+            T0.GRP_CODE ,
+            T0.DEPT_CODE ,
+            T0.MEM_CODE ,
+            CASE WHEN T0.MEM_LVL = 1 THEN 'GCM'
+                    WHEN T0.MEM_LVL = 2 THEN 'SCM'
+                    WHEN T0.MEM_LVL = 3 THEN 'CM'
+                    WHEN T0.MEM_LVL = 4 THEN 'Cody'
+                    END MEM_LVL,
+            T0.TOTAL_EXPIRED ,
+            T0.TOTAL_FRESH_EXPIRED ,
+            CASE WHEN T0.MEM_LVL IN (3,4) THEN NVL(T1.TOTAL_FRESH_EXPIRED,0)
+                 WHEN T0.MEM_LVL = 2      THEN NVL(T3.TOTAL_FRESH_EXPIRED,0)
+                 WHEN T0.MEM_LVL = 1      THEN NVL(T5.TOTAL_FRESH_EXPIRED,0)
+                 END TOTAL_FRESH_EXPIRED_LAST,
+            CASE WHEN T0.MEM_LVL IN (3,4) THEN NVL(T2.TOTAL_FRESH_EXPIRED,0)
+                 WHEN T0.MEM_LVL = 2      THEN NVL(T4.TOTAL_FRESH_EXPIRED,0)
+                 WHEN T0.MEM_LVL = 1      THEN NVL(T6.TOTAL_FRESH_EXPIRED,0)
+                 END TOTAL_FRESH_EXPIRED_LAST2,
+            T0.TOTAL_FRESH_EXPIRED_3M,
+            T0.SVM_BY_OWN ,
+            T0.SVM_BY_OTHER ,
+            T0.EXTRADE_BY_OWN ,
+            T0.EXTRADE_BY_OTHER ,
+            <!-- T0.REJOIN_RATE_3M REJOIN_RATE, --> <!-- 20230508: Celeste commented due to rejoin % display enhancement -->
+            T0.REJOIN_RATE_1M REJOIN_RATE,
+            T0.UPD_DT
+        FROM SAL0259T T0
+        LEFT JOIN SAL0259T T1 ON T1.MEM_CODE = T0.MEM_CODE
+                                        AND T1.DEPT_CODE = T0.DEPT_CODE
+                                        AND T1.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY')
+                                        AND T1.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
+                                        AND T1.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL IN (3,4)
+        LEFT JOIN SAL0259T T2 ON T2.MEM_CODE = T0.MEM_CODE
+                                        AND T2.DEPT_CODE = T0.DEPT_CODE
+                                        AND T2.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY')
+                                        AND T2.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')
+                                        AND T2.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL IN (3,4)
+        LEFT JOIN SAL0259T T3 ON T3.MEM_CODE = T0.MEM_CODE
+                                        AND T3.GRP_CODE  = T0.GRP_CODE
+                                        AND T3.DEPT_CODE = T0.DEPT_CODE
+                                        AND T3.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY')
+                                        AND T3.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
+                                        AND T3.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL = 2
+        LEFT JOIN SAL0259T T4 ON T4.MEM_CODE = T0.MEM_CODE
+                                        AND T4.GRP_CODE = T0.GRP_CODE
+                                        AND T4.DEPT_CODE = T0.DEPT_CODE
+                                        AND T4.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY')
+                                        AND T4.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')
+                                        AND T4.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL = 2
+        LEFT JOIN SAL0259T T5 ON T5.MEM_CODE = T0.MEM_CODE
+                                        AND T5.ORG_CODE = T0.ORG_CODE
+                                        AND T5.GRP_CODE  = T0.GRP_CODE
+                                        AND T5.DEPT_CODE = T0.DEPT_CODE
+                                        AND T5.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY')
+                                        AND T5.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
+                                        AND T5.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL = 1
+        LEFT JOIN SAL0259T T6 ON T6.MEM_CODE = T0.MEM_CODE
+                                        AND T6.ORG_CODE = T0.ORG_CODE
+                                        AND T6.GRP_CODE = T0.GRP_CODE
+                                        AND T6.DEPT_CODE = T0.DEPT_CODE
+                                        AND T6.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY')
+                                        AND T6.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')
+                                        AND T6.MEM_LVL = T0.MEM_LVL AND T0.MEM_LVL = 1
+        WHERE 1 = 1
+            AND T0.MEM_LVL <![CDATA[<>]]> 0
+            AND T0.REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
+            AND T0.REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
+
+        <if test="orgCode != null and orgCode != '' ">
+            AND T0.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+            AND T0.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+            AND T0.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != '' ">
+            AND T0.MEM_CODE = #{memCode}
+        </if>
+        <if test="memLvl != null and memLvl != '' ">
+            AND T0.MEM_LVL = #{memLvl}
+        </if>
+
+        ORDER BY T0.MEM_LVL ASC
+    </select>
+
+    <select id="selectExpiredMembershipList" parameterType="Map" resultType="egovMap">
+
+        SELECT
+
+		    FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),T0.EXPIRY_DT)) EXPIRED_PERIOD
+		    , TO_CHAR(T0.EXPIRY_DT,'YYYY/MM/DD')  EXPIRY_DT
+		    , T1.SALES_ORD_NO
+		    , T0.MEM_CODE
+		    , T2.NAME MEMBER_NAME
+		    , T3.NAME CUST_NAME
+		    , T4.TEL_M1
+		    , T4.TEL_R
+		    , T4.TEL_O
+		    , T5.CODE_NAME CUST_TYPE
+		    , NVL((ACCDEBTSUB.ACC_DEBT_SUB_CURR_COLCT * -1),0) COLLECTION
+		    , NVL(ACCDEBTSUB.ACC_DEBT_SUB_OPNG_COLCT_TRGET,0) TARGET
+		    , T9.STATE INSTALL_STATE
+		    , T9.CITY INSTALL_AREA
+
+		FROM SAL0245T T0
+		JOIN SAL0001D T1 ON T1.SALES_ORD_ID = T0.SALES_ORD_ID
+		JOIN ORG0001D T2 ON T2.MEM_ID = T0.MEM_ID
+		JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+		JOIN SAL0027D T4 ON T4.CUST_CNTC_ID = T1.CUST_CNT_ID
+		JOIN SYS0013M T5 ON T5.CODE_ID = T3.TYPE_ID
+		LEFT JOIN PAY0053S ACCDEBTSUB on ACCDEBTSUB.ACC_DEBT_ORD_ID = T0.SALES_ORD_ID  AND ACCDEBTSUB.ACC_DEBT_SRV_CNTRCT_ID = T0.SRV_MEM_CNTRCT_ID
+		JOIN SAL0045D T7 ON T7.SALES_ORD_ID = T1.SALES_ORD_ID
+		JOIN SAL0023D T8 ON T8.CUST_ADD_ID = T7.ADD_ID
+		LEFT JOIN SYS0064M T9 ON T9.AREA_ID = T8.AREA_ID
+		LEFT JOIN CMM0086T EXC ON EXC.SALES_ORD_NO = T1.SALES_ORD_NO AND exc.expiry_month = EXTRACT(MONTH FROM SYSDATE) AND exc.expiry_YEAR = EXTRACT(YEAR FROM SYSDATE)
+		JOIN SYS0026M STK ON STK.STK_ID = T0.ITM_STK_ID
+		WHERE T0.ORD_STUS = 4
+		    AND EXPR_REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
+		    AND EXPR_REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
+		    AND TO_CHAR(T0.EXPIRY_DT,'YYYY/MM') <![CDATA[<= ]]> TO_CHAR(SYSDATE,'YYYY/MM')
+		    AND STK.STK_CTGRY_ID <![CDATA[<> ]]> 924
+		    AND (T0.REN_STUS IS NULL OR T0.REN_STUS NOT IN ('RET','SUS')) AND (T0.CNTRCT_RENTAL_STUS IS NULL OR T0.CNTRCT_RENTAL_STUS NOT IN ('RET','SUS'))
+            AND T0.APP_TYPE_ID IN (66, 67, 68, 142, 143, 1412)
+            AND EXC.SALES_ORD_NO IS NULL
+            AND T2.MEM_TYPE = 2
+            AND T0.ORG_CODE != ' '
+
+        <if test='arrAppType != null and arrAppType != ""'>
+             AND T0.APP_TYPE_ID IN
+             <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+
+         <if test='arrExpiredPeriod != null and arrExpiredPeriod != ""'>
+             AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT))) IN
+             <foreach item="item" collection="arrExpiredPeriod" index="index" open="(" separator="," close=")">
+                     #{item}
+             </foreach>
+         </if>
+<!--          <choose> -->
+<!--             <when test="expPeriod != null and expPeriod !='' "> -->
+<!--                       AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT)))  <![CDATA[>=]]> #{expPeriod} -->
+<!--              </when> -->
+<!--              <otherwise> -->
+<!--                 <if test='arrExpiredPeriod != null and arrExpiredPeriod != ""'> -->
+<!--                     AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT))) IN -->
+<!--                     <foreach item="item" collection="arrExpiredPeriod" index="index" open="(" separator="," close=")"> -->
+<!--                             #{item} -->
+<!--                     </foreach> -->
+<!--                 </if> -->
+<!--              </otherwise> -->
+<!--          </choose> -->
+         <if test="custType != null and custType != '' ">
+            AND T3.TYPE_ID = #{custType}
+        </if>
+        <if test="orgCode != null and orgCode != '' ">
+            AND T0.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+            AND T0.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+            AND T0.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != '' ">
+            AND T0.MEM_CODE = #{memCode}
+        </if>
+        <if test='arrCategory != null and arrCategory != ""'>
+             AND STK.STK_CTGRY_ID IN
+             <foreach item="item" collection="arrCategory" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='arrProduct != null and arrProduct != ""'>
+             AND T0.ITM_STK_ID IN
+             <foreach item="item" collection="arrProduct" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+
+
+    </select>
+
+</mapper>

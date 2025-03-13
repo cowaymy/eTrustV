@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGISTOMapper">
+    <select id="serialScanningGISTODataList" parameterType="Map" resultType="EgovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGISTOMapper.serialScanningGISTODataList] - KR JUN */
+        SELECT Z.DELNO
+             , Z.REQSTNO
+             , Z.REQSTDT
+             , Z.REQSTTYPE
+             , Z.TRNSCTYPE
+             , Z.TRNSCTYPEDTL
+             , Z.TOLOC
+             , Z.FRMLOCID
+             , Z.TOLOCID
+             , Z.DELDATE
+             , SUM(Z.DELQTY) AS DELQTY
+          FROM (
+		          SELECT l55.DELVRY_NO AS DELNO
+					   , l47.REQST_NO AS REQSTNO
+					   , TO_CHAR(l47.REQST_CRT_DT, 'dd/mm/yyyy') AS REQSTDT
+					   , l47.REQST_TYPE AS REQSTTYPE
+					   , l47.TRNSC_TYPE AS TRNSCTYPE   -- US : STO, UM and L47.REQST_TYPE = 'PO' : Inbound SMO, UM and L47.REQST_TYPE <![CDATA[ <> ]]> 'PO' : SMO
+					   , l47.TRNSC_TYPE_DTL AS TRNSCTYPEDTL
+					   , DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS TOLOC
+					   , l47.RCIV_CDC_RDC AS FRMLOCID
+					   , l47.REQST_CDC_RDC AS TOLOCID
+					   , NVL(TO_CHAR(TO_DATE(l54.DELVRY_DT, 'yyyymmdd'), 'dd/mm/yyyy'), '-') AS DELDATE
+					   , NVL(l55.DELVRY_QTY,0) AS DELQTY
+				   FROM LOG0047M l47
+					  , LOG0048D l48
+					  , LOG0055D l55
+					  , LOG0054M l54
+					  , SYS0028M s28q
+				  WHERE l47.REQST_NO = l48.REQST_NO
+				    AND l47.REQST_NO = l55.REQST_NO
+				    AND l55.DELVRY_NO = l54.DELVRY_NO
+				    AND l47.REQST_CDC_RDC = s28q.WH_LOC_ID(+)
+				    AND l47.REQST_CRT_DT <![CDATA[ >= ]]>  to_date(#{searchReqSDate},'dd/mm/yyyy')   -- FROM
+				    AND l47.REQST_CRT_DT <![CDATA[ <= ]]>  to_date(#{searchReqEDate} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
+				    AND (1, l47.RCIV_CDC_RDC) IN
+		            <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+		               (1, #{item})
+		            </foreach>
+				    AND l47.trnsc_type IN ('US')
+				    AND l47.REQST_TYPE <![CDATA[ <> ]]>  'PO'
+				    AND NVL(l54.DELVRY_GI_CMPLT, 'N') = 'N'
+				    AND NVL(l55.del_flag,'N')  <![CDATA[ <> ]]>  'Y'
+				    AND NVL(l47.REQST_DEL , 'N') = 'N'
+				    AND NVL(l48.REQST_DEL , 'N') = 'N'
+				<if test="searchDeliveryOrRequestNo !=null and searchDeliveryOrRequestNo != ''">
+		            AND (l55.DELVRY_NO = #{searchDeliveryOrRequestNo} OR l47.REQST_NO = #{searchDeliveryOrRequestNo})
+		        </if>
+			    GROUP BY l55.DELVRY_NO, l47.REQST_NO, l47.REQST_CRT_DT, L47.REQST_TYPE, l47.TRNSC_TYPE, l47.TRNSC_TYPE_DTL, s28q.WH_LOC_DESC, l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l54.DELVRY_DT, l55.DELVRY_QTY
+			 ) Z
+        GROUP BY Z.DELNO, Z.REQSTNO, Z.REQSTDT, Z.REQSTTYPE, Z.TRNSCTYPE, Z.TRNSCTYPEDTL, Z.TOLOC, Z.FRMLOCID, Z.TOLOCID, Z.DELDATE
+	    ORDER BY Z.DELDATE, Z.REQSTDT
+
+    </select>
+</mapper>

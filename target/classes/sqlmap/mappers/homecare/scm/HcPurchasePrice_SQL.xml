@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper">
+
+    <select id="selectComonCodeList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectComonCodeList] - KR JIN */
+        SELECT CODE_ID
+		     , CODE
+		     , CODE_NAME
+		  FROM SYS0013M
+		 WHERE CODE_MASTER_ID = #{codeMasterId}
+		   AND DISAB = 0
+    </select>
+
+    <select id="selectVendorList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectVendorList] - KR JIN */
+		SELECT MEM_ACC_ID AS CODE_ID
+		     , MEM_ACC_NAME AS CODE_NAME
+		     , MEM_ACC_ID ||' - '|| MEM_ACC_NAME AS CODE_NAMES
+		  FROM FCM0006M A
+		     , SYS0013M B
+		  <if test='isAdmin == "N"'>
+		      , SYS0103M C
+		  </if>
+		 WHERE A.MEM_ACC_ID = B.CODE
+		   and B.CODE_MASTER_ID = 445
+		   AND B.DISAB = 0
+
+		   <if test='isAdmin == "N"'>
+               and A.MEM_ACC_ID = C.VENDOR_CODE
+               and C.USER_ID = #{loginId}
+               and C.MENU_CODE = #{menuCode}
+               and C.DISAB = 0
+          </if>
+    </select>
+
+    <select id="selectHcPurchasePriceListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectHcPurchasePriceList] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM (
+	             SELECT A.MEM_ACC_ID AS MEM_ACC_ID
+	                  , B.STK_ID
+	                  , B.STK_CODE
+	                  , B.STK_CTGRY_ID
+	               FROM FCM0006M A  -- 계정
+	                  , SYS0013M A2 -- common code
+	                  , SYS0026M B  -- STOCK
+	              WHERE 1 = 1
+	                AND A.MEM_ACC_ID = A2.CODE
+			        AND A2.CODE_MASTER_ID = 445
+			        AND A2.DISAB = 0
+	                AND A.MEM_ACC_ID = #{sMemAccId}
+	                AND B.STK_CTGRY_ID IN ( SELECT AA.CODE_ID        -- Mattress('5706'), Frame('5707')
+			                                  FROM SYS0013M AA
+			                                     , SYS0094M BB
+			                                 WHERE AA.CODE = BB.CODE
+			                                   AND AA.CODE_MASTER_ID = 11
+			                                   AND BB.IND = 'HOMECARE')
+
+	              <if test='sStkCd != null and sStkCd != ""'>
+	                AND B.STK_CODE = #{sStkCd}
+	              </if>
+	              <if test='sStkId != null and sStkId != ""'>
+                    AND B.STK_ID = #{sStkId}
+                  </if>
+	              <if test='sCategory != null and sCategory.size != 0'>
+	                AND B.STK_CTGRY_ID IN
+	                <foreach item="item" collection="sCategory" index="index" open="(" separator="," close=")">
+	                 #{item}
+	                </foreach>
+	              </if>
+	              <if test='sType != null and sType.size != 0'>
+                    AND B.STK_TYPE_ID IN
+                    <foreach item="item" collection="sType" index="index" open="(" separator="," close=")">
+                     #{item}
+                    </foreach>
+                  </if>
+              ) A
+             , (SELECT *
+                  FROM HMC0001M
+                 WHERE 1 = 1
+                <if test="sValidDt != null and sValidDt !=''">
+                   AND VALID_START_DT <![CDATA[<=]]> #{sValidDt}
+                   AND VALID_END_DT <![CDATA[>=]]> #{sValidDt}
+                </if>
+               ) C  -- PURCHASE PRICE(HC)
+         WHERE 1 = 1
+           AND A.MEM_ACC_ID = C.MEM_ACC_ID(+)
+           AND A.STK_ID  = C.STOCK_ID(+)
+           AND A.STK_CODE   = C.STOCK_CODE(+)
+    </select>
+
+    <select id="selectHcPurchasePriceList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectHcPurchasePriceList] 20190918 - KR JIN */
+	    SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+
+				    SELECT A.MEM_ACC_ID
+					     , A.MEM_ACC_NAME
+					     , A.STK_ID
+					     , A.STK_CODE
+					     , A.STK_DESC
+					     , A.STK_CTGRY_ID
+					     , A.UOM AS UOM
+					     , C.PRICE_SEQ_NO
+					     , TO_CHAR(TO_DATE(C.VALID_START_DT, 'YYYYMMDD'), 'YYYY/MM/DD') AS VALID_START_DT
+					     , TO_CHAR(TO_DATE(C.VALID_END_DT, 'YYYYMMDD'), 'YYYY/MM/DD') AS VALID_END_DT
+					     <!-- , C.CUR -->
+					     , '1150' AS CUR
+					     , C.PURCHS_PRC
+					     , C.CRT_DT
+					     , C.CRT_USER_ID
+					     , C.UPD_DT
+					     , C.UPD_USER_ID
+					    FROM (
+					     SELECT A.MEM_ACC_ID
+					          , A.MEM_ACC_NAME
+					          , B.STK_ID
+					          , B.STK_DESC
+					          , B.STK_CTGRY_ID
+					          , B.UOM
+					          , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '42' AND B.UOM = CODE_ID) AS UOM_NM
+					          , B.STK_CODE
+					          , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11' AND B.STK_CTGRY_ID = CODE_ID) AS STK_CTGRY_NM
+					       FROM FCM0006M A  -- 계정
+					          , SYS0013M A2 -- common code
+					          , SYS0026M B  -- STOCK
+					      WHERE 1 = 1
+					        AND A.MEM_ACC_ID = A2.CODE
+                            AND A2.CODE_MASTER_ID = 445
+                            AND A2.DISAB = 0
+					        AND A.MEM_ACC_ID = #{sMemAccId}
+					        AND B.STK_CTGRY_ID IN ( SELECT AA.CODE_ID     -- Mattress('5706'), Frame('5707')
+		                                              FROM SYS0013M AA
+		                                                 , SYS0094M BB
+		                                             WHERE AA.CODE = BB.CODE
+		                                               AND AA.CODE_MASTER_ID = 11
+		                                               AND BB.IND = 'HOMECARE')
+
+					      <if test='sStkCd != null and sStkCd != ""'>
+		                    AND B.STK_CODE = #{sStkCd}
+		                  </if>
+					      <if test='sStkId != null and sStkId != ""'>
+			                AND B.STK_ID = #{sStkId}
+					      </if>
+			              <if test='sCategory != null and sCategory.size != 0'>
+			                AND B.STK_CTGRY_ID IN
+			                <foreach item="item" collection="sCategory" index="index" open="(" separator="," close=")">
+			                 #{item}
+			                </foreach>
+			              </if>
+			              <if test='sType != null and sType.size != 0'>
+		                    AND B.STK_TYPE_ID IN
+		                    <foreach item="item" collection="sType" index="index" open="(" separator="," close=")">
+		                     #{item}
+		                    </foreach>
+		                  </if>
+					      ) A
+					      , (SELECT *
+			                   FROM HMC0001M
+			                  WHERE 1 = 1
+			                 <if test="sValidDt != null and sValidDt !=''">
+			                    AND VALID_START_DT <![CDATA[<=]]> #{sValidDt}
+			                    AND VALID_END_DT <![CDATA[>=]]> #{sValidDt}
+			                 </if>
+			                ) C  -- PURCHASE PRICE(HC)
+					  WHERE 1 = 1
+					    AND A.MEM_ACC_ID = C.MEM_ACC_ID(+)
+					    AND A.STK_ID  = C.STOCK_ID(+)
+					    AND A.STK_CODE   = C.STOCK_CODE(+)
+			          ORDER BY
+			        <choose>
+	                    <when test='sort != null and sort.size != 0'>
+
+	                        <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+	                            <choose>
+	                                <when test='item.field == "memAccId"'>A.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "memAccName"'>A.MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "stkId"'>A.STK_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "stkCode"'>A.STK_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "stkDesc"'>A.STK_DESC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "stkCtgryId"'>A.STK_CTGRY_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "sUom"'>A.UOM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "priceSeqNo"'>C.PRICE_SEQ_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "validStartDt"'>C.VALID_START_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "validEndDt"'>C.VALID_END_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <when test='item.field == "cur"'>C.CUR <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "purchsPrc"'>C.PURCHS_PRC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "uom"'>C.UOM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "crtDt"'>C.CRT_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "crtUserId"'>C.CRT_USER_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "updDt"'>C.UPD_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "updUserId"'>C.UPD_USER_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+	                                <otherwise>
+	                                    A.MEM_ACC_ID ASC, A.MEM_ACC_NAME ASC
+	                                </otherwise>
+	                            </choose>
+	                        </foreach>
+	                    </when>
+	                    <otherwise>
+	                        A.MEM_ACC_ID, A.MEM_ACC_NAME
+	                    </otherwise>
+                    </choose>
+		            ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectHcPurchasePriceHstList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectHcPurchasePriceHstList] - KR JIN */
+        select A.HISTORY_SEQ_NO        --PO Price History Sequence
+			 , A.PRICE_SEQ_NO          --Sequence
+			 , A.MEM_ACC_ID            --Vendor
+			 , B.MEM_ACC_NAME
+			 , A.STOCK_ID              --Material ID
+			 , A.STOCK_CODE            --Material Code
+			 , C.STK_DESC
+			 , C.STK_CTGRY_ID
+			 , TO_DATE(A.VALID_START_DT, 'YYYYMMDD') AS VALID_START_DT  --Valid Start Date
+			 , TO_DATE(A.VALID_END_DT, 'YYYYMMDD') AS VALID_END_DT      --Valid End Date
+			 , A.PURCHS_PRC            --Purchase Price
+			 , A.CUR                   --Currency
+			 , A.UOM                   --Unit
+			 , A.CRT_DT                --Create Date
+			 , A.CRT_USER_ID           --Create User Id
+			 , A.UPD_DT                --Update Date
+			 , A.UPD_USER_ID           --Update User Id
+          from HMC0002H A
+             , FCM0006M B
+             , SYS0013M B2 -- common code
+             , SYS0026M C
+         WHERE 1 = 1
+           AND A.MEM_ACC_ID = B.MEM_ACC_ID
+           AND B.MEM_ACC_ID = B2.CODE
+           AND B2.CODE_MASTER_ID = 445
+           AND B2.DISAB = 0
+
+           AND A.STOCK_ID = C.STK_ID
+           AND A.STOCK_CODE = C.STK_CODE
+
+           AND A.PRICE_SEQ_NO = #{sPriceSeqNo}
+    </select>
+
+    <select id="selectHcPurchasePriceKey" parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectHcPurchasePriceKey] - KR JIN */
+        SELECT MAX(PRICE_SEQ_NO) AS PRICE_SEQ_NO
+          FROM HMC0001M
+         WHERE MEM_ACC_ID = #{sMemAccId}
+           AND STOCK_ID = #{sStockId}
+           AND STOCK_CODE = #{sStockCode}
+    </select>
+
+    <insert id="insertHcPurchasePrice" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.insertHcPurchasePrice] - KR JIN */
+	    <selectKey keyProperty="priceSeqNo" resultType="String" order="BEFORE">
+            SELECT 'P' || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(PRICE_SEQ_NO), 'P000000000'), 2))+1, 9, '0') AS priceSeqNo FROM HMC0001M
+        </selectKey>
+		INSERT
+		  INTO HMC0001M    --HomeCare Purchase Price
+		(
+			   PRICE_SEQ_NO          --PO Price Sequence
+			 , MEM_ACC_ID            --Vendor
+			 , STOCK_ID              --Material ID
+			 , STOCK_CODE            --Material Code
+			 , VALID_START_DT        --Valid Start Date
+			 , VALID_END_DT          --Valid End Date
+			 , PURCHS_PRC            --Purchase Price
+			 , CUR                   --Currency
+			 , UOM                   --Unit
+			 , CRT_DT                --Create Date
+			 , CRT_USER_ID           --Create User Id
+			 , UPD_DT                --Update Date
+			 , UPD_USER_ID           --Update User Id
+
+		)VALUES(
+               #{priceSeqNo}           --Sequence
+			 , #{memAccId}             --Vendor
+			 , #{stkId}                --Material ID
+			 , #{stkCode}              --Material Code
+			 , TO_CHAR(TO_DATE(#{validStartDt}, 'YYYY/MM/DD'), 'YYYYMMDD')         --Valid Start Date
+			 , TO_CHAR(TO_DATE(#{validEndDt}, 'YYYY/MM/DD'), 'YYYYMMDD')           --Valid End Date
+			 , #{purchsPrc}            --Purchase Price
+			 , #{cur}                  --Currency
+			 , #{uom}                  --Unit
+			 , SYSDATE                 --Create Date
+			 , #{crtUserId}            --Create User Id
+			 , SYSDATE                 --Update Date
+			 , #{updUserId}            --Update User Id
+		)
+    </insert>
+
+    <update id="updateHcPurchasePrice" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.updateHcPurchasePrice] - KR JIN */
+        UPDATE HMC0001M    --HomeCare Purchase Price
+		   SET MEM_ACC_ID     = #{memAccId}             --Vendor
+		     , STOCK_ID       = #{stkId}              --Material ID
+			 , STOCK_CODE     = #{stkCode}            --Material Code
+			 , VALID_START_DT = TO_CHAR(TO_DATE(#{validStartDt}, 'YYYY/MM/DD'), 'YYYYMMDD')         --Valid Start Date
+			 , VALID_END_DT   = TO_CHAR(TO_DATE(#{validEndDt}, 'YYYY/MM/DD'), 'YYYYMMDD')           --Valid End Date
+			 , PURCHS_PRC     = #{purchsPrc}            --Purchase Price
+			 , CUR            = #{cur}                  --Currency
+			 , UOM            = #{uom}                  --Unit
+			 , CRT_DT         = SYSDATE
+			 , CRT_USER_ID    = #{crtUserId}            --Create User Id
+			 , UPD_DT         = SYSDATE
+			 , UPD_USER_ID    = #{updUserId}            --Update User Id
+		 WHERE 1 = 1
+		   AND PRICE_SEQ_NO = #{priceSeqNo}
+    </update>
+
+    <insert id="insertHcPurchasePriceHist" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.insertHcPurchasePriceHist] - KR JIN */
+        INSERT
+          INTO HMC0002H    --HomeCare Purchase Price HISTORY
+		(
+			   HISTORY_SEQ_NO        --PO Price History Sequence
+			 , PRICE_SEQ_NO          --Sequence
+			 , MEM_ACC_ID            --Vendor
+			 , STOCK_ID              --Material ID
+			 , STOCK_CODE            --Material Code
+			 , VALID_START_DT        --Valid Start Date
+			 , VALID_END_DT          --Valid End Date
+			 , PURCHS_PRC            --Purchase Price
+			 , CUR                   --Currency
+			 , UOM                   --Unit
+			 , CRT_DT                --Create Date
+			 , CRT_USER_ID           --Create User Id
+			 , UPD_DT                --Update Date
+			 , UPD_USER_ID           --Update User Id
+	   )VALUES(
+			   (SELECT 'H' || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(HISTORY_SEQ_NO), 'P000000000'), 2))+1, 9, '0') AS HISTORY_SEQ_NO FROM HMC0002H)
+			 , #{priceSeqNo}           --Sequence
+			 , #{memAccId}             --Vendor
+			 , #{stkId}                --Material ID
+			 , #{stkCode}              --Material Code
+			 , TO_CHAR(TO_DATE(#{validStartDt}, 'YYYY/MM/DD'), 'YYYYMMDD') --Valid Start Date
+			 , TO_CHAR(TO_DATE(#{validEndDt}, 'YYYY/MM/DD'), 'YYYYMMDD')   --Valid End Date
+			 , #{purchsPrc}            --Purchase Price
+			 , #{cur}                  --Currency
+			 , #{uom}                  --Unit
+			 , SYSDATE
+			 , #{crtUserId}            --Create User Id
+			 , SYSDATE
+			 , #{updUserId}            --Update User Id
+	   )
+    </insert>
+
+    <select id="selectHcPurchaseDuflicateDate" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcPurchasePriceMapper.selectHcPurchaseDuflicateDate] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM HMC0001M
+         WHERE MEM_ACC_ID = #{memAccId}
+           AND STOCK_ID = #{stkId}
+           AND STOCK_CODE = #{stkCode}
+           AND VALID_START_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{validEndDt}, 'YYYY/MM/DD'), 'YYYYMMDD')
+           AND VALID_END_DT <![CDATA[>=]]> TO_CHAR(TO_DATE(#{validStartDt}, 'YYYY/MM/DD'), 'YYYYMMDD')
+    </select>
+
+</mapper>

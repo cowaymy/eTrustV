@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.bom.impl.BomMapper">
+    <select id="selectCdcList" parameterType="Map" resultType="EgovMap">
+		SELECT
+		         WH_LOC_ID CODE_ID
+		        ,WH_LOC_CODE CODE_CODE
+		        ,DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
+		    FROM SYS0028M
+		      WHERE WH_LOC_GB = 01
+		      ORDER BY CODE_NAME
+    </select>
+
+	<select id="selectCodeList" parameterType="Map" resultType="EgovMap">
+		SELECT
+		CODE_ID ,
+		CODE ,
+		CODE_NAME ,
+		DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+		FROM SYS0013M
+		WHERE DISAB = 0
+		<if test="groupCode != null and groupCode !=''">
+			AND CODE_MASTER_ID = #{groupCode}
+			AND CODE_ID IN (62,63)
+		</if>
+
+		<if test="Codeval != null and Codeval !=''">
+			AND CODE = #{Codeval}
+		</if>
+		<if test="likeValue != null and likeValue !=''">
+			AND CODE LIKE #{likeValue}||'%'
+		</if>
+		<if test="notlike != null and notlike !=''">
+			AND CODE NOT LIKE #{notlike}||'%'
+		</if>
+		<choose>
+			<when test="orderValue !=null and orderValue !=''">
+				ORDER BY ${orderValue}
+			</when>
+			<otherwise>
+				ORDER BY CODE_NAME
+			</otherwise>
+		</choose>
+	</select>
+
+    <select id="selectBomList" parameterType="Map" resultType="egovMap">
+        SELECT
+            m.BOM  bom ,
+            m.ALTRTIV_BOM  altrtiv_bom ,
+            m.PLANT  plant ,
+            m.MATRL_NO  matrl_no ,
+            (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = m.MATRL_NO) stkdesc,
+            (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = m2.STK_CTGRY_ID) matrl_nm,
+            m.BOM_USE  bom_use ,
+            d.BOM_ITM_NODE_NO  bom_itm_node_no ,
+            d.BOM_CTGRY  bom_ctgry ,
+            d.INTNL_CNTR  intnl_cntr ,
+            d.ITM_CTGRY  itm_ctgry ,
+            d.BOM_ITM_NO  bom_itm_no ,
+            d.SORT_STRING  sort_string ,
+            d.BOM_COMPNT  bom_compnt ,
+            m2.STK_DESC stk_desc,
+            sm.CODE_ID categoryid,
+            sm.CODE_NAME category,
+            d.COMPNT_QTY  compnt_qty ,
+            d.COMPNT_UNIT_OF_MEASURE  compnt_unit_of_measure ,
+            TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY')  valid_from_dt ,
+            TO_CHAR(d.VALID_TO_DT, 'DD/MM/YYYY')  valid_to_dt ,
+            d.CHNG_NO  chng_no ,
+            d.DEL_INDICT  del_indict ,
+            d.DT_RCORD_CRT_ON  dt_rcord_crt_on ,
+            d.USER_WHO_CRT_RCORD  user_who_crt_rcord ,
+            d.CHNG_ON  chng_on ,
+            d.NAME_PERSON_WHO_CHG_OBJ name_person_who_chg_obj,
+            d.LEAD_TM_OFFSET_N LEAD_TM_OFFSET,
+            d.ALTER_ITM_GRP ALTER_ITM_GRP,
+            d.ALTER_ITM_RANK_ORD ALTER_ITM_RANK_ORD,
+            d.USE_PROBABILTIY USE_PROBABILTIY,
+            (CASE WHEN d.DEFAULT_FILTER = 1 THEN 'Y' ELSE 'N' END) default_filter
+        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
+              WHERE m.BOM  = d.BOM
+              AND d.BOM_COMPNT = m2.STK_CODE
+              AND sm.CODE_ID = m2.STK_TYPE_ID
+              <!-- Added for excluding Deleted records by Hui Ding, 7/8/2019 -->
+              AND NVL(d.DEL_INDICT , 'N') <![CDATA[<>]]> 'Y'
+            <choose>
+                <when test="bom != null and categoryid != null">
+                  AND m.BOM=#{bom}
+                  AND sm.CODE_ID=#{categoryid}
+                </when>
+                <otherwise>
+	           <if test="srchmtrcd != null and srchmtrcd!= ''">
+	              AND m.MATRL_NO LIKE  #{srchmtrcd}||'%'
+	          </if>
+              <if test="srchcatagorytype !=null and srchcatagorytype !=''">
+                    AND  sm.CODE_ID = #{srchcatagorytype}
+             </if>
+<!-- 	           <if test="srchValid != null and srchValid != ''"> -->
+<!-- 	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY') -->
+<!-- 	           </if>   -->
+	            <if test="srchValid != null and srchValid != ''">
+                  AND TO_CHAR (TO_DATE (#{srchValid},   'DD/MM/YYYY'),'YYYYMMDD')   between TO_CHAR(d.VALID_FROM_DT, 'YYYYMMDD')  AND TO_CHAR(d.VALID_TO_DT, 'YYYYMMDD')
+               </if>
+
+                 <if test="srchcompnt !=null and srchcompnt !=''">
+                    AND  d.BOM_COMPNT = #{srchcompnt}
+             </if>
+
+              </otherwise>
+             </choose>
+                ORDER BY m.BOM, d.BOM_ITM_NODE_NO
+    </select>
+     <select id="materialInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+                l43m.BOM
+               ,l43m.ALTRTIV_BOM
+               ,l43m.PLANT
+               ,l43m.BOM_USE
+               ,l43m.MATRL_NO
+               ,s26m.STK_ID
+               ,s26m.STK_CODE
+               ,s26m.STK_DESC STK_DESC
+               ,(SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_ID = s26m.STK_CTGRY_ID) STK_CTGRY_NM
+              , (SELECT CODE_ID
+                   FROM SYS0013M
+                  WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_ID
+              , (SELECT CODE_NAME
+                   FROM SYS0013M
+                  WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_NM
+              , (SELECT NAME
+                   FROM SYS0038M
+                  WHERE STUS_CODE_ID = s26m.STUS_CODE_ID) STUS_CODE_NM
+              ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=S26M.UOM) UOM_NAME
+              , s26m.IS_SIRIM IS_SIRIM
+              , s26m.IS_NCV    IS_NCV
+              , s26m.NET_WT NET_WT
+              , s26m.GROS_WT GROS_WT
+              , s26m.MEASURE_CBM    MEASURE_CBM
+          FROM LOG0043M l43m, SYS0026M s26m
+         WHERE 1 = 1
+           AND l43m.MATRL_NO = s26m.STK_CODE
+           AND  l43m.BOM = #{bom}
+     </select>
+     <select id="materialInfo2" parameterType="Map" resultType="egovMap">
+        SELECT
+		        l44d.BOM_COMPNT BOM_COMPNT
+		       ,s26m.STK_DESC STK_DESC
+		       ,(SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = s26m.STK_CTGRY_ID) STK_CTGRY_NM
+		      , (SELECT CODE_ID
+		           FROM SYS0013M
+		          WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_ID
+		      , (SELECT CODE_NAME
+		           FROM SYS0013M
+		          WHERE CODE_ID = s26m.STK_TYPE_ID) STK_TYPE_NM
+		      , (SELECT NAME
+		           FROM SYS0038M
+		          WHERE STUS_CODE_ID = s26m.STUS_CODE_ID) STUS_CODE_NM
+              ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=S26M.UOM) UOM_NAME
+		      , s26m.IS_SIRIM IS_SIRIM
+		      , s26m.IS_NCV    IS_NCV
+		      , s26m.NET_WT NET_WT
+		      , s26m.GROS_WT GROS_WT
+		      , s26m.MEASURE_CBM    MEASURE_CBM
+		  FROM LOG0044D l44d, SYS0026M s26m
+		 WHERE 1 = 1
+		   AND l44d.BOM_COMPNT = s26m.STK_CODE
+		   AND l44d.BOM_COMPNT=#{cmpntId}
+     </select>
+
+     <update id="modifyLeadTmOffset" parameterType="Map">
+        update log0044d
+           set LEAD_TM_OFFSET_N = #{leadTmOffset}
+         where bom = #{bom}
+           and BOM_ITM_NODE_NO = #{bomItmNodeNo}
+     </update>
+</mapper>

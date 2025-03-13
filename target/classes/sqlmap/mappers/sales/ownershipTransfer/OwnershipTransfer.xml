@@ -1,0 +1,1951 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.sales.ownershipTransfer.impl.OwnershipTransferMapper">
+
+    <select id="selectStatusCode" parameterType="Map" resultType="egovMap">
+        SELECT
+        STUS_CODE_ID CODE_ID,
+        CODE,
+        NAME CODE_NAME,
+        NAME DESCRIPTION
+        FROM SYS0038M
+        WHERE STUS_CODE_ID in (1,5,6)
+        ORDER BY CODE_NAME ASC
+    </select>
+
+    <select id="selectRootList" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.ROT_ID,
+        H.CCP_ID,
+        A.ROT_NO,
+        A.ROT_ORD_ID,
+        A.ROT_ORD_NO,
+        G.CODE_NAME ROT_APP_TYPE,
+        B.ROT_OLD_CUST_ID,
+        C.NAME OLD_CUST_NAME,
+        B.ROT_NEW_CUST_ID,
+        D.NAME NEW_CUST_NAME,
+        E.NAME ROT_STUS,
+        TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY AM HH:MI:SS') || ' (' || F.USER_NAME || ') ' ROT_REQ_DT,
+        I.CODE || ' - ' || I.RESN_DESC ROT_FEEDBACK_CODE,
+        H.CCP_REM,
+        TO_CHAR(H.CCP_UPD_DT, 'DD/MM/YYYY AM HH:MI:SS') || ' (' || J.USER_NAME || ') ' ROT_UPD_DT,
+        TO_CHAR(H.CCP_UPD_DT, 'DD/MM/YYYY AM HH:MI:SS') ROT_UPD_DT2
+        FROM SAL0275M A
+        JOIN SAL0276D B
+        ON A.ROT_ID = B.ROT_ID
+        JOIN SAL0029D C
+        ON B.ROT_OLD_CUST_ID = C.CUST_ID
+        JOIN SAL0029D D
+        ON B.ROT_NEW_CUST_ID = D.CUST_ID
+        JOIN SYS0038M E
+        ON A.ROT_STUS = E.STUS_CODE_ID
+        JOIN SYS0047M F
+        ON A.ROT_REQ_USER_ID = F.USER_ID
+        JOIN SYS0013M G
+        ON B.ROT_APP_TYPE = G.CODE_ID
+        AND G.CODE_MASTER_ID = 10
+        JOIN SAL0277D H
+        ON A.ROT_ID = H.ROT_ID
+        LEFT JOIN SYS0032M I
+        ON H.CCP_RESN_ID = I.RESN_ID
+        JOIN SYS0047M J
+        ON H.CCP_UPD_USER_ID = J.USER_ID
+        WHERE 1=1
+        <if test="rotOrdNo != null and rotOrdNo != '' ">
+            AND A.ROT_ORD_NO = #{rotOrdNo}
+        </if>
+        <if test="oriCustID != null and oriCustID != '' ">
+            AND B.ROT_OLD_CUST_ID = #{oriCustID}
+        </if>
+        <if test="newCustID != null and newCustID != '' ">
+            AND B.ROT_NEW_CUST_ID = #{newCustID}
+        </if>
+        <if test="reqStartDt != null and reqStartDt != '' ">
+        <![CDATA[
+            AND A.ROT_REQ_DT >= TO_DATE(#{reqStartDt}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="reqEndDt != null and reqEndDt != '' ">
+        <![CDATA[
+            AND A.ROT_REQ_DT <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') +1
+        ]]>
+        </if>
+        <if test="rotNo != null and rotNo != '' ">
+            AND A.ROT_NO = #{rotNo}
+        </if>
+        <if test="(rotAppType != null and rotAppType != '') ">
+            AND B.ROT_APP_TYPE IN
+            <foreach item="item" collection="rotAppType" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="(rotStus != null and rotStus != '') ">
+            AND A.ROT_STUS IN
+            <foreach item="item" collection="rotStus" index="index" open="("
+                separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="(rotReqBrnch != null and rotReqBrnch != '' ) ">
+            AND B.ROT_REQ_BRANCH_ID IN
+            <foreach item="item" collection="rotReqBrnch" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="reqInfo != null and reqInfo != '' ">
+            AND B.ROT_REQUESTOR_CODE = #{reqInfo}
+        </if>
+        <if test="(rotFeedbackCode != null and rotFeedbackCode != '') ">
+
+            AND H.CCP_RESN_ID IN
+            <foreach item="item" collection="rotFeedbackCode" index="index"
+                open="(" separator="," close=")">
+                <if test="item == 3481 ">
+                0
+                </if>
+                <if test="item != 3481 ">
+                    #{item}
+                </if>
+
+            </foreach>
+        </if>
+        <if test="lastUpdateUser != null and lastUpdateUser != '' ">
+            AND J.USER_NAME = #{lastUpdateUser}
+        </if>
+        <if test="rootKeyInUser != null and rootKeyInUser != '' ">
+            AND F.USER_NAME = #{rootKeyInUser}
+        </if>
+        ORDER BY A.ROT_ID DESC
+    </select>
+
+    <select id="getSalesOrdId" parameterType="String" resultType="egovMap">
+        SELECT A.SALES_ORD_ID ORD_ID, A.STUS_CODE_ID ORD_STUS_ID, B.CODE ORD_STUS_CODE
+        FROM SAL0001D A
+        JOIN SYS0038M B ON A.STUS_CODE_ID = B.STUS_CODE_ID
+        WHERE SALES_ORD_NO = #{sOrdNo}
+    </select>
+
+    <select id="rootCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+        RESN_ID CODE_ID,
+        CODE || ' - ' || RESN_DESC CODE_NAME
+        FROM SYS0032M
+        WHERE STUS_CODE_ID = 1
+        AND RESN_TYPE_ID = #{typeId}
+        ORDER BY RESN_ID
+    </select>
+
+    <select id="getRootID" parameterType="String" resultType="int">
+        SELECT SAL0275M_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="selectDocNo" parameterType="String" resultType="egovMap">
+    <![CDATA[
+         SELECT
+             DOC_NO_ID,
+             CASE WHEN (DOC_NO IS NOT NULL ) THEN DOC_NO
+                  ELSE '' END C1,
+             CASE WHEN (DOC_NO_PREFIX IS NOT NULL ) THEN DOC_NO_PREFIX
+                  ELSE '' END C2
+         FROM SYS0022C
+         WHERE DOC_NO_ID = '177'
+           AND ROWNUM <= 1
+    ]]>
+    </select>
+
+    <update id="updateDocNo" parameterType="Map">
+    <![CDATA[
+        UPDATE SYS0022C
+        SET DOC_NO = LPAD(#{nextDocNo}, 6, '0')
+        WHERE DOC_NO_ID = '177'
+    ]]>
+    </update>
+
+    <select id="getRentPaySetID" parameterType="Map" resultType="int">
+        SELECT RENT_PAY_ID
+        FROM SAL0074D
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="getInstID" parameterType="Map" resultType="int">
+        SELECT INSTALL_ID
+        FROM SAL0045D
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="getCustBillID" parameterType="Map" resultType="int">
+        SELECT SAL0024D_CUST_BILL_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getRotCcpId" parameterType="Map" resultType="int">
+        SELECT SAL0277D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSAL0275M" parameterType="Map">
+        /* ROT Master */
+        INSERT INTO SAL0275M
+        (
+        ROT_ID,
+        ROT_NO,
+        ROT_ORD_ID,
+        ROT_ORD_NO,
+        ROT_STUS,
+        ROT_REQ_DT,
+        ROT_REQ_USER_ID,
+        ROT_CRT_DT,
+        ROT_CRT_USER_ID,
+        ROT_UPD_DT,
+        ROT_UPD_USER_ID
+        ) VALUES (
+        #{rotID},
+        #{rotDocNo},
+        #{rotOrdID},
+        #{rotOrdNo},
+        #{rotStus},
+        SYSDATE,
+        #{userID},
+        SYSDATE,
+        #{userID},
+        SYSDATE,
+        #{userID}
+        )
+    </insert>
+
+    <insert id="insertSAL0276D" parameterType="Map">
+        /* ROT Detail */
+        INSERT INTO SAL0276D
+        (
+        ROT_ID,
+        ROT_NO,
+        ROT_ORD_ID,
+        ROT_ORD_NO,
+        ROT_REASON_BEFORE,
+        ROT_REQ_AS,
+        ROT_REQ_REBILL,
+        ROT_REQ_INVC_GRP,
+        ROT_OLD_CUST_ID,
+        ROT_NEW_CUST_ID,
+        ROT_APP_TYPE,
+        ROT_CNT_ID,
+        ROT_ADD_ID,
+        ROT_BILL_ID,
+        ROT_STK_ID,
+        ROT_PRC_ID,
+        ROT_PV,
+        ROT_AMT,
+        ROT_PROMO_ID,
+        ROT_DEF_RENT_AMT,
+        ROT_ATCH_GRP_ID,
+        ROT_CRT_DT,
+        ROT_CRT_USER_ID,
+        ROT_UPD_DT,
+        ROT_UPD_USER_ID,
+        ROT_REQUESTOR_CODE,
+        ROT_REQ_BRANCH_ID
+        ) VALUES (
+        #{rotID},
+        #{rotDocNo},
+        #{rotOrdID},
+        #{rotOrdNo},
+        #{rotRsn},
+        #{rotReqAS},
+        #{rotReqRebill},
+        #{rotReqInvcGrp},
+        #{rotOldCustID},
+        #{rotNewCustID},
+        #{rotAppType},
+        #{rotCntID},
+        #{rotAddID},
+        #{rotBillID},
+        #{rotStkID},
+        #{rotPrcID},
+        #{rotPV},
+        #{rotAmt},
+        #{rotPromoID},
+        #{rotDefRentAmt},
+        #{rotAtchGrpId},
+        SYSDATE,
+        #{userID},
+        SYSDATE,
+        #{userID},
+        #{requestorCode},
+        #{rotReqBrnchID}
+        )
+    </insert>
+
+    <insert id="insertSAL0277D" parameterType="Map">
+        INSERT INTO SAL0277D
+        (
+        ROT_ID,
+        CCP_ID,
+        CCP_SALES_ORD_ID,
+        CCP_SCHEME_TYPE_ID,
+        CCP_TYPE_ID,
+        CCP_INCOME_RANGE_ID,
+        CCP_TOT_SCRE_POINT,
+        CCP_STUS_ID,
+        CCP_RESN_ID,
+        CCP_REM,
+        CCP_RJ_STUS_ID,
+        CCP_UPD_USER_ID,
+        CCP_UPD_DT,
+        CCP_IS_LOU,
+        CCP_IS_SAMAN,
+        CCP_IS_SYNC,
+        CCP_PNC_REM,
+        CCP_HAS_GRNT,
+        CCP_IS_HOLD,
+        CCP_IS_CURR,
+        CCP_CTOS_BATCH_NO,
+        CCP_AGM_REQ,
+        CCP_TEMPLATE
+        ) VALUES (
+        #{rotID},
+        #{ccpId},
+        #{ccpSalesOrdId},
+        #{ccpSchemeTypeId},
+        #{ccpTypeId},
+        #{ccpIncomeRangeId},
+        #{ccpTotScrePoint},
+        #{ccpStusId},
+        #{ccpResnId},
+        #{ccpRem},
+        #{ccpRjStusId},
+        #{userID},
+        SYSDATE,
+        #{ccpIsLou},
+        #{ccpIsSaman},
+        #{ccpIsSync},
+        #{ccpPncRem},
+        #{ccpHasGrnt},
+        #{ccpIsHold},
+        #{ccpIsCurr},
+        #{ccpCtosBatchNo},
+        #{ccpAgmReq},
+        #{ccpTemplate}
+        )
+    </insert>
+
+    <insert id="insertSAL0279D" parameterType="Map">
+        /* ROT RentPaySet Staging */
+        INSERT INTO SAL0279D
+        (
+        ROT_ID,
+        RENT_PAY_ID,
+        SALES_ORD_ID,
+        MODE_ID,
+        CUST_CRC_ID,
+        BANK_ID,
+        CUST_ACC_ID,
+        DD_APPLY_DT,
+        DD_SUBMIT_DT,
+        DD_START_DT,
+        DD_REJCT_DT,
+        UPD_USER_ID,
+        UPD_DT,
+        STUS_CODE_ID,
+        IS_3RD_PARTY,
+        CUST_ID,
+        EDIT_TYPE_ID,
+        NRIC_OLD,
+        FAIL_RESN_ID,
+        ISSU_NRIC,
+        AEON_CNVR,
+        REM,
+        LAST_APPLY_USER,
+        PAY_TRM,
+        SVC_CNTRCT_ID,
+        GRACE_PERIOD,
+        DEDUCT_ACC_ID
+        ) VALUES (
+        #{rotID},
+        #{rentPayId},
+        #{rotOrdID},
+        #{modeId},
+        #{custCrcId},
+        #{bankId},
+        #{custAccId},
+        TO_DATE(#{ddDates}, 'DD/MM/YYYY'),
+        TO_DATE(#{ddDates}, 'DD/MM/YYYY'),
+        TO_DATE(#{ddDates}, 'DD/MM/YYYY'),
+        TO_DATE(#{ddDates}, 'DD/MM/YYYY'),
+        #{userID},
+        SYSDATE,
+        #{stusCodeId},
+        #{is3rdParty},
+        #{custId},
+        #{editTypeId},
+        #{nricOld},
+        #{failResnId},
+        #{issuNric},
+        #{aeonCnvr},
+        #{rem},
+        #{userID},
+        #{payTrm},
+        #{svcCntrctId},
+        #{gracePeriod},
+        #{deductAccId}
+        )
+    </insert>
+
+    <insert id="insertSAL0282D" parameterType="Map">
+        /* ROT Installation Staging */
+        INSERT INTO SAL0282D
+        (
+        ROT_ID,
+        INSTALL_ID,
+        SALES_ORD_ID,
+        ADD_ID,
+        CNT_ID,
+        PRE_CALL_DT,
+        PRE_DT,
+        PRE_TM,
+        INSTCT,
+        BRNCH_ID,
+        UPD_DT,
+        UPD_USER_ID
+        ) VALUES (
+        #{rotID},
+        #{installID},
+        #{salesOrdId},
+        #{addId},
+        #{cntId},
+        #{preCallDt},
+        TO_DATE(#{preDt}, 'DD/MM/YYYY'),
+        #{preTm},
+        #{instct},
+        #{brnchId},
+        SYSDATE,
+        #{userID}
+        )
+    </insert>
+
+    <insert id="insertSAL0280D_new" parameterType="Map">
+        /* ROT Rental Bill Grouping Staging - New Group */
+        INSERT INTO SAL0280D
+        (
+        ROT_ID,
+        CUST_BILL_ID,
+        CUST_BILL_SO_ID,
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        CUST_BILL_UPD_USER_ID,
+        CUST_BILL_UPD_DT,
+        CUST_BILL_GRP_NO,
+        CUST_BILL_CRT_USER_ID,
+        CUST_BILL_CRT_DT,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID,
+        IND
+        ) VALUES (
+        #{rotID},
+        #{custBillId},
+        #{custBillSoId},
+        #{custBillCustId},
+        #{custBillCntId},
+        #{custBillAddId},
+        #{custBillStusId},
+        #{custBillRem},
+        #{userID},
+        SYSDATE,
+        #{custBillGrpNo},
+        #{userID},
+        SYSDATE,
+        #{custBillPayTrm},
+        #{custBillInchgMemId},
+        #{custBillEmail},
+        #{custBillIsEstm},
+        #{custBillIsSms},
+        #{custBillIsPost},
+        #{custBillPayRefNo1},
+        #{custBillPayRefNo2},
+        #{custBillEmailAdd},
+        #{custBillIsWebPortal},
+        #{custBillWebPortalUrl},
+        #{custBillIsSms2},
+        #{custBillCustCareCntId},
+        #{ind}
+        )
+    </insert>
+
+    <update id="updateSAL0276D_CustBill" parameterType="Map">
+        UPDATE SAL0276D
+        SET ROT_BILL_ID = #{rotBillID}
+        WHERE ROT_ID = #{rotID}
+    </update>
+
+    <insert id="insertSAL0280D_ex" parameterType="Map">
+        /* ROT Rental Bill Grouping Staging - Existing Group Staging Update*/
+        INSERT INTO SAL0280D
+        (
+        ROT_ID,
+        CUST_BILL_ID,
+        CUST_BILL_SO_ID,
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        CUST_BILL_UPD_USER_ID,
+        CUST_BILL_UPD_DT,
+        CUST_BILL_GRP_NO,
+        CUST_BILL_CRT_USER_ID,
+        CUST_BILL_CRT_DT,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID,
+        IND
+        )
+        SELECT
+        #{rotID},
+        CUST_BILL_ID,
+        #{custBillSoId},
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        #{userId},
+        SYSDATE,
+        CUST_BILL_GRP_NO,
+        #{userId},
+        SYSDATE,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID,
+        #{ind}
+        FROM SAL0024D
+        WHERE CUST_BILL_ID = #{custBillId}
+    </insert>
+
+    <select id="getCcpByCcpId" parameterType="Map" resultType="egovMap">
+        SELECT
+        Extent1.CCP_ID,
+        Extent3.SALES_ORD_NO,
+        Extent3.CRT_DT,
+        Extent4.USER_NAME,
+        Extent3.SALES_ORD_ID,
+        Extent1.CCP_TYPE_ID,
+        Extent13.CODE_NAME,
+        Extent3.REF_NO,
+        Extent9.CUST_ID,
+        Extent9.NAME,
+        Extent9.NRIC,
+        Extent7.TEL_M1,
+        CASE WHEN ( 969 = Extent1.CCP_SCHEME_TYPE_ID ) THEN 0 ELSE 1 END
+        CCP_SCHEME_TYPE_ID,
+        Extent9.DOB,
+        Extent12.STK_CODE,
+        Extent12.STK_DESC,
+        Extent3.SALES_DT,
+        Extent14.NAME NAME1,
+        Extent17.BRNCH_ID,
+        Extent17.NAME NAME2,
+        Extent1.CCP_TOT_SCRE_POINT,
+        Extent1.CCP_STUS_ID,
+        Extent15.NAME NAME3,
+        CASE WHEN ( Extent18.RESN_ID IS NULL ) THEN 0 ELSE Extent18.RESN_ID END
+        RESN_ID,
+        CASE WHEN ( Extent18.RESN_DESC IS NULL ) THEN '' ELSE Extent18.RESN_DESC
+        END RESN_DESC,
+        CASE WHEN ( Extent1.CCP_REM IS NULL ) THEN NULL ELSE Extent1.CCP_REM END
+        CCP_REM,
+        CASE WHEN ( Extent1.CCP_PNC_REM IS NULL ) THEN NULL ELSE
+        Extent1.CCP_PNC_REM END CCP_PNC_REM,
+        CASE WHEN ( Extent1.CCP_RJ_STUS_ID IS NULL ) THEN 0 ELSE
+        Extent1.CCP_RJ_STUS_ID END CCP_RJ_STUS_ID,
+        CASE WHEN ( Extent16.NAME IS NULL ) THEN ' ' ELSE Extent16.NAME END NAME4,
+        CASE WHEN ( 1 = Extent1.CCP_IS_LOU ) THEN 1 ELSE 0 END CCP_IS_LOU,
+        CASE WHEN ( 1 = Extent1.CCP_IS_SAMAN ) THEN 1 ELSE 0 END CCP_IS_SAMAN,
+        CASE WHEN ( 1 = Extent1.CCP_IS_HOLD ) THEN 1 ELSE 0 END CCP_IS_HOLD,
+        CASE WHEN ( Extent10.SCRE_CTGRY_ID IS NOT NULL ) THEN
+        Extent10.SCRE_CTGRY_ID ELSE 0 END SCRE_CTGRY_ID,
+        Extent10.SCRE_CTGRY_DESC,
+        Extent1.CCP_UPD_DT,
+        Extent2.USER_NAME USERNAME1,
+        NVL(Extent8.MODE_ID , 0) MODE_ID,
+        '' C12,
+        Extent6.AREA_ID
+        FROM SAL0277D Extent1
+        LEFT JOIN SYS0047M Extent2
+        ON Extent1.CCP_UPD_USER_ID = Extent2.USER_ID
+        JOIN SAL0001D Extent3
+        ON Extent1.CCP_SALES_ORD_ID = Extent3.SALES_ORD_ID
+        LEFT JOIN SYS0047M Extent4
+        ON Extent3.CRT_USER_ID = Extent4.USER_ID
+        LEFT JOIN SAL0045D Extent5
+        ON Extent3.SALES_ORD_ID = Extent5.SALES_ORD_ID
+        LEFT JOIN SAL0023D Extent6
+        ON Extent5.ADD_ID = Extent6.CUST_ADD_ID
+        LEFT JOIN SAL0027D Extent7
+        ON Extent3.CUST_CNT_ID = Extent7.CUST_CNTC_ID
+        LEFT JOIN SAL0074D Extent8
+        ON Extent3.SALES_ORD_ID = Extent8.SALES_ORD_ID
+        JOIN SAL0029D Extent9
+        ON Extent3.CUST_ID = Extent9.CUST_ID
+        LEFT JOIN SYS0008M Extent10
+        ON Extent1.CCP_INCOME_RANGE_ID = Extent10.SCRE_CTGRY_ID
+        JOIN SAL0002D Extent11
+        ON Extent3.SALES_ORD_ID = Extent11.SALES_ORD_ID
+        JOIN SYS0026M Extent12
+        ON Extent11.ITM_STK_ID = Extent12.STK_ID
+        LEFT JOIN SYS0013M Extent13
+        ON Extent1.CCP_TYPE_ID = Extent13.CODE_ID
+        LEFT JOIN SYS0038M Extent14
+        ON Extent3.STUS_CODE_ID = Extent14.STUS_CODE_ID
+        LEFT JOIN SYS0038M Extent15
+        ON Extent1.CCP_STUS_ID = Extent15.STUS_CODE_ID
+        LEFT JOIN SYS0038M Extent16
+        ON Extent1.CCP_RJ_STUS_ID = Extent16.STUS_CODE_ID
+        JOIN SYS0005M Extent17
+        ON Extent3.BRNCH_ID = Extent17.BRNCH_ID
+        LEFT JOIN SYS0032M Extent18
+        ON Extent1.CCP_RESN_ID = Extent18.RESN_ID
+        LEFT JOIN SYS0064M Extent19
+        ON Extent6.AREA_ID = Extent19.AREA_ID
+        WHERE Extent1.CCP_ID = #{groupCode}
+        <![CDATA[
+          AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <select id="selectCcpInfoByCcpId" parameterType="Map"
+        resultType="egovMap">
+        SELECT
+        Extent1.CCP_ID,
+        Extent1.CCP_STUS_ID,
+        Extent1.CCP_TOT_SCRE_POINT,
+        Extent1.CCP_INCOME_RANGE_ID,
+        Extent2.NAME,
+        CASE WHEN ( Extent1.CCP_REM IS NULL ) THEN NULL ELSE Extent1.CCP_REM END
+        CCP_REM,
+        CASE WHEN ( Extent1.CCP_PNC_REM IS NULL ) THEN NULL ELSE
+        Extent1.CCP_PNC_REM END CCP_PNC_REM,
+        CASE WHEN ( Extent3.RESN_ID IS NULL ) THEN 0 ELSE Extent3.RESN_ID END
+        RESN_ID,
+        CASE WHEN ( Extent3.RESN_DESC IS NULL ) THEN '' ELSE Extent3.RESN_DESC END
+        RESN_DESC,
+        CASE WHEN ( 1 = Extent1.CCP_IS_LOU ) THEN 1 ELSE 0 END CCP_IS_LOU,
+        CASE WHEN ( 1 = Extent1.CCP_IS_SAMAN ) THEN 1 ELSE 0 END CCP_IS_SAMAN,
+        CASE WHEN ( 1 = Extent1.CCP_IS_HOLD ) THEN 1 ELSE 0 END CCP_IS_HOLD,
+        CASE WHEN ( Extent5.NAME IS NULL ) THEN '' ELSE Extent5.NAME END
+        NAME1,
+        CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE
+        Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC,
+        CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END
+        CCP_FICO,
+        NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
+        CASE WHEN (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT,
+        Extent9.CHS_STUS,
+        Extent9.CHS_RSN,
+        CASE WHEN ( 1 = Extent1.CCP_AGM_REQ ) THEN 1 ELSE 0 END CCP_AGM_REQ,
+        CASE WHEN ( 1 = Extent1.CCP_TEMPLATE ) THEN 1 ELSE 0 END CCP_TEMPLATE,
+        Extent1.CCP_ATCH_GRP_ID,
+        CASE WHEN ( 0 = Extent1.CCP_RESN_ID ) THEN 0 ELSE Extent1.CCP_RESN_ID END
+        CCP_RESN_ID
+        FROM SAL0277D Extent1
+        LEFT JOIN SYS0038M Extent2
+        ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
+        LEFT JOIN SYS0032M Extent3
+        ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
+        LEFT JOIN SYS0008M Extent4
+        ON Extent1.CCP_INCOME_RANGE_ID = Extent4.SCRE_CTGRY_ID
+        LEFT JOIN SYS0038M Extent5
+        ON Extent1.CCP_RJ_STUS_ID = Extent5.STUS_CODE_ID
+        LEFT JOIN SAL0001D Extent6
+        ON Extent1.CCP_SALES_ORD_ID = Extent6.SALES_ORD_ID
+        LEFT JOIN SAL0107D Extent7
+        ON Extent6.SALES_ORD_NO = Extent7.ORD_NO
+        LEFT JOIN SAL0074D Extent8
+        ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
+        LEFT JOIN SAL0262D Extent9
+        ON Extent6.CUST_ID = Extent9.CUST_ID
+        AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
+        AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
+        WHERE Extent1.CCP_ID = #{ccpId}
+        <![CDATA[
+            AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <select id="selectRootDetails" parameterType="Map" resultType="egovMap">
+        /* ownershipTransfer.selectRootDetails */
+        <![CDATA[
+SELECT
+            /* GENERAL ROT DETAILS */
+            A.ROT_ID,
+            A.ROT_NO,
+            A.ROT_ORD_ID,
+            A.ROT_ORD_NO,
+            Z1.NAME,
+            Z23.CODE || ' - ' || Z23.RESN_DESC ROT_REASON_BEFORE,
+            Z24.RESN_ID  ROT_REASON_AFTER,
+            TO_CHAR(A.ROT_REQ_DT, 'DD-MM-YYYY') ROT_REQ_DT,
+            Z2.USER_NAME ROT_REQ_USER,
+            TO_CHAR(A.ROT_APPV_DT, 'DD-MM-YYYY') ROT_APPV_DT,
+            Z3.USER_NAME ROT_APPV_USER,
+            B.ROT_REQ_AS,
+            B.ROT_REQ_REBILL,
+            B.ROT_REQ_INVC_GRP,
+            B.ROT_ATCH_GRP_ID,
+            /* ROT DETAILS */
+            /* CUSTOMER TAB */
+            B.ROT_NEW_CUST_ID,
+            C.NAME ROT_NEW_CUST_NAME,
+            C.NRIC,
+            Z4.CODE_NAME CUST_TYPE,
+            Z5.NAME CUST_NATIONALITY,
+            Z6.CODE_NAME CUST_RACE,
+            TO_CHAR(C.DOB, 'DD-MM-YYYY') DOB,
+            CASE WHEN C.GENDER = 'M' THEN 'Male' WHEN C.GENDER = 'F' THEN 'Female' ELSE '' END CUST_GENDER,
+            CASE WHEN C.NATION <> 1 THEN TO_CHAR(C.PAS_SPORT_EXPR, 'YYYY-MM-DD') ELSE '' END PASS_SPORT_EXPR,
+            CASE WHEN C.NATION <> 1 THEN TO_CHAR(C.VISA_EXPR, 'YYYY-MM-DD') ELSE '' END VISA_EXPR,
+            C.EMAIL CUST_EMAIL,
+            Z7.CODE_NAME INDUSTRY_CODE,
+            C.REM CUST_REM,
+            /* MAILING ADDRESS TAB */
+            E.ADDR_DTL MAIL_ADDR1,
+            E.STREET MAIL_ADDR2,
+            F.AREA MAIL_AREA,
+            F.CITY MAIL_CITY,
+            F.POSTCODE MAIL_POSTCODE,
+            F.STATE MAIL_STATE,
+            F.COUNTRY MAIL_COUNTRY,
+            D.CUST_BILL_GRP_NO BILLING_GRP,
+            NVL(D.CUST_BILL_IS_ESTM, 0) BILL_ESTM,
+            NVL(D.CUST_BILL_IS_SMS, 0) BILL_SMS,
+            NVL(CUST_BILL_IS_POST, 0) BILL_POST,
+            /* CONTACT PERSON TAB */
+            G.NAME CNTC_NAME,
+            Z8.CODE CNTC_INITIAL,
+            CASE WHEN G.GENDER = 'M' THEN 'Male' WHEN G.GENDER = 'F' THEN 'Female' ELSE '' END CNTC_GENDER,
+            G.NRIC CNTC_NRIC,
+            TO_CHAR(G.DOB, 'DD-MM-YYYY') CNTC_DOB,
+            Z9.CODE_NAME CNTC_RACE,
+            G.EMAIL CNTC_EMAIL,
+            G.DEPT CNTC_DEPT,
+            G.POS CNTC_POST,
+            NVL(G.TEL_M1, G.TEL_M2) TEL_M,
+            G.TEL_R,
+            G.TEL_O,
+            G.TELF TEL_F,
+            /* INSTALLATION TAB */
+            I.ADDR_DTL INST_ADDR1,
+            I.STREET INST_ADDR2,
+            J.AREA INST_AREA,
+            J.CITY INST_CITY,
+            J.POSTCODE INST_POSTCODE,
+            J.STATE INST_STATE,
+            J.COUNTRY INST_COUNTRY,
+            K.NAME INST_CNTC_NAME,
+            Z10.CODE INST_CNTC_INITIAL,
+            CASE WHEN K.GENDER = 'M' THEN 'Male' WHEN K.GENDER = 'F' THEN 'Female' ELSE '' END INST_CNTC_GENDER,
+            K.NRIC INST_CNTC_NRIC,
+            TO_CHAR(K.DOB, 'DD-MM-YYYY') INST_CNTC_DOB,
+            Z11.CODE_NAME INST_CNTC_RACE,
+            K.EMAIL INST_CNTC_EMAIL,
+            K.DEPT INST_CNTC_DEPT,
+            K.POS INST_CNTC_POST,
+            NVL(K.TEL_M1, K.TEL_M2) INST_TEL_M,
+            K.TEL_R INST_TEL_R,
+            K.TEL_O INST_TEL_O,
+            K.TELF INST_TEL_F,
+            H.BRNCH_ID INST_BRNCH,
+            L.CODE BRNCH_CODE,
+            L.CODE || ' - ' || L.NAME BRNCH_NAME,
+            TO_CHAR(H.PRE_DT, 'DD/MM/YYYY') PRE_INST_DT,
+            CASE WHEN (TO_NUMBER(SUBSTR(H.PRE_TM, 1, 2)) < 12) THEN SUBSTR(H.PRE_TM, 1, 5) || 'AM' ELSE SUBSTR(H.PRE_TM, 1, 5) || 'PM' END PRE_INST_TM,
+            H.INSTCT,
+            /* PAYMODE TAB */
+            M.MODE_ID PAYMODE_ID,
+            Z12.CODE_NAME PAYMODE,
+            M.ISSU_NRIC,
+            M.IS_3RD_PARTY,
+            M.CUST_ID PAYMODE_3RD_PARTY_ID,
+            N.NAME PAYMODE_3RD_PARTY_NAME,
+            N.NRIC PAYMODE_3RD_PARTY_NRIC,
+            Z18.CODE_NAME PAYMODE_3RD_PARTY_CTYPE,
+            /* CRC PAYMODE */
+            Z13.CUST_ORI_CRC_NO,
+            Z15.CODE_NAME CRC_TYPE,
+            Z13.CUST_CRC_OWNER,
+            SUBSTR(Z13.CUST_CRC_EXPR, 1, 2) || '/' || SUBSTR(Z13.CUST_CRC_EXPR, 3, 2) CRC_EXPR,
+            Z14.NAME CRC_BANK,
+            Z16.CODE_NAME CARD_TYPE,
+            /* DD PAYMODE */
+            Z19.CUST_ACC_NO DD_ACC_NO,
+            Z21.CODE_NAME DD_ACC_TYPE,
+            Z19.CUST_ACC_OWNER,
+            NVL(Z19.CUST_ACC_BANK_BRNCH, '-') DD_ISSUE_BANK_BRNCH,
+            Z20.NAME DD_BANK,
+            /* EXIST CUSTOMER INFO */
+            EXT1.CUST_ID EXT_CUST_ID,
+            EXT2.CODE_NAME EXT_CUST_TYPE,
+            EXT3.NAME EXT_CUST_NATIONALITY,
+            EXT4.CODE_NAME EXT_CUST_RACE,
+            EXT1.NAME EXT_CUST_NAME,
+            EXT1.NRIC EXT_CUST_NRIC,
+            TO_CHAR(EXT1.DOB, 'DD-MM-YYYY') EXT_CUST_DOB,
+            CASE WHEN EXT1.GENDER = 'M' THEN 'Male' WHEN G.GENDER = 'F' THEN 'Female' ELSE '' END EXT_CUST_GENDER,
+            CASE WHEN EXT1.NATION <> 1 THEN TO_CHAR(EXT1.PAS_SPORT_EXPR, 'YYYY-MM-DD') ELSE '' END EXT_PASS_SPORT_EXPR,
+            CASE WHEN EXT1.NATION <> 1 THEN TO_CHAR(EXT1.VISA_EXPR, 'YYYY-MM-DD') ELSE '' END EXT_VISA_EXPR,
+            EXT1.EMAIL EXT_CUST_EMAIL,
+            EXT1.REM EXT_CUST_REMARK,
+            EXT5.CODE_NAME EXT_INDUSTRY_CODE,
+            /* old customer contact person */
+            G1.NAME EXT_CTN_NAME,
+            G1.TEL_M1 EXT_CTN_MOBILE,
+            G1.TEL_R EXT_CTN_RESIDENCE,
+            G1.TEL_O EXT_CTN_OFFICE,
+            /* old cus inst addr */
+            I1.ADDR_DTL|| I1.STREET || I2.CITY ||', '|| I2.POSTCODE || ', '|| I2.STATE ||', '|| I2.COUNTRY EXT_INST_ADDR,
+            /* NEW cus inst addr */
+            E.ADDR_DTL|| E.STREET || F.CITY ||', '|| F.POSTCODE || ', '|| F.STATE ||', '|| F.COUNTRY NEW_INST_ADDR,
+            /* EXT CUS CRC DETAIL */
+            EXT7.CODE_NAME EXT_PAYMODE,
+            EXT8.CUST_ORI_CRC_NO EXT_CRC_NO,
+            EXT10.CODE_NAME EXT_CRC_TYPE,
+            EXT8.CUST_CRC_OWNER EXT_CRC_OWNER,
+            SUBSTR(EXT8.CUST_CRC_EXPR, 1, 2) || '/' || SUBSTR(EXT8.CUST_CRC_EXPR, 3, 2) EXT_CRC_EXPR,
+            EXT10.CODE_NAME EXT_CRC_TYPE,
+            ext11.CODE_NAME EXT_CARD_TYPE,
+            EXT9.NAME EXT_ISSUE_BANK
+        FROM SAL0275M A
+        JOIN SAL0276D B
+            ON A.ROT_ID = B.ROT_ID
+        /* NEW CUSTOMER INFO */
+        JOIN SAL0029D C
+            ON B.ROT_NEW_CUST_ID = C.CUST_ID
+        /* BILLING INFO */
+        LEFT JOIN SAL0280D D
+            ON A.ROT_ID = D.ROT_ID
+            AND B.ROT_BILL_ID = D.CUST_BILL_ID
+        LEFT JOIN SAL0023D E
+            ON D.CUST_BILL_ADD_ID = E.CUST_ADD_ID
+        LEFT JOIN SYS0064M F
+            ON E.AREA_ID = F.AREA_ID
+        /* CONTACT INFO */
+        JOIN SAL0027D G
+            ON B.ROT_CNT_ID = G.CUST_CNTC_ID
+        JOIN SAL0001D GG
+            ON GG.SALES_ORD_ID = A.ROT_ORD_ID
+        JOIN SAL0027D G1
+            ON G1.CUST_CNTC_ID = GG.CUST_CNT_ID
+        /* INSTALLATION INFO */
+        JOIN SAL0282D H
+            ON A.ROT_ID = H.ROT_ID
+        JOIN SAL0023D I
+            ON H.ADD_ID = I.CUST_ADD_ID
+        /* EXisting customer address*/
+        JOIN SAL0023D I1
+            ON B.ROT_OLD_CUST_ID =  I1.CUST_ID and I1.STUS_CODE_ID = 9
+        left join SYS0064M I2 on I1.AREA_ID = I2.AREA_ID
+
+        JOIN SYS0064M J
+            ON I.AREA_ID = J.AREA_ID
+        JOIN SAL0027D K
+            ON H.CNT_ID = K.CUST_CNTC_ID
+        JOIN SYS0005M L
+            ON H.BRNCH_ID = L.BRNCH_ID
+        /* PAYMODE INFO */
+        JOIN SAL0279D M
+            ON A.ROT_ID = M.ROT_ID
+        JOIN SAL0029D N
+            ON M.CUST_ID = N.CUST_ID
+        /* --------------------------------------- */
+        /* COMMON DETAILS / CODES */
+        LEFT JOIN SYS0038M Z1 /* ROT STATUS */
+            ON A.ROT_STUS = Z1.STUS_CODE_ID
+        LEFT JOIN SYS0047M Z2 /* ROT REQUESTOR */
+            ON A.ROT_REQ_USER_ID = Z2.USER_ID
+        LEFT JOIN SYS0047M Z3 /* ROT APPROVER */
+            ON A.ROT_APPV_USER_ID = Z3.USER_ID
+        LEFT JOIN SYS0013M Z4 /* CUST TYPE */
+            ON C.TYPE_ID = Z4.CODE_ID
+            AND Z4.CODE_MASTER_ID = 8
+        LEFT JOIN SYS0015M Z5 /* NATIONALITY */
+            ON C.NATION = Z5.CNTY_ID
+        LEFT JOIN SYS0013M Z6 /* CUSTOMER RACE */
+            ON C.RACE_ID = Z6.CODE_ID
+            AND Z6.CODE_MASTER_ID = 2
+        LEFT JOIN SYS0013M Z7 /* CORPORATE TYPE */
+            ON C.CORP_TYPE_ID = Z7.CODE_ID
+            AND Z7.CODE_MASTER_ID = 95
+        LEFT JOIN SYS0013M Z8 /* CONTACT INITIALS */
+            ON G.CUST_INITIAL = Z8.CODE_ID
+            AND Z8.CODE_MASTER_ID = 17
+        LEFT JOIN SYS0013M Z9 /* CONTACT RACE */
+            ON G.RACE_ID = Z9.CODE_ID
+            AND Z9.CODE_MASTER_ID = 2
+        LEFT JOIN SYS0013M Z10 /* CONTACT INITIALS */
+            ON K.CUST_INITIAL = Z10.CODE_ID
+            AND Z10.CODE_MASTER_ID = 17
+        LEFT JOIN SYS0013M Z11 /* INSTALLATION CONTACT RACE */
+            ON K.RACE_ID = Z11.CODE_ID
+            AND Z11.CODE_MASTER_ID = 2
+        LEFT JOIN SYS0032M Z23 /* ROT REASON BEFORE*/
+            ON B.ROT_REASON_BEFORE = Z23.RESN_ID
+        LEFT JOIN SYS0032M Z24 /* ROT REASON AFTER*/
+            ON B.ROT_REASON_AFTER = Z24.RESN_ID
+        /* -------------------------------- */
+        LEFT JOIN SYS0013M Z12 /* PAYMENT MODE */
+            ON M.MODE_ID = Z12.CODE_ID
+            AND Z12.CODE_MASTER_ID = 19
+        LEFT JOIN SAL0028D Z13 /* CRC PAYMODE */
+            ON M.CUST_CRC_ID = Z13.CUST_CRC_ID
+        LEFT JOIN SYS0004M Z14 /* CRC BANK */
+            ON Z13.CUST_CRC_BANK_ID = Z14.BANK_ID
+        LEFT JOIN SYS0013M Z15 /* CRC TYPE */
+            ON Z13.CUST_CRC_TYPE_ID = Z15.CODE_ID
+            AND Z15.CODE_MASTER_ID = 21
+        LEFT JOIN SYS0013M Z16 /* CARD TYPE */
+            ON Z13.CARD_TYPE_ID = Z16.CODE_ID
+            AND Z16.CODE_MASTER_ID = 115
+        LEFT JOIN SAL0029D Z17
+            ON Z13.CUST_ID = Z17.CUST_ID
+        LEFT JOIN SYS0013M Z18 /* CUST TYPE */
+            ON Z17.TYPE_ID = Z18.CODE_ID
+            AND Z18.CODE_MASTER_ID = 8
+        /* -------------------------------- */
+        LEFT JOIN SAL0022D Z19 /* DD PAYMODE */
+            ON M.CUST_ACC_ID = Z19.CUST_ACC_ID
+        LEFT JOIN SYS0004M Z20 /* DD BANK */
+            ON Z19.CUST_ACC_BANK_ID = Z20.BANK_ID
+        LEFT JOIN SYS0013M Z21 /* DD TYPE */
+            ON Z19.CUST_ACC_TYPE_ID = Z21.CODE_ID
+            AND Z21.CODE_MASTER_ID = 20
+        LEFT JOIN SYS0013M Z22 /* DD CHANNEL */
+            ON Z19.CUST_ACC_DDT_CHL = Z22.CODE_ID
+            AND Z22.CODE_MASTER_ID = 403
+        /* EXIST CUSTOMER INFO */
+        LEFT JOIN SAL0029D EXT1 ON B.ROT_OLD_CUST_ID = EXT1.CUST_ID
+        LEFT JOIN SYS0013M EXT2 /* EXIST CUST TYPE */
+            ON EXT1.TYPE_ID = EXT2.CODE_ID
+            AND EXT2.CODE_MASTER_ID = 8
+        LEFT JOIN SYS0015M EXT3 /* EXIST CUST NATIONALITY */
+            ON EXT1.NATION = EXT3.CNTY_ID
+        LEFT JOIN SYS0013M EXT4 /* EXIST CUST RACE */
+            ON EXT1.RACE_ID = EXT4.CODE_ID
+            AND EXT4.CODE_MASTER_ID = 2
+        LEFT JOIN SYS0013M EXT5 /* CORPORATE TYPE */
+            ON EXT1.CORP_TYPE_ID = EXT5.CODE_ID
+            AND EXT5.CODE_MASTER_ID = 95
+        /* Existing Customer Payment Detail*/
+        JOIN SAL0074D EXT6 on EXT6.sales_ord_Id = M.sales_ord_Id
+        LEFT JOIN SYS0013M EXT7 /* PAYMENT MODE */
+            ON EXT6.MODE_ID = EXT7.CODE_ID
+            AND EXT7.CODE_MASTER_ID = 19
+        LEFT JOIN SAL0028D EXT8 /* CRC PAYMODE */
+            ON EXT6.CUST_CRC_ID = EXT8.CUST_CRC_ID
+        LEFT JOIN sys0004M EXT9 /* CRC BANK */
+            ON EXT6.BANK_ID = EXT9.BANK_ID
+        LEFT JOIN SYS0013M EXT10 /* CRC TYPE */
+            ON EXT8.CUST_CRC_TYPE_ID = EXT10.CODE_ID
+            AND EXT10.CODE_MASTER_ID = 21
+        LEFT JOIN SYS0013M EXT11 /* CARD TYPE */
+            ON EXT8.CARD_TYPE_ID = EXT11.CODE_ID
+            AND EXT11.CODE_MASTER_ID = 115
+        WHERE A.ROT_ID = #{rotId}
+        ]]>
+    </select>
+
+    <select id="selectRotCallLog" parameterType="Map" resultType="egovMap">
+        SELECT
+        CASE WHEN A.ROT_CALL_STUS = 'ACT' THEN 'Active'
+        WHEN A.ROT_CALL_STUS = 'VER' THEN 'Verification'
+        WHEN A.ROT_CALL_STUS = 'APP' THEN 'Approve'
+        WHEN A.ROT_CALL_STUS = 'ONH' THEN 'On-Hold'
+        ELSE ''
+        END ROT_CALL_STUS,
+        TO_CHAR(A.ROT_CALL_DT, 'DD-MM-YYYY') ROT_CALL_DT,
+        A.ROT_REM,
+        B.USER_NAME ROT_CALL_RESPD_PIC,
+        TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT
+        FROM SAL0278D A
+        JOIN SYS0047M B
+        ON A.ROT_CALL_RESPD_ID = B.USER_ID
+        WHERE ROT_ID = #{rotId}
+    </select>
+
+    <select id="selectRotHistory" parameterType="Map" resultType="egovMap">
+        SELECT
+        ROT_REQ_DT,
+        OLD_CUST_ID,
+        OLD_CUST_NAME,
+        NEW_CUST_ID,
+        NEW_CUST_NAME,
+        STATUS,
+        ROT_REASON_BEFORE,
+        ROT_REASON_AFTER,
+        ROUND(
+        CASE WHEN NEXT_REQ_DT IS NULL THEN MONTHS_BETWEEN(SYSDATE,
+        TO_DATE(ROT_REQ_DT, 'DD/MM/YYYY'))
+        ELSE MONTHS_BETWEEN(TO_DATE(NEXT_REQ_DT, 'DD/MM/YYYY'),
+        TO_DATE(ROT_REQ_DT, 'DD/MM/YYYY')) END ) AS PRODUCT_USAGE_MONTH,
+        APP_Type_ID
+
+        FROM (
+        SELECT
+        ROT_REQ_DT,
+        OLD_CUST_ID,
+        OLD_CUST_NAME,
+        NEW_CUST_ID,
+        NEW_CUST_NAME,
+        STATUS,
+        ROT_REASON_BEFORE,
+        ROT_REASON_AFTER,
+        /* LAG(ROT_REQ_DT) OVER (ORDER BY REQ_DT) AS PREVIOUS_REQ_DT */
+        LAG(ROT_REQ_DT) OVER (ORDER BY REQ_DT DESC) AS NEXT_REQ_DT,
+        APP_Type_ID
+        FROM (
+        SELECT
+        TO_CHAR(A.SO_EXCHG_CRT_DT, 'DD/MM/YYYY') ROT_REQ_DT,
+        A.SO_EXCHG_OLD_CUST_ID OLD_CUST_ID,
+        B.NAME OLD_CUST_NAME,
+        A.SO_EXCHG_NW_CUST_ID NEW_CUST_ID,
+        C.NAME NEW_CUST_NAME,
+        D.CODE STATUS,
+        '' ROT_REASON_BEFORE,
+        '' ROT_REASON_AFTER,
+        A.SO_EXCHG_CRT_DT REQ_DT,
+        C.TYPE_ID as APP_Type_ID
+        FROM SAL0004D A
+        JOIN SAL0029D B
+        ON A.SO_EXCHG_OLD_CUST_ID = B.CUST_ID
+        JOIN SAL0029D C
+        ON A.SO_EXCHG_NW_CUST_ID = C.CUST_ID
+        JOIN SYS0038M D
+        ON A.SO_EXCHG_STUS_ID = D.STUS_CODE_ID
+        WHERE A.SO_ID = #{salesOrdID}
+
+        UNION ALL
+
+        SELECT
+        TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY') ROT_REQ_DT,
+        B.ROT_OLD_CUST_ID OLD_CUST_ID,
+        C.NAME OLD_CUST_NAME,
+        B.ROT_NEW_CUST_ID NEW_CUST_ID,
+        D.NAME NEW_CUST_NAME,
+        E.CODE STATUS,
+        F.CODE || ' - ' || F.RESN_DESC ROT_REASON_BEFORE,
+        CASE WHEN (G.CODE || ' - ' || G.RESN_DESC)= ' - ' THEN ''
+        ELSE
+            G.CODE || ' - ' || G.RESN_DESC
+        END AS ROT_REASON_AFTER,
+        A.ROT_REQ_DT REQ_DT,
+        D.TYPE_ID as APP_Type_ID
+        FROM SAL0275M A
+        JOIN SAL0276D B
+        ON A.ROT_ID = B.ROT_ID
+        JOIN SAL0029D C
+        ON B.ROT_OLD_CUST_ID = C.CUST_ID
+        JOIN SAL0029D D
+        ON B.ROT_NEW_CUST_ID = D.CUST_ID
+        JOIN SYS0038M E
+        ON A.ROT_STUS = E.STUS_CODE_ID
+        JOIN SYS0032M F
+        ON B.ROT_REASON_BEFORE = F.RESN_ID
+        LEFT JOIN SYS0032M G
+        ON B.ROT_REASON_AFTER = G.RESN_ID
+        WHERE A.ROT_ID = #{rotId}
+        )
+        )
+        ORDER BY ROT_REQ_DT DESC
+    </select>
+
+    <insert id="insCallLog" parameterType="Map">
+        INSERT INTO SAL0278D
+        VALUES (
+        #{rotID},
+        SAL0278D_ID_SEQ.NEXTVAL,
+        (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{rotCallRespdId}),
+        TO_DATE(#{rotCallDt}, 'DD/MM/YYYY'),
+        #{rotCallStus},
+        #{rotRem},
+        '',
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+        )
+    </insert>
+
+    <!-- ************************************************************************************* -->
+
+    <update id="updateCcpDecision" parameterType="Map">
+        UPDATE SAL0277D
+        SET CCP_SCHEME_TYPE_ID = #{saveCustTypeId},
+        CCP_INCOME_RANGE_ID = #{incomeRangeEdit},
+        CCP_TOT_SCRE_POINT = #{ccpTotalScorePoint},
+        CCP_STUS_ID = #{statusEdit},
+        CCP_RESN_ID = #{reasonCodeEdit},
+        CCP_REM = #{spcialRem},
+        CCP_RJ_STUS_ID = #{rejectStatusEdit},
+        CCP_UPD_DT = SYSDATE,
+        CCP_UPD_USER_ID = #{userId},
+        CCP_IS_LOU = #{letterOfUdt},
+        CCP_IS_SAMAN = #{summon},
+        CCP_IS_SYNC = #{updateCCPIssynch},
+        CCP_PNC_REM = #{pncRem},
+        CCP_HAS_GRNT = #{hasGrnt},
+        CCP_IS_HOLD = #{onHoldCcp},
+        CCP_FICO = #{ficoScore},
+        CCP_AGM_REQ = #{agmReq},
+        CCP_TEMPLATE = #{cowayTemplate},
+        CCP_ATCH_GRP_ID = #{ccpAtchFileGrpId},
+        ROT_CCP_REM = #{rotCcpRem}
+        WHERE CCP_ID = #{saveCcpId}
+    </update>
+
+    <update id="updateCcpDecisionStatus" parameterType="egovMap">
+        UPDATE SAL0283D
+        SET CCP_ITM_STUS_ID = #{ccpItmStusId}
+        WHERE CCP_ITM_ID = #{ccpItmId}
+    </update>
+
+    <insert id="insertCcpDecision" parameterType="Map">
+        INSERT INTO SAL0283D
+        (
+        ROT_ID,
+        CCP_ITM_ID,
+        CCP_ID,
+        CCP_SCRE_EVENT_ID,
+        CCP_ITM_SCRE_UNIT,
+        CCP_ITM_POINT_SCRE,
+        CCP_ITM_REM,
+        CCP_ITM_UPD_USER_ID,
+        CCP_ITM_UPD_DT,
+        CCP_ITM_STUS_ID
+        ) VALUES (
+        #{rotId},
+        SAL0283D_ITM_ID_SEQ.NEXTVAL,
+        #{saveCcpId},
+        #{insCcpScreEventId},
+        #{insCcpItmScreUnit},
+        #{insCcpItmPointScre},
+        NULL,
+        #{userId},
+        SYSDATE,
+        #{insCcpItmStusId}
+        )
+    </insert>
+
+    <select id="getCcpDecisionList" parameterType="Map" resultType="EgovMap">
+        SELECT
+        Extent1.CCP_ITM_ID,
+        Extent1.CCP_ID,
+        Extent1.CCP_SCRE_EVENT_ID,
+        Extent1.CCP_ITM_SCRE_UNIT,
+        Extent1.CCP_ITM_POINT_SCRE,
+        Extent1.CCP_ITM_REM,
+        Extent1.CCP_ITM_UPD_USER_ID,
+        Extent1.CCP_ITM_UPD_DT,
+        Extent1.CCP_ITM_STUS_ID
+        FROM SAL0283D Extent1
+        WHERE Extent1.CCP_ID = #{saveCcpId}
+    </select>
+
+    <update id="updateSAL0277D_stus" parameterType="Map">
+        /* ROT Approve or Reject Status Update */
+        UPDATE SAL0275M
+        SET ROT_STUS = #{rotStus},
+        ROT_APPV_DT = SYSDATE,
+        ROT_APPV_USER_ID = #{userId},
+        ROT_UPD_DT = SYSDATE,
+        ROT_UPD_USER_ID = #{userId}
+        WHERE ROT_ID = #{rotId}
+    </update>
+
+    <insert id="insertSAL0004D_ROT" parameterType="Map">
+        /* ROT Product or Application Type Exchange */
+        INSERT INTO SAL0004D (SO_EXCHG_ID,SO_ID,SO_EXCHG_TYPE_ID,SO_EXCHG_STUS_ID,SO_EXCHG_RESN_ID,SO_CUR_STUS_ID,INSTALL_ENTRY_ID,SO_EXCHG_OLD_APP_TYPE_ID,SO_EXCHG_NW_APP_TYPE_ID,SO_EXCHG_OLD_STK_ID,SO_EXCHG_NW_STK_ID,SO_EXCHG_OLD_PRC_ID,SO_EXCHG_NW_PRC_ID,SO_EXCHG_OLD_PRC
+,SO_EXCHG_NW_PRC,SO_EXCHG_OLD_PV,SO_EXCHG_NW_PV,SO_EXCHG_OLD_RENT_AMT,SO_EXCHG_NW_RENT_AMT,SO_EXCHG_OLD_PROMO_ID,SO_EXCHG_NW_PROMO_ID,SO_EXCHG_CRT_DT,SO_EXCHG_CRT_USER_ID,SO_EXCHG_UPD_DT,SO_EXCHG_UPD_USER_ID,SO_EXCHG_OLD_SRV_CONFIG_ID,SO_EXCHG_NW_SRV_CONFIG_ID,SO_EXCHG_SYNC_CHK,SO_EXCHG_OLD_CALL_ENTRY_ID,SO_EXCHG_NW_CALL_ENTRY_ID,SO_EXCHG_STK_RET_MOV_ID,SO_EXCHG_REM
+,SO_EXCHG_OLD_DEF_RENT_AMT,SO_EXCHG_NW_DEF_RENT_AMT,SO_EXCHG_UNDER_FREE_AS_ID,SO_EXCHG_OLD_CUST_ID,SO_EXCHG_NW_CUST_ID,SO_EXCHG_FORM_NO,EMAIL_SENT_COUNT)
+        SELECT
+        SAL0004D_SO_EXCHG_ID_SEQ.NEXTVAL SO_EXCHG_ID,
+        ROT_ORD_ID SO_ID,
+        284 SO_EXCHG_TYPE_ID,
+        4 SO_EXCHG_STUS_ID,
+        0 SO_EXCHG_RESN_ID,
+        25 SO_CUR_STUS_ID,
+        0 INSTALL_ENTRY_ID,
+        ROT_APP_TYPE SO_EXCHG_OLD_APP_TYPE_ID,
+        ROT_APP_TYPE SO_EXCHG_NW_APP_TYPE_ID,
+        ROT_STK_ID SO_EXCHG_OLD_STK_ID,
+        ROT_STK_ID SO_EXCHG_NW_STK_ID,
+        ROT_PRC_ID SO_EXCHG_OLD_PRC_ID,
+        ROT_PRC_ID SO_EXCHG_NW_PRC_ID,
+        0 SO_EXCHG_OLD_PRC,
+        0 SO_EXCHG_NW_PRC,
+        ROT_PV SO_EXCHG_OLD_PV,
+        ROT_PV SO_EXCHG_NW_PV,
+        ROT_AMT SO_EXCHG_OLD_RENT_AMT,
+        ROT_AMT SO_EXCHG_NW_RENT_AMT,
+        ROT_PROMO_ID SO_EXCHG_OLD_PROMO_ID,
+        ROT_PROMO_ID SO_EXCHG_NW_PROMO_ID,
+        SYSDATE SO_EXCHG_CRT_DT,
+        ROT_CRT_USER_ID,
+        SYSDATE SO_EXCHG_UPD_DT,
+        ROT_UPD_USER_ID,
+        0 SO_EXCHG_OLD_SRV_CONFIG_ID,
+        0 SO_EXCHG_NW_SRV_CONFIG_ID,
+        0 SO_EXCHG_SYNC_CHK,
+        0 SO_EXCHG_OLD_CALL_ENTRY_ID,
+        0 SO_EXCHG_NW_CALL_ENTRY_ID,
+        0 SO_EXCHG_STK_RET_MOV_ID,
+        '' SO_EXCHG_REM,
+        ROT_DEF_RENT_AMT SO_EXCHG_OLD_DEF_RENT_AMT,
+        ROT_DEF_RENT_AMT SO_EXCHG_NW_DEF_RENT_AMT,
+        0 SO_EXCHG_UNDER_FREE_AS_ID,
+        ROT_OLD_CUST_ID SO_EXCHG_OLD_CUST_ID,
+        ROT_NEW_CUST_ID SO_EXCHG_NW_CUST_ID,
+        '' SO_EXCHG_FORM_NO,
+        0 EMAIL_SENT_COUNT
+        FROM SAL0276D
+        WHERE ROT_ID = #{rotId}
+    </insert>
+
+    <update id="mergeSAL0074D_ROT" parameterType="Map">
+        /* ROT RentPaySet */
+        MERGE INTO SAL0074D T
+        USING (
+        SELECT
+        RENT_PAY_ID,
+        SALES_ORD_ID,
+        MODE_ID,
+        CUST_CRC_ID,
+        BANK_ID,
+        CUST_ACC_ID,
+        DD_SUBMIT_DT,
+        DD_START_DT,
+        DD_REJCT_DT,
+        UPD_USER_ID,
+        IS_3RD_PARTY,
+        CUST_ID,
+        NRIC_OLD,
+        FAIL_RESN_ID,
+        ISSU_NRIC,
+        LAST_APPLY_USER
+        FROM SAL0279D
+        WHERE ROT_ID = #{rotId}
+        ) S
+        ON (T.RENT_PAY_ID = S.RENT_PAY_ID AND T.SALES_ORD_ID = S.SALES_ORD_ID)
+        WHEN MATCHED THEN UPDATE
+        SET T.MODE_ID = S.MODE_ID,
+        T.CUST_CRC_ID = S.CUST_CRC_ID,
+        T.BANK_ID = S.BANK_ID,
+        T.CUST_ACC_ID = S.CUST_ACC_ID,
+        T.DD_APPLY_DT = SYSDATE,
+        T.DD_SUBMIT_DT = S.DD_SUBMIT_DT,
+        T.DD_START_DT = S.DD_START_DT,
+        T.DD_REJCT_DT = S.DD_REJCT_DT,
+        T.UPD_USER_ID = S.UPD_USER_ID,
+        T.UPD_DT = SYSDATE,
+        T.IS_3RD_PARTY = S.IS_3RD_PARTY,
+        T.CUST_ID = S.CUST_ID,
+        T.NRIC_OLD = S.NRIC_OLD,
+        T.FAIL_RESN_ID = S.FAIL_RESN_ID,
+        T.ISSU_NRIC = S.ISSU_NRIC,
+        T.LAST_APPLY_USER = S.LAST_APPLY_USER
+    </update>
+
+    <insert id="insertSAL0024D_ROT" parameterType="Map">
+        /* ROT Insert Final New Billing Group */
+        /*
+        INSERT INTO SAL0024D
+        (
+        CUST_BILL_ID,
+        CUST_BILL_SO_ID,
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        CUST_BILL_UPD_USER_ID,
+        CUST_BILL_UPD_DT,
+        CUST_BILL_GRP_NO,
+        CUST_BILL_CRT_USER_ID,
+        CUST_BILL_CRT_DT,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID
+        )
+        SELECT
+        CUST_BILL_ID,
+        CUST_BILL_SO_ID,
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        CUST_BILL_UPD_USER_ID,
+        SYSDATE,
+        CUST_BILL_GRP_NO,
+        CUST_BILL_CRT_USER_ID,
+        SYSDATE,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID
+        FROM SAL0280D
+        WHERE ROT_ID = rotId
+        AND IND = '_new'
+        */
+
+        MERGE INTO SAL0024D T
+        USING (
+        SELECT
+        CUST_BILL_ID,
+        CUST_BILL_SO_ID,
+        CUST_BILL_CUST_ID,
+        CUST_BILL_CNT_ID,
+        CUST_BILL_ADD_ID,
+        CUST_BILL_STUS_ID,
+        CUST_BILL_REM,
+        CUST_BILL_UPD_USER_ID,
+        SYSDATE CUST_BILL_UPD_DT,
+        CUST_BILL_GRP_NO,
+        CUST_BILL_CRT_USER_ID,
+        SYSDATE CUST_BILL_CRT_DT,
+        CUST_BILL_PAY_TRM,
+        CUST_BILL_INCHG_MEM_ID,
+        CUST_BILL_EMAIL,
+        CUST_BILL_IS_ESTM,
+        CUST_BILL_IS_SMS,
+        CUST_BILL_IS_POST,
+        CUST_BILL_PAY_REF_NO1,
+        CUST_BILL_PAY_REF_NO2,
+        CUST_BILL_EMAIL_ADD,
+        CUST_BILL_IS_WEB_PORTAL,
+        CUST_BILL_WEB_PORTAL_URL,
+        CUST_BILL_IS_SMS2,
+        CUST_BILL_CUST_CARE_CNT_ID
+        FROM SAL0280D
+        WHERE ROT_ID = #{rotId}
+        AND IND = '_new'
+        ) S
+        ON (T.CUST_BILL_ID = S.CUST_BILL_ID)
+        WHEN NOT MATCHED THEN
+        INSERT (
+        T.CUST_BILL_ID,
+        T.CUST_BILL_SO_ID,
+        T.CUST_BILL_CUST_ID,
+        T.CUST_BILL_CNT_ID,
+        T.CUST_BILL_ADD_ID,
+        T.CUST_BILL_STUS_ID,
+        T.CUST_BILL_REM,
+        T.CUST_BILL_UPD_USER_ID,
+        T.CUST_BILL_UPD_DT,
+        T.CUST_BILL_GRP_NO,
+        T.CUST_BILL_CRT_USER_ID,
+        T.CUST_BILL_CRT_DT,
+        T.CUST_BILL_PAY_TRM,
+        T.CUST_BILL_INCHG_MEM_ID,
+        T.CUST_BILL_EMAIL,
+        T.CUST_BILL_IS_ESTM,
+        T.CUST_BILL_IS_SMS,
+        T.CUST_BILL_IS_POST,
+        T.CUST_BILL_PAY_REF_NO1,
+        T.CUST_BILL_PAY_REF_NO2,
+        T.CUST_BILL_EMAIL_ADD,
+        T.CUST_BILL_IS_WEB_PORTAL,
+        T.CUST_BILL_WEB_PORTAL_URL,
+        T.CUST_BILL_IS_SMS2,
+        T.CUST_BILL_CUST_CARE_CNT_ID
+        ) VALUES (
+        S.CUST_BILL_ID,
+        S.CUST_BILL_SO_ID,
+        S.CUST_BILL_CUST_ID,
+        S.CUST_BILL_CNT_ID,
+        S.CUST_BILL_ADD_ID,
+        S.CUST_BILL_STUS_ID,
+        S.CUST_BILL_REM,
+        S.CUST_BILL_UPD_USER_ID,
+        S.CUST_BILL_UPD_DT,
+        S.CUST_BILL_GRP_NO,
+        S.CUST_BILL_CRT_USER_ID,
+        S.CUST_BILL_CRT_DT,
+        S.CUST_BILL_PAY_TRM,
+        S.CUST_BILL_INCHG_MEM_ID,
+        S.CUST_BILL_EMAIL,
+        S.CUST_BILL_IS_ESTM,
+        S.CUST_BILL_IS_SMS,
+        S.CUST_BILL_IS_POST,
+        S.CUST_BILL_PAY_REF_NO1,
+        S.CUST_BILL_PAY_REF_NO2,
+        S.CUST_BILL_EMAIL_ADD,
+        S.CUST_BILL_IS_WEB_PORTAL,
+        S.CUST_BILL_WEB_PORTAL_URL,
+        S.CUST_BILL_IS_SMS2,
+        S.CUST_BILL_CUST_CARE_CNT_ID
+        )
+    </insert>
+
+    <update id="updateSAL0001D_ROT" parameterType="Map">
+        /*
+        UPDATE SAL0001D
+        SET CUST_BILL_ID = (SELECT ROT_BILL_ID FROM SAL0276D WHERE ROT_ID =
+        rotId,
+        CUST_
+        WHERE SALES_ORD_ID = (SELECT ROT_ORD_ID FROM SAL0275M WHERE ROT_ID = rotId
+        */
+
+        MERGE INTO SAL0001D T
+        USING (
+        SELECT
+        ROT_ORD_ID SALES_ORD_ID,
+        ROT_NEW_CUST_ID CUST_ID,
+        ROT_CNT_ID CUST_CNT_ID,
+        ROT_ADD_ID CUST_ADD_ID,
+        ROT_BILL_ID CUST_BILL_ID,
+        ROT_UPD_USER_ID UPD_USER_ID
+        FROM SAL0276D
+        WHERE ROT_ID = #{rotId}
+        ) S
+        ON (T.SALES_ORD_ID = S.SALES_ORD_ID)
+        WHEN MATCHED THEN UPDATE
+        SET T.CUST_ID = S.CUST_ID,
+        T.CUST_CNT_ID = S.CUST_CNT_ID,
+        T.CUST_ADD_ID = S.CUST_ADD_ID,
+        T.CUST_BILL_ID = S.CUST_BILL_ID,
+        T.UPD_DT = SYSDATE,
+        T.UPD_USER_ID = S.UPD_USER_ID
+    </update>
+
+    <select id="getExistCustBill_SAL0280D" parameterType="Map"
+        resultType="egovMap">
+        SELECT
+        A.ROT_ORD_ID,
+        B.CUST_BILL_ID,
+        B.CUST_BILL_UPD_USER_ID
+        FROM SAL0275M A
+        JOIN SAL0280D B
+        ON A.ROT_ID = B.ROT_ID
+        AND IND <![CDATA[ <> ]]>
+        '_new'
+        WHERE A.ROT_ID = #{rotId}
+    </select>
+
+    <update id="updateSAL0280D_ex" parameterType="Map">
+        UPDATE SAL0280D
+        SET CUST_BILL_SO_ID = #{custBillSoId}
+        WHERE ROT_ID = #{rotID}
+        AND CUST_BILL_ID = #{custBillId}
+    </update>
+
+    <update id="updateSAL0024D_ROT" parameterType="Map">
+        UPDATE SAL0024D
+        SET CUST_BILL_SO_ID = #{custBillSoId},
+        CUST_BILL_UPD_USER_ID = #{custBillUpdUserId},
+        CUST_BILL_UPD_DT = SYSDATE
+        WHERE CUST_BILL_ID = #{custBillId}
+    </update>
+
+    <update id="mergeSAL0045D_ROT" parameterType="Map">
+        MERGE INTO SAL0045D T
+        USING (
+        SELECT
+        INSTALL_ID,
+        SALES_ORD_ID,
+        ADD_ID,
+        CNT_ID,
+        PRE_CALL_DT,
+        PRE_DT,
+        PRE_TM,
+        INSTCT,
+        BRNCH_ID,
+        UPD_DT,
+        UPD_USER_ID
+        FROM SAL0282D
+        WHERE ROT_ID = #{rotId}
+        ) S
+        ON (T.INSTALL_ID = S.INSTALL_ID AND T.SALES_ORD_ID = S.SALES_ORD_ID)
+        WHEN MATCHED THEN UPDATE
+        SET T.ADD_ID = S.ADD_ID,
+        T.CNT_ID = S.CNT_ID,
+        T.PRE_CALL_DT = S.PRE_CALL_DT,
+        T.PRE_DT = S.PRE_DT,
+        T.PRE_TM = S.PRE_TM,
+        T.INSTCT = S.INSTCT,
+        T.BRNCH_ID = S.BRNCH_ID,
+        T.UPD_USER_ID = S.UPD_USER_ID,
+        T.UPD_DT = SYSDATE
+    </update>
+
+    <select id="getAttachments" parameterType="Map" resultType="egovMap">
+        /*
+        SELECT *
+        FROM (
+        SELECT
+        Row_number () OVER (PARTITION BY F1.ATCH_FILE_GRP_ID ORDER BY
+        F1.ATCH_FILE_GRP_ID, F2.ATCH_FILE_ID) AS RNUM,
+        F1.ATCH_FILE_GRP_ID,
+        F2.ATCH_FILE_ID,
+        Count (F1.ATCH_FILE_ID)
+        OVER (PARTITION BY F1.ATCH_FILE_GRP_ID) AS FILE_CNT
+        FROM SYS0070M F1
+        LEFT JOIN SYS0071D F2
+        ON F1.ATCH_FILE_ID = F2.ATCH_FILE_ID
+        ) F
+        WHERE F.RNUM = 1
+        AND ATCH_FILE_GRP_ID = attachId
+        */
+
+        SELECT
+        T1.ATCH_FILE_GRP_ID,
+        T1.ATCH_FILE_ID,
+        T2.ATCH_FILE_NAME,
+        T2.FILE_SUB_PATH,
+        T2.PHYSICL_FILE_NAME,
+        T2.FILE_EXTSN,
+        T2.FILE_SIZE
+        FROM SYS0070M T1
+        LEFT JOIN SYS0071D T2
+        ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+        WHERE T1.ATCH_FILE_GRP_ID = #{attachId}
+        ORDER BY T1.ATCH_FILE_ID
+    </select>
+
+    <select id="getAttachmentInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+        T1.ATCH_FILE_GRP_ID,
+        T1.ATCH_FILE_ID,
+        T2.ATCH_FILE_NAME,
+        T2.FILE_SUB_PATH,
+        T2.PHYSICL_FILE_NAME,
+        T2.FILE_EXTSN,
+        T2.FILE_SIZE
+        FROM SYS0070M T1
+        LEFT JOIN SYS0071D T2
+        ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+        WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+        AND T1.ATCH_FILE_ID = #{atchFileId}
+    </select>
+
+    <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
+        select T.BRANCH_NAME
+, T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.NRIC
+             , T.MEM_TYPE
+             , T.CODE_NAME
+             , T.DEPT_CODE
+             , T.GRP_CODE
+             , T.ORG_CODE
+             , T.MEM_LVL
+             , T.LVL3_UP_ID
+             , T.LVL2_UP_ID
+             , T.LVL1_UP_ID
+          FROM (
+             SELECT T1.MEM_ID
+                  , T1.BRNCH
+                  , BRANCH.CODE || ' - ' || BRANCH.NAME AS BRANCH_NAME
+                  , T1.MEM_CODE
+                  , T1.MEM_TYPE
+                  , T1.NAME
+                  , T1.NRIC
+                  , T2.CODE_NAME
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               LEFT JOIN SYS0005M BRANCH ON BRANCH.brnch_id = T1.BRNCH
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+              WHERE 1 = 1
+              <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+              </if>
+              <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+              </if>
+              <if test='stus != null and stus !=""'>
+                AND T1.STUS = #{stus}
+              </if>
+                AND ROWNUM &lt;= 1 ) T
+    </select>
+    <update id="updateSAL0276D_rotReason" parameterType="Map">
+        /* ROT Detail */
+        UPDATE SAL0276D
+        set ROT_REASON_AFTER = #{rotReasonAfter}
+        where ROT_ID = #{ccpRotId}
+    </update>
+
+<select id="selectRequestorInfo" parameterType="Map" resultType="egovMap">
+        /* ROT Requestor Info */
+SELECT CASE WHEN (EXT2.CODE ||' - '|| EXT2.NAME  = ' - ')THEN '' ELSE (EXT2.CODE ||' - '|| EXT2.NAME ) END AS REQUEST_BRANCH,
+        EXT3.BRANCH_NAME,
+        EXT3.MEM_CODE,
+        EXT3.NAME,
+        EXT3.DEPT_CODE,
+        EXT3.GRP_CODE,
+        EXT3.ORG_CODE
+        FROM SAL0276D EXT1
+        LEFT JOIN SYS0005M EXT2 ON EXT2.BRNCH_ID = EXT1.ROT_REQ_BRANCH_ID
+        LEFT JOIN (select T.BRANCH_NAME, T.MEM_ID, T.MEM_CODE, T.NAME, T.NRIC, T.MEM_TYPE, T.CODE_NAME, T.DEPT_CODE, T.GRP_CODE, T.ORG_CODE, T.MEM_LVL, T.LVL3_UP_ID, T.LVL2_UP_ID, T.LVL1_UP_ID
+          FROM (SELECT T1.MEM_ID, T1.BRNCH, BRANCH.CODE || ' - ' || BRANCH.NAME AS BRANCH_NAME, T1.MEM_CODE, T1.MEM_TYPE, T1.NAME, T1.NRIC, T2.CODE_NAME, CASE WHEN (NOT((T3.MEM_ID IS NULL)AND (T3.MEM_CODE IS NULL)
+          AND (T3.MEM_LVL IS NULL) AND (T3.DEPT_CODE IS NULL) AND (T3.GRP_CODE IS NULL) AND (T3.ORG_CODE IS NULL) AND (T3.TOP_ORG_CODE IS NULL) AND (T3.MEM_UP_ID IS NULL) AND (T3.LVL3_UP_ID IS NULL) AND (T3.LVL2_UP_ID IS NULL)AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.DEPT_CODE
+                         ELSE ''
+                    END DEPT_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID IS NULL)
+                               AND (T3.MEM_CODE IS NULL)
+                               AND (T3.MEM_LVL IS NULL)
+                               AND (T3.DEPT_CODE IS NULL)
+                               AND (T3.GRP_CODE IS NULL)
+                               AND (T3.ORG_CODE IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID IS NULL)
+                               AND (T3.LVL3_UP_ID IS NULL)
+                               AND (T3.LVL2_UP_ID IS NULL)
+                               AND (T3.LVL1_UP_ID IS NULL)
+                               AND (T3.LVL0_UP_ID IS NULL))) THEN T3.GRP_CODE
+                         ELSE ''
+                    END GRP_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.ORG_CODE
+                         ELSE ''
+                    END ORG_CODE
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.MEM_LVL
+                        ELSE 0
+                           END MEM_LVL
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL3_UP_ID
+                         ELSE 0
+                    END LVL3_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL2_UP_ID
+                         ELSE 0
+                    END LVL2_UP_ID
+                  , CASE WHEN (NOT((T3.MEM_ID       IS NULL)
+                               AND (T3.MEM_CODE     IS NULL)
+                               AND (T3.MEM_LVL      IS NULL)
+                               AND (T3.DEPT_CODE    IS NULL)
+                               AND (T3.GRP_CODE     IS NULL)
+                               AND (T3.ORG_CODE     IS NULL)
+                               AND (T3.TOP_ORG_CODE IS NULL)
+                               AND (T3.MEM_UP_ID    IS NULL)
+                               AND (T3.LVL3_UP_ID   IS NULL)
+                               AND (T3.LVL2_UP_ID   IS NULL)
+                               AND (T3.LVL1_UP_ID   IS NULL)
+                               AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
+                         ELSE 0
+                    END LVL1_UP_ID
+               FROM ORG0001D T1
+               LEFT JOIN SYS0005M BRANCH ON BRANCH.brnch_id = T1.BRNCH
+               JOIN SYS0013M T2
+                 ON T2.CODE_ID = T1.MEM_TYPE
+               LEFT
+               JOIN (SELECT V1.MEM_ID
+                          , V1.MEM_CODE
+                          , V1.MEM_LVL
+                          , V1.DEPT_CODE
+                          , V1.GRP_CODE
+                          , V1.ORG_CODE
+                          , V1.TOP_ORG_CODE
+                          , V1.MEM_UP_ID
+                          , V1.LVL3_UP_ID
+                          , V1.LVL2_UP_ID
+                          , V1.LVL1_UP_ID
+                          , V1.LVL0_UP_ID
+                              FROM ORG1001V V1 ) T3
+                 ON T3.MEM_ID = T1.MEM_ID
+        <![CDATA[
+                AND ROWNUM <= 1
+        ]]> ) T) EXT3 ON EXT3.MEM_CODE = EXT1.ROT_REQUESTOR_CODE
+              where ext1.rot_id = #{rotId}
+    </select>
+
+
+    <select id="checkBundleInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+			      SELECT DISTINCT
+			             A.SALES_ORD_NO, A.SALES_ORD_ID
+			       FROM SAL0001D A
+			      JOIN HMC0011D B ON A.SALES_ORD_NO IN (B.MAT_ORD_NO, B.FRA_ORD_NO)
+			      WHERE #{salesOrdNo}  IN (B.MAT_ORD_NO , B.FRA_ORD_NO) AND A.SALES_ORD_NO <> #{salesOrdNo}
+        ]]>
+    </select>
+
+
+    <select id="checkBundleInfoCcp" parameterType="Map" resultType="egovMap">
+                  WITH BNDL_TBL AS (
+                        <if test='editOrdId2 != null and editOrdId2 !=""'>
+		                      SELECT SALES_ORD_NO FROM SAL0001D WHERE SALES_ORD_ID = #{editOrdId2}
+		                 </if>
+
+                         <if test='ccpRotId != null and ccpRotId !=""'>
+                              SELECT  ROT_ORD_NO AS SALES_ORD_NO FROM SAL0275M WHERE ROT_ID = #{ccpRotId}
+                         </if>
+                    )
+           <![CDATA[
+                    SELECT DISTINCT
+                            A.SALES_ORD_NO
+                        ,   A.SALES_ORD_ID
+                        ,   F.CCP_ID AS EDIT_CCP_ID
+                        ,   D.ROT_ID  AS CCP_ROT_ID
+                        ,   D.ROT_ORD_ID AS EDIT_ORD_ID
+                        ,   G.CODE AS EDIT_APP_TYPE_CODE
+                        ,   F.CCP_ID AS SAVE_CCP_ID
+                        ,   D.ROT_ORD_ID SAVE_ORD_ID
+                    FROM SAL0001D A
+                    JOIN HMC0011D B ON A.SALES_ORD_NO IN (B.MAT_ORD_NO, B.FRA_ORD_NO)
+                    LEFT JOIN BNDL_TBL C ON 1=1
+                    JOIN SAL0275M D ON A.SALES_ORD_NO = D.ROT_ORD_NO AND D.ROT_STUS =1
+                    JOIN SAL0276D E ON D.ROT_ID =E.ROT_ID
+                    JOIN SAL0277D F ON E.ROT_ID =F.ROT_ID
+                    JOIN SYS0013M G ON G.CODE_ID = E.ROT_APP_TYPE
+                    WHERE C.SALES_ORD_NO  IN (B.MAT_ORD_NO , B.FRA_ORD_NO) AND A.SALES_ORD_NO <> C.SALES_ORD_NO
+                    AND ROWNUM = 1
+          ]]>
+    </select>
+
+    <select id="checkActRot" parameterType="Map" resultType="egovMap">
+            SELECT
+                    COUNT(*) AS ACT_COUNT
+            FROM SAL0275M WHERE ROT_ORD_NO = #{sOrdNo} AND ROT_STUS =1
+    </select>
+
+     <select id="getRootGrpID" parameterType="String" resultType="int">
+        SELECT SAL0275M_GROUP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="updRootGrpId" parameterType="Map">
+        UPDATE SAL0275M SET GROUP_ID = #{grpId} WHERE ROT_ID = #{rotId}
+    </update>
+
+	<select id="checkRootGrpId" parameterType="Map" resultType="egovMap">
+	        WITH GRP_TBL AS (
+               <if test='rotID != null and rotID !=""'>
+                         SELECT  ROT_ORD_NO , NVL(GROUP_ID,0) GROUP_ID FROM SAL0275M where rot_id = #{rotID}
+               </if>
+
+               <if test='ccpRotId != null and ccpRotId !=""'>
+                         SELECT  ROT_ORD_NO , NVL(GROUP_ID,0) GROUP_ID FROM SAL0275M where rot_id = #{ccpRotId}
+               </if>
+            )
+          <![CDATA[
+            SELECT
+                      A.ROT_ID
+                    , A.ROT_ORD_ID
+                    , C.CCP_ID
+                    , E.CODE AS APP_TYPE_CODE
+            FROM SAL0275M A
+            JOIN GRP_TBL B ON A.GROUP_ID = B.GROUP_ID
+            JOIN SAL0277D C ON A.ROT_ID = C.ROT_ID
+            JOIN SAL0276D D ON A.ROT_ID = D.ROT_ID
+            JOIN SYS0013M E ON E.CODE_ID = D.ROT_APP_TYPE
+            WHERE A.ROT_ORD_NO <> B.ROT_ORD_NO AND B.GROUP_ID <> 0
+	       ]]>
+	</select>
+
+</mapper>

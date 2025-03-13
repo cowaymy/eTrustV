@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.PoManagementMapper">
+
+<!-- PO Issue -->
+<!-- PO COMMON -->
+<select id="selectPoStatus" parameterType="Map" resultType="egovMap">
+SELECT SUM(A.SUPP_CONF_CNT) AS SUPP_CONF_CNT
+     , SUM(A.PO_ISS_CNT) AS PO_ISS_CNT
+     , SUM(A.PO_APPR_CNT) AS PO_APPR_CNT
+  FROM (
+        SELECT COUNT(*) AS SUPP_CONF_CNT, 0 AS PO_ISS_CNT, 0 AS PO_APPR_CNT
+          FROM SCM0005M A
+          LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+         WHERE A.PLAN_YEAR = #{scmYearCbBox}
+           AND A.PLAN_WEEK = #{scmWeekCbBox}
+           AND A.PLAN_STUS_ID = 5
+        UNION ALL
+        SELECT 0 AS SUPP_CONF_CNT, COUNT(*) AS PO_ISS_CNT, 0 AS PO_APPR_CNT
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID)
+         WHERE A.PO_YEAR = #{scmYearCbBox}
+           AND A.PO_WEEK = #{scmWeekCbBox}
+        UNION ALL
+        SELECT 0 AS SUPP_CONF_CNT, 0 AS PO_ISS_CNT, COUNT(*) AS PO_APPR_CNT
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID)
+         WHERE A.PO_YEAR = #{scmYearCbBox}
+           AND A.PO_WEEK = #{scmWeekCbBox}
+           AND B.PO_ITEM_STUS_ID = 5
+        ) A
+</select>
+<!-- Search -->
+<select id="selectPoTargetList" parameterType="Map" resultType="egovMap">
+SELECT '0' AS CHK
+     , DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
+     , DECODE(B.PO_MONTH, NULL, A.PLAN_MONTH, B.PO_MONTH) AS PO_MONTH
+     , DECODE(B.PO_WEEK, NULL, A.PLAN_WEEK, B.PO_WEEK) AS PO_WEEK
+     , #{scmCdcCbBox} AS CDC
+     , DECODE(B.PLAN_GR_YEAR, NULL, #{planGrYear}, B.PLAN_GR_YEAR) AS PLAN_GR_YEAR
+     , DECODE(B.PLAN_GR_MONTH, NULL, #{planGrMonth}, B.PLAN_GR_MONTH) AS PLAN_GR_MONTH
+     , DECODE(B.PLAN_GR_WEEK, NULL, #{planGrWeek}, B.PLAN_GR_WEEK) AS PLAN_GR_WEEK
+     , G.CODE_DESC AS CDC_DESC
+     , A.STOCK_CODE
+     , C.STK_DESC AS NAME
+     , C.STK_CTGRY_ID AS CTGRY_ID
+     , D.CODE_NAME AS CTGRY
+     , C.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS TYPE
+     , 0 AS PLAN_QTY
+     , A.W01, A.W02, A.W03, A.W04, A.W05, A.W06, A.W07, A.W08, A.W09, A.W10, A.W11, A.W12, A.W13, A.W14, A.W15, A.W16, A.W17, A.W18, A.W19, A.W20
+     , A.MOQ
+     , NVL(B.PO_QTY, 0) AS PO_QTY
+     , CASE WHEN NVL(B.FOB_PRC, 0) = 0
+            THEN NVL(F.FOB_PRC, 0)
+            ELSE NVL(B.FOB_PRC, 0)
+            END AS FOB_PRC
+     , CASE WHEN NVL(B.FOB_AMT, 0) = 0
+            THEN CASE WHEN NVL(B.FOB_PRC, 0) = 0
+                      THEN A.MOQ * NVL(F.FOB_PRC, 0)
+                      ELSE A.MOQ * NVL(B.FOB_PRC, 0)
+                      END
+            ELSE NVL(B.FOB_AMT, 0)
+            END AS FOB_AMT
+     , NVL(B.PO_STUS_ID, 0) AS PO_STUS_ID
+     , NVL(B.PO_ITEM_STUS_ID, 0) AS PO_ITEM_STUS_ID
+     , F.PURCH_PRC
+     , F.COND_PRC_UNIT AS PRC_UNIT
+     , F.VENDOR
+     , F.VENDOR_TXT
+     , F.CURR
+     , F.CURR_NAME
+  FROM (
+        SELECT Z.PLAN_YEAR, Z.PLAN_MONTH, Z.PLAN_WEEK, Z.CDC, X.STOCK_CODE, NVL(Y.MOQ, 0) AS MOQ
+             , NVL(X.W01, 0) AS W01, NVL(X.W02, 0) AS W02, NVL(X.W03, 0) AS W03, NVL(X.W04, 0) AS W04, NVL(X.W05, 0) AS W05
+             , NVL(X.W06, 0) AS W06, NVL(X.W07, 0) AS W07, NVL(X.W08, 0) AS W08, NVL(X.W09, 0) AS W09, NVL(X.W10, 0) AS W10
+             , NVL(X.W11, 0) AS W11, NVL(X.W12, 0) AS W12, NVL(X.W13, 0) AS W13, NVL(X.W14, 0) AS W14, NVL(X.W15, 0) AS W15
+             , NVL(X.W16, 0) AS W16, NVL(X.W17, 0) AS W17, NVL(X.W18, 0) AS W18, NVL(X.W19, 0) AS W19, NVL(X.W20, 0) AS W20
+          FROM SCM0005M Z
+          LEFT OUTER JOIN SCM0006D X ON (Z.PLAN_ID = X.PLAN_ID)
+          LEFT OUTER JOIN SCM0017M Y ON (X.STOCK_CODE = Y.STOCK_CODE AND Z.CDC = Y.CDC)
+         WHERE Z.PLAN_YEAR = #{scmYearCbBox}
+           AND Z.PLAN_WEEK = #{scmWeekCbBox}
+           AND Z.CDC = #{scmCdcCbBox}
+           AND X.PSI_ID = 3
+        ) A
+  LEFT OUTER JOIN (
+                   SELECT Z.PO_YEAR
+                        , Z.PO_MONTH
+                        , Z.PO_WEEK
+                        , Z.CDC
+                        , X.STOCK_CODE
+                        , Z.PLAN_GR_YEAR
+                        , Z.PLAN_GR_MONTH
+                        , Z.PLAN_GR_WEEK
+                        , Z.PO_STUS_ID
+                        , X.PO_QTY
+                        , X.PO_ITEM_STUS_ID
+                        , X.FOB_PRC
+                        , X.FOB_AMT
+                     FROM SCM0052M Z
+                     LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID AND X.USE_YN = 'Y')
+                    WHERE Z.PO_YEAR = #{scmYearCbBox}
+                      AND Z.PO_WEEK = #{scmWeekCbBox}
+                      AND Z.CDC = #{scmCdcCbBox}
+                   ) B ON (A.STOCK_CODE = B.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
+  LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN (
+                   SELECT Z.MATRL_MST AS STOCK_CODE
+                        , NVL(Z.PURCHS_PRC, 0) AS PURCH_PRC
+                        , NVL(Z.CONDI_PRC_UNIT, 0) AS COND_PRC_UNIT
+                        , CASE WHEN NVL(Z.CONDI_PRC_UNIT, 0) != 0
+                               THEN ROUND((NVL(Z.PURCHS_PRC, 0) / NVL(Z.CONDI_PRC_UNIT, 0)), 2)
+                               ELSE 0
+                               END AS FOB_PRC
+                        , Z.VENDOR
+                        , Z.VENDOR_TXT
+                        , X.CODE_NAME AS CURR_NAME
+                        , Z.CUR AS CURR
+                        , ROW_NUMBER() OVER (PARTITION BY Z.VENDOR, Z.MATRL_MST, Z.PURCHS_ORG ORDER BY Z.SEQ_NO DESC) AS SN
+                     FROM LOG0078M Z
+                     LEFT OUTER JOIN SYS0013M X ON (Z.CUR = X.CODE_ID AND X.CODE_MASTER_ID = 94) /* 94 : Currency */
+                     <![CDATA[
+                        WHERE NVL(Z.MARK_DEL, 0) <> 'X'
+                        AND SYSDATE BETWEEN TO_DATE(VALID_START_DT,'YYYY/MM/DD') AND TO_DATE(VALID_END_DT,'YYYY/MM/DD')
+                     ]]>
+                   ) F ON (A.STOCK_CODE = F.STOCK_CODE AND F.SN = 1)
+  LEFT OUTER JOIN SYS0013M G ON (G.CODE = #{scmCdcCbBox} AND G.CODE_MASTER_ID = 349) /* 349 : Supply CDC Code */
+ WHERE 1 = 1
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND C.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND C.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.STOCK_CODE
+</select>
+<select id="selectPoCreatedList" parameterType="Map" resultType="egovMap">
+SELECT 'PDF ' || '/ EXCEL' AS PDF
+     , DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
+     , B.PO_ID
+     , B.PO_YEAR
+     , B.PO_MONTH
+     , B.PO_WEEK
+     , B.CDC
+     , A.PO_NO
+     , A.PO_ITEM_NO
+     , A.STOCK_CODE
+     , C.STK_DESC AS NAME
+     , C.STK_CTGRY_ID AS CTGRY_ID
+     , D.CODE_NAME AS CTGRY
+     , C.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS TYPE
+     , NVL(A.PO_QTY, 0) AS PO_QTY
+     , TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') AS PO_ISS_DT
+     , B.PO_STUS_ID
+     , G.NAME AS PO_STUS_NAME
+     , A.PO_ITEM_STUS_ID
+     , F.NAME AS PO_ITEM_STUS_NAME
+     , B.PLAN_GR_YEAR
+     , B.PLAN_GR_MONTH
+     , B.PLAN_GR_WEEK
+     , NVL(A.PRC_UNIT, 0) AS PRC_UNIT
+     , NVL(A.PURCH_PRC, 0) AS PURCH_PRC
+     , NVL(A.FOB_PRC, 0) AS FOB_PRC
+     , NVL(A.FOB_AMT, 0) AS FOB_AMT
+  FROM SCM0053D A
+  LEFT OUTER JOIN SCM0052M B ON (A.PO_ID = B.PO_ID)
+  LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
+  LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0038M F ON (A.PO_ITEM_STUS_ID = F.STUS_CODE_ID)
+  LEFT OUTER JOIN SYS0038M G ON (B.PO_STUS_ID = G.STUS_CODE_ID)
+ WHERE 1 = 1
+   AND A.USE_YN = 'Y'
+   AND A.PO_ITEM_STUS_ID NOT IN (10)
+   AND A.PO_ID IN (SELECT Z.PO_ID FROM SCM0052M Z WHERE Z.PO_YEAR = #{scmYearCbBox} AND Z.PO_WEEK = #{scmWeekCbBox} AND Z.CDC = #{scmCdcCbBox})
+ ORDER BY A.PO_NO, A.PO_ITEM_NO
+</select>
+<select id="selectPoInfo" parameterType="Map" resultType="egovMap">
+SELECT A.PO_ID
+     , A.PO_YEAR
+     , A.PO_MONTH
+     , A.PO_WEEK
+     , A.CDC
+     , A.PLAN_GR_YEAR
+     , A.PLAN_GR_MONTH
+     , A.PLAN_GR_WEEK
+     , A.PO_STUS_ID
+     , C.CODE_DESC AS CDC_DESC
+  FROM SCM0052M A
+  LEFT OUTER JOIN SYS0013M C ON (A.CDC = C.CODE AND C.CODE_MASTER_ID = 349) /* 349 : Supply CDC Code */
+ WHERE A.PO_YEAR = #{poYear}
+   AND A.PO_WEEK = #{poWeek}
+   AND A.CDC = #{cdc}
+</select>
+
+<!-- Create PO -->
+<insert id="insertPoMaster" parameterType="Map">
+INSERT INTO SCM0052M
+(
+       PO_ID
+     , PO_YEAR
+     , PO_MONTH
+     , PO_WEEK
+     , CDC
+     , PLAN_GR_YEAR
+     , PLAN_GR_MONTH
+     , PLAN_GR_WEEK
+     , CRT_DT
+     , CRT_USER_ID
+ )
+VALUES
+(
+       SCM0052M_PO_ID_SEQ.NEXTVAL
+     , #{poYear}
+     , #{poMonth}
+     , #{poWeek}
+     , #{cdc}
+     , #{planGrYear}
+     , #{planGrMonth}
+     , #{planGrWeek}
+     , SYSDATE
+     , #{crtUserId}
+ )
+</insert>
+<select id="selectGetPoNo" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN MAX(A.PO_NO) IS NULL
+            THEN 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '001'
+            ELSE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || LPAD(TO_NUMBER(SUBSTR(MAX(A.PO_NO), 12, 3)) + 1, 3, '0')
+            END AS PO_NO
+  FROM SCM0053D A
+ WHERE A.PO_NO LIKE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '%'
+</select>
+<insert id="insertPoDetail" parameterType="Map">
+INSERT INTO SCM0053D
+(
+       PO_ID
+     , PO_NO
+     , PO_ITEM_NO
+     , STOCK_CODE
+     , PO_QTY
+     , PRC_UNIT
+     , PURCH_PRC
+     , FOB_PRC
+     , FOB_AMT
+     , VENDOR
+     , CURR
+     , CRT_DT
+     , CRT_USER_ID
+ )
+VALUES
+(
+       #{poId}
+     , #{poNo}
+     , #{poItemNo}
+     , #{stockCode}
+     , #{poQty}
+     , #{prcUnit}
+     , #{purchPrc}
+     , #{fobPrc}
+     , #{fobAmt}
+     , #{vendor}
+     , #{curr}
+     , SYSDATE
+     , #{crtUserId}
+ )
+</insert>
+
+<!-- Delete -->
+<update id="updatePoDetail" parameterType="Map">
+UPDATE SCM0053D
+   SET PO_ITEM_STUS_ID = #{poItemStusId}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PO_NO = #{poNo}
+   AND PO_ITEM_NO = #{poItemNo}
+   AND STOCK_CODE = #{stockCode}
+   AND USE_YN = 'Y'
+</update>
+
+<!-- PO Approval -->
+<!-- Search -->
+<select id="selectPoSummary" parameterType="Map" resultType="egovMap">
+SELECT C.STK_CTGRY_ID AS CTGRY_ID
+     , D.CODE_NAME AS CTGRY
+     , NVL(CASE WHEN A.CDC = '2010' THEN SUM(B.PO_QTY) ELSE 0 END, 0) AS QTY2010
+     , NVL(CASE WHEN A.CDC = '2010' THEN SUM(B.FOB_AMT) ELSE 0 END, 0) AS AMT2010
+     , NVL(CASE WHEN A.CDC = '2020' THEN SUM(B.PO_QTY) ELSE 0 END, 0) AS QTY2020
+     , NVL(CASE WHEN A.CDC = '2020' THEN SUM(B.FOB_AMT) ELSE 0 END, 0) AS AMT2020
+     , NVL(CASE WHEN A.CDC = '2030' THEN SUM(B.PO_QTY) ELSE 0 END, 0) AS QTY2030
+     , NVL(CASE WHEN A.CDC = '2030' THEN SUM(B.FOB_AMT) ELSE 0 END, 0) AS AMT2030
+     , NVL(CASE WHEN A.CDC = '2040' THEN SUM(B.PO_QTY) ELSE 0 END, 0) AS QTY2040
+     , NVL(CASE WHEN A.CDC = '2040' THEN SUM(B.FOB_AMT) ELSE 0 END, 0) AS AMT2040
+     , NVL(CASE WHEN A.CDC = '2050' THEN SUM(B.PO_QTY) ELSE 0 END, 0) AS QTY2050
+     , NVL(CASE WHEN A.CDC = '2050' THEN SUM(B.FOB_AMT) ELSE 0 END, 0) AS AMT2050
+     , NVL(SUM(B.PO_QTY), 0) AS TOT_QTY
+     , NVL(SUM(B.FOB_AMT), 0) AS TOT_AMT
+  FROM SCM0052M A
+  LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
+  LEFT OUTER JOIN SYS0026M C ON (B.STOCK_CODE = C.STK_CODE)
+  LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.PO_YEAR = #{scmYearCbBox}
+   AND A.PO_WEEK = #{scmWeekCbBox}
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND C.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ GROUP BY C.STK_CTGRY_ID, D.CODE_NAME, A.CDC
+ ORDER BY C.STK_CTGRY_ID, D.CODE_NAME
+</select>
+<select id="selectPoApprList" parameterType="Map" resultType="egovMap">
+SELECT DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
+     , B.PO_ID
+     , B.PO_YEAR
+     , B.PO_MONTH
+     , B.PO_WEEK
+     , B.CDC
+     , A.PO_NO
+     , A.PO_ITEM_NO
+     , A.STOCK_CODE
+     , C.STK_DESC AS NAME
+     , C.STK_CTGRY_ID AS CTGRY_ID
+     , D.CODE_NAME AS CTGRY
+     , C.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS TYPE
+     , NVL(A.PO_QTY, 0) AS PO_QTY
+     , TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') AS PO_ISS_DT
+     , A.PO_ITEM_STUS_ID
+     , F.NAME AS PO_ITEM_STUS_NAME
+     , B.PLAN_GR_YEAR
+     , B.PLAN_GR_MONTH
+     , B.PLAN_GR_WEEK
+     , B.PO_STUS_ID
+     , G.NAME AS PO_STUS_NAME
+     , H.USER_NAME
+     , 0 AS GR_QTY
+     , TO_CHAR(A.IF_DT, 'YYYY-MM-DD') AS IF_DT
+     , NVL(A.PRC_UNIT, 0) AS PRC_UNIT
+     , NVL(A.PURCH_PRC, 0) AS PURCH_PRC
+     , NVL(A.FOB_PRC, 0) AS FOB_PRC
+     , NVL(A.FOB_AMT, 0) AS FOB_AMT
+  FROM SCM0053D A
+  LEFT OUTER JOIN SCM0052M B ON (A.PO_ID = B.PO_ID)
+  LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
+  LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0038M F ON (A.PO_ITEM_STUS_ID = F.STUS_CODE_ID)
+  LEFT OUTER JOIN SYS0038M G ON (B.PO_STUS_ID = G.STUS_CODE_ID)
+  LEFT OUTER JOIN SYS0047M H ON (A.UPD_USER_ID = H.USER_ID)
+ WHERE 1 = 1
+   AND A.USE_YN = 'Y'
+   AND A.PO_ID IN (
+                   SELECT Z.PO_ID
+                     FROM SCM0052M Z
+                    WHERE Z.PO_YEAR = #{scmYearCbBox} AND Z.PO_WEEK = #{scmWeekCbBox}
+	<if test="scmCdcCbBox != null and scmCdcCbBox != ''">
+                      AND Z.CDC = #{scmCdcCbBox}
+	</if>
+                   )
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND C.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.PO_NO, A.PO_ITEM_NO
+</select>
+
+<!-- Approve -->
+<update id="updatePoApprove" parameterType="Map">
+UPDATE SCM0053D
+   SET PO_ITEM_STUS_ID = #{poItemStusId}
+     , IF_DT = SYSDATE
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PO_NO = #{poNo}
+   AND USE_YN = 'Y'
+</update>
+
+<!-- Delete -->
+<update id="updateSupplyPlan" parameterType="Map">
+UPDATE SCM0005m
+   SET PLAN_STUS_ID = 1
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PLAN_YEAR = #{poYear}
+   AND PLAN_MONTH = #{poMonth}
+   AND PLAN_WEEK = #{poWeek}
+   AND CDC = #{cdc}
+</update>
+
+<update id="updatePoDetailDel" parameterType="Map">
+UPDATE SCM0053D
+   SET PO_ITEM_STUS_ID = 10
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+ WHERE PO_NO = #{poNo}
+   AND STOCK_CODE = #{stockCode}
+   AND PO_ITEM_NO = #{poItemNo}
+</update>
+
+</mapper>

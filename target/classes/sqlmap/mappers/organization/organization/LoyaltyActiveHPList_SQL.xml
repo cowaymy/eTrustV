@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.LoyaltyActiveHPListMapper">
+
+    <select id="selectLoyaltyActiveHPList" parameterType="Map" resultType="egovMap">
+    SELECT T.* FROM (
+        SELECT DISTINCT A.MEM_ID, A.MEM_CODE,A.NAME, TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
+                                V.DEPT_CODE,  V.GRP_CODE,  V.ORG_CODE,
+                                NVL(X6.M6,0) M6,
+                                NVL(X5.M5,0) M5,
+                                NVL(X4.M4,0) M4,
+                                NVL(X3.M3,0) M3,
+                                NVL(X2.M2,0) M2,
+                                NVL(X1.M1,0) M1,
+                                NVL(X0.M0,0) M0,
+                                NVL(M6,0)+NVL(M5,0)+NVL(M4,0)+NVL(M3,0)+NVL(M2,0)+NVL(M1,0) AS TOT_SAL,
+                                NVL(WS.WS_ACHV,'NO ACHIEVE')  WS_ACHV,
+                                MP.MEET_POINT_CODE
+         FROM ORG0001D A
+            JOIN ORG1001V V ON V.MEM_ID = A.MEM_ID
+            LEFT JOIN ORG0003D AP ON AP.APLCTN_ID = A.APLICNT_ID
+            LEFT JOIN REP0109T WS ON WS.MEM_ID = A.MEM_ID AND WS.RPT_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-1)))) AND  RPT_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-1))))
+            LEFT JOIN SYS0089M MP ON MP.MEET_POINT_ID = AP.APLICNT_MEETPOINT
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M6
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-6)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-6))))
+                GROUP BY MEM_ID)X6 ON X6.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M5
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-5)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-5))))
+                GROUP BY MEM_ID)X5 ON X5.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M4
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-4)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-4))))
+                GROUP BY MEM_ID)X4 ON X4.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M3
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-3)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-3))))
+                GROUP BY MEM_ID)X3 ON X3.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M2
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-2)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-2))))
+                GROUP BY MEM_ID)X2 ON X2.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M1
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM ( (ADD_MONTHS(SYSDATE,-1)))) AND PV_YEAR = EXTRACT(YEAR FROM ( (ADD_MONTHS(SYSDATE,-1))))
+                GROUP BY MEM_ID)X1 ON X1.MEM_ID = A.MEM_ID
+            LEFT JOIN ( SELECT MEM_ID, COUNT(1) AS M0
+                FROM SAL0001D
+                WHERE PV_MONTH = EXTRACT(MONTH FROM SYSDATE) AND PV_YEAR = EXTRACT(YEAR FROM SYSDATE)
+                GROUP BY MEM_ID)X0 ON X0.MEM_ID = A.MEM_ID
+         WHERE A.MEM_TYPE = 1 AND A.STUS = 1
+         <if test="hpCode != null and hpCode != ''">
+            AND UPPER(A.MEM_CODE) LIKE '%'||UPPER(#{hpCode})||'%'
+         </if>
+         <if test="orgCode != null and orgCode != ''">
+            AND UPPER(V.ORG_CODE) LIKE '%'||UPPER(#{orgCode})||'%'
+         </if>
+         <if test="grpCode != null and grpCode != ''">
+            AND UPPER(V.GRP_CODE) LIKE '%'||UPPER(#{grpCode})||'%'
+         </if>
+         <if test="deptCode != null and deptCode != ''">
+            AND UPPER(V.DEPT_CODE) LIKE '%'||UPPER(#{deptCode})||'%'
+         </if>
+         <if test="meetingPoint != null and meetingPoint !=''">
+            AND MP.MEET_POINT_ID = #{meetingPoint}
+         </if>
+         ) T WHERE T.TOT_SAL <![CDATA[>]]>= 1
+    </select>
+
+</mapper>

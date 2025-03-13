@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.coway.trust.biz.services.serviceDashboardApi.impl.ServiceDashboardApiMapper">
+
+<select id="selectCsStatusDashboard" resultType="egovMap">
+<![CDATA[
+            SELECT
+                A.CODE_NAME AS CS_TYPE, A.CODE AS SEQ, NVL(ACT_COUNT,0) AS ACT_COUNT, NVL(COM_COUNT,0)AS COM_COUNT, NVL(CANCEL_COUNT,0) AS CANCEL_COUNT, NVL(FAIL_COUNT,0) AS FAIL_COUNT,
+                NVL(ACT_COUNT,0)+ NVL(COM_COUNT,0)+ NVL(CANCEL_COUNT,0) + NVL(FAIL_COUNT,0) AS TOTAL_COUNT
+            FROM SYS0013M A
+            LEFT JOIN
+            (SELECT * FROM
+             (
+                SELECT
+                    CS_TYPE, FN_GET_STUS_DESC(STUS_CODE_ID,0) AS STUS, COUNT(STUS_CODE_ID) AS COUNT
+                FROM
+                (
+                    SELECT
+                            CASE WHEN APP_TYPE_ID IN (66,67,68) THEN 'PRIME SERIES'
+                                 WHEN APP_TYPE_ID IN (3216,3217) THEN 'CS1Y1T'
+                                 WHEN APP_TYPE_ID IN (5701,5702) THEN 'FT1Y1T'
+                            END CS_TYPE,
+                            STUS_CODE_ID
+                    FROM (
+                            SELECT
+                                ROW_NUMBER() OVER(PARTITION BY NO ORDER BY RESULT DESC) AS DUM_SEQ, Project1.*
+                            FROM
+                                (
+                                    SELECT
+                                           DISTINCT HS.NO AS NO
+                                                  , HS.STUS_CODE_ID AS STUS_CODE_ID
+                                                  , HS.MONTH
+                                                  , HS.YEAR
+                                                  , HR.NO AS RESULT
+                                                  , SO.APP_TYPE_ID
+                                                  ,CD.MEM_CODE
+                                    FROM SVC0008D HS
+                                    JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
+                                    LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
+                                    JOIN SAL0045D INS ON INS.SALES_ORD_ID = HS.SALES_ORD_ID
+                                    JOIN SAL0023D AD ON AD.CUST_ADD_ID = INS.ADD_ID
+                                    LEFT JOIN SVC0006D HR ON HR.SCHDUL_ID = HS.SCHDUL_ID
+                                    JOIN SAL0029D CU ON CU.CUST_ID = SO.CUST_ID
+                                    LEFT JOIN ORG0001D CD ON CD.MEM_ID = HS.CODY_ID
+                                    WHERE 1=1
+                                    AND CD.MEM_CODE = #{regId}
+                                    AND HS.YEAR = TO_CHAR(SYSDATE,'YYYY')
+                                    AND HS.MONTH =  TO_CHAR(SYSDATE,'MM')
+                                 )Project1
+                        ) WHERE DUM_SEQ = 1
+                    )
+                GROUP BY CS_TYPE, STUS_CODE_ID
+            )
+            PIVOT (SUM(COUNT)FOR STUS IN ('ACT' AS ACT_COUNT, 'COM' AS COM_COUNT, 'CAN' AS CANCEL_COUNT,'FAL' AS FAIL_COUNT))
+            )B ON A.CODE_NAME = B.CS_TYPE
+            WHERE A.CODE_MASTER_ID = 526
+            ORDER BY A.CODE
+
+]]>
+</select>
+
+</mapper>

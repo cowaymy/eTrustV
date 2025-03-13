@@ -1,0 +1,1983 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.impl.htOrderDetailMapper">
+
+<select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+       V1.APP_TYPE_ID,
+       V1.APP_TYPE_CODE,
+       V1.APP_TYPE_NAME,
+       V1.CRT_USER_ID,
+       V1.CUST_ID,
+       V1.CUST_NAME,
+       V1.CUST_IC,
+       V1.CUST_VA_NO,
+       V1.CUST_TYPE_ID,
+       V1.CUST_TYPE,
+       V1.CUST_DOB,
+       V1.CUST_NATION,
+       V1.CUST_GENDER,
+       V1.CUST_RACE,
+       V1.CUST_EMAIL,
+       V1.CUST_PASSPORT_EXPR,
+       V1.CUST_VISA_EXPR,
+       V1.KEYIN_BRNCH_ID,
+       V1.KEYIN_BRNCH_NAME,
+       V1.ORD_DT,
+       V1.SALES_DT,
+       V1.ORD_ID,
+       V1.ORD_NO,
+       V1.ORD_STUS_CODE,
+       V1.ORD_STUS_ID,
+       V1.ORD_PO_NO,
+       V1.TOT_AMT,
+       V1.ORD_REF_NO,
+       V1.ORD_MEM_ID,
+       V1.ORD_MEM_NAME,
+       V1.ORD_MEM_NRIC,
+       V1.ORD_MEM_CODE,
+       V1.ORD_MEM_TYPE_ID,
+       V1.ORD_MEM_TYPE_NAME,
+       V1.BILLING_GRP_ID,
+       V1.MAIL_TEL_MOB,
+       V1.MAIL_TEL_FAX,
+       V1.MAIL_TEL_OFF,
+       V1.MAIL_TEL_RES,
+       V1.INST_TEL_FAX,
+       V1.INST_TEL_MOB,
+       V1.INST_TEL_OFF,
+       V1.INST_TEL_RES,
+       V1.PV_MONTH,
+       V1.PV_YEAR,
+       V1.PROMO_ID,
+       V1.PROMO_CODE,
+       V1.PROMO_DESC,
+       V1.RELATED_NO,
+       V1.RELATED_ID,
+       V1.BRAND,
+       V1.PRODUCT_NAME,
+       V1.ORD_DEPT_CODE,
+       V1.ORD_GRP_CODE,
+       V1.ORD_ORG_CODE,
+       V1.ORD_HM_ID,
+       V1.ORD_SM_ID,
+       V1.ORD_GM_ID,
+       V1.ORD_REM,
+       V1.UPD_DT,
+       V1.UPD_USER_ID,
+       V1.CUST_ID2,
+       V1.CUST_IC2,
+       V1.CUST_NAME2,
+	   V1.PROD_CAT
+       FROM (
+       SELECT DISTINCT cd.CODE APP_TYPE_CODE,
+                som.APP_TYPE_ID,
+                cd.CODE_NAME APP_TYPE_NAME,
+                NVL (u.USER_NAME, ' ') CRT_USER_ID,
+                c.NRIC CUST_IC,
+                c.NAME CUST_NAME,
+                som.CUST_ID,
+                NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
+                c.TYPE_ID CUST_TYPE_ID,
+                (
+                  CASE WHEN C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
+                              THEN ( NVL(CUSTTYPE.CODE_NAME,' ') || ' (' || NVL(CORPTYPE.CODE_NAME,' ') || ')' )
+                          ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+                  END
+              ) CUST_TYPE,
+              (
+                  CASE
+                      WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
+                      ELSE TO_DATE('19000101','YYYYMMDD')
+                  END
+              ) AS CUST_DOB,
+              NVL(CO.NAME,' ') CUST_NATION,
+              (
+                  CASE WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
+                      ELSE ' '
+                  END
+              ) CUST_GENDER,
+              NVL(RC.CODE_NAME,' ') CUST_RACE,
+              NVL(C.EMAIL,' ') CUST_EMAIL,
+              C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
+              C.VISA_EXPR CUST_VISA_EXPR,
+              NVL(SOM.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+              NVL(B.CODE || ' - ' || B.NAME,' ') KEYIN_BRNCH_NAME,
+              TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
+              som.SALES_DT,
+              som.SRV_ORD_ID ORD_ID,
+              som.SRV_ORD_NO ORD_NO,
+              S.CODE ORD_STUS_CODE,
+              som.STUS_CODE_ID ORD_STUS_ID,
+              NVL (som.CUST_PO_NO, ' ') ORD_PO_NO,
+              som.TOT_AMT,
+              NVL (som.REF_NO, ' ') ORD_REF_NO,
+              NVL (som.MEM_ID, 0) ORD_MEM_ID,
+              NVL (mem.NAME, ' ') ORD_MEM_NAME,
+              NVL (mem.NRIC, ' ') ORD_MEM_NRIC,
+              NVL (mem.MEM_CODE, ' ') ORD_MEM_CODE,
+              NVL (mem.MEM_TYPE, 0) ORD_MEM_TYPE_ID,
+              NVL (mt.CODE_NAME,' ') ORD_MEM_TYPE_NAME ,
+              NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
+              cp2.TEL_M1 MAIL_TEL_MOB,
+              cp2.TELF MAIL_TEL_FAX,
+              cp2.TEL_O MAIL_TEL_OFF,
+              cp2.TEL_R MAIL_TEL_RES,
+              cp3.TELF INST_TEL_FAX,
+              cp3.TEL_M1 INST_TEL_MOB,
+              cp3.TEL_O INST_TEL_OFF,
+              cp3.TEL_R INST_TEL_RES,
+              som.PV_MONTH PV_MONTH,
+              som.PV_YEAR PV_YEAR,
+              som.PROMO_ID,
+              NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
+              NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
+              NVL (som.BINDING_NO, ' ') RELATED_NO,
+              NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
+              NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
+              som.DEPT_CODE ORD_DEPT_CODE,
+              som.GRP_CODE ORD_GRP_CODE,
+              som.ORG_CODE ORD_ORG_CODE,
+              som.SALES_HM_ID ORD_HM_ID,
+              som.SALES_SM_ID ORD_SM_ID,
+              som.SALES_GM_ID ORD_GM_ID,
+              som.SALES_PROD_SZ PRODUCT_NAME,
+              som.REM ORD_REM,
+              TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
+              u2.USER_NAME UPD_USER_ID,
+              so.cust_id CUST_ID2,
+              cust.NRIC CUST_IC2,
+              cust.NAME CUST_NAME2,
+  		      E.CODE AS PROD_CAT
+           FROM SAL0225D som
+                JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
+                LEFT JOIN SAL0001D SO ON SO.SALES_ORD_ID = som.SRV_ORD_ID
+                LEFT JOIN SAL0029D c ON c.CUST_ID = SO.CUST_ID
+                LEFT JOIN SAL0029D cust ON cust.CUST_ID= SOM.CUST_ID
+                JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
+                JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
+                LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
+                LEFT JOIN SYS0047M u2 ON u2.USER_ID = som.UPD_USER_ID
+                LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
+                LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
+                LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
+                LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
+                LEFT JOIN SYS0005M B ON B.BRNCH_ID = SOM.BRNCH_ID
+                LEFT JOIN SYS0015M CO ON CO.CNTY_ID = C.NATION AND NVL(C.TYPE_ID,0) = 964
+                LEFT JOIN SYS0013M RC ON RC.CODE_ID = C.RACE_ID AND NVL(C.TYPE_ID,0) = 964
+                LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
+                LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
+                LEFT JOIN SYS0013M MT ON MT.CODE_ID = MEM.MEM_TYPE
+                LEFT JOIN SAL0002D SO2 ON SO2.SALES_ORD_ID = som.SRV_ORD_ID
+                LEFT JOIN SYS0026M D ON D.STK_ID =  SO2.ITM_STK_ID
+                LEFT JOIN SYS0013M E ON E.CODE_ID = D.STK_CTGRY_ID
+       ) V1
+       WHERE  1= 1
+       AND V1.ORD_ID = #{salesOrderId}
+
+    </select>
+
+    <select id="selectLatestOrderLogByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT T.LOG_ID
+        , T.SALES_ORD_ID
+        , T.PRGRS_ID
+        , T.LOG_DT
+        , T.REF_ID
+        , T.IS_LOK
+        , T.LOG_CRT_USER_ID
+        , T.LOG_CRT_DT
+        , T.PRGRS
+        , T.USER_NAME
+        FROM
+        ( SELECT T1.LOG_ID
+        , T1.SALES_ORD_ID
+        , T1.PRGRS_ID
+        , T1.LOG_DT
+        , T1.REF_ID
+        , T1.IS_LOK
+        , T1.LOG_CRT_USER_ID
+        , T1.LOG_CRT_DT
+        , T2.PRGRS
+        , DECODE ( T3.USER_ID, NULL, '', T3.USER_NAME) AS USER_NAME
+        FROM SAL0009D T1
+        JOIN SAL0010M T2
+        ON T2.PRGRS_ID = T1.PRGRS_ID
+        LEFT
+        JOIN SYS0047M T3
+        ON T3.USER_ID = T1.LOG_CRT_USER_ID
+        WHERE T1.SALES_ORD_ID = #{salesOrderId}
+        <if test="prgrsId > 0">
+            AND T2.PRGRS_ID = #{prgrsId}
+        </if>
+        ORDER BY T1.LOG_ID DESC
+        ) T WHERE ROWNUM &lt;= 1
+    </select>
+
+    <select id="selectOrderAgreementByOrderID" parameterType="Map" resultType="egovMap">
+        SELECT T.GOV_AG_ITM_ID
+        , T.GOV_AG_ID
+        , T.GOV_AG_ITM_BATCH_NO
+        , T.GOV_AG_ITM_CRT_USER_ID
+        , T.GOV_AG_ITM_INST_RESULT
+        , T.GOV_AG_ITM_SALES_ORD_ID
+        , T.GOV_AG_ITM_RENT_RESULT
+        , T.GOV_AG_ITM_STUS_ID
+        , T.GOV_AG_ITM_UPD_USER_ID
+        , T.GOV_AG_ITM_CRT_DT
+        , T.GOV_AG_END_DT
+        , T.GOV_AG_ITM_START_DT
+        , T.GOV_AG_ITM_UPD_DT
+        FROM
+        ( SELECT RANK() OVER(ORDER BY T1.GOV_AG_ID DESC) AS RANK1
+        , T1.GOV_AG_ITM_ID GOV_AG_ITM_ID
+        , T1.GOV_AG_ID GOV_AG_ID
+        , T1.GOV_AG_ITM_BATCH_NO GOV_AG_ITM_BATCH_NO
+        , T1.GOV_AG_ITM_SALES_ORD_ID GOV_AG_ITM_SALES_ORD_ID
+        , T1.GOV_AG_ITM_STUS_ID GOV_AG_ITM_STUS_ID
+        , T1.GOV_AG_ITM_CRT_USER_ID GOV_AG_ITM_CRT_USER_ID
+        , T1.GOV_AG_ITM_UPD_USER_ID GOV_AG_ITM_UPD_USER_ID
+        , T1.GOV_AG_ITM_RENT_RESULT GOV_AG_ITM_RENT_RESULT
+        , T1.GOV_AG_ITM_INST_RESULT GOV_AG_ITM_INST_RESULT
+        , DECODE(NVL(T1.GOV_AG_ITM_CRT_DT,''), '', '01/01/1900',
+        TO_CHAR(T1.GOV_AG_ITM_CRT_DT, 'DD/MM/YYYY')) AS GOV_AG_ITM_CRT_DT
+        , DECODE(NVL(T2.GOV_AG_END_DT,''), '', '01/01/1900',
+        TO_CHAR(T2.GOV_AG_END_DT, 'DD/MM/YYYY')) AS GOV_AG_END_DT
+        , DECODE(NVL(T1.GOV_AG_ITM_START_DT,''), '', '01/01/1900',
+        TO_CHAR(T1.GOV_AG_ITM_START_DT, 'DD/MM/YYYY')) AS GOV_AG_ITM_START_DT
+        , DECODE(NVL(T1.GOV_AG_ITM_UPD_DT,''), '', '01/01/1900',
+        TO_CHAR(T1.GOV_AG_ITM_UPD_DT, 'DD/MM/YYYY')) AS GOV_AG_ITM_UPD_DT
+        FROM SAL0034D T1
+        LEFT OUTER
+        JOIN SAL0033D T2
+        ON T1.GOV_AG_ID = T2.GOV_AG_ID
+        WHERE T1.GOV_AG_ITM_SALES_ORD_ID = #{salesOrderId}
+        ) T
+        WHERE RANK1 = 1
+    </select>
+
+    <select id="selectOrderReferralInfoList" parameterType="Map" resultType="egovMap">
+        SELECT T.SALES_ORD_ID
+        , T.ORD_REF_ID
+        , T.SALES_ORD_NO
+        , T.CRT_DT
+        , T.STUS_CODE
+        , T.STATE_ID AS REF_STATE_ID
+        , T4.USER_ID
+        , T4.USER_NAME
+        , NVL(T.REF_NAME, '') AS REF_NAME
+        , NVL(T.NAME, '') AS REF_STATE_NAME
+        , NVL(T.REF_CNTC, '') AS REF_CNTC
+        , NVL(T.REF_REM, '') AS REF_REM
+        FROM
+        ( SELECT T1.SALES_ORD_ID
+        , T2.ORD_REF_ID
+        , T2.SALES_ORD_NO
+        , T2.REF_NAME
+        , T2.REF_CNTC
+        , T2.REF_REM
+        , T2.CRT_DT
+        , T2.CRT_USER_ID
+        , T2.STUS_CODE
+        , T3.STATE_ID
+        , T3.NAME
+        FROM SAL0001D T1
+        INNER
+        JOIN SAL0069D T2
+        ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        INNER
+        JOIN SYS0035M T3
+        ON T3.STATE_ID = T2.REF_STATE_ID
+        WHERE 8 != T2.STUS_CODE
+        ) T
+        INNER JOIN SYS0047M T4
+        ON T4.USER_ID = T.CRT_USER_ID
+        WHERE T.SALES_ORD_NO = #{salesOrdNo}
+    </select>
+
+    <resultMap id="callLogClobMap" type="egovMap">
+        <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string" />
+    </resultMap>
+    <select id="selectCallLogList" parameterType="Map" resultMap="callLogClobMap">
+        SELECT ROWNUM
+        , SALES_ORD_ID
+        , CALL_ENTRY_ID
+        , CALL_RESULT_ID
+        , CALL_ROS_AMT
+        , CALL_CRT_DT
+        , CALL_CRT_USER_ID
+        , CALL_REM
+        , TYPE_ID
+        , CODE
+        , CODE_NAME
+        , CALL_FDBCK_ID
+        , RESN_ID
+        , RESN_DESC
+        , CALL_CRT_USER_NAME
+        , STUS_CODE_ID
+        , STUS_CODE
+        , STUS_NAME
+        , ROS_MONTH
+        , ROS_YEAR
+        , ROS_CALLER_USER_ID
+        , ROS_CALLER_USER_NAME
+        FROM
+        ( SELECT T2.SALES_ORD_ID
+        , T2.CALL_ENTRY_ID
+        , T1.CALL_RESULT_ID
+        , T1.CALL_ROS_AMT
+        , TO_CHAR(T1.CALL_CRT_DT, 'yyyy-MM-dd hh24:mi') CALL_CRT_DT
+        , T1.CALL_CRT_USER_ID
+        , T1.CALL_REM
+        , T2.TYPE_ID
+        , T3.CODE
+        , T3.CODE_NAME
+        , NVL(T1.CALL_FDBCK_ID, 0) AS CALL_FDBCK_ID
+        , DECODE(T5.RESN_ID, NULL, '', T5.CODE) AS RESN_ID
+        , DECODE(T5.RESN_ID, NULL, '', T5.RESN_DESC) AS RESN_DESC
+        , DECODE(T6.USER_ID, NULL, '', T6.USER_NAME) AS CALL_CRT_USER_NAME
+        , DECODE(T4.STUS_CODE_ID, NULL, 0, T4.STUS_CODE_ID) AS STUS_CODE_ID
+        , DECODE(T4.STUS_CODE_ID, NULL, '', T4.CODE) AS STUS_CODE
+        , DECODE(T4.STUS_CODE_ID, NULL, '', T4.NAME) AS STUS_NAME
+        , CASE WHEN (NOT(T7.SALES_ORD_ID IS NULL AND T7.ROS_YEAR IS NULL AND
+        T7.ROS_MONTH IS NULL)) THEN T7.ROS_MONTH ELSE 0 END AS ROS_MONTH
+        , CASE WHEN (NOT(T7.SALES_ORD_ID IS NULL AND T7.ROS_YEAR IS NULL AND
+        T7.ROS_MONTH IS NULL)) THEN T7.ROS_YEAR ELSE 0 END AS ROS_YEAR
+        , DECODE(T8.USER_ID, NULL, 0, T8.USER_ID) AS ROS_CALLER_USER_ID
+        , DECODE(T8.USER_ID, NULL, '', T8.USER_NAME) AS ROS_CALLER_USER_NAME
+        FROM CCR0007D T1
+        INNER
+        JOIN CCR0006D T2
+        ON T2.CALL_ENTRY_ID = T1.CALL_ENTRY_ID
+        INNER JOIN SYS0013M T3
+        ON T3.CODE_ID = T2.TYPE_ID
+        LEFT OUTER
+        JOIN SYS0038M T4
+        ON T4.STUS_CODE_ID = T1.CALL_STUS_ID
+        LEFT OUTER
+        JOIN SYS0032M T5
+        ON (T5.RESN_ID = T1.CALL_FDBCK_ID)
+        AND (439 = T5.RESN_TYPE_ID)
+        LEFT OUTER
+        JOIN SYS0047M T6
+        ON T6.USER_ID = T1.CALL_CRT_USER_ID
+        LEFT OUTER
+        JOIN MSC0013D T7
+        ON (T7.SALES_ORD_ID = T2.SALES_ORD_ID)
+        AND TO_NUMBER(T7.ROS_MONTH) = TO_NUMBER(TO_CHAR(T1.CALL_CRT_DT,'MM'))
+        AND TO_NUMBER(T7.ROS_YEAR) = TO_NUMBER(TO_CHAR(T1.CALL_CRT_DT,'YYYY'))
+        LEFT OUTER
+        JOIN SYS0047M T8
+        ON T8.USER_ID = T7.ROS_CALLER_USER_ID
+        WHERE 8 != T1.CALL_STUS_ID
+        AND T2.SALES_ORD_ID = #{salesOrderId}
+        ORDER BY T1.CALL_RESULT_ID DESC
+        )
+    </select>
+
+    <select id="selectPaymentMasterList" parameterType="Map"
+        resultType="egovMap">
+        SELECT PAY_ID
+        , OR_NO
+        , SALES_ORD_ID
+        , BILL_ID
+        , TR_NO
+        , TYPE_ID
+        , PAY_DATA
+        , BANK_CHG_ACC_ID
+        , COLL_MEM_ID
+        , BRNCH_ID
+        , BANK_ACC_ID
+        , STUS_CODE_ID
+        , UPD_USER_ID
+        , UPD_DT
+        , SYNC_HECK
+        , CUST_ID_3PARTY
+        , TOT_AMT
+        , MTCH_ID
+        , CRT_USER_ID
+        , CRT_DT
+        , IS_ALLOW_REV_MULTI
+        , IS_GL_POST_CLM
+        , GL_POST_CLM_DT
+        , TRX_ID
+        , CODE_DESC
+        , SALES_ORD_NO
+        , NAME
+        , CODE
+        , NAME1 AS NAME1
+        , ACC_CODE
+        , ACC_DESC
+        , NAME2 AS NAME2
+        , NAME3 AS NAME3
+        , USER_NAME
+        , REV_RECEIPT_NO
+        FROM
+        ( SELECT T1.PAY_ID
+        , T1.OR_NO
+        , T1.SALES_ORD_ID
+        , T1.BILL_ID
+        , T1.TR_NO
+        , T1.TYPE_ID
+        , TO_CHAR(T1.PAY_DATA, 'DD/MM/YYYY') PAY_DATA
+        , T1.BANK_CHG_ACC_ID
+        , T1.COLL_MEM_ID
+        , T1.BRNCH_ID
+        , T1.BANK_ACC_ID
+        , T1.STUS_CODE_ID
+        , T1.UPD_USER_ID
+        , T1.UPD_DT
+        , T1.SYNC_HECK
+        , T1.CUST_ID_3PARTY
+        , T1.TOT_AMT
+        , T1.MTCH_ID
+        , T1.CRT_USER_ID
+        , T1.CRT_DT
+        , T1.IS_ALLOW_REV_MULTI
+        , T1.IS_GL_POST_CLM
+        , T1.GL_POST_CLM_DT
+        , T1.TRX_ID
+        , T2.CODE_DESC
+        , T3.SRV_ORD_NO SALES_ORD_NO
+        , T4.NAME
+        , T5.CODE
+        , T5.NAME AS NAME1
+        , T6.ACC_CODE
+        , T6.ACC_DESC
+        , T7.NAME AS NAME2
+        , T8.NAME AS NAME3
+        , T9.USER_NAME
+        , '' AS C1
+        , DECODE(T10.PAY_ID, NULL, '', T10.OR_NO) AS REV_RECEIPT_NO
+        FROM PAY0064D T1
+        LEFT OUTER
+        JOIN SYS0013M T2
+        ON T2.CODE_ID = T1.TYPE_ID
+        LEFT OUTER
+        JOIN SAL0225D T3
+        ON T3.SRV_ORD_ID = T1.SALES_ORD_ID
+        LEFT OUTER
+        JOIN ORG0001D T4
+        ON T4.MEM_ID = T1.COLL_MEM_ID
+        LEFT OUTER
+        JOIN SYS0005M T5
+        ON T5.BRNCH_ID = T1.BRNCH_ID
+        LEFT OUTER
+        JOIN SYS0001M T6
+        ON T6.ACC_ID = T1.BANK_ACC_ID
+        LEFT OUTER
+        JOIN SYS0038M T7
+        ON T7.STUS_CODE_ID = T1.STUS_CODE_ID
+        LEFT OUTER
+        JOIN ORG0001D T8
+        ON T8.MEM_ID = T1.UPD_USER_ID
+        LEFT OUTER
+        JOIN SYS0047M T9
+        ON T9.USER_ID = T1.CRT_USER_ID
+        LEFT OUTER
+        JOIN PAY0064D T10
+        ON T10.PAY_ID = T1.MTCH_ID
+        AND 101 = T1.TYPE_ID
+        LEFT JOIN PAY0007D T11 ON  T11.BILL_ID = T1.BILL_ID
+        WHERE (T1.SVC_CNTRCT_ID = 0 OR T1.SVC_CNTRCT_ID IS NULL)
+        AND T11.BILL_SO_ID = #{salesOrderId}
+        )
+        ORDER BY PAY_ID DESC
+    </select>
+
+    <select id="selectOrderInstallationInfoByOrderID" parameterType="Map"
+        resultType="egovMap">
+       SELECT V1.INSTALL_ID
+        , V1.ORD_ID
+        , V1.INST_ADDR_DTL
+        , V1.INST_STREET
+        , V1.INST_AREA
+        , V1.INST_POSTCODE
+        , V1.INST_CITY
+        , V1.INST_STATE
+        , V1.INST_COUNTRY
+        , V1.INST_CNT_NAME
+        , V1.INST_CNT_NRIC
+        , V1.INST_CNT_EMAIL
+        , V1.INST_CNT_TEL_M
+        , V1.INST_CNT_TEL_O
+        , V1.INST_CNT_TEL_R
+        , V1.INST_CNT_TEL_F
+        , V1.INST_CNT_GENDER
+        , V1.INSTCT
+        , V1.PREFER_INST_DT
+        , V1.PREFER_INST_TM
+        , V1.INSTALL_ADDR_ID
+        , V1.INSTALL_CNTC_ID
+        , V1.INST_CNT_DEPT
+        , V1.INST_CNT_POST
+        , V1.VRIFY_REM
+        FROM (
+
+   SELECT i.install_id,
+          som.srv_ord_id ord_id,
+          NVL (ca1.ADDR_DTL, ' ') AS INST_ADDR_DTL,
+          NVL (ca1.STREET, ' ') AS INST_STREET,
+          NVL (ma1.AREA, ' ') AS INST_AREA,
+          NVL (ma1.POSTCODE, ' ') AS INST_POSTCODE,
+          NVL (ma1.CITY, ' ') AS INST_CITY,
+          NVL (ma1.STATE, ' ') AS INST_STATE,
+          NVL (ma1.COUNTRY, ' ') AS INST_COUNTRY,
+          NVL (cp1.NAME, ' ') inst_cnt_name,
+          NVL (cp1.nric, ' ') inst_cnt_nric,
+          NVL (cp1.email, ' ') inst_cnt_email,
+          NVL (cp1.tel_m1, ' ') inst_cnt_tel_m,
+          NVL (cp1.tel_o, ' ') inst_cnt_tel_o,
+          NVL (cp1.tel_r, ' ') inst_cnt_tel_r,
+          NVL (cp1.telf, ' ') inst_cnt_tel_f,
+          (CASE
+              WHEN NVL (cp1.gender, ' ') = 'M' THEN 'Male'
+              WHEN NVL (cp1.gender, ' ') = 'F' THEN 'Female'
+              ELSE ' '
+           END)
+             inst_cnt_gender,
+          NVL (i.brnch_id, 0) dsc_id,
+          NVL (i.instct, ' ') instct,
+          DECODE (i.pre_dt,
+                  NULL, '01/01/1900',
+                  TO_CHAR (i.pre_dt, 'DD/MM/YYYY'))
+             prefer_inst_dt,
+          DECODE (i.pre_tm, NULL, '00:00:00', SUBSTR (i.pre_tm, 0, 8))
+             prefer_inst_tm,
+          NVL (i.add_id, 0) install_addr_id,
+          NVL (i.cnt_id, 0) install_cntc_id,
+          NVL (cp1.dept, ' ') inst_cnt_dept,
+          NVL (cp1.pos, ' ') inst_cnt_post,
+          i.vrify_rem,
+          ma1.area_id
+     FROM SAL0225D som
+          JOIN sal0045d i
+             ON i.sales_ord_id = som.SRV_ORD_ID
+          LEFT JOIN sal0023d ca1
+             ON ca1.cust_add_id = i.add_id
+          LEFT JOIN SYS0064M ma1
+             ON ma1.AREA_ID = ca1.AREA_ID
+          LEFT JOIN sal0027d cp1
+             ON cp1.cust_cntc_id = i.cnt_id
+             ) V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+        AND ROWNUM &lt;= 1
+    </select>
+
+    <select id="selectOrderCCPFeedbackCodeByOrderID" parameterType="Map"
+        resultType="egovMap">
+
+        select A.CODE,
+        A.RESN_DESC
+        from (
+        SELECT T2.CODE
+        , T2.RESN_DESC
+        , rank() over (order by CCP_ID desc) rnk
+        FROM SAL0102D T1
+        JOIN SYS0032M T2
+        ON T2.RESN_ID = T1.CCP_RESN_ID
+        WHERE T1.CCP_SALES_ORD_ID = #{salesOrderId}
+        ) A
+        where a.rnk = 1
+    </select>
+
+    <select id="selectOrderCCPInfoByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT T1.CCP_ID
+        , T1.CCP_SALES_ORD_ID
+        , T1.CCP_SCHEME_TYPE_ID
+        , T1.CCP_TYPE_ID
+        , T1.CCP_INCOME_RANGE_ID
+        , T1.CCP_TOT_SCRE_POINT
+        , T1.CCP_STUS_ID
+        , T1.CCP_RESN_ID
+        , DBMS_LOB.SUBSTR(T1.CCP_REM, 4000) CCP_REM
+        , T1.CCP_RJ_STUS_ID
+        , T1.CCP_UPD_USER_ID
+        , T1.CCP_UPD_DT
+        , T1.CCP_IS_LOU
+        , T1.CCP_IS_SAMAN
+        , T1.CCP_IS_SYNC
+        , DBMS_LOB.SUBSTR(T1.CCP_PNC_REM, 4000) CCP_PNC_REM
+        , T1.CCP_HAS_GRNT
+        , T1.CCP_IS_HOLD
+        , T1.CCP_IS_CURR
+        , T1.CCP_FICO
+        , T1.CCP_FICO_LOK
+        , CCP_CTOS_BATCH_NO
+        FROM SAL0102D T1
+        WHERE T1.CCP_SALES_ORD_ID = #{salesOrderId}
+         <![CDATA[
+         AND ROWNUM <= 1
+         ]]>
+    </select>
+
+    <select id="selectOrderSalesmanViewByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT T1.SRV_ORD_ID SALES_ORD_ID
+        , T6.DEPT_CODE DEPT_CODE
+        , T6.GRP_CODE GRP_CODE
+        , T6.ORG_CODE ORG_CODE
+        , T2.MEM_ID MEM_ID
+        , T2.MEM_CODE MEM_CODE
+        , T2.MEM_TYPE MEM_TYPE
+        , T2.NAME NAME
+        , T2.NRIC NRIC
+        , T2.TEL_OFFICE TEL_OFFICE
+        , T2.TEL_HUSE TEL_HUSE
+        , T2.TEL_MOBILE TEL_MOBILE
+        , T3.MEM_ID MEM_ID1
+        , T3.MEM_CODE MEM_CODE1
+        , T3.NAME NAME1
+        , T3.TEL_MOBILE TEL_MOBILE1
+        , T4.MEM_ID MEM_ID2
+        , T4.MEM_CODE MEM_CODE2
+        , T4.NAME NAME2
+        , T4.TEL_MOBILE TEL_MOBILE2
+        , T5.MEM_ID MEM_ID3
+        , T5.MEM_CODE MEM_CODE3
+        , T5.NAME NAME3
+        , T5.TEL_MOBILE TEL_MOBILE3
+        FROM SAL0225D T1
+        LEFT
+        JOIN ORG0001D T2
+        ON T2.MEM_ID = T1.MEM_ID
+        LEFT
+        JOIN ORG0001D T3
+        ON T3.MEM_ID = T1.SALES_GM_ID
+        LEFT
+        JOIN ORG0001D T4
+        ON T4.MEM_ID = T1.SALES_SM_ID
+        LEFT
+        JOIN ORG0001D T5
+        ON T5.MEM_ID = T1.SALES_HM_ID
+        LEFT JOIN ORG1001V T6
+        ON T6.MEM_CODE = T2.MEM_CODE
+        WHERE T1.SRV_ORD_ID = #{salesOrderId}
+    </select>
+
+    <select id="selectOrderServiceMemberViewByOrderID"
+        parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T1.SRV_ORD_ID SALES_ORD_ID
+             , T3.MEM_ID MEM_ID
+             , T3.MEM_CODE MEM_CODE
+             , T3.NAME NAME
+             , T3.NRIC NRIC
+             , T3.TEL_OFFICE TEL_OFFICE
+             , T3.TEL_HUSE TEL_HUSE
+             , T3.TEL_MOBILE TEL_MOBILE
+             , T4.DEPT_CODE DEPT_CODE
+             , T4.GRP_CODE GRP_CODE
+             , T4.ORG_CODE ORG_CODE
+             , T5.MEM_ID MEM_ID1
+             , T5.MEM_CODE MEM_CODE1
+             , T5.NAME NAME1
+             , T5.TEL_MOBILE TEL_MOBILE1
+             , T7.MEM_ID MEM_ID2
+             , T7.MEM_CODE MEM_CODE2
+             , T7.NAME NAME2
+             , T7.TEL_MOBILE TEL_MOBILE2
+             , T9.MEM_ID MEM_ID3
+             , T9.MEM_CODE MEM_CODE3
+             , T9.NAME NAME3
+             , T9.TEL_MOBILE TEL_MOBILE3
+             , T10.SERIAL_REQUIRE_CHK_YN
+             , T10.WH_LOC_GB
+             , T10.WH_LOC_ID CT_WH_LOC_ID
+          FROM SAL0225D T1
+          JOIN SAL0090D T2 ON T2.SRV_SO_ID = T1.SRV_ORD_ID
+          JOIN ORG0001D T3 ON T3.MEM_ID = T2.SRV_CODY_ID
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T4
+            ON T4.MEM_ID = T3.MEM_ID
+          LEFT
+          JOIN ORG0001D T5
+            ON T5.MEM_ID = T4.MEM_UP_ID
+          LEFT
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T6
+            ON T6.MEM_ID = T4.MEM_UP_ID
+          LEFT
+          JOIN ORG0001D T7
+            ON T7.MEM_ID = T6.MEM_UP_ID
+          LEFT
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T8
+            ON T8.MEM_ID = T6.MEM_UP_ID
+          LEFT JOIN ORG0001D T9
+            ON T9.MEM_ID = T8.MEM_UP_ID
+      	LEFT JOIN SYS0028M T10 ON T3.MEM_CODE = T10.WH_LOC_CODE
+         WHERE T1.SRV_ORD_ID = #{salesOrderId} AND ROWNUM <= 1
+    ]]>
+    </select>
+
+    <select id="selectOrderSameRentalGroupOrderList" parameterType="Map"
+        resultType="egovMap">
+    <![CDATA[
+        SELECT T.SALES_ORD_ID
+             , T.SALES_ORD_NO
+             , T.CODE
+             , T.CODE1
+             , T.NAME
+             , T.NRIC
+             , T.SALES_DT
+          FROM
+             ( SELECT DISTINCT T2.SALES_ORD_ID
+                    , T2.SALES_ORD_NO
+                    , T3.CODE
+                    , T4.CODE CODE1
+                    , T5.NAME
+                    , T5.NRIC
+                    , NVL(TO_CHAR(T1.SALES_DT, 'DD/MM/YYYY'), TO_DATE('01/01/1900', 'DD/MM/YYYY')) SALES_DT
+                 FROM SAL0001D T1
+                 JOIN SAL0001D T2
+                   ON T2.CUST_BILL_ID = T1.CUST_BILL_ID
+                  AND T2.SALES_ORD_ID <> #{salesOrderId}
+                 JOIN SYS0038M T3
+                   ON T3.STUS_CODE_ID = T2.STUS_CODE_ID
+                 JOIN SYS0013M T4
+                   ON T4.CODE_ID = T2.APP_TYPE_ID
+                 JOIN SAL0029D T5
+                   ON T5.CUST_ID = T2.CUST_ID
+                WHERE T1.SALES_ORD_ID = #{salesOrderId}
+                  AND 66 = T1.APP_TYPE_ID
+                  AND T1.CUST_BILL_ID > 0
+             ) T
+         ORDER BY T.SALES_ORD_NO
+    ]]>
+    </select>
+
+    <select id="selectOrderMailingInfoByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT V1.ORD_ID
+        , V1.ADDR_DTL
+        , V1.STREET
+        , V1.MAIL_AREA
+        , V1.MAIL_POST_CODE
+        , V1.MAIL_CITY
+        , V1.MAIL_STATE
+        , V1.MAIL_CNTY
+        , V1.MAIL_CNT_NAME
+        , V1.MAIL_CNT_NRIC
+        , V1.MAIL_CNT_EMAIL
+        , V1.MAIL_CNT_EMAIL_ADD
+        , V1.MAIL_CNT_TEL_M
+        , V1.MAIL_CNT_TEL_O
+        , V1.MAIL_CNT_TEL_R
+        , V1.MAIL_CNT_TEL_F
+        , V1.MAIL_CNT_GENDER
+        , V1.BILL_GRP_NO
+        , V1.BILL_STATE_EMAIL
+        , V1.BILL_STATE
+        , V1.BILL_SMS
+        , V1.BILL_POST
+        , V1.MAIL_CNTC_ID
+        , V1.MAIL_ADDR_ID
+        , V1.MAIL_CNT_DEPT
+        , V1.MAIL_CNT_POST
+        FROM SAL1011V V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+    </select>
+
+    <select id="selectOrderRentPaySetInfoByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT V1.ORD_ID
+        , V1.RENT_PAY_ID
+        , V1.RENT_PAY_MODE_CODE
+        , V1.RENT_PAY_MODE_DESC
+        , TO_CHAR(V1.RENT_PAY_APPLY_DT, 'dd/MM/yyyy') RENT_PAY_APPLY_DT
+        , TO_CHAR(V1.RENT_PAY_SUBMIT_DT, 'dd/MM/yyyy') RENT_PAY_SUBMIT_DT
+        , TO_CHAR(V1.RENT_PAY_START_DT, 'dd/MM/yyyy') RENT_PAY_START_DT
+        , TO_CHAR(V1.RENT_PAY_REJCT_DT, 'dd/MM/yyyy') RENT_PAY_REJCT_DT
+        , V1.RENT_PAY_REJCT_CODE
+        , V1.RENT_PAY_REJCT_DESC
+        , V1.RENT_PAY_ISS_BANK_CODE
+        , V1.RENT_PAY_ISS_BANK_NAME
+        , V1.RENT_PAY_ACC_NO
+        , V1.RENT_PAY_ACC_OWNER
+        <!--, pkg_crypto.DECRYPT(V1.RENT_PAY_CRC_NO) RENT_PAY_CRC_NO -->
+        , V1.RENT_PAY_ORI_CRC_NO AS RENT_PAY_CRC_NO
+        , V1.RENT_PAY_CR_OWNER
+        , V1.RENT_PAY_CRC_EXPR
+        , V1.ISSU_NRIC
+        , V1.CLM_LIMIT
+        , V1.CLM_DT
+        , V1.CLM_DD_MODE
+        , V1.IS_3PARTY
+        , V1.PAYER_CUST_ID
+        , V1.PAY_MODE_ID
+        , V1.CRC_ID
+        , V1.BANK_ACC_ID
+        , V1.ISSU_BANK_ID
+        , V1.FAIL_RESN_ID
+        , V1.OLD_IC
+        , V1.PAY_TRM
+        , V1.CARD_TYPE
+        , V1.CARD_TYPE_ID
+        , V1.DDT_CHNL
+        FROM PAY1009V V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+        AND ROWNUM = 1
+    </select>
+
+    <select id="selectThirdPartyInfo" parameterType="Map"
+        resultType="egovMap">
+        SELECT V1.ORD_ID
+        , V1.RENT_PAY_MODE_CODE
+        , V1.RENT_PAY_MODE_DESC
+        , TO_CHAR(V1.RENT_PAY_APPLY_DT, 'yyyy-MM-dd') RENT_PAY_APPLY_DT
+        , TO_CHAR(V1.RENT_PAY_SUBMIT_DT, 'yyyy-MM-dd') RENT_PAY_SUBMIT_DT
+        , TO_CHAR(V1.RENT_PAY_START_DT, 'yyyy-MM-dd') RENT_PAY_START_DT
+        , TO_CHAR(V1.RENT_PAY_REJCT_DT, 'yyyy-MM-dd') RENT_PAY_REJCT_DT
+        , V1.RENT_PAY_REJCT_CODE
+        , V1.RENT_PAY_REJCT_DESC
+        , V1.RENT_PAY_ISS_BANK_CODE
+        , V1.RENT_PAY_ISS_BANK_NAME
+        , V1.RENT_PAY_ACC_NO
+        , V1.RENT_PAY_ACC_OWNER
+        , V1.RENT_PAY_CRC_NO
+        , V1.RENT_PAY_CR_OWNER
+        , V1.RENT_PAY_CRC_EXPR
+        , V1.ISSU_NRIC
+        , V1.CLM_LIMIT
+        , V1.CLM_DT
+        , V1.CLM_DD_MODE
+        , V1.IS_3PARTY
+        , V1.PAYER_CUST_ID
+        , V1.PAY_MODE_ID
+        , V1.CRC_ID
+        , V1.BANK_ACC_ID
+        , V1.ISSU_BANK_ID
+        , V1.FAIL_RESN_ID
+        , V1.OLD_IC
+        , V1.PAY_TRM
+        , V1.CARD_TYPE
+        , V1.CARD_TYPE_ID
+        FROM PAY1009V V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+    </select>
+
+    <select id="selectMembershipInfoList" parameterType="Map"
+        resultType="egovMap">
+        SELECT SORT_NO
+        , SALES_ORD_ID
+        , MBRSH_ID
+        , MBRSH_NO
+        , MBRSH_BILL_NO
+        , MBRSH_STUS_CODE
+        , PAC_NAME
+        , MBRSH_CRT_DT
+        , DECODE(MBRSH_START_DT, '01-JAN-00', '-', MBRSH_START_DT) AS
+        MBRSH_START_DT
+        , DECODE(MBRSH_EXPR_DT, '01-JAN-00', '-', MBRSH_EXPR_DT) AS
+        MBRSH_EXPR_DT
+        , MBRSH_DUR
+        FROM
+        ( SELECT DECODE(V1.MBRSH_START_DT, '01-JAN-00', 1, 0) AS SORT_NO
+        , V1.SALES_ORD_ID
+        , V1.MBRSH_ID
+        , V1.MBRSH_NO
+        , V1.MBRSH_BILL_NO
+        , V1.MBRSH_STUS_CODE
+        , V1.PAC_NAME
+        , V1.MBRSH_CRT_DT
+        , V1.MBRSH_START_DT
+        , TO_DATE(V1.MBRSH_START_DT,'DD-MON-YY') as MBRSH_START_DT2
+        , V1.MBRSH_EXPR_DT
+        , V1.MBRSH_DUR
+        FROM (
+            SELECT sm.SRV_SALES_ORD_ID SALES_ORD_ID,
+                  sm.SRV_MEM_ID MBRSH_ID,
+                  sm.SRV_MEM_NO MBRSH_NO,
+                  NVL (sm.SRV_MEM_BILL_NO, ' ') MBRSH_BILL_NO,
+                  sta.CODE MBRSH_STUS_CODE,
+                  TO_CHAR (cd.CODE_DESC) PAC_NAME,
+                  TO_CHAR(sm.SRV_CRT_DT, 'DD-MON-YY') MBRSH_CRT_DT,
+                  TO_CHAR(sm.SRV_START_DT, 'DD-MON-YY') MBRSH_START_DT,
+                  TO_CHAR(sm.SRV_EXPR_DT, 'DD-MON-YY') MBRSH_EXPR_DT,
+                  sm.SRV_DUR MBRSH_DUR
+             FROM SAL0095D sm
+                  JOIN SAL0225D orm
+                     ON orm.SRV_ORD_ID = sm.SRV_SALES_ORD_ID
+                        AND orm.APP_TYPE_ID IN (3216,3217,5701,5702)
+                        AND orm.SALES_DT >=
+                               TO_DATE ('2018-01-01', 'YYYY-MM-DD')
+                  JOIN SYS0038M sta
+                     ON sta.STUS_CODE_ID = sm.SRV_STUS_CODE_ID
+                     JOIN SYS0013M cd ON cd.CODE_ID = orm.APP_TYPE_ID
+
+        ) V1
+        WHERE V1.SALES_ORD_ID = #{salesOrderId}
+        )
+        ORDER BY SORT_NO, MBRSH_START_DT2
+    </select>
+
+    <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
+        SELECT T.DOC_SUB_ID
+        , T.DOC_SO_ID
+        , T.DOC_TYPE_ID
+        , T.CODE_NAME
+        , T.DOC_SUB_DT
+        , T.DOC_COPY_QTY
+        FROM
+        ( SELECT T1.DOC_SUB_ID DOC_SUB_ID
+        , T1.DOC_TYPE_ID DOC_TYPE_ID
+        , T1.DOC_SO_ID DOC_SO_ID
+        , T2.CODE_NAME CODE_NAME
+        , DECODE(T1.DOC_SUB_DT, NULL, '01/01/1900', TO_CHAR(T1.DOC_SUB_DT,
+        'DD/MM/YYYY')) DOC_SUB_DT
+        , NVL(T1.DOC_COPY_QTY, 0) DOC_COPY_QTY
+        FROM ORG0010D T1
+        JOIN SYS0013M T2 ON T2.CODE_ID = T1.DOC_TYPE_ID
+        WHERE 1 = T1.STUS_ID
+        AND T1.DOC_SO_ID = #{salesOrderId}
+        ) T
+        ORDER BY T.CODE_NAME ASC
+    </select>
+
+    <select id="selectGuaranteeInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T1.CCP_ID CCP_ID
+             , T1.CCP_SALES_ORD_ID CCP_SALES_ORD_ID
+             , DECODE( T3.MEM_ID, NULL,  0, T3.MEM_ID)   MEM_ID
+             , DECODE( T3.MEM_ID, NULL, '', T3.MEM_CODE) MEM_CODE
+             , DECODE( T3.MEM_ID, NULL, '', T3.NAME)     NAME
+             , DECODE( T3.MEM_ID, NULL, '', T3.NRIC)     NRIC
+             , DECODE( T4.MEM_ID, NULL,  0, T4.MEM_ID)   MEM_ID2
+             , DECODE( T4.MEM_ID, NULL, '', T4.MEM_CODE) MEM_CODE2
+             , DECODE( T4.MEM_ID, NULL, '', T4.NAME)     NAME2
+             , DECODE( T4.MEM_ID, NULL, '', T4.NRIC)     NRIC2
+             , DECODE( T5.MEM_ID, NULL,  0, T5.MEM_ID)   MEM_ID3
+             , DECODE( T5.MEM_ID, NULL, '', T5.MEM_CODE) MEM_CODE3
+             , DECODE( T5.MEM_ID, NULL, '', T5.NAME)     NAME3
+             , DECODE( T5.MEM_ID, NULL, '', T5.NRIC)     NRIC3
+             , DECODE( T6.MEM_ID, NULL,  0, T6.MEM_ID)   MEM_ID4
+             , DECODE( T6.MEM_ID, NULL, '', T6.MEM_CODE) MEM_CODE4
+             , DECODE( T6.MEM_ID, NULL, '', T6.NAME)     NAME4
+             , DECODE( T6.MEM_ID, NULL, '', T6.NRIC)     NRIC4
+          FROM SAL0102D T1
+          JOIN SAL0105D T2
+            ON T2.CCP_ID = T1.CCP_ID
+           AND 1 = T2.CCP_GRNT_STUS_ID
+          LEFT
+          JOIN ORG0001D T3
+            ON T3.MEM_ID = T2.CCP_GRNT_GM_MEM_ID
+          LEFT
+          JOIN ORG0001D T4
+            ON T4.MEM_ID = T2.CCP_GRNT_SM_MEM_ID
+          LEFT
+          JOIN ORG0001D T5
+            ON T5.MEM_ID = T2.CCP_GRNT_HM_MEM_ID
+          LEFT
+          JOIN ORG0001D T6
+            ON T6.MEM_ID = T2.CCP_GRNT_HP_MEM_ID
+         WHERE 1 = T1.CCP_HAS_GRNT
+           AND T1.CCP_SALES_ORD_ID = #{salesOrderId}
+           AND ROWNUM <= 1
+    ]]>
+    </select>
+
+    <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
+    SELECT T.BANK_DTL_ID
+             , T.BANK_DTL_AMT
+             , T.CTRL_ID
+             , T.CRT_DT_MM
+             , T.CRT_DT_DD
+             , T.BATCH_MODE
+             , T.CODE
+             , CASE WHEN t.ctrl_stus_id<![CDATA[<>]]>4 THEN '-'
+                       ELSE T.CODE_NAME END AS is_approve_str
+                       ,T.BANK_DTL_APPR_CODE
+    FROM ( SELECT T1.BANK_DTL_ID
+                        , T1.BANK_DTL_AMT
+                        , T2.CTRL_ID
+                        , TO_CHAR(T2.CRT_DT, 'MM-YYYY') CRT_DT_MM
+                        , TO_CHAR(T2.CRT_DT, 'DD/MM/YYYY') CRT_DT_DD
+                        , CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'CRC'
+                                  WHEN T2.CTRL_IS_CRC = 0 THEN 'DD'
+                                  ELSE 'FPX' END BATCH_MODE
+                        , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
+                        , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
+                        , NVL(T1.BANK_APPV, 0) BANK_APPV
+                        , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
+                        , T2.CTRL_IS_CRC CTRL_IS_CRC
+                        , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
+                        WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
+                        WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
+                        WHEN T4.IND = 'CHGCARD' THEN
+                                                    CASE WHEN T2.CTRL_IS_CRC = 1 THEN
+                                                        CASE WHEN T1.BANK_DTL_APPR_CODE = '54' THEN 'Transaction Not Allowed' ELSE 'Change Card' END
+                                                    ELSE  'Change Account' END
+                        WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
+               FROM PAY0042D T1
+               JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
+                                        AND 8 != T2.CTRL_STUS_ID
+               LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD','TRXNOTALW')
+               WHERE T1.SALES_ORD_ID = #{salesOrderId}
+    ) T ORDER BY T.BANK_DTL_ID DESC
+    </select>
+
+    <select id="selectEcashList" parameterType="Map" resultType="egovMap">
+        SELECT T1.FILE_ITM_ID
+        , TO_CHAR(T1.FILE_ITM_CRT, 'DD/MM/YYYY') AS FILE_ITM_CRT
+        , T2.CODE_NAME
+        , T1.FILE_ITM_AMT
+        , CASE WHEN T1.FILE_ITM_STUS_ID = 4 THEN 'Success'
+        WHEN T1.FILE_ITM_STUS_ID IN (6,8) THEN 'Fail'
+        ELSE '-'
+        END IS_SUCCESS
+        , T1.FILE_ITM_STUS_ID
+        , T1.FILE_ITM_REM
+        FROM SAL0152M T1
+        , SYS0013M T2
+        WHERE T1.FILE_ITM_ORD_ID = #{salesOrderId}
+        AND T1.FILE_ITM_STUS_ID != 8
+        AND T1.FILE_ITM_TYPE_ID = T2.CODE_ID
+        ORDER
+        BY T1.FILE_ITM_ID DESC
+    </select>
+
+    <select id="selectDiscountList" parameterType="Map" resultType="egovMap">
+        SELECT T1.ORD_ID
+        , T2.SALES_ORD_NO
+        , T3.CODE_DESC
+        , T1.DC_AMT_PER_INSTLMT
+        , T1.DC_START_INSTLMT
+        , T1.DC_END_INSTLMT
+        , T1.REM
+        FROM PAY0054D T1
+        JOIN SAL0001D T2
+        ON T2.SALES_ORD_ID = T1.ORD_ID
+        LEFT
+        JOIN SYS0013M T3
+        ON T1.DC_TYPE = T3.CODE_ID
+        WHERE T1.ORD_ID = #{salesOrderId}
+        AND 1 = T1.DC_STUS_ID
+    </select>
+
+    <select id="selectOrderConfigInfo" parameterType="Map"
+        resultType="egovMap">
+    <![CDATA[
+           SELECT
+                DISTINCT
+                 T.ORD_ID
+             , T.CONFIG_BS_GEN
+             , T.SRV_MEM_FREQ
+             , T.MEM_ID
+             , T.MEM_CODE
+             , T.NAME
+             , T.SETL_DT
+             , T.CONFIG_BS_REM
+             , T.CONFIG_SETT_AS
+             , T.CONFIG_SETT_BS
+             , T.CONFIG_SETT_INS
+             , T.CONFIG_BS_WEEK
+
+          FROM
+                           ( SELECT T2.ORD_ID
+                                  , T2.CONFIG_ID
+                                  , T2.CONFIG_SETT_INS
+                                  , T2.CONFIG_SETT_BS
+                                  , T2.CONFIG_SETT_AS
+                                   ,T2.CONFIG_BS_GEN
+                                  , T2.CONFIG_BS_MEM_ID
+                                  , T2.CONFIG_BS_WEEK
+                                  , T2.CONFIG_BS_REM
+                                  , T2.SRV_MEM_ID
+                                  , T2.SRV_MEM_NO
+                                  , T2.SRV_MEM_BILL_NO
+                                  , T2.SRV_MEM_START_DT
+                                  , T2.SRV_MEM_EXPR_DT
+                                  , T2.SRV_MEM_FREQ
+                                  , T2.SRV_MEM_DUR
+                                  , T2.SRV_MEM_SALESMAN_CODE
+                                  , T2.SRV_MEM_SALESMAN_NAME
+                                  , T4.SETL_DT
+                                  , DECODE(T3.MEM_ID, NULL, 0, T3.MEM_ID) MEM_ID
+                                  , DECODE(T3.MEM_ID, NULL,'', T3.MEM_CODE) MEM_CODE
+                                  , DECODE(T3.MEM_ID, NULL,'', T3.NAME) NAME
+                               FROM (
+
+                  SELECT a.ORD_ID ,
+          NVL(cg.SRV_CONFIG_ID, 0) CONFIG_ID  ,
+          (CASE
+                WHEN NVL(cs1.SRV_SETT_STUS_ID, 0) = 1 THEN 1
+          ELSE 0
+             END) CONFIG_SETT_INS  ,
+          (CASE
+                WHEN NVL(cs2.SRV_SETT_STUS_ID, 0) = 1 THEN 1
+          ELSE 0
+             END) CONFIG_SETT_BS  ,
+          (CASE
+                WHEN NVL(cs3.SRV_SETT_STUS_ID, 0) = 1 THEN 1
+          ELSE 0
+             END) CONFIG_SETT_AS  ,
+          NVL(cg.SRV_BS_GEN, 0) CONFIG_BS_GEN  ,
+          NVL(cg.SRV_CODY_ID, 0) CONFIG_BS_MEM_ID  ,
+          NVL(cg.SRV_BS_WEEK, 0) CONFIG_BS_WEEK  ,
+          NVL(cg.SRV_REM, ' ') CONFIG_BS_REM  ,
+          a.SRV_MEM_ID ,
+          NVL(sm.SRV_MEM_NO, ' ') SRV_MEM_NO  ,
+          NVL(sm.SRV_MEM_BILL_NO, ' ') SRV_MEM_BILL_NO  ,
+      NVL(sm.SRV_START_DT, TO_DATE('01/01/1900', 'dd/mm/yyyy')) SRV_MEM_START_DT,
+      NVL(sm.SRV_EXPR_DT, TO_DATE('01/01/1900', 'dd/mm/yyyy')) SRV_MEM_EXPR_DT,
+          NVL(Prd.SRV_PRD_DUR, 0) SRV_MEM_FREQ  ,
+          NVL(sm.SRV_DUR, 0) SRV_MEM_DUR  ,
+          NVL(mem.MEM_CODE, ' ') SRV_MEM_SALESMAN_CODE  ,
+          NVL(mem.NAME, ' ') SRV_MEM_SALESMAN_NAME
+
+     FROM ( SELECT som.SRV_ORD_ID ORD_ID  ,
+                   NVL(sm.SRV_MEM_ID, 0) SRV_MEM_ID
+            FROM SAL0225D som
+                   LEFT JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = som.SRV_ORD_ID
+                   AND sm.SRV_STUS_CODE_ID = 4
+                   AND to_char(SYSDATE,'yyyymmdd') BETWEEN to_char(SRV_START_DT,'yyyymm')||'01' AND to_char(last_day(SRV_EXPR_DT),'yyyymmdd')
+             WHERE  ( som.STUS_CODE_ID <> 8 ) ) a
+            LEFT JOIN SAL0090D cg   ON cg.SRV_SO_ID = a.ORD_ID
+            AND cg.SRV_STUS_ID = 1
+            LEFT JOIN SAL0089D cs1   ON cs1.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            AND cs1.SRV_SETT_TYPE_ID = 281
+            LEFT JOIN SAL0089D cs2   ON cs2.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            AND cs2.SRV_SETT_TYPE_ID = 280
+            LEFT JOIN SAL0089D cs3   ON cs3.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            AND cs3.SRV_SETT_TYPE_ID = 279
+            LEFT JOIN SAL0095D sm   ON sm.SRV_MEM_ID = a.SRV_MEM_ID
+            AND a.SRV_MEM_ID <> 0
+             LEFT JOIN SAL0088D Prd   ON Prd.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+            AND Prd.SRV_PRD_STUS_ID = 1
+              AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(Prd.SRV_PRD_START_DT,'YYYYMM')||'01' AND TO_CHAR(LAST_DAY(Prd.SRV_PRD_EXPR_DT),'YYYYMMDD')
+            LEFT JOIN ORG0001D mem   ON mem.MEM_ID = NVL(sm.SRV_MEM_SALES_MEM_ID, 0)
+            AND NVL(sm.SRV_MEM_SALES_MEM_ID, 0) <> 0
+                           ) T2
+
+                       LEFT
+                       JOIN ORG0001D T3
+                         ON T2.CONFIG_BS_MEM_ID = T3.MEM_ID
+                       LEFT JOIN  SVC0008D T5 ON T2.ORD_ID = T5.SALES_ORD_ID
+                       AND MONTH = EXTRACT(MONTH FROM SYSDATE)
+                        AND YEAR = EXTRACT(YEAR FROM SYSDATE)
+                       LEFT
+                       JOIN SVC0006D T4
+                         ON T2.ORD_ID = T4.SALES_ORD_ID
+                         AND T4.SCHDUL_ID = T5.SCHDUL_ID
+                        AND 4 = T4.RESULT_STUS_CODE_ID
+                      WHERE T2.ORD_ID = #{salesOrderId}
+                    ) T
+                ORDER BY T.SETL_DT DESC
+    ]]>
+    </select>
+
+    <select id="selectGSTCertInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T1.EURC_ID
+             , T1.EURC_RLIEF_TYPE_ID
+             , T1.EURC_SALES_ORD_ID
+             , T1.EURC_REF_NO
+             , TO_CHAR(T1.EURC_REF_DT, 'DD/MM/YYYY') EURC_REF_DT
+             , T1.EURC_CUST_RGS_NO
+             , T1.EURC_REM
+             , T1.EURC_FILE_PATH_NAME
+             , T1.EURC_RLIEF_APP_TYPE_ID
+             , T1.ATCH_FILE_GRP_ID
+          FROM SAL0042D T1
+         WHERE T1.EURC_SALES_ORD_ID = #{salesOrderId}
+           AND ROWNUM <= 1
+    ]]>
+    </select>
+
+    <select id="selectMemberInfo" parameterType="string" resultType="string">
+    <![CDATA[
+        SELECT CODE
+          FROM ORG0001D T1
+             , SYS0013M T2
+         WHERE T1.STUS = 1
+           AND T1.MEM_TYPE = T2.CODE_ID
+           AND T1.NRIC = #{value}
+           AND ROWNUM <= 1
+    ]]>
+    </select>
+
+    <resultMap id="transMap" type="egovMap"></resultMap>
+    <select id="selectLast6MonthTransList" parameterType="Map"
+        statementType="CALLABLE">
+        {
+        call SP_GET_ORD_LAST_6_MTH_TRNSC(#{salesOrderId},#{p1, mode=OUT,
+        jdbcType=CURSOR, javaType=ResultSet, resultMap=transMap})
+        }
+    </select>
+
+    <select id="selectLast6MonthTransListNew" parameterType="Map"
+        resultType="egovMap">
+        WITH DUMMY_TITLE AS (
+        SELECT '1' AS TYPE FROM DUAL
+        )
+        SELECT 'Type' AS TYPE
+        , 'Current Month' AS CUR_MONTH
+        , TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'MM/YYYY') AS PREV_1_MONTH
+        , TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'MM/YYYY') AS PREV_2_MONTH
+        , TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'MM/YYYY') AS PREV_3_MONTH
+        , TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'MM/YYYY') AS PREV_4_MONTH
+        , TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'MM/YYYY') AS PREV_5_MONTH
+        FROM DUAL
+        UNION ALL
+        SELECT TYPE
+        , TO_CHAR(NVL(SUM(CUR_MONTH), 0)) AS CUR_MONTH
+        , TO_CHAR(NVL(SUM(PREV_1_MONTH), 0)) AS PREV_1_MONTH
+        , TO_CHAR(NVL(SUM(PREV_2_MONTH), 0)) AS PREV_2_MONTH
+        , TO_CHAR(NVL(SUM(PREV_3_MONTH), 0)) AS PREV_3_MONTH
+        , TO_CHAR(NVL(SUM(PREV_4_MONTH), 0)) AS PREV_4_MONTH
+        , TO_CHAR(NVL(SUM(PREV_5_MONTH), 0)) AS PREV_5_MONTH
+        FROM
+        ( SELECT 'Payment (Rental/Outright)' AS TYPE
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') = TO_CHAR(SYSDATE,
+        'YYYY-MM')
+        THEN RENT_AMT
+        ELSE 0
+        END AS CUR_MONTH
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+        THEN RENT_AMT
+        ELSE 0
+        END AS PREV_1_MONTH
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+        THEN RENT_AMT
+        ELSE 0
+        END AS PREV_2_MONTH
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+        THEN RENT_AMT
+        ELSE 0
+        END AS PREV_3_MONTH
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+        THEN RENT_AMT ELSE 0
+        END AS PREV_4_MONTH
+        , CASE WHEN TO_CHAR(RENT_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+        THEN RENT_AMT
+        ELSE 0
+        END AS PREV_5_MONTH
+        FROM DUMMY_TITLE T1
+        LEFT OUTER
+        JOIN PAY0022D
+        ON TO_CHAR(RENT_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -
+        5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+        AND ( RENT_DOC_NO LIKE '%OR%'
+        OR RENT_DOC_TYPE_ID = 155
+        OR RENT_DOC_TYPE_ID = 157 )
+        AND RENT_SO_ID = #{salesOrdId}
+        )
+        WHERE 66 = #{appTypeId}
+        GROUP BY TYPE
+        UNION ALL
+        SELECT TYPE
+        , TO_CHAR(NVL(SUM(CUR_MONTH), 0)) AS CUR_MONTH
+        , TO_CHAR(NVL(SUM(PREV_1_MONTH), 0)) AS PREV_1_MONTH
+        , TO_CHAR(NVL(SUM(PREV_2_MONTH), 0)) AS PREV_2_MONTH
+        , TO_CHAR(NVL(SUM(PREV_3_MONTH), 0)) AS PREV_3_MONTH
+        , TO_CHAR(NVL(SUM(PREV_4_MONTH), 0)) AS PREV_4_MONTH
+        , TO_CHAR(NVL(SUM(PREV_5_MONTH), 0)) AS PREV_5_MONTH
+        FROM
+        ( SELECT 'Payment (Rental/Outright)' AS TYPE
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') = TO_CHAR(SYSDATE,
+        'YYYY-MM')
+        THEN TRADE_AMT
+        ELSE 0
+        END AS CUR_MONTH
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+        THEN TRADE_AMT
+        ELSE 0
+        END AS PREV_1_MONTH
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+        THEN TRADE_AMT
+        ELSE 0
+        END AS PREV_2_MONTH
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+        THEN TRADE_AMT
+        ELSE 0
+        END AS PREV_3_MONTH
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+        THEN TRADE_AMT ELSE 0
+        END AS PREV_4_MONTH
+        , CASE WHEN TO_CHAR(TRADE_DT_TM, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+        THEN TRADE_AMT
+        ELSE 0
+        END AS PREV_5_MONTH
+        FROM DUMMY_TITLE T1
+        LEFT OUTER
+        JOIN PAY0035D
+        ON TO_CHAR(TRADE_DT_TM, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -
+        5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+        AND ( TRADE_DOC_NO LIKE '%OR%'
+        OR TRADE_DOC_TYPE_ID = 155
+        OR TRADE_DOC_TYPE_ID = 157 )
+        AND TRADE_SO_ID = #{salesOrdId}
+        )
+        WHERE 66 != #{appTypeId}
+        GROUP BY TYPE
+        UNION ALL
+        SELECT TYPE
+        , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+        , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+        , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+        , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+        , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+        , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+        FROM
+        ( SELECT 'AS' AS TYPE
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') = TO_CHAR(SYSDATE,
+        'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS CUR_MONTH
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_1_MONTH
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_2_MONTH
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_3_MONTH
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_4_MONTH
+        , CASE WHEN TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+        THEN (E.AS_NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_5_MONTH
+        FROM SVC0001D E
+        JOIN SYS0038M S ON S.STUS_CODE_ID = E.AS_STUS_ID
+        WHERE E.AS_SO_ID = #{salesOrdId}
+        AND TO_CHAR(E.AS_REQST_DT, 'YYYY-MM') BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,
+        - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE, 'YYYY-MM')
+        )
+        GROUP BY TYPE
+        UNION ALL
+        SELECT TYPE
+        , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+        , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+        , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+        , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+        , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+        , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+        FROM
+        ( SELECT 'HS' AS TYPE
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(SYSDATE, 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS CUR_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_1_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_2_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_3_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_4_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+        THEN (M.NO || ' - ' || S.CODE)
+        ELSE ''
+        END AS PREV_5_MONTH
+        FROM SVC0008D M
+        JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_CODE_ID
+        LEFT
+        JOIN SVC0006D RM ON RM.SCHDUL_ID = M.SCHDUL_ID
+        AND RM.TYPE_ID = 306
+        AND RM.RESULT_IS_CURR = 1
+        LEFT
+        JOIN SYS0032M RC ON RC.RESN_ID = RM.REN_COLCT_ID
+        WHERE M.SALES_ORD_ID = #{salesOrdId}
+        AND TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') BETWEEN
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,
+        'YYYY-MM')
+        )
+        GROUP BY TYPE
+        UNION ALL
+        SELECT TYPE
+        , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+        , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+        , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+        , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+        , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+        , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+        FROM
+        ( SELECT 'RC Code' AS TYPE
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(SYSDATE, 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS CUR_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS PREV_1_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS PREV_2_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS PREV_3_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS PREV_4_MONTH
+        , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') =
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM')
+        THEN NVL(RC.CODE, '-')
+        ELSE ''
+        END AS PREV_5_MONTH
+        FROM SVC0008D M
+        JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_CODE_ID
+        LEFT
+        JOIN SVC0006D RM ON RM.SCHDUL_ID = M.SCHDUL_ID
+        AND RM.TYPE_ID = 306
+        AND RM.RESULT_IS_CURR = 1
+        LEFT
+        JOIN SYS0032M RC ON RC.RESN_ID = RM.REN_COLCT_ID
+        WHERE M.SALES_ORD_ID = #{salesOrdId}
+        AND TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') BETWEEN
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYY-MM') AND TO_CHAR(SYSDATE,
+        'YYYY-MM')
+        )
+        GROUP BY TYPE
+        UNION ALL
+        SELECT TYPE
+        , NVL(MAX(CUR_MONTH), '-') AS CUR_MONTH
+        , NVL(MAX(PREV_1_MONTH), '-') AS PREV_1_MONTH
+        , NVL(MAX(PREV_2_MONTH), '-') AS PREV_2_MONTH
+        , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
+        , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
+        , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
+        FROM
+        ( SELECT 'Opening Rental Status' AS TYPE
+        , NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '') AS CUR_MONTH
+        , '' AS PREV_1_MONTH
+        , '' AS PREV_2_MONTH
+        , '' AS PREV_3_MONTH
+        , '' AS PREV_4_MONTH
+        , '' AS PREV_5_MONTH
+        FROM PAY0052S M
+        WHERE M.ACC_DEBT_SRV_CNTRCT_ID = 0
+        AND M.ACC_DEBT_ORD_ID = #{salesOrdId}
+        UNION ALL
+        SELECT 'Opening Rental Status' AS TYPE
+        , ''
+        , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYYMM')
+        THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+        ELSE ''
+        END AS PREV_1_MONTH
+        , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 2), 'YYYYMM')
+        THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS,'')
+        ELSE ''
+        END AS PREV_2_MONTH
+        , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 3), 'YYYYMM')
+        THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+        ELSE ''
+        END AS PREV_3_MONTH
+        , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 4), 'YYYYMM')
+        THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+        ELSE ''
+        END AS PREV_4_MONTH
+        , CASE WHEN M.ACC_YM = TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYYMM')
+        THEN NVL(M.ACC_DEBT_OPNG_RENTAL_STUS, '')
+        ELSE ''
+        END AS PREV_5_MONTH
+        FROM PAY0150D M
+        WHERE M.ACC_DEBT_SRV_CNTRCT_ID = 0
+        AND M.ACC_DEBT_ORD_ID = #{salesOrdId}
+        AND M.ACC_YM BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, - 5), 'YYYYMM') AND
+        TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYYMM')
+        )
+        GROUP BY TYPE
+    </select>
+
+    <select id="selectCurrentBSResultByBSNo" parameterType="Map"
+        resultType="egovMap">
+    <![CDATA[
+        SELECT T.RESULT_ID RESULT_ID
+             , T.NO NO
+             , T.TYPE_ID TYPE_ID
+             , T.SCHDUL_ID SCHDUL_ID
+             , T.SALES_ORD_ID SALES_ORD_ID
+             , T.CODY_ID CODY_ID
+             , T.SETL_DT SETL_DT
+             , T.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID
+             , T.FAIL_RESN_ID FAIL_RESN_ID
+             , T.REN_COLCT_ID REN_COLCT_ID
+             , T.WH_ID WH_ID
+             , T.RESULT_REM RESULT_REM
+             , T.RESULT_CRT_DT RESULT_CRT_DT
+             , T.RESULT_CRT_USER_ID RESULT_CRT_USER_ID
+             , T.RESULT_UPD_DT RESULT_UPD_DT
+             , T.RESULT_UPD_USER_ID RESULT_UPD_USER_ID
+             , T.RESULT_IS_SYNC RESULT_IS_SYNC
+             , T.RESULT_IS_EDIT RESULT_IS_EDIT
+             , T.RESULT_STOCK_USE RESULT_STOCK_USE
+             , T.RESULT_IS_CURR RESULT_IS_CURR
+             , T.RESULT_MTCH_ID RESULT_MTCH_ID
+             , T.RESULT_IS_ADJ RESULT_IS_ADJ
+             , T.RESULT_ENTRY_POINT RESULT_ENTRY_POINT
+             , T.RESULT_MOBILE_ID RESULT_MOBILE_ID
+          FROM
+             ( SELECT T2.RESULT_ID RESULT_ID
+                    , T2.NO NO
+                    , T2.TYPE_ID TYPE_ID
+                    , T2.SCHDUL_ID SCHDUL_ID
+                    , T2.SALES_ORD_ID SALES_ORD_ID
+                    , T2.CODY_ID CODY_ID
+                    , T2.SETL_DT SETL_DT
+                    , T2.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID
+                    , T2.FAIL_RESN_ID FAIL_RESN_ID
+                    , T2.REN_COLCT_ID REN_COLCT_ID
+                    , T2.WH_ID WH_ID
+                    , T2.RESULT_REM RESULT_REM
+                    , T2.RESULT_CRT_DT RESULT_CRT_DT
+                    , T2.RESULT_CRT_USER_ID RESULT_CRT_USER_ID
+                    , T2.RESULT_UPD_DT RESULT_UPD_DT
+                    , T2.RESULT_UPD_USER_ID RESULT_UPD_USER_ID
+                    , T2.RESULT_IS_SYNC RESULT_IS_SYNC
+                    , T2.RESULT_IS_EDIT RESULT_IS_EDIT
+                    , T2.RESULT_STOCK_USE RESULT_STOCK_USE
+                    , T2.RESULT_IS_CURR RESULT_IS_CURR
+                    , T2.RESULT_MTCH_ID RESULT_MTCH_ID
+                    , T2.RESULT_IS_ADJ RESULT_IS_ADJ
+                    , T2.RESULT_ENTRY_POINT RESULT_ENTRY_POINT
+                    , T2.RESULT_MOBILE_ID RESULT_MOBILE_ID
+                 FROM SVC0008D T1
+                 JOIN SVC0006D T2
+                   ON T2.SCHDUL_ID = T1.SCHDUL_ID
+                  AND 1 = T2.RESULT_IS_CURR
+                  AND 306 = T2.TYPE_ID
+                WHERE T1.NO = #{no} AND ROWNUM <= 1
+             ) T
+    ]]>
+    </select>
+
+    <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT T.AS_ID
+        , T.AS_NO
+        , T.AS_SO_ID
+        , T.AS_REQST_DT
+        , T.AS_STUS_ID
+        , T.AS_TYPE_ID
+        , T.CODE CODE
+        , T.CODE CODE1
+        , T.SALES_ORD_NO
+        , T.CODE CODE2
+        , T.NAME
+        , T.NRIC
+        , T.AS_RESULT_ID
+        , T.AS_RESULT_NO
+        , T.USER_NAME
+        , T.AS_TOT_AMT
+        FROM
+        ( SELECT DISTINCT T1.AS_ID
+        , T1.AS_NO
+        , T1.AS_SO_ID
+        , T1.AS_REQST_DT
+        , T1.AS_STUS_ID
+        , T1.AS_TYPE_ID
+        , T2.CODE CODE
+        , T3.CODE CODE1
+        , T4.SALES_ORD_NO
+        , T5.CODE CODE2
+        , T6.NAME NAME
+        , T6.NRIC NRIC
+        , T7.AS_RESULT_ID
+        , T7.AS_RESULT_NO
+        , T8.USER_NAME
+        , T7.AS_TOT_AMT
+        FROM SVC0001D T1
+        JOIN SYS0013M T2 ON T1.AS_TYPE_ID = T2.CODE_ID
+        JOIN SYS0038M T3 ON T1.AS_STUS_ID = T3.STUS_CODE_ID
+        JOIN SAL0001D T4 ON T1.AS_SO_ID = T4.SALES_ORD_ID
+        JOIN SYS0013M T5 ON T4.APP_TYPE_ID = T5.CODE_ID
+        JOIN SAL0029D T6 ON T4.CUST_ID = T6.CUST_ID
+        LEFT
+        JOIN SVC0004D T7 ON T1.AS_ID = T7.AS_ENTRY_ID
+        AND 457 = T7.AS_RESULT_TYPE_ID
+        AND 1 = T7.AS_RESULT_IS_CURR
+        LEFT
+        JOIN SYS0047M T8 ON T1.AS_CRT_USER_ID = T8.USER_ID
+        WHERE 8 != T1.AS_STUS_ID
+        AND T1.AS_NO = #{asNo}
+        ) T
+        ORDER BY T.AS_ID
+    </select>
+
+        <select id="selectCovrgAreaList" parameterType="Map" resultType="egovMap">
+
+   SELECT
+        cvrg.AREA_COVRG_ID,
+        cvrg.AREA_ID,
+        cvrg.STUS_CODE_ID,
+        cvrg.AREA_REM,
+        C.NAME ,
+        B.COUNTRY ,
+        B.STATE,
+        B.POSTCODE,
+        B.CITY ,
+        B.AREA ,
+        CRT_DT ,
+        CRT_USER_ID
+        UPD_DT ,
+    UPD_USER_ID ,
+    B.HT_CODE
+ FROM
+    SAL0233M cvrg
+    JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+    LEFT JOIN SYS0038M C ON cvrg.STUS_CODE_ID = C.STUS_CODE_ID
+    WHERE 1=1
+        <if test="area != null and area != ''">
+            AND UPPER(B.AREA) LIKE UPPER('%'||#{area}||'%')
+        </if>
+        <if test="areaID != null and areaID != ''">
+            AND REPLACE(B.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
+        </if>
+        <if test="city != null and city != ''">
+            AND UPPER(B.CITY) LIKE UPPER('%'||#{city}||'%')
+        </if>
+        <if test="state != null and state != ''">
+            AND B.STATE = #{state}
+        </if>
+        <if test="postcode != null and postcode != ''">
+            AND B.POSTCODE = #{postcode}
+        </if>
+        <if test="status != null and status != ''">
+           AND cvrg.STUS_CODE_ID = #{status}
+        </if>
+    ORDER BY cvrg.AREA_ID
+
+    </select>
+
+   <select id="getHTCovrgAreaList" parameterType="Map" resultType="egovMap">
+
+   SELECT
+   cvrg.AREA_COVRG_ID,
+        cvrg.AREA_ID,
+        cvrg.STUS_CODE_ID,
+        cvrg.AREA_REM ,
+        C.NAME ,
+        B.COUNTRY ,
+        B.STATE,
+        B.POSTCODE,
+        B.CITY ,
+        B.AREA ,
+        CRT_DT ,
+        CRT_USER_ID
+        UPD_DT ,
+    UPD_USER_ID
+ FROM
+    SAL0233M cvrg
+    JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+    LEFT JOIN SYS0038M C ON cvrg.STUS_CODE_ID = C.STUS_CODE_ID
+    WHERE 1=1
+    AND cvrg.AREA_ID = #{areaId}
+
+    </select>
+
+                <update id="updateCovrgAreaStatus" parameterType="Map">
+               UPDATE SAL0233M
+                           SET STUS_CODE_ID = #{stusCodeId}
+                                ,AREA_REM = #{remark}
+                                ,UPD_DT = SYSDATE
+                                ,UPD_USER_ID = #{updUserId}
+                         WHERE   AREA_COVRG_ID = #{areaCovrgId}
+
+             </update>
+   <select id="selectCovrgAreaListByGrp" parameterType="Map" resultType="egovMap">
+
+   SELECT
+        cvrg.AREA_COVRG_ID,
+        cvrg.AREA_ID AS AREA_ID1,
+        cvrg.STUS_CODE_ID,
+        cvrg.AREA_REM,
+        C.NAME AS STATUS1 ,
+        B.COUNTRY ,
+        B.STATE AS STATE1,
+        B.POSTCODE AS POSTCODE1,
+        B.CITY AS CITY1 ,
+        B.AREA AS AREA1 ,
+        CRT_DT ,
+        CRT_USER_ID
+        UPD_DT ,
+    UPD_USER_ID ,
+    B.HT_CODE AS HT_CODE1
+ FROM
+    SAL0233M cvrg
+    JOIN SYS0064M B ON cvrg.AREA_ID = B.AREA_ID
+    LEFT JOIN SYS0038M C ON cvrg.STUS_CODE_ID = C.STUS_CODE_ID
+    WHERE 1=1
+        <if test="area != null and area != ''">
+            AND UPPER(B.AREA) LIKE UPPER('%'||#{area}||'%')
+        </if>
+        <if test="areaID != null and areaID != ''">
+            AND REPLACE(B.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
+        </if>
+        <if test="city != null and city != ''">
+            AND UPPER(B.CITY) LIKE UPPER('%'||#{city}||'%')
+        </if>
+        <if test="state != null and state != ''">
+            AND B.STATE = #{state}
+        </if>
+        <if test="postcode != null and postcode != ''">
+            AND B.POSTCODE = #{postcode}
+        </if>
+          <if test="statusId != null and statusId != ''">
+            AND cvrg.STUS_CODE_ID = #{statusId}
+        </if>
+
+
+    ORDER BY cvrg.AREA_ID
+
+    </select>
+
+    <update id="updateCoverageAreaActive" parameterType="Map">
+	UPDATE SAL0233M
+	SET STUS_CODE_ID = 1 ,
+	UPD_USER_ID = #{updUserId},
+	UPD_DT = SYSDATE
+	WHERE
+	AREA_ID IN
+	<foreach item="item" collection="areaIdListSp" index="index"
+		open="(" separator="," close=")">
+		#{item}
+	</foreach>
+
+    </update>
+
+    <update id="updateCoverageAreaInactive" parameterType="Map">
+	UPDATE SAL0233M
+	SET STUS_CODE_ID = 8 ,
+	UPD_USER_ID = #{updUserId},
+	UPD_DT = SYSDATE
+	WHERE
+	AREA_ID IN
+	<foreach item="item" collection="areaIdListSp" index="index"
+		open="(" separator="," close=")">
+		#{item}
+	</foreach>
+
+    </update>
+
+    <update id="updateCSOrderStatus" parameterType="Map">
+	UPDATE SAL0225d
+	SET STUS_CODE_ID = #{status} ,
+	UPD_USER_ID = #{updUserId},
+	UPD_DT = SYSDATE,
+	REM = #{txtRemark}
+	WHERE
+	SRV_ORD_ID = #{ordId}
+
+    </update>
+
+  <select id="selectResnCodeList" parameterType="Map" resultType="egovMap">
+    SELECT T1.RESN_ID CODE,
+           UPPER(T1.CODE || ' - ' || T1.RESN_DESC) CODE_NAME
+    FROM SYS0032M T1
+    WHERE T1.RESN_TYPE_ID = #{resnTypeId}
+
+    <if test='stusCodeId != null and stusCodeId !=""'>
+      AND T1.STUS_CODE_ID = #{stusCodeId}
+    </if>
+
+      <if test='codeIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+            AND T1.CODE IN (SELECT     REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL)
+                                    FROM DUAL
+                                    CONNECT BY REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+    ORDER BY T1.RESN_ID
+  </select>
+
+<insert id="insertCSReqCancel" parameterType="Map">
+    <selectKey keyProperty="soReqId" resultType="Integer" order="BEFORE">
+      SELECT SAL0020D_SO_REQ_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT
+    INTO SAL0020D
+    ( SO_REQ_ID
+    , SO_REQ_SO_ID
+    , SO_REQ_STUS_ID
+    , SO_REQ_RESN_ID
+    , SO_REQ_PREV_CALL_ENTRY_ID
+    , SO_REQ_CUR_CALL_ENTRY_ID
+    , SO_REQ_CUR_STUS_ID
+    , SO_REQ_CRT_DT
+    , SO_REQ_CRT_USER_ID
+    , SO_REQ_UPD_DT
+    , SO_REQ_UPD_USER_ID
+    , SO_REQ_CUR_STK_ID
+    , SO_REQ_CUR_APP_TYPE_ID
+    , SO_REQ_CUR_AMT
+    , SO_REQ_CUR_PV
+    , SO_REQ_CURR_AMT
+    , SO_REQ_ACTUAL_CANCL_DT
+    , SO_REQ_CANCL_TOT_OTSTND
+    , SO_REQ_CANCL_PNALTY_AMT
+    , SO_REQ_CANCL_OB_PRIOD
+    , SO_REQ_CANCL_UNDER_COOL_PRIOD
+    , SO_REQ_CANCL_RENTAL_OTSTND
+    , SO_REQ_CANCL_TOT_USED_PRIOD
+    , SO_REQ_NO
+    , SO_REQ_CANCL_ADJ_AMT
+    , SO_REQSTER
+    , SO_REQ_PRE_RETN_DT
+    , SO_REQ_REM
+    , SO_REQ_BANK_ACC
+    , SO_REQ_ISS_BANK
+    , SO_REQ_ACC_NAME
+    , SO_REQ_ATTACH
+    )
+    VALUES
+    ( #{soReqId}
+    , #{soReqSoId}
+    , #{soReqStusId}
+    , #{soReqResnId}
+    , #{soReqPrevCallEntryId}
+    , #{soReqCurCallEntryId}
+    , #{soReqCurStusId}
+    , SYSDATE
+    , #{soReqCrtUserId}
+    , SYSDATE
+    , #{soReqUpdUserId}
+    , #{soReqCurStkId}
+    , #{soReqCurAppTypeId}
+    , #{soReqCurAmt}
+    , #{soReqCurPv}
+    , #{soReqCurrAmt}
+    , SYSDATE
+    , #{soReqCanclTotOtstnd}
+    , #{soReqCanclPnaltyAmt}
+    , #{soReqCanclObPriod}
+    , #{soReqCanclUnderCoolPriod}
+    , #{soReqCanclRentalOtstnd}
+    , #{soReqCanclTotUsedPriod}
+    , #{soReqNo}
+    , #{soReqCanclAdjAmt}
+    , #{soReqster}
+    , SYSDATE
+    , #{soReqRem}
+    , #{soReqBankAcc}
+    , #{soReqIssBank}
+    , #{soReqAccName}
+    , #{soReqAttach}
+    )
+  </insert>
+
+      <update id="updateCSMembershipStatus" parameterType="Map">
+        UPDATE SAL0095D
+          SET SRV_STUS_CODE_ID = #{status} ,
+            SRV_UPD_USER_ID = #{updUserId},
+            SRV_UPD_DT = SYSDATE,
+            SRV_REM = #{txtRemark}
+         WHERE SRV_SALES_ORD_ID = #{ordId}
+    </update>
+
+  <select id="selectHcAcBulkOrderDtlList" parameterType="Map" resultType="egovMap">
+     SELECT A.SUB_ORD_ID AS ORDER_ID,
+                B.SALES_ORD_NO AS AIRCOND_BULK_ORDER_NO,
+                A.COMBO_GRP AS COMBO_GROUP,
+                G.CODE AS APP_TYPE,
+                D.STK_DESC AS PRODUCT,
+                E.PROMO_ID AS PROMO_ID,
+                E.PROMO_CODE AS PROMO_CODE,
+                E.PROMO_DESC AS PROMO_NAME,
+                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORDER_DATE,
+                H.CODE AS ORDER_STATUS
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+      JOIN SAL0017D E ON B.PROMO_ID = E.PROMO_ID
+      JOIN SAL0029D F ON B.CUST_ID = F.CUST_ID
+      JOIN SYS0013M G ON B.APP_TYPE_ID = G.CODE_ID
+      JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
+      WHERE
+      <if test="pckBindingId != 0">
+          A.MAIN_ORD_ID =#{pckBindingId}
+      </if>
+      <if test="pckBindingId == 0">
+          A.MAIN_ORD_ID = #{ordId}
+      </if>
+      AND A.SUB_ORD_ID <![CDATA[ <> ]]> #{ordId}
+      AND A.DISB = 0
+      ORDER BY B.SALES_ORD_NO ASC
+  </select>
+
+</mapper>

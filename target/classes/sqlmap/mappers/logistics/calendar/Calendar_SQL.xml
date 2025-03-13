@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.calendar.impl.CalendarMapper">
+
+    <select id="selectCalendarEventList"  parameterType="Map" resultType="egovMap">
+        SELECT EVENT_ID
+        , EVENT_DT
+        , EXTRACT(DAY FROM EVENT_DT) DAY_OF_MONTH
+        , EVENT_DESC
+        FROM MSC0052D
+        WHERE TO_CHAR(EVENT_DT, 'MM/YYYY') = #{calMonthYear}
+        AND DISAB = 0
+        AND MEM_TYPE = #{calMemType}
+        ORDER BY EVENT_DT
+    </select>
+
+    <select id="selectNextBatchId" resultType="int">
+            SELECT NVL(MAX(BATCH_ID) + 1, 1) AS BATCH_ID FROM MSC0050M
+    </select>
+
+    <insert id="saveBatchCalMst" parameterType="Map">
+        INSERT INTO MSC0050M
+        (
+        BATCH_ID,
+        BATCH_MEM_TYPE,
+        BATCH_MTH_YEAR,
+        BATCH_STUS_ID,
+        CNFM_STUS_ID,
+        CRT_USER_ID,
+        CRT_DT,
+        BATCH_CAL_REM
+        ) VALUES (
+        #{batchId},
+        #{batchMemType},
+        #{batchMthYear},
+        '1',
+        '44',
+        #{crtUserId},
+        SYSDATE,
+        'Calendar File Upload'
+        )
+    </insert>
+
+    <insert id="saveBatchCalDetailList" parameterType="java.util.List">
+        INSERT INTO MSC0051D
+        (
+        BATCH_DET_ID,
+        BATCH_ID,
+        EVENT_DT,
+        BATCH_MEM_TYPE,
+        EVENT_DESC,
+        DISAB,
+        CRT_USER_ID,
+        CRT_DT
+        )
+        SELECT MSC0051D_SEQ.NEXTVAL, batchId, eventDt, batchMemType, eventDesc, disab, crtUserId, crtDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+         SELECT
+        #{item.batchId} batchId,
+        TO_DATE(#{item.eventDt}, 'DD/MM/YYYY') eventDt,
+        #{item.batchMemType} batchMemType,
+        #{item.eventDesc} eventDesc,
+        '0' disab,
+        #{item.crtUserId} crtUserId,
+        SYSDATE crtDt
+        FROM DUAL
+        </foreach>
+        )
+    </insert>
+
+    <update id="callBatchCalUpdList" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_CALENDAR_UPD_LIST(#{batchId})}
+    </update>
+
+    <select id="selectEventListToManage"  parameterType="Map" resultType="egovMap">
+        SELECT EVENT_ID
+        , TO_CHAR(cal.EVENT_DT, 'DD/MM/YYYY') EVENT_DT
+        , sys.CODE_NAME AS MEM_TYPE
+        , cal.EVENT_DESC
+        , DECODE(cal.DISAB, 0, 'N', 1, 'Y') DISAB
+        FROM MSC0052D cal
+            JOIN SYS0013M sys ON (cal.MEM_TYPE = sys.CODE_ID and sys.CODE_MASTER_ID = 1)
+        WHERE TO_CHAR(cal.EVENT_DT, 'MM/YYYY') = #{calMonthYear}
+        AND cal.DISAB = 0
+        AND cal.MEM_TYPE = #{calMemType}
+        ORDER BY cal.EVENT_DT
+    </select>
+
+    <update id="updRemoveCalItem" parameterType="Map">
+        UPDATE MSC0052D
+        SET DISAB = '1'
+        , UPD_USER_ID = #{userId}
+        , UPD_DT = SYSDATE
+        WHERE EVENT_ID = #{eventId}
+    </update>
+
+    <update id="saveCalEventChangeList" parameterType="Map">
+        UPDATE MSC0052D
+        SET EVENT_DESC = #{eventDesc}
+        , UPD_USER_ID = #{updUserId}
+        , UPD_DT = SYSDATE
+        WHERE EVENT_ID = #{eventId}
+    </update>
+
+</mapper>

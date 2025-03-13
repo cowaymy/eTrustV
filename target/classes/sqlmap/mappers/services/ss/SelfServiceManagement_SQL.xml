@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.ss.impl.SelfServiceManagementMapper">
+ <select id="selectSelfServiceJsonList" parameterType="Map" resultType="egovMap">
+    SELECT
+    	C.CUST_ID ,
+    	C.NAME AS CUST_NAME ,
+    	B.SALES_ORD_NO ,
+    	A.NO AS HS_NO ,
+    	TO_CHAR(D.SETL_DT,'DD/MM/YYYY') AS COMPLETE_DT  ,
+    	E.CODE AS SS_STUS ,
+    	P.CODE_NAME AS DELVY_STUS ,
+    	TO_CHAR(O.SS_DELIVRY_DT,'DD/MM/YYYY') AS DELIVRY_DT ,
+    	NVL(Q.SS_RTN_NO,'-') SS_RTN_NO ,
+    	TO_CHAR(Q.CRT_DT,'DD/MM/YYYY') AS SS_RTN_DT ,
+    	A.CRT_USER_ID ,
+    	H.USER_NAME CRT_USR ,
+    	TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') CRT_DT ,
+    	A.UPD_USER_ID ,
+    	I.USER_NAME UPD_USR ,
+    	TO_CHAR(A.UPD_DT, 'DD/MM/YYYY') UPD_DT ,
+    	A.SCHDUL_ID ,
+    	A.SALES_ORD_ID ,
+    	B.CUST_CNT_ID ,
+    	B.CUST_ADD_ID ,
+    	K.STK_ID ,
+    	K.STK_DESC ,
+    	M.ADDR_DTL ,
+    	M.STREET ,
+		N.STATE ,
+		N.CITY ,
+		N.POSTCODE ,
+		N.AREA ,
+		R.TEL_M1 AS PHONE,
+		R.EMAIL ,
+		NVL(O.SS_RESULT_ID,0) SS_RESULT_ID ,
+		CASE WHEN A.STUS_CODE_ID = 21 AND D.FAIL_RESN_ID != 0 THEN S.RESN_DESC
+			 WHEN A.STUS_CODE_ID = 21 AND D.FAIL_RESN_ID = 0 THEN 'DHL Fail to Delivery'
+		ELSE '-' END AS FAIL_RESN
+    FROM SVC0008D A
+    LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0029D C ON B.CUST_ID = C.CUST_ID
+    LEFT JOIN SVC0006D D ON A.SCHDUL_ID = D.SCHDUL_ID AND D.RESULT_IS_CURR = 1
+    LEFT JOIN SYS0038M E ON A.STUS_CODE_ID = E.STUS_CODE_ID
+    LEFT JOIN SYS0047M H ON A.CRT_USER_ID = H.USER_ID
+    LEFT JOIN SYS0047M I ON A.UPD_USER_ID = I.USER_ID
+    LEFT JOIN SAL0002D J ON B.SALES_ORD_ID = J.SALES_ORD_ID
+    LEFT JOIN SYS0026M K ON J.ITM_STK_ID = K.STK_ID
+    JOIN SAL0090D L ON A.SALES_ORD_ID = L.SRV_SO_ID
+    LEFT JOIN SAL0023D M ON B.CUST_ADD_ID = M.CUST_ADD_ID
+    LEFT JOIN SYS0064M N ON M.AREA_ID = N.AREA_ID
+    LEFT JOIN SVC0144M O ON A.SCHDUL_ID = O.SCHDUL_ID
+    LEFT JOIN SYS0013M P ON O.SS_DELIVRY_STUS_ID = P.CODE AND P.CODE_MASTER_ID = 585
+    LEFT JOIN SVC0146M Q ON A.SCHDUL_ID = Q.SS_REF_ID
+    LEFT JOIN SAL0027D R ON B.CUST_CNT_ID = R.CUST_CNTC_ID
+    LEFT JOIN SYS0032M S ON D.FAIL_RESN_ID = S.RESN_ID AND S.RESN_TYPE_ID = 7692 AND S.STUS_CODE_ID = 1
+    WHERE
+    	L.SRV_STUS_ID = 1
+    <![CDATA[
+     	AND L.SRV_TYPE = 'SS'
+     	AND A.TYPE_ID = 7660
+    ]]>
+    <if test="mySSMonth != null and mySSMonth != ''">
+    	AND A.YEAR = TO_CHAR(TO_DATE(#{mySSMonth} ,'MM/YYYY'),'YYYY')
+    	AND A.MONTH = TO_CHAR(TO_DATE(#{mySSMonth},'MM/YYYY'),'MM')
+    </if>
+    <if test="myInstallMonth != null and myInstallMonth != ''">
+    	AND B.PV_MONTH = TO_CHAR(TO_DATE(#{myInstallMonth},'MM/YYYY'),'MM')
+    	AND B.PV_YEAR = TO_CHAR(TO_DATE(#{myInstallMonth},'MM/YYYY'),'YYYY')
+    </if>
+    <if test="txtCustomerId != null and txtCustomerId != ''">
+		AND C.CUST_ID = #{txtCustomerId}
+	</if>
+	<if test="txtHsOrder != null and txtHsOrder != ''">
+		AND A.NO = #{txtHsOrder}
+	</if>
+	<if test="txtSalesOrder != null and txtSalesOrder != ''">
+		AND B.SALES_ORD_NO = #{txtSalesOrder}
+	</if>
+	<if test='completeStartDt != null and completeStartDt != "" and completeEndDt != null and completeEndDt != ""'>
+    	AND D.SETL_DT BETWEEN TO_DATE(#{completeStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{completeEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+	<if test="deliveryStatusArray != null and deliveryStatusArray != '' ">
+       	AND O.SS_DELIVRY_STUS_ID IN
+     <foreach item="item" collection="deliveryStatusArray" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+	<if test="cmbSsStatus != null and cmbSsStatus != ''">
+      	AND A.STUS_CODE_ID = #{cmbSsStatus}
+    </if>
+    <if test="postCode != null and postCode != ''">
+      	AND N.POSTCODE = #{postCode}
+    </if>
+
+  </select>
+
+  <select id="selectSelfServiceFilterItmList" parameterType="Map" resultType="egovMap">
+  SELECT Distinct1.C1 C1,
+       Distinct1.STK_ID STK_ID,
+       Distinct1.STK_CODE STK_CODE,
+       Distinct1.STK_DESC STK_DESC,
+       Distinct1.SERIAL_CHK,
+       Distinct1.SRV_FILTER_ID,
+       Distinct1.SRV_CONFIG_ID,
+       Distinct1.SRV_FILTER_LAST_SERIAL OLD_SERIAL_NO,
+       Distinct1.SERIAL_NO,
+       Distinct1.SS_RESULT_ID,
+       Distinct1.SS_RESULT_ITM_ID,
+       TO_CHAR(Distinct1.SRV_FILTER_PRV_CHG_DT, 'DD/MM/YYYY') SRV_FILTER_PRV_CHG_DT,
+       Distinct1.SRV_FILTER_PRIOD
+  FROM (
+                SELECT Extent1.SRV_SO_ID SRV_SO_ID,
+                       Extent2.SRV_FILTER_STK_ID SRV_FILTER_STK_ID,
+                       Extent2.SRV_FILTER_ID,
+                       Extent1.SRV_CONFIG_ID,
+                       Extent2.SRV_FILTER_LAST_SERIAL,
+                       Extent3.STK_ID STK_ID,
+               		   Extent3.STK_CODE STK_CODE,
+                       Extent3.STK_DESC STK_DESC,
+                       Extent3.SERIAL_CHK,
+                       1 C1 ,
+                       Extent5.SS_RESULT_ID,
+                       Extent6.SS_RESULT_ITM_ID,
+                       Extent6.FILTER_BARCD_SERIAL_NO SERIAL_NO,
+                       Extent2.SRV_FILTER_PRV_CHG_DT,
+                       Extent2.SRV_FILTER_PRIOD
+                  FROM SAL0090D Extent1
+                  JOIN SAL0087D Extent2 ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
+                  JOIN SYS0026M Extent3 ON Extent2.SRV_FILTER_STK_ID = Extent3.STK_ID
+                  LEFT JOIN SVC0008D Extent4 ON Extent1.SRV_SO_ID = Extent4.SALES_ORD_ID
+                  LEFT JOIN SVC0144M Extent5 ON Extent4.SCHDUL_ID = Extent5.SCHDUL_ID
+                  LEFT JOIN SVC0145D Extent6 ON Extent5.SS_RESULT_ID = Extent6.SS_RESULT_ID AND Extent6.SS_RESULT_PART_ID = Extent2.SRV_FILTER_STK_ID
+
+                  WHERE 1 = Extent1.SRV_STUS_ID
+                  	AND Extent1.SRV_SO_ID = #{salesOrdId}
+                  	AND Extent4.SCHDUL_ID = #{schdulId}
+                    AND Extent2.SRV_FILTER_STUS_ID = 1
+                    <![CDATA[
+                    AND Extent1.SRV_TYPE = 'SS'
+                    AND ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(Extent2.SRV_FILTER_PRV_CHG_DT), Extent2.SRV_FILTER_PRIOD) <= SYSDATE
+                    ]]>
+       ) Distinct1
+	</select>
+
+	<select id="getSeqSVC0144M" resultType="java.lang.Integer">
+    SELECT SVC0144M_SS_RESULT_ID.NEXTVAL FROM DUAL
+    </select>
+
+	<select id="getSeqSVC0145D" resultType="java.lang.Integer">
+    SELECT SVC0145D_SS_RESULT_ITM_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getSeqSVC0146M" resultType="java.lang.Integer">
+    SELECT SVC0146M_SS_RTN_ID.NEXTVAL FROM DUAL
+    </select>
+
+	<select id="getSeqSVC0147D" resultType="java.lang.Integer">
+    SELECT SVC0147D_SS_RTN_ITM_ID.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSelfServiceResultMaster" parameterType="Map">
+     INSERT INTO SVC0144M ( SS_RESULT_ID ,
+                                         SCHDUL_ID ,
+                                         SALES_ORD_ID ,
+                                         SS_RESULT_STUS_CODE_ID ,
+                                         SS_FAIL_RESN_ID ,
+                                         SS_RESULT_REM ,
+                                         SS_RESULT_CRT_USER_ID ,
+                                         SS_RESULT_CRT_DT ,
+                                         SS_RESULT_UPD_USER_ID ,
+                                         SS_RESULT_UPD_DT,
+                                         SS_SHIPMENT_NO ,
+                                         SRV_PREV_DT
+     ) VALUES ( #{ssResultId} ,
+                     #{schdulId} ,
+                     #{salesOrdId} ,
+                     1 ,
+                     0 ,
+                     #{remark} ,
+                     #{crtUsrId} ,
+                     SYSDATE ,
+                     #{crtUsrId} ,
+                     SYSDATE,
+                     #{serviceNo},
+                     #{srvPrevDt}
+     )
+   </insert>
+
+   <insert id="insertSelfServiceResultDetail" parameterType="Map">
+    INSERT INTO SVC0145D ( SS_RESULT_ITM_ID ,
+                                        SS_RESULT_ID ,
+                                        SS_RESULT_PART_ID ,
+                                        SS_RESULT_PART_DESC ,
+                                        SS_RESULT_PART_QTY ,
+                                        SS_RESULT_REM ,
+                                        SS_RESULT_CRT_DT ,
+                                        SS_RESULT_CRT_USER_ID ,
+                                        SS_RESULT_UPD_DT ,
+                                        SS_RESULT_UPD_USER_ID ,
+                                        FILTER_BARCD_SERIAL_NO,
+                                        OLD_FILTER_BARCD_SERIAL_NO,
+                                        SRV_FILTER_PRV_CHG_DT
+     ) VALUES ( #{ssResultItmId} ,
+                     #{ssResultId} ,
+                     #{stkId} ,
+                     #{stkDesc} ,
+                     NVL(#{qty},1) ,
+                     #{remark} ,
+                     SYSDATE ,
+                     #{crtUsrId} ,
+                     SYSDATE ,
+                     #{crtUsrId} ,
+                     #{serialNo} ,
+                     #{oldSerialNo},
+                     TO_DATE(#{srvFilterPrvChgDt},'DD/MM/YYYY')
+    )
+  </insert>
+
+  <update id="updateSelfServiceResultDetail" parameterType="Map">
+    UPDATE SVC0145D SET FILTER_BARCD_SERIAL_NO = #{serialNo}
+                                   , SS_RESULT_UPD_USER_ID = #{updUsrId}
+                                   , SS_RESULT_UPD_DT = SYSDATE
+    WHERE SS_RESULT_ITM_ID = #{ssResultItmId}
+       AND SS_RESULT_PART_ID = #{stkId}
+  </update>
+
+  <select id="getSelfServiceFilterList" parameterType="Map" resultType="egovMap">
+  SELECT Distinct1.C1 C1,
+       Distinct1.STK_ID STK_ID,
+       Distinct1.STK_CODE STK_CODE,
+       Distinct1.STK_DESC STK_DESC,
+       Distinct1.SERIAL_CHK,
+       Distinct1.SERIAL_NO,
+       Distinct1.SS_RESULT_ID,
+       Distinct1.SS_RESULT_ITM_ID,
+       Distinct1.OLD_SERIAL_NO,
+       Distinct1.SRV_FILTER_PRV_CHG_DT
+  FROM (
+                SELECT Extent1.SALES_ORD_ID,
+                       Extent4.STK_ID STK_ID,
+               		   Extent4.STK_CODE STK_CODE,
+                       Extent4.STK_DESC STK_DESC,
+                       Extent4.SERIAL_CHK,
+                       Extent3.SS_RESULT_PART_QTY C1,
+                       Extent3.FILTER_BARCD_SERIAL_NO SERIAL_NO,
+                       Extent3.OLD_FILTER_BARCD_SERIAL_NO OLD_SERIAL_NO ,
+                       Extent3.SS_RESULT_ID,
+                       Extent3.SS_RESULT_ITM_ID,
+                       Extent3.SRV_FILTER_PRV_CHG_DT
+                  FROM SVC0008D Extent1
+                  LEFT JOIN SVC0144M Extent2 ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
+                  LEFT JOIN SVC0145D Extent3 ON Extent2.SS_RESULT_ID = Extent3.SS_RESULT_ID
+                  LEFT JOIN SYS0026M Extent4 ON Extent3.SS_RESULT_PART_ID = Extent4.STK_ID
+
+                  WHERE
+                  	Extent1.SALES_ORD_ID = #{salesOrdId}
+                  	AND Extent1.SCHDUL_ID = #{schdulId}
+                  	AND Extent2.SS_RESULT_ID = #{ssResultId}
+
+       ) Distinct1
+	</select>
+
+	<select id="checkFilterBarCodeNo"  parameterType="Map" resultType="egovMap">
+	SELECT
+		Extent3.NO HS_NO,
+		Extent1.FILTER_BARCD_SERIAL_NO SERIAL_NO
+	FROM SVC0145D Extent1
+	LEFT JOIN SVC0144M Extent2 ON Extent1.SS_RESULT_ID = Extent2.SS_RESULT_ID
+	LEFT JOIN SVC0008D Extent3 ON Extent2.SCHDUL_ID = Extent3.SCHDUL_ID
+	WHERE
+		Extent2.SS_RESULT_STUS_CODE_ID NOT IN (21,10)
+		AND Extent1.FILTER_BARCD_SERIAL_NO = #{serialNo}
+		AND Extent3.TYPE_ID = 7660
+	</select>
+
+	<select id="selectSelfServiceResultInfo" parameterType="Map" resultType="egovMap">
+	SELECT
+		Extent1.SS_RESULT_ID ,
+		Extent1.SCHDUL_ID ,
+		Extent1.SALES_ORD_ID ,
+		Extent1.SS_SHIPMENT_NO ,
+		Extent1.SS_DELIVRY_STUS_ID ,
+		Extent2.CODE_NAME AS SS_DELIVRY_STUS ,
+		TO_CHAR(Extent1.SS_DELIVRY_DT, 'DD/MM/YYYY') AS SS_DELIVRY_DT,
+		Extent3.SS_RTN_NO,
+		Extent4.SRV_CONFIG_ID
+	FROM SVC0144M Extent1
+	LEFT JOIN SYS0013M Extent2 ON Extent1.SS_DELIVRY_STUS_ID = Extent2.CODE AND Extent2.CODE_MASTER_ID = 585
+	LEFT JOIN SVC0146M Extent3 ON Extent1.SCHDUL_ID = Extent3.SS_REF_ID
+	LEFT JOIN SAL0090D Extent4 ON Extent1.SALES_ORD_ID = Extent4.SRV_SO_ID AND Extent4.SRV_STUS_ID = 1
+	WHERE
+		Extent1.SS_RESULT_ID = #{ssResultId}
+		AND Extent1.SCHDUL_ID = #{schdulId}
+		AND Extent1.SALES_ORD_ID = #{salesOrderId}
+	</select>
+
+	<select id="getSelfServiceDelivryList" parameterType="Map" resultType="egovMap">
+	SELECT
+		DELVY_REF_ID ,
+		DELVY_TRKNO ,
+		DELVY_SEQ ,
+		Extent2.CODE_NAME AS DELVY_STUS ,
+		TO_CHAR(DELVY_DT , 'DD/MM/YYYY') AS DELVY_DT ,
+		DELVY_LOC ,
+		DELVY_RMK
+	FROM SVC0143D Extent1
+	LEFT JOIN SYS0013M Extent2 ON Extent1.DELVY_SEQ = Extent2.CODE AND Extent2.CODE_MASTER_ID = 585
+	WHERE
+		Extent1.DELVY_REF_ID = #{schdulId}
+		AND DEL_FLG = 'N'
+	ORDER BY DELVY_ID DESC
+	</select>
+
+	<select id="getSelfServiceRtnItmDetailList" parameterType="Map" resultType="egovMap">
+	SELECT
+		Extent1.SALES_ORD_ID,
+        Extent4.STK_ID STK_ID,
+        Extent4.STK_CODE ITEM_CODE,
+        Extent4.STK_DESC ITEM_DESC,
+        Extent4.SERIAL_CHK,
+        Extent3.SS_RESULT_PART_QTY AS QUANTITY,
+        Extent3.FILTER_BARCD_SERIAL_NO SERIAL_NO,
+        Extent3.SS_RESULT_ID,
+        Extent3.SS_RESULT_ITM_ID,
+        Extent5.SS_RTN_NO ,
+        Extent6.SS_RTN_ITM_ID ,
+        CASE WHEN Extent6.SS_RTN_GDS != 0 THEN Extent6.SS_RTN_GDS ELSE 0 END AS TOT_GOOD_COND,
+        CASE WHEN Extent6.SS_RTN_BAD_GDS != 0 THEN Extent6.SS_RTN_BAD_GDS ELSE 0 END AS TOT_DEFECT_COND,
+        CASE WHEN Extent6.SS_RTN_MISS_GDS !=0 THEN Extent6.SS_RTN_MISS_GDS ELSE 0 END AS TOT_MIA_COND
+    FROM SVC0008D Extent1
+    LEFT JOIN SVC0144M Extent2 ON Extent1.SCHDUL_ID = Extent2.SCHDUL_ID
+    LEFT JOIN SVC0145D Extent3 ON Extent2.SS_RESULT_ID = Extent3.SS_RESULT_ID
+    LEFT JOIN SYS0026M Extent4 ON Extent3.SS_RESULT_PART_ID = Extent4.STK_ID
+    LEFT JOIN SVC0146M Extent5 ON Extent1.SCHDUL_ID = Extent5.SS_REF_ID
+    LEFT JOIN SVC0147D Extent6 ON Extent5.SS_RTN_ID = Extent6.SS_RTN_ID AND Extent3.SS_RESULT_PART_ID = Extent6.SS_STK_ID AND Extent6.DEL_FLG = 'N'
+	WHERE
+       Extent1.SALES_ORD_ID = #{salesOrdId}
+       AND Extent1.SCHDUL_ID = #{schdulId}
+       AND Extent2.SS_RESULT_ID = #{ssResultId}
+	</select>
+
+	<select id="getSelfServiceRtnItmList" parameterType="Map" resultType="egovMap">
+    SELECT
+    	C.STK_ID AS ITEM_CODE,
+        C.STK_DESC AS ITEM_DESC,
+        F.SS_RESULT_PART_QTY AS QUANTITY,
+        A.SS_RTN_GDS AS TOT_GOOD_COND,
+        A.SS_RTN_BAD_GDS AS TOT_DEFECT_COND,
+        A.SS_RTN_MISS_GDS AS TOT_MIA_COND
+    FROM SVC0147D A
+    JOIN SVC0146M B ON A.SS_RTN_ID = B.SS_RTN_ID AND B.DEL_FLG = 'N'
+    JOIN SYS0026M C ON A.SS_STK_ID = C.STK_ID
+    JOIN SVC0144M D ON B.SS_REF_ID = D.SCHDUL_ID
+    JOIN SVC0008D E ON D.SCHDUL_ID = E.SCHDUL_ID
+    JOIN SVC0145D F ON D.SS_RESULT_ID = F.SS_RESULT_ID AND F.SS_RESULT_PART_ID = A.SS_STK_ID
+    WHERE A.DEL_FLG = 'N'
+        AND B.SS_REF_ID = #{schdulId}
+  </select>
+
+  <insert id="insertSelfServiceStockReturnMaster" parameterType="Map">
+     INSERT INTO SVC0146M ( SS_RTN_ID ,
+                                         SS_RTN_NO ,
+                                         SS_RTN_TYP_ID ,
+                                         SS_REF_ID ,
+                                         SS_RTN_STAT ,
+                                         DEL_FLG ,
+                                         CRT_USR_ID ,
+                                         CRT_DT ,
+                                         UPD_USR_ID,
+                                         UPD_DT
+     ) VALUES ( #{ssRtnId} ,
+                     #{ssRtnNo} ,
+                     296 ,
+                     #{schdulId} ,
+                     1 ,
+                     'N',
+                     #{crtUsrId} ,
+                     SYSDATE ,
+                     #{crtUsrId} ,
+                     SYSDATE
+     )
+   </insert>
+
+   <insert id="insertSelfServiceStockReturnDetail" parameterType="Map">
+     INSERT INTO SVC0147D ( SS_RTN_ITM_ID ,
+                                         SS_RTN_ID ,
+                                         SS_STK_ID ,
+                                         SS_RTN_GDS ,
+                                         SS_RTN_BAD_GDS ,
+                                         SS_RTN_MISS_GDS ,
+                                         DEL_FLG ,
+                                         CRT_USR_ID ,
+                                         CRT_DT ,
+                                         UPD_USR_ID,
+                                         UPD_DT
+     ) VALUES ( #{ssRtnItmId} ,
+                     #{ssRtnId} ,
+                     #{stkId} ,
+                     #{totGoodCond} ,
+                     #{totDefectCond} ,
+                     #{totMiaCond} ,
+                     'N',
+                     #{crtUsrId} ,
+                     SYSDATE ,
+                     #{crtUsrId} ,
+                     SYSDATE
+     )
+   </insert>
+
+   <update id="updateSelfServiceStockReturnDetail" parameterType="Map">
+    UPDATE SVC0147D SET SS_RTN_GDS = #{totGoodCond}
+    					, SS_RTN_MISS_GDS = #{totMiaCond}
+   						, UPD_USR_ID = #{crtUsrId}
+   						, UPD_DT = SYSDATE
+    WHERE
+   		SS_RTN_ITM_ID = #{ssRtnItmId}
+   		AND SS_STK_ID = #{stkId}
+   		AND DEL_FLG = 'N'
+   </update>
+
+   <update id="rollbackSelfServiceReturnGoodsQty" parameterType="Map">
+    UPDATE SVC0146M SET DEL_FLG = 'Y'
+   						, UPD_USR_ID = #{crtUsrId}
+   						, UPD_DT = SYSDATE
+    WHERE
+   		SS_REF_ID = #{schdulId}
+   		AND SS_RTN_ID = #{ssRtnId}
+   		AND DEL_FLG = 'N'
+   </update>
+
+   <update id="rollbackSelfServiceReturnQty" parameterType="Map">
+    UPDATE SVC0147D SET DEL_FLG = 'Y'
+                                   , UPD_USR_ID = #{crtUsrId}
+                                   , UPD_DT = SYSDATE
+    WHERE SS_RTN_ID = #{ssRtnId}
+        AND DEL_FLG = 'N'
+  </update>
+
+  <delete id="rollbackSelfServiceResultMaster" parameterType="Map">
+   DELETE FROM SVC0144M WHERE SS_RESULT_ID = #{ssResultId}
+  </delete>
+
+  <delete id="rollbackSelfServiceResultDetail" parameterType="Map">
+   DELETE FROM SVC0145D WHERE SS_RESULT_ID = #{ssResultId}
+  </delete>
+
+  <select id="selectSelfServiceItmList" parameterType="Map" resultType="egovMap">
+  SELECT LISTAGG(B.STK_CODE|| '-' || A.SS_RESULT_PART_QTY, ', ') WITHIN GROUP (ORDER BY A.SS_RESULT_ID) AS ITM_LIST
+  	FROM SVC0145D A
+    LEFT JOIN SYS0026M B ON A.SS_RESULT_PART_ID = B.STK_ID
+  WHERE
+  	A.SS_RESULT_ID = #{ssResultId}
+  </select>
+
+  <update id="updateHsMasterStatus" parameterType="Map">
+   UPDATE SVC0008D
+		SET STUS_CODE_ID = #{ssStusId},
+			REM = #{ssRemark},
+			UPD_DT = SYSDATE ,
+			UPD_USER_ID = #{updUsrId}
+   WHERE SCHDUL_ID = #{schdulId}
+  </update>
+
+  <update id="updateHsResultStatus" parameterType="Map">
+   UPDATE SVC0006D
+		SET RESULT_STUS_CODE_ID = #{ssStusId},
+			RESULT_REM = #{ssRemark},
+			FAIL_RESN_ID = #{ssFailReason},
+			RESULT_UPD_DT = SYSDATE ,
+			RESULT_UPD_USER_ID = #{updUsrId}
+   WHERE SCHDUL_ID = #{schdulId}
+  </update>
+
+  <update id="updateSsMasterStatus" parameterType="Map">
+   UPDATE SVC0144M
+		SET SS_RESULT_STUS_CODE_ID = #{ssStusId},
+			SS_FAIL_RESN_ID = #{ssFailReason},
+			SS_RESULT_REM = #{ssRemark},
+			SS_RESULT_UPD_DT = SYSDATE ,
+			SS_RESULT_UPD_USER_ID = #{updUsrId}
+   WHERE SCHDUL_ID = #{schdulId}
+  		AND SS_RESULT_ID = #{ssResultId}
+  </update>
+
+  <update id="updateHsConfigPrevDt" parameterType="Map">
+   UPDATE SAL0090D
+	   SET SRV_PREV_DT = (SELECT SRV_PREV_DT FROM SVC0144M WHERE SS_RESULT_ID = #{ssResultId}),
+		   SRV_UPD_USER_ID = #{updUsrId},
+		   SRV_UPD_DT = SYSDATE
+   WHERE SRV_CONFIG_ID = #{srvConfigId}
+		AND SRV_SO_ID = #{salesOrdId}
+		AND SRV_STUS_ID = 1
+  </update>
+
+  <update id="updateHsconfigSetting" parameterType="Map">
+   UPDATE SAL0087D
+	   SET SRV_FILTER_PRV_CHG_DT = #{srvFilterPrvChgDt} ,
+	       SRV_FILTER_EXPR_DT = ADD_MONTHS(SRV_FILTER_EXPR_DT , -SRV_FILTER_PRIOD) ,
+	   	   SRV_FILTER_LAST_SERIAL = #{oldSerialNo} ,
+	       SRV_FILTER_PREV_SERIAL = '',
+	       SRV_FILTER_CRT_USER_ID = #{updUsrId},
+	       SRV_FILTER_UPD_DT = SYSDATE
+   WHERE SRV_CONFIG_ID = #{srvConfigId}
+		AND SRV_FILTER_STK_ID = #{stkId}
+		AND SRV_FILTER_STUS_ID = 1
+  </update>
+
+  <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
+   SELECT COUNT(*) CNT
+   FROM SVC0008D A,
+		SVC0144M B
+   WHERE A.SCHDUL_ID = B.SCHDUL_ID
+		 AND A.NO = #{serviceNo}
+  </select>
+
+  <select id="ssFailReasonList" parameterType="Map" resultType="egovMap">
+   SELECT Extent1.RESN_ID AS CODE_ID,
+		           Extent1.CODE || '-' || Extent1.RESN_DESC AS CODE_NAME
+   FROM SYS0032M Extent1
+   WHERE Extent1.RESN_TYPE_ID = 7692
+		 AND Extent1.STUS_CODE_ID = 1
+   ORDER BY Extent1.CODE ASC
+  </select>
+
+  <select id="SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_BARCODE_SCAN_SS_VALIDATE( #{serialNo}, #{delvyNo}, #{fromLocId}, #{trnscType}, #{ioType} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="SP_LOGISTIC_SS_SAVE" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_SS_SAVE( #{ssResultId}, #{fromLocId}, #{toLocId}, #{trnscType}, #{ioType} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="SP_LOGISTIC_SS_EDIT" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call SP_LOGISTIC_SS_EDIT( #{ssResultId}, #{fromLocId} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+  </select>
+
+  <select id="SP_LOGISTIC_RETURN_SS" parameterType="Map"  statementType="CALLABLE" >
+      {
+          call "SP_LOGISTIC_RETURN_SS"( #{ssRefNo}, #{trnscType} ,#{fromLocId} ,#{ioType} ,#{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR})
+      }
+  </select>
+
+</mapper>

@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.stockReplenishment.impl.StockReplenishmentMapper">
+
+    <select id="selectWeekList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+              SELECT 'B' || LEVEL CODE_ID,  'B' || LEVEL CODE_NAME  FROM DUAL
+              CONNECT BY LEVEL <= 4
+      ]]>
+    </select>
+
+     <select id="selectSroCodyList" parameterType="Map" resultType="egovMap">
+             WITH l75 AS
+            (
+                SELECT
+                    L75.LOC_ID,
+                    L75.ITM_CODE,
+                    SUM(REQST_QTY) - SUM(NVL(MOV_QTY, 0)) AS BOOKING_QTY
+                FROM
+                    LOG0075M L75
+                WHERE NVL(L75.FINAL_CMPLT, 'N')  <![CDATA[ <> ]]>   'Y'
+                AND L75.REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N')   <![CDATA[ <> ]]>  'Y')
+                GROUP BY L75.LOC_ID, L75.ITM_CODE
+            )
+            SELECT
+                  A.SRO_NO
+                , SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , NVL(B.SRO_FORE_QTY,0) SRO_FORE_QTY
+                , NVL(H.DELVRY_QTY,0)  SRO_REQ_DEVLI_QTY
+                , NVL(H.DELVRY_QTY,0) - NVL(B.SRO_FORE_QTY,0) SHORTAGE_QTY
+                , NVL(B.SRO_CODY_AVA_QTY,0) SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
+                , J.QTY - NVL(L75.BOOKING_QTY, 0) AVAILABLE_QTY
+            FROM LOG0117M A
+            JOIN LOG0118D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_CODY_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
+            LEFT JOIN LOG0055D H ON G.REQST_NO = H.REQST_NO AND E.STK_CODE = H.ITM_CODE
+            LEFT JOIN SYS0028M I ON I.WH_LOC_CODE = A.SRO_CDC_CODE
+            LEFT JOIN LOG0056M J ON I.WH_LOC_ID = J.LOC_ID AND J.STK_CODE = E.STK_CODE
+            LEFT JOIN L75 ON E.STK_CODE = L75.ITM_CODE AND J.LOC_ID = L75.LOC_ID
+            WHERE 1=1
+             <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+            <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+              select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+    </select>
+
+     <select id="selectSroRdcList" parameterType="Map" resultType="egovMap">
+            WITH l75 AS
+            (
+                SELECT
+                    L75.LOC_ID,
+                    L75.ITM_CODE,
+                    SUM(REQST_QTY) - SUM(NVL(MOV_QTY, 0)) AS BOOKING_QTY
+                FROM
+                    LOG0075M L75
+                WHERE NVL(L75.FINAL_CMPLT, 'N')  <![CDATA[ <> ]]>   'Y'
+                AND L75.REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N')   <![CDATA[ <> ]]>  'Y')
+                GROUP BY L75.LOC_ID, L75.ITM_CODE
+            )
+            SELECT
+                  A.SRO_NO
+                , SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , NVL(B.SRO_SEND_QTY,0) SRO_FORE_QTY
+                , NVL(H.DELVRY_QTY,0)  SRO_REQ_DEVLI_QTY
+                , NVL(H.DELVRY_QTY,0) - NVL(B.SRO_SEND_QTY,0) SHORTAGE_QTY
+                , 0 SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
+                , J.QTY - NVL(L75.BOOKING_QTY, 0) AVAILABLE_QTY
+            FROM LOG0200M A
+            JOIN LOG0201D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_RDC_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
+            LEFT JOIN LOG0055D H ON G.REQST_NO = H.REQST_NO AND E.STK_CODE = H.ITM_CODE
+            LEFT JOIN SYS0028M I ON I.WH_LOC_CODE = A.SRO_CDC_CODE
+            LEFT JOIN LOG0056M J ON I.WH_LOC_ID = J.LOC_ID AND J.STK_CODE = E.STK_CODE
+            LEFT JOIN L75 ON E.STK_CODE = L75.ITM_CODE AND J.LOC_ID = L75.LOC_ID
+            WHERE 1=1
+            <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+             <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+                 select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+             <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+
+    </select>
+
+     <select id="selectSroList" parameterType="Map" resultType="egovMap">
+             WITH l75 AS
+            (
+                SELECT
+                    L75.LOC_ID,
+                    L75.ITM_CODE,
+                    SUM(REQST_QTY) - SUM(NVL(MOV_QTY, 0)) AS BOOKING_QTY
+                FROM
+                    LOG0075M L75
+                WHERE NVL(L75.FINAL_CMPLT, 'N')  <![CDATA[ <> ]]>   'Y'
+                AND L75.REQST_NO IN (SELECT REQST_NO FROM LOG0047M WHERE NVL(REQST_DEL, 'N')   <![CDATA[ <> ]]>  'Y')
+                GROUP BY L75.LOC_ID, L75.ITM_CODE
+            )
+            SELECT
+                  A.SRO_NO
+                , SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , NVL(B.SRO_FORE_QTY,0) SRO_FORE_QTY
+                , NVL(H.DELVRY_QTY,0)  SRO_REQ_DEVLI_QTY
+                , NVL(H.DELVRY_QTY,0) - NVL(B.SRO_FORE_QTY,0) SHORTAGE_QTY
+                , NVL(B.SRO_CODY_AVA_QTY,0) SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
+                , J.QTY - NVL(L75.BOOKING_QTY, 0) AVAILABLE_QTY
+            FROM LOG0117M A
+            JOIN LOG0118D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_CODY_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
+            LEFT JOIN LOG0055D H ON G.REQST_NO = H.REQST_NO AND E.STK_CODE = H.ITM_CODE
+            LEFT JOIN SYS0028M I ON I.WH_LOC_CODE = A.SRO_CDC_CODE
+            LEFT JOIN LOG0056M J ON I.WH_LOC_ID = J.LOC_ID AND J.STK_CODE = E.STK_CODE
+            LEFT JOIN L75 ON E.STK_CODE = L75.ITM_CODE AND J.LOC_ID = L75.LOC_ID
+            WHERE 1=1
+             <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+            <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+              select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+
+            UNION
+
+            SELECT
+                  A.SRO_NO
+                , SRO_CRT_YYYY  FORE_YYYY
+                , SRO_CRT_MM    FORE_MM
+                , SRO_CRT_WW    FORE_WW
+                , C.WH_LOC_CODE RDC_CODE
+                , C.WH_LOC_DESC RDC_DESC
+                , C.WH_LOC_ID   RDC_LOC_ID
+                , D.WH_LOC_CODE CODY_CODE
+                , D.WH_LOC_DESC CODY_DESC
+                , D.WH_LOC_ID   CODY_LOC_ID
+                , E.STK_CODE
+                , E.STK_DESC
+                , NVL(B.SRO_SEND_QTY,0) SRO_FORE_QTY
+                , NVL(H.DELVRY_QTY,0)  SRO_REQ_DEVLI_QTY
+                , NVL(H.DELVRY_QTY,0) - NVL(B.SRO_SEND_QTY,0) SHORTAGE_QTY
+                , 0 SRO_CODY_AVA_QTY
+                , NVL(B.SRO_CDC_AVA_QTY,0) SRO_CDC_AVA_QTY
+                , A.SRO_REF_SMO_NO
+                , DECODE (G.REQST_STUS, 'P', 'Active', 'O', 'Active','C', 'Completed') AS SRO_STATUS_CD
+                , J.QTY - NVL(L75.BOOKING_QTY, 0) AVAILABLE_QTY
+            FROM LOG0200M A
+            JOIN LOG0201D B ON A.SRO_NO = B.SRO_NO
+            JOIN SYS0028M C ON B.SRO_RDC_CODE = C.WH_LOC_CODE
+            JOIN SYS0028M D ON B.SRO_RDC_CODE = D.WH_LOC_CODE
+            JOIN SYS0026M E ON B.SRO_STK_CODE = E.STK_CODE
+            JOIN SYS0005M F ON D.WH_LOC_BRNCH_ID = F.BRNCH_ID
+            JOIN LOG0047M G ON A.SRO_REF_SMO_NO = G.REQST_NO
+            LEFT JOIN LOG0055D H ON G.REQST_NO = H.REQST_NO AND E.STK_CODE = H.ITM_CODE
+            LEFT JOIN SYS0028M I ON I.WH_LOC_CODE = A.SRO_CDC_CODE
+            LEFT JOIN LOG0056M J ON I.WH_LOC_ID = J.LOC_ID AND J.STK_CODE = E.STK_CODE
+            LEFT JOIN L75 ON E.STK_CODE = L75.ITM_CODE AND J.LOC_ID = L75.LOC_ID
+            WHERE 1=1
+            <if test="searchYear != null and searchYear != '' ">
+            AND  A.SRO_CRT_YYYY = #{searchYear}
+            </if>
+             <if test="searchMonth != null and searchMonth != '' ">
+            AND  A.SRO_CRT_MM = #{searchMonth}
+            </if>
+            <if test="searchWeek != null and searchWeek != '' ">
+            AND  A.SRO_CRT_WW = #{searchWeek}
+            </if>
+             <if test="searchCDC != null and searchCDC != '' ">
+            AND  A.SRO_CDC_CODE = #{searchCDC}
+            </if>
+            <if test="searchBranch != null and searchBranch != '' ">
+            AND #{searchBranch} IN (D.WH_LOC_BRNCH_ID , D.WH_LOC_BRNCH_ID2 , D.WH_LOC_BRNCH_ID3, D.WH_LOC_BRNCH_ID4, D.WH_LOC_BRNCH_ID5)
+            </if>
+            <if test="searchMatCode != null and searchMatCode !=''">
+            AND (E.STK_CODE = #{searchMatCode} OR E.STK_DESC LIKE '%' || #{searchMatCode} || '%' )
+            </if>
+            <if test="searchLoc != null and searchLoc !=''">
+            AND D.WH_LOC_CODE IN
+            <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+           </if>
+            <if test="searchStatus != null and searchStatus !=''">
+            AND G.REQST_STUS IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="UNION" close=")">
+                 select regexp_substr (#{item},'[^,]+',1,level) from DUAL connect by level <![CDATA[ <= ]]> length ( #{item} ) - length ( replace ( #{item}, ',' ) ) + 1
+             </foreach>
+           </if>
+           <if test="searchType != null and searchType !=''">
+            AND E.STK_TYPE_ID IN
+            <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+            </if>
+            <if test="searchCtgry != null and searchCtgry !=''">
+            AND E.STK_CTGRY_ID IN
+            <foreach item="item" collection="searchCtgry" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+             <if test="searchlocgb != null and searchlocgb !=''">
+            AND D.WH_LOC_GB in
+            <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+             #{item}
+             </foreach>
+            </if>
+            <if test="sstocknm != null and sstocknm !=''">
+            AND (UPPER(E.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(E.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
+            </if>
+    </select>
+
+
+
+    <select id="selectSroSafetyLvlList" parameterType="Map" resultType="egovMap">
+		SELECT
+			      B.WH_LOC_CODE BRANCH_CODE
+			    , B.WH_LOC_DESC BRANCH_NAME
+			    , A.SAFETY_QTY
+			    , C.STK_CODE
+			    , C.STK_DESC
+			    , C.STK_CTGRY_ID
+			    , C.STK_TYPE_ID
+			    , D.CODE_NAME CATEGORY
+			    , E.CODE_NAME TYPE
+			    , A.UPD_DT
+		FROM LOG0119M A
+		LEFT JOIN SYS0028M B ON A.WH_LOC_CODE = B.WH_LOC_CODE
+		LEFT JOIN SYS0026M C ON A.STK_CODE = C.STK_CODE
+		LEFT JOIN SYS0013M D ON C.STK_CTGRY_ID = D.CODE_ID
+		LEFT JOIN SYS0013M E ON C.STK_TYPE_ID = E.CODE_ID
+		WHERE NVL(A.DISAB,0) = 0
+		<if test="searchCDC != null and searchCDC != '' ">
+        AND  B.CDC_CODE = #{searchCDC}
+        </if>
+
+        <if test="searchBranch != null and searchBranch != '' ">
+         AND  #{searchBranch} IN (B.WH_LOC_BRNCH_ID , B.WH_LOC_BRNCH_ID2 , B.WH_LOC_BRNCH_ID3, B.WH_LOC_BRNCH_ID4, B.WH_LOC_BRNCH_ID5)
+         </if>
+
+    </select>
+
+
+    <update id="updateMergeLOG0119M" parameterType="Map">
+        MERGE INTO LOG0119M A
+        USING
+        (
+                  SELECT
+                          #{branchCode} as WH_LOC_CODE
+                        , #{stkCode}  as STK_CODE
+                        , #{safetyQty} as SAFETY_QTY
+                        , #{userId} as  USER_ID
+                        , B.STK_CTGRY_ID
+                   FROM DUAL A
+                   JOIN SYS0026M B ON B.STK_CODE = #{stkCode}
+            ) SRC ON (  A.WH_LOC_CODE = SRC.WH_LOC_CODE AND A.STK_CODE = SRC.STK_CODE)
+            WHEN MATCHED THEN
+            UPDATE
+            SET   A.SAFETY_QTY  = SRC.SAFETY_QTY
+                  , A.UPD_USER_ID = SRC.USER_ID
+                  , A.UPD_DT      = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT (
+                          WH_LOC_CODE
+                        , STK_CODE
+                        , SAFETY_QTY
+                        , DISAB
+                        , CRT_USER_ID
+                        , CRT_DT
+                        , STK_CTGRY_ID
+                   )
+             VALUES (
+                          SRC.WH_LOC_CODE
+                        , SRC.STK_CODE
+                        , SRC.SAFETY_QTY
+                        , 0
+                        , SRC.USER_ID
+                        , SYSDATE
+                        , SRC.STK_CTGRY_ID
+           )
+    </update>
+
+
+    <select id="selectSroLocationType"  parameterType="Map" resultType="egovMap">
+        SELECT CODE,
+               CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'SRO_LOCGB'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+    </select>
+
+
+    <select id="selectSroStatus"  parameterType="Map" resultType="egovMap">
+        SELECT CODE,
+               CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'SRO_STUS'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+    </select>
+
+     <select id="selectWeeklyList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+		      SELECT
+	                  A.GEN_FORE_YYYY,
+	                  A.GEN_FORE_MM,
+	                  A.GEN_FORE_BATCH,
+	                  TO_CHAR(TO_DATE(A.GEN_BATCH_START_DT,'YYYY/MM/DD') ,'YYYY/MM/DD') GEN_BATCH_START_DT,
+	                  A.GEN_BATCH_RATE,
+	                  A.GEN_TAT_YYYY,
+	                  A.GEN_TAT_MM,
+	                  A.CRT_ID,
+	                  B.USER_NAME CRT_USER,
+	                  A.CRT_DT,
+	                  A.UPD_ID,
+	                  C.USER_NAME UPD_USER,
+	                  TO_CHAR(A.UPD_DT,'YYYY/MM/DD') UPD_DT
+	                  FROM LOG0114M A
+	                  LEFT JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+	                  LEFT JOIN SYS0047M C ON A.UPD_ID = C.USER_ID
+               WHERE 1=1
+           ]]>
+         <if test="year != null and month != null">
+                AND A.GEN_FORE_YYYY=#{year} AND A.GEN_FORE_MM=#{month}
+        </if>
+          <![CDATA[
+                ORDER BY  A.GEN_FORE_YYYY,
+                      A.GEN_FORE_MM,
+                      A.GEN_FORE_BATCH
+        ]]>
+    </select>
+
+    <update id="saveSroCalendarGrid" parameterType="Map">
+               MERGE INTO LOG0114M A
+               USING (
+	                    SELECT
+	                     #{genForeYyyy} GEN_FORE_YYYY,
+	                     #{genForeMm} GEN_FORE_MM,
+	                     #{genForeBatch} GEN_FORE_BATCH,
+	                     TO_CHAR(TO_DATE(#{genBatchStartDt},'YYYY/MM/DD'),'YYYYMMDD') GEN_BATCH_START_DT,
+	                     #{genBatchRate} GEN_BATCH_RATE,
+	                     #{genTatYyyy} GEN_TAT_YYYY,
+	                     #{genTatMm} GEN_TAT_MM,
+	                     #{userId} USER_ID
+	                    FROM DUAL
+                )SRC ON (A.GEN_FORE_YYYY = SRC.GEN_FORE_YYYY AND A.GEN_FORE_MM = SRC.GEN_FORE_MM AND A.GEN_FORE_MM = SRC.GEN_FORE_MM
+               AND A.GEN_FORE_BATCH = SRC.GEN_FORE_BATCH)
+               WHEN MATCHED THEN UPDATE
+               SET  A.GEN_BATCH_START_DT = SRC.GEN_BATCH_START_DT,
+	                   A.GEN_BATCH_RATE = SRC.GEN_BATCH_RATE,
+	                   A.UPD_ID = SRC.USER_ID,
+	                   A.UPD_DT = SYSDATE
+               WHEN NOT MATCHED THEN
+               INSERT (GEN_FORE_YYYY, GEN_FORE_MM, GEN_FORE_BATCH, GEN_BATCH_START_DT, GEN_BATCH_RATE, GEN_TAT_YYYY, GEN_TAT_MM, CRT_ID, CRT_DT)
+               VALUES(
+                       SRC.GEN_FORE_YYYY,
+                       SRC.GEN_FORE_MM,
+                       SRC.GEN_FORE_BATCH,
+                       SRC.GEN_BATCH_START_DT,
+                       SRC.GEN_BATCH_RATE,
+                       SRC.GEN_TAT_YYYY,
+                       SRC.GEN_TAT_MM,
+                       SRC.USER_ID,
+                       SYSDATE
+               )
+    </update>
+
+
+    <select id="selectYearList" parameterType="Map" resultType="egovMap">
+	 <![CDATA[
+	       SELECT (TO_CHAR(SYSDATE,'YYYY') - 1) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'YYYY') - 1) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 5
+	 ]]>
+	</select>
+
+
+	<select id="selectMonthList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT  LPAD(LEVEL,2,'0') CODE_ID, LPAD(LEVEL,2,'0') CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 12
+     ]]>
+    </select>
+
+
+
+</mapper>

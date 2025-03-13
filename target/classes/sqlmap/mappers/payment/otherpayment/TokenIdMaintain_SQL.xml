@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.TokenIdMaintainMapper">
+
+  <select id="selectTokenIdMaintain" parameterType="Map" resultType="egovMap">
+  SELECT TOKEN_ID
+   ,EXT3.CODE_NAME AS CARD_TYPE
+   ,EXT4.CODE_NAME AS CREDIT_CARD_TYPE
+   ,EXT1.RESPONSE_CODE
+   ,EXT1.RESPONSE_DESC AS RESPONSE_DESC
+   ,TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY')AS UPD_DT
+   ,EXT1.CUST_CRC_ID AS CUST_CRC_ID
+   ,EXT2.CODE AS CODE
+   ,EXT1.REMARK AS REMARK
+   ,EXT5.USER_NAME UPD_USER_ID
+   FROM PAY0318D EXT1
+   LEFT JOIN SYS0038M EXT2 ON EXT2.STUS_CODE_ID = EXT1.STATUS
+   LEFT JOIN SYS0013M EXT3 ON EXT3.CODE_ID = EXT1.CARD_TYPE
+   LEFT JOIN SYS0013M EXT4 ON EXT4.CODE_ID = EXT1.CREDIT_CARD_TYPE
+   LEFT JOIN SYS0047M EXT5 ON EXT5.USER_ID = EXT1.UPD_USER_ID
+    WHERE 1 = 1
+    <if test="tokenIdSearch != null and tokenIdSearch != '' ">
+        AND TOKEN_ID = #{tokenIdSearch}
+    </if>
+    <if test="status != null and status != '' ">
+        AND STATUS = #{status}
+    </if>
+    <if test="responseCode != null and responseCode != '' ">
+      AND RESPONSE_CODE = #{responseCode}
+    </if>
+    <if test="creditCardType != null and creditCardType != '' ">
+      AND UPPER(CREDIT_CARD_TYPE) = UPPER(#{creditCardType})
+    </if>
+    <if test="updatorCode != null and updatorCode != '' ">
+      AND UPPER(EXT5.USER_NAME) = UPPER(#{updatorCode})
+    </if>
+
+    AND EXT1.UPD_DT BETWEEN TO_DATE(#{updStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{updEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+
+    ORDER BY EXT1.CUST_CRC_ID ASC
+  </select>
+
+    <update id="saveTokenIdMaintainBulk" parameterType="Map">
+   MERGE INTO GBSLCVD.PAY0318D D
+    USING (
+      SELECT
+       #{uploadStatus} AS STATUS
+       ,#{userId} AS USER_ID
+       ,V.TOKEN_ID AS NEW_TOKEN_ID
+       ,C.CUST_CRC_ID AS NEW_CUST_CRC_ID
+       ,C.CARD_TYPE_ID AS NEW_CARD_TYPE
+       ,C.CUST_CRC_TYPE_ID AS NEW_CREDIT_CARD_TYPE
+       ,V.RESPONSE_CODE AS NEW_RESPONSE_CODE
+       ,V.RESPONSE_DESC AS NEW_RESPONSE_DESC
+       ,V.REMARK AS NEW_REMARK
+        FROM (
+          <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+            #{item.tokenId} TOKEN_ID
+            ,#{item.cardType} CARD_TYPE
+                ,#{item.creditCardType} CREDIT_CARD_TYPE
+                ,#{item.responseCode} RESPONSE_CODE
+                ,#{item.responseDesc} RESPONSE_DESC
+                ,#{item.remark} REMARK
+            FROM DUAL
+          </foreach>
+     ) V
+     JOIN SAL0028D C ON C.CUST_CRC_TOKEN = V.TOKEN_ID
+     <if test="uploadStatus == '1'">
+     JOIN SYS0094M K ON K.CODE = V.RESPONSE_CODE
+     </if>
+     WHERE V.REMARK IS NOT NULL
+     ) S ON  (S.NEW_CUST_CRC_ID = D.CUST_CRC_ID)
+    WHEN MATCHED THEN UPDATE SET D.STATUS = S.STATUS
+                               , D.UPD_DT = SYSDATE
+                               , D.UPD_USER_ID = S.USER_ID
+                               , D.REMARK = S.NEW_REMARK
+    WHEN NOT MATCHED THEN INSERT (
+                SEQUENCE_ID
+                ,TOKEN_ID
+                ,CUST_CRC_ID
+                ,CARD_TYPE
+                ,CREDIT_CARD_TYPE
+                ,RESPONSE_CODE
+                ,RESPONSE_DESC
+                ,STATUS
+                ,REMARK
+                ,CRT_DT
+                ,CRT_USER_ID
+                ,UPD_DT
+                ,UPD_USER_ID
+            ) VALUES (
+                PAY0318D_SEQUENCE_ID_SEQ.NEXTVAL
+                ,S.NEW_TOKEN_ID
+                ,S.NEW_CUST_CRC_ID
+                ,S.NEW_CARD_TYPE
+                ,S.NEW_CREDIT_CARD_TYPE
+                ,S.NEW_RESPONSE_CODE
+                ,S.NEW_RESPONSE_DESC
+                ,S.STATUS
+                ,S.NEW_REMARK
+                ,SYSDATE
+                ,S.USER_ID
+                ,SYSDATE
+                ,S.USER_ID
+            )
+    </update>
+
+  <select id="selectTokenIdMaintainDetailPop" parameterType="Map" resultType="egovMap">
+    SELECT
+		EXTENT1.CUST_CRC_TOKEN
+		,EXTENT2.SALES_ORD_NO
+		,TO_CHAR(EXTENT4.UPD_DT,'DD/MM/YYYY') AS LAST_UPDATE_DATE
+		,EXTENT2.MTH_RENT_AMT AS AMOUNT
+		,EXTENT3.NAME AS CUSTOMER_NAME
+		,CASE WHEN EXTENT4.IS_3RD_PARTY = '1' THEN 'YES' ELSE 'NO' END AS THIRD_PARTY
+		FROM SAL0028D EXTENT1
+
+		LEFT JOIN SAL0001D EXTENT2 ON EXTENT1.CUST_ID = EXTENT2.CUST_ID
+		LEFT JOIN SAL0029D EXTENT3 ON EXTENT3.CUST_ID = EXTENT1.CUST_ID
+		LEFT JOIN SAL0074D EXTENT4 ON EXTENT2.SALES_ORD_ID = EXTENT4.SALES_ORD_ID
+
+    WHERE 1 = 1
+    <if test="custCrcId != null and custCrcId != '' ">
+      AND EXTENT1.CUST_CRC_ID = #{custCrcId}
+    </if>
+    <if test="tokenId != null and tokenId != '' ">
+      AND EXTENT1.CUST_CRC_TOKEN = #{tokenId}
+    </if>
+    ORDER BY 1 ASC
+  </select>
+
+<select id="selectTokenIdMaintainHistoryUpload" parameterType="Map" resultType="egovMap">
+    SELECT
+    TO_CHAR(EXT1.CREATE_DATE, 'DD-MM-YYYY') AS CRT_DT,
+    EXT2.USER_NAME AS UPDATOR,
+    EXT1.TOTAL_COUNT AS TOTAL_ITEMS
+
+    FROM PAY0335D EXT1
+        JOIN SYS0047M EXT2 ON EXT2.USER_ID = EXT1.CRT_USER_ID
+
+    WHERE 1 = 1
+
+    ORDER BY 1 ASC
+  </select>
+
+  <insert id="saveTokenIdMaintainUploadHistory" parameterType="Map">
+       INSERT INTO PAY0335D
+       (
+       HIST_SEQUENCE_ID,
+       CREATE_DATE,
+       CRT_USER_ID,
+       TOTAL_COUNT
+       )
+       VALUES
+       (
+       PAY0335D_SEQUENCE_ID_SEQ.NEXTVAL,
+       SYSDATE,
+       #{userId},
+       #{totalCount}
+       )
+  </insert>
+</mapper>

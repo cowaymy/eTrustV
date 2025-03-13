@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.ResearchDevelopment.impl.UsedPartReTestResultMapper">
+
+ <!-- SELECT START -->
+
+<select id="selectUsedPartReList" parameterType="Map" resultType="egovMap">
+
+ <!-- WITH ENTRY_INFO_MAX AS (SELECT /*+rule*/ SALES_ORD_ID, INSTALL_ENTRY_ID,INSTALL_RESULT_ID
+      FROM (SELECT SALES_ORD_ID,
+                   INSTALL_ENTRY_ID,INSTALL_RESULT_ID,
+              RANK () OVER (PARTITION BY SALES_ORD_ID ORDER BY INSTALL_ENTRY_ID DESC) RANK
+              FROM SAL0046D
+          WHERE STUS_CODE_ID = 4)
+      WHERE RANK = 1) -->
+  SELECT
+
+      DISTINCT B.SALES_ORD_NO,
+      B.SALES_ORD_ID,
+      B.SALES_ORD_ID AS ORD_ID,
+      NVL(FLOOR(MONTHS_BETWEEN(C.AS_SETL_DT,IR2.INSTALL_DT)), '0') AS AS_AGING ,
+      DECODE (IR2.INSTALL_DT, NULL, '01/01/1900', TO_CHAR (IR2.INSTALL_DT, 'DD/MM/YYYY')) LAST_INSTALL_DT,
+      C.AS_SETL_DT,
+      Q.CODE_NAME AS PRODUCT_CATEGORY,
+      P.STK_CODE,
+      P.STK_DESC,
+      A.AS_NO,
+      A.AS_ID,
+      C.AS_RESULT_NO,
+      G.NAME AS CUST_NAME,
+      NVL (IR2.SERIAL_NO, ' ') LAST_INSTALL_SERIAL_NO,
+      R.TEST_UP_CT,
+      B.CODE DSC_CODE,
+      B.NAME DSC_NAME,
+      D.ASR_ITM_ID,
+      D.ASR_ITM_PART_ID,
+      D.ASR_ITM_PART_DESC,
+      W.STK_CODE AS ASR_ITM_PART_CODE,
+      IR2.PSI,
+      IR2.LPM,
+      C.AS_RESULT_REM,
+      M.DEFECT_DESC AS AS_ERROR_CODE,
+      N.DEFECT_DESC AS AS_DESCRIPTION,
+      DT.DEFECT_DESC AS SOLUTION_LARGE ,
+      SC.DEFECT_DESC AS SOLUTION_SMALL ,
+      DD.DEFECT_DESC AS PROBLEM_SYMPTOM_LARGE ,
+      DC.DEFECT_DESC AS PROBLEM_SYMPTOM_SMALL ,
+      DP.DEFECT_DESC AS DEFECT_PART_LARGE ,
+      DP.DEFECT_RMK AS DEFECT_PART_SMALL ,
+      MA.STATE INST_STATE,
+      MA.CITY INST_CITY,
+      MA.AREA INST_AREA,
+      R.TEST_UP_ID AS TEST_RESULT_ID,
+      R.TEST_UP_NO AS TEST_RESULT_NO,
+      R.TEST_UP_REM AS TEST_RESULT_REMARK,
+      R.TEST_UP_GNE,
+      TO_CHAR(R.TEST_UP_SETL_DT, 'DD/MM/YYYY') AS TEST_UP_SETL_DT,
+      R.TEST_YN,
+      S.CMPLT_YN,
+      R.RCD_TMS,
+      TO_CHAR(R.TEST_MNF_DT, 'DD/MM/YYYY') AS TEST_MNF_DT,
+      CASE WHEN R.TEST_UP_STUS = 0 THEN CASE WHEN R.TEST_UP_NO IS NULL THEN 'Active' END
+      ELSE T.NAME END AS TEST_STUS,
+      ASDD.DEFECT_DESC AS_PROBLEM_SYMPTOM_LARGE,
+      ASDC.DEFECT_DESC AS AS_PROBLEM_SYMPTOM_SMALL
+
+  FROM SVC0004D C
+  JOIN SVC0001D A ON A.AS_ID = C.AS_ENTRY_ID
+  JOIN SAL0001D B ON B.SALES_ORD_ID = A.AS_SO_ID
+  <!-- JOIN ENTRY_INFO_MAX EIMAX ON EIMAX.SALES_ORD_ID = B.SALES_ORD_ID
+  JOIN SAL0046D IE2 ON IE2.SALES_ORD_ID = B.SALES_ORD_ID AND IE2.INSTALL_ENTRY_ID = EIMAX.INSTALL_ENTRY_ID
+  JOIN SAL0047D IR2 ON IR2.ENTRY_ID = EIMAX.INSTALL_ENTRY_ID AND IR2.RESULT_ID = EIMAX.INSTALL_RESULT_ID -->
+  JOIN SAL0047D IR2 ON (IR2.RESULT_ID,IR2.entry_id) =
+                       (SELECT
+                            MAX(x.install_result_id), MAX(X.INSTALL_ENTRY_ID) entry_id
+                         FROM SAL0046D x
+                         WHERE x.STUS_CODE_ID = 4 AND x.SALES_ORD_ID = B.sales_ORD_ID)
+  JOIN SVC0005D D ON C.AS_RESULT_ID = D.AS_RESULT_ID AND D.ASR_ITM_PART_ID IS NOT NULL
+  JOIN SAL0029D G ON G.CUST_ID = B.CUST_ID
+  LEFT JOIN SVC0122D R ON R.ASR_ITM_ID = D.ASR_ITM_ID
+  JOIN SYS0100M H1 ON H1.DEFECT_ID = C.AS_DEFECT_TYPE_ID AND H1.DEFECT_TYP = 'DT' AND H1.DEFECT_CODE IN ('1800', '1500')
+  LEFT JOIN SYS0100M M ON M.DEFECT_ID = A.AS_MALFUNC_ID
+  LEFT JOIN SYS0100M N ON N.DEFECT_ID = A.AS_MALFUNC_RESN_ID AND N.DEFECT_GRP = M.DEFECT_ID
+  JOIN SAL0002D O ON O.SALES_ORD_ID = B.SALES_ORD_ID
+  JOIN SYS0026M P ON P.STK_ID = O.ITM_STK_ID
+  LEFT JOIN SYS0013M Q ON Q.CODE_ID = P.STK_CTGRY_ID
+  JOIN LOG0103M S ON S.SVC_ORD_ID = A.AS_NO AND  S.CMPLT_YN = 'Y'
+  LEFT JOIN SYS0038M T ON T.STUS_CODE_ID = R.TEST_UP_STUS
+  LEFT JOIN SYS0026M W ON W.STK_ID = D.ASR_ITM_PART_ID
+  JOIN SAL0045D I ON I.SALES_ORD_ID = B.SALES_ORD_ID
+  JOIN SAL0023D CAL ON CAL.CUST_ADD_ID = I.ADD_ID
+  JOIN SYS0005M B ON B.BRNCH_ID = I.BRNCH_ID
+  JOIN SYS0064M MA ON MA.AREA_ID = CAL.AREA_ID
+  LEFT JOIN SYS0100M DT ON R.TEST_AS_DEFECT_TYPE_ID =　DT.DEFECT_ID AND DT.DEFECT_TYP ='DT'
+  LEFT JOIN SYS0100M SC ON R.TEST_AS_SLUTN_RESN_ID = SC.DEFECT_ID AND SC.DEFECT_TYP ='SC'
+  LEFT JOIN SYS0100M DD ON R.TEST_AS_DEFECT_DTL_RESN_ID = DD.DEFECT_ID AND DD.DEFECT_TYP ='DD'
+  LEFT JOIN SYS0100M DC ON R.TEST_AS_DEFECT_ID = DC.DEFECT_ID AND DC.DEFECT_TYP ='DC'
+  LEFT JOIN SYS0100M DP ON R.TEST_AS_DEFECT_PART_ID = DP.DEFECT_ID AND DP.DEFECT_TYP ='DP'
+  LEFT JOIN SYS0100M ASDD ON C.AS_DEFECT_DTL_RESN_ID = ASDD.DEFECT_ID AND ASDD.DEFECT_TYP ='DD'
+  LEFT JOIN SYS0100M ASDC ON C.AS_DEFECT_ID = ASDC.DEFECT_ID AND ASDC.DEFECT_TYP ='DC'
+
+WHERE 1 = 1
+<if test="orderNum != null and orderNum != '' ">
+AND  B.SALES_ORD_NO = #{orderNum}
+</if>
+
+<if test="cmbbranchId != null and cmbbranchId != '' ">
+AND B.CODE = #{cmbbranchId}
+</if>
+
+<if test="trStatus != null and trStatus != '' ">
+                <choose>
+                    <when test="trStatus == 1 ">
+                        AND (R.TEST_UP_STUS = '1' OR R.TEST_UP_STUS ='' OR R.TEST_UP_STUS IS NULL)
+                    </when>
+                    <otherwise>
+                        AND R.TEST_UP_STUS = '4'
+                    </otherwise>
+                </choose>
+</if>
+
+<if test="cmbCategory != null and cmbCategory != '' ">
+AND P.STK_CTGRY_ID = #{cmbCategory}
+</if>
+
+<if test="asProduct != null and asProduct != '' ">
+AND P.STK_CODE = #{asProduct}
+</if>
+
+
+<if test="spareFilterName != null and spareFilterName != '' ">
+AND D.ASR_ITM_PART_ID = #{spareFilterName}
+</if>
+
+<if test="Genuinity != null and Genuinity != '' ">
+AND R.TEST_UP_GNE = #{Genuinity}
+</if>
+
+<if test="Type != null and Type != '' ">
+AND W.STK_TYPE_ID = #{Type}
+</if>
+
+ <if test="TestResultNo != null and TestResultNo != '' ">
+AND R.TEST_UP_NO = #{TestResultNo}
+</if>
+
+<if test="asStartDt != null and asStartDt != '' and asEndDt != null and asEndDt != ''">
+ AND C.AS_SETL_DT BETWEEN TO_DATE(#{asStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{asEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+</if>
+
+<!-- order by B.SALES_ORD_NO -->
+
+</select>
+
+
+  <select id="getTestResultInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+        TEST_UP_ID AS TEST_RESULT_ID,
+        TEST_UP_NO AS TEST_RESULT_NO,
+        TEST_UP_STUS,
+        TEST_UP_REM,
+        TEST_UP_GNE,
+        TO_CHAR(TEST_UP_SETL_DT, 'DD/MM/YYYY') AS TEST_UP_SETL_DT,
+        TEST_UP_SETL_TM,
+        TO_CHAR(TEST_MNF_DT, 'DD/MM/YYYY') AS TEST_MNF_DT,
+        TEST_AS_DEFECT_PART_ID,
+        TEST_AS_DEFECT_DTL_RESN_ID,
+        TEST_AS_DEFECT_ID,
+        TEST_AS_DEFECT_TYPE_ID,
+        TEST_AS_SLUTN_RESN_ID,
+        TEST_UP_CT,
+        B0.DEFECT_ID AS DEFECT_ID_DT,
+        B0.DEFECT_CODE AS DEFECT_CODE_DT,
+        B0.DEFECT_DESC AS DEFECT_DESC_DT,
+        B1.DEFECT_ID AS DEFECT_ID_DC,
+        B1.DEFECT_CODE AS DEFECT_CODE_DC,
+        B1.DEFECT_DESC AS DEFECT_DESC_DC,
+        B2.DEFECT_ID AS DEFECT_ID_DP,
+        B2.DEFECT_CODE AS DEFECT_CODE_DP,
+        B2.DEFECT_DESC AS DEFECT_DESC_DP,
+        B3.DEFECT_ID AS DEFECT_ID_DD,
+        B3.DEFECT_CODE AS DEFECT_CODE_DD,
+        B3.DEFECT_DESC AS DEFECT_DESC_DD,
+        B4.DEFECT_ID AS DEFECT_ID_SC,
+        B4.DEFECT_CODE AS DEFECT_CODE_SC,
+        B4.DEFECT_DESC AS DEFECT_DESC_SC,
+        D.STK_CODE AS ASR_ITM_CODE,
+        D.STK_DESC AS ASR_ITM_DESC
+    FROM SVC0122D A
+        LEFT JOIN SYS0100M B0 ON B0.DEFECT_ID = A.TEST_AS_DEFECT_TYPE_ID AND B0.DEFECT_TYP = 'DT'
+        LEFT JOIN SYS0100M B1 ON B1.DEFECT_ID = A.TEST_AS_DEFECT_ID AND B1.DEFECT_TYP = 'DC'
+        LEFT JOIN SYS0100M B2 ON B2.DEFECT_ID = A.TEST_AS_DEFECT_PART_ID AND B2.DEFECT_TYP = 'DP'
+        LEFT JOIN SYS0100M B3 ON B3.DEFECT_ID = A.TEST_AS_DEFECT_DTL_RESN_ID AND B3.DEFECT_TYP = 'DD'
+        LEFT JOIN SYS0100M B4 ON B4.DEFECT_ID = A.TEST_AS_SLUTN_RESN_ID AND B4.DEFECT_TYP = 'SC'
+        JOIN SVC0005D C ON C.ASR_ITM_ID = A.ASR_ITM_ID
+        JOIN SYS0026M D ON D.STK_ID = C.ASR_ITM_PART_ID
+    WHERE TEST_UP_ID = #{TEST_RESULT_ID}
+  </select>
+
+  <select id="selectOrderBasicInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[ SELECT Extent1.ORD_ID ORD_ID ,
+                     Extent1.ORD_NO ORD_NO ,
+                     Extent1.RENTAL_STUS RENTAL_STUS ,
+                     Extent1.ORD_STUS_ID ORD_STUS_ID ,
+                     Extent1.ORD_STUS_CODE ORD_STUS_CODE ,
+                     Extent1.ORD_STUS_NAME ORD_STUS_NAME ,
+                     to_char(Extent1.ORD_DT,'dd/mm/yyyy') ORD_DT ,
+                     Extent1.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                     Extent1.ORD_AMT ORD_AMT ,
+                     Extent1.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                     Extent1.ORD_PV ORD_PV ,
+                     Extent1.ORD_PV_MONTH ORD_PV_MONTH ,
+                     Extent1.ORD_PV_YEAR ORD_PV_YEAR ,
+                     Extent1.ORD_REF_NO ORD_REF_NO ,
+                     Extent1.ORD_PO_NO ORD_PO_NO ,
+                     Extent1.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                     Extent1.ORD_GRP_CODE ORD_GRP_CODE ,
+                     Extent1.ORD_ORG_CODE ORD_ORG_CODE ,
+                     Extent1.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                     to_char(Extent1.ORD_CRT_DT,'dd/mm/yyyy') ORD_CRT_DT ,
+                     Extent1.APP_TYPE_ID APP_TYPE_ID ,
+                     Extent1.APP_TYPE_CODE APP_TYPE_CODE ,
+                     Extent1.APP_TYPE_DESC APP_TYPE_DESC ,
+                     Extent1.STOCK_ID STOCK_ID ,
+                     Extent1.STOCK_CODE STOCK_CODE ,
+                     Extent1.STOCK_DESC STOCK_DESC ,
+                     Extent1.CUST_ID CUST_ID ,
+                     Extent1.CUST_TYPE CUST_TYPE ,
+                     Extent1.CUST_NAME CUST_NAME ,
+                     Extent1.CUST_NRIC CUST_NRIC ,
+                     Extent1.CUST_DOB CUST_DOB ,
+                     Extent1.CUST_NATION CUST_NATION ,
+                     Extent1.CUST_GENDER CUST_GENDER ,
+                     Extent1.CUST_RACE CUST_RACE ,
+                     Extent1.CUST_EMAIL CUST_EMAIL ,
+                     Extent1.CUST_VA_NO CUST_VA_NO ,
+                     Extent1.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                     Extent1.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                     Extent1.ORD_PROMO_ID ORD_PROMO_ID ,
+                     Extent1.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                     Extent1.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                     Extent1.ORD_MEM_ID ORD_MEM_ID ,
+                     Extent1.ORD_MEM_CODE ORD_MEM_CODE ,
+                     Extent1.ORD_MEM_NAME ORD_MEM_NAME ,
+                     Extent1.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                     Extent1.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                     Extent1.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                     Extent1.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                     Extent1.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                     Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                     Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                     Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                     Extent1.ORD_REM ORD_REM ,
+                     Extent1.RENT_CHK_ID RENT_CHK_ID ,
+                     Extent1.ORD_HM_ID ORD_HM_ID ,
+                     Extent1.ORD_SM_ID ORD_SM_ID ,
+                     Extent1.ORD_GM_ID ORD_GM_ID ,
+                     Extent1.ORD_ADDR_ID ORD_ADDR_ID ,
+                     Extent1.ORD_CNTC_ID ORD_CNTC_ID ,
+                     Extent1.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                     Extent1.UPD_DT UPD_DT ,
+                     Extent1.UPD_USER_ID UPD_USER_ID ,
+                     Extent1.JOM_PAY_REF JOM_PAY_REF ,
+                     Extent1.STK_CTGRY_ID STK_CTGRY_ID ,
+                     Extent1.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                     Extent1.CUST_TYPE_ID CUST_TYPE_ID ,
+                     Extent1.CUST_BILL_ID CUST_BILL_ID ,
+                     Extent1.OBLIGT_YEAR OBLIGT_YEAR
+      FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID ,
+                    vOrderBasicInfo.ORD_NO ORD_NO ,
+                    vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                    vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                    vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                    vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                    vOrderBasicInfo.ORD_DT ORD_DT ,
+                    vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                    vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                    vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                    vOrderBasicInfo.ORD_PV ORD_PV ,
+                    vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                    vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                    vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                    vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                    vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                    vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                    vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                    vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                    vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                    vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                    vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                    vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                    vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                    vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                    vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                    vOrderBasicInfo.CUST_ID CUST_ID ,
+                    vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                    vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                    vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                    vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                    vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                    vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                    vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                    vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                    vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                    vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                    vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                    vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                    vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                    vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                    vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                    vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                    vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                    vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                    vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                    vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                    vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                    vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                    vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                    vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                    vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                    vOrderBasicInfo.ORD_REM ORD_REM ,
+                    vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                    vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                    vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                    vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                    vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                    vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                    vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                    vOrderBasicInfo.UPD_DT UPD_DT ,
+                    vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                    vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                    vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                    vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                    vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                    vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                    vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+             FROM SAL1006V vOrderBasicInfo ) Extent1
+             LEFT JOIN SAL0102D Extent2 ON Extent2.CCP_SALES_ORD_ID = Extent1.ORD_ID
+             JOIN SAL0009D Extent3 ON Extent3.LOG_ID = (SELECT MAX(LOG_ID)
+                                                        FROM SAL0009D
+                                                        WHERE SALES_ORD_ID = Extent1.ORD_ID
+                                                        GROUP BY SALES_ORD_ID)
+             WHERE ( Extent1.ORD_NO = #{orderNo} )
+               AND NOT EXISTS (SELECT 1
+                                 FROM SAL0001D Z
+                                WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                  AND Z.BNDL_ID IS NOT NULL
+                              )             -- homecare Remove(except)
+                AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
+                AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5))
+                AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="getUsedPartReTestResultDocNo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT FN_GET_DOCNO(#{DOCNO})  uprno  FROM DUAL
+    ]]>
+  </select>
+
+  <select id="getUsedPartReTestResultId" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT SVC0122D_ID.NEXTVAL seq FROM DUAL
+    ]]>
+  </select>
+
+  <select id="isReTestAlreadyResult_bak" parameterType="Map" resultType="java.lang.Integer">
+    <![CDATA[
+      SELECT COUNT(TEST_UP_ID)
+        FROM SVC0122D
+      WHERE  AS_NO =#{serviceNo}
+        AND ASR_ITM_ID = #{asrItmId}
+    ]]>
+  </select>
+
+  <select id="isReTestAlreadyResult" parameterType="Map" resultType="egovMap">
+      SELECT *
+        FROM SVC0122D
+      WHERE  1=1
+         AND AS_NO IN
+         <foreach item="item" collection="serviceNo" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+
+         AND ASR_ITM_ID IN
+         <foreach item="item" collection="asrItmId" index="index" open="(" separator="," close=")">
+           #{item}
+         </foreach>
+  </select>
+
+  <select id="isReTestAlreadyResult_2" parameterType="Map" resultType="java.lang.Integer">
+    <![CDATA[
+      SELECT COUNT(TEST_UP_ID)
+        FROM SVC0122D
+      WHERE  AS_NO =#{serviceNo}
+        AND ASR_ITM_ID = #{asrItmId}
+    ]]>
+  </select>
+
+  <select id="getAsEventInfo" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT CASE WHEN(H.RESN_ID IS NOT NULL)
+                           THEN H.RESN_DESC
+                           ELSE B.DEFECT_TYPE_CODE_DESC
+                    END malfu_code ,
+                    CASE WHEN (H.RESN_ID IS NOT NULL)
+                           THEN I.RESN_DESC
+                           ELSE B.DEFECT_DTL_CODE_DESC
+                    END malfu_reason ,
+                    D.CODE|| ' - ' || D.NAME DSC,
+                    A.AS_APPNT_TM Req_tm
+    FROM SVC0001D A,
+         SVC0056M B,
+         ORG0001D C,
+         SYS0005M D,
+         SYS0032M H,
+         SYS0032M I
+    WHERE A.AS_MALFUNC_ID = B.DEFECT_TYPE_CODE
+      AND A.AS_MALFUNC_RESN_ID = B.DEFECT_DTL_CODE
+      AND A.AS_MEM_ID = C.MEM_ID
+      AND C.BRNCH = D.BRNCH_ID
+      AND A.AS_MALFUNC_ID = H.RESN_ID(+)
+      and A.AS_MALFUNC_RESN_ID =
+      I.RESN_ID(+) AND A.AS_NO = #{as_No}
+  </select>
+
+  <select id="selRcdTms" parameterType="Map" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM SVC0001D
+    WHERE AS_ID = #{asId}
+      AND AS_NO = #{asNo}
+      AND AS_SO_ID = #{salesOrderId}
+      AND RCD_TMS = #{rcdTms}
+  </select>
+
+  <select id="getSearchDtRange" parameterType="Map" resultType="String">
+    SELECT CODE
+    FROM SYS0094M
+    WHERE IND = 'AS_DT_RGN'
+      AND DISB = '0'
+  </select>
+
+  <select id="asProd"  parameterType="Map" resultType="egovMap">
+    SELECT STK_CODE AS STK_ID,
+           STK_CODE || ' - ' || STK_DESC AS STK_DESC
+    FROM SYS0026M
+    WHERE STK_TYPE_ID = '61'
+      AND STUS_CODE_ID NOT IN (8, 7)
+    ORDER BY STK_CODE
+  </select>
+
+  <select id="selectAsCrtStat"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_CRTSTAT'
+      AND DISB = 0
+      AND CODE in ('1','4')
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectTimePick"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'TIME_PICK'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <insert id="insertSVC0122D" parameterType="Map">
+    INSERT INTO SVC0122D ( TEST_UP_ID,
+                           TEST_UP_NO,
+                           TEST_UP_STUS,
+                           TEST_UP_REM,
+                           TEST_UP_GNE,
+                           TEST_MNF_DT,
+                           TEST_UP_SETL_DT,
+                           TEST_UP_SETL_TM,
+                           TEST_YN,
+                           TEST_UP_CT,
+                           ASR_ITM_ID,
+                           TEST_AS_DEFECT_PART_ID,
+                           TEST_AS_DEFECT_DTL_RESN_ID,
+                           TEST_AS_DEFECT_ID,
+                           TEST_AS_DEFECT_TYPE_ID,
+                           TEST_AS_SLUTN_RESN_ID,
+                           AS_NO,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           UPD_USER_ID,
+                           UPD_DT
+    ) VALUES ( #{TEST_UP_ID},
+               #{TEST_UP_NO},
+               #{TEST_UP_STUS},
+               #{TEST_UP_REM},
+               #{TEST_UP_GNE},
+               TO_DATE(#{TEST_MNF_DT}, 'DD/MM/YYYY'),
+               TO_DATE(#{TEST_UP_SETL_DT}, 'DD/MM/YYYY'),
+               #{TEST_UP_SETL_TM},
+               #{TEST_YN},
+               #{TEST_UP_CT},
+               #{ASR_ITM_ID},
+               #{TEST_AS_DEFECT_PART_ID},
+               #{TEST_AS_DEFECT_DTL_RESN_ID},
+               #{TEST_AS_DEFECT_ID},
+               #{TEST_AS_DEFECT_TYPE_ID},
+               #{TEST_AS_SLUTN_RESN_ID},
+               #{AS_NO},
+               #{updator},
+               SYSDATE,
+               #{updator},
+               SYSDATE
+    )
+  </insert>
+
+  <update id="updateSVC0122D"  parameterType="Map">
+    UPDATE SVC0122D
+        SET TEST_UP_STUS = #{TEST_UP_STUS},
+              TEST_UP_REM = #{TEST_UP_REM},
+              TEST_UP_GNE = #{TEST_UP_GNE},
+              TEST_MNF_DT = TO_DATE(#{TEST_MNF_DT}, 'DD/MM/YYYY'),
+              TEST_UP_SETL_DT = TO_DATE(#{TEST_UP_SETL_DT}, 'DD/MM/YYYY'),
+              TEST_UP_SETL_TM = #{TEST_UP_SETL_TM},
+              TEST_YN = #{TEST_YN},
+              TEST_UP_CT = #{TEST_UP_CT},
+              TEST_AS_DEFECT_PART_ID = #{TEST_AS_DEFECT_PART_ID},
+              TEST_AS_DEFECT_DTL_RESN_ID = #{TEST_AS_DEFECT_DTL_RESN_ID},
+              TEST_AS_DEFECT_ID = #{TEST_AS_DEFECT_ID},
+              TEST_AS_DEFECT_TYPE_ID = #{TEST_AS_DEFECT_TYPE_ID},
+              TEST_AS_SLUTN_RESN_ID = #{TEST_AS_SLUTN_RESN_ID},
+              UPD_USER_ID   = #{updator},
+              UPD_DT = SYSDATE
+        WHERE TEST_UP_ID = #{TEST_UP_ID}
+    </update>
+
+    <insert id="insertSVC0122D_notTested"  parameterType="Map">
+        INSERT INTO SVC0122D ( TEST_UP_ID,
+                           TEST_UP_NO,
+                           TEST_YN,
+                           AS_NO,
+                           ASR_ITM_ID,
+                           CRT_USER_ID,
+                           CRT_DT,
+                           UPD_USER_ID,
+                           UPD_DT
+    ) VALUES ( #{TEST_UP_ID},
+               #{TEST_UP_NO},
+               'N',
+               #{asNo},
+               #{asrItmId},
+               #{updator},
+               SYSDATE,
+               #{updator},
+               SYSDATE )
+    </insert>
+
+    <select id="selectCTList" parameterType="Map" resultType="egovMap">
+        SELECT A.MEM_CODE CODE_ID,
+           A.MEM_CODE || '-' || A.NAME CODE_NAME
+        FROM ORG0001D A,
+         SYS0005M B
+        WHERE A.BRNCH = B.BRNCH_ID
+            AND B.TYPE_ID = '43'
+            AND A.STUS = '1'
+            AND A.MEM_TYPE = '3'
+        ORDER BY CODE_ID
+    </select>
+
+    <select id="getSpareFilterList" parameterType="Map" resultType="egovMap">
+        SELECT
+             m2.STK_ID AS CODE_ID,
+             INITCAP(TRIM(STK_DESC)) || ' - ' || TRIM(sm.CODE_NAME)  as CODE_NAME
+        FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
+              WHERE m.BOM  = d.BOM
+              AND d.BOM_COMPNT = m2.STK_CODE
+              AND sm.CODE_ID = m2.STK_TYPE_ID
+              AND NVL(d.DEL_INDICT , 'N')  <![CDATA[<>]]> 'Y'
+              AND UPPER(m.MATRL_NO) = UPPER(#{groupCode})
+        ORDER BY m.BOM, d.BOM_ITM_NODE_NO
+    </select>
+
+  </mapper>

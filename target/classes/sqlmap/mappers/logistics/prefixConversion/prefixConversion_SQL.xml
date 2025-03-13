@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.logistics.prefixConversion.impl.prefixConversionMapper">
+	<select id="searchPrefixConfigList" parameterType="Map"
+		resultType="egovMap">
+		/*
+		[com.coway.trust.biz.logistics.prefixConversion.impl.prefixConversionMapper.searchPrefixConfigList]
+		- TOMMY */
+		SELECT
+		A.PREFIX_CONFIG_ID,
+		A.PREFIX_STK_ID,
+		B.STK_CODE AS PREFIX_STK_CODE,
+		B.STK_DESC AS PREFIX_STK_DESC,
+		A.PREFIX_CONV_STK_ID,
+		C.STK_CODE AS PREFIX_CONV_STK_CODE,
+		C.STK_DESC AS PREFIX_CONV_STK_DESC,
+		A.USE_YN,
+		A.CRT_USER_ID,
+		D.USER_NAME AS CRT_USER,
+		TO_CHAR(A.CRT_DT,'DD/MM/YYYY') CRT_DT
+		FROM LOG0205M A
+		LEFT JOIN SYS0026M B ON A.PREFIX_STK_ID = B.STK_ID
+		LEFT JOIN SYS0026M C ON A.PREFIX_CONV_STK_ID = C.STK_ID
+		LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
+		WHERE 1=1
+		<if test='prefixProdId != null and prefixProdId != ""'>
+			AND B.STK_ID = #{prefixProdId}
+		</if>
+		<if test='prefixConvProdId != null and prefixConvProdId != ""'>
+			AND C.STK_ID = #{prefixConvProdId}
+		</if>
+
+		ORDER BY A.PREFIX_CONFIG_ID DESC
+	</select>
+
+	<insert id="addPrefixConfig" parameterType="Map">
+		/*
+		[com.coway.trust.biz.logistics.prefixConversion.impl.prefixConversionMapper.addPrefixConfig]
+		- TOMMY */
+		INSERT INTO LOG0205M (
+		PREFIX_CONFIG_ID,
+		PREFIX_STK_ID,
+		PREFIX_CONV_STK_ID,
+		USE_YN,
+		CRT_DT,
+		CRT_USER_ID,
+		UPD_DT,
+		UPD_USER_ID
+		)
+		VALUES (
+		LOG0205M_PREFIX_CONFIG_ID.NEXTVAL,
+		#{prefixProdId},
+		#{prefixConvProdId},
+		#{useYn},
+		SYSDATE,
+		#{crtUserId},
+		SYSDATE,
+		#{updUserId}
+		)
+	</insert>
+
+	<update id="updatePrefixConfig" parameterType="Map">
+		/*
+		[com.coway.trust.biz.logistics.prefixConversion.impl.prefixConversionMapper.updatePrefixConfig]
+		- TOMMY */
+		UPDATE LOG0205M
+		SET
+		PREFIX_STK_ID = #{prefixProdId},
+		PREFIX_CONV_STK_ID = #{prefixConvProdId},
+		USE_YN = #{useYn},
+		UPD_DT = SYSDATE,
+		UPD_USER_ID = #{updUserId}
+		WHERE
+		PREFIX_CONFIG_ID = #{prefixConfigId}
+	</update>
+
+	<select id="selectPrefixConversionByProdId" parameterType="Map"
+		resultType="String">
+		/*
+		[com.coway.trust.biz.logistics.prefixConversion.impl.prefixConversionMapper.selectPrefixConversionByProdId]
+		- TOMMY */
+		SELECT
+		A.PREFIX_CONFIG_ID
+		FROM LOG0205M A
+		WHERE 1=1
+		<if test='useYn != null and useYn != ""'>
+			AND A.USE_YN = #{useYn}
+		</if>
+		<if test='prefixProdId != null and prefixProdId != ""'>
+			AND A.PREFIX_STK_ID = #{prefixProdId}
+		</if>
+		<if test='prefixConvProdId != null and prefixConvProdId != ""'>
+			AND A.PREFIX_CONV_STK_ID = #{prefixConvProdId}
+		</if>
+		ORDER BY A.PREFIX_CONFIG_ID DESC
+	</select>
+
+	<select id="selectPrefixConfigInfo" parameterType="Map"
+		resultType="egovMap">
+		SELECT
+		A.PREFIX_CONFIG_ID,
+		A.PREFIX_STK_ID,
+		B.STK_CODE AS PREFIX_STK_CODE,
+		B.STK_DESC AS PREFIX_STK_DESC,
+		A.PREFIX_CONV_STK_ID,
+		C.STK_CODE AS PREFIX_CONV_STK_CODE,
+		C.STK_DESC AS PREFIX_CONV_STK_DESC,
+		A.USE_YN,
+		A.CRT_USER_ID,
+		D.USER_NAME AS CRT_USER,
+		TO_CHAR(A.CRT_DT,'DD/MM/YYYY') CRT_DT
+		FROM LOG0205M A
+		LEFT JOIN SYS0026M B ON A.PREFIX_STK_ID = B.STK_ID
+		LEFT JOIN SYS0026M C ON A.PREFIX_CONV_STK_ID = C.STK_ID
+		LEFT JOIN SYS0047M D ON A.CRT_USER_ID = D.USER_ID
+		WHERE 1=1 AND
+		A.PREFIX_CONFIG_ID = #{prefixConfigId}
+		ORDER BY A.PREFIX_CONFIG_ID DESC
+	</select>
+
+</mapper>

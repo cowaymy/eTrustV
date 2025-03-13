@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.msales.impl.OrderCustAddrApiMapper">
+
+    <select id="orderCustAddressList" parameterType="Map" resultType="egovMap">
+            SELECT 
+                        project1.CUST_ADD_ID,
+                        project1.CUST_ID,
+                        project1.AREA_ID,
+                        project1.ADDR_DTL,
+                        project1.ADDR,
+                        project1.STREET, 
+                        project1.AREA, 
+                        project1.POST_CODE, 
+                        project1.CITY, 
+                        project1.STATE,
+                        project1.COUNTRY,
+                        project1.MAIN_YN,
+                        project1.STUS_CODE_ID
+                    FROM 
+                        (SELECT Extent1.CUST_ADD_ID   ,
+	                                Extent1.CUST_ID   ,
+	                                Extent1.AREA_ID,
+	                                Extent1.ADDR_DTL,
+	                                CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
+	                                NVL(Extent1.STREET, '') ||' '|| Extent5.AREA ||' '|| Extent5.POSTCODE ||' '|| Extent5.CITY ||' '|| Extent5.STATE ||' '|| Extent5.COUNTRY AS ADDR,
+	                                Extent1.STREET, Extent5.AREA, Extent5.POSTCODE as POST_CODE, Extent5.CITY, Extent5.STATE,
+	                                Extent5.COUNTRY,
+	                                DECODE(Extent1.STUS_CODE_ID, '9', 'Y','N') as MAIN_YN,
+	                                CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  
+                            FROM SAL0023D Extent1
+                               JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID                               
+                               LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                               LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
+                           WHERE 8 <![CDATA[<>]]> Extent1.STUS_CODE_ID 
+	                        <if test="customerId != null and customerId !=''">
+	                            AND Extent1.CUST_ID = #{customerId}
+	                        </if>
+                        ) project1
+                   ORDER BY project1.STUS_CODE_ID DESC
+    </select>
+</mapper>

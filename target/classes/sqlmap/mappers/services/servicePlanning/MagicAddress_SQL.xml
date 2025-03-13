@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.servicePlanning.impl.MagicAddressMapper">
+
+    <!-- Search Magic Address -->
+    <select id="selectMagicAddress" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.services.servicePlanning.impl.MagicAddressMapper.selectMagicAddress */
+        SELECT A.AREA_ID
+                 , A.AREA
+                 , A.CITY
+                 , A.POSTCODE
+                 , A.STATE
+                 , A.CODY_BRNCH_CODE
+                 , A.CODY_MANGR_USER_ID
+                 , A.CT_BRNCH_CODE
+                 , A.CT_SUB_GRP
+                 , A.SO_BRNCH_CODE
+                 , A.HT_CODE
+                 , A.DT_BRNCH_CODE
+                 , A.DT_SUB_GRP
+                 , CASE WHEN A.AREA_ID IN (SELECT AREA_ID FROM SYS0064M
+                                                        WHERE CODY_BRNCH_CODE IS NULL
+                                                              OR CT_BRNCH_CODE IS NULL
+                                                              OR DT_BRNCH_CODE IS NULL
+                                                              ) THEN 'Active'
+                   ELSE 'Complete'
+                   END AS STATUS
+
+        FROM SYS0064M A
+        <where>
+	        <if test="area != null and area != ''">
+	            AND UPPER(A.AREA) LIKE UPPER('%'||#{area}||'%')
+	        </if>
+	        <if test="areaID != null and areaID != ''">
+	            AND REPLACE(A.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
+	        </if>
+	        <if test="postcode != null and postcode != ''">
+                AND A.POSTCODE = #{postcode}
+            </if>
+	        <if test="city != null and city != ''">
+	            AND UPPER(A.CITY) LIKE UPPER('%'||#{city}||'%')
+	        </if>
+	        <if test="state != null and state != ''">
+	            AND A.STATE = #{state}
+	        </if>
+	        <if test="codyBranch != null and codyBranch != ''">
+	            AND A.CODY_BRNCH_CODE = #{codyBranch}
+	        </if>
+	        <if test="ctBranch != null and ctBranch != ''">
+	            AND A.CT_BRNCH_CODE = #{ctBranch}
+	        </if>
+	        <if test="soBranch != null and soBranch != ''">
+	            AND A.SO_BRNCH_CODE = #{soBranch}
+	        </if>
+	        <if test="hdcBranch != null and hdcBranch != ''">
+                AND A.DT_BRNCH_CODE = #{hdcBranch}
+            </if>
+	        <if test="status != null and status != ''">
+	            <if test=" status == 'Active' ">
+	                AND (CODY_BRNCH_CODE IS NULL OR CT_BRNCH_CODE IS NULL OR DT_BRNCH_CODE IS NULL)
+	            </if>
+	            <if test=" status == 'Complete' ">
+	                AND (CODY_BRNCH_CODE IS NOT NULL AND CT_BRNCH_CODE IS NOT NULL AND DT_BRNCH_CODE IS NOT NULL)
+	            </if>
+	        </if>
+            <if test="htCode != null and htCode != ''">
+	            AND UPPER(A.HT_CODE) LIKE UPPER('%'||#{htCode}||'%')
+	        </if>
+        </where>
+    </select>
+
+</mapper>

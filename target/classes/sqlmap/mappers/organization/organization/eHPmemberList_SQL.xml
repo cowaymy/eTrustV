@@ -1,0 +1,1442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.eHPmemberListMapper">
+
+    <select id="getDocNo" parameterType="Map" resultType="egovMap">
+        select FN_GET_DOCNO(#{docNo})  doc_No  , #{docNo} as doc_No_Id FROM DUAL
+    </select>
+
+        <select id="selectDocNo" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+
+     <update id="updateDocNo" parameterType="Map">
+     <![CDATA[
+        UPDATE SYS0022C
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
+        ]]>
+    </update>
+
+        <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+       <select id="selectAttachList" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+                   ,T2.FILE_KEY_SEQ
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T2.FILE_KEY_SEQ
+    </select>
+
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+     <select id="selectEHPMemberList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+           SELECT row_number,
+            Project1.MEM_ID MemberID,
+            Project1.MEM_TYPE  MemberType,
+            Project1.MEM_CODE MemberCode,
+            Project1.CODE_NAME CodeName,
+            Project1.NAME Name,
+            Project1.NRIC NRIC,
+            Project1.status_name,
+            Project1.UPD_DT Updated,
+            Project1.STUS Status,
+
+            /*By KV - Position*/
+            Project1.position_name,
+            Project1.brnch_id,
+            Project1.ct_sub_grp,
+
+
+            Project1.C1 C1,
+            project1.TRAINEE_TYPE,
+            project1.TEST_RESULT,
+            project1.approved_by,
+            project1.branch,
+            project1.CRT_DT,
+            project1.ADDRESS,
+            project1.GRP_CODE,
+            project1.COLLCT_BRNCH,
+            project1.FAIL_RESN_ID ,
+            project1.RESN_DESC,
+            project1.REM,
+            Project1.CRT_USR_ID ,
+            '0' as COLLCT_BRNCH ,
+            '0' as ATCH_FILE_GRP_ID
+            FROM ( SELECT Project1.C1 C1,
+                     Project1.MEM_ID MEM_ID,
+                     Project1.MEM_CODE MEM_CODE,
+                     Project1.MEM_TYPE MEM_TYPE,
+                     Project1.NAME NAME,
+                     Project1.NRIC NRIC,
+                     Project1.STUS STUS,
+                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
+                     Project1.CODE_NAME CODE_NAME,
+                     Project1.status_name,
+
+                     /*By KV*/
+                     Project1.position_name,
+                     Project1.brnch_id,
+                    Project1.ct_sub_grp,
+                    project1.TRAINEE_TYPE,
+                    project1.TEST_RESULT,
+                    project1.approved_by,
+                    project1.branch,
+                    TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT,
+                    project1.ADDRESS,
+                    project1.GRP_CODE,
+                    project1.COLLCT_BRNCH,
+                    project1.FAIL_RESN_ID ,
+                    project1.RESN_DESC,
+                    project1.REM,
+                    Project1.CRT_USR_ID,
+                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+
+                     FROM ( SELECT DISTINCT
+                    GroupBy1.A1 C1,
+                    Extent1.MEM_ID MEM_ID,
+                    Extent1.MEM_CODE MEM_CODE,
+                    Extent1.MEM_TYPE MEM_TYPE,
+                    Extent1.NAME NAME,
+                    Extent1.NRIC NRIC,
+                    Extent1.STUS STUS,
+                    Extent1.UPD_DT UPD_DT,
+                    Extent2.CODE_NAME CODE_NAME,
+                    Extent3.NAME as status_name,
+                    Extent1.brnch as brnch_id,
+                    Extent5.ct_sub_grp,
+                    extent1.TRAINEE_TYPE,
+                    /*By KV*/
+                    Extend6.MEM_ORG_DESC position_name,
+                    CASE
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
+                        THEN 'Pass'
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'F' )
+                        THEN 'Fail'
+                        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
+                        THEN 'Absent'
+                    ELSE ''
+                    END TEST_RESULT,
+                    Extent9.USER_NAME as approved_by,
+                    Extent10.CODE as branch,
+                    Extent1.CRT_DT,
+                    CASE WHEN (Extent1.AREA_ID IS NOT NULL OR Extent1.ADDR_DTL IS NOT NULL) THEN
+                            (Extent1.ADDR_DTL || ' ' ||
+                            CASE WHEN Extent1.STREET IS NOT NULL THEN Extent1.STREET || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.AREA IS NOT NULL THEN Extent11.AREA || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.POSTCODE IS NOT NULL THEN  Extent11.POSTCODE || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.CITY IS NOT NULL THEN  Extent11.CITY || ', ' ELSE '' END ||
+                            CASE WHEN Extent11.STATE IS NOT NULL THEN  Extent11.STATE || ', ' ELSE '' END ||
+                            Extent11.COUNTRY)
+                        ELSE Extent1.ADDR1 || ', ' || Extent1.ADDR2 || ', ' ||
+                            (CASE WHEN Extent1.ADDR3 IS NULL THEN '' ELSE Extent1.ADDR3 || ', ' END) ||
+                            (CASE WHEN Extent1.ADDR4 IS NULL THEN '' ELSE Extent1.ADDR4 || ', ' END) ||
+                            Extent1.POSTCODE || ' ' ||Extent15.AREA_NAME || ', ' || Extent14.NAME || ', ' || Extent13.NAME
+                        END
+                    as ADDRESS,
+                    Extent12.GRP_CODE ,
+                    Extent1.COLLCT_BRNCH ,
+                    Extent16.FAIL_RESN_ID ,
+                    Extent17.RESN_DESC,
+                    Extent16.REM,
+                     Extent1.CRT_USER_ID ,
+                    Extent18.USER_NAME CRT_USR_ID
+
+                    FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
+                    INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
+                    INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode   eg.active, not active*/
+
+                     /* By KV - add Position*/
+                    LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
+                    LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+                    LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
+                    LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
+                    LEFT JOIN SYS0064M Extent11 ON Extent1.AREA_ID = Extent11.AREA_ID
+                    LEFT JOIN ORG1001V Extent12 ON Extent1.MEM_ID = Extent12.MEM_ID
+                    LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
+                    LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
+                    LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
+                    LEFT JOIN ORG0031D Extent16 ON Extent1.MEM_ID = Extent16.MEM_ID
+                    LEFT JOIN SYS0032M Extent17 ON Extent16.FAIL_RESN_ID = Extent17.RESN_ID
+                    LEFT JOIN SYS0047M Extent18 ON Extent1.CRT_USER_ID = Extent7.USER_ID
+
+                    CROSS JOIN  (SELECT
+                        COUNT(1) A1
+                        FROM ORG0001D Extent4,
+                        ORG0005D Extent7
+
+                         WHERE 1=1
+                         ]]>
+                         <if test="memTypeCom != null and memTypeCom != ''">
+                           AND  Extent4.MEM_TYPE =  #{memTypeCom}
+                         </if>
+                         <if test="code != null and code != ''">
+                           AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
+                         </if>
+                         <if test="name != null and name != ''">
+                           AND  UPPER(Extent4.NAME) LIKE UPPER('%' || #{name} || '%')
+                         </if>
+                         <if test="icNum != null and icNum != ''">
+                           AND  Extent4.NRIC LIKE   '%' || #{icNum} || '%'
+                         </if>
+                         <if test="birth != null and birth != ''">
+                           AND Extent4.DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
+                         </if>
+                         <if test="nation != null and nation != ''">
+                           AND  Extent4.NATION =  #{nation}
+                         </if>
+                         <if test="race != null and race != ''">
+                           AND  Extent4.RACE =  #{race}
+                         </if>
+                         <if test="status != null and status != ''">
+                           AND  Extent4.STUS =  #{status}
+                         </if>
+                         <if test="keyUser != null and keyUser != ''">
+                           AND  Extent4.CRT_USER_ID =  #{keyUser}
+                         </if>
+                         <if test="keyBranch != null and keyBranch != ''">
+                           AND  Extent4.BRNCH =  #{keyBranch}
+                         </if>
+
+                         <if test="createDate != '' and endDate != '' ">
+                            <![CDATA[  AND TO_DATE(Extent4.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                         </if>
+                         <if test="contact != null and contact != ''">
+                            AND (( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
+                         </if>
+
+                         /* By KV - Position */
+                         <if test="position != null and position != ' ' ">
+                            AND Extent7.MEM_LVL= #{position}
+                         </if>
+                         <if test="code == null or code == ''">
+                            <choose>
+                                    <when test="memberLevel == 1">
+                                        AND Extent7.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                    </when>
+                                    <when test="memberLevel == 2">
+                                        AND Extent7.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
+                                    </when>
+                                    <when test="memberLevel == 3">
+                                        AND Extent7.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                    </when>
+                                    <when test="memberLevel == 4">
+                                        AND Extent4.MEM_CODE = #{userName}
+                                    </when>
+                            </choose>
+                         </if>
+                        )  GroupBy1
+                        LEFT JOIN (  SELECT *
+                                          FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
+                                                                             ORDER BY COURS_ITM_ID DESC) ITM_ROWS
+                                                FROM MSC0009D A)
+                                          WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+
+                        WHERE 1=1
+
+                        <if test="memTypeCom != null and memTypeCom != ''">
+                          AND   Extent1.MEM_TYPE =  #{memTypeCom}
+                         </if>
+                         <if test="code != null and code != ''">
+                           AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
+                         </if>
+                         <if test="name != null and name != ''">
+                           AND  UPPER(Extent1.NAME) LIKE UPPER('%' || #{name} || '%')
+                         </if>
+                         <if test="icNum != null and icNum != ''">
+                           AND  Extent1.NRIC LIKE   '%' || #{icNum} || '%'
+                         </if>
+                         <if test="birth != null and birth != ''">
+                           AND Extent1.DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
+                         </if>
+                          <if test="nation != null and nation != ''">
+                           AND  Extent1.NATION =  #{nation}
+                         </if>
+                         <if test="race != null and race != ''">
+                           AND Extent1.RACE =  #{race}
+                         </if>
+                         <if test="status != null and status != ''">
+                           AND  Extent1.STUS =  #{status}
+                         </if>
+                         <if test="keyUser != null and keyUser != ''">
+                           AND  Extent1.CRT_USER_ID =  #{keyUser}
+                         </if>
+                         <if test="keyBranch != null and keyBranch != ''">
+                           AND  TO_NUMBER(Extent1.BRNCH,99999.99) =  #{keyBranch}
+                         </if>
+
+                          <if test="collectionBrnch != null and collectionBrnch != ''">
+                           AND  TO_NUMBER(Extent1.COLLCT_BRNCH,99999.99) =  #{collectionBrnch}
+                         </if>
+
+                          <if test="createDate != '' and endDate != '' ">
+                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                         </if>
+                          <if test="contact != null and contact != ''">
+                            AND  ((Extent1.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.TEL_MOBILE = #{contact} OR Extent1.TEL_HUSE = #{contact} OR Extent1.TEL_OFFICE = #{contact})
+                         </if>
+
+                           /*By KV - Position*/
+                          <if test="position != null and position != ''">
+                            AND Extent5.MEM_LVL= #{position}
+                         </if>
+
+                        <choose>
+                                <when test="memberLevel == 1">
+<!--                                     AND Extent5.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} ) -->
+                                            AND extent12.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                </when>
+                                <when test="memberLevel == 2">
+<!--                                     AND Extent5.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} ) -->
+                                            AND extent12.GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
+                                </when>
+                                <when test="memberLevel == 3">
+<!--                                     AND Extent5.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} ) -->
+                                      AND extent12.DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                </when>
+                                <when test="memberLevel == 4">
+                                    <if test="code == null or code == ''">
+                                    AND Extent1.MEM_CODE = #{userName}
+                                    </if>
+                                </when>
+                        </choose>
+                  <![CDATA[
+                )   Project1
+            )  Project1
+            WHERE Project1.row_number >  0
+            ORDER BY Project1.MEM_CODE ASC
+             ]]>
+    </select>
+
+
+<!-- select EHP Applicant -->
+<select id="selectEHPApplicantList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT
+            row_number,
+            Project1.MEM_ID MemberID,
+            Project1.MEM_TYPE  MemberType,
+            Project1.MEM_CODE MemberCode,
+            Project1.CODE_NAME CodeName,
+            Project1.NAME Name,
+            Project1.NRIC NRIC,
+            Project1.status_name,
+            Project1.UPD_DT Updated,
+            Project1.STUS Status,
+            Project1.EXTEND1_CDATE KeyInDate, /*webster lee 07072020 -added new column call key-in-At -----------------------*/
+            Project1.position_name,
+            Project1.brnch_id,
+            Project1.ct_sub_grp,
+            Project1.C1 C1,
+            Project1.COLLCT_BRNCH ,
+            Project1.FAIL_RESN_ID ,
+            Project1.RESN_DESC,
+            Project1.REM,
+            Project1.CRT_USR_ID,
+            Project1.ATCH_FILE_GRP_ID ,
+            Project1.DEPT_CODE ,
+            Project1.STUS_UPD_ID,
+            Project1.HP_CODE,
+            Project1.BRNCH_CODE,
+            Project1.APPROVED_BY,
+            Project1.CRT_DT
+        FROM (
+            SELECT
+                Project1.C1 C1,
+                Project1.MEM_ID MEM_ID,
+                Project1.MEM_CODE MEM_CODE,
+                Project1.MEM_TYPE MEM_TYPE,
+                Project1.NAME NAME,
+                Project1.NRIC NRIC,
+                Project1.STUS STUS,
+                TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY HH:MI AM') UPD_DT,
+                Project1.CODE_NAME CODE_NAME,
+                Project1.status_name,
+                Project1.position_name,
+                Project1.brnch_id,
+                Project1.ct_sub_grp,
+                Project1.COLLCT_BRNCH ,
+                Project1.FAIL_RESN_ID ,
+                Project1.RESN_DESC,
+                Project1.REM,
+                Project1.CRT_USR_ID,
+                Project1.ATCH_FILE_GRP_ID,
+                Project1.DEPT_CODE ,
+                Project1.STUS_UPD_ID ,
+                Project1.HP_CODE,
+                Project1.BRNCH_CODE,
+                Project1.APPROVED_BY,
+                Project1.EXTEND1_CDATE, /*webster lee 07072020 - added new column call key-in-At -----------------------*/
+                TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
+                row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+            FROM (
+                SELECT
+                    '' C1,
+                    Extent1.APLCTN_ID MEM_ID,
+                    Extent1.APLICNT_CODE MEM_CODE,
+                    Extent1.APLICNT_TYPE MEM_TYPE,
+                    Extent1.APLICNT_NAME NAME,
+                    Extent1.APLICNT_NRIC NRIC,
+                    Extent1.STUS_ID STUS,
+                    Extent1.UPD_DT UPD_DT,
+                    Extent2.CODE_NAME CODE_NAME,
+                    Extent3.NAME as status_name,
+                    '' as brnch_id,
+                    '' ct_sub_grp,
+                    '' position_name,
+                    Extent4.LAST_GRP_CODE GRP_CODE,
+                    Extent4.LAST_ORG_CODE ORG_CODE,
+                    Extent1.COLLCT_BRNCH ,
+                    Extent5.FAIL_RESN_ID ,
+                    Extent6.RESN_DESC,
+                    Extent5.REM,
+                    Extent1.CRT_USER_ID ,
+                    Extent18.USER_NAME CRT_USR_ID,
+                    Extent1.ATCH_FILE_GRP_ID ,
+                    Extent1.DEPT_CODE ,
+                    CASE WHEN Extent1.STUS_ID = 5 THEN Extent22.USER_NAME ELSE Extent19.USER_NAME END STUS_UPD_ID,
+                    Extent20.MEM_CODE HP_CODE ,
+                    Extent21.CODE || ' - ' || Extent21.NAME  BRNCH_CODE ,
+                    Extent22.USER_NAME APPROVED_BY ,
+                    Extent20.CRT_DT,
+                    TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY HH:MI AM') EXTEND1_CDATE /*webster lee 07072020 - added new column call key-in-At -----------------------*/
+                    FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
+                    INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
+                    INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
+                    LEFT JOIN ORG0005D Extent4 ON Extent1.DEPT_CODE = Extent4.DEPT_CODE AND Extent4.MEM_LVL = '3'
+                    /*LEFT JOIN ORG0031D Extent5 ON Extent1.APLCTN_ID = Extent5.MEM_ID*/
+
+                        LEFT JOIN (SELECT * FROM (
+                    SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SEQ DESC) ITM_ROWS
+                    FROM ORG0031D B
+                     )
+                    WHERE ITM_ROWS = 1
+                    ) Extent5 ON Extent1.APLCTN_ID = Extent5.MEM_ID
+
+
+
+                    LEFT JOIN SYS0032M Extent6 ON Extent5.FAIL_RESN_ID = Extent6.RESN_ID
+                    LEFT JOIN SYS0047M Extent18 ON Extent1.CRT_USER_ID = Extent18.USER_ID
+                    LEFT JOIN SYS0047M Extent19 ON Extent5.CRT_USER_ID = Extent19.USER_ID
+                    LEFT JOIN ORG0001D Extent20 ON Extent20.APLICNT_ID = Extent1.APLCTN_ID
+                    LEFT JOIN SYS0005M Extent21 ON Extent1.COLLCT_BRNCH = Extent21.BRNCH_ID
+                    LEFT JOIN SYS0047M Extent22 ON Extent20.CRT_USER_ID = Extent22.USER_ID
+    ]]>
+                    WHERE 1=1
+                        AND Extent1.APLICNT_TYPE IN ('1','2803')
+                        <if test="eHPcode != null and eHPcode != ''">
+                            AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{eHPcode} || '%')
+                        </if>
+                        <if test="eHPname != null and eHPname != ''">
+                            AND  UPPER(Extent1.APLICNT_NAME) LIKE UPPER('%' || #{eHPname} || '%')
+                        </if>
+                        <if test="eHPicNum != null and eHPicNum != ''">
+                            AND  Extent1.APLICNT_NRIC LIKE   '%' || #{eHPicNum} || '%'
+                        </if>
+                        <if test="eHPstatus != null and eHPstatus != ''">
+                            AND  Extent1.STUS_ID =  #{eHPstatus}
+                        </if>
+                        <if test="eHPcreateDate != '' and eHPendDate == '' ">
+                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHPcreateDate}, 'DD/MM/YYYY') ]]>
+                        </if>
+                        <if test="eHPendDate != '' and eHPcreateDate == '' ">
+                            <![CDATA[  AND TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD')   <=  TO_DATE(#{eHPendDate}, 'DD/MM/YYYY') ]]>
+                        </if>
+                        <if test="eHPcreateDate != '' and eHPendDate != '' ">
+                            <![CDATA[  AND trunc(Extent1.CRT_DT) >= TO_DATE(#{eHPcreateDate}, 'DD/MM/YYYY') and trunc(Extent1.CRT_DT) <= TO_DATE(#{eHPendDate}, 'DD/MM/YYYY') ]]>
+                        </if>
+                        <if test="eHPcontact != null and eHPcontact != ''">
+                            AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{eHPcontact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{eHPcontact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{eHPcontact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{eHPcontact} OR Extent1.APLICNT_TEL_HUSE = #{eHPcontact} OR Extent1.APLICNT_TEL_OFFICE = #{eHPcontact})
+                        </if>
+                        <if test="eHPcollectionBrnch != null and eHPcollectionBrnch != ''">
+                           AND  TO_NUMBER(Extent1.COLLCT_BRNCH,99999.99) =  #{eHPcollectionBrnch}
+                        </if>
+                        <if test = 'memberLevel == "3" '>
+                            <if test="deptCodeHd != null and deptCodeHd != ''">
+                                AND Extent1.DEPT_CODE = #{deptCodeHd}
+                            </if>
+                        </if>
+                        <if test = 'memberLevel == "2" '>
+                            <if test="grpCodeHd != null and grpCodeHd != ''">
+                                AND Extent4.LAST_GRP_CODE = #{grpCodeHd}
+                            </if>
+                        </if>
+                        <if test = 'memberLevel == "1" '>
+                            <if test="orgCodeHd != null and orgCodeHd != ''">
+                                AND Extent4.LAST_ORG_CODE = #{orgCodeHd}
+                            </if>
+                        </if>
+                         <!--websterLee 7/7/2020 - add new filter called approved date-->
+                        <if test = 'eHApprovedDateFrom !="" and eHApprovedDateFrom !=null' >
+                            <if test = 'eHApprovedDateTo !="" and eHApprovedDateTo !=null '>
+	                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHApprovedDateFrom}, 'DD/MM/YYYY') ]]>
+	                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY')  ]]>
+                            </if>
+                        </if >
+            <![CDATA[
+                ) Project1
+            ) Project1
+            WHERE Project1.row_number >  0
+            ORDER BY Project1.MEM_CODE ASC
+            ]]>
+    </select>
+
+      <insert id="insertEHPMemApp" parameterType="Map">
+      INSERT INTO ORG0003D (
+         APLCTN_ID
+       , APLICNT_CODE
+       , APLICNT_TYPE
+       , APLICNT_NAME
+       , APLICNT_FULL_NAME
+       , APLICNT_IDNTFC
+       , APLICNT_NRIC
+       , APLICNT_DOB
+       , APLICNT_GENDER
+       , APLICNT_RACE
+       , APLICNT_MARTL
+       , APLICNT_NATION
+       , APLICNT_TEL_OFFICE
+       , APLICNT_TEL_HUSE
+       , APLICNT_TEL_MOBILE
+       , APLICNT_EMAIL
+       , APLICNT_SPOUSE_CODE
+       , APLICNT_SPOUSE_NAME
+       , APLICNT_SPOUSE_NRIC
+       , APLICNT_SPOUSE_OCPAT
+       , APLICNT_SPOUSE_TEL_CNTC
+       , APLICNT_SPOUSE_DOB
+       , APLICNT_EDU_LEV
+       , APLICNT_LANG
+       , APLICNT_BANK_ID
+       , APLICNT_BANK_ACC_NO
+       , APLICNT_SPONS_CODE
+       , APLICNT_TRNSPRT
+       , REM, STUS_ID
+       , CRT_DT
+       , CRT_USER_ID
+       , UPD_DT
+       , UPD_USER_ID
+       , CNFM
+       , CNFM_DT
+       , DEPT_CODE
+       , AREA_ID
+       , ADDR_DTL
+       , STREET
+       , MAIN_DEPT
+       , SUB_DEPT
+       , APLICNT_MEETPOINT
+       , COLLCT_BRNCH
+       , ATCH_FILE_GRP_ID
+       , COURS_ID
+       , APLICNT_INC_TAX
+       , APLICNT_REG_OPT
+       )
+      VALUES (
+      ORG0003D_APLCTN_ID_SEQ.NEXTVAL
+        , #{applicantCode}
+      , #{applicantType}
+      , UPPER(#{applicantName})
+      , UPPER(#{applicantFullName})
+      , #{applicantIdentification}
+      , #{applicantNRIC}
+      , TO_DATE(#{applicantDOB},'dd-mm-yyyy')
+      , #{applicantGender}
+      , #{applicantRace}
+      , #{applicantMarital}
+      , #{applicantNationality}
+      , #{applicantTelOffice}
+      , #{applicantTelHouse}
+      , #{applicantTelMobile}
+      , #{applicantEmail}
+      , #{applicantSpouseCode}
+      , #{applicantSpouseName}
+      , #{applicantSpouseNRIC}
+      , #{applicantSpouseOccupation}
+      , #{applicantSpouseTelContact}
+      ,TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy')
+      , #{applicantEduLevel}
+      , #{applicantLanguage}
+      , #{applicantBankID}
+      , #{applicantBankAccNo}
+      , #{applicantSponsorCode}
+      , #{applicantTransport}
+      , #{remark}
+      , #{statusId}
+      , SYSDATE
+      , #{creator}
+      , SYSDATE
+      , #{updator}
+      , #{confirmation}
+      , TO_DATE(#{confirmDate},'DD-MM-YYYY')
+      , #{deptCode}
+      , #{areaId}
+      , #{addrDtl}
+      , #{streetDtl}
+      , #{searchdepartment}
+      , #{searchSubDept}
+      , #{meetingPoint}
+      , #{collectionBrnch}
+      , #{atchFileGrpId}
+      , #{coursId}
+      , #{eHPincomeTaxNo}
+      , #{registrationOption}
+      )
+  </insert>
+
+      <select id="selectMemberId" parameterType="Map" resultType="String">
+
+      <if test="code != null and code == 'mem'">
+          SELECT MAX(MEM_ID) MEMBERID FROM ORG0001D
+      </if>
+
+      <if test="code != null and code == 'tax'">
+         SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
+      </if>
+
+      <if test="code != null and code == 'memApp'">
+         SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
+      </if>
+       <if test="code != null and code == 'user'">
+        SELECT MAX(USER_ID) USER_ID FROM SYS0047M
+       </if>
+    </select>
+
+     <update id="eHPMemberUpdate" parameterType="Map" >
+     update ORG0003D
+     SET APLCTN_ID = APLCTN_ID
+           <if test="eHPareaId != null and eHPareaId != '' ">
+           , AREA_ID = #{eHPareaId}
+           </if>
+           <if test="eHPstreetDtl != null and eHPstreetDtl != '' ">
+           , STREET =#{eHPstreetDtl}
+           </if>
+           <if test="eHPaddrDtl != null and eHPaddrDtl != '' ">
+           , ADDR_DTL =#{eHPaddrDtl}
+           </if>
+            <if test="eHPgender != null and eHPgender != '' ">
+           , APLICNT_GENDER =#{eHPgender}
+           </if>
+             <if test="eHPmemberNm != null and eHPmemberNm != '' ">
+           , APLICNT_NAME =#{eHPmemberNm}
+           </if>
+             <if test="eHPnric != null and eHPnric != '' ">
+           , APLICNT_NRIC =#{eHPnric}
+           </if>
+             <if test="eHPemail != null and eHPemail != '' ">
+           , APLICNT_EMAIL =#{eHPemail}
+           </if>
+             <if test="eHPmobileNo != null and eHPmobileNo != '' ">
+           , APLICNT_TEL_MOBILE =#{eHPmobileNo}
+           </if>
+             <if test="eHPofficeNo != null and eHPofficeNo != '' ">
+           , APLICNT_TEL_OFFICE =#{eHPofficeNo}
+           </if>
+            <if test="eHPresidenceNo != null and eHPresidenceNo != '' ">
+           , APLICNT_TEL_HUSE =#{eHPresidenceNo}
+           </if>
+
+             <if test="eHPcmbRace != null and eHPcmbRace != '' ">
+           , APLICNT_RACE =#{eHPcmbRace}
+           </if>
+             <if test="eHPmarrital != null and eHPmarrital != '' ">
+           , APLICNT_MARTL =#{eHPmarrital}
+           </if>
+            <if test="eHPsponsorCd != null and eHPsponsorCd != '' ">
+           , APLICNT_SPONS_CODE =#{eHPsponsorCd}
+           </if>
+             <if test="eHPbankAccNo != null and eHPbankAccNo != '' ">
+           , APLICNT_BANK_ACC_NO =#{eHPbankAccNo}
+           </if>
+             <if test="eHPissuedBank != null and eHPissuedBank != '' ">
+           , APLICNT_BANK_ID =#{eHPissuedBank}
+           </if>
+           <if test="eHPBirth != null and eHPBirth != '' ">
+            ,APLICNT_DOB  =to_date( #{eHPBirth} , 'DD-MM-YYYY' )
+           </if>
+            <if test="eHPspouseCode != null and eHPspouseCode != '' ">
+             ,APLICNT_SPOUSE_CODE = #{eHPspouseCode}
+             </if>
+               <if test="eHPspouseName != null and eHPspouseName != '' ">
+             ,APLICNT_SPOUSE_NAME = #{eHPspouseName}
+             </if>
+             <if test="eHPspouseNric != null and eHPspouseNric != '' ">
+             ,APLICNT_SPOUSE_NRIC = #{eHPspouseNric}
+             </if>
+             <if test="eHPspouseOcc != null and eHPspouseOcc != '' ">
+             ,APLICNT_SPOUSE_OCPAT = #{eHPspouseOcc}
+             </if>
+             <if test="eHPspouseContat != null and eHPspouseContat != '' ">
+             ,APLICNT_SPOUSE_TEL_CNTC = #{eHPspouseContat}
+             </if>
+             <if test="eHPspouseDob != null and eHPspouseDob != '' ">
+             ,APLICNT_SPOUSE_DOB = TO_DATE(#{eHPspouseDob},'DD-MM-YYYY')
+             </if>
+            <if test="eHPstatusId != null and eHPstatusId != '' ">
+            , STUS_ID = #{eHPstatusId}
+           </if>
+           <if test="eHPmeetingPoint != null and eHPmeetingPoint != '' ">
+            , APLICNT_MEETPOINT = #{eHPmeetingPoint}
+           </if>
+            <if test="eHPcollectionBrnch != null and eHPcollectionBrnch != '' ">
+            , COLLCT_BRNCH = #{eHPcollectionBrnch}
+           </if>
+            <if test="atchFileGrpId != null and atchFileGrpId != '' ">
+            , ATCH_FILE_GRP_ID = #{atchFileGrpId}
+           </if>
+            <if test="eHPregOpt != null and eHPregOpt != '' ">
+            , APLICNT_REG_OPT = #{eHPregOpt}
+           </if>
+           , UPD_DT = SYSDATE
+
+           , UPD_USER_ID = #{updUserId}
+
+           , APLICNT_INC_TAX = #{eHPincomeTaxNo}
+
+     where  APLCTN_ID = #{eHPMemberID}
+     </update>
+
+     <select id="selectEHPmemberListView"  parameterType="Map" resultType="egovMap">
+
+              SELECT
+             A.APLCTN_ID,
+               A.APLICNT_TYPE ,
+            A.AREA_ID ,
+            A.ADDR_DTL ,
+            A.STREET ,
+            A.DEPT_CODE DEPT_CODE,
+            TO_CHAR( A.APLICNT_DOB ,'DD/MM/YYYY' ) APLICNT_DOB,
+            A.APLICNT_NAME ,
+            A.APLICNT_CODE MEM_CODE,
+            A.APLICNT_GENDER ,
+            A.APLICNT_RACE ,
+            A.APLICNT_NRIC ,
+            A.APLICNT_MARTL ,
+            A.APLICNT_NATION ,
+            A.APLICNT_TEL_OFFICE ,
+            A.APLICNT_TEL_HUSE ,
+            A.APLICNT_TEL_MOBILE ,
+            A.APLICNT_EMAIL ,
+            A.APLICNT_SPOUSE_CODE ,
+            A.APLICNT_SPOUSE_NAME ,
+            A.APLICNT_SPOUSE_NRIC ,
+            A.APLICNT_SPOUSE_OCPAT ,
+            A.APLICNT_SPOUSE_TEL_CNTC ,
+            TO_CHAR(A.APLICNT_SPOUSE_DOB,'DD/MM/YYYY') APLICNT_SPOUSE_DOB ,
+            TO_CHAR(A.CRT_DT,'DD/MM/YYYY') APLICNT_JOIN_DT ,
+            A.APLICNT_BANK_ID ,
+            A.APLICNT_BANK_ACC_NO ,
+            A.APLICNT_SPONS_CODE ,
+            A.APLICNT_MEETPOINT ,
+            A.COLLCT_BRNCH APLICNT_COL_BRNCH ,
+            A.ATCH_FILE_GRP_ID ,
+            B.AREA AREA,
+            B.COUNTRY,
+            B.CITY,
+            B.STATE,
+            B.POSTCODE ,
+             C.NAME NATION ,
+             A.CNFM ,
+             A.APLICNT_INC_TAX
+            FROM ORG0003D A
+            LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+            LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
+            WHERE 1=1
+            AND     A.APLCTN_ID = #{MemberID}
+
+     </select>
+
+  <select id="selectEHPmemberView"  parameterType="Map" resultType="egovMap">
+
+              SELECT
+              A.APLCTN_ID ,
+               A.APLICNT_TYPE ,
+            A.AREA_ID ,
+            A.ADDR_DTL ,
+            A.STREET ,
+            A.DEPT_CODE DEPT_CODE,
+            TO_CHAR( A.APLICNT_DOB ,'DD/MM/YYYY' ) APLICNT_DOB,
+            A.APLICNT_NAME ,
+            A.APLICNT_CODE MEM_CODE,
+            A.APLICNT_GENDER ,
+            A.APLICNT_RACE ,
+            A.APLICNT_NRIC ,
+            A.APLICNT_MARTL ,
+            A.APLICNT_NATION ,
+            A.APLICNT_TEL_OFFICE ,
+            A.APLICNT_TEL_HUSE ,
+            A.APLICNT_TEL_MOBILE ,
+            A.APLICNT_EMAIL ,
+            A.APLICNT_SPOUSE_CODE ,
+            A.APLICNT_SPOUSE_NAME ,
+            A.APLICNT_SPOUSE_NRIC ,
+            A.APLICNT_SPOUSE_OCPAT ,
+            A.APLICNT_SPOUSE_TEL_CNTC ,
+            A.STUS_ID ,
+            TO_CHAR(A.APLICNT_SPOUSE_DOB,'DD/MM/YYYY') APLICNT_SPOUSE_DOB ,
+            TO_CHAR(A.CRT_DT,'DD/MM/YYYY') APLICNT_JOIN_DT ,
+            A.APLICNT_BANK_ID ,
+            A.APLICNT_BANK_ACC_NO ,
+            A.APLICNT_SPONS_CODE ,
+            D.NAME APLICNT_SPONS_NM ,
+            D.NRIC APLICNT_SPONS_NRIC ,
+            A.APLICNT_MEETPOINT ,
+            A.COLLCT_BRNCH APLICNT_COL_BRNCH ,
+            A.ATCH_FILE_GRP_ID ,
+            B.AREA AREA,
+            B.COUNTRY,
+            B.CITY,
+            B.STATE,
+            B.POSTCODE ,
+             C.NAME NATION ,
+             A.CNFM,
+             A.APLICNT_INC_TAX,
+             A.APLICNT_REG_OPT
+            FROM ORG0003D A
+            LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+            LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
+            LEFT JOIN ORG0001D D ON A.APLICNT_SPONS_CODE = D.MEM_CODE
+            WHERE 1=1
+            AND     A.APLCTN_ID = #{MemberID}
+
+     </select>
+
+     <select id="selectCollectBranch" parameterType="Map" resultType="egovMap">
+              SELECT
+            BRNCH_ID CODE_ID,
+            CODE || ' - ' || NAME CODE_NAME
+        FROM SYS0005M
+        WHERE STUS_ID = 1 AND TYPE_ID = 45
+        ORDER BY CODE
+    </select>
+
+    <insert id="eHPmemberStatusInsert" parameterType="Map">
+    INSERT INTO ORG0031D
+    (
+    SEQ ,
+    MEM_ID ,
+    MEM_TYPE ,
+    NAME ,
+    NRIC ,
+    STUS_CODE_ID ,
+    FAIL_RESN_ID ,
+    REM ,
+    CRT_DT ,
+    CRT_USER_ID ,
+    UPD_DT ,
+    UPD_USER_ID
+    )
+    VALUES
+    (
+    ORG0031D_SEQ.NEXTVAL,
+    #{eHPMemberID},
+    #{eHPmemberType} ,
+    #{eHPmemberNm} ,
+    #{eHPnric} ,
+    #{eHPapplicationStatus} ,
+     #{eHPFailReasn} ,
+     #{eHPRemarkTxt} ,
+    SYSDATE ,
+    #{eHPCreator} ,
+    SYSDATE ,
+    #{eHPUpdator}
+    )
+
+    </insert>
+
+        <update id = "eHPmemberStatusUpdate" parameterType = "Map">
+    UPDATE ORG0031D
+    SET STUS_CODE_ID = #{eHPapplicationStatus} ,
+    UPD_USER_ID = #{eHPUpdator} ,
+    FAIL_RESN_ID = #{eHPFailReasn} ,
+    REM  = #{eHPRemarkTxt} ,
+    UPD_DT = SYSDATE
+    WHERE
+    MEM_ID = #{eHPMemberID}
+
+    </update>
+
+
+    <update id = "eHPApplicantStatusUpdate" parameterType = "Map">
+    UPDATE ORG0003D
+    SET STUS_ID = #{eHPapplicationStatus} ,
+    UPD_USER_ID = #{eHPUpdator} ,
+    UPD_DT = SYSDATE
+    WHERE
+    APLCTN_ID = #{eHPMemberID}
+
+    </update>
+
+        <select id="eHPselectStatus" parameterType="Map" resultType="egovMap">
+
+        SELECT
+        Distinct1.StatusCodeID StatusCodeID,
+        Distinct1.Code Code,
+        Distinct1.Name Name
+        FROM ( SELECT DISTINCT
+        STUS_CODE_ID STATUSCODEID,
+        CODE CODE,
+        NAME NAME
+        FROM  SYS0038M
+        WHERE STUS_CODE_ID IN (44,102,5,6,21)
+    )  Distinct1
+    </select>
+
+
+  <select id="getEHPMemberListView" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+SELECT Limit1.MEM_ID MEM_ID  ,
+        Limit1.AREA_ID,
+        Limit1.STREET,
+        Limit1.ADDR_DTL,
+         Limit1.CITY,
+        Limit1.AREA,
+        Limit1.POSTCODE,
+        Limit1.STATE,
+        Limit1.COUNTRY,
+       Limit1.C3 C3  ,
+       Limit1.C4 C4  ,
+       Limit1.C5 C5  ,
+       Limit1.C8 C8  ,
+       Limit1.C9 C9  ,
+       Limit1.EMAIL EMAIL  ,
+       Limit1.GENDER GENDER  ,
+       Limit1.C10 C10  ,
+       Limit1.C11 C11  ,
+       Limit1.C12 C12  ,
+       Limit1.C13 C13  ,
+       Limit1.C14 C14  ,
+       Limit1.C15 C15  ,
+       Limit1.C16 C16  ,
+       Limit1.C17 C17  ,
+       Limit1.C18 C18  ,
+       Limit1.C19 C19  ,
+       Limit1.C20 C20  ,
+       Limit1.C21 C21  ,
+       Limit1.C22 C22  ,
+       Limit1.C23 C23  ,
+       Limit1.C24 C24  ,
+       Limit1.C25 C25  ,
+       Limit1.C26 C26  ,
+       Limit1.C27 C27  ,
+       Limit1.C28 C28  ,
+       Limit1.BANK BANK  ,
+       Limit1.BANK_NAME BANK_NAME,
+       Limit1.BANK_ACC_NO BANK_ACC_NO  ,
+       Limit1.C29 C29  ,
+       Limit1.C30 C30  ,
+       Limit1.C31 C31  ,
+       Limit1.C32 C32  ,
+       Limit1.NAME1 NAME  ,
+       Limit1.MEM_CODE MEM_CODE  ,
+       Limit1.NAME NAME1  ,
+       Limit1.NRIC NRIC  ,
+       Limit1.MEM_TYPE MEM_TYPE  ,
+       Limit1.CODE_NAME CODE_NAME  ,
+       Limit1.C33 C33  ,
+       Limit1.C34 C34  ,
+       Limit1.C35 C35  ,
+       Limit1.C36 C36  ,
+       Limit1.C39 C39  ,
+       Limit1.C40 C40  ,
+       Limit1.C41 C41  ,
+       Limit1.C42 C42  ,
+       Limit1.C43 C43  ,
+       Limit1.C44 C44  ,
+       Limit1.C45 C45  ,
+       Limit1.C46 C46  ,
+       Limit1.C47 C47  ,
+       Limit1.C48 C48  ,
+       Limit1.C51 C51  ,
+       Limit1.C52 C52  ,
+       Limit1.C53 C53  ,
+       Limit1.C54 C54  ,
+       Limit1.C55 C55  ,
+       Limit1.C56 C56  ,
+       Limit1.TR_NO TR_NO  ,
+       Limit1.TEL_MOBILE TEL_MOBILE  ,
+       Limit1.TEL_HUSE TEL_HUSE  ,
+       Limit1.TEL_OFFICE TEL_OFFICE  ,
+       Limit1.C57 C57  ,
+       Limit1.SPUSE_CODE SPUSE_CODE  ,
+       Limit1.SPOUSE_NAME SPOUSE_NAME  ,
+       Limit1.SPOUSE_NRIC SPOUSE_NRIC  ,
+       Limit1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+       Limit1.C58 C58  ,
+       Limit1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+       Limit1.C59 C59  ,
+       Limit1.RANK RANK  ,
+       Limit1.C60 C60  ,
+       Limit1.HSPTLZ  HSPTLZ,
+       Limit1.MAIN_DEPT,
+      Limit1.SUB_DEPT,
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
+       Limit1.APLICNT_MEETPOINT,
+       Limit1.COLLCT_BRNCH ,
+       Limit1.COLLCT_BRNCH_DESC,
+       Limit1.HP_CODE ,
+       Limit1.HP_ID,
+       Limit1.APLICNT_INC_TAX,
+       Limit1.APLICNT_REG_OPT
+  FROM (
+SELECT Extent1.APLCTN_ID MEM_ID  ,
+                Extent1.APLICNT_CODE MEM_CODE  ,
+                Extent1.APLICNT_TYPE MEM_TYPE  ,
+                Extent1.APLICNT_NAME NAME  ,
+                Extent1.APLICNT_NRIC NRIC  ,
+                Extent1.APLICNT_GENDER GENDER  ,
+                Extent26.AREA_ID,
+                Extent1.STREET,
+                Extent1.ADDR_DTL,
+                Extent26.CITY,
+                Extent26.AREA,
+                Extent26.POSTCODE,
+                Extent26.STATE,
+                Extent26.COUNTRY,
+                Extent1.APLICNT_TEL_OFFICE TEL_OFFICE  ,
+                Extent1.APLICNT_TEL_HUSE TEL_HUSE  ,
+                Extent1.APLICNT_TEL_MOBILE TEL_MOBILE  ,
+                Extent1.APLICNT_EMAIL EMAIL  ,
+                Extent1.APLICNT_SPOUSE_CODE SPUSE_CODE  ,
+                Extent1.APLICNT_SPOUSE_NAME SPOUSE_NAME  ,
+                Extent1.APLICNT_SPOUSE_NRIC SPOUSE_NRIC  ,
+                Extent1.APLICNT_SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                Extent1.APLICNT_SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                Extent1.APLICNT_BANK_ID BANK  ,
+                Extent27.CODE || ' - ' || Extent27.NAME BANK_NAME,
+                Extent1.APLICNT_BANK_ACC_NO BANK_ACC_NO  ,
+                '' RANK  ,
+                '' TR_NO  ,
+                '' HSPTLZ  ,
+                Extent2.NAME NAME1  ,
+                Extent3.CODE_NAME CODE_NAME   ,
+                '' C3  ,
+                '' C4  ,
+                '' C5  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_EDU_LEV IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_EDU_LEV,99999.99)
+                ELSE 0
+                   END C8  ,
+                CASE
+                     WHEN ( Extent11.CODE_ID IS NOT NULL ) THEN Extent11.CODE_NAME
+                ELSE ''
+                   END C9  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_LANG IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_LANG,99999.99)
+                ELSE 0
+                   END C10  ,
+                CASE
+                     WHEN ( Extent12.CODE_ID IS NOT NULL ) THEN Extent12.CODE_NAME
+                ELSE ''
+                   END C11  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.MEM_CODE
+                ELSE ''
+                   END C12  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.NAME
+                ELSE ''
+                   END C13  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_MOBILE
+                ELSE ''
+                   END C14  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_OFFICE
+                ELSE ''
+                   END C15  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_HUSE
+                ELSE ''
+                   END C16  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.MEM_CODE
+                ELSE ''
+                   END C17  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.NAME
+                ELSE ''
+                   END C18  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_MOBILE
+                ELSE ''
+                   END C19  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_OFFICE
+                ELSE ''
+                   END C20  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_HUSE
+                ELSE ''
+                   END C21  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.MEM_CODE
+                ELSE ''
+                   END C22  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.NAME
+                ELSE ''
+                   END C23  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_MOBILE
+                ELSE ''
+                   END C24  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_OFFICE
+                ELSE ''
+                   END C25  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_HUSE
+                ELSE ''
+                   END C26  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_MARTL IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                ELSE 0
+                   END C27  ,
+                CASE
+                     WHEN ( Extent21.CODE_ID IS NOT NULL ) THEN Extent21.CODE_NAME
+                ELSE ''
+                   END C28  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_DOB IS NOT NULL ) THEN to_char(Extent1.APLICNT_DOB,'dd/mm/yyyy')
+                ELSE ''
+                   END C29  ,
+                '' C30  ,
+                CASE
+                     WHEN ( Extent25.USER_VAL_ID_TO IS NOT NULL ) THEN to_char(Extent25.USER_VAL_ID_TO,'yyyy-mm-dd')
+                ELSE ''
+                   END C31  ,
+                CASE
+                     WHEN ( Extent1.STUS_ID IS NOT NULL ) THEN Extent1.STUS_ID
+                ELSE 0
+                   END C32   ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.MEM_UP_ID
+                ELSE 0
+                   END C33  ,
+                CASE
+                     WHEN ( Extent22.WH_LOC_ID IS NOT NULL ) THEN Extent22.WH_LOC_ID
+                ELSE 0
+                   END C34  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_NATION IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_NATION,99999.99)
+                ELSE 0
+                   END C35  ,
+                CASE
+                     WHEN ( Extent17.CNTY_ID IS NOT NULL ) THEN Extent17.NAME
+                ELSE ''
+                   END C36  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_RACE IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_RACE,99999.99)
+                ELSE 0
+                   END C39  ,
+                CASE
+                     WHEN ( Extent18.CODE_ID IS NOT NULL ) THEN Extent18.CODE_NAME
+                ELSE ''
+                   END C40,
+                CASE
+                    WHEN ( Extent1.DEPT_CODE IS NOT NULL ) THEN Extent1.DEPT_CODE
+                ELSE ''
+                   END C41  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.GRP_CODE
+                ELSE ''
+                   END C42  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.ORG_CODE
+                ELSE ''
+                   END C43  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.MEM_LVL
+                ELSE 0
+                   END C44  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL3_UP_ID
+                ELSE 0
+                   END C45  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL2_UP_ID
+                ELSE 0
+                   END C46  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL1_UP_ID
+                ELSE 0
+                   END C47,
+               '' C48  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.MEM_CODE
+                ELSE ''
+                   END C51  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.NAME
+                ELSE ''
+                   END C52  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.NRIC
+                ELSE ''
+                   END C53  ,
+                '' C54  ,
+                '' C55  ,
+                '' C56  ,
+                CASE
+                     WHEN ( Extent5.MEM_ORG_DESC_ID IS NOT NULL ) THEN Extent5.MEM_ORG_DESC
+                ELSE ''
+                   END C57  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_SPOUSE_DOB IS NOT NULL ) THEN to_char(Extent1.APLICNT_SPOUSE_DOB,'yyyy-mm-dd')
+                ELSE ''
+                   END C58  ,
+                '' C59  ,
+                '' C60,
+                EXTENT1.MAIN_DEPT,
+                EXTENT1.SUB_DEPT,
+                EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
+                EXTENT1.COLLCT_BRNCH ,
+               EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC ,
+               Extent31.MEM_CODE HP_CODE ,
+               Extent31.MEM_ID HP_ID,
+               Extent1.APLICNT_INC_TAX,
+               Extent32.CODE_DESC APLICNT_REG_OPT
+         FROM ORG0003D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
+                LEFT JOIN ORG0001D Extent31 ON Extent1.APLCTN_ID = Extent31.APLICNT_ID
+                LEFT JOIN SYS0013M Extent32 ON Extent1.APLICNT_REG_OPT = Extent32.CODE_ID
+        LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                            FROM ORG1001V vMemberOrg  ) Extent4   ON Extent4.MEM_ID = Extent31.MEM_ID
+                LEFT JOIN ORG0012D Extent5   ON ( Extent5.MEM_ORG_LVL = Extent4.MEM_LVL )
+                AND ( Extent5.MEM_TYPE_ID = Extent1.APLICNT_TYPE )
+--                LEFT JOIN SYS0005M Extent10   ON Extent10.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,99999.99)
+                LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = TO_NUMBER(Extent1.APLICNT_EDU_LEV,99999.99)
+                LEFT JOIN SYS0013M Extent12   ON Extent12.CODE_ID = TO_NUMBER(Extent1.APLICNT_LANG,99999.99)
+                LEFT JOIN ORG0001D Extent13   ON Extent13.MEM_ID = Extent4.LVL1_UP_ID
+                LEFT JOIN ORG0001D Extent14   ON Extent14.MEM_ID = Extent4.LVL2_UP_ID
+                LEFT JOIN ORG0001D Extent15   ON Extent15.MEM_ID = Extent4.LVL3_UP_ID
+--                LEFT JOIN SYS0013M Extent16   ON Extent16.CODE_ID = TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                LEFT JOIN SYS0015M Extent17   ON Extent17.CNTY_ID = TO_NUMBER(Extent1.APLICNT_NATION,99999.99)
+                LEFT JOIN SYS0013M Extent18   ON Extent18.CODE_ID = TO_NUMBER(Extent1.APLICNT_RACE,99999.99)
+--                LEFT JOIN SYS0013M Extent19   ON Extent19.CODE_ID = Extent1.TRNSPRT
+                LEFT JOIN ORG0001D Extent20   ON Extent20.MEM_CODE = Extent1.APLICNT_SPONS_CODE
+                LEFT JOIN SYS0013M Extent21   ON Extent21.CODE_ID = TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                LEFT JOIN SYS0028M Extent22   ON ( Extent22.WH_LOC_CODE = Extent1.APLICNT_CODE )
+                AND ( Extent1.APLICNT_TYPE IN ( 2,3 )
+               )
+--        LEFT JOIN SYS0013M Extent23   ON Extent23.CODE_ID = Extent1.RANK
+--                LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
+                LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.APLICNT_FULL_NAME
+                LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
+                LEFT JOIN SYS0004M Extent27   ON Extent1.APLICNT_BANK_ID = Extent27.BANK_ID and 1 = Extent27.STUS_CODE_ID
+                LEFT JOIN ORG0014D Extent28   ON Extent27.BANK_ID = Extent28.Bank_ID and 848 = Extent28.TYPE_ID and 1 = Extent28.STUS_CODE_ID
+                LEFT JOIN SYS0089M Extent29 ON Extent1.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
+                LEFT JOIN SYS0005M Extent30 ON Extent1.COLLCT_BRNCH = Extent30.BRNCH_ID
+          WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
+           ]]>
+    </select>
+
+
+    <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
+             SELECT
+                  CODE_ID detailCodeId,
+                  CODE_MASTER_ID,
+                  CODE detailCode,
+                  CODE_NAME detailCodeName,
+                  DBMS_LOB.SUBSTR (CODE_DESC, 4000) detailCodeDesc,
+                  CASE WHEN (CRT_DT IS NOT NULL) THEN  TO_CHAR(CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT,
+                  CASE WHEN (CRT_USER_ID IS NOT NULL) THEN CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
+                  DECODE(CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END , 0,'N',1,'Y','N')  AS detailDisabled,
+                  CASE WHEN (UPD_DT IS NOT NULL) THEN  TO_CHAR(UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
+                  CASE WHEN (UPD_USER_ID IS NOT NULL) THEN UPD_USER_ID ELSE 0 END AS UPD_USER_ID
+                  FROM SYS0013M
+            WHERE CODE_MASTER_ID = #{mstCdId}
+
+                    AND DISAB = 0
+
+            ORDER BY CODE ASC
+    </select>
+
+    <select id="selectHPOrientation" parameterType="Map" resultType="egovMap">
+    SELECT A.COURS_ID CODE_ID, A.COURS_NAME || ' - ' || TO_CHAR(A.COURS_CLS_DT, 'DD/MM/YYYY') CODE_NAME
+    FROM MSC0008D A
+    LEFT JOIN (
+        SELECT COURS_ID, COUNT(*) CNT
+        FROM MSC0009D
+        WHERE COURS_MEM_STUS_ID = 1
+        GROUP BY COURS_ID
+    ) B
+        ON A.COURS_ID = B.COURS_ID
+    WHERE A.COURS_MEM_TYPE_ID = '1'
+        AND A.COURS_TYPE_CODE_ID = '2936'
+        AND A.COURS_STUS_ID = 1
+        AND A.COURS_LIMIT > NVL (B.CNT, 0)
+        AND TO_DATE(TO_CHAR(A.COURS_START, 'YYYYMM'), 'YYYYMM') BETWEEN TO_DATE(#{startDay},'yyyymm') AND TO_DATE(#{endDay},'yyyymm')
+        AND TO_DATE(TO_CHAR(A.COURS_END, 'YYYYMM'), 'YYYYMM') BETWEEN TO_DATE(#{startDay},'yyyymm') AND TO_DATE(#{endDay},'yyyymm')
+        AND A.COURS_CLS_DT >= TO_DATE(#{curDt}, 'yyyymmdd')
+    </select>
+
+    <select id="selectHpApplByEmail" parameterType="Map" resultType="egovMap">
+        SELECT
+        APLCTN_ID, APLICNT_CODE, APLICNT_EMAIL FROM ORG0003D WHERE APLICNT_EMAIL = #{eHPemail} AND STUS_ID NOT IN (6,8,10)
+    </select>
+
+    <select id="selecteHPFailRemark" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+	    SELECT
+            T2.NAME AS STUS
+            , T4.RESN_DESC AS REM1
+            , REM AS REM2
+            , T3.USER_NAME AS CRT_USER_ID
+            , CRT_DT
+            ,CASE WHEN TO_CHAR(CRT_DT, 'HH12') < 12 THEN  TO_CHAR(CRT_DT, 'HH12:MI AM')
+             ELSE TO_CHAR(CRT_DT, 'HH12:MI PM') END AS CRT_TIME
+        from ORG0031D T1
+            join sys0038m T2 on T1.STUS_CODE_ID = T2.STUS_CODE_ID
+            join sys0047m T3 on T1.CRT_USER_ID = T3.USER_ID
+            join sys0032m T4 on T1.FAIL_RESN_ID = T4.RESN_ID
+        where MEM_ID = #{aplctnId}
+        ORDER BY CRT_DT DESC
+     ]]>
+    </select>
+
+    <select id="getMemberExistByNRIC" parameterType="Map" resultType="egovMap">
+		    SELECT
+		        STUS_ID
+		    FROM ORG0003D
+		    WHERE APLICNT_NRIC = #{nric}
+		    ORDER BY APLCTN_ID DESC
+    </select>
+
+    </mapper>

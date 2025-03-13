@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+
+    <!-- jndi -->
+
+    <!-- jndi -->
+    <beans profile="prd">
+        <bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_PRD"/>
+        </bean>
+
+        <bean id="long-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_PRD"/>
+        </bean>
+    </beans>
+
+    <beans profile="qa">
+        <bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_QA"/>
+        </bean>
+
+        <bean id="long-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_QA"/>
+        </bean>
+    </beans>
+
+    <beans profile="dev">
+        <bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_DEV"/>
+        </bean>
+
+        <bean id="long-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+            <property name="jndiName" value="eTRUST_DEV"/>
+        </bean>
+    </beans>
+
+    <beans profile="local">
+        <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+            <property name="poolName" value="springHikariCP" />
+            <property name="driverClassName" value="${spring.datasource.driver-class-name}" />
+            <property name="jdbcUrl" value="${spring.datasource.url}" />
+            <property name="username" value="${spring.datasource.username}" />
+            <property name="password" value="${spring.datasource.password}" />
+            <property name="connectionTimeout" value="${spring.datasource.connection.timeout}" />
+            <property name="idleTimeout" value="0" />
+            <property name="leakDetectionThreshold" value="0" />
+            <property name="maxLifetime" value="300000" />
+            <property name="maximumPoolSize" value="${spring.datasource.maximumPoolSize}" />
+            <property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
+        </bean>
+
+        <bean id="normal-dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+            <constructor-arg ref="hikariConfig" />
+        </bean>
+
+
+        <bean id="long-hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+            <property name="poolName" value="springHikariCP-long" />
+            <property name="driverClassName" value="${spring.datasource.driver-class-name}" />
+            <property name="jdbcUrl" value="${spring.datasource.url}" />
+            <property name="username" value="${spring.datasource.username}" />
+            <property name="password" value="${spring.datasource.password}" />
+            <property name="connectionTimeout" value="${spring.long.datasource.connection.timeout}" />
+            <property name="idleTimeout" value="0" />
+            <property name="leakDetectionThreshold" value="0" />
+            <property name="maxLifetime" value="300000" />
+            <property name="maximumPoolSize" value="${spring.long.datasource.maximumPoolSize}" />
+            <property name="connectionTestQuery" value="${spring.datasource.validation-query}" />
+        </bean>
+
+        <bean id="long-dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+            <constructor-arg ref="long-hikariConfig" />
+        </bean>
+    </beans>
+
+</beans>

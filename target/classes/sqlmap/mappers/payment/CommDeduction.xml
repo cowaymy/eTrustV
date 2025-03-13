@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.CommDeductionMapper">
+
+    <!--Search Payment Order List(Master Grid) 리스트 조회  -->
+    <select id="selectCommitionDeduction" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.FILE_ID FILE_ID  ,
+			       Extent1.FILE_NAME FILE_NAME  ,
+			       Extent1.FILE_DT FILE_DT  ,
+			       Extent1.FILE_REF_NO FILE_REF_NO  ,
+			       Extent1.TOT_RCORD TOT_RCORD  ,
+			       Extent1.TOT_AMT TOT_AMT  ,
+			       Extent1.FILE_STUS FILE_STUS,
+			       Extent2.NAME FILE_STUS_NAME,
+			       Extent3.CODE_NAME MEM_TYPE ,
+                   Extent1.ACTN_DT ACTN_DT
+		  FROM CMM0052M Extent1
+		  JOIN SYS0038M Extent2 on Extent1.FILE_STUS = Extent2.STUS_CODE_ID
+		  LEFT JOIN SYS0013M Extent3 on Extent3.CODE_ID = Extent1.MEM_TYPE_ID
+		WHERE 1=1
+		<if test="fileId != null and fileId != '' ">
+		    AND Extent1.FILE_ID = #{fileId}
+		</if>
+		<if test="actionDate != null and actionDate != ''">
+            AND Extent1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+        </if>
+        <if test="cmbMemberType != null and cmbMemberType != ''">
+            AND Extent1.MEM_TYPE_ID = #{cmbMemberType}
+        </if>
+
+    ORDER BY Extent1.FILE_ID DESC
+    </select>
+
+    <select id="selectExistLogMList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.FILE_ID FILE_ID  ,
+			       Extent1.FILE_NAME FILE_NAME  ,
+			       Extent1.FILE_DT FILE_DT  ,
+			       Extent1.FILE_REF_NO FILE_REF_NO  ,
+			       Extent1.TOT_RCORD TOT_RCORD  ,
+			       Extent1.TOT_AMT TOT_AMT  ,
+			       Extent1.FILE_STUS FILE_STUS
+		  FROM CMM0052M Extent1
+	   WHERE  Extent1.FILE_REF_NO LIKE '%' || #{fileRefNo} || '%'
+	   AND FILE_STUS <![CDATA[ <> ]]> 8
+    </select>
+
+    <insert id="insertMaster" parameterType="Map">
+        <selectKey keyProperty="fileId" resultType="int" order="BEFORE">
+            SELECT CMM0052M_FILE_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO CMM0052M
+		(
+		  FILE_ID,
+		  FILE_NAME,
+		  FILE_DT,
+		  FILE_REF_NO,
+		  TOT_RCORD,
+		  TOT_AMT,
+		  FILE_STUS,
+		  MEM_TYPE_ID,
+		  ACTN_DT
+		)
+		VALUES
+		(
+		  #{fileId},
+		  #{fileName},
+		  TO_DATE(#{fileDate}, 'YYYY-MM-DD HH:MI:SS'),
+		  #{fileRefNo},
+		  #{totalRecords},
+		  #{totalAmount},
+		  #{fileStatus},
+		  #{memTypeId},
+		  to_date(#{actionDate},'yyyymm')
+		)
+    </insert>
+
+    <insert id="insertDetail" parameterType="Map">
+        INSERT INTO CMM0051D
+		(
+		   ITM_ID,
+		   FILE_ID,
+		   ORD_NO,
+		   MEM_CODE,
+		   AMT,
+		   SYNC_CMPLT,
+		   PAID_MONTH,
+		   DEDUCT_CODE,
+		   PAY_TYPE
+		)
+		VALUES
+	   (
+	       CMM0051D_ITM_ID_SEQ.NEXTVAL,
+	       #{fileId},
+	       #{orderNo},
+	       #{memberCode},
+	       #{amount},
+	       #{syncCompleted},
+	       #{paidMonth},
+	       #{deductCode},
+	       #{appType}
+	   )
+    </insert>
+
+    <select id="selectMasterView" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.TRX_ID TRX_ID  ,
+			       Extent1.TRX_DT TRX_DT  ,
+			       Extent1.TRX_AMT TRX_AMT  ,
+			       Extent1.PAY_ID PAY_ID  ,
+			       Extent1.OR_NO OR_NO  ,
+			       Extent1.TR_NO TR_NO  ,
+			       Extent1.PAY_DT PAY_DT  ,
+			       Extent1.LAST_UPD_DT LAST_UPD_DT  ,
+			       Extent1.PAY_TYPE_ID PAY_TYPE_ID  ,
+			       Extent1.PAY_TYPE_NAME PAY_TYPE_NAME  ,
+			       Extent1.LAST_UPD_USER_ID LAST_UPD_USER_ID  ,
+			       Extent1.LAST_UPD_USER_NAME LAST_UPD_USER_NAME  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent1.OR_AMT OR_AMT  ,
+			       Extent1.PO_NO PO_NO  ,
+			       Extent1.CLCTR_BRNCH_ID CLCTR_BRNCH_ID  ,
+			       Extent1.CLCTR_BRNCH_CODE CLCTR_BRNCH_CODE  ,
+			       Extent1.CLCTR_BRNCH_NAME CLCTR_BRNCH_NAME  ,
+			       Extent1.CUST_ID CUST_ID  ,
+			       Extent1.CUST_NAME CUST_NAME  ,
+			       Extent1.CUST_IC CUST_IC  ,
+			       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+			       Extent1.CUST_TYPE_NAME CUST_TYPE_NAME  ,
+			       Extent1.PRODUCT_CTGRY_ID PRODUCT_CTGRY_ID  ,
+			       Extent1.PRODUCT_CTGRY_NAME PRODUCT_CTGRY_NAME  ,
+			       Extent1.PRODUCT_ID PRODUCT_ID  ,
+			       Extent1.PRODUCT_CODE PRODUCT_CODE  ,
+			       Extent1.PRODUCT_DESC PRODUCT_DESC  ,
+			       Extent1.KEYIN_USER_ID KEYIN_USER_ID  ,
+			       Extent1.KEYIN_USER_NAME KEYIN_USER_NAME  ,
+			       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+			       Extent1.APP_TYPE_NAME APP_TYPE_NAME  ,
+			       Extent1.CLCTR_NAME CLCTR_NAME  ,
+			       Extent1.CLCTR_CODE CLCTR_CODE  ,
+			       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+			       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+			       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+			       Extent1.DEBTOR_ACC_ID DEBTOR_ACC_ID  ,
+			       Extent1.DEBTOR_ACC_CODE DEBTOR_ACC_CODE  ,
+			       Extent1.DEBTOR_ACC_DESC DEBTOR_ACC_DESC  ,
+			       Extent1.SALES_MEM_ID SALES_MEM_ID  ,
+			       Extent1.SALES_MEM_CODE SALES_MEM_CODE  ,
+			       Extent1.SALES_MEM_NAME SALES_MEM_NAME  ,
+			       Extent1.VIRTL_ACC_NO VIRTL_ACC_NO  ,
+			       Extent1.HP_CODE HP_CODE  ,
+			       Extent1.HP_NAME HP_NAME  ,
+			       Extent1.HP_ID HP_ID  ,
+			       Extent1.CLCTR_ID CLCTR_ID  ,
+			       Extent1.ALLOW_COMM ALLOW_COMM  ,
+			       Extent1.ADV_MONTH ADV_MONTH  ,
+			       Extent1.TR_ISSU_DT TR_ISSU_DT  ,
+			       Extent1.BATCH_PAY_ID BATCH_PAY_ID
+		  FROM PAY1001V Extent1
+		WHERE Extent1.TR_NO = #{fileRefNo}
+
+    </select>
+
+    <select id="selectLogDetail" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ITM_ID ITM_ID  ,
+			       Extent1.FILE_ID FILE_ID  ,
+			       Extent1.ORD_NO ORD_NO  ,
+			       Extent1.MEM_CODE MEM_CODE  ,
+			       Extent1.AMT AMT  ,
+			       CASE WHEN(Extent1.SYNC_CMPLT = 1) THEN 'true' ELSE 'false' END SYNC_CMPLT  ,
+			       Extent1.PAID_MONTH PAID_MONTH ,
+			       Extent1.DEDUCT_CODE DEDUCT_CODE ,
+			       Extent1.PAY_TYPE PAY_TYPE
+		  FROM CMM0051D Extent1
+	   WHERE  Extent1.FILE_ID = #{fileId}
+    </select>
+
+    <select id="selectDetailForPaymentResult" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+			       Extent1.PAY_ID PAY_ID  ,
+			       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+			       Extent2.CODE_NAME CODE_NAME  ,
+			       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+			       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO ELSE ' ' END PAY_ITM_ORI_CC_NO  ,
+			       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+			       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+			       Extent3.CODE_NAME CODENAME1  ,
+			       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+			       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+			       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+			       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+			       CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END BANK  ,
+			       Extent4.NAME NAME  ,
+			       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+			       CASE WHEN (Extent1.PAY_ITM_IS_ONLINE = 1) THEN 'true' ELSE 'false' END PAY_ITM_IS_ONLINE  ,
+			       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+			       CASE WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE ELSE ' ' END ACC  ,
+			       Extent5.ACC_DESC ACC_DESC  ,
+			       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+			       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+			       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+			       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+			       Extent6.NAME NAME1  ,
+			       CASE WHEN(Extent1.PAY_ITM_IS_LOK = 1) THEN 'true' ELSE 'false' END PAY_ITM_IS_LOK  ,
+			       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+			       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+			       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+			       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+			       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+			       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+			       Extent1.ETC3 ETC3  ,
+			       CASE WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END PAY_ITM_EFT_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END PAY_ITM_RUNNG_NO  ,
+			       CASE WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END PAY_ITM_CARD_TYPE_ID  ,
+			       CASE WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME ELSE ' ' END CODE  ,
+			       CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE
+			            WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
+			            WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
+			            WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP'
+			            ELSE '-' END
+			            WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
+			            WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END PAYITEMONLINE
+			  FROM PAY0065D Extent1
+			         LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
+			         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
+			         LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent1.PAY_ITM_ISSU_BANK_ID
+			         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
+			         LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
+			         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+			 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
+			          AND ( Extent1.PAY_ID = #{payId} )
+
+    </select>
+    <resultMap id="createPayment" type="egovMap"></resultMap>
+    <select id="createPaymentProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_PAY_CMMS_DEDUCT(#{fileId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
+    </select>
+
+    <update id="deactivateCommissionDeductionStatus" parameterType="Map" >
+        UPDATE CMM0052M
+        SET
+              FILE_STUS = 8
+        WHERE
+            FILE_ID = #{fileId}
+    </update>
+</mapper>

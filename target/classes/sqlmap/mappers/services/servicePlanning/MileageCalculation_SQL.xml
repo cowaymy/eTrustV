@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.servicePlanning.impl.MileageCalculationMapper">
+
+<sql id="pagingStart">
+    SELECT *
+    FROM (SELECT ROWNUM AS RNUM
+                            ,Z.*
+                FROM (
+</sql>
+<sql id="pagingEnd">
+     ) Z
+                WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+    WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+</sql>
+
+<insert id="insertDCPMaster" parameterType="Map">
+    INSERT INTO SVC0034M(
+      MEM_TYPE
+    , BRNCH_CODE
+    , DCP_FROM
+    , DCP_FROM_ID
+    , DCP_TO
+    , DCP_TO_ID
+    , DISTANCE
+    , CRT_USER_ID
+    , CRT_DT
+    , UPD_USER_ID
+    , UPD_DT
+    )
+    VALUES(
+       #{memType}
+     , #{brnchCode}
+     , #{dcpFrom}
+     , #{dcpFromId}
+     , #{dcpTo}
+     , #{dcpToId}
+     , #{distance}
+     , #{userId}
+     , SYSDATE
+     , #{userId}
+     , SYSDATE
+     )
+</insert>
+
+<update id="updatetDCPMaster" parameterType="Map">
+    MERGE INTO SVC0034M A
+    USING DUAL
+    ON (A.MEM_TYPE = #{memType}
+        AND A.BRNCH_CODE = #{brnchCode}
+        AND A.DCP_FROM = #{dcpFrom}
+        AND A.DCP_TO = #{dcpTo})
+    WHEN MATCHED THEN
+        UPDATE SET
+          <!-- A.MEM_TYPE = #{memType},
+          A.BRNCH_CODE = #{brnchCode},
+          A.DCP_FROM = #{dcpFrom},
+          A.DCP_FROM_ID = #{dcpFromId},
+          A.DCP_TO = #{dcpTo},
+          A.DCP_TO_ID = #{dcpToId}, -->
+          A.DISTANCE = NVL(#{distance},''),
+          A.UPD_USER_ID = #{userId},
+          A.UPD_DT = SYSDATE
+    WHEN NOT MATCHED THEN
+        INSERT (A.MEM_TYPE, A.BRNCH_CODE, A.DCP_FROM, A.DCP_FROM_ID, A.DCP_TO, A.DCP_TO_ID, A.DISTANCE, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
+        VALUES (#{memType}, #{brnchCode}, #{dcpFrom}, #{dcpFromId}, #{dcpTo}, #{dcpToId}, NVL(#{distance},''), #{userId}, SYSDATE, #{userId}, SYSDATE)
+</update>
+
+<update id="updatetDCPMasterLinked" parameterType="Map">
+    MERGE INTO SVC0034M A
+    USING DUAL
+    ON ( A.MEM_TYPE = #{memType}
+        AND A.BRNCH_CODE = #{brnchCode}
+        AND A.DCP_FROM = #{dcpTo}
+        AND A.DCP_TO = #{dcpFrom})
+    WHEN MATCHED THEN
+        UPDATE SET
+          <!-- A.MEM_TYPE = #{memType},
+          A.BRNCH_CODE = #{brnchCode},
+          A.DCP_FROM = #{dcpTo},
+          A.DCP_FROM_ID = #{dcpToId},
+          A.DCP_TO = #{dcpFrom},
+          A.DCP_TO_ID = #{dcpFromId}, -->
+          A.DISTANCE = NVL(#{distance},''),
+          A.UPD_USER_ID = #{userId},
+          A.UPD_DT = SYSDATE
+    WHEN NOT MATCHED THEN
+        INSERT (A.MEM_TYPE, A.BRNCH_CODE, A.DCP_FROM, A.DCP_FROM_ID, A.DCP_TO, A.DCP_TO_ID, A.DISTANCE, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
+        VALUES (#{memType}, #{brnchCode}, #{dcpTo}, #{dcpToId}, #{dcpFrom}, #{dcpFromId}, #{distance}, #{userId}, SYSDATE, #{userId}, SYSDATE)
+</update>
+
+<!-- <delete id="deleteDCPMaster" parameterType="Map">
+         DELETE FROM SVC0034M
+         WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}
+         AND DCP_FROM = #{dcpFrom1} AND DCP_TO = #{dcpTo1}
+         AND DCP_FROM_ID = #{dcpFromId1} AND AND DCP_TO = #{dcpTo1}
+</delete> -->
+
+<select id="selectAllDCPMaster"  parameterType="Map" resultType="egovMap">
+SELECT ROWNUM AS RNUM, Z.* FROM (
+    <if test="memType != null and memType == 2 ">
+        SELECT
+          'CODY' MEM_TYPE,
+          C.CODY_BRNCH_CODE BRNCH_CODE,
+          C.CITY_FROM CITY_FROM,
+          C.DCP_FROM DCP_FROM,
+          C.DCP_FROM_ID DCP_FROM_ID,
+          C.CITY_TO CITY_TO,
+          C.DCP_TO DCP_TO,
+          C.DCP_TO_ID DCP_TO_ID,
+          NVL(TO_CHAR(A.DISTANCE),0)  DISTANCE
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CODY_BRNCH_CODE = BB.CODY_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                          AND A.MEM_TYPE IN (2)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                         )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CODY_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test='mcpFrom != null and mcpFrom != "" '>
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test='mcpTo != null and mcpTo != "" '>
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+
+    <if test="memType != null and memType == 3 ">
+        SELECT
+          'CT' MEM_TYPE,
+          C.CT_BRNCH_CODE BRNCH_CODE,
+          C.CITY_FROM CITY_FROM,
+          C.DCP_FROM DCP_FROM,
+          C.DCP_FROM_ID DCP_FROM_ID,
+          C.CITY_TO CITY_TO,
+          C.DCP_TO DCP_TO,
+          C.DCP_TO_ID DCP_TO_ID,
+          NVL(TO_CHAR(A.DISTANCE),0)  DISTANCE
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CT_BRNCH_CODE = BB.CT_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                        AND A.MEM_TYPE IN (3)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                        )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CT_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test='mcpFrom != null and mcpFrom != "" '>
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test='mcpTo != null and mcpTo != "" '>
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+    ) Z
+</select>
+
+<select id="selectDCPMaster"  parameterType="Map" resultType="egovMap">
+<include refid="pagingStart" />
+    <if test="memType != null and memType == 2 ">
+        SELECT
+          'CODY' MEM_TYPE,
+          C.CODY_BRNCH_CODE BRNCH_CODE,
+          C.CITY_FROM CITY_FROM,
+          C.DCP_FROM DCP_FROM,
+          C.DCP_FROM_ID DCP_FROM_ID,
+          C.CITY_TO CITY_TO,
+          C.DCP_TO DCP_TO,
+          C.DCP_TO_ID DCP_TO_ID,
+          A.DISTANCE DISTANCE
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CODY_BRNCH_CODE = BB.CODY_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                          AND A.MEM_TYPE IN (2)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                         )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CODY_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+
+    <if test="memType != null and memType == 3 ">
+        SELECT
+          'CT' MEM_TYPE,
+          C.CT_BRNCH_CODE BRNCH_CODE,
+          C.CITY_FROM CITY_FROM,
+          C.DCP_FROM DCP_FROM,
+          C.DCP_FROM_ID DCP_FROM_ID,
+          C.CITY_TO CITY_TO,
+          C.DCP_TO DCP_TO,
+          C.DCP_TO_ID DCP_TO_ID,
+          A.DISTANCE DISTANCE
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CT_BRNCH_CODE = BB.CT_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                        AND A.MEM_TYPE IN (3)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                        )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CT_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+<include refid="pagingEnd" />
+</select>
+
+<!-- selectDCPMaster 전체 건수 -->
+<select id="selectDCPMasterCount"  parameterType="Map" resultType="int">
+    <if test="memType != null and memType == 2 ">
+        SELECT
+          COUNT(1) AS CNT
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CODY_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CODY_BRNCH_CODE = BB.CODY_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                          AND A.MEM_TYPE IN (2)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                         )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CODY_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+
+    <if test="memType != null and memType == 3 ">
+        SELECT
+          COUNT(1) AS CNT
+        FROM SVC0034M A
+        FULL OUTER JOIN (SELECT AA.CT_BRNCH_CODE, AA.CITY CITY_FROM, AA.AREA DCP_FROM, AA.AREA_ID DCP_FROM_ID, BB.CITY CITY_TO, BB.AREA DCP_TO, BB.AREA_ID DCP_TO_ID
+                        FROM SYS0064M AA, SYS0064M BB
+                        WHERE AA.CT_BRNCH_CODE = BB.CT_BRNCH_CODE
+                        <if test="cityFrom != null and cityFrom != '' ">
+                           AND AA.CITY = #{cityFrom}
+                        </if>
+                        <if test="cityTo != null and cityTo != '' ">
+                           AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
+                        </if>
+<![CDATA[
+                        AND AA.AREA_ID <> BB.AREA_ID) C
+]]>
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
+                        AND A.MEM_TYPE IN (3)
+                        <if test="brnch != null and brnch != '' ">
+                          AND A.BRNCH_CODE IN (#{brnch})
+                       </if>
+                        )
+        WHERE 1=1
+            <if test="brnch != null and brnch != '' ">
+               AND C.CT_BRNCH_CODE IN (#{brnch})
+            </if>
+            <if test="mcpFrom != null and mcpFrom != '' ">
+               AND LOWER( C.DCP_FROM ) LIKE '%' || LOWER(#{mcpFrom}) || '%'
+            </if>
+            <if test="mcpTo != null and mcpTo != '' ">
+               AND LOWER( C.DCP_TO ) LIKE '%' || LOWER(#{mcpTo}) || '%'
+            </if>
+        ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
+    </if>
+</select>
+
+<select id="selectDCPFrom"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+              DCP_FROM CODE_ID,
+              DCP_FROM CODE_NAME
+         FROM SVC0034M
+         WHERE 1=1
+           <if test="groupCode != null and groupCode != '' ">
+              AND BRNCH_CODE  IN (#{groupCode})
+           </if>
+           ORDER BY DCP_FROM ASC
+</select>
+
+<select id="selectDCPTo"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+              DCP_TO CODE_ID,
+              DCP_TO CODE_NAME
+         FROM SVC0034M
+         WHERE 1=1
+           <if test="groupCode != null and groupCode != '' ">
+              AND BRNCH_CODE  IN (#{groupCode})
+           </if>
+           ORDER BY DCP_TO ASC
+</select>
+
+<select id="selectArea"  parameterType="Map" resultType="egovMap">
+                SELECT DISTINCT AREA CODE_ID,
+                   AREA CODE_NAME
+        FROM SYS0064M
+</select>
+
+<insert id="insertSchemaMgmt" parameterType="Map">
+    INSERT INTO SVC0033M(
+      SCHEM_ID
+    , MEM_TYPE
+    , RANGE_FROM
+    , RANGE_TO
+    , MILEAGE_AMT
+    , DEDUCT_FLAG
+    , MULTI_RATE
+    , PERIOD_FROM
+    , PERIOD_TO
+    , CRT_USER_ID
+    , CRT_DT
+    , UPD_USER_ID
+    , UPD_DT
+    <!-- BY KV -add extra charge-->
+    , EXT_CHARG
+    )
+    VALUES(
+       SVC0033M_SCHEM_ID_SEQ.NEXTVAL
+     , #{memType}
+     , TO_NUMBER(#{rangeFrom})
+     , TO_NUMBER(#{rangeTo})
+     , TO_NUMBER(#{mileageAmt})
+     , TO_NUMBER(#{deductFlag})
+     , TO_NUMBER(#{multiRate})
+     , TO_DATE(#{applyFrom},'YYYY-MM-DD')
+     , TO_DATE(#{applyTo},'YYYY-MM-DD')
+     , #{userId}
+     , SYSDATE
+     , #{userId}
+     , SYSDATE
+     <!-- BY KV -add extra charge-->
+     , #{extCharg}
+     )
+</insert>
+<update id="updateSchemaMgmt" parameterType="Map">
+    UPDATE SVC0033M SET
+        MEM_TYPE = #{memType},
+        RANGE_FROM = TO_NUMBER(#{rangeFrom}),
+        RANGE_TO = TO_NUMBER(#{rangeTo}),
+        MILEAGE_AMT = TO_NUMBER(#{mileageAmt}),
+        DEDUCT_FLAG = TO_NUMBER(#{deductFlag}),
+        MULTI_RATE = TO_NUMBER(#{multiRate}),
+        PERIOD_FROM = TO_DATE(#{applyFrom},'YYYY-MM-DD'),
+        PERIOD_TO = TO_DATE(#{applyTo},'YYYY-MM-DD'),
+        UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE,
+        <!-- BY KV -add extra charge-->
+        EXT_CHARG = #{extCharg}
+    WHERE SCHEM_ID = #{schemId}
+</update>
+<delete id="deleteSchemaMgmt" parameterType="Map">
+         DELETE FROM SVC0033M
+         WHERE SCHEM_ID = #{schemId}
+</delete>
+<select id="selectSchemaMgmt"  parameterType="Map" resultType="egovMap">
+        SELECT
+            SCHEM_ID SCHEM_ID,
+            CASE WHEN MEM_TYPE = 2 THEN 'CODY'
+            ELSE 'CT' END  MEM_TYPE,
+            RANGE_FROM RANGE_FROM,
+            RANGE_TO RANGE_TO,
+            MILEAGE_AMT MILEAGE_AMT,
+            DEDUCT_FLAG DEDUCT_FLAG,
+            MULTI_RATE MULTI_RATE,
+            <!-- BY KV -add extra charge-->
+            EXT_CHARG EXT_CHARG,
+            TO_CHAR(PERIOD_FROM,'YYYY-MM-DD')  APPLY_FROM,
+            TO_CHAR(PERIOD_TO, 'YYYY-MM-DD')  APPLY_TO
+        FROM SVC0033M
+        WHERE 1=1
+        <if test="memTypeList != null and memTypeList != '' ">
+           AND MEM_TYPE IN
+           <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+        <if test="applyFrom != '' and applyFrom != null ">
+           <![CDATA[ AND  PERIOD_FROM  >= TO_DATE(#{applyFrom}, 'DD/MM/YYYY') ]]>
+        </if>
+         <if test="applyTo !='' and applyTo != null ">
+           <![CDATA[  AND PERIOD_TO <=  TO_DATE(#{applyTo}, 'DD/MM/YYYY') ]]>
+        </if>
+</select>
+
+<select id="selectCTResultMgmt"  parameterType="Map" resultType="egovMap">
+<![CDATA[
+SELECT MEM_CODE,Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE ,SERVICE_DATE, DISTANCE TOTAL_DISTANCE, BRANCH_ID ,
+             (
+		        SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
+		              FROM SVC0033M A
+		              WHERE A.mem_type = z.mem_Type
+		              AND PERIOD_FROM <= UPD_DT
+		              AND PERIOD_TO     >= UPD_DT
+		              AND RANGE_FROM  <= DISTANCE
+		              AND RANGE_TO       >= DISTANCE
+             ) AS MILEAGE
+                                                                    ]]>
+FROM
+      (
+            SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE,NVL (SUM(DISTANCE),0 ) AS DISTANCE ,  code BRANCH_ID
+            FROM
+            (
+              SELECT C.MEM_TYPE,C.MEM_CODE,D.code ,TO_CHAR(B.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+               FROM SVC0001D A,
+                    SVC0004D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE A.AS_ID = B.AS_ENTRY_ID
+                AND TO_CHAR(B.AS_SETL_DT, 'MM/YYYY') = #{month}
+                AND B.AS_CT_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)   IN
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+
+                UNION ALL
+
+
+              SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.INSTALL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+               FROM SAL0046D A,
+                    SAL0047D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE A.INSTALL_ENTRY_ID = B.ENTRY_ID
+                AND TO_CHAR(B.INSTALL_DT, 'MM/YYYY') = #{month}
+                AND B.CT_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)   IN
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+
+            UNION ALL
+
+            SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.STK_RETN_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+            FROM    Log0038D A,
+                    Log0039D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE   A.STK_RETN_ID = B.STK_RETN_ID
+                AND TO_CHAR(B.STK_RETN_DT, 'MM/YYYY') = #{month}
+                AND B.STK_RETN_CT_MEM_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)  IN
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+
+            ) A
+            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE
+      ) Z
+
+  where 1=1
+
+                <if test="memTypeList != null and memTypeList != '' ">
+                   AND Z.MEM_TYPE IN
+                   <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+                <if test="memCodeList != null and memCodeList != '' ">
+                   AND UPPER(Z.MEM_CODE) IN UPPER
+                   <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+                <if test="branchList != null and branchList != ' ' ">
+                   AND  Z.BRANCH_ID IN
+                   <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+         order by SERVICE_DATE
+</select>
+<select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
+<![CDATA[
+  SELECT MEM_CODE
+             , Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE
+             , SERVICE_DATE
+             , DISTANCE TOTAL_DISTANCE
+             ,  BRANCH_ID
+             ,  ( SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
+              FROM SVC0033M A
+              WHERE A.mem_type = z.mem_Type
+              AND PERIOD_FROM <= UPD_DT
+              AND PERIOD_TO     >= UPD_DT
+              AND RANGE_FROM  <= DISTANCE
+              AND RANGE_TO       >= DISTANCE
+           ) AS MILEAGE
+    ]]>
+FROM
+      (
+            SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE, NVL (SUM(DISTANCE) , 0 ) AS DISTANCE ,  code BRANCH_ID
+            FROM
+            (
+                SELECT B.MEM_TYPE,B.MEM_CODE, TO_CHAR(C.SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE, A.DISTANCE , D.code
+                FROM SVC0008D A, ORG0001D B , SVC0006D C ,  SYS0005M  D
+                WHERE A.CODY_ID = B.MEM_ID
+                AND B.BRNCH  = D.BRNCH_ID
+                AND   A.SCHDUL_ID = C.SCHDUL_ID
+                AND UPPER(B.MEM_CODE) IN
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+                AND A.YEAR = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)
+                AND A.MONTH = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)
+            ) A
+            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE
+      ) Z
+  where 1=1
+
+                <if test="memTypeList != null and memTypeList != '' ">
+                   AND Z.MEM_TYPE IN
+                   <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+                <if test="memCodeList != null and memCodeList != '' ">
+                   AND UPPER(Z.MEM_CODE) IN
+                   <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+                <if test="branchList != null and branchList != ' ' ">
+                   AND  Z.BRANCH_ID IN
+                   <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+                </if>
+         order by SERVICE_DATE
+</select>
+    <select id="selectBranch"  parameterType="Map" resultType="egovMap">
+        SELECT CODE CODE_ID,
+                     CODE CODE_NAME
+        FROM SYS0005M
+        WHERE 1=1
+         <if test="groupCode != null and groupCode != ''">
+           AND TYPE_ID=#{groupCode}
+         </if>
+        GROUP BY CODE
+        ORDER BY CODE
+    </select>
+    <select id="selectMemberCode"  parameterType="Map" resultType="egovMap">
+         SELECT A.MEM_CODE CODE_ID, A.MEM_CODE ||' - '|| A.NAME CODE_NAME, B.CODE
+        FROM ORG0001D A INNER JOIN SYS0005M B ON A.BRNCH = B.BRNCH_ID
+        WHERE 1=1
+         <if test="groupCode != null and groupCode != ''">
+              AND A.MEM_TYPE  = #{groupCode}
+         </if>
+          AND A.STUS = '1'
+    </select>
+    <select id="selectCity"  parameterType="Map" resultType="egovMap">
+         SELECT DISTINCT CITY CODE_ID, CITY CODE_NAME
+         FROM SYS0064M
+         WHERE 1=1
+         <if test="groupCode != null and groupCode != '' ">
+            AND (CT_BRNCH_CODE = #{groupCode} OR CODY_BRNCH_CODE = #{groupCode})
+         </if>
+         ORDER BY CITY ASC
+    </select>
+</mapper>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.MemberEligibilityMapper">
+
+    <select id="selectMemberEligibility" parameterType="Map" resultType="egovMap">
+    SELECT
+        MEM_ID,
+        NAME,
+        MEM_CODE,
+        NRIC,
+        STUS,
+        STATUS_NAME,
+        SAL_ORG_REJOIN_ID,
+        SAL_ORG_REJOIN,
+        APPR_STUS,
+        APPR_STUS_NAME,
+        APPROVED_BY,
+        TRM_REJOIN
+     FROM (
+		  SELECT
+		      O01D.MEM_ID,
+		      O01D.NAME,
+		      O01D.MEM_CODE,
+		      O01D.NRIC,
+              O01D.STUS,
+		      S38M.NAME AS STATUS_NAME,
+		      0 AS SAL_ORG_REJOIN_ID,
+	          '-' AS SAL_ORG_REJOIN,
+	          0 AS APPR_STUS,
+              '-' AS APPR_STUS_NAME,
+              '-' AS APPROVED_BY,
+              O01D.TRM_REJOIN AS TRM_REJOIN
+		  FROM ORG0001D O01D
+		  LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
+		  WHERE 1=1
+		       <if test="icNum != null and icNum != '' " >
+                     AND O01D.NRIC LIKE '%'|| TRIM(#{icNum})
+		       </if>
+		        <if test="code != null and code != '' " >
+                      AND O01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
+		        </if>
+		        <if test="name != null and name != '' " >
+                      AND O01D.NAME = #{name}
+		        </if>
+	            <if test="currentStatus != null and currentStatus != '' " >
+	                 <if test="currentStatus != 'Rejoin' " >
+                            AND O01D.STUS =  #{currentStatus}
+                      </if>
+                       <if test="currentStatus == 'Rejoin' " >
+                            AND O01D.TRM_REJOIN = 1 AND O01D.STUS = 3
+                      </if>
+                </if>
+           UNION
+           SELECT
+                O46D.MEM_ID,
+                O46D.NAME,
+                O46D.MEM_CODE,
+                O46D.NRIC,
+                A.STUS AS STUS,
+                A.STATUS_NAME AS STATUS_NAME,
+                O46D.SAL_ORG_REJOIN AS SAL_ORG_REJOIN_ID,
+                S13M.CODE AS SAL_ORG_REJOIN,
+                O46D.APPR_STUS AS APPR_STUS,
+                SY38M.NAME AS APPR_STUS_NAME,
+                B.USER_FULL_NAME AS APPROVED_BY,
+                A.TRM_REJOIN AS TRM_REJOIN
+            FROM ORG0046D O46D
+            LEFT JOIN SYS0038M SY38M ON O46D.APPR_STUS = SY38M.STUS_CODE_ID
+            LEFT JOIN (
+			                SELECT
+			                    OR01D.MEM_ID,
+			                    OR01D.STUS,
+			                    SYS38M.NAME AS STATUS_NAME,
+			                    OR01D.TRM_REJOIN AS TRM_REJOIN
+			                FROM ORG0001D OR01D
+			                LEFT JOIN SYS0038M SYS38M ON OR01D.STUS = SYS38M.STUS_CODE_ID
+			                WHERE 1=1
+			                    <if test="icNum != null and icNum != '' " >
+			                         AND OR01D.NRIC LIKE '%'|| TRIM(#{icNum})
+			                    </if>
+			                    <if test="code != null and code != '' " >
+			                          AND OR01D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
+			                    </if>
+			                    <if test="name != null and name != '' " >
+                                          AND OR01D.NAME = #{name}
+			                    </if>
+			                    <if test="currentStatus != null and currentStatus != '' " >
+			                         <if test="currentStatus != 'Rejoin' " >
+			                                AND OR01D.STUS =  #{currentStatus}
+			                          </if>
+			                           <if test="currentStatus == 'Rejoin' " >
+			                                AND OR01D.TRM_REJOIN = 1 AND OR01D.STUS = 3
+			                          </if>
+			                    </if>
+            )A ON A.MEM_ID = O46D.MEM_ID
+            LEFT JOIN (
+			                SELECT
+			                    S47M.USER_ID,
+			                    S47M.USER_FULL_NAME
+			                FROM SYS0047M S47M
+			                WHERE 1=1
+			                <if test="approvedBy != null and approvedBy != '' " >
+                                 AND S47M.USER_FULL_NAME =  #{approvedBy}
+			                </if>
+            ) B ON O46D.APPR_USER_ID = B.USER_ID
+            LEFT JOIN SYS0013M S13M ON S13M.CODE_ID = O46D.SAL_ORG_REJOIN
+            WHERE 1=1
+               <if test="icNum != null and icNum != '' " >
+                     AND O46D.NRIC LIKE '%'|| TRIM(#{icNum})
+               </if>
+                <if test="code != null and code != '' " >
+                      AND O46D.MEM_CODE LIKE  TRIM(#{code}) ||'%'
+                </if>
+                <if test="name != null and name != '' " >
+                      AND O46D.NAME = #{name}
+                </if>
+                <if test="currentStatus != null and currentStatus != '' " >
+                      <if test="currentStatus != 'Rejoin' " >
+                            AND A.STUS =  #{currentStatus}
+                      </if>
+                      <if test="currentStatus == 'Rejoin' " >
+                            AND A.TRM_REJOIN = 1 AND A.STUS = 3
+                      </if>
+                </if>
+                 <if test="orgToJoin != null and orgToJoin != '' " >
+                      AND O46D.SAL_ORG_REJOIN =  #{orgToJoin}
+                </if>
+                 <if test="approvalStatus != null and approvalStatus != '' " >
+                      AND O46D.APPR_STUS =  #{approvalStatus}
+                </if>
+                <if test="approvedBy != null and approvedBy != '' " >
+                      AND B.USER_FULL_NAME =  #{approvedBy}
+                </if>
+                )
+       WHERE 1=1
+       <if test="icNum != null and icNum != '' " >
+            AND NRIC LIKE '%'|| TRIM(#{icNum})
+      </if>
+      <if test="code != null and code != '' " >
+            AND MEM_CODE LIKE  TRIM(#{code}) ||'%'
+      </if>
+      <if test="name != null and name != '' " >
+            AND NAME = #{name}
+     </if>
+     <if test="currentStatus != null and currentStatus != '' " >
+           <if test="currentStatus != 'Rejoin' " >
+                 AND STUS =  #{currentStatus}
+           </if>
+           <if test="currentStatus == 'Rejoin' " >
+                 AND TRM_REJOIN = 1 AND STUS = 3
+           </if>
+     </if>
+      <if test="orgToJoin != null and orgToJoin != '' " >
+           AND SAL_ORG_REJOIN_ID =  #{orgToJoin}
+     </if>
+      <if test="approvalStatus != null and approvalStatus != '' " >
+           AND APPR_STUS =  #{approvalStatus}
+     </if>
+       <if test="approvedBy != null and approvedBy != '' " >
+           AND APPROVED_BY =  #{approvedBy}
+     </if>
+  </select>
+
+
+  <select id="getMemberInfo"  parameterType="Map" resultType="egovMap">
+        SELECT
+              O01D.MEM_ID,
+              O01D.NAME,
+              O01D.MEM_CODE,
+              O01D.MEM_TYPE, <!-- Check HP eligibility -->
+              NVL(O01D.RANK, 0) AS RANK, <!-- Check HP eligibility -->
+              NVL(A.PV_YEAR || '-' || LPAD(A.PV_MONTH,'2',0),'-') AS LAST_RANK_CHG_DT, <!-- Check HP eligibility -->
+              O01D.NRIC,
+              NVL(TO_CHAR(O01D.RESIGN_DT, 'YYYY-MM-DD'),'-') AS RESIGN_DT,
+              O01D.STUS,
+              S38M.NAME AS STATUS_NAME,
+              O01D.TRM_REJOIN AS TRM_REJOIN
+        FROM ORG0001D O01D
+        LEFT JOIN SYS0038M S38M ON O01D.STUS = S38M.STUS_CODE_ID
+        LEFT JOIN (
+            SELECT *
+	        FROM (
+	            SELECT B.*,
+	            ROW_NUMBER() OVER (
+	                PARTITION BY B.MEM_ID
+	                ORDER BY B.SALES_ORD_ID DESC
+	            ) ITM_ROWS
+	            FROM SAL0001D B
+	            JOIN ORG1001V EXTENT ON B.MEM_ID = EXTENT.MEM_ID
+	            WHERE B.PV_YEAR <![CDATA[ <> ]]> 0 AND B.PV_MONTH <![CDATA[ <> ]]> 0 AND B.STUS_CODE_ID = 4
+	                AND B.MEM_ID = #{memberID}
+	        )
+	        WHERE ITM_ROWS = 1
+        ) A ON A.MEM_ID = O01D.MEM_ID
+        WHERE O01D.MEM_ID = #{memberID}
+  </select>
+
+  <select id="getMemberRejoinInfo"  parameterType="Map" resultType="egovMap">
+        SELECT
+             APPR_STUS
+         FROM (SELECT APPR_STUS FROM ORG0046D WHERE MEM_ID = #{memberID} ORDER BY APPR_DT DESC)
+         WHERE ROWNUM = 1
+  </select>
+
+    <insert id="submitMemberRejoin" parameterType="Map">
+        INSERT INTO ORG0046D (
+             MEM_ELIGIBLE_ID
+            ,MEM_ID
+	        ,NAME
+	        ,MEM_CODE
+	        ,NRIC
+	        ,SAL_ORG_REJOIN
+	        ,ATCH_FILE_ID
+	        ,CRT_DT
+	        ,CRT_USER_ID
+	        ,APPR_STUS
+        ) VALUES (
+              ORG0046D_MEM_ELIGIBLE_ID_SEQ.NEXTVAL
+	        , #{selectMemId}
+	        , #{selectMemName}
+	        , #{selectMemCode}
+	        , #{selectNric}
+	        , #{selectOrgItem}
+	        , #{selectAtchFileId}
+	        , SYSDATE
+	        , #{userId}
+	        , 44
+        )
+    </insert>
+
+    <select id="getPICEmail"  parameterType="Map" resultType="egovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'ORGANIZATION'
+        AND DISB = '0'
+        AND PARAM_CODE = #{selectOrgItem}
+    </select>
+</mapper>

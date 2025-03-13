@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipColorGridMapper">
+
+    <select id="membershipColorGridList" parameterType="Map" resultType="egovMap">
+         SELECT * FROM (
+
+        (SELECT sm.SRV_MEM_NO MBRSH_NO
+            , 'OUTRIGHT' MBRSH_TYPE
+            , sm.SRV_SALES_ORD_ID SALES_ORD_ID
+            , som.SALES_ORD_NO
+            , TO_CHAR(sm.SRV_START_DT, 'DD/MM/YYYY') MBRSH_START_DT
+            , sm.SRV_EXPR_DT MBRSH_EXPR_DT
+            , sm.SRV_STUS_CODE_ID STUS_ID
+            , s.CODE MBRSH_STUS_CODE
+            , sm.SRV_CRT_DT MBRSH_CRT_DT
+            , NVL (mem.MEM_CODE, ' ') SALESMAN_CODE
+            , sm.SRV_DUR MBRSH_DUR
+            , mo.ORG_CODE
+            , mo.GRP_CODE
+            , mo.DEPT_CODE
+            , pac.SRV_MEM_DESC PAC_NAME
+            , c.NAME CUST_NAME
+            , (CASE WHEN NVL (sm.SRV_MEM_PV_MONTH, 0) > 0 THEN 1 ELSE 0 END) IS_NET
+            , (CASE
+                WHEN NVL (sm.SRV_MEM_PV_MONTH, 0) <![CDATA[>]]> 0
+                THEN
+                    (CASE
+                        WHEN NVL (sm.SRV_MEM_PV_MONTH, 0) <![CDATA[<]]> 10
+                        THEN
+                             '0'
+                            || NVL (sm.SRV_MEM_PV_MONTH, 0)
+                            || '/'
+                            || NVL (sm.SRV_MEM_PV_YEAR, 0)
+                        ELSE
+                            NVL (sm.SRV_MEM_PV_MONTH, 0) || '/' || NVL (sm.SRV_MEM_PV_YEAR, 0)
+                      END)
+               ELSE
+                 '-'
+               END) NET_MONTH
+         FROM SAL0095D sm
+                 JOIN SAL0001D som ON som.SALES_ORD_ID = sm.SRV_SALES_ORD_ID
+                 JOIN ORG1001V mo ON mo.MEM_ID = sm.SRV_MEM_SALES_MEM_ID
+                 JOIN SAL0091M pac ON pac.SRV_MEM_PAC_ID = sm.SRV_MEM_PAC_ID
+                 JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+                 JOIN SYS0038M s ON s.STUS_CODE_ID = sm.SRV_STUS_CODE_ID
+                 LEFT JOIN ORG0001D mem ON mem.MEM_ID = sm.SRV_MEM_SALES_MEM_ID
+         WHERE 1 = 1
+        <if test="createStDate != null and createStDate != ''">
+            AND sm.SRV_CRT_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+        <if test="createEnDate != null and createEnDate != ''">
+            AND sm.SRV_CRT_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+        <if test="netSalesMonth != null and netSalesMonth != ''">
+            AND sm.SRV_MEM_PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+            AND sm.SRV_MEM_PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            AND som.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="salesmanCode != null and salesmanCode != ''">
+            AND mem.MEM_CODE = #{salesmanCode}
+        </if>
+        <if test="cmbCondition == 1 ">
+            AND sm.SRV_STUS_CODE_ID = 1
+        </if>
+        <if test="cmbCondition == 2 ">
+            AND sm.SRV_STUS_CODE_ID = 10
+        </if>
+        <if test="cmbCondition == 3 ">
+            AND sm.SRV_STUS_CODE_ID = 4
+            AND sm.SRV_MEM_PV_YEAR <![CDATA[>]]> 0
+            AND sm.SRV_MEM_PV_MONTH <![CDATA[>]]> 0
+        </if>
+        <if test="cmbCondition == 4 ">
+            AND sm.SRV_STUS_CODE_ID = 4
+            AND sm.SRV_MEM_PV_YEAR = 0
+            AND sm.SRV_MEM_PV_MONTH = 0
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND mo.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND mo.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND mo.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memtype != null and memtype != ''">
+            AND mem.MEM_TYPE = #{memtype}
+         </if>
+
+        ) UNION ALL (
+
+        SELECT srm.SRV_CNTRCT_REF_NO MBRSH_NO
+            , 'RENTAL' MBRSH_TYPE
+            , srm.SRV_CNTRCT_ORD_ID SALES_ORD_ID
+            , som.SALES_ORD_NO
+            , (CASE
+                WHEN TO_CHAR(E7.SRV_PRD_START_DT, 'YYYYMMDD') = '19000101'
+                THEN ''
+                ELSE TO_CHAR(E7.SRV_PRD_START_DT, 'DD/MM/YYYY')
+                END ) MBRSH_START_DT
+            , E7.SRV_PRD_EXPR_DT MBRSH_EXPR_DT
+            , srm.SRV_CNTRCT_STUS_ID STUS_ID
+            , s.CODE MBRSH_STUS_CODE
+            , srm.SRV_CNTRCT_CRT_DT MBRSH_CRT_DT
+            , NVL (mem.MEM_CODE, ' ') SALESMAN_CODE
+            , E10.QOTAT_CNTRCT_DUR MBRSH_DUR
+            , mo.ORG_CODE
+            , mo.GRP_CODE
+            , mo.DEPT_CODE
+            , E3.SRV_CNTRCT_PAC_DESC PAC_NAME
+            , c.NAME CUST_NAME
+            , (CASE WHEN NVL (srm.SRV_CNTRCT_NET_MONTH, 0) > 0 THEN 1 ELSE 0 END) IS_NET
+            , (CASE
+                WHEN NVL (srm.SRV_CNTRCT_NET_MONTH, 0) <![CDATA[>]]> 0
+                THEN
+                    (CASE
+                        WHEN NVL (srm.SRV_CNTRCT_NET_MONTH, 0) <![CDATA[<]]> 10
+                        THEN
+                             '0'
+                            || NVL (srm.SRV_CNTRCT_NET_MONTH, 0)
+                            || '/'
+                            || NVL (srm.SRV_CNTRCT_NET_YEAR, 0)
+                        ELSE
+                            NVL (srm.SRV_CNTRCT_NET_MONTH, 0) || '/' || NVL (srm.SRV_CNTRCT_NET_YEAR, 0)
+                      END)
+               ELSE
+                 '-'
+               END) NET_MONTH
+         FROM SAL0077D srm
+                 JOIN SAL0001D som ON som.SALES_ORD_ID = srm.SRV_CNTRCT_ORD_ID
+                 JOIN SAL0081D E3   ON E3.SRV_CNTRCT_PAC_ID = srm.SRV_CNTRCT_PCKG_ID
+                 LEFT JOIN SAL0088D E7 ON E7.SRV_PRD_CNTRCT_ID = srm.SRV_CNTRCT_ID
+                 JOIN SAL0083D E10   ON E10.QOTAT_ID = srm.SRV_CNTRCT_QUOT_ID
+                 JOIN ORG1001V mo ON mo.MEM_ID = srm.SRV_CNTRCT_SALESMAN
+                 JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+                 JOIN SYS0038M s ON s.STUS_CODE_ID = srm.SRV_CNTRCT_STUS_ID
+                 LEFT JOIN ORG0001D mem ON mem.MEM_ID = srm.SRV_CNTRCT_SALESMAN
+         WHERE 1 = 1
+        <if test="createStDate != null and createStDate != ''">
+            AND srm.SRV_CNTRCT_CRT_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+        <if test="createEnDate != null and createEnDate != ''">
+            AND srm.SRV_CNTRCT_CRT_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+        <if test="netSalesMonth != null and netSalesMonth != ''">
+            AND srm.SRV_CNTRCT_NET_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+            AND srm.SRV_CNTRCT_NET_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+        </if>
+        <if test="orderNo != null and orderNo != ''">
+            AND som.SALES_ORD_NO = #{orderNo}
+        </if>
+        <if test="salesmanCode != null and salesmanCode != ''">
+            AND mem.MEM_CODE = #{salesmanCode}
+        </if>
+        <if test="cmbCondition == 1 ">
+            AND srm.SRV_CNTRCT_STUS_ID = 1
+        </if>
+        <if test="cmbCondition == 2 ">
+            AND srm.SRV_CNTRCT_STUS_ID = 10
+        </if>
+        <if test="cmbCondition == 3 ">
+            AND srm.SRV_CNTRCT_STUS_ID = 4
+            AND srm.SRV_CNTRCT_NET_YEAR <![CDATA[>]]> 0
+            AND srm.SRV_CNTRCT_NET_MONTH <![CDATA[>]]> 0
+        </if>
+        <if test="cmbCondition == 4 ">
+            AND srm.SRV_CNTRCT_STUS_ID = 4
+            AND srm.SRV_CNTRCT_NET_YEAR = 0
+            AND srm.SRV_CNTRCT_NET_MONTH = 0
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND mo.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND mo.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND mo.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memtype != null and memtype != ''">
+            AND mem.MEM_TYPE = #{memtype}
+        </if>
+
+        )
+
+        ) WHERE 1=1
+        <if test="membershipType != null and membershipType != ''">
+            AND MBRSH_TYPE = #{membershipType}
+        </if>
+
+    </select>
+
+</mapper>

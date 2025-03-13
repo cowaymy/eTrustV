@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper">
+
+  <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+    SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectPaymentList] 20190930 - KR HAN */
+               Extent1.SALES_ORD_ID SALES_ORD_ID
+             , Extent1.SALES_ORD_NO SALES_ORD_NO
+             , Extent2.CUST_ID CUST_ID
+             , Extent2.NAME CUST_NAME
+             , CASE WHEN ( Extent4.CODE_NAME IS NOT NULL )
+               THEN Extent3.CODE_NAME||'('||Extent4.CODE_NAME||')'
+                ELSE Extent3.CODE_NAME
+                END CUST_TYPE_NAME
+             , Extent1.APP_TYPE_ID APP_TYPE_ID
+             , Extent5.CODE_NAME APP_TYPE_NAME
+    FROM SAL0001D Extent1
+    JOIN SAL0029D Extent2 ON Extent1.CUST_ID = Extent2.CUST_ID
+    JOIN SYS0013M Extent3 ON Extent3.CODE_ID = Extent2.TYPE_ID
+    LEFT OUTER JOIN SYS0013M Extent4 ON Extent4.CODE_ID = Extent2.CORP_TYPE_ID
+    JOIN SYS0013M Extent5 ON Extent1.APP_TYPE_ID = Extent5.CODE_ID
+
+    WHERE Extent1.STUS_CODE_ID  <![CDATA[<>]]>  8
+
+    <if test='searchType eq "1"'>
+        AND Extent1.SALES_ORD_NO = #{searchKeyword}
+    </if>
+
+    <if test='searchType eq "2" or searchType eq "3" '>
+        AND Extent2.NRIC = #{searchKeyword}
+    </if>
+
+     <if test='salesOrdNo != null and salesOrdNo !=""'>
+        AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+     </if>
+
+  </select>
+
+  <select id="selectBillInfoRental" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectBillInfoRental] 20191010 - KR HAN */
+               Extent1.SALES_ORD_ID,
+               Extent1.CUST_BILL_ID,
+               Extent1.SALES_ORD_NO,
+               Extent1.CUST_ID,
+               Extent4.NAME CUST_NM,
+               Extent1.APP_TYPE_ID,
+               Extent2.CODE_NAME APP_TYPE_NM,
+               Extent1.PV_YEAR,
+               Extent1.PV_MONTH,
+               Extent1.STUS_CODE_ID STUS_CODE_ID,
+               Extent3.STUS_CODE_ID STUS_CODE_NM,
+               CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                       THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                       ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+               Extent1.TOT_AMT
+    FROM SAL0001D Extent1
+    LEFT JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+    LEFT JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+    LEFT JOIN ( SELECT RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                     FROM PAY0022D
+                     WHERE RENT_DOC_TYPE_ID = 161 AND RENT_AMT >=  0
+                     GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+    LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id
+    WHERE 1=1
+
+    <!-- Extent1.APP_TYPE_ID = 66 -->
+    AND Extent1.SALES_ORD_NO = #{salesOrdNo}
+    ORDER BY Extent1.SALES_ORD_NO
+  </select>
+
+  <select id="selectSalesNotificationInfo" parameterType="Map" resultType="egovMap">
+     SELECT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectSalesNotificationInfo] 20191014 - KR HAN */
+                Extent1.SALES_ORD_ID SALES_ORD_ID
+              , Extent1.SALES_ORD_NO SALES_ORD_NO
+              , Extent2.TEL_M1 MOBILE_NO
+              , Extent2.EMAIL EMAIL
+    FROM SAL0001D Extent1
+    JOIN SAL0027D Extent2 ON Extent1.CUST_CNT_ID = Extent2.CUST_CNTC_ID
+    WHERE Extent1.SALES_ORD_NO = #{salesOrdNo}
+  </select>
+
+  <insert id="insertSalesNotification" parameterType="Map"  >
+    INSERT  /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.insertSalesNotification] 20191014 - KR HAN */
+    INTO PAY0297D( MOB_PAY_NO
+                          , SALES_ORD_NO
+                          , PAY_STUS_ID
+                          , PAY_MODE
+                          , ADV_MONTH
+                          , ADV_AMT
+                          , OTSTND_AMT
+                          , PAY_AMT
+                          , UPLOAD_IMG
+                          , UPLOAD_IMG2
+                          , UPLOAD_IMG3
+                          , UPLOAD_IMG4
+                          , SLIP_NO
+                          , ISSU_BANK_ID
+                          , CHEQUE_DT
+                          , CHEQUE_NO
+                          , SMS_1
+                          , SMS_2
+                          , EMAIL_1
+                          , EMAIL_2
+                          , SIGN_IMG
+                          , MOB_TICKET_NO
+                          , PAY_REM
+                          , CRT_USER_ID
+                          , CRT_DT
+                          , UPD_USER_ID
+                          , UPD_DT
+
+                          , CARD_NO
+                          , APPROVAL_NO
+                          , CRC_NAME
+                          , TRANSACTION_DATE
+                          , EXPIRY_DATE
+                          , CARD_MODE
+                          , MERCHANT_BANK
+                          , CARD_BRAND
+
+    ) VALUES( PAY0297D_SEQ.NEXTVAL
+                  ,#{salesOrdNo}
+                  ,#{payStusId}
+                  ,#{payMode}
+                  ,#{advMonth}
+                  ,TO_NUMBER(#{advAmt}, '9999999.99')
+                  ,TO_NUMBER(#{otstndAmt}, '9999999.99')
+                  ,TO_NUMBER(#{payAmt}, '9999999.99')
+                  ,#{uploadImg1}
+                  ,#{uploadImg2}
+                  ,#{uploadImg3}
+                  ,#{uploadImg4}
+                  ,#{slipNo}
+                  ,#{issuBankId}
+                  ,#{chequeDt}
+                  ,#{chequeNo}
+                  ,#{sms1}
+                  ,#{sms2}
+                  ,#{email1}
+                  ,#{email2}
+                  ,UTL_RAW.CAST_TO_RAW(#{signImg})
+                  ,#{mobTicketNo}
+                  ,#{payRem}
+                  ,#{crtUserId}
+                  ,SYSDATE
+                  ,#{updUserId}
+                  ,SYSDATE
+
+                  ,#{cardNo}
+                  ,#{approvalNo}
+                  ,#{crcName}
+                  ,#{transactionDate}
+                  ,#{expiryDate}
+                  ,#{cardMode}
+                  ,#{merchantBank}
+                  ,#{cardBrand}
+    )
+  </insert>
+
+  <select id="selectBankSelectBox" parameterType="Map" resultType="egovMap">
+     SELECT /* [com.coway.trust.biz.payment.payment.service.impl.PaymentApiMapper.selectBankSelectBox] 20191014 - KR HAN */
+                BANK_ID BANK_ID
+              , NAME BANK_NM
+     FROM SYS0004M
+     WHERE STUS_CODE_ID = '1'
+     ORDER BY BANK_ID ASC
+  </select>
+
+
+  <select id="selectCardModeBox" parameterType="Map" resultType="egovMap">
+         SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = '130'
+        AND DISAB = '0'
+        AND CODE_ID in ('2711','2712')
+        ORDER BY CODE_ID
+  </select>
+
+  <select id="selectMerchantBankOn2708" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (102,107)
+        ORDER BY ACC_CODE ASC
+  </select>
+
+    <select id="selectMerchantBankOn2709" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (102,107)
+        ORDER BY ACC_CODE ASC
+  </select>
+
+    <select id="selectMerchantBankOn2710" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (100,102,104,105,106,107,553,563)
+        ORDER BY ACC_CODE ASC
+  </select>
+
+  <select id="selectMerchantBankOn2711" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID = 102
+        ORDER BY ACC_CODE ASC
+  </select>
+
+  <select id="selectMerchantBankOn2712" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID = 102
+        ORDER BY ACC_CODE ASC
+  </select>
+
+    <select id="selectIssueBankOn2710" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                        AND BANK_ID IN (5,6,17,19,20,21,28,29,30,34,38,23,3,36,32)
+                    ) Project1
+        ORDER BY Project1.CODE ASC
+  </select>
+
+  <select id="selectIssueBankOn2712" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                        AND BANK_ID IN (3,36)
+                    ) Project1
+        ORDER BY Project1.CODE ASC
+  </select>
+
+  <select id="selectIssueBankOnDefault" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                    ) Project1
+        ORDER BY Project1.CODE ASC
+  </select>
+
+  <select id="getSmsTemplate" parameterType="Map" resultType="String">
+    SELECT REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smseTRNo'),'{1}', #{salesOrdNo}), '{2}', #{payAmt}), '{3}', #{mobTicketNo})
+    FROM DUAL
+  </select>
+
+  <insert id="insertMSC0015D" parameterType="Map"  >
+    INSERT INTO MSC0015D ( SMS_ID
+                                       , SMS_MSG
+                                       , SMS_MSISDN
+                                       , SMS_TYPE_ID
+                                       , SMS_PRIO
+                                       , SMS_REF_NO
+                                       , SMS_BATCH_UPLOAD_ID
+                                       , SMS_REM
+                                       , SMS_START_DT
+                                       , SMS_EXPR_DT
+                                       , SMS_STUS_ID
+                                       , SMS_RETRY
+                                       , SMS_CRT_DT
+                                       , SMS_CRT_USER_ID
+                                       , SMS_UPD_DT
+                                       , SMS_UPD_USER_ID
+                                       , SMS_VENDOR_ID
+    ) VALUES ( MSC0015D_SEQ.NEXTVAL
+                  , #{smsTemplate}
+                  , #{mobileNo}
+                  , 975
+                  , 1
+                  , (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrdNo})
+                  , 0
+                  , UPPER('SMS E-TR TICKET VIA MOBILE APPS')
+                  , SYSDATE
+                  , SYSDATE + 1
+                  , 4
+                  , 0
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{crtUserId}
+                  , 2
+                  )
+    </insert>
+
+  <select id="getEmailTitle" parameterType="Map" resultType="String">
+    SELECT REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{mobTicketNo})
+    FROM DUAL
+  </select>
+
+  <select id="getEmailDetails" parameterType="Map" resultType="egovMap">
+    SELECT
+        p.SALES_ORD_NO AS SALES_ORD_NO,
+        p.PAY_AMT AS PAY_AMT,
+        s47.USER_NAME AS COLLECTOR_CODE,
+        s47.USER_FULL_NAME AS COLLECTOR_NAME,
+        s26.STK_DESC AS STK_DESC,
+        TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
+        s13.CODE_NAME AS PYMT_MODE,
+        (select
+            NVL (ca1.ADDR_DTL, ' ')  || ', ' ||
+            NVL (ca1.STREET, ' ')  || ', ' ||
+            NVL (ma1.AREA, ' ')  || ', ' ||
+            NVL (ma1.POSTCODE, ' ')  || ', ' ||
+            NVL (ma1.CITY, ' ')  || ', ' ||
+            NVL (ma1.STATE, ' ')  || ', ' ||
+            NVL (ma1.COUNTRY, ' ')
+            FROM sal0001d som
+                JOIN sal0045d i
+                    ON i.sales_ord_id = som.sales_ord_id
+                LEFT JOIN sal0023d ca1
+                    ON ca1.cust_add_id = i.add_id
+                LEFT JOIN SYS0064M ma1
+                    ON ma1.AREA_ID = ca1.AREA_ID
+                where som.sales_ord_id = s1.SALES_ORD_ID) AS INST_ADDRESS
+    FROM
+        ( SELECT * FROM PAY0297D WHERE SALES_ORD_NO = #{salesOrdNo} ) p
+        JOIN SAL0001D s1 ON s1.SALES_ORD_NO = p.SALES_ORD_NO
+        JOIN SAL0002D s2 ON s2.SALES_ORD_ID = s1.SALES_ORD_ID
+        JOIN SYS0026M s26 ON s26.STK_ID = s2.ITM_STK_ID
+        JOIN SYS0013M s13 ON s13.CODE_ID = p.PAY_MODE
+        JOIN SYS0047M s47 ON s47.USER_ID = p.CRT_USER_ID
+   WHERE p.MOB_TICKET_NO = #{mobTicketNo}
+  </select>
+
+<!--   <select id="getEmailDetails" parameterType="Map" resultType="String"> -->
+<!--     SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{custNm}), '{2}', #{payAmt}), '{3}', #{mobTicketNo}), '{4}', #{salesOrdNo}) -->
+<!--     FROM DUAL -->
+<!--   </select> -->
+
+</mapper>

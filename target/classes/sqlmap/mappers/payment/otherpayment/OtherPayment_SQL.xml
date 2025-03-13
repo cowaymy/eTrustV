@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.OtherPaymentMapper">
+
+    <select id="selectBankStatementList" parameterType="Map" resultType="egovMap">
+    SELECT
+			A.F_TRNSC_ID id,
+			C.NAME BANK,
+			D.ACC_DESC BANK_ACC_NAME,
+			A.F_TRNSC_DT TRNSC_DT,
+			A.F_TRNSC_REF_CHQ_NO CHQ_NO,
+			A.F_TRNSC_REF_VA_NO,
+			A.F_TRNSC_REF3 REF3,
+			A.F_TRNSC_REF1 REF1,
+			A.F_TRNSC_REF4 REF4,
+			A.F_TRNSC_REF2 REF2,
+			A.F_TRNSC_REF6 REF6,
+			A.F_TRNSC_REM TYPE,
+			A.F_TRNSC_DEBT_AMT DEBT,
+			A.F_TRNSC_CRDIT_AMT CRDIT,
+			<!--(CASE WHEN B.F_BANK_JRNL_STUS_ID = 1  THEN 'Mapped' ELSE 'UnMapped' END) STUS
+			B.POSTNG_DT MTCH_DT,-->
+			(CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+			A.OTH_KEYIN_MAPPING_DT,
+			A.F_TRNSC_TELLER_ID,
+			A.F_TRNSC_NEW_CHQ_NO
+			<if test="memType == 2 ">
+			,F.MEM_CODE
+			</if>
+    FROM PAY0081D A
+            JOIN PAY0079D B on A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+            LEFT JOIN SYS0004M C on B.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D on B.F_BANK_JRNL_ACC_ID = D.ACC_ID <!-- AND (D.IS_PAY_CASH = 1 OR D.IS_PAY_ONLINE = 1 OR IS_PAY_CHQ = 1)-->
+            <if test="memType == 4 or memType == 6  ">
+
+            <if test="(deptCode != null and deptCode != '' ) or (grpCode != null and grpCode != '') or (orgCode != null and orgCode != '')">
+                 JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+                 JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+            </if>
+            <if test="(deptCode == null or deptCode == '' ) and (grpCode == null or grpCode == '') and (orgCode == null or orgCode == '')">
+                LEFT JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+                LEFT JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+            </if>
+			<if test="deptCode != null and deptCode != '' ">
+			    AND E.DEPT_CODE = #{deptCode}
+			</if>
+			<if test="grpCode != null and grpCode != '' ">
+			    AND E.GRP_CODE = #{grpCode}
+			</if>
+			<if test="orgCode != null and orgCode != '' ">
+			    AND E.ORG_CODE = #{orgCode}
+			</if>
+         </if>
+         <if test="memType == 2">
+			<if test="(memLevel == 1 or memLevel == 2) and bizType == 1376">
+			     LEFT JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+			     LEFT JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+			</if>
+			<if test="(memLevel == 1 or memLevel == 2) and bizType == 1375">
+                 JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+                 JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+            </if>
+			<if test="memLevel == 3 or memLevel == 4">
+			    JOIN ORG0001D F ON F.MEM_VA_NO = A.F_TRNSC_REF_VA_NO
+			    JOIN ORG1001V E ON E.MEM_ID = F.MEM_ID
+			</if>
+			<if test="deptCode != null and deptCode != '' ">
+			    AND E.DEPT_CODE = #{deptCode}
+			</if>
+			<if test="grpCode != null and grpCode != '' ">
+			    AND E.GRP_CODE = #{grpCode}
+			</if>
+			<if test="orgCode != null and orgCode != '' ">
+			    AND E.ORG_CODE = #{orgCode}
+			</if>
+         </if>
+
+         WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
+
+		 <if test="bankDateFr != null and bankDateFr != '' and bankDateTo != null and bankDateTo != '' ">
+		        AND A.F_TRNSC_DT  <![CDATA[>= ]]> TO_DATE(#{bankDateFr}, 'DD/MM/YYYY')
+		        AND A.F_TRNSC_DT  <![CDATA[<]]> TO_DATE(#{bankDateTo}, 'DD/MM/YYYY') + 1
+		 </if>
+		 <if test="searchPayType != null and searchPayType != '' and searchPayType != 'ALL' ">
+		        AND A.F_TRNSC_REM = #{searchPayType}
+		 </if>
+		 <if test="searchBankAcc != null and searchBankAcc != '' ">
+		        AND B.F_BANK_JRNL_ACC_ID = #{searchBankAcc}
+		 </if>
+		 <if test="searchCreditAmtFr != null and searchCreditAmtFr != '' ">
+                AND TO_NUMBER(A.F_TRNSC_CRDIT_AMT) <![CDATA[>= ]]> #{searchCreditAmtFr}
+         </if>
+         <if test="searchCreditAmtTo != null and searchCreditAmtTo != '' ">
+                AND TO_NUMBER(A.F_TRNSC_CRDIT_AMT) <![CDATA[<= ]]> #{searchCreditAmtTo}
+         </if>
+         <if test="searchVa != null and searchVa !='' ">
+            AND A.F_TRNSC_REF_VA_NO =  #{searchVa}
+         </if>
+         <if test="memType == 2 and bizType == 1376">
+           AND (F.MEM_CODE IS NULL OR (F.MEM_CODE IS NOT NULL AND E.GRP_CODE IS NOT NULL AND E.ORG_CODE IS NOT NULL))
+         </if>
+    </select>
+
+    <select id="getMemVaNo" parameterType="Map" resultType="egovMap">
+	     SELECT
+	     MEM_VA_NO
+	     ,MEM_CODE
+	     FROM ORG0001D
+	     WHERE MEM_ID = #{memId}
+	     AND MEM_TYPE = '2'
+    </select>
+
+</mapper>

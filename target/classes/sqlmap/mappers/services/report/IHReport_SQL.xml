@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.coway.trust.biz.services.report.impl.IHReportMapper">
+
+  <select id="selectMemberCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_ID CODE_ID  ,
+           Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+           Project1.NAME NAME  ,
+           Project1.NRIC NRIC  ,
+           Project1.MEM_TYPE MEM_TYPE
+      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                    Extent1.MEM_CODE MEM_CODE  ,
+                    Extent1.MEM_TYPE MEM_TYPE  ,
+                    Extent1.NAME NAME  ,
+                    Extent1.NRIC NRIC
+             FROM ORG0001D Extent1
+             JOIN ORG0005D ORG5 ON ORG5.MEM_ID = Extent1.MEM_ID
+             WHERE ( 1 = Extent1.STUS )
+                   AND ( Extent1.MEM_TYPE = 3 )
+                   AND ( ORG5.MEM_LVL in ( '4','3','2') )
+
+                   <!-- By KV link with branch in as log book list jsp -->
+                   <if test="groupCode != null and groupCode !='' ">
+                     AND Extent1.BRNCH = #{groupCode}
+                   </if>
+      ) Project1
+      ORDER BY Project1.MEM_CODE ASC
+  </select>
+
+  <select id="selectOrderNum" parameterType="Map" resultType="egovMap">
+    SELECT GroupBy1.A1 C1,
+           GroupBy1.A2 C2
+    FROM ( SELECT MIN(Extent2.SALES_ORD_NO) A1,
+                  MAX(Extent2.SALES_ORD_NO) A2
+           FROM SVC0001D Extent1
+           JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.AS_SO_ID
+    ) GroupBy1
+  </select>
+
+  <select id="selectViewLedger" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+     SELECT Project1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID  ,
+            Project1.AS_DOC_NO AS_DOC_NO  ,
+            Project1.CODE_NAME CODE_NAME  ,
+            Project1.C1 C1  ,
+            Project1.C2 C2  ,
+            Project1.C3 C3  ,
+            Project1.C4 C4
+     FROM ( SELECT Extent1.AS_DOC_NO AS_DOC_NO  ,
+                   Extent1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID  ,
+                   Extent2.CODE_NAME CODE_NAME  ,
+                   CASE WHEN ( Extent1.AS_LG_DT IS NOT NULL )
+                        THEN TO_CHAR(Extent1.AS_LG_DT,'DD-MM-YYYY')
+                        ELSE TO_CHAR('1900-01-01','yyyy-mm-dd')
+                        END C1,
+                   CASE WHEN ( Extent1.AS_LG_AMT >0 )
+                        THEN Extent1.AS_LG_AMT
+                        ELSE 0
+                        END C2  ,
+                   CASE WHEN ( Extent1.AS_LG_AMT <= 0 )
+                        THEN Extent1.AS_LG_AMT
+                        ELSE 0
+                        END C3  ,
+                   CASE WHEN ( Extent1.AS_ADV_PAY IS NOT NULL )
+                        THEN Extent1.AS_ADV_PAY
+                        ELSE 0
+                        END C4
+            FROM PAY0006D Extent1
+            JOIN SYS0013M Extent2 ON Extent1.AS_LG_DOC_TYPE_ID = Extent2.CODE_ID
+            WHERE Extent1.AS_ID = (SELECT AS_ENTRY_ID FROM SVC0109D WHERE AS_RESULT_NO = #{ASRNO})
+     ) Project1
+     ORDER BY Project1.C1 ASC
+    ]]>
+  </select>
+
+  <select id="selectMemCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_CODE CODE_ID  ,
+           Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+           Project1.NAME NAME  ,
+           Project1.NRIC NRIC  ,
+           Project1.MEM_TYPE MEM_TYPE
+    FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                  Extent1.MEM_CODE MEM_CODE  ,
+                  Extent1.MEM_TYPE MEM_TYPE  ,
+                  Extent1.NAME NAME  ,
+                  Extent1.NRIC NRIC
+           FROM ORG0001D Extent1
+           WHERE ( 1 = Extent1.STUS )
+             AND ( Extent1.MEM_TYPE = 3 )
+    ) Project1 ORDER BY Project1.MEM_CODE ASC
+  </select>
+
+  <select id="selectAsLogBookTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'IH_LGBKTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsLogBookGrp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_LGBKGRP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsSumTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'IH_SUMTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsSumStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_SUMSTA'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsYsTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_YSTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsYsAge" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_YSAGE'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+</mapper>

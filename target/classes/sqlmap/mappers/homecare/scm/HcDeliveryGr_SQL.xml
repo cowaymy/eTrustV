@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper">
+
+    <select id="selectDeliveryGrMainCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryGrMainCnt] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM (
+		        SELECT CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
+		                                                          FROM (
+		                                                                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		                                                                     , REQST_NO
+		                                                                     , REQST_NO_ITM
+		                                                                     , ITM_CODE
+		                                                                  FROM LOG0099D
+		                                                               ) Z
+		                                                         WHERE Z.REQST_NO = B.HMC_GR_NO
+		                                                           AND Z.REQST_NO_ITM = B.HMC_GR_NO_DTL_NO
+		                                                           AND Z.ITM_CODE = B.STOCK_CODE
+		                                                           AND Z.RN = 1
+		                                                      )
+		                    ELSE B.RCIPT_QTY
+		               END AS RCIPT_QTY
+		          FROM HMC0009M A       -- GR
+		             , HMC0010D B
+		             , HMC0007M C
+		         WHERE A.HMC_GR_NO = B.HMC_GR_NO
+		           AND A.PO_NO = B.PO_NO
+		           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+		           AND A.PO_NO = C.PO_NO
+		           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+		           AND A.USE_YN = 'Y'
+		          -- AND C.DELVRY_STATUS = '5652'
+		           AND C.USE_YN = 'Y'
+		         <if test='sCdc != null and sCdc != ""'>
+		           AND A.CDC = #{sCdc}
+		         </if>
+		         <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
+		           AND C.DELVRY_GI_DT <![CDATA[>=]]> TO_DATE(#{sDlvGiDtFrom}, 'YYYYMMDD')
+		         </if>
+		         <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
+		           AND C.DELVRY_GI_DT <![CDATA[<=]]> TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1
+		         </if>
+		         <if test="sMemAccId != null and sMemAccId !=''">
+		           AND C.MEM_ACC_ID = #{sMemAccId}
+		         </if>
+		         <if test="sMemAcc != null and sMemAcc !=''">
+		             AND 1 = 2
+		         </if>
+		         <if test="sPoNo != null and sPoNo !=''">
+		           AND A.PO_NO = #{sPoNo}
+		         </if>
+		         <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
+		           AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
+		         </if>
+		         <if test="sGrYn != null and sGrYn !=''">
+		           AND A.GR_YN = #{sGrYn}
+		         </if>
+              ) Z
+      WHERE Z.RCIPT_QTY <![CDATA[>]]> 0
+    </select>
+
+    <select id="selectDeliveryGrMain" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryGrMain] - KR JIN */
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+                    SELECT Z.*
+                      FROM (
+		                    SELECT B.HMC_GR_NO
+							     , B.HMC_GR_NO_DTL_NO
+							     , B.HMC_DELVRY_NO
+							     , B.HMC_DELVRY_NO_DTL_NO
+							     , B.PO_NO
+							     , B.PO_DTL_NO
+							     , B.STOCK_ID
+							     , B.STOCK_CODE
+							     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = B.STOCK_ID AND STK_CODE = B.STOCK_CODE) AS STOCK_NAME
+							     , NVL(A.GR_YN, 'N') AS GR_YN
+							     , C.DELVRY_STATUS
+							     , CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
+		                                                                      FROM (
+																	                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+								                                                         , REQST_NO
+								                                                         , REQST_NO_ITM
+								                                                         , ITM_CODE
+								                                                      FROM LOG0099D
+						                                                           ) Z
+								                                             WHERE Z.REQST_NO = B.HMC_GR_NO
+								                                               AND Z.REQST_NO_ITM = B.HMC_GR_NO_DTL_NO
+								                                               AND Z.ITM_CODE = B.STOCK_CODE
+								                                               AND Z.RN = 1
+															              )
+							            ELSE B.RCIPT_QTY
+							        END AS RCIPT_QTY
+							     , B.QC_FAIL_QTY
+							     , A.GR_DT
+							  FROM HMC0009M A       -- GR
+							     , HMC0010D B
+							     , HMC0007M C
+							 WHERE A.HMC_GR_NO = B.HMC_GR_NO
+							   AND A.PO_NO = B.PO_NO
+							   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+							   AND A.PO_NO = C.PO_NO
+							   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+							   AND A.USE_YN = 'Y'
+							   --AND C.DELVRY_STATUS = '5652'
+							   AND C.USE_YN = 'Y'
+							 <if test='sCdc != null and sCdc != ""'>
+					           AND A.CDC = #{sCdc}
+							 </if>
+							 <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
+							   AND C.DELVRY_GI_DT <![CDATA[>=]]> TO_DATE(#{sDlvGiDtFrom}, 'YYYYMMDD')
+							 </if>
+							 <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
+							   AND C.DELVRY_GI_DT <![CDATA[<=]]> TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1
+							 </if>
+							 <if test="sMemAccId != null and sMemAccId !=''">
+							   AND C.MEM_ACC_ID = #{sMemAccId}
+							 </if>
+							 <if test="sMemAcc != null and sMemAcc !=''">
+					             AND 1 = 2
+					         </if>
+							 <if test="sPoNo != null and sPoNo !=''">
+							   AND A.PO_NO = #{sPoNo}
+							 </if>
+							 <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
+							   AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
+							 </if>
+							 <if test="sGrYn != null and sGrYn !=''">
+		                       AND A.GR_YN = #{sGrYn}
+		                     </if>
+		                ) Z
+		            WHERE Z.RCIPT_QTY <![CDATA[>]]> 0
+
+                    ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "hmcGrNo"'>Z.HMC_GR_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        Z.HMC_GR_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            Z.HMC_GR_NO DESC
+                        </otherwise>
+                     </choose>
+                 ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectGrHeaderInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectGrHeaderInfo] - KR JIN */
+	    SELECT A.HMC_DELVRY_NO
+		     , A.PO_NO
+		     , B.CDC
+		     , B.MEM_ACC_ID
+		     , CASE WHEN (SELECT MAX(1) FROM HMC0009M WHERE PO_NO = A.PO_NO AND HMC_DELVRY_NO = A.HMC_DELVRY_NO AND USE_YN = 'Y' AND GR_YN = 'N') = 1 THEN 'N'
+		            ELSE 'Y'
+		        END AS IS_NEW_YN
+		     , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND DISAB = '0' AND CODE_ID = A.DELVRY_STATUS) AS DELVRY_STATUS_CD
+		  FROM HMC0007M A
+		     , HMC0004M B
+		 WHERE A.PO_NO = B.PO_NO
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
+    </select>
+
+    <insert id="insertDeliveryGrHeader" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.insertDeliveryGrHeader] - KR JIN */
+        <selectKey keyProperty="hmcGrNo" resultType="String" order="BEFORE">
+            SELECT 'HGR'||TO_CHAR(SYSDATE, 'YYMMDD')|| LPAD(NVL(MAX(TO_NUMBER(SUBSTR(HMC_GR_NO, 10))), 0)+1, 5, '0') AS HMC_GR_NO
+			  FROM HMC0009M
+			 WHERE HMC_GR_NO LIKE 'HGR'||TO_CHAR(SYSDATE, 'YYMMDD') || '%'
+        </selectKey>
+
+        INSERT
+          INTO HMC0009M
+        (
+			   HMC_GR_NO              --HomeCare GR Number
+			 , PO_NO                  --PO No
+			 , HMC_DELVRY_NO          --Delivery Number
+			 , GR_YN                  --SAVE : N, GR : Y
+			 , GR_DT                  --GR Date
+			 , CDC                    --CDC
+			 , RM                     --Remark
+			 , PO_SETTL_STATUS        --PO Settlement Status 443
+			 , USE_YN                 --USE_YN
+			 , CRT_DT                 --Create Date
+			 , CRT_USER_ID            --Create User Id
+			 , UPD_DT                 --Update Date
+			 , UPD_USER_ID            --Update User Id
+	   )VALUES(
+			   #{hmcGrNo}               --HomeCare GR Number
+			 , #{poNo}                  --PO No
+			 , #{hmcDelvryNo}           --Delivery Number
+			 , 'N'
+			 , NULL
+			 , #{cdc}                   --CDC
+			 , NULL
+			 , NULL
+			 , 'Y'
+			 , SYSDATE
+			 , #{crtUserId}             --Create User Id
+			 , SYSDATE
+			 , #{updUserId}             --Update User Id
+		)
+    </insert>
+
+    <insert id="insertDeliveryGrDetailList" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.insertDeliveryGrDetailList] - KR JIN */
+		INSERT
+		  INTO HMC0010D
+		(
+		       HMC_GR_NO
+		     , HMC_GR_NO_DTL_NO
+		     , HMC_DELVRY_NO
+		     , HMC_DELVRY_NO_DTL_NO
+		     , PO_NO
+		     , PO_DTL_NO
+		     , STOCK_ID
+		     , STOCK_CODE
+		     , RCIPT_QTY
+		     , QC_FAIL_QTY
+		     , USE_YN
+		     , CRT_DT
+		     , CRT_USER_ID
+		     , UPD_DT
+		     , UPD_USER_ID
+		)
+		SELECT #{hmcGrNo} AS HMC_GR_NO
+		     , (SELECT NVL(MAX(HMC_GR_NO_DTL_NO), 0) AS HMC_GR_NO_DTL_NO FROM HMC0010D WHERE HMC_GR_NO = #{hmcGrNo}) + ROWNUM AS HMC_GR_NO_DTL_NO
+		     , HMC_DELVRY_NO  AS HMC_DELVRY_NO
+		     , HMC_DELVRY_NO_DTL_NO AS HMC_DELVRY_NO_DTL_NO
+		     , PO_NO
+		     , PO_DTL_NO
+		     , STOCK_ID
+		     , STOCK_CODE
+		     , 0 AS RCIPT_QTY
+		     , 0 AS QC_FAIL_QTY
+		     , 'Y' AS USE_YN
+		     , SYSDATE AS CRT_DT
+		     , #{crtUserId} AS CRT_USER_ID
+		     , SYSDATE AS UPD_DT
+		     , #{updUserId} AS UPD_USER_ID
+		  FROM HMC0008D
+		 WHERE USE_YN = 'Y'
+		   AND HMC_DELVRY_NO = #{hmcDelvryNo}
+    </insert>
+
+    <select id="selectDeliveryConfirm" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryConfirm] - KR JIN */
+         SELECT CASE WHEN Z.SERIAL_CHK = 'N' THEN 0
+                     ELSE ( SELECT COUNT(1)
+				              FROM (
+						             SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+						                  , REQST_NO
+						                  , ITM_CODE
+						               FROM LOG0099D
+                                       WHERE REQST_NO = Z.ING_GR_NO
+                                       AND ITM_CODE = Z.STOCK_CODE
+						            ) Z1
+						       WHERE Z1.RN = 1
+						   )
+			      END AS RCIPT_TM_QTY
+			  , Z.*
+		   FROM (
+		         SELECT COUNT(1) OVER () AS ITEM_COUNT
+				      , B.STOCK_ID
+				      , B.STOCK_CODE
+				      , D.STK_DESC AS STOCK_NAME
+				      , DECODE(D.SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+				      , D.STK_TYPE_ID
+				      , B.DELVRY_QTY
+				      , B.PO_NO
+				      , B.PO_DTL_NO
+				      , B.HMC_DELVRY_NO
+				      , B.HMC_DELVRY_NO_DTL_NO
+				      , C.CDC
+				      , NVL(C.RCIPT_GR_QTY, 0) AS RCIPT_GR_QTY
+				      , NVL(C.FAIL_GR_QTY, 0) AS FAIL_GR_QTY
+				      <!-- , NVL(C.RCIPT_TM_QTY, 0) AS RCIPT_TM_QTY -->
+				      , NVL(C.FAIL_TM_QTY, 0) AS FAIL_TM_QTY
+				      , CASE WHEN C.ING_GR_NO IS NULL THEN (SELECT MAX(Z.HMC_GR_NO)
+		                                                      FROM HMC0009M Z
+		                                                     WHERE Z.HMC_DELVRY_NO = A.HMC_DELVRY_NO
+		                                                       AND Z.PO_NO = A.PO_NO
+		                                                       AND Z.USE_YN = 'Y'
+		                                                       AND Z.GR_YN = 'N'
+		                                                    )
+		                     ELSE C.ING_GR_NO
+		                 END AS ING_GR_NO
+
+				   FROM HMC0007M A
+				      , HMC0008D B
+				      , (
+				        SELECT A.HMC_DELVRY_NO
+				             , B.HMC_DELVRY_NO_DTL_NO
+				             , A.PO_NO
+				             , B.PO_DTL_NO
+				             , B.STOCK_ID
+				             , B.STOCK_CODE
+				             , MAX(A.CDC) AS CDC
+				             , SUM(CASE WHEN A.GR_YN = 'Y' THEN B.RCIPT_QTY ELSE 0 END) AS RCIPT_GR_QTY
+				             , SUM(CASE WHEN A.GR_YN = 'Y' THEN B.QC_FAIL_QTY ELSE 0 END) AS FAIL_GR_QTY
+				             , SUM(CASE WHEN A.GR_YN = 'N' THEN B.RCIPT_QTY ELSE 0 END) AS RCIPT_TM_QTY
+				             , SUM(CASE WHEN A.GR_YN = 'N' THEN B.QC_FAIL_QTY ELSE 0 END) AS FAIL_TM_QTY
+		                     , (SELECT MAX(Z.HMC_GR_NO) FROM HMC0009M Z
+		                         WHERE Z.HMC_DELVRY_NO = A.HMC_DELVRY_NO
+		                           AND Z.USE_YN = 'Y'
+		                           AND Z.GR_YN = 'N'
+		                       ) AS ING_GR_NO
+				          FROM HMC0009M A
+				             , HMC0010D B
+				         WHERE A.HMC_GR_NO = B.HMC_GR_NO (+)
+				           AND A.PO_NO = B.PO_NO (+)
+				           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO (+)
+				           AND A.USE_YN = 'Y'
+				           AND B.USE_YN (+) = 'Y'
+				           AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
+				          GROUP BY A.PO_NO, B.PO_DTL_NO, A.HMC_DELVRY_NO, B.HMC_DELVRY_NO_DTL_NO, B.STOCK_ID, B.STOCK_CODE
+				        ) C
+				      , SYS0026M D
+				  WHERE A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+				    AND A.PO_NO = B.PO_NO
+				    AND B.PO_NO = C.PO_NO (+)
+				    AND B.PO_DTL_NO = C.PO_DTL_NO (+)
+				    AND B.HMC_DELVRY_NO = C.HMC_DELVRY_NO (+)
+				    AND B.HMC_DELVRY_NO_DTL_NO = C.HMC_DELVRY_NO_DTL_NO (+)
+				    AND B.STOCK_ID = C.STOCK_ID (+)
+				    AND B.STOCK_CODE = C.STOCK_CODE (+)
+				    AND B.STOCK_ID = D.STK_ID (+)
+                    AND B.STOCK_CODE = D.STK_CODE (+)
+				    AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
+				    AND A.USE_YN = 'Y'
+				    AND B.USE_YN = 'Y'
+		    ) Z
+    </select>
+
+    <select id="selectGrHeaderCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectGrHeaderCnt] - KR JIN */
+        SELECT COUNT(1)
+          FROM HMC0009M
+         WHERE HMC_GR_NO = #{hmcGrNo}
+           AND USE_YN = 'Y'
+           AND GR_YN = 'N'
+    </select>
+
+    <delete id="deleteDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.deleteDeliveryGrDetail] - KR JIN */
+        DELETE FROM HMC0010D
+         WHERE HMC_GR_NO = #{hmcGrNo}
+    </delete>
+
+    <select id="selectSerialGrCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectSerialGrCnt] - KR JIN */
+        SELECT COUNT(1)
+		  FROM (
+		        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		          FROM LOG0099D
+		         WHERE REQST_NO = #{hmcGrNo}
+                   AND ITM_CODE = #{stockCode}
+		       )
+		 WHERE RN = 1
+    </select>
+
+    <insert id="insertDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.insertDeliveryGrDetail] - KR JIN */
+        INSERT
+          INTO HMC0010D
+		(
+			   HMC_GR_NO                   --HomeCare GR Number
+			 , HMC_GR_NO_DTL_NO            --HomeCare GR Detail Number
+			 , HMC_DELVRY_NO               --Delivery Number
+			 , HMC_DELVRY_NO_DTL_NO        --Delivery Detail Number
+			 , PO_NO                       --PO No
+			 , PO_DTL_NO                   --Po Detail No
+			 , STOCK_ID                    --Material
+			 , STOCK_CODE                  --Material Code
+			 , RCIPT_QTY                   --Quantity Received
+			 , QC_FAIL_QTY                 --Qc Fail Quantity
+			 , USE_YN                      --USE_YN
+			 , CRT_DT                      --Create Date
+			 , CRT_USER_ID                 --Create User Id
+			 , UPD_DT                      --Update Date
+			 , UPD_USER_ID                 --Update User Id
+
+	   )VALUES(
+			   #{hmcGrNo}                    --HomeCare GR Number
+			 , (SELECT NVL(MAX(HMC_GR_NO_DTL_NO), 0)+1 AS HMC_GR_NO_DTL_NO FROM HMC0010D WHERE HMC_GR_NO = #{hmcGrNo})
+			 , #{hmcDelvryNo}                --Delivery Number
+			 , #{hmcDelvryNoDtlNo}           --Delivery Detail Number
+			 , #{poNo}                       --PO No
+			 , #{poDtlNo}                    --Po Detail No
+			 , #{stockId}                    --Material
+			 , #{stockCode}                  --Material Code
+			 , #{rciptQty}                   --Quantity Received
+			 , #{qcFailQty}                  --Qc Fail Quantity
+			 , 'Y'
+			 , SYSDATE
+			 , #{crtUserId}                  --Create User Id
+			 , SYSDATE
+			 , #{updUserId}                  --Update User Id
+	   )
+    </insert>
+
+    <update id="updateDeliveryGrState" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrState] - KR JIN */
+        UPDATE HMC0009M
+           SET GR_YN = 'Y'
+             , GR_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_GR_NO = #{hmcGrNo}
+    </update>
+
+    <select id="selectGrDifferenceCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectGrDifferenceCnt] - KR JIN */
+        SELECT SUM(Z.DIFF_QTY) AS DIFF_QTY
+		  FROM (
+				SELECT A.HMC_DELVRY_NO
+				     , A.HMC_DELVRY_NO_DTL_NO
+				     , NVL(A.DELVRY_QTY, 0) AS DELVRY_QTY
+				     , NVL(B.GR_QTY, 0) AS GR_QTY
+				     , NVL(A.DELVRY_QTY, 0) - NVL(B.GR_QTY, 0) AS DIFF_QTY
+				  FROM HMC0008D A
+				     , (
+				        SELECT A.HMC_DELVRY_NO
+				             , B.HMC_DELVRY_NO_DTL_NO
+				             , A.PO_NO
+				             , B.PO_DTL_NO
+				             , B.STOCK_ID
+				             , B.STOCK_CODE
+				             , SUM(rcipt_qty) + SUM(qc_fail_qty) AS GR_QTY
+				          FROM HMC0009M A
+				             , HMC0010D B
+				         WHERE A.HMC_GR_NO = B.HMC_GR_NO
+				           AND A.PO_NO = B.PO_NO
+				           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+				           AND A.USE_YN = 'Y'
+				           AND B.USE_YN = 'Y'
+				           AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
+				          GROUP BY A.HMC_DELVRY_NO
+				                 , B.HMC_DELVRY_NO_DTL_NO
+				                 , A.PO_NO
+				                 , B.PO_DTL_NO
+				                 , B.STOCK_ID
+				                 , B.STOCK_CODE
+				         ) B
+				   WHERE A.HMC_DELVRY_NO = B.HMC_DELVRY_NO (+)
+				     AND A.HMC_DELVRY_NO_DTL_NO = B.HMC_DELVRY_NO_DTL_NO (+)
+				     AND A.PO_NO = B.PO_NO (+)
+				     AND A.PO_DTL_NO = B.PO_DTL_NO (+)
+				     AND A.STOCK_ID = B.STOCK_ID (+)
+				     AND A.STOCK_CODE = B.STOCK_CODE (+)
+				     AND A.USE_YN = 'Y'
+				     AND A.HMC_DELVRY_NO = #{hmcDelvryNo}
+		     ) Z
+    </select>
+
+    <update id="updateDeliveryComplete" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryComplete] - KR JIN */
+        UPDATE HMC0007M
+		   SET DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND DISAB = '0' AND CODE = '30')
+		     , UPD_DT = SYSDATE
+		     , UPD_USER_ID = #{updUserId}
+		  WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
+    <!-- proceduar call -->
+    <select id="callGrProcedure" parameterType="Map"  statementType="CALLABLE">
+        {
+            CALL SP_HOMECARE_DELIVERY(#{hmcGrNo}, 'HP', TO_CHAR(SYSDATE, 'DD/MM/YYYY'), 'GR', #{updUserId}, #{rdata, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNMSG})
+        }
+    </select>
+
+    <select id="selectItemSerialChk" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectItemSerialChkYn] - KR JIN */
+        SELECT DECODE(MAX(SERIAL_CHK), 'Y', 'Y', 'N') AS SERIAL_CHK
+             , MAX(STK_TYPE_ID) AS STK_TYPE_ID
+          FROM SYS0026M
+         WHERE 1 = 1
+           AND STK_ID = #{stockId}
+           AND STK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectLocationSerialChk" parameterType="Map" resultType="String">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectLocationSerialChk] - KR JIN */
+		SELECT CASE WHEN '61' = #{stkTypeId} AND SERIAL_REQUIRE_CHK_YN = 'Y' THEN SERIAL_PD_CHK
+		            WHEN '62' = #{stkTypeId} AND SERIAL_REQUIRE_CHK_YN = 'Y' THEN SERIAL_FT_CHK
+		            WHEN '63' = #{stkTypeId} AND SERIAL_REQUIRE_CHK_YN = 'Y' THEN SERIAL_PT_CHK
+		            ELSE 'N'
+		        END AS SERIAL_CHK
+		  FROM (
+		        SELECT NVL(SERIAL_PD_CHK, 'N') AS SERIAL_PD_CHK  -- PRODUCT 61(15)
+		             , NVL(SERIAL_FT_CHK, 'N') AS SERIAL_FT_CHK  -- FILTER  62(15)
+		             , NVL(SERIAL_PT_CHK, 'N') AS SERIAL_PT_CHK  -- PARTS   63(15)
+		             , NVL(SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+		          FROM SYS0028M
+		         WHERE WH_LOC_ID = #{cdc}
+		 )
+    </select>
+
+    <select id="selectGrDetailList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectGrDetailList] - KR JIN */
+		SELECT A.HMC_GR_NO
+		     , A.HMC_GR_NO_DTL_NO
+		     , A.HMC_DELVRY_NO
+		     , A.HMC_DELVRY_NO_DTL_NO
+		     , A.PO_NO
+		     , A.PO_DTL_NO
+		     , B.CDC
+		     , A.STOCK_ID
+		     , A.STOCK_CODE
+		     , A.RCIPT_QTY
+		     , A.QC_FAIL_QTY
+		     , DECODE(C.SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+		     , C.STK_TYPE_ID
+		  FROM HMC0010D A
+		     , HMC0009M B
+		     , SYS0026M C
+		 WHERE A.HMC_GR_NO = B.HMC_GR_NO
+		   AND A.PO_NO = B.PO_NO
+		   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+		   AND A.STOCK_ID = C.STK_ID
+		   AND A.STOCK_CODE = C.STK_CODE
+           AND A.USE_YN = 'Y'
+           AND B.USE_YN = 'Y'
+		   AND A.HMC_GR_NO = #{hmcGrNo}
+    </select>
+
+    <delete id="deleteDeliveryGrDetailRow" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.deleteDeliveryGrDetailRow] - KR JIN */
+        DELETE FROM HMC0010D
+         WHERE HMC_GR_NO = #{hmcGrNo}
+           AND HMC_GR_NO_DTL_NO = #{hmcGrNoDtlNo}
+    </delete>
+
+    <update id="updateDeliveryGrDetailRow" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrDetailRow] - KR JIN */
+        UPDATE HMC0010D
+           SET RCIPT_QTY = #{rciptQty}
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_GR_NO = #{hmcGrNo}
+           AND HMC_GR_NO_DTL_NO = #{hmcGrNoDtlNo}
+    </update>
+
+    <update id="updateDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrDetail] - Huiling */
+        update LOG0099D set scan_stus_code = 'C' where Scan_no in (
+        select SCAN_NO from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+        ,SCAN_NO
+        FROM LOG0099D
+        WHERE REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+        )x where x.rn =1
+        )
+    </update>
+
+    <update id="updateDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrMain] - Huiling */
+        update LOG0100m set stus_code = 'I'
+        WHERE last_REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+    </update>
+
+    <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryGrHist] - Huiling */
+        select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        FROM LOG0101h
+        WHERE last_REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+        )x where RN =1
+    </select>
+
+    <update id="updateDeliveryGrHist" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrHist] - Huiling */
+        update LOG0101H set stus_code = 'I'
+        WHERE serial_no = #{serialNo}
+        AND SEQ = #{seq}
+    </update>
+</mapper>

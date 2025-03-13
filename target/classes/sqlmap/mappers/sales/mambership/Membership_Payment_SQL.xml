@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipPaymentMapper">
+
+
+    <select id="selPaymentConfig" parameterType="Map" resultType="egovMap">
+			  <![CDATA[
+					 SELECT sList.ORD_ID   ,
+							       sList.CONFIG_ID   ,
+							       sList.CONFIG_SETT_INS   ,
+							       sList.CONFIG_SETT_BS   ,
+							       sList.CONFIG_SETT_AS   ,
+							       sList.CONFIG_BS_GEN   ,
+							       sList.CONFIG_BS_MEM_ID   ,
+							       sList.CONFIG_BS_WEEK   ,
+							       sList.CONFIG_BS_REM   ,
+							       sList.SRV_MEM_ID   ,
+							       sList.SRV_MEM_NO   ,
+							       sList.SRV_MEM_BILL_NO   ,
+							       sList.SRV_MEM_PAC_ID   ,
+							       sList.SRV_MEM_PAC_CODE   ,
+							       sList.SRV_MEM_PAC_NAME   ,
+							       sList.SRV_MEM_START_DT   ,
+							       sList.SRV_MEM_EXPR_DT   ,
+							       sList.SRV_MEM_FREQ   ,
+							       sList.SRV_MEM_DUR   ,
+							       sList.SRV_MEM_SALESMAN_CODE   ,
+							       sList.SRV_MEM_SALESMAN_NAME   ,
+							       sList.LAST_SRV_MEM_ID   ,
+							       sList.LAST_SRV_MEM_START_DATE   ,
+							       sList.LAST_SRV_MEM_EXPR_DATE   ,
+							        CASE  WHEN (  sList.LAST_SRV_MEM_EXPR_DATE   >= sysdate ) THEN   to_char(sList.LAST_SRV_MEM_EXPR_DATE,'dd-mm-yyyy')        ELSE  'Expired'  END EXPRTEXT
+							  FROM ( SELECT cinfo.ORD_ID   ,
+							                cinfo.CONFIG_ID   ,
+							                cinfo.CONFIG_SETT_INS   ,
+							                cinfo.CONFIG_SETT_BS   ,
+							                cinfo.CONFIG_SETT_AS   ,
+							                cinfo.CONFIG_BS_GEN   ,
+							                cinfo.CONFIG_BS_MEM_ID   ,
+							                cinfo.CONFIG_BS_WEEK   ,
+							                cinfo.CONFIG_BS_REM   ,
+							                cinfo.SRV_MEM_NO   ,
+							                cinfo.SRV_MEM_BILL_NO   ,
+							                cinfo.SRV_MEM_PAC_ID   ,
+							                cinfo.SRV_MEM_PAC_CODE   ,
+							                cinfo.SRV_MEM_PAC_NAME   ,
+							                cinfo.SRV_MEM_START_DT   ,
+							                cinfo.SRV_MEM_EXPR_DT   ,
+							                cinfo.SRV_MEM_FREQ   ,
+							                cinfo.SRV_MEM_ID   ,
+							                cinfo.SRV_MEM_DUR   ,
+							                cinfo.SRV_MEM_SALESMAN_CODE   ,
+							                cinfo.SRV_MEM_SALESMAN_NAME   ,
+							                cinfo.LAST_SRV_MEM_ID   ,
+							                cinfo.LAST_SRV_MEM_START_DATE   ,
+							                cinfo.LAST_SRV_MEM_EXPR_DATE
+							         FROM SAL1014V cinfo ) sList
+							 WHERE  sList.ORD_ID =#{PAY_ORD_ID} AND ROWNUM <= 1
+		          ]]>
+		 </select>
+
+
+
+
+    <select id="paymentLastMembership" parameterType="Map" resultType="egovMap">
+	    <![CDATA[
+	                SELECT stb.mbrsh_id , stb.mbrsh_no ,
+	                       stb.mbrsh_bill_no , stb.ord_id ,
+	                       stb.ord_no , stb.mbrsh_pac_amt ,
+	                       stb.mbrsh_filter_amt ,
+	                       stb.mbrsh_tot_amt , stb.mbrsh_otstnd ,
+	                       CASE WHEN ( stb.mbrsh_freq IS NOT NULL ) THEN stb.mbrsh_freq||' month(s)'  ELSE  stb.mbrsh_freq||'' END  mbrsh_freq,
+	                       CASE WHEN ( stb.mbrsh_dur IS NOT NULL ) THEN stb.mbrsh_dur||' month(s)'  ELSE  stb.mbrsh_dur||'' END  mbrsh_dur  ,
+	                       to_char(stb.mbrsh_start_dt,'dd-mm-yyyy' )   mbrsh_start_dt ,
+	                       to_char(stb.mbrsh_expr_dt,'dd-mm-yyyy' )    mbrsh_expr_dt ,
+	                       stb.mbrsh_rem ,
+	                       stb.mbrsh_stus_id ,
+	                       stb.mbrsh_stus_code ,
+	                       stb.mbrsh_stus_name ,
+	                       to_char(stb.mbrsh_crt_dt,'dd-mm-yyyy' )  mbrsh_crt_dt ,
+	                       stb.mbrsh_crt_user_id mbrsh_crt_user_id,
+	                       stb.mbrsh_upd_dt ,
+	                       stb.mbrsh_upd_user_id ,
+	                       stb.mbrsh_sales_mem_id ,
+	                       stb.mbrsh_sales_mem_code ,
+	                       stb.mbrsh_sales_mem_name ,
+	                       stb.cnt_name , stb.cnt_nric ,
+	                       stb.cnt_gender , stb.cnt_race ,
+	                       stb.cnt_tel_m , stb.cnt_tel_o ,
+	                       stb.cnt_tel_r , stb.cnt_tel_f ,
+	                       stb.cnt_email ,
+	                       stb.mbrsh_pac_promo_id ,
+	                       stb.mbrsh_pac_promo_code ,
+	                       stb.mbrsh_pac_promo_name ,
+	                       stb.mbrsh_promo_id ,
+	                       stb.mbrsh_promo_code ,
+	                       stb.mbrsh_promo_name , stb.pv_month ,
+	                       stb.pv_year , stb.brnch_id ,
+	                       stb.brnch_code , stb.brnch_name ,
+	                       stb.pac_id , stb.pac_code ,
+	                       stb.pac_name , stb.quot_id ,
+	                       stb.quot_no , stb.bill_id_pckg ,
+	                       stb.bill_id_filter , stb.cust_name ,
+	                       stb.cust_ic
+	                  FROM (SELECT mfo.mbrsh_id mbrsh_id,
+	                               mfo.mbrsh_no mbrsh_no,
+	                               mfo.mbrsh_bill_no mbrsh_bill_no,
+	                               mfo.ord_id ord_id, mfo.ord_no ord_no,
+	                               mfo.mbrsh_pac_amt mbrsh_pac_amt,
+	                               mfo.mbrsh_filter_amt mbrsh_filter_amt,
+	                               mfo.mbrsh_tot_amt mbrsh_tot_amt,
+	                               mfo.mbrsh_otstnd mbrsh_otstnd,
+	                               mfo.mbrsh_freq mbrsh_freq,
+	                               mfo.mbrsh_dur mbrsh_dur,
+	                               mfo.mbrsh_start_dt mbrsh_start_dt,
+	                               mfo.mbrsh_expr_dt mbrsh_expr_dt,
+	                               mfo.mbrsh_rem mbrsh_rem,
+	                               mfo.mbrsh_stus_id mbrsh_stus_id,
+	                               mfo.mbrsh_stus_code mbrsh_stus_code,
+	                               mfo.mbrsh_stus_name mbrsh_stus_name,
+	                               mfo.mbrsh_crt_dt mbrsh_crt_dt,
+	                               mfo.mbrsh_crt_user_id mbrsh_crt_user_id,
+	                               mfo.mbrsh_upd_dt mbrsh_upd_dt,
+	                               mfo.mbrsh_upd_user_id mbrsh_upd_user_id,
+	                               mfo.mbrsh_sales_mem_id mbrsh_sales_mem_id,
+	                               mfo.mbrsh_sales_mem_code mbrsh_sales_mem_code,
+	                               mfo.mbrsh_sales_mem_name mbrsh_sales_mem_name,
+	                               mfo.cnt_name cnt_name,
+	                               mfo.cnt_nric cnt_nric,
+	                               mfo.cnt_gender cnt_gender,
+	                               mfo.cnt_race cnt_race,
+	                               mfo.cnt_tel_m cnt_tel_m,
+	                               mfo.cnt_tel_o cnt_tel_o,
+	                               mfo.cnt_tel_r cnt_tel_r,
+	                               mfo.cnt_tel_f cnt_tel_f,
+	                               mfo.cnt_email cnt_email,
+	                               mfo.mbrsh_pac_promo_id mbrsh_pac_promo_id,
+	                               mfo.mbrsh_pac_promo_code mbrsh_pac_promo_code,
+	                               mfo.mbrsh_pac_promo_name mbrsh_pac_promo_name,
+	                               mfo.mbrsh_promo_id mbrsh_promo_id,
+	                               mfo.mbrsh_promo_code mbrsh_promo_code,
+	                               mfo.mbrsh_promo_name mbrsh_promo_name,
+	                               mfo.pv_month pv_month,
+	                               mfo.pv_year pv_year,
+	                               mfo.brnch_id brnch_id,
+	                               mfo.brnch_code brnch_code,
+	                               mfo.brnch_name brnch_name,
+	                               mfo.pac_id pac_id,
+	                               mfo.pac_code pac_code,
+	                               mfo.pac_name pac_name,
+	                               mfo.quot_id quot_id,
+	                               mfo.quot_no quot_no,
+	                               mfo.bill_id_pckg bill_id_pckg,
+	                               mfo.bill_id_filter bill_id_filter,
+	                               mfo.cust_name cust_name,
+	                               mfo.cust_ic cust_ic
+	                          FROM sal1002v mfo) stb
+	                 WHERE stb.mbrsh_id = #{PAY_LAST_MBRSH_ID} AND ROWNUM <= 1
+	        ]]>
+
+    </select>
+
+        <select id="paymentInsAddress" parameterType="Map" resultType="egovMap">
+      <![CDATA[
+                    SELECT sList.ORD_ID ORD_ID  ,
+                               sList.INST_ADDR1 INST_ADDR1  ,
+                               sList.INST_ADDR2 INST_ADDR2  ,
+                               sList.INST_ADDR3 INST_ADDR3  ,
+                               sList.INST_POST_CODE INST_POST_CODE  ,
+                               sList.INST_AREA INST_AREA  ,
+                               sList.INST_STATE INST_STATE  ,
+                               sList.INST_CNTY INST_CNTY
+                          FROM ( SELECT insinfo.ORD_ID ORD_ID  ,
+                                        insinfo.INST_ADDR1 INST_ADDR1  ,
+                                        insinfo.INST_ADDR2 INST_ADDR2  ,
+                                        insinfo.INST_ADDR3 INST_ADDR3  ,
+                                        insinfo.INST_CNTY INST_CNTY  ,
+                                        insinfo.INST_STATE INST_STATE  ,
+                                        insinfo.INST_AREA INST_AREA  ,
+                                        insinfo.INST_POST_CODE INST_POST_CODE  ,
+                                        insinfo.INST_CNT_NAME INST_CNT_NAME  ,
+                                        insinfo.INST_CNT_NRIC INST_CNT_NRIC  ,
+                                        insinfo.INST_CNT_EMAIL INST_CNT_EMAIL  ,
+                                        insinfo.INST_CNT_TEL_M INST_CNT_TEL_M  ,
+                                        insinfo.INST_CNT_TEL_O INST_CNT_TEL_O  ,
+                                        insinfo.INST_CNT_TEL_R INST_CNT_TEL_R  ,
+                                        insinfo.INST_CNT_TEL_F INST_CNT_TEL_F  ,
+                                        insinfo.INST_CNT_GENDER INST_CNT_GENDER  ,
+                                        insinfo.FIRST_INSTALL_NO FIRST_INSTALL_NO  ,
+                                        insinfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE  ,
+                                        insinfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME  ,
+                                        insinfo.FIRST_INSTALL_DT FIRST_INSTALL_DT  ,
+                                        insinfo.FIRST_INSTALL_REM FIRST_INSTALL_REM  ,
+                                        insinfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO  ,
+                                        insinfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO  ,
+                                        insinfo.LAST_INSTALL_NO LAST_INSTALL_NO  ,
+                                        insinfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE  ,
+                                        insinfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME  ,
+                                        insinfo.LAST_INSTALL_DT LAST_INSTALL_DT  ,
+                                        insinfo.LAST_INSTALL_REM LAST_INSTALL_REM  ,
+                                        insinfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO  ,
+                                        insinfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO  ,
+                                        insinfo.DSC_ID DSC_ID  ,
+                                        insinfo.DSC_CODE DSC_CODE  ,
+                                        insinfo.DSC_NAME DSC_NAME  ,
+                                        insinfo.INSTCT INSTCT  ,
+                                        insinfo.PREFER_INST_DT PREFER_INST_DT  ,
+                                        insinfo.PREFER_INST_TM PREFER_INST_TM  ,
+                                        insinfo.INSTALL_ADDR_ID INSTALL_ADDR_ID  ,
+                                        insinfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
+                                        insinfo.INST_CNT_DEPT INST_CNT_DEPT  ,
+                                        insinfo.INST_CNT_POST INST_CNT_POST  ,
+                                        insinfo.VRIFY_REM VRIFY_REM
+                                 FROM SAL1010V insinfo ) sList
+                         WHERE  sList.ORD_ID = #{PAY_ORD_ID}
+                              AND ROWNUM <= 1
+          ]]>
+    </select>
+
+
+    <select id="paymentCollecterList" parameterType="Map" resultType="egovMap">
+
+					        SELECT  seL.MEM_ID,
+						                seL.MEM_CODE,
+						                seL.NAME,
+						                seL.NRIC,
+						                seL.CODE_NAME,
+						                to_char(sel.c1,'dd-mm-yyyy') C1,
+						                seL.C2,
+						                ROW_NUMBER() OVER ( ORDER BY seL.MEM_CODE ASC  ) ROW_NUMBER
+					         FROM ( SELECT ord.MEM_ID MEM_ID  ,
+					                       ord.MEM_CODE MEM_CODE  ,
+					                       ord.NAME NAME  ,
+					                       ord.NRIC NRIC  ,
+					                       sys13.CODE_NAME CODE_NAME  ,
+					                       ord.JOIN_DT C1  ,
+					                       CASE
+					                            WHEN ( ord.MEM_TYPE IS NOT NULL ) THEN ord.MEM_TYPE
+					                       ELSE 0
+					                          END C2
+					                FROM ORG0001D ord
+					                       JOIN SYS0013M sys13   ON ord.MEM_TYPE = sys13.CODE_ID
+					                 WHERE  ( 1 = ord.STUS )
+
+					                 <if test="MEM_CODE != null and MEM_CODE != ''">
+					                     AND ( ord.MEM_CODE = #{MEM_CODE} )
+					                 </if>
+
+					                  <if test="MEM_TYPE != null and MEM_TYPE != ''">
+                                        AND ( (CASE   WHEN ( ord.MEM_TYPE IS NOT NULL ) THEN ord.MEM_TYPE  ELSE 0  END) = #{MEM_TYPE})
+                                     </if>
+
+                                      <if test="JOIN_DATE != null and JOIN_DATE != ''">
+                                          AND  ord.JOIN_DT  = to_char(to_char(  #{JOIN_DATE},'dd/mm/yyyy'))
+                                     </if>
+
+									 <if test="MEM_NAME != null and MEM_NAME != ''">
+                                            AND  UPPER(ord.NAME)  LIKE '%'||UPPER(#{MEM_NAME})||'%'
+                                     </if>
+			                        <if test="NRIC != null and NRIC != ''">
+			                                AND  UPPER(ord.NRIC)  LIKE '%'||UPPER(#{NRIC})||'%'
+                                    </if>
+					             ) seL
+					        ORDER BY seL.MEM_CODE ASC
+
+    </select>
+
+
+     <select id="paymentColleConfirm" parameterType="Map" resultType="egovMap">
+          <![CDATA[
+                            SELECT seL.MEM_ID   ,
+								       seL.MEM_CODE   ,
+								       seL.MEM_TYPE   ,
+								       seL.NAME   ,
+								       seL.FULL_NAME   ,
+								       seL.PASSWD   ,
+								       seL.NRIC   ,
+								       seL.DOB   ,
+								       seL.GENDER   ,
+								       seL.RACE   ,
+								       seL.MARTL   ,
+								       seL.TEL_OFFICE   ,
+								       seL.TEL_HUSE   ,
+								       seL.TEL_MOBILE   ,
+								       seL.EMAIL   ,
+								       seL.SPUSE_CODE   ,
+								       seL.SPOUSE_NAME   ,
+								       seL.SPOUSE_NRIC   ,
+								       seL.SPOUSE_OCPAT   ,
+								       seL.SPOUSE_TEL_CNTC   ,
+								       seL.SPOUSE_DOB   ,
+								       seL.EDC_LEV   ,
+								       seL.LANG   ,
+								       seL.BANK   ,
+								       seL.BANK_ACC_NO   ,
+								       seL.SPONS_CODE   ,
+								       seL.JOIN_DT   ,
+								       seL.RESIGN_DT   ,
+								       seL.TRM_DT   ,
+								       seL.RENEW_DT   ,
+								       seL.AGRMNT_NO   ,
+								       seL.BRNCH   ,
+								       seL.STUS   ,
+								       seL.SYNC_CHK   ,
+								       seL.RANK   ,
+								       seL.TRNSPRT   ,
+								       seL.PROMO_DT   ,
+								       seL.TR_NO   ,
+								       seL.CRT_DT   ,
+								       seL.CRT_USER_ID   ,
+								       seL.UPD_DT   ,
+								       seL.UPD_USER_ID   ,
+								       seL.MEM_IS_OUT_SRC   ,
+								       seL.APLICNT_ID   ,
+								       seL.BIZ_TYPE   ,
+								       seL.HSPTLZ
+								  FROM ORG0001D seL
+								 WHERE  seL.MEM_CODE = #{COLL_MEM_CODE} AND seL.STUS = 1 AND ROWNUM <= 1
+                ]]>
+    </select>
+
+     <select id="paymentGetAccountCode" parameterType="Map" resultType="egovMap">
+
+					  SELECT sL.ACC_ID   code_Id ,
+					         sL.C1             code_Name ,
+					         sL.ACC_DESC,
+					         sL.ACC_CODE
+					  FROM ( SELECT sys01mt.ACC_ID   ,
+					                sys01mt.ACC_CODE   ,
+					                sys01mt.ACC_DESC   ,
+					                sys01mt.ACC_CODE || ' - ' || sys01mt.ACC_DESC C1
+					         FROM SYS0001M sys01mt
+					          WHERE  ( 1 = sys01mt.ACC_STUS_ID )
+
+					                    <if test="CODE_TYPE == 'CASH' ">
+					                        AND ( 1 = sys01mt.IS_PAY_CASH )
+					                    </if>
+
+					                    <if test="CODE_TYPE == 'ONLINE' ">
+                                             AND ( 1 = sys01mt.IS_PAY_ONLINE )
+                                             AND  (sys01mt.ACC_ID  IN (102 , 105, 497 , 107))
+                                        </if>
+
+                                        <if test="CODE_TYPE == 'CHQ' ">
+                                                AND ( 1 = sys01mt.IS_PAY_CHQ )
+                                        </if>
+
+                                         <if test="CODE_TYPE == 'CRC' ">
+                                                 AND ( 1 = sys01mt.IS_PAY_CRC )
+                                        </if>
+					        ) sL
+					  ORDER BY sL.ACC_CODE ASC
+
+    </select>
+
+    <resultMap id="mPaymemtMap" type="egovMap" />
+    <select id="paymentCharges" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[
+            {
+                  call SP_GET_MBRSH_CHRG_INFO ( #{PAY_MBRSH_ID},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mPaymemtMap})
+            }
+         ]]>
+      </select>
+
+</mapper>

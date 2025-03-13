@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmMasterMngMentMapper">
+
+<!-- SCM MASTER MANAGEMENT -->
+<!-- 
+<select id="selectMasterMngmentSearch" parameterType="Map" resultType="egovMap">
+SELECT A.STK_ID
+     , A.STK_CODE AS STOCK_CODE
+     , A.STK_DESC AS STOCK_DESC
+     , A.STK_CTGRY_ID AS CATEGORY_ID
+     , C.CODE_NAME AS CATEGORY
+     , A.STK_TYPE_ID AS TYPE_ID
+     , D.CODE_NAME AS TYPE
+     , B.IS_TRGET
+     , B.MEMO
+     , TO_CHAR(B.START_DT, 'MM-DD-YYYY') AS START_DT
+     , TO_CHAR(B.END_DT, 'MM-DD-YYYY') AS END_DT
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2010') AS KL_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2020') AS PN_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2030') AS JB_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2040') AS KK_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2050') AS KC_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2010') AS KL_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2020') AS PN_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2030') AS JB_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2040') AS KK_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2050') AS KC_MOQ
+     , NVL(B.SAFETY_STOCK, 0) AS SAFETY_STOCK
+     , NVL(B.LEAD_TM, 0) AS LEAD_TM
+     , NVL(B.LOADING_QTY, 0) AS LOADING_QTY
+     , NVL(B.MIN_ORD_QTY, 0) AS MIN_ORD_QTY
+     , B.DFLT_STOCK
+  FROM SYS0026M A
+  LEFT OUTER JOIN SCM0008M B ON (A.STK_ID = B.STOCK_ID)
+  LEFT OUTER JOIN SYS0013M C ON (A.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M D ON (A.STK_TYPE_ID = D.CODE_ID AND D.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_NCV = 0
+	<if test="scmStockCode != null and scmStockCode != ''">
+   AND (A.STK_CODE LIKE '%' || #{scmStockCode} || '%' OR A.STK_DESC LIKE '%' || #{scmStockCode} || '%')
+	</if>
+	<if test="scmStockTypeCbBox != null and !scmStockTypeCbBox.isEmpty">
+   AND A.STK_TYPE_ID IN 
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+	<if test="scmStockCategoryCbBox != null and !scmStockCategoryCbBox.isEmpty">
+   AND A.STK_CTGRY_ID IN 
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+ ORDER BY A.STK_CTGRY_ID, A.STK_TYPE_ID, A.STK_DESC
+</select>
+ -->
+<update id="updateMasterMngment" parameterType="Map">
+UPDATE SCM0008M
+   SET IS_TRGET = #{isTrget}
+	<if test="startDt != null and startDt !=''">
+     , START_DT = TO_DATE(#{startDt}, 'mm-dd-yyyy')
+	</if>
+	<if test="endDt != null and endDt !=''">
+     , END_DT = TO_DATE(#{endDt}, 'mm-dd-yyyy')
+	</if>
+	<if test="memo != null and memo !=''">
+     , MEMO = #{memo}
+	</if>
+	<if test="safetyStock != null and safetyStock !=''">
+     , SAFETY_STOCK = #{safetyStock}
+	</if>
+	<if test="leadTm != null and leadTm !=''">
+     , LEAD_TM = #{leadTm}
+	</if>
+	<if test="loadingQty != null and loadingQty !=''">
+     , LOADING_QTY = #{loadingQty}
+	</if>
+	<if test="defautStockName != null and defautStockName !=''">
+     , DFLT_STOCK = (
+                     SELECT DECODE(A.STOCK_CODE, NULL, #{defautStockName}, A.STOCK_CODE ) AS STOCK_CODE
+                       FROM SCM0008M A
+                       LEFT OUTER JOIN SYS0026M B ON (B.STK_CODE = A.STOCK_CODE)
+                      WHERE B.STK_DESC = #{defautStockName}
+                         OR A.STOCK_CODE = #{defautStockName}
+                     )
+	</if>
+ WHERE STOCK_ID = #{stockId}
+</update>
+
+<update id="updateMasterMngSupplyPlanTgtMoq" parameterType="Map">
+UPDATE SCM0017M
+   SET IS_TRGET = #{cdcIsTarget}
+	<if test='moq != null and moq !=""'>
+     , MOQ = #{moq}
+	</if>
+ WHERE STOCK_ID = #{stockId}
+   AND CDC_CODE = #{cdcCode}
+</update>
+
+<insert id="insertMstMngMasterCDC" parameterType="Map">
+INSERT INTO SCM0017M
+(
+       STOCK_ID
+     , CDC_CODE
+     , STOCK_CODE
+     , IS_TRGET
+     , MOQ
+)
+VALUES
+(
+       #{stkId}
+     , #{cdcCode}
+     , #{stockCodeTxt}
+     , #{cdcIsTarget}
+     , NULL
+)
+</insert>
+
+<insert id="insertMstMngMasterHeader" parameterType="Map">
+INSERT INTO SCM0008M
+(
+       STOCK_ID
+     , STOCK_CODE
+     , IS_TRGET
+	<if test="memoTxt != null and memoTxt !=''">
+     , MEMO
+	</if>
+     , START_DT
+     , END_DT
+     , SAFETY_STOCK
+     , LEAD_TM
+     , MIN_ORD_QTY
+     , LOADING_QTY
+     , STUS_CODE
+     , DFLT_STOCK
+)
+VALUES
+(
+       #{stkId}
+     , #{stockCodeTxt}
+     , #{headerIsTrget}
+	<if test="memoTxt != null and memoTxt !=''">
+     , #{memoTxt}
+	</if>
+     , TO_DATE(#{StartedDateTxt},'dd-mm-yyyy')
+     , TO_DATE(#{EndDateTxt},'dd-mm-yyyy')
+     , #{supplyPlanSafetyStockTxt}
+     , #{supplyPlanLTtxt}
+     , #{supplyPlanMoqTxt}
+     , #{supplyPlanLoadingQtyTxt}
+     , 1
+     , NULL
+)
+</insert>
+
+<!-- CDC WAREHOUSE MAPPING : CDC Master -->
+<select id="selectCdcMst" parameterType="Map" resultType="egovMap">
+SELECT 'N' AS EDIT
+     , A.CDC_CODE
+     , A.CDC_NAME
+     , A.CDC_PORT_NAME
+  FROM SCM0016M A
+ ORDER BY A.CDC_CODE
+</select>
+
+<insert id="insertCdcMst" parameterType="Map">
+INSERT INTO SCM0016M
+(
+       CDC_CODE
+     , CDC_NAME
+     , CDC_PORT_NAME
+ )
+VALUES
+(
+       #{cdcCode}
+     , #{cdcName}
+     , #{cdcPortName}
+ )
+</insert>
+
+<update id="updateCdcMst" parameterType="Map">
+UPDATE SCM0016M
+   SET CDC_NAME = #{cdcName}
+     , CDC_PORT_NAME = #{cdcPortName}
+ WHERE CDC_CODE = #{cdcCode}
+</update>
+
+<delete id="deleteCdcMst" parameterType="Map">
+DELETE FROM SCM0016M WHERE CDC_CODE = #{cdcCode}
+</delete>
+
+<!-- CDC WAREHOUSE MAPPING : CDC Warehouse Mapping -->
+<select id="selectCdcWareMapping" parameterType="Map" resultType="egovMap">
+SELECT '0' AS CHK
+     , B.CODE AS SYS_CODE
+     , B.CODE_DESC AS CDC_CODE
+     , B.CODE_NAME AS CDC_NAME
+     , A.WH_ID
+     , C.WH_LOC_ID
+     , C.WH_LOC_CODE
+     , C.WH_LOC_DESC
+  FROM SCM0022M A /* CDC-Warehouse Mapping */
+  LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0) /* System Code */
+  LEFT OUTER JOIN SYS0028M C ON (C.WH_LOC_ID = A.WH_ID) /* Warehouse Code */
+ WHERE C.WH_LOC_CODE NOT LIKE 'CT%'
+	<if test="cdcCode != null and cdcCode !=''">
+   AND B.CODE = #{cdcCode}
+   <!-- AND A.CDC = DECODE(#{cdcCbBox}, '2010', 'KL', '2020', 'PN', '2030', 'JB', '2040', 'KK', '2050', 'KC', #{cdcCbBox}) -->
+	</if>
+ ORDER BY B.CODE, A.WH_ID
+</select>
+
+<select id="selectWhLocationMapping" parameterType="Map" resultType="egovMap">
+SELECT '' AS CDC
+     , A.WH_LOC_ID WH_ID
+     , A.WH_LOC_CODE AS WH_CODE
+     , A.WH_LOC_DESC AS WH_NAME
+  FROM SYS0028M A /* Warehouse Master */
+ WHERE A.WH_LOC_DESC LIKE 'DSC%'
+   AND A.WH_LOC_ID NOT IN (SELECT WH_ID FROM SCM0022M)
+ ORDER BY A.WH_LOC_ID, A.WH_LOC_CODE
+</select>
+
+<insert id="insertCdcWhMapping" parameterType="Map">
+INSERT INTO SCM0022M
+(
+       WH_ID
+     , CDC
+)
+VALUES
+(
+       #{whId}
+     , #{cdc}
+)
+</insert>
+
+<delete id="deleteCdcWhMapping" parameterType="Map">
+DELETE FROM SCM0022M WHERE WH_ID = #{whLocId} AND CDC = #{sysCode}
+</delete>
+
+<!-- ??? -->
+<select id="selectInvenCbBoxByStockType" parameterType="Map" resultType="egovMap">
+SELECT A.STK_CODE AS STOCK_CODE
+     , A.STK_DESC AS STOCK_NAME
+     , A.STK_ID
+     , B.CODE_ID AS CODE_ID_1
+     , C.CODE_ID AS CODE_ID_2
+     , B.CODE AS CODE_2
+     , C.CODE AS CODE_SUB
+  FROM SYS0026M A
+ INNER JOIN SYS0013M B ON A.STK_CTGRY_ID = B.CODE_ID
+ INNER JOIN SYS0013M C ON A.STK_TYPE_ID = C.CODE_ID
+ WHERE NOT EXISTS (SELECT '1' FROM SCM0008M Z WHERE Z.STOCK_ID = A.STK_ID)
+   AND A.STUS_CODE_ID = 1
+   AND TO_NUMBER(A.IS_NCV ) = 0
+	<if test="scmStockTypeCbBox != null and scmStockTypeCbBox !=''">
+   AND C.CODE_ID = #{scmStockTypeCbBox}
+	</if>
+ ORDER BY A.STK_ID
+</select>
+
+<select id="selectInvenCbBoxByCategory" parameterType="Map" resultType="egovMap">
+SELECT A.STK_CODE AS STK_CODE
+     , A.STK_DESC AS STK_NAME
+     , A.STK_ID
+     , A.CODE_ID AS CATEGORY_ID
+     , B.CODE_ID AS STK_TYPE_CODE
+     , A.CODE AS CATEGORY_CODE
+     , B.CODE AS STK_TYPE
+  FROM (
+        SELECT Z.STK_ID AS STK_ID
+             , Z.STK_CODE AS STK_CODE
+             , Z.STK_DESC AS STK_DESC
+             , Z.STK_TYPE_ID AS STK_TYPE_ID
+             , X.CODE_ID AS CODE_ID
+             , X.Code AS CODE
+          FROM SYS0026M Z
+         INNER JOIN SYS0013M X ON (Z.STK_CTGRY_ID = X.CODE_ID)
+         WHERE NOT EXISTS (SELECT '1' FROM SCM0008M ZZ WHERE ZZ.STOCK_ID = Z.STK_ID)
+           AND Z.STUS_CODE_ID = 1
+           AND TO_NUMBER(Z.IS_NCV) = 0
+        ) A
+ INNER JOIN SYS0013M B ON (A.STK_TYPE_ID = B.CODE_ID)
+ WHERE 1 = 1
+	<if test="scmStockTypeCbBox != null and scmStockTypeCbBox !=''">
+   AND B.CODE_ID = #{scmStockTypeCbBox}
+	</if>
+	<if test="scmCategoryCbBox != null and scmCategoryCbBox !=''">
+   AND A.CODE_ID = #{scmCategoryCbBox}
+	</if>
+	<if test="scmStockNameTxt != null and scmStockNameTxt !=''">
+   AND A.STK_DESC LIKE '%' || #{scmStockNameTxt} || '%'
+	</if>
+</select>
+
+<!-- Business Plan Manager -->
+<select id="selectVersionCbList" parameterType="Map" resultType="egovMap">
+SELECT A.VER
+     , EXTRACT(YEAR FROM A.CRT_DT) AS YEAR
+     , EXTRACT(MONTH FROM A.CRT_DT) AS MONTH
+     , EXTRACT(DAY FROM A.CRT_DT) AS DAY
+     , '[ ' || LPAD(A.VER, 2, '0') || ' ]' || ' - ' || EXTRACT(YEAR FROM A.CRT_DT) || '.' || LPAD(EXTRACT(MONTH FROM A.CRT_DT), 2, '0') || '.' ||  LPAD(EXTRACT(DAY FROM A.CRT_DT), 2, '0') AS EXCUTE_DATE
+  FROM SCM0003M A
+ WHERE A.TEAM = #{scmTeamCbBox}
+   AND A.YYYY = #{scmYearCbBox}
+ ORDER BY A.VER DESC
+</select>
+
+<select id="selectBizPlanManager" parameterType="Map" resultType="egovMap">
+SELECT A.STOCK_CTGRY
+     , A.M01 AS JAN
+     , A.M02 AS FEB
+     , A.M03 AS MAR
+     , A.M04 AS APR
+     , A.M05 AS MAY
+     , A.M06 AS JUN
+     , A.M07 AS JUL
+     , A.M08 AS AGU
+     , A.M09 AS SEP
+     , A.M10 AS OCT
+     , A.M11 AS NOV
+     , A.M12 AS DEC
+     , A.YEARTOTAL AS TOTAL
+     , A.PLAN_ID
+     , A.YYYY
+     , A.VER
+  FROM SCM0049V A
+ WHERE A.YYYY = #{scmYearCbBox}
+   AND A.VER = #{scmPeriodCbBox}
+ ORDER BY A.STOCK_CTGRY
+</select>
+
+<select id="selectBizPlanStock" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , A.TEAM
+     , A.STOCK_CTGRY
+     , A.STK_TYPE_ID
+     , A.STOCK_CODE
+     , A.STOCK_NAME
+     , A.M01 AS JAN
+     , A.M02 AS FEB
+     , A.M03 AS MAR
+     , A.M04 AS APR
+     , A.M05 AS MAY
+     , A.M06 AS JUN
+     , A.M07 AS JUL
+     , A.M08 AS AGU
+     , A.M09 AS SEP
+     , A.M10 AS OCT
+     , A.M11 AS NOV
+     , A.M12 AS DEC
+     , A.YEAR_TOT AS TOTAL
+     , A.YYYY
+     , A.VER
+     , A.PLAN_DESC
+     , A.CRT_USER_ID
+     , A.CRT_DT
+     , A.UPD_USER_ID
+     , A.UPD_DT
+  FROM SCM0050V A
+ WHERE A.TEAM = #{scmTeamCbBox}
+   AND A.YYYY = #{scmYearCbBox}
+   AND A.VER = #{scmPeriodCbBox}
+	<choose>
+		<when test="scmStockTypes != null and !scmStockTypes.isEmpty">
+   AND A.STK_TYPE_ID IN
+			<foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+#{item}
+			</foreach>
+		</when>
+	</choose>
+ ORDER BY A.STOCK_NAME
+</select>
+
+<update id="updatePlanStock" parameterType="Map">
+UPDATE SCM0004D
+   SET PLAN_ID = #{planId}
+	<if test="jan != null and jan !=''">
+     , M01 = #{jan}
+	</if>
+	<if test="feb != null and feb !=''">
+     , M02 = #{feb}
+	</if>
+	<if test="mar != null and mar !=''">
+     , M03 = #{mar}
+	</if>
+	<if test="apr != null and apr !=''">
+     , M04 = #{apr}
+	</if>
+	<if test="may != null and may !=''">
+     , M05 = #{may}
+	</if>
+	<if test="jun != null and jun !=''">
+     , M06 = #{jun}
+	</if>
+	<if test="jul != null and jul !=''">
+     , M07 = #{jul}
+	</if>
+	<if test="agu != null and agu !=''">
+     , M08 = #{agu}
+	</if>
+	<if test="sep != null and sep !=''">
+     , M09 = #{sep}
+	</if>
+	<if test="oct != null and oct !=''">
+     , M10 = #{oct}
+	</if>
+	<if test="nov != null and nov !=''">
+     , M11 = #{nov}
+	</if>
+	<if test="dec != null and dec !=''">
+     , M12 = #{dec}
+	</if>
+ WHERE PLAN_ID = #{planId}
+   AND STOCK_CODE = #{stockCode}
+</update>
+
+<insert id="insertBizPlanMaster" parameterType="Map">
+<selectKey keyProperty="bizPlanMasterSeq" resultType="int" order="BEFORE">
+SELECT SCM0003M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+
+INSERT INTO SCM0003M
+(
+       PLAN_ID
+     , TEAM
+     , YYYY
+     , VER
+     , PLAN_DESC
+     , CRT_USER_ID
+     , CRT_DT
+     , UPD_USER_ID
+     , UPD_DT
+)
+VALUES
+(
+       #{bizPlanMasterSeq}
+     , #{scmTeamCbBox}
+     , #{scmYearCbBox}
+     , (SELECT MAX(VER) + 1 FROM SCM0003M WHERE TEAM = #{scmTeamCbBox} AND YYYY = #{scmYearCbBox} GROUP BY TEAM, YYYY)
+     , ''
+     , #{crtUserId}
+     , SYSDATE
+     , #{updUserId}
+     , SYSDATE
+)
+</insert>
+
+<insert id="insertDetailExcel" parameterType="Map">
+INSERT INTO SCM0004D
+(
+       PLAN_ID
+     , STOCK_CODE
+     , M01
+     , M02
+     , M03
+     , M04
+     , M05
+     , M06
+     , M07
+     , M08
+     , M09
+     , M10
+     , M11
+     , M12
+)
+VALUES
+(
+       #{planDetailIdSeq}
+     , #{stockCode}
+     , #{m01}
+     , #{m02}
+     , #{m03}
+     , #{m04}
+     , #{m05}
+     , #{m06}
+     , #{m07}
+     , #{m08}
+     , #{m09}
+     , #{m10}
+     , #{m11}
+     , #{m12}
+)
+</insert>
+
+<select id="getSeqNowSCM0003M" resultType="int">
+SELECT SCM0003M_PLAN_ID_SEQ.CURRVAL FROM DUAL
+</select>
+
+<insert id="insertMasterExcel" parameterType="Map">
+<selectKey keyProperty="bizPlanMasterSeq" resultType="int" order="BEFORE">
+SELECT SCM0003M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+
+INSERT INTO SCM0003M
+(
+       PLAN_ID
+     , TEAM
+     , YYYY
+     , VER
+     , PLAN_DESC
+     , CRT_USER_ID
+     , CRT_DT
+     , UPD_USER_ID
+     , UPD_DT
+)
+VALUES
+(
+       #{bizPlanMasterSeq}
+     , #{scmTeamCbBox}
+     , #{scmYearCbBox}
+     , #{scmPeriodCbBox}
+     , ''
+     , #{crtUserId}
+     , SYSDATE
+     , #{updUserId}
+     , SYSDATE
+)
+</insert>
+
+<!-- Plan Sales DashBoard -->
+<select id="selectChartDataList" parameterType="Map" resultType="egovMap">
+SELECT A.SCM_YEAR
+     , A.SCM_MONTH
+     , A.BIZ_PLAN
+     , A.SALES_PLAN
+     , A.ORDED  ACTUAL_SALES
+     , A.RATE
+  FROM SCM0051V A
+ WHERE A.SCM_YEAR = #{scmYearCbBox}
+ ORDER BY A.SCM_YEAR, A.SCM_QUARTER, A.SCM_MONTH
+</select>
+
+<select id="selectQuarterRate" parameterType="Map" resultType="egovMap">
+SELECT A.SCM_QUARTER
+     , A.BIZ_PLAN
+     , A.SALES_PLAN
+     , A.ORDED AS ACTUAL_SALES
+     , ROUND(A.RATE, 2) AS RATING
+     , 'view detail' AS VIEW_DETAIL
+  FROM SCM0061V A
+ WHERE A.SCM_YEAR = #{scmYearCbBox}
+ ORDER BY A.SCM_QUARTER
+</select>
+
+<select id="selectPSDashList" parameterType="Map" resultType="egovMap">
+SELECT GRP
+     , STOCK_CTGRY
+     , STK_TYPE_ID
+     , M1_BIZ_PLAN
+     , M1_SALES_PLAN
+     , M1_ORDED
+     , M1_RATE
+     , M2_BIZ_PLAN
+     , M2_SALES_PLAN
+     , M2_ORDED
+     , M2_RATE
+     , M3_BIZ_PLAN
+     , M3_SALES_PLAN
+     , M3_ORDED
+     , M3_RATE
+     , M4_BIZ_PLAN
+     , M4_SALES_PLAN
+     , M4_ORDED
+     , M4_RATE
+     , M5_BIZ_PLAN
+     , M5_SALES_PLAN
+     , M5_ORDED
+     , M5_RATE
+     , M6_BIZ_PLAN
+     , M6_SALES_PLAN
+     , M6_ORDED
+     , M6_RATE
+     , M7_BIZ_PLAN
+     , M7_SALES_PLAN
+     , M7_ORDED
+     , M7_RATE
+     , M8_BIZ_PLAN
+     , M8_SALES_PLAN
+     , M8_ORDED
+     , M8_RATE
+     , M9_BIZ_PLAN
+     , M9_SALES_PLAN
+     , M9_ORDED
+     , M9_RATE
+     , M10_BIZ_PLAN
+     , M10_SALES_PLAN
+     , M10_ORDED
+     , M10_RATE
+     , M11_BIZ_PLAN
+     , M11_SALES_PLAN
+     , M11_ORDED
+     , M11_RATE
+     , M12_BIZ_PLAN
+     , M12_SALES_PLAN
+     , M12_ORDED
+     , M12_RATE
+  FROM (
+        WITH BODY_CONT
+        AS (
+            SELECT Z.GRP
+                 , Z.STOCK_CTGRY
+                 , Z.STK_TYPE_ID
+                 , Z.SCM_MONTH
+                 , Z.BIZ_PLAN
+                 , Z.SALES_PLAN
+                 , Z.ORDED
+                 , ROUND(Z.RATE, 1) AS RATE
+              FROM SCM0062V Z
+             WHERE Z.SCM_YEAR = #{scmYearCbBox}
+	<if test="paramStockCtgry != null and paramStockCtgry != ''">
+               AND Z.STOCK_CTGRY = #{paramStockCtgry}
+	</if>
+	<choose>
+		<when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+               AND Z.STK_TYPE_ID IN
+			<foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+#{item}
+			</foreach>
+		</when>
+	</choose>
+	<if test="paramGrp != null and paramGrp != ''">
+               AND Z.GRP = #{paramGrp}
+	</if>
+             GROUP BY GRP, Z.SCM_YEAR, Z.SCM_QUARTER, Z.SCM_MONTH, Z.STOCK_CTGRY, Z.STK_TYPE_ID, Z.BIZ_PLAN, Z.SALES_PLAN, Z.ORDED, Z.RATE
+            )
+            SELECT *
+              FROM BODY_CONT
+             PIVOT (MAX(BIZ_PLAN) AS BIZ_PLAN
+                 , MAX(SALES_PLAN) AS SALES_PLAN
+                 , MAX(ORDED) AS ORDED
+                 , MAX(RATE )  AS RATE
+               FOR SCM_MONTH IN (1 AS M1, 2 AS M2, 3 AS M3, 4 AS M4, 5 AS M5, 6 AS M6, 7 AS M7, 8 AS M8, 9 AS M9, 10 AS M10, 11 AS M11, 12 AS M12))
+        ) SCM62V
+  ORDER BY GRP, STOCK_CTGRY
+</select>
+</mapper>

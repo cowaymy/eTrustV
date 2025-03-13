@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Coway E-Temporary Receipt Email</title>
+</head>
+
+<body>
+	<div style="width: 800px">
+		<div style="text-align: center;">
+			<h3>[Coway] E-Voucher Verification Code Has Arrived</h3>
+			<h4>
+				Voucher Code : ${voucherCode}
+			</h4>
+		</div>
+		<br> <br>
+
+		<table style="width: 800px; font-family: Calibri; font-size: 14px">
+			<colgroup>
+				<col style="width: 15%" />
+				<col style="width: 60%; padding-right: 50px" />
+				<col style="width: 10%" />
+				<col style="width: 15%; align: right" />
+			</colgroup>
+			<tr>
+				<td>Product Name :</td>
+				<td><span>${product}</span> <span style='display: ${freeItemDisplay}'>(Free: ${free})</span></td>
+			</tr>
+			<tr>
+				<td>Variation :</td>
+				<td>${obligation}</td>
+			</tr>
+			<tr>
+				<td>Order ID :</td>
+				<td>${ordId}</td>
+			</tr>
+		</table>
+		<br> <br>
+
+		<div>
+			<h4>Redemption Instructions</h4>
+			<hr
+				style="height: 2px; border: none; color: #333; background-color: #333;">
+			<p>1. Wait for Coway Sales Agent to contact you via phone call
+				within next 5 working days</p>
+			<p>2. Present the verification code to Coway Sales Agent</p>
+			<p>3. Coway Sales Agent will verify the e-voucher & process the
+				order</p>
+		</div>
+
+		<br>
+
+		<div>
+			<h4>Buyer Information & Customer Service Support</h4>
+			<hr
+				style="height: 2px; border: none; color: #333; background-color: #333;">
+			<table height="150">
+				<tr>
+					<td>Buyer Name :</td>
+					<td>${custName}</td>
+				</tr>
+				<tr>
+					<td>Buyer Email :</td>
+					<td>${custEmail}</td>
+				</tr>
+				<tr>
+					<td>Phone Number :</td>
+					<td>${custContact}</td>
+				</tr>
+				<tr>
+					<td>Customer Service Support :</td>
+					<td>1-800-88-8111</td>
+				</tr>
+			</table>
+		</div>
+		<hr
+			style="height: 2px; border: none; color: #333; background-color: #333;">
+		<div>
+			<p style="text-align: center">Coway | Your order is confirm</p>
+			<p style="text-align: center">If you have questions about your
+				order, please visit <a href="https://www.coway.com/FAQ">coway.com/FAQ</a> or contact us at
+				<a href="https://www.coway.com/contact_us">coway.com/contact_us</a></p>
+			<p style="text-align: center">Thank you for shopping with Coway.
+				We look forward to your next visit</p>
+			<div>
+				<table align="center" valign="center">
+					<tr>
+						<td align="center" valign="center">FAQ | </td>
+						<td align="center" valign="center"><a href="" target="_blank"><img src="cid:mail_icon" width="40" height="40"/></a></td>
+						<td align="center" valign="center"><a href="https://www.facebook.com/CowayMalaysia" target="_blank"><img src="cid:facebook_icon" width="30" height="30"/></a></td>
+						<td align="center" valign="center"><a href="https://www.instagram.com/officialcowaymalaysia" target="_blank"><img src="cid:instagram_icon" width="30" height="30"/></a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<hr
+			style="height: 2px; border: none; color: #333; background-color: #333;">
+		<div>
+			<p style="text-align: center">This is an automatically generated email. Please do not reply to this email.</p>
+		</div>
+		<div style="text-align: center">
+			<img src="cid:coway_header" width="450" height="100">
+		</div>
+		<br>
+	</div>
+</body>
+</html>

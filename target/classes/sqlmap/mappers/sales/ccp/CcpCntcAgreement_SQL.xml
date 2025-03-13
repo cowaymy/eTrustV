@@ -1,0 +1,1502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper">
+
+    <select id="selectContactAgreementList" parameterType="Map" resultType="egovMap">
+			 <![CDATA[
+			  SELECT
+			       Project2.GOV_AG_ID   ,
+			       Project2.GOV_AG_BATCH_NO   ,
+			       Project2.GOV_AG_SALES_ORD_ID   ,
+			       Project2.SALES_ORD_NO   ,
+			       Project2.NAME1 NAME  ,
+			       Project2.GOV_AG_STUS_ID   ,
+			       Project2.NAME NAME1  ,
+			       Project2.GOV_AG_PRGRS_ID   ,
+			       Project2.GOV_AG_PRGRS_NAME   ,
+			       Project2.GOV_AG_TYPE_ID   ,
+			       Project2.CODE   ,
+			       TO_CHAR(Project2.GOV_AG_CRT_DT ,'DD-MM-YYYY') AS GOV_AG_CRT_DT,
+			       Project2.USER_NAME   ,
+			       Project2.GOV_AG_ROLE_DESC   ,
+			       Project2.MEM_CODE   ,
+			       TO_CHAR(Project2.GOV_AG_START_DT,'DD-MM-YYYY') AS GOV_AG_START_DT,
+			       TO_CHAR(Project2.GOV_AG_END_DT, 'DD-MM-YYYY') AS GOV_AG_END_DT
+
+			  FROM ( SELECT Extent1.GOV_AG_ID GOV_AG_ID  ,
+			                Extent1.GOV_AG_SALES_ORD_ID GOV_AG_SALES_ORD_ID  ,
+			                Extent1.GOV_AG_BATCH_NO GOV_AG_BATCH_NO  ,
+			                Extent1.GOV_AG_STUS_ID GOV_AG_STUS_ID  ,
+			                Extent1.GOV_AG_PRGRS_ID GOV_AG_PRGRS_ID  ,
+			                Extent1.GOV_AG_TYPE_ID GOV_AG_TYPE_ID  ,
+			                Extent1.GOV_AG_START_DT GOV_AG_START_DT  ,
+			                Extent1.GOV_AG_END_DT GOV_AG_END_DT  ,
+			                Extent1.GOV_AG_CRT_DT GOV_AG_CRT_DT  ,
+			                Extent2.MEM_CODE MEM_CODE  ,
+			                Extent3.NAME NAME  ,
+			                Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+			                Extent5.NAME NAME1  ,
+			                Extent6.USER_NAME USER_NAME  ,
+			                Extent7.GOV_AG_PRGRS_NAME GOV_AG_PRGRS_NAME  ,
+			                Extent8.GOV_AG_MSG_ID GOV_AG_MSG_ID  ,
+			                Extent10.GOV_AG_ROLE_DESC GOV_AG_ROLE_DESC  ,
+			                Extent11.CODE CODE ,
+			                (SELECT
+			                    MAX(GOV_AG_MSG_ID)
+			                FROM
+			                    SAL0036D Extent12
+			                WHERE
+			                    Extent12.GOV_AG_ID = Extent1.GOV_AG_ID
+			                AND ROWNUM = 1
+			                ) C1
+
+
+			         FROM SAL0033D Extent1
+			                LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.GOV_AG_MEM_ID
+			                LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.GOV_AG_STUS_ID
+			                LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.GOV_AG_SALES_ORD_ID
+			                LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+			                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.GOV_AG_CRT_USER_ID
+			                LEFT JOIN SAL0037C Extent7   ON Extent7.GOV_AG_PRGRS_ID = Extent1.GOV_AG_PRGRS_ID
+			                LEFT JOIN SAL0036D Extent8   ON Extent8.GOV_AG_ID = Extent1.GOV_AG_ID
+			                LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID GOV_AG_USER_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_ROLE_ID GOV_AG_ROLE_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_DEPT_ID GOV_AG_USER_DEPT_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_STUS_ID GOV_AG_USER_STUS_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID GOV_AG_USER_UPD_USER_ID  ,
+			                                   GovAgreementUserRole.GOV_AG_USER_UPD_DT GOV_AG_USER_UPD_DT
+			                            FROM SAL0040D GovAgreementUserRole ) Extent9   ON Extent9.GOV_AG_USER_ID = Extent8.GOV_AG_MSG_CRT_USER_ID
+			                LEFT JOIN SAL0039M Extent10   ON Extent10.GOV_AG_ROLE_ID = Extent9.GOV_AG_ROLE_ID
+			                LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = Extent1.GOV_AG_TYPE_ID ) Project2
+
+			 WHERE   0 <> Project2.GOV_AG_STUS_ID
+			 AND Project2.GOV_AG_MSG_ID = Project2.C1
+
+			   ]]>
+
+		        <!--   Agreement No.  -->
+		        <if test="null != govAgBatchNo and '' !=  govAgBatchNo ">
+		              AND UPPER(Project2.GOV_AG_BATCH_NO) LIKE  '%'|| UPPER(#{govAgBatchNo}) || '%'
+		        </if>
+
+		        <!-- CRT_DT // FROM -->
+		        <if test="null != govAgCrtDtFrom and '' != govAgCrtDtFrom">
+		              AND Project2.GOV_AG_CRT_DT >= TO_DATE(#{govAgCrtDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+		        </if>
+
+		         <!-- CRT_DT // TO -->
+		         <if test="null != govAgCrtDtTo and '' != govAgCrtDtTo">
+
+		             <![CDATA[
+		              AND Project2.GOV_AG_CRT_DT <= TO_DATE(#{govAgCrtDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+		             ]]>
+
+		         </if>
+
+		          <if test="null != salesOrdNo and  '' != salesOrdNo ">
+		              <if test=" exist == 1 ">
+                            AND Project2.GOV_AG_BATCH_NO IN
+                            <foreach collection="getBatchNoList" item="value" open="(" separator="," close=")">
+                                #{value}
+                            </foreach>
+		              </if>
+		              <if test=" exist == 0 ">
+		                    AND 1= 0
+		              </if>
+		          </if>
+
+		         <if test="null != govAgStartDtFrom and  '' != govAgStartDtFrom ">
+		              AND Project2.GOV_AG_START_DT >= TO_DATE(#{govAgStartDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+		         </if>
+
+
+                 <if test="null != govAgStartDtTo and  '' != govAgStartDtTo ">
+
+	                 <![CDATA[
+	                      AND Project2.GOV_AG_START_DT <= TO_DATE(#{govAgStartDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	                 ]]>
+
+                 </if>
+
+
+		         <if test=" null != name and '' != name ">
+	                   AND UPPER(Project2.NAME1) LIKE '%' || UPPER(#{name}) || '%'
+		         </if>
+
+
+		        <if test=" null != govAgEndDtFrom  and '' != govAgEndDtFrom">
+	                   AND Project2.GOV_AG_END_DT >= TO_DATE(#{govAgEndDtFrom}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+		        </if>
+
+
+		        <if test=" null != govAgEndDtTo and '' != govAgEndDtTo ">
+	                   <![CDATA[
+	                   AND Project2.GOV_AG_END_DT <= TO_DATE(#{govAgEndDtTo} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	                     ]]>
+		        </if>
+
+                <if test=" null != progressVal and '' != progressVal">
+	                   AND  Project2.GOV_AG_PRGRS_ID IN
+	                   <foreach collection="govAgPrgsIdList" item="value" open="(" separator="," close=")">
+	                      #{value}
+	                   </foreach>
+		         </if>
+
+		         <if test=" null != statusVal and '' != statusVal ">
+		                AND  Project2.GOV_AG_STUS_ID IN
+		                <foreach collection="govAgStusIdList" item="value" open="(" separator="," close=")">
+		                  #{value}
+		                </foreach>
+		         </if>
+
+		         <if test=" null != typeVal and '' != typeVal">
+		              AND  Project2.GOV_AG_TYPE_ID IN
+		              <foreach collection="govAgTypeIdList" item="value" open="(" separator="," close=")">
+		                  #{value}
+		              </foreach>
+		          </if>
+
+		          <if test=" null != memCode and '' != memCode">
+		              AND UPPER(Project2.MEM_CODE) LIKE '%' || UPPER(#{memCode}) || '%'
+		          </if>
+
+		          <if test=" null != userName and '' != userName">
+		              AND UPPER(Project2.USER_NAME LIKE) '%' || UPPER(#{userName}) || '%'
+		          </if>
+
+			  ORDER BY Project2.GOV_AG_ID DESC
+
+    </select>
+
+    <select id="selectItemBatchNofromSalesOrdNo" parameterType="Map" resultType="java.lang.String">
+				SELECT
+				    Extent2.GOV_AG_ITM_BATCH_NO
+				FROM
+				    SAL0001D Extent1
+				    JOIN SAL0034D Extent2   ON Extent2.GOV_AG_ITM_SALES_ORD_ID = Extent1.SALES_ORD_ID
+				 WHERE  Extent1.SALES_ORD_NO = #{salesOrdNo}
+				 AND  Extent2.GOV_AG_ITM_BATCH_NO IS NOT NULL
+     </select>
+
+     <select id="getOrderId" parameterType="Map" resultType="egovMap" >
+     <![CDATA[
+     SELECT T1.ORD_ID   ,
+                T1.ORD_NO   ,
+                T1.RENTAL_STUS   ,
+                T1.ORD_STUS_ID   ,
+                T1.ORD_STUS_CODE   ,
+                T1.ORD_STUS_NAME   ,
+                T1.ORD_DT   ,
+                T1.INSTLMT_PRIOD   ,
+                T1.ORD_AMT   ,
+                T1.ORD_MTH_RENTAL   ,
+                T1.ORD_PV   ,
+                T1.ORD_PV_MONTH   ,
+                T1.ORD_PV_YEAR   ,
+                T1.ORD_REF_NO   ,
+                T1.ORD_PO_NO   ,
+                T1.ORD_DEPT_CODE   ,
+                T1.ORD_GRP_CODE   ,
+                T1.ORD_ORG_CODE   ,
+                T1.ORD_CRT_USER_ID   ,
+                T1.ORD_CRT_DT   ,
+                T1.APP_TYPE_ID   ,
+                T1.APP_TYPE_CODE   ,
+                T1.APP_TYPE_DESC ,
+                T1.STOCK_ID   ,
+                T1.STOCK_CODE   ,
+                T1.STOCK_DESC   ,
+                T1.CUST_ID   ,
+                T1.CUST_TYPE   ,
+                T1.CUST_NAME   ,
+                T1.CUST_NRIC   ,
+                T1.CUST_DOB   ,
+                T1.CUST_NATION   ,
+                T1.CUST_GENDER   ,
+                T1.CUST_RACE   ,
+                T1.CUST_EMAIL   ,
+                T1.CUST_VA_NO   ,
+                T1.CUST_PASSPORT_EXPR   ,
+                T1.CUST_VISA_EXPR   ,
+                T1.ORD_PROMO_ID   ,
+                T1.ORD_PROMO_CODE   ,
+                T1.ORD_PROMO_DESC   ,
+                T1.ORD_MEM_ID   ,
+                T1.ORD_MEM_CODE   ,
+                T1.ORD_MEM_NAME   ,
+                T1.ORD_MEM_NRIC   ,
+                T1.ORD_MEM_TYPE_ID   ,
+                T1.ORD_MEM_TYPE_CODE   ,
+                T1.ORD_MEM_TYPE_NAME   ,
+                T1.COOL_OFF_PRIOD   ,
+                T1.KEYIN_BRNCH_ID   ,
+                T1.KEYIN_BRNCH_CODE   ,
+                T1.KEYIN_BRNCH_NAME   ,
+                T1.ORD_REM   ,
+                T1.RENT_CHK_ID   ,
+                T1.ORD_HM_ID   ,
+                T1.ORD_SM_ID   ,
+                T1.ORD_GM_ID   ,
+                T1.ORD_ADDR_ID   ,
+                T1.ORD_CNTC_ID   ,
+                T1.ORD_PROMO_RELATED_NO   ,
+                T1.UPD_DT   ,
+                T1.UPD_USER_ID   ,
+                T1.JOM_PAY_REF   ,
+                T1.STK_CTGRY_ID   ,
+                T1.STK_CTGRY_NAME   ,
+                T1.CUST_TYPE_ID   ,
+                T1.CUST_BILL_ID   ,
+                T1.OBLIGT_YEAR
+       FROM
+                SAL1006V T1
+       WHERE
+                T1.ORD_NO = #{salesOrderNo}  AND ROWNUM <= 1
+       ]]>
+
+     </select>
+
+     <select id="selectAfterServiceJsonList" parameterType="Map" resultType="egovMap">
+		        SELECT DISTINCT Extent1.AS_NO AS_NO  ,
+		                  TO_CHAR(Extent1.AS_REQST_DT, 'DD-MM-YYYY')  AS_REQST_DT  ,
+		                  Extent2.CODE CODE  ,
+		                  1 C1  ,
+		                  CASE WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN Extent3.AS_RESULT_NO ELSE '-' END AS_RESULT_NO  ,
+		                  CASE WHEN ( Extent4.RESN_ID IS NOT NULL ) THEN Extent4.RESN_DESC ELSE '-' END RESN_DESC  ,
+		                  CASE WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC ELSE '-' END RESN_DESC1  ,
+		                  CASE WHEN ( Extent6.MEM_ID IS NOT NULL ) THEN Extent6.MEM_CODE ELSE '-' END MEM_CODE  ,
+		                  CASE WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.RESN_DESC ELSE '-' END RESN_DESC2  ,
+		                  CASE WHEN ( Extent3.AS_RESULT_ID IS NOT NULL ) THEN TO_CHAR(Extent3.AS_TOT_AMT, 'FM9999999999990.00') ELSE TO_CHAR(UTILS.CONVERT_TO_FLOAT(0,53), 'FM9999999999990.00')END AS_TOT_AMT  ,
+		                  TO_CHAR( Extent3.AS_SETL_DT, 'DD-MM-YYYY')  AS_SETL_DT
+		         FROM SVC0001D Extent1
+		                JOIN SYS0038M Extent2   ON Extent1.AS_STUS_ID = Extent2.STUS_CODE_ID
+		                LEFT JOIN SVC0004D Extent3   ON  Extent1.AS_ID = Extent3.AS_ENTRY_ID
+		                AND  1 = Extent3.AS_RESULT_IS_CURR
+		                AND  457 = Extent3.AS_RESULT_TYPE_ID
+		                LEFT JOIN SYS0032M Extent4   ON Extent1.AS_MALFUNC_ID = Extent4.RESN_ID
+		                LEFT JOIN SYS0032M Extent5   ON Extent1.AS_MALFUNC_RESN_ID = Extent5.RESN_ID
+		                LEFT JOIN ORG0001D Extent6   ON Extent3.AS_CT_ID = Extent6.MEM_ID
+		                LEFT JOIN SYS0032M Extent7   ON Extent3.AS_SLUTN_RESN_ID = Extent7.RESN_ID
+		          WHERE  Extent1.AS_SO_ID = #{salesOrderId}
+     </select>
+
+     <select id="selectBeforeServiceJsonList" parameterType="Map" resultType="egovMap">
+				SELECT Extent1.NO   ,
+				    Extent1.MONTH  || ' - ' || Extent1.YEAR  BS_MONTH,
+				    Extent2.CODE   ,
+				    Extent3.CODE CODE1  ,
+				    Extent4.MEM_CODE   ,
+				    TO_CHAR(Extent5.SETL_DT, 'DD-MM-YYYY') SETL_DT,
+				    Extent5.NO NO1  ,
+				    Extent6.CODE CODE2  ,
+				    Extent7.CODE CODE3
+				FROM SVC0008D Extent1
+				    JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
+				    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+				    JOIN ORG0001D Extent4   ON Extent1.CODY_ID = Extent4.MEM_ID
+				    LEFT JOIN SVC0006D Extent5   ON ( Extent1.SCHDUL_ID = Extent5.SCHDUL_ID )
+				    AND ( 1 = Extent5.RESULT_IS_CURR )
+				    LEFT JOIN SYS0032M Extent6   ON Extent5.REN_COLCT_ID = Extent6.RESN_ID
+				    LEFT JOIN SYS0032M Extent7   ON Extent5.FAIL_RESN_ID = Extent7.RESN_ID
+				WHERE  Extent1.SALES_ORD_ID = #{salesOrderId}
+				ORDER BY Extent1.NO DESC
+     </select>
+
+     <select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+     /*[com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper.selectSearchOrderNo]*/
+				SELECT
+                    Distinct1.C1 C1 ,
+                    Distinct1.ORD_ID ,
+                    Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
+                    Distinct1.ORD_STUS_CODE ,
+                    Distinct1.CUST_NAME ,
+                    CASE WHEN LENGTH(Distinct1.CUST_NRIC) = 12 THEN REGEXP_REPLACE(SUBSTR(Distinct1.CUST_NRIC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(Distinct1.CUST_NRIC, 9,12)
+                    ELSE Distinct1.CUST_NRIC
+                    END CUST_NRIC,
+                    Distinct1.APP_TYPE_CODE ,
+                    Distinct1.STOCK_CODE ,
+                    Distinct1.STOCK_DESC,
+                    Distinct1.ORD_PV_MONTH,
+                    Distinct1.ORD_PV_YEAR,
+                    Distinct1.APP_TYPE_ID
+                FROM ( SELECT DISTINCT Extent1.ORD_ID ORD_ID ,
+                                       Extent1.ORD_NO ORD_NO ,
+                                       Extent1.ORD_STUS_CODE  ,
+                                       Extent1.APP_TYPE_CODE  ,
+                                       Extent1.STOCK_CODE  ,
+                                       Extent1.STOCK_DESC  ,
+                                       Extent1.CUST_NAME  ,
+                                       Extent1.CUST_NRIC  , 1 C1,
+                                       Extent1.ORD_DT,
+                                       Extent1.ORD_PV_MONTH,
+                                       Extent1.ORD_PV_YEAR,
+                                       Extent1.APP_TYPE_ID
+                                       FROM (
+                                            SELECT vOrderBasicInfo.ORD_ID  ,
+                                            vOrderBasicInfo.ORD_NO ORD_NO ,
+                                            vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                                            vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                                            vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                                            vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                                            vOrderBasicInfo.ORD_DT ORD_DT ,
+                                            vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                                            vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                                            vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                                            vOrderBasicInfo.ORD_PV ORD_PV ,
+                                            vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                                            vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                                            vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                                            vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                                            vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                                            vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                                            vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                                            vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                                            vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                                            vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                                            vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                                            vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                                            vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                                            vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                                            vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                                            vOrderBasicInfo.CUST_ID CUST_ID ,
+                                            vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                                            vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                                            vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                                            vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                                            vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                                            vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                                            vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                                            vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                                            vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                                            vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                                            vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                                            vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                                            vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                                            vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                                            vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                                            vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                                            vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                                            vOrderBasicInfo.ORD_REM ORD_REM ,
+                                            vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                                            vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                                            vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                                            vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                                            vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                                            vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                                            vOrderBasicInfo.UPD_DT UPD_DT ,
+                                            vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                                            vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                                            vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                                            vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                                            vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                                            vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                                            vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                                       FROM SAL1006V vOrderBasicInfo ) Extent1
+				          <![CDATA[
+				          WHERE  ( 'IACT' <> Extent1.ORD_STUS_CODE )
+				           ]]>
+				            AND NOT EXISTS (SELECT 1
+		                                      FROM SAL0001D Z
+		                                     WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+		                                       AND Z.BNDL_ID IS NOT NULL
+		                                    )             -- homecare Remove(except)
+				           <if test=" '' != searchOrdNo and null != searchOrdNo">
+				                AND ( Extent1.ORD_NO = #{searchOrdNo})
+				           </if>
+				           <if test=" '' != searchOrdDate and null != searchOrdDate">
+				                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
+				           </if>
+				           <if test='pdpaMonth != null and pdpaMonth != 0'>
+					            AND Extent1.ORD_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+					       </if>
+				           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
+				                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
+				           </if>
+				           <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+				                AND ( UPPER(Extent1.CUST_NRIC) = UPPER(#{searchOrdCustNric}) )
+				                <!-- AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NRIC), UPPER(#{searchOrdCustNric})),10,0)) > 0 ) -->
+				           </if>
+				           <if test=" null != appType and appType.length > 0">
+				                AND Extent1.APP_TYPE_ID  IN
+				                <foreach collection="appType" item="item" open="(" separator="," close=")">
+				                    #{item}
+				                </foreach>
+				           </if>
+
+		        ) Distinct1
+
+     </select>
+
+     <select id="selectSearchMemberCode" parameterType="Map" resultType="egovMap">
+					SELECT  Extent1.MEM_ID MEM_ID  ,
+					        Extent1.MEM_CODE MEM_CODE  ,
+					        Extent1.NAME NAME  ,
+					        Extent1.NRIC NRIC  ,
+					        Extent2.CODE_NAME CODE_NAME  ,
+					        TO_CHAR(Extent1.JOIN_DT , 'DD-MM-YYYY') JOIN_DT  ,
+					        CASE WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE ELSE 0 END MEM_TYPE
+					FROM
+					    ORG0001D Extent1
+					    JOIN SYS0013M Extent2   ON Extent1.MEM_TYPE = Extent2.CODE_ID
+					WHERE
+					    1 = Extent1.STUS
+					<if test=" '' != searchMemCode and null != searchMemCode">
+					  AND
+                        Extent1.MEM_CODE = #{searchMemCode}
+					</if>
+					<if test=" '' != searchMemType and null != searchMemType">
+					AND
+					    (CASE WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE ELSE 0 END) = #{searchMemType}
+					</if>
+					<if test=" '' != searchDate and null != searchDate">
+					AND
+					    Extent1.JOIN_DT = TO_DATE(#{searchDate}, 'DD/MM/YYYY')
+					</if>
+					<if test=" '' != searchCustName and null != searchCustName">
+					AND
+					    UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.NAME), UPPER(#{searchCustName})),10,0) > 0
+					</if>
+					<if test=" '' != searchCustNric and null != searchCustNric">
+					AND
+					    UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.NRIC), UPPER(#{searchCustNric})),10,0) > 0
+					</if>
+					ORDER BY Extent1.MEM_CODE ASC
+     </select>
+
+     <select id="getMemCodeConfirm" parameterType="Map" resultType="egovMap">
+			<![CDATA[
+				SELECT Extent1.MEM_ID MEM_ID  ,
+				       Extent1.MEM_CODE MEM_CODE  ,
+				       Extent1.MEM_TYPE MEM_TYPE  ,
+				       Extent1.NAME NAME  ,
+				       Extent1.FULL_NAME FULL_NAME  ,
+				       Extent1.PASSWD PASSWD  ,
+				       Extent1.NRIC NRIC  ,
+				       Extent1.DOB DOB  ,
+				       Extent1.GENDER GENDER  ,
+				       Extent1.RACE RACE  ,
+				       Extent1.MARTL MARTL  ,
+				       Extent1.TEL_OFFICE TEL_OFFICE  ,
+				       Extent1.TEL_HUSE TEL_HUSE  ,
+				       Extent1.TEL_MOBILE TEL_MOBILE  ,
+				       Extent1.EMAIL EMAIL  ,
+				       Extent1.SPUSE_CODE SPUSE_CODE  ,
+				       Extent1.SPOUSE_NAME SPOUSE_NAME  ,
+				       Extent1.SPOUSE_NRIC SPOUSE_NRIC  ,
+				       Extent1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+				       Extent1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+				       Extent1.SPOUSE_DOB SPOUSE_DOB  ,
+				       Extent1.EDC_LEV EDC_LEV  ,
+				       Extent1.LANG LANG  ,
+				       Extent1.BANK BANK  ,
+				       Extent1.BANK_ACC_NO BANK_ACC_NO  ,
+				       Extent1.SPONS_CODE SPONS_CODE  ,
+				       Extent1.JOIN_DT JOIN_DT  ,
+				       Extent1.RESIGN_DT RESIGN_DT  ,
+				       Extent1.TRM_DT TRM_DT  ,
+				       Extent1.RENEW_DT RENEW_DT  ,
+				       Extent1.AGRMNT_NO AGRMNT_NO  ,
+				       Extent1.BRNCH BRNCH  ,
+				       Extent1.STUS STUS  ,
+				       Extent1.SYNC_CHK SYNC_CHK  ,
+				       Extent1.RANK RANK  ,
+				       Extent1.TRNSPRT TRNSPRT  ,
+				       Extent1.PROMO_DT PROMO_DT  ,
+				       Extent1.TR_NO TR_NO  ,
+				       Extent1.CRT_DT CRT_DT  ,
+				       Extent1.CRT_USER_ID CRT_USER_ID  ,
+				       Extent1.UPD_DT UPD_DT  ,
+				       Extent1.UPD_USER_ID UPD_USER_ID  ,
+				       Extent1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+				       Extent1.APLICNT_ID APLICNT_ID  ,
+				       Extent1.BIZ_TYPE BIZ_TYPE  ,
+				       Extent1.HSPTLZ HSPTLZ
+				  FROM ORG0001D Extent1
+				 WHERE  Extent1.MEM_CODE = #{inputMemCode} AND ROWNUM <= 1
+				 ]]>
+     </select>
+
+     <select id="selectCurierListJsonList"  resultType="egovMap">
+				SELECT Extent1.CURIER_ID CODE_ID  ,
+                       Extent1.CURIER_CODE   ,
+                       Extent1.CURIER_NAME  CODE_NAME ,
+                       Extent1.CURIER_REG_NO   ,
+                       Extent1.CURIER_STUS_ID   ,
+                       Extent1.AREA_ID   ,
+                       Extent1.ADDR_DTL   ,
+                       Extent1.STREET   ,
+                       Extent1.CURIER_CNTC_NO1   ,
+                       Extent1.CURIER_CNTC_NO2   ,
+                       Extent1.CURIER_FAX_NO   ,
+                       Extent1.CURIER_EMAIL   ,
+                       Extent1.CURIER_CRT_DT   ,
+                       Extent1.CURIER_CRT_USER_ID   ,
+                       Extent1.CURIER_UPD_DT   ,
+                       Extent1.CURIER_UPD_USER_ID
+                  FROM SYS0016M Extent1
+                 WHERE  1 = Extent1.CURIER_STUS_ID
+                  ORDER BY Extent1.CURIER_NAME ASC
+    </select>
+
+    <select id="selectOrderJsonList"  parameterType="Map" resultType="egovMap">
+				SELECT Extent1.SALES_ORD_ID   ,
+				       Extent1.SALES_ORD_NO   ,
+				       TO_CHAR(Extent1.SALES_DT, 'DD-MM-YYYY')   SALES_DT,
+				       Extent3.CODE_NAME   ,
+				       Extent4.NAME   ,
+				       Extent5.NAME NAME1  ,
+				       Extent5.NRIC   ,
+				       Extent6.STK_DESC
+				FROM SAL0001D Extent1
+				       JOIN SAL0002D Extent2   ON Extent1.SALES_ORD_ID = Extent2.SALES_ORD_ID
+				       JOIN SYS0013M Extent3   ON Extent1.APP_TYPE_ID = Extent3.CODE_ID
+				       JOIN SYS0038M Extent4   ON Extent1.STUS_CODE_ID = Extent4.STUS_CODE_ID
+				       JOIN SAL0029D Extent5   ON Extent1.CUST_ID = Extent5.CUST_ID
+				       JOIN SYS0026M Extent6   ON Extent2.ITM_STK_ID = Extent6.STK_ID
+				 WHERE  Extent1.SALES_ORD_ID = #{salesOrderId}
+				 ORDER BY Extent1.SALES_ORD_ID DESC
+    </select>
+
+    <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>
+
+    <!--###### CREATE SEQUENCE  START######-->
+    <select id="crtSeqSAL0033D"  resultType="java.lang.String">
+        SELECT SAL0033D_GOV_AG_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqSAL0036D" resultType="java.lang.String">
+        SELECT SAL0036D_GOV_AG_MSG_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqSAL0035D" resultType="java.lang.String">
+        SELECT SAL0035D_AG_CNSGN_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqSAL0034D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT SAL0034D_GOV_AG_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqCCR0006D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqCCR0007D" resultType="java.lang.String"> <!--LOOP  -->
+        SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    <!-- ###### CREATE SEQUENCE END ######-->
+
+    <insert id="insertGovAgreementInfo" parameterType="Map" >
+					INSERT INTO SAL0033D
+								  ( GOV_AG_ID,
+								    GOV_AG_SALES_ORD_ID,
+								    GOV_AG_BATCH_NO,
+								    GOV_AG_MEM_ID,
+								    GOV_AG_STUS_ID,
+								    GOV_AG_PRGRS_ID,
+								    GOV_AG_TYPE_ID,
+								    GOV_AG_START_DT,
+								    GOV_AG_END_DT,
+								    GOV_AG_PRE_UPD_USER_ID,
+								    GOV_AG_REM,
+								    GOV_AG_CRT_USER_ID,
+								    GOV_AG_CRT_DT,
+								    GOV_AG_UPD_USER_ID,
+								    GOV_AG_UPD_DT,
+								    GOV_AG_CRT_ROLE_ID,
+								    GOV_AG_QTY,
+								    GOV_AG_HAS_NOTFY,
+								    GOV_AG_EXP_MTH_NOTFY,
+								    GOV_AG_IS_NW_MODULE,
+								    GOV_AG_LAST_SEND_DT,
+								    GOV_AG_LAST_RCIV_DT,
+                                    GOV_AG_EXP_DAY_NOTFY )
+					  VALUES (
+					           #{govAgreeIdSeq},
+					           #{salesOrdId},
+					          #{docNo},
+					           #{govAgMemId},
+					           1,
+					           #{inputProgress},
+					           #{inputAgreementType},
+					           TO_DATE(#{inputPeriodStart}, 'DD/MM/YYYY'),
+					           TO_DATE(#{inputPeriodEnd}, 'DD/MM/YYYY'),
+					           0,
+					           #{agreementAgmRemark},
+					           #{userId},
+					           SYSDATE,
+					           #{userId},
+					           SYSDATE,
+					           #{rollId},
+					           #{inputDocQty},
+					           0,
+					           0,
+					           1,
+					           TO_DATE(#{sendDt} , 'DD/MM/YYYY'),
+					           TO_DATE(#{rcivDt}, 'DD/MM/YYYY'),
+					           0)
+    </insert>
+
+    <select id="getUserInfo"  parameterType="Map" resultType="egovMap">
+				SELECT Extent1.GOV_AG_USER_ID   ,
+				       Extent1.GOV_AG_ROLE_ID   ,
+				       Extent1.GOV_AG_USER_DEPT_ID   ,
+				       Extent1.GOV_AG_USER_STUS_ID   ,
+				       Extent1.GOV_AG_USER_UPD_USER_ID   ,
+				       Extent1.GOV_AG_USER_UPD_DT
+				FROM ( SELECT GovAgreementUserRole.GOV_AG_USER_ID   ,
+				            GovAgreementUserRole.GOV_AG_ROLE_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_DEPT_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_STUS_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID   ,
+				            GovAgreementUserRole.GOV_AG_USER_UPD_DT
+				     FROM SAL0040D GovAgreementUserRole
+				     ORDER BY  GovAgreementUserRole.GOV_AG_ROLE_ID DESC) Extent1
+				 <![CDATA[
+				WHERE  Extent1.GOV_AG_USER_ID = #{userId} AND ROWNUM <= 1
+				  ]]>
+    </select>
+
+    <insert id="insertGovAgreementMessLog"  parameterType="Map">
+				INSERT INTO SAL0036D
+							  ( GOV_AG_MSG_ID,
+							    GOV_AG_ID,
+							    GOV_AG_MSG,
+							    GOV_AG_MSG_PROG_STUS_ID,
+							    GOV_AG_MSG_STUS_ID,
+							    GOV_AG_MSG_CRT_USER_ID,
+							    GOV_AG_MSG_CRT_DT,
+							    GOV_AG_MSG_UPD_USER_ID,
+							    GOV_AG_MSG_UPD_DT,
+							    GOV_AG_MSG_HAS_ATTACH,
+							    GOV_AG_MSG_ATTACH_FILE_NAME
+							    )
+				  VALUES (
+							          #{govMsgIdSeq},
+							          #{govAgreeIdSeq},
+							          #{agreementMsg},
+							          #{inputProgress},
+							           5,
+							           #{userId},
+							           SYSDATE,
+							           #{userId},
+							           SYSDATE,
+							           0,
+							           ''
+							   )
+    </insert>
+
+    <insert id="insertConsignment"  parameterType="Map">
+			 INSERT INTO SAL0035D
+							  ( AG_CNSGN_ID,
+							    GOV_AG_ID,
+							    IS_CURR,
+							    DISAB,
+							    AG_COSIGN_NO,
+							    AG_REQSTER_TYPE_ID,
+							    AG_CNSGN_RCIV_DT,
+							    CURIER_ID,
+							    CRT_DT,
+							    CRT_USER_ID,
+							    UPD_DT,
+							    UPD_USER_ID,
+							    AG_CNSGN_SEND_DT,
+							    CNSGN_USER_ID_HAND,
+							    CNSGN_MTH_ID )
+			  VALUES ( #{govConsignSeq}  ,
+				            #{govAgreeIdSeq},
+				           1,
+				           0,
+				           NVL(#{inputConsignmentNo} , ' '),
+				           #{inputAgmReq},
+				           TO_DATE(#{consignmentReciveDt}, 'DD/MM/YYYY'),
+				           NVL(#{inputCourierSelect}, 0),
+				           SYSDATE,
+				           #{userId},
+				           SYSDATE,
+				           #{userId},
+				           TO_DATE(#{agCnsgnSendDt}, 'DD/MM/YYYY'),
+				           #{consignBtHand},
+				           1237 )
+    </insert>
+
+    <!-- Grid List Loop 사용 insert  -->
+    <insert id="insertGovAgreementSub" parameterType="Map">
+				INSERT INTO SAL0034D
+				  ( GOV_AG_ITM_ID,
+				    GOV_AG_ID,
+				    GOV_AG_ITM_BATCH_NO,
+				    GOV_AG_ITM_SALES_ORD_ID,
+				    GOV_AG_ITM_STUS_ID,
+				    GOV_AG_ITM_CRT_DT,
+				    GOV_AG_ITM_CRT_USER_ID,
+				    GOV_AG_ITM_UPD_DT,
+				    GOV_AG_ITM_UPD_USER_ID,
+				    GOV_AG_ITM_START_DT,
+				    GOV_AG_ITM_EXPR_DT,
+				    GOV_AG_ITM_RENT_RESULT,
+				    GOV_AG_ITM_INST_RESULT )
+				  VALUES (
+				           #{govAgItmIdSeq},
+				           #{govAgreeIdSeq},
+				          #{docNo},
+				           #{salesOrdId},
+				           1,
+				           SYSDATE,
+				           #{userId},
+				           SYSDATE,
+				           #{userId},
+				           TO_DATE(#{inputPeriodStart}, 'DD/MM/YYYY'),
+                           TO_DATE(#{inputPeriodEnd}, 'DD/MM/YYYY'),
+				           '',
+				           '' )
+    </insert>
+
+    <insert id="insertCallEntry"  parameterType="Map">
+				 INSERT INTO CCR0006D
+								  ( CALL_ENTRY_ID,
+								    SALES_ORD_ID,
+								    TYPE_ID,
+								    STUS_CODE_ID,
+								    RESULT_ID,
+								    DOC_ID,
+								    CRT_USER_ID,
+								    CRT_DT,
+								    CALL_DT,
+								    IS_WAIT_FOR_CANCL,
+								    HAPY_CALLER_ID,
+								    UPD_DT,
+								    UPD_USER_ID,
+								    ORI_CALL_DT )
+				  VALUES ( #{govCallEntryIdSeq},
+				           #{salesOrdId},
+				           1233,
+				           1,
+				           0,
+				           #{salesOrdId},
+				           #{userId},
+				           SYSDATE,
+				           SYSDATE,
+				           0,
+				           0,
+				           SYSDATE,
+				           #{userId},
+				           SYSDATE )
+    </insert>
+
+    <insert id="insertCallResult" parameterType="Map">
+				INSERT INTO CCR0007D
+								  ( CALL_RESULT_ID,
+								    CALL_ENTRY_ID,
+								    CALL_STUS_ID,
+								    CALL_DT,
+								    CALL_ACTN_DT,
+								    CALL_FDBCK_ID,
+								    CALL_CT_ID,
+								    CALL_REM,
+								    CALL_CRT_USER_ID,
+								    CALL_CRT_DT,
+								    CALL_CRT_USER_ID_DEPT,
+								    CALL_HC_ID,
+								    CALL_ROS_AMT,
+								    CALL_SMS,
+								    CALL_SMS_REM )
+				  VALUES (    #{govCallResultIdSeq},
+						           #{govCallEntryIdSeq},
+						           1,
+						           SYSDATE,
+						           SYSDATE,
+						           0,
+						           0,
+						           #{agreementAgmRemark},
+						           #{userId},
+						           SYSDATE,
+						           0,
+						           0,
+						           0,
+						           0,
+						           '' )
+    </insert>
+
+    <update id="updateResultId" parameterType="Map">
+			UPDATE
+			    CCR0006D
+			SET
+			    RESULT_ID = #{govCallResultIdSeq}
+			WHERE
+			     CALL_ENTRY_ID = #{govCallEntryIdSeq}
+    </update>
+
+    <update id="updatePreUpdUserId" parameterType="Map">
+			UPDATE
+			    SAL0033D
+			SET
+			    GOV_AG_PRE_UPD_USER_ID = #{govMsgIdSeq}
+			WHERE
+			    GOV_AG_ID =   #{govAgreeIdSeq}
+    </update>
+
+    <select id="selectAgreementInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+				SELECT Project1.GOV_AG_ID   ,
+				       Project1.GOV_AG_SALES_ORD_ID   ,
+				       Project1.SALES_ORD_NO   ,
+				       Project1.NAME1 NAME  ,
+				       Project1.GOV_AG_BATCH_NO   ,
+				       Project1.GOV_AG_STUS_ID   ,
+				       Project1.NAME NAME1  ,
+				       Project1.GOV_AG_PRGRS_ID   ,
+				       Project1.GOV_AG_PRGRS_NAME   ,
+				       Project1.GOV_AG_TYPE_ID   ,
+				       Project1.CODE_NAME   ,
+				       TO_CHAR(Project1.GOV_AG_CRT_DT, 'DD-MM-YYYY') GOV_AG_CRT_DT  ,
+				       Project1.USER_NAME   ,
+				       Project1.GOV_AG_ROLE_DESC   ,
+				       Project1.MEM_CODE  ,
+				       Project1.GOV_AG_QTY   ,
+				       TO_CHAR(Project1.GOV_AG_START_DT, 'DD-MM-YYYY')  GOV_AG_START_DT ,
+				       TO_CHAR(Project1.GOV_AG_END_DT, 'DD-MM-YYYY')  GOV_AG_END_DT  ,
+				       Project1.GOV_AG_LAST_SEND_DT   ,
+				       Project1.GOV_AG_LAST_RCIV_DT   ,
+				       Project1.CORP_CUST_TYPE,
+				       Project1.AGREEMENT_TYPE,
+				       Project1.ERL_TER_NON_CRISIS ERL_TER_NON_CRISIS_CHK
+				  FROM ( SELECT Filter1.GOV_AG_ID   ,
+				                Filter1.GOV_AG_SALES_ORD_ID   ,
+				                Filter1.GOV_AG_BATCH_NO   ,
+				                Filter1.GOV_AG_STUS_ID   ,
+				                Filter1.GOV_AG_PRGRS_ID   ,
+				                Filter1.GOV_AG_TYPE_ID   ,
+				                Filter1.GOV_AG_START_DT   ,
+				                Filter1.GOV_AG_END_DT   ,
+				                Filter1.GOV_AG_CRT_DT   ,
+				                Filter1.GOV_AG_QTY   ,
+				                CASE WHEN ( ( Filter1.GOV_AG_LAST_SEND_DT IS NOT NULL ) AND ( Filter1.GOV_AG_LAST_SEND_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) ) THEN TO_CHAR(Filter1.GOV_AG_LAST_SEND_DT, 'DD-MM-YYYY') ELSE  '-' END GOV_AG_LAST_SEND_DT  ,
+				                CASE WHEN ( ( Filter1.GOV_AG_LAST_RCIV_DT IS NOT NULL ) AND ( Filter1.GOV_AG_LAST_RCIV_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) ) THEN TO_CHAR(Filter1.GOV_AG_LAST_RCIV_DT, 'DD-MM-YYYY') ELSE  '-' END GOV_AG_LAST_RCIV_DT  ,
+				                Filter1.CODE_NAME   ,
+				                Filter1.MEM_CODE   ,
+				                Filter1.NAME1 NAME  ,
+				                Filter1.SALES_ORD_NO   ,
+				                Filter1.NAME2 NAME1  ,
+				                Filter1.USER_NAME   ,
+				                Filter1.GOV_AG_PRGRS_NAME   ,
+				                Extent11.GOV_AG_ROLE_DESC   ,
+				                Filter1.CORP_CUST_TYPE,
+				                Filter1.AGREEMENT_TYPE,
+				                Filter1.ERL_TER_NON_CRISIS
+				         FROM ( SELECT Extent1.GOV_AG_ID   ,
+				                       Extent1.GOV_AG_SALES_ORD_ID   ,
+				                       Extent1.GOV_AG_BATCH_NO   ,
+				                       Extent1.GOV_AG_STUS_ID   ,
+				                       Extent1.GOV_AG_PRGRS_ID   ,
+				                       Extent1.GOV_AG_TYPE_ID   ,
+				                       Extent1.GOV_AG_START_DT   ,
+				                       Extent1.GOV_AG_END_DT   ,
+				                       Extent1.GOV_AG_CRT_DT   ,
+				                       Extent1.GOV_AG_QTY   ,
+				                       Extent1.GOV_AG_LAST_SEND_DT   ,
+				                       Extent1.GOV_AG_LAST_RCIV_DT   ,
+				                       Extent2.CODE_NAME   ,
+				                       Extent3.MEM_CODE   ,
+				                       Extent4.NAME NAME1  ,
+				                       Extent5.SALES_ORD_NO   ,
+				                       Extent6.NAME NAME2  ,
+				                       Extent7.USER_NAME   ,
+				                       Extent8.GOV_AG_PRGRS_NAME   ,
+				                       Extent10.GOV_AG_ROLE_ID   ,
+				                       Extent12.CODE_NAME CORP_CUST_TYPE,
+				                       Extent13.CODE_NAME AGREEMENT_TYPE,
+				                       Extent1.ERL_TER_NON_CRISIS
+				                FROM SAL0033D Extent1
+				                       LEFT JOIN SYS0013M Extent2   ON Extent1.GOV_AG_TYPE_ID = Extent2.CODE_ID
+				                       LEFT JOIN ORG0001D Extent3   ON Extent1.GOV_AG_MEM_ID = Extent3.MEM_ID
+				                       LEFT JOIN SYS0038M Extent4   ON Extent1.GOV_AG_STUS_ID = Extent4.STUS_CODE_ID
+				                       LEFT JOIN SAL0001D Extent5   ON Extent1.GOV_AG_SALES_ORD_ID = Extent5.SALES_ORD_ID
+				                       LEFT JOIN SAL0029D Extent6   ON Extent5.CUST_ID = Extent6.CUST_ID
+				                       LEFT JOIN SYS0047M Extent7   ON Extent1.GOV_AG_CRT_USER_ID = Extent7.USER_ID
+				                       LEFT JOIN SAL0037C Extent8   ON Extent1.GOV_AG_PRGRS_ID = Extent8.GOV_AG_PRGRS_ID
+				                       LEFT JOIN SAL0036D Extent9   ON Extent1.GOV_AG_PRE_UPD_USER_ID = Extent9.GOV_AG_MSG_ID
+				                       LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID GOV_AG_USER_ID  ,
+				                                          GovAgreementUserRole.GOV_AG_ROLE_ID GOV_AG_ROLE_ID  ,
+				                                          GovAgreementUserRole.GOV_AG_USER_DEPT_ID GOV_AG_USER_DEPT_ID  ,
+				                                          GovAgreementUserRole.GOV_AG_USER_STUS_ID GOV_AG_USER_STUS_ID  ,
+				                                          GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID GOV_AG_USER_UPD_USER_ID  ,
+				                                          GovAgreementUserRole.GOV_AG_USER_UPD_DT GOV_AG_USER_UPD_DT
+				                                   FROM SAL0040D GovAgreementUserRole ) Extent10   ON Extent9.GOV_AG_MSG_CRT_USER_ID = Extent10.GOV_AG_USER_ID
+				                        LEFT JOIN SYS0013M Extent12  ON Extent12.CODE_ID = Extent5.CORP_CUST_TYPE
+				                        LEFT JOIN SYS0013M Extent13  ON Extent13.CODE_ID = Extent5.AGREEMENT_TYPE
+				                 WHERE  0 <> Extent1.GOV_AG_STUS_ID ) Filter1
+				                LEFT JOIN SAL0039M Extent11   ON Filter1.GOV_AG_ROLE_ID = Extent11.GOV_AG_ROLE_ID
+				          WHERE  Filter1.GOV_AG_ID = #{govAgId} ) Project1
+				  ORDER BY Project1.GOV_AG_ID DESC
+ ]]>
+    </select>
+
+    <select id="getMessageStatusCode"  parameterType="Map" resultType="egovMap">
+				SELECT Extent1.STUS_CODE_ID   CODE_ID,
+				           Extent1.CODE CODE  ,
+				           Extent1.NAME  CODE_NAME
+				FROM    SYS0038M Extent1
+				WHERE  1 = 1
+
+				<choose>
+				    <when test="groupCode == 7 ">
+                        AND Extent1.STUS_CODE_ID IN ( 5,10,44,6 )
+				    </when>
+				    <otherwise>
+				        AND Extent1.STUS_CODE_ID IN ( 5,6,44,6 )
+				    </otherwise>
+				</choose>
+    </select>
+
+    <!-- Call Ajax from Agreement Maintenance  -->
+    <select id="selectConsignmentLogAjax" parameterType="Map" resultType="egovMap">
+				SELECT Project1.AG_CNSGN_ID   ,
+				       Project1.GOV_AG_ID   ,
+				       Project1.IS_CURR   ,
+				       Project1.DISAB   ,
+				       Project1.AG_COSIGN_NO   ,
+				       Project1.CODE_NAME   ,
+				       Project1.AG_CNSGN_RCIV_DT   ,
+				       Project1.CURIER_NAME   ,
+				       Project1.CRT_DT   ,
+				       Project1.USER_NAME   ,
+				       Project1.UPD_DT   ,
+				       Project1.USER_NAME1   ,
+				       Project1.CNSGN_USER_ID_HAND   ,
+				       Project1.AG_CNSGN_SEND_DT
+				  FROM ( SELECT Extent1.AG_CNSGN_ID   ,
+				                Extent1.GOV_AG_ID   ,
+				                Extent1.IS_CURR   ,
+				                Extent1.DISAB   ,
+				                Extent1.AG_COSIGN_NO   ,
+				                Extent1.CNSGN_USER_ID_HAND   ,
+				                Extent2.CURIER_NAME   ,
+				                Extent3.CODE_NAME   ,
+				                CASE WHEN ( Extent1.AG_CNSGN_RCIV_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.AG_CNSGN_RCIV_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_RCIV_DT  ,
+				                CASE WHEN ( Extent1.CRT_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END CRT_DT  ,
+				                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END USER_NAME  ,
+				                CASE WHEN ( Extent1.UPD_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END UPD_DT  ,
+				                CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END USER_NAME1  ,
+				                CASE WHEN ( Extent1.AG_CNSGN_SEND_DT > TO_DATE('1900-01-01', 'YYYY-MM-DD') ) THEN TO_CHAR(Extent1.AG_CNSGN_SEND_DT, 'DD-MM-YYYY') ELSE '01-01-1900' END AG_CNSGN_SEND_DT
+				         FROM SAL0035D Extent1
+				                LEFT JOIN SYS0016M Extent2   ON Extent2.CURIER_ID = Extent1.CURIER_ID
+				                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.AG_REQSTER_TYPE_ID
+				                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+				                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+				          WHERE  Extent1.GOV_AG_ID = #{govAgId} ) Project1
+				  ORDER BY Project1.AG_CNSGN_ID DESC
+    </select>
+
+    <select id="selectMessageLogAjax" parameterType="Map" resultType="egovMap">
+					<![CDATA[
+					SELECT Extent1.GOV_AG_ID   ,
+                           Extent1.GOV_AG_BATCH_NO   ,
+                           Extent2.GOV_AG_MSG_ID   ,
+                           Extent2.GOV_AG_MSG   ,
+                           TO_CHAR(Extent2.GOV_AG_MSG_CRT_DT, 'DD-MM-YYYY')  GOV_AG_MSG_CRT_DT ,
+                           Extent4.USER_NAME   ,
+                           CASE WHEN ( UTILS.CONVERT_TO_NUMBER(0,1,0) <> Extent2.GOV_AG_MSG_HAS_ATTACH ) THEN 'Yes' ELSE 'No' END GOV_AG_MSG_HAS_ATTACH  ,
+                           CASE WHEN ( Extent2.GOV_AG_MSG_ATTACH_FILE_NAME IS NOT NULL ) THEN Extent2.GOV_AG_MSG_ATTACH_FILE_NAME ELSE ' ' END GOV_AG_MSG_ATTACH_FILE_NAME  ,
+                           Extent3.NAME   ,
+                           Extent5.GOV_AG_PRGRS_NAME   ,
+                           Extent7.GOV_AG_ROLE_DESC,
+                           Extent9.ATCH_FILE_ID
+                    FROM SAL0033D Extent1
+                           JOIN SAL0036D Extent2   ON Extent1.GOV_AG_ID = Extent2.GOV_AG_ID
+                           LEFT JOIN SYS0038M Extent3   ON Extent2.GOV_AG_MSG_STUS_ID = Extent3.STUS_CODE_ID
+                           JOIN SYS0047M Extent4   ON Extent2.GOV_AG_MSG_CRT_USER_ID = Extent4.USER_ID
+                           LEFT JOIN SAL0037C Extent5   ON Extent2.GOV_AG_MSG_PROG_STUS_ID = Extent5.GOV_AG_PRGRS_ID
+                           LEFT JOIN ( SELECT GovAgreementUserRole.GOV_AG_USER_ID   ,
+                                              GovAgreementUserRole.GOV_AG_ROLE_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_DEPT_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_STUS_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_UPD_USER_ID   ,
+                                              GovAgreementUserRole.GOV_AG_USER_UPD_DT
+                                       FROM SAL0040D GovAgreementUserRole ) Extent6   ON Extent2.GOV_AG_MSG_UPD_USER_ID = Extent6.GOV_AG_USER_ID
+                           LEFT JOIN SAL0039M Extent7   ON Extent6.GOV_AG_ROLE_ID = Extent7.GOV_AG_ROLE_ID
+                           LEFT JOIN SYS0070M Extent8   ON Extent8.ATCH_FILE_GRP_ID = Extent2.ATCH_FILE_GRP_ID
+                           LEFT JOIN SYS0071D Extent9   ON Extent9.ATCH_FILE_ID = Extent8.ATCH_FILE_ID
+					WHERE  Extent1.GOV_AG_ID = #{govAgId}
+					ORDER BY Extent2.GOV_AG_MSG_CRT_DT DESC
+					]]>
+     </select>
+
+    <select id="selectContactOrdersAjax" parameterType="Map" resultType="egovMap">
+				SELECT Project1.GOV_AG_ID   ,
+                       Project1.SALES_ORD_NO   ,
+                       Project1.NAME   ,
+                       Project1.GOV_AG_ITM_INST_RESULT   ,
+                       Project1.GOV_AG_ITM_RENT_RESULT,
+                       TO_CHAR(Project1.GOV_AG_ITM_START_DT , 'DD/MM/YYYY') GOV_AG_ITM_START_DT,
+                       TO_CHAR(Project1.GOV_AG_ITM_EXPR_DT, 'DD/MM/YYYY') GOV_AG_ITM_EXPR_DT,
+                       Project1.GOV_AG_ITM_CRT_USER_ID,
+                       TO_CHAR(Project1.GOV_AG_ITM_CRT_DT, 'DD/MM/YYYY') GOV_AG_ITM_CRT_DT,
+                       Project1.CODE,
+                       Project1.CODE_NAME,
+                       Project1.USER_FULL_NAME
+                  FROM ( SELECT Project1.GOV_AG_ID   ,
+                                Project1.GOV_AG_ITM_RENT_RESULT   ,
+                                Project1.GOV_AG_ITM_INST_RESULT   ,
+                                Project1.SALES_ORD_NO   ,
+                                Project1.NAME,
+                                Project1.GOV_AG_ITM_START_DT,
+                                Project1.GOV_AG_ITM_EXPR_DT,
+                                Project1.GOV_AG_ITM_CRT_USER_ID,
+                                Project1.GOV_AG_ITM_CRT_DT,
+                                Project1.CODE,
+                                Project1.CODE_NAME,
+                                Project1.USER_FULL_NAME
+                         FROM ( SELECT Filter1.GOV_AG_ID   ,
+                                       Filter1.GOV_AG_ITM_RENT_RESULT   ,
+                                       Filter1.GOV_AG_ITM_INST_RESULT   ,
+                                       Filter1.SALES_ORD_NO   ,
+                                       Filter1.NAME,
+                                       Filter1.GOV_AG_ITM_START_DT,
+                                       Filter1.GOV_AG_ITM_EXPR_DT,
+                                       Filter1.GOV_AG_ITM_CRT_USER_ID,
+                                       Filter1.GOV_AG_ITM_CRT_DT,
+                                       Filter1.CODE,
+                                       Filter1.CODE_NAME,
+                                       Extent4.USER_FULL_NAME
+                                FROM ( SELECT Extent1.GOV_AG_ID   ,
+                                              Extent1.GOV_AG_ITM_CRT_USER_ID   ,
+                                              Extent1.GOV_AG_ITM_RENT_RESULT   ,
+                                              Extent1.GOV_AG_ITM_INST_RESULT   ,
+                                              Extent2.SALES_ORD_NO   ,
+                                              Extent3.NAME,
+                                              Extent1.GOV_AG_ITM_START_DT,
+                                              Extent1.GOV_AG_ITM_EXPR_DT,
+                                              Extent1.GOV_AG_ITM_CRT_DT,
+                                              Extent5.CODE,
+                                              Extent5.NAME CODE_NAME
+
+                                       FROM SAL0034D Extent1
+                                              JOIN SAL0001D Extent2   ON Extent1.GOV_AG_ITM_SALES_ORD_ID = Extent2.SALES_ORD_ID
+                                              JOIN SAL0029D Extent3   ON Extent2.CUST_ID = Extent3.CUST_ID
+                                              JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.GOV_AG_ITM_STUS_ID
+                                        WHERE  1 = Extent1.GOV_AG_ITM_STUS_ID ) Filter1
+                                       JOIN SYS0047M Extent4   ON Filter1.GOV_AG_ITM_CRT_USER_ID = Extent4.USER_ID
+                                 WHERE  Filter1.GOV_AG_ID = #{govAgId}
+                                 ) Project1 ) Project1
+                  ORDER BY Project1.GOV_AG_ID DESC
+    </select>
+
+ <!-- Consignment Add Start -->
+<update id="updateReceiveDate"  parameterType="Map">
+			UPDATE
+			    SAL0033D
+			SET
+			    GOV_AG_UPD_DT = SYSDATE,
+
+			    <if test=" updConsignMethod == 1237 ">
+			         GOV_AG_LAST_RCIV_DT = SYSDATE
+			    </if>
+			    <if test=" updConsignMethod == 1236 ">
+			         GOV_AG_LAST_SEND_DT = SYSDATE
+			    </if>
+			 WHERE  GOV_AG_ID = #{updAgrId}
+    </update>
+
+<select id="getConsignId"  parameterType="Map" resultType="egovMap">
+			<![CDATA[
+			SELECT Extent1.AG_CNSGN_ID   ,
+			       Extent1.GOV_AG_ID   ,
+			       Extent1.IS_CURR   ,
+			       Extent1.DISAB   ,
+			       Extent1.AG_COSIGN_NO   ,
+			       Extent1.AG_REQSTER_TYPE_ID   ,
+			       Extent1.AG_CNSGN_RCIV_DT   ,
+			       Extent1.CURIER_ID   ,
+			       Extent1.CRT_DT   ,
+			       Extent1.CRT_USER_ID   ,
+			       Extent1.UPD_DT   ,
+			       Extent1.UPD_USER_ID   ,
+			       Extent1.AG_CNSGN_SEND_DT   ,
+			       Extent1.CNSGN_USER_ID_HAND   ,
+			       Extent1.CNSGN_MTH_ID
+			  FROM SAL0035D Extent1
+			 WHERE  ( Extent1.GOV_AG_ID = #{updAgrId}  )
+			          AND ( 1 = Extent1.IS_CURR ) AND ROWNUM <= 1
+			]]>
+    </select>
+
+<update id="updateCurrentStatus" parameterType="Map">
+			UPDATE
+			    SAL0035D
+			SET
+			    IS_CURR = 0,
+			    UPD_DT = SYSDATE
+			WHERE
+			    AG_CNSGN_ID = #{agCnsgnId}
+    </update>
+
+<insert id="insertNewConsign"  parameterType="Map">
+    INSERT INTO SAL0035D
+                    ( AG_CNSGN_ID,
+                      GOV_AG_ID,
+                      IS_CURR,
+                      DISAB,
+                      AG_COSIGN_NO,
+                      AG_REQSTER_TYPE_ID,
+                      AG_CNSGN_RCIV_DT,
+                      CURIER_ID,
+                      CRT_DT,
+                      CRT_USER_ID,
+                      UPD_DT,
+                      UPD_USER_ID,
+                      AG_CNSGN_SEND_DT,
+                      CNSGN_USER_ID_HAND,
+                      CNSGN_MTH_ID )
+  VALUES (
+               SAL0035D_AG_CNSGN_ID_SEQ.NEXTVAL,
+               #{updAgrId},
+                1,
+                0,
+                #{updConsignmentNo},
+                #{updAgmReq},
+                <choose>
+                    <when test=" '' != updConReceiveDate and null != updConReceiveDate ">
+                         TO_DATE(#{updConReceiveDate}, 'DD/MM/YYYY'),
+                    </when>
+                    <otherwise>
+                        TO_DATE(#{defaultDate}, 'DD/MM/YYYY'),
+                    </otherwise>
+                </choose>
+                #{updCourierSelect},
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{userId},
+                <choose>
+                    <when test=" '' != updConSendDate and null != updConSendDate ">
+                         TO_DATE(#{updConSendDate}, 'DD/MM/YYYY'),
+                    </when>
+                    <otherwise>
+                        TO_DATE(#{defaultDate}, 'DD/MM/YYYY'),
+                    </otherwise>
+                </choose>
+                #{byHand},
+                #{updConsignMethod})
+
+</insert>
+<!--  Save And Edit  Start-->
+<select id="selectProgressStatus"  parameterType="Map" resultType="egovMap">
+			SELECT Extent1.GOV_AG_STEP_ID   ,
+			       Extent1.GOV_AG_STEP_NAME   ,
+			       Extent1.GOV_AG_STEP_PREV   ,
+			       Extent1.GOV_AG_STEP_NEXT   ,
+			       Extent1.GOV_AG_STUS_ID   ,
+			       Extent1.GOV_AG_CRT_DT   ,
+			       Extent1.GOV_AG_CRT_USER_ID   ,
+			       Extent1.GOV_AG_UPD_DT   ,
+			       Extent1.GOV_AG_UPD_USER_ID   ,
+			       Extent1.GOV_AG_STEP_IS_START   ,
+			       Extent1.GOV_AG_STEP_IS_CLOS   ,
+			       Extent1.GOV_AG_STEP_SEQ_NO
+			FROM SAL0038D Extent1
+			         JOIN SAL0033D Extent2   ON Extent1.GOV_AG_STEP_ID = Extent2.GOV_AG_PRGRS_ID
+			WHERE   1 = Extent1.GOV_AG_STUS_ID
+			AND ROWNUM = 1
+			AND Extent2.GOV_AG_ID = #{updAgrId}
+
+			<if test=" '' != ordByNext and null != ordByNext">
+			    ORDER BY Extent1.GOV_AG_STEP_NEXT
+			</if>
+
+			<if test=" '' != ordByPre and null != ordByPre">
+			     ORDER BY Extent1.GOV_AG_STEP_PREV
+			</if>
+
+			<if test=" '' != ordByStep and null != ordByStep ">
+			     ORDER BY Extent1.GOV_AG_STEP_ID
+			</if>
+
+			<if test=" '' != ordByStepSeqNo and null != ordByStepSeqNo">
+			     ORDER BY Extent1.GOV_AG_STEP_SEQ_NO
+			</if>
+
+</select>
+
+<select id="selectAgmSoIdList"  parameterType="Map" resultType="egovMap">
+						SELECT Extent1.GOV_AG_ITM_ID   ,
+						       Extent1.GOV_AG_ID   ,
+						       Extent1.GOV_AG_ITM_BATCH_NO   ,
+						       Extent1.GOV_AG_ITM_SALES_ORD_ID   ,
+						       Extent1.GOV_AG_ITM_STUS_ID   ,
+						       Extent1.GOV_AG_ITM_CRT_DT   ,
+						       Extent1.GOV_AG_ITM_CRT_USER_ID   ,
+						       Extent1.GOV_AG_ITM_UPD_DT   ,
+						       Extent1.GOV_AG_ITM_UPD_USER_ID   ,
+						       Extent1.GOV_AG_ITM_START_DT   ,
+						       Extent1.GOV_AG_ITM_EXPR_DT   ,
+						       Extent1.GOV_AG_ITM_RENT_RESULT   ,
+						       Extent1.GOV_AG_ITM_INST_RESULT
+						  FROM SAL0034D Extent1
+						 WHERE  Extent1.GOV_AG_ID = #{updAgrId}
+</select>
+
+<select id="getRosCallLog"  parameterType="Map" resultType="egovMap">
+			<![CDATA[
+				SELECT Extent1.SALES_ORD_ID   ,
+				       Extent1.ROS_YEAR   ,
+				       Extent1.ROS_MONTH   ,
+				       Extent1.ROS_CALLER_USER_ID   ,
+				       Extent1.ROS_CALL_RESN_ID   ,
+				       Extent1.ROS_CALL_RECALL_DT   ,
+				       Extent1.ROS_CALL_STUS_ID   ,
+				       Extent1.ROS_CALL_CRT_DT   ,
+				       Extent1.ROS_CALL_CRT_USER_ID   ,
+				       Extent1.ROS_CALL_UPD_DT   ,
+				       Extent1.ROS_CALL_UPD_USER_ID
+				  FROM MSC0013D Extent1
+				 WHERE   Extent1.SALES_ORD_ID =  #{salesOrdId}
+				          AND  Extent1.ROS_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL)
+				          AND  Extent1.ROS_MONTH = (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL)
+				          AND ROWNUM <= 1
+			]]>
+</select>
+
+<update id="updateRosCall" parameterType="egovMap">
+			UPDATE MSC0013D
+			   SET ROS_CALL_UPD_DT = SYSDATE
+			WHERE  SALES_ORD_ID = #{salesOrdId}
+			AND  ROS_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL)
+			AND  ROS_MONTH = (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL)
+</update>
+
+<select id="selectCallEntry" parameterType="Map" resultType="egovMap">
+                <![CDATA[
+				  SELECT Extent1.CALL_ENTRY_ID   ,
+				       Extent1.SALES_ORD_ID   ,
+				       Extent1.TYPE_ID   ,
+				       Extent1.STUS_CODE_ID   ,
+				       Extent1.RESULT_ID   ,
+				       Extent1.DOC_ID   ,
+				       Extent1.CRT_USER_ID   ,
+				       Extent1.CRT_DT   ,
+				       Extent1.CALL_DT   ,
+				       Extent1.IS_WAIT_FOR_CANCL   ,
+				       Extent1.HAPY_CALLER_ID   ,
+				       Extent1.UPD_DT   ,
+				       Extent1.UPD_USER_ID   ,
+				       Extent1.ORI_CALL_DT
+				  FROM CCR0006D Extent1
+				 WHERE   Extent1.SALES_ORD_ID = #{salesOrdId}
+				          AND  1233 = Extent1.TYPE_ID  AND ROWNUM <= 1
+                ]]>
+</select>
+
+<insert id="insertEditCallResult"  parameterType="Map">
+    INSERT INTO CCR0007D
+            (  CALL_RESULT_ID,
+               CALL_ENTRY_ID,
+               CALL_STUS_ID,
+               CALL_DT,
+               CALL_ACTN_DT,
+               CALL_FDBCK_ID,
+               CALL_CT_ID,
+               CALL_REM,
+               CALL_CRT_USER_ID,
+               CALL_CRT_DT,
+               CALL_CRT_USER_ID_DEPT,
+               CALL_HC_ID,
+               CALL_ROS_AMT,
+               CALL_SMS,
+               CALL_SMS_REM )
+  VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL,
+													  #{callEntryId},
+													 #{callStatusId},
+												          TO_DATE(#{callDate} , 'DD/MM/YYYY'),
+													   TO_DATE(#{callActnDt}, 'DD/MM/YYYY'),
+												#{callFeedBackId},
+												         #{callCTId},
+												      #{callRemark},
+												            #{userId},
+													         SYSDATE,
+													  #{callCrtDept},
+													       #{callHcId},
+													                    0,
+													                    0,
+													                   '')
+</insert>
+
+<update id="updateEditCallEntry"  parameterType="egovMap">
+UPDATE CCR0006D
+SET RESULT_ID = #{resultId},
+       UPD_DT = SYSDATE
+ WHERE   CALL_ENTRY_ID = #{callEntryId}
+</update>
+
+<insert id="insertEditCallEntry" parameterType="Map">
+     INSERT INTO CCR0006D
+                                  ( CALL_ENTRY_ID,
+                                    SALES_ORD_ID,
+                                    TYPE_ID,
+                                    STUS_CODE_ID,
+                                    RESULT_ID,
+                                    DOC_ID,
+                                    CRT_USER_ID,
+                                    CRT_DT,
+                                    CALL_DT,
+                                    IS_WAIT_FOR_CANCL,
+                                    HAPY_CALLER_ID,
+                                    UPD_DT,
+                                    UPD_USER_ID,
+                                    ORI_CALL_DT )
+                  VALUES ( CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL,
+                           #{salesOrdId},
+                           1233,
+                           1,
+                           0,
+                           #{salesOrdId},
+                           #{userId},
+                           SYSDATE,
+                           SYSDATE,
+                           0,
+                           0,
+                           SYSDATE,
+                           #{userId},
+                           SYSDATE )
+</insert>
+
+<insert id="insertRosCall" parameterType="Map">
+    INSERT INTO MSC0013D
+                             (SALES_ORD_ID,
+                              ROS_YEAR,
+                              ROS_MONTH,
+                              ROS_CALLER_USER_ID,
+                              ROS_CALL_RESN_ID,
+                              ROS_CALL_RECALL_DT,
+                              ROS_CALL_STUS_ID,
+                              ROS_CALL_CRT_DT,
+                              ROS_CALL_CRT_USER_ID,
+                              ROS_CALL_UPD_DT,
+                              ROS_CALL_UPD_USER_ID)
+                          VALUES(
+		                                #{salesOrdId},
+		                               (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL) ,
+		                                 (SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL),
+		                                #{callerUserId},
+		                                #{callerReasonId},
+		                                TO_DATE(#{callerRecallDate}, 'DD/MM/YYYY'),
+		                                #{callerStatusId},
+		                                SYSDATE,
+		                                #{userId},
+		                                SYSDATE,
+		                                #{userId}
+                                     )
+</insert>
+
+<insert id="insertAgreementMessLog" parameterType="Map">
+        INSERT INTO SAL0036D
+                              ( GOV_AG_MSG_ID,
+                                GOV_AG_ID,
+                                GOV_AG_MSG,
+                                GOV_AG_MSG_PROG_STUS_ID,
+                                GOV_AG_MSG_STUS_ID,
+                                GOV_AG_MSG_CRT_USER_ID,
+                                GOV_AG_MSG_CRT_DT,
+                                GOV_AG_MSG_UPD_USER_ID,
+                                GOV_AG_MSG_UPD_DT,
+                                GOV_AG_MSG_HAS_ATTACH,
+                                GOV_AG_MSG_ATTACH_FILE_NAME
+                                )
+                  VALUES (
+                                      #{msgLogSeq},
+                                      #{updAgrId},
+                                      #{updResultRemark},
+                                      #{updPrgId},
+                                       #{hiddenUpdMsgStatus},
+                                       #{userId},
+                                       SYSDATE,
+                                       #{userId},
+                                       SYSDATE,
+                                       0,
+                                       ''
+                               )
+</insert>
+
+<select id="selectEditAfAgreementList" parameterType="Map" resultType="egovMap">
+				SELECT Extent1.GOV_AG_ID   ,
+				       Extent1.GOV_AG_SALES_ORD_ID   ,
+				       Extent1.GOV_AG_BATCH_NO   ,
+				       Extent1.GOV_AG_MEM_ID   ,
+				       Extent1.GOV_AG_STUS_ID   ,
+				       Extent1.GOV_AG_PRGRS_ID   ,
+				       Extent1.GOV_AG_TYPE_ID   ,
+				       Extent1.GOV_AG_START_DT   ,
+				       Extent1.GOV_AG_END_DT   ,
+				       Extent1.GOV_AG_PRE_UPD_USER_ID   ,
+				       Extent1.GOV_AG_REM   ,
+				       Extent1.GOV_AG_CRT_USER_ID   ,
+				       Extent1.GOV_AG_CRT_DT   ,
+				       Extent1.GOV_AG_UPD_USER_ID   ,
+				       Extent1.GOV_AG_UPD_DT   ,
+				       Extent1.GOV_AG_CRT_ROLE_ID   ,
+				       Extent1.GOV_AG_QTY   ,
+				       Extent1.GOV_AG_HAS_NOTFY   ,
+				       Extent1.GOV_AG_EXP_MTH_NOTFY   ,
+				       Extent1.GOV_AG_IS_NW_MODULE   ,
+				       Extent1.GOV_AG_LAST_SEND_DT   ,
+				       Extent1.GOV_AG_LAST_RCIV_DT
+				  FROM SAL0033D Extent1
+				 WHERE  Extent1.GOV_AG_ID = #{updAgrId}
+</select>
+
+<update id="updateAgreement"  parameterType="Map">
+			UPDATE
+			     SAL0033D
+			SET
+			       GOV_AG_PRE_UPD_USER_ID = #{updAgrId},
+			       GOV_AG_STUS_ID = #{govAgrStatusId},
+			       GOV_AG_PRGRS_ID = #{govAgrPrgId},
+			       GOV_AG_UPD_USER_ID = #{userId},
+			       GOV_AG_HAS_NOTFY = #{updIsNotification},
+			       GOV_AG_EXP_DAY_NOTFY = #{updNotificationMonth},
+			       <if test=" '' != changeMsgDate and null != changeMsgDate">
+			             GOV_AG_START_DT = TO_DATE(#{updPeriodStart}, 'DD/MM/YYYY'),
+			             GOV_AG_END_DT = TO_DATE(#{updPeriodEnd}, 'DD/MM/YYYY'),
+			       </if>
+			       ERL_TER_NON_CRISIS = #{erlTerNonCrisisChk},
+			       GOV_AG_UPD_DT = SYSDATE
+			 WHERE   GOV_AG_ID = #{updAgrId}
+</update>
+
+
+<update id="updateCcpAgreementMessageFile" parameterType="Map">
+                    UPDATE
+                        SAL0036D
+                    SET
+                        ATCH_FILE_GRP_ID = #{fileGroupKey},
+                        GOV_AG_MSG_HAS_ATTACH = 1
+                    WHERE
+                        GOV_AG_MSG_ID = #{updMsgId}
+</update>
+
+<update id="updateCcpLatMessageId" parameterType="Map">
+    UPDATE
+        SAL0033D
+    SET
+       GOV_AG_PRE_UPD_USER_ID = #{govAgPreUpdator} ,
+       GOV_AG_STUS_ID = #{govAgrStatusId},
+       GOV_AG_PRGRS_ID = #{govAgrProgressId},
+       GOV_AG_UPD_USER_ID = #{govAgrUpdator},
+       GOV_AG_UPD_DT = SYSDATE
+       <if test=" isChangeDate != null and '' != isChangeDate">
+            , GOV_AG_START_DT = TO_DATE(#{govAgrStartDate}, 'DD/MM/YYYY'),
+            GOV_AG_END_DT = TO_DATE(#{govAgrEndDate}, 'DD/MM/YYYY')
+       </if>
+    WHERE GOV_AG_ID = #{govAgrId}
+</update>
+</mapper>

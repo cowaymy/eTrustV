@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.msales.impl.OrderCustomerApiMapper">
+
+    <select id="orderCustInfo" parameterType="Map" resultType="egovMap">
+            SELECT * FROM
+		   (SELECT   DECODE (project1.CUSTOMER_ID, 0, 'N', 'Y') AS CUST_EXIST_Y_N,
+		           project1.CUST_ADDR_ID,        
+		           project1.CUSTOMER_ID,        
+		           project1.CUST_NAME,            
+		           project1.NRIC_COMPANY_NO,        
+		           project1.CUST_BIRTH_DAY,        
+		           project1.CUST_GENDER,        
+		           project1.CUSTOMER_TYPE, 
+		           project1.AREA_ID,
+		           project1.ADDR_DTL,
+		           project1.STREET,
+		           project1.AREA,
+		           project1.POST_CODE,
+		           project1.CITY,
+		           project1.STATE,
+		           project1.COUNTRY,
+		           project1.CRT_DT
+		   FROM (
+		   SELECT 
+		            Extent6.CUST_ADD_ID AS CUST_ADDR_ID,
+		            Extent1.CUST_ID AS CUSTOMER_ID,
+		            Extent1.NAME AS CUST_NAME,
+		            Extent1.NRIC AS NRIC_COMPANY_NO,
+		            TO_CHAR (Extent1.DOB, 'YYYYMMDD') AS CUST_BIRTH_DAY,
+		            Extent1.GENDER AS CUST_GENDER,
+		            Extent1.TYPE_ID AS CUSTOMER_TYPE,
+		            Extent6.AREA_ID,
+		            Extent6.ADDR_DTL,
+		            Extent6.STREET,
+		            Extent10.AREA,
+		            Extent10.POSTCODE AS POST_CODE,
+		            Extent10.CITY,
+		            Extent10.STATE,
+		            Extent10.COUNTRY,
+		            Extent1.CRT_DT
+		        FROM SAL0029D Extent1
+		            LEFT OUTER JOIN SAL0023D Extent6 ON Extent6.CUST_ID = Extent1.CUST_ID AND 9 = Extent6.STUS_CODE_ID
+		            LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent6.AREA_ID
+		        WHERE 
+		            8 <![CDATA[<>]]> Extent1.STUS_CODE_ID 
+		           AND Extent1.NRIC = #{nricCompanyNo}
+		           AND Extent1.TYPE_ID = #{customerType}
+		      UNION ALL
+		        SELECT 0 AS CUST_ADDR_ID,
+		                 0 AS CUSTOMER_ID,
+		                 '' AS CUST_NAME,
+		                 '' AS NRIC_COMPANY_NO,
+		                 '' AS CUST_BIRTH_DAY,
+		                 '' AS CUST_GENDER,
+		                 0 AS CUSTOMER_TYPE,
+		                 '' AS AREA_ID,
+		                 '' AS ADDR_DTL,
+		                 '' AS STREET,
+		                 '' AS AREA,
+		                 '' AS POST_CODE,
+		                 '' AS CITY,
+		                 '' AS STATE,
+		                 '' AS COUNTRY,
+		                 TO_DATE('1900-01-01', 'YYYY-MM-DD') AS CRT_DT
+		          FROM   DUAL
+		          ) project1
+		      Order by project1.CRT_DT DESC )
+		          WHERE   ROWNUM = 1
+    </select>
+    
+    <select id="custIdSeq" resultType="Integer">
+        SELECT SAL0029D_CUST_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <insert id="insertCustomer" parameterType="Map">
+	    INSERT INTO SAL0029D (CUST_ID,
+                                          NAME,
+                                          NRIC,
+                                          NATION,
+                                          DOB,
+                                          GENDER,
+                                          RACE_ID,
+                                          EMAIL,
+                                          REM,
+                                          STUS_CODE_ID,
+                                          UPD_USER_ID,
+                                          UPD_DT,
+                                          REN_GRP,
+                                          PST_TERMS,
+                                          ID_OLD,
+                                          CRT_USER_ID,
+                                          CRT_DT,
+                                          TYPE_ID,
+                                          PAS_SPORT_EXPR,
+                                          VISA_EXPR,
+                                          CUST_VA_NO,
+                                          CORP_TYPE_ID,
+                                          GST_RGIST_NO)
+                      VALUES   (#{custIdSeq},
+                                    #{custName},
+                                    #{nricCompanyNo},
+                                    #{cmbNation},
+                                    TO_DATE(#{custBirthDay}, 'DD/MM/YYYY'),
+                                    #{custGender},
+                                    #{custRace},
+                                    #{email},
+                                    #{rem},
+                                    9,
+                                    #{crtUserId},
+                                    SYSDATE,
+                                    #{renGrp},
+                                    #{pstTerms},
+                                    #{idOld},
+                                    #{crtUserId},
+                                    SYSDATE,
+                                    #{customerType},
+                                    TO_DATE('01/01/1900', 'DD/MM/YYYY'),
+                                    TO_DATE('01/01/1900', 'DD/MM/YYYY'),
+                                    NULL,
+                                    #{cmbCorpTypeId},
+                                    #{gstRgistNo})
+    </insert>
+    
+    <insert id="insertContactInfo" parameterType="Map">
+        INSERT INTO SAL0027D (CUST_CNTC_ID, CUST_ID,
+                                          NAME,
+                                          CUST_INITIAL,
+                                          NRIC,
+                                          POS,
+                                          TEL_M1,
+                                          TEL_M2,
+                                          TEL_O,
+                                          TEL_R,
+                                          TELF,
+                                          DOB,
+                                          GENDER,
+                                          RACE_ID,
+                                          EMAIL,
+                                          STUS_CODE_ID,
+                                          UPD_DT,
+                                          UPD_USER_ID,
+                                          ID_OLD,
+                                          DEPT,
+                                          DCM,
+                                          CRT_DT,
+                                          CRT_USER_ID,
+                                          EXT)
+                      VALUES   (SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL,
+                                    #{custIdSeq},
+                                    #{custName},
+                                    #{custInitials},
+                                    #{nricCompanyNo},
+                                    #{pos},
+                                    #{telM1},
+                                    #{telM2},
+                                    #{telO},
+                                    #{telR},
+                                    #{telF},
+                                    TO_DATE(#{custBirthDay} , 'DD/MM/YYYY'),
+                                    #{custGender},
+                                    #{custRace},
+                                    #{email},
+                                    9,
+                                    SYSDATE,
+                                    #{crtUserId},
+                                    #{idOld},
+                                    #{dept},
+                                    #{dcm},
+                                    SYSDATE,
+                                    #{crtUserId},
+                                    #{ext}
+                                    )
+    </insert>
+    
+    <insert id="insertCareContactInfo" parameterType="Map">
+        INSERT INTO SAL0026D (CUST_CARE_CNT_ID, 
+                                          CUST_ID,
+                                          NAME,
+                                          CUST_INITIAL,
+                                          TEL_M,
+                                          TEL_O,
+                                          TEL_R,
+                                          EXT,
+                                          EMAIL,
+                                          STUS_CODE_ID,
+                                          CRT_USER_ID,
+                                          CRT_DT,
+                                          UPD_USER_ID,
+                                          UPD_DT,
+                                          TELF)
+          VALUES   (SAL0026D_CUST_CARE_CNT_ID_SEQ.NEXTVAL,
+                        #{custIdSeq},
+                        #{custName},
+                        #{custInitials},
+                        #{asTelM},
+                        #{asTelO},
+                        #{asTelR},
+                        #{asExt},
+                        #{asEmail},
+                        9,
+                        #{crtUserId},
+                        SYSDATE,
+                        #{crtUserId},
+                        SYSDATE,
+                        #{asTelF}
+                       )
+    </insert>
+</mapper>

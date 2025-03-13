@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.replenishment.impl.SROMapper">
+
+   <select id="selectSROSeq" resultType="String">
+        SELECT  'SRO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(GBSLCVD.SRO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
+    </select>
+
+
+
+    <select id="selectSroCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+         AND  CODE_MASTER_ID = 339
+         AND  CODE IN ('02' ,'05')
+      </select>
+
+
+
+    <select id="sroItemMgntList" parameterType="Map" resultType="egovMap">
+
+
+        select * from (
+                      SELECT
+                           s28.WH_LOC_ID ,
+                           s28.WH_LOC_CODE  as loccd ,
+                           s28.WH_LOC_DESC  as locdesc ,
+                           s28.WH_LOC_STK_GRAD ,
+                           s28.WH_LOC_GB ,
+                           l56.STK_CODE   as matcd,
+                           s26.STK_DESC  as matname ,
+                           nvl(( SELECT SRO_ITM_BAS_QTY FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ) ,0)  as basicqty,
+                           nvl(( SELECT SRO_ITM_RORD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0) as reoderpoint,
+                           nvl(( SELECT SRO_ITM_ADD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0)   as additional,
+                           nvl(( SELECT SRO_ITM_USE_YN FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),'N')   as useyn
+                       FROM  log0056m l56
+                            , SYS0028M s28
+                            , SYS0026M s26
+                      WHERE l56.LOC_ID  = s28.WH_LOC_ID
+                        AND  l56.STK_CODE =s26.STK_CODE
+                        AND s26.STUS_CODE_ID = 1
+                        <if test="tlocation != null and tlocation !=''">
+                                 AND  s28.WH_LOC_ID    = #{tlocation}
+                        </if>
+                        <if test="locgrad != null and locgrad !=''">
+                                AND  s28.WH_LOC_STK_GRAD = #{locgrad}
+                        </if>
+                          <if test="loctypes != null and loctypes !=''">
+                                AND  s28.WH_LOC_GB  IN
+                                <foreach item="item" collection="loctypes" index="index" open="(" separator="," close=")">
+                                 #{item}
+                                </foreach>
+                           </if>
+
+                         <if test="materialCode != null and materialCode !=''">
+                              AND  s26.STK_CODE =#{materialCode}
+                        </if>
+
+                         <if test="cTypes != null and cTypes !=''">
+                                AND  s26.STK_TYPE_ID  IN
+	                        <foreach item="item" collection="cTypes" index="index" open="(" separator="," close=")">
+	                         #{item}
+	                        </foreach>
+                        </if>
+
+                        <if test="catetypes != null and catetypes !=''">
+	                        AND  s26.STK_CTGRY_ID  IN
+	                        <foreach item="item" collection="catetypes" index="index" open="(" separator="," close=")">
+	                         #{item}
+	                        </foreach>
+                        </if>
+                        ORDER BY WH_LOC_CODE asc
+                    )
+                    where  1=1
+                     <if test="materialUseYn != null and materialUseYn !=''">
+                         AND  useyn ='Y'  /*자동보충 것만 처리 한다. */
+                     </if>
+    </select>
+
+
+    <update id="updateSroItem"  parameterType="Map" >
+        MERGE INTO LOG0110M T0
+        USING (
+	                SELECT
+	                     #{loccd}           AS SRO_WH_LOC_CODE
+	                    , #{matcd}         AS SRO_STK_CODE
+	                    , #{basicqty}      AS SRO_ITM_BAS_QTY
+	                    , #{reoderpoint}  AS SRO_ITM_RORD_POT
+	                    , #{additional}     AS SRO_ITM_ADD_POT
+	                    , #{updUserId}    AS UPD_USER_ID
+	                    , #{loclevl}         AS SRO_LOC_LEVEL
+	                    , #{useyn}         AS SRO_ITM_USE_YN
+	                FROM DUAL
+            )T1
+         ON( T0.SRO_WH_LOC_CODE = T1.SRO_WH_LOC_CODE AND T0.SRO_STK_CODE = T1.SRO_STK_CODE)
+        WHEN MATCHED THEN
+            UPDATE
+               SET  SRO_ITM_BAS_QTY   = NVL(T1.SRO_ITM_BAS_QTY,SRO_ITM_BAS_QTY)
+                    , SRO_ITM_RORD_POT  = NVL(T1.SRO_ITM_RORD_POT,SRO_ITM_RORD_POT)
+                    , SRO_ITM_ADD_POT    = NVL(T1.SRO_ITM_ADD_POT,SRO_ITM_ADD_POT)
+                    , SRO_LOC_LEVEL        = NVL(T1.SRO_LOC_LEVEL,SRO_LOC_LEVEL)
+                    , SRO_ITM_USE_YN      =NVL(T1.SRO_ITM_USE_YN,SRO_ITM_USE_YN)
+                    , UPD_USER_ID            = T1.UPD_USER_ID
+                    , UPD_DT                    =SYSDATE
+        WHEN NOT MATCHED THEN
+            INSERT (SRO_WH_LOC_CODE
+	                    ,SRO_STK_CODE
+	                    ,SRO_ITM_BAS_QTY
+	                    ,SRO_ITM_RORD_POT
+	                    ,SRO_ITM_ADD_POT
+	                    ,SRO_LOC_LEVEL
+	                    ,SRO_ITM_USE_YN
+	                    ,CRT_USER_ID
+	                    ,CRT_DT
+	                    ,UPD_USER_ID
+	                    ,UPD_DT
+                    )
+             VALUES (
+	                     T1.SRO_WH_LOC_CODE
+	                     ,T1.SRO_STK_CODE
+	                     ,T1.SRO_ITM_BAS_QTY
+	                     ,T1.SRO_ITM_RORD_POT
+	                     ,T1.SRO_ITM_ADD_POT
+	                     ,T1.SRO_LOC_LEVEL
+	                     ,T1.SRO_ITM_USE_YN
+	                     ,T1.UPD_USER_ID
+	                     ,SYSDATE
+	                     ,T1.UPD_USER_ID
+	                     ,SYSDATE
+            )
+    </update>
+
+    <insert id="insertLOG0111D"   parameterType="Map" >
+             INSERT  INTO LOG0111D (
+                             SRO_NO
+                            ,SRO_CRT_DT
+                            ,SRO_FR_WH_LOC_CODE
+                            ,SRO_TO_WH_LOC_CODE
+                            ,SRO_STATE_CD
+                            ,SRO_REF_SRO_NO
+                            ,SRO_TYPE
+                            ,SRO_RESUT_MSG
+                            ,CRT_USER_ID
+                            ,CRT_DT
+                    )
+                 SELECT
+                    #{newsrono}
+                    ,TO_CHAR(SYSDATE, 'yyyymmdd')
+                    ,SRO_FR_WH_LOC_CODE
+                    ,SRO_TO_WH_LOC_CODE
+                    ,'A'
+                    ,#{srono}
+                    ,SRO_TYPE
+                    ,'Generation Complete'
+                    ,#{updUserId}
+                    ,SYSDATE
+                FROM LOG0111D  WHERE SRO_NO =#{srono}
+    </insert>
+
+
+    <insert id="insertLOG0112D"   parameterType="Map"  >
+       <![CDATA[
+			INSERT INTO LOG0112D (
+					             SRO_NO
+		                        ,SRO_STK_CODE
+		                        ,SRO_ITM_STATE_CD
+		                        ,SRO_ITM_REPL_CON_QTY
+		                        ,SRO_ITM_REPL_SUP_QTY
+		                        ,SRO_MAK_TO_AVL_QTY
+		                        ,SRO_MAK_FR_AVL_QTY
+		                        ,SRO_MAK_BAS_QTY
+		                        ,SRO_MAK_RORD_POT
+		                        ,SRO_ITM_RESULT_MSG
+		                        ,REF_SRO_NO
+		                        ,CRT_USER_ID
+		                        ,CRT_DT
+			)
+			SELECT
+			            #{newsrono}                                                                                                      AS SRO_NO
+			            , AA.SRO_STK_CODE                                                                                             AS SRO_STK_CODE
+				        , 'C'
+			            , #{requestqty}                                                                                                   AS SRO_ITM_REPL_CON_QTY
+			            , SRO_ITM_REPL_SUP_QTY
+                        ,  FN_GET_SRO_AVAILABLE_QTY( BB.SRO_TO_WH_LOC_CODE, AA.SRO_STK_CODE)                                    AS SRO_MAK_TO_AVL_QTY
+                        ,  (FN_GET_AVAILABLE_QTY(BB.SRO_FR_WH_LOC_CODE  ,AA.SRO_STK_CODE) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            ,  CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
+			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
+			            , 'Generation Complete'
+			            , #{srono}                                                                                                               AS REF_SRO_NO
+			            , #{updUserId}
+			             , SYSDATE
+			        FROM LOG0112D  AA ,  LOG0111D BB , LOG0110M CC
+			    WHERE AA.SRO_NO  =BB.SRO_NO
+				    AND BB .SRO_TO_WH_LOC_CODE = CC.SRO_WH_LOC_CODE
+				    AND AA.SRO_STK_CODE  = CC.SRO_STK_CODE
+				    AND AA.SRO_NO            =#{srono}
+				    AND AA.SRO_STK_CODE  =#{srostkcode}
+				    AND CC.SRO_ITM_USE_YN      ='Y'
+				    ]]>
+    </insert>
+
+
+   <select id="sroMgmtList" parameterType="Map" resultType="egovMap">
+   SELECT
+    *
+FROM (
+         SELECT
+                rownum                  AS rowno,
+		        SRO_NO                 AS srono ,
+		        SRO_TYPE              AS srotype,
+	            SRO_CRT_DT          AS srocrtdt ,
+	            SRO_FR_WH_LOC_CODE AS srofrwlcd ,
+	            (SELECT WH_LOC_DESC  FROM  SYS0028M M  WHERE WH_LOC_CODE =SRO_FR_WH_LOC_CODE)    AS srofrwldesc,
+	            SRO_TO_WH_LOC_CODE AS srotowlcd ,
+	            (SELECT WH_LOC_DESC  FROM  SYS0028M M  WHERE WH_LOC_CODE =SRO_TO_WH_LOC_CODE)    AS srotowldesc,
+	            SRO_REQST_NO AS sroreqno ,
+	            (SELECT B.CODE_NAME   FROM LOG0047M  A ,  SYS0013M B WHERE A.REQST_NO =  SRO_REQST_NO  AND A.REQST_STUS = B.CODE AND B.CODE_MASTER_ID=309    ) AS reqstus,
+	            (SELECT REQST_DEL   FROM LOG0047M  A  WHERE A.REQST_NO =  SRO_REQST_NO  ) AS  reqstdelyn,
+	            decode (SRO_STATE_CD,'A', 'Active' ,'C' ,'Complete' ,'D' ,'Deleted')  AS srostacd ,
+	            SRO_MATRL_DOC_NO AS sromatdocno ,
+	            SRO_RESUT_MSG AS sromsg ,
+	            SRO_REF_SRO_NO AS srorefsrono,
+	            CRT_DT AS crtdt,
+	            ROW_NUMBER() OVER (PARTITION BY SRO_REF_SRO_NO ORDER BY  CRT_DT ASC  ,   SRO_NO)  osroNo,
+	            SRO_RESUT_MSG AS sroresutmsg
+	    FROM  LOG0111D
+	  WHERE 1=1
+	    <if test="statecd != null and statecd !=''">
+	         AND SRO_STATE_CD =  #{statecd}
+	    </if>
+
+
+	    <if test="materialcode != null and materialcode !=''">
+		      AND SRO_NO  IN   (
+						                    SELECT SRO_NO
+						        FROM GBSLCVD.LOG0112D
+						           WHERE   SRO_STK_CODE  =#{materialcode}
+						             <if test="crtsdt != null and crtsdt !=''">
+                                        AND to_char (to_date(SRO_CRT_DT, 'yyyymmdd'),'yyyymmdd') BETWEEN  TO_CHAR(  to_date (#{crtsdt} ,'dd/mm/yyyy'),'yyyymmdd') AND  TO_CHAR(to_date (#{crtedt} ,'dd/mm/yyyy'),'yyyymmdd')
+                                    </if>
+
+             )
+        </if>
+
+
+
+		    <if test="crtsdt != null and crtsdt !=''">
+		                 AND to_char (to_date(SRO_CRT_DT, 'yyyymmdd'),'yyyymmdd') BETWEEN  TO_CHAR(  to_date (#{crtsdt} ,'dd/mm/yyyy'),'yyyymmdd') AND  TO_CHAR(to_date (#{crtedt} ,'dd/mm/yyyy'),'yyyymmdd')
+	        </if>
+
+        <if test="srono != null and srono !=''">
+              AND SRO_NO  = #{srono}
+        </if>
+
+        <if test="flocation != null and flocation !=''">
+                AND SRO_FR_WH_LOC_CODE =    (SELECT WH_LOC_CODE  FROM  SYS0028M WHERE WH_LOC_ID = #{flocation})
+
+        </if>
+
+	    <if test="tlocation != null and tlocation !=''">
+               AND SRO_TO_WH_LOC_CODE =  (SELECT WH_LOC_CODE  FROM  SYS0028M WHERE WH_LOC_ID = #{tlocation})
+        </if>
+
+
+        )
+    ORDER BY   srorefsrono desc , osroNo
+
+    </select>
+
+
+   <select id="sroMgmtDetailList" parameterType="Map" resultType="egovMap">
+   <![CDATA[
+
+       select   rownum                  AS rowno
+                , srono
+                ,srostkcode
+                ,sroitmlev
+                ,decode (sroitmstatecd, 'I', 'Active' ,'C' ,'Complete', 'D' ,'Deleted') sroitmstatecd
+                ,case when  reqstdel = 'Y' THEN  (sroconqty) ELSE sroconqty END sroconqty
+                ,srosupqty
+                ,case when   (srofulqty >0 ) then (srofulqty )   else 0    end as srofulqty
+                ,case when   (sroitmstatecd ='I') then
+                              case when  (to_number(srofravailqtyorg) > srofulqty) then  to_number(srofulqty)
+                                     WHEN  (to_number(srofravailqtyorg) < srofulqty) AND   srofulqty >0  THEN to_number(srofravailqtyorg) ELSE  0 END
+                  else 0
+                 end  as requestqty
+                ,srotoavlqty
+                ,srobasqty
+                ,srorordpot
+                ,sroaddpot
+                ,srofravlqty
+                ,stkdesc
+                ,srofrnowavlqty
+                ,case when   (sroitmstatecd ='I') then
+                         case when  ( srofravailqtyorg > 0   AND srofulqty >0) then   'generate'  else '' end
+                  else ''
+                 end generate
+                ,srorefsrono
+                ,srotype
+                ,sroitmresultmsg
+                ,srofravailqty
+                ,srofravailqtyorg
+                ,crtuserid
+                ,crtdt
+                ,reqstdel
+                ,srocalautoreplenqty
+                ,srodivsupqty
+      from(
+   	  SELECT
+			    srono
+			    ,srostkcode
+			    ,sroitmlev
+			    ,sroitmstatecd
+			    ,sroconqty
+			    ,srosupqty
+			    ,srosupqty - sroconqty AS srofulqty
+			    ,srotoavlqty
+			    ,srobasqty
+			    ,srorordpot
+			    ,sroaddpot
+			    ,srofravlqty
+			    ,stkdesc
+			    ,srofrnowavlqty
+			    ,srorefsrono
+			    ,srotype
+			    ,sroitmresultmsg
+			    ,(FN_GET_AVAILABLE_QTY(srofrwhloccode ,srostkcode ) -sroconqty) as srofravailqty
+			    ,(FN_GET_AVAILABLE_QTY(srofrwhloccode ,srostkcode ) ) as srofravailqtyorg
+			    ,crtuserid
+			    ,crtdt
+			    ,srocalautoreplenqty
+			    ,srodivsupqty
+			    ,reqstdel
+		from(
+		      SELECT
+				     L112.SRO_NO                          AS srono
+				    ,L112.SRO_STK_CODE                AS srostkcode
+				    ,L112.SRO_ITM_REPL_CON_LEV    AS sroitmlev
+				    ,L112.SRO_ITM_STATE_CD          AS sroitmstatecd
+				    ,NVL(( SELECT SUM(SRO_ITM_REPL_CON_QTY) SRO_ITM_REPL_CON_QTY
+					            FROM LOG0112D  RB, GBSLCVD.LOG0111d RA , LOG0047M RC
+					         WHERE  RA.SRO_NO  = RB.SRO_NO
+					            AND RB.SRO_STK_CODE =L112.SRO_STK_CODE
+					            AND RA.SRO_REQST_NO  = RC.REQST_NO (+)
+					            AND NVL(RC.REQST_DEL,'N')  <> 'Y'
+					            AND RB.SRO_NO IN (
+					                            SELECT SRO_NO
+					                                FROM GBSLCVD.LOG0111d
+					                            WHERE (SRO_NO =#{srono}
+					                                            OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
+					                                       )
+					                            )
+					  ),0)AS sroconqty
+					,L112.SRO_ITM_REPL_DIV_SUP_QTY   AS srodivsupqty
+				    ,L112.SRO_ITM_REPL_SUP_QTY    AS srosupqty
+				    ,L112.SRO_ITM_REPL_FUL_QTY     AS srofulqty
+				    ,NVL((SELECT SUM(SRO_MAK_TO_AVL_QTY)
+                                                                            FROM GBSLCVD.LOG0112D
+                                                                         WHERE SRO_STK_CODE = L112.SRO_STK_CODE
+                                                                            AND SRO_NO IN (
+                                                                                            SELECT SRO_NO
+                                                                                            FROM GBSLCVD.LOG0111d
+                                                                                            WHERE (SRO_NO = #{srono}
+                                                                                                            OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
+                                                                                                  )
+                                                                                            )
+                      ),0)    AS srotoavlqty
+				    ,L112.SRO_MAK_BAS_QTY          AS srobasqty
+				    ,L112.SRO_MAK_RORD_POT        AS srorordpot
+				    ,L112.SRO_MAK_ADD_POT          AS sroaddpot
+				    ,L112.SRO_MAK_FR_AVL_QTY     AS srofravlqty
+				    ,s26.STK_DESC               AS stkdesc
+				    ,L112.CRT_USER_ID           AS crtuserid
+				    ,L112.CRT_DT                AS crtdt
+				    ,L111.SRO_REF_SRO_NO       AS  srorefsrono
+				    ,L111.SRO_TYPE                  AS srotype
+				    ,NVL((SELECT (l56.qty - nvl(l75.bookqty , 0)) AS qty
+				               FROM log0056m l56 , sys0026m s26 , sys0028m s28 ,(
+				                                                            SELECT loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) AS bookqty
+				                                                            FROM log0075m
+				                                                            WHERE nvl(final_cmplt , 'N') <> 'Y'
+				                                                                AND reqst_no IN (
+				                                                                SELECT
+				                                                                    reqst_no
+				                                                                FROM
+				                                                                    log0047m
+				                                                                WHERE
+				                                                                    NVL (REQST_DEL, 'N') <> 'Y')
+				                                                            GROUP BY
+				                                                                loc_id , itm_code
+				                                                            ) l75
+				                                                        WHERE
+				                                                            1 = 1
+				                                                            AND l56.stk_code = l75.itm_code(+)
+				                                                            AND l56.loc_id = l75.loc_id(+)
+				                                                            AND l56.loc_id = s28.wh_loc_id
+				                                                            AND l56.stk_code = s26.stk_code
+				                                                            AND s26.STUS_CODE_ID = 1
+				                                                            AND l56.stk_code = L112.SRO_STK_CODE
+				                                                            AND s28.WH_LOC_CODE  =L111.SRO_FR_WH_LOC_CODE
+				      ),0) AS  srofrnowavlqty
+				    ,L112.SRO_ITM_RESULT_MSG   AS sroitmresultmsg
+				    ,L111.SRO_FR_WH_LOC_CODE  AS srofrwhloccode
+				    ,CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY ,0) ELSE  0  END  srocalautoreplenqty
+				    ,D.REQST_DEL  reqstdel
+		    FROM LOG0112D L112 , SYS0026M s26  , LOG0111D L111 , LOG0047M D
+		 WHERE L112.SRO_NO =#{srono}
+		  AND  L112.SRO_NO =L111.SRO_NO
+		  AND  L111.SRO_REQST_NO  =D.REQST_NO(+)
+		  AND  L112.SRO_STK_CODE  = s26.STK_CODE
+		  AND  L112.SRO_STK_CODE  = s26.STK_CODE
+		)
+	)
+		  ]]>
+    </select>
+
+
+   <select id="sroMgmtDetailListPopUp" parameterType="Map" resultType="egovMap">
+		SELECT
+     		    A.SRO_NO AS srono ,
+			    C.STK_CODE AS srostkcode ,
+			    C.STK_DESC AS stkdesc ,
+			    decode (SRO_ITM_STATE_CD, 'I', 'Active' , 'C' , 'Complete' ,'D' ,'Deleted') AS sroitmstatecd ,
+			    SRO_CRT_DT AS crtdt ,
+			    nvl(SRO_REQST_NO,0) AS srorefsrono ,
+			    nvl(SRO_MAK_BAS_QTY,0) AS srobasqty ,
+			    nvl(SRO_MAK_RORD_POT,0) AS sroreordpot ,
+			    nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0))  sroreordrangeqty,
+			    nvl(SRO_MAK_BAS_QTY,0)-(nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0)))   srominnumqty,
+			    nvl(SRO_MAK_TO_AVL_QTY,0) AS srotoavailqty ,
+			    nvl(SRO_MAK_CDC_ITEM_TOTAL_QTY,0) AS srofravlqty ,
+			    nvl(SRO_ITM_REPL_SUP_QTY,0)    AS srosupqty,
+			    nvl(SRO_ITM_REPL_DIV_SUP_QTY,0)    AS srodivsupqty,
+                CASE WHEN D.REQST_DEL ='Y' THEN 'STO has been deleted.' ELSE   SRO_ITM_RESULT_MSG    END  sroitmresultmsg,
+			    CASE WHEN D.REQST_DEL ='Y'  THEN  0 ELSE  nvl(SRO_ITM_REPL_CON_QTY ,0)  END  sroautoreplenqty ,
+			    CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY *-1,0) ELSE  0  END  srocenautoreplenqty ,
+			    D.REQST_DEL  reqstdel,
+			     nvl(SRO_ITM_REPL_DIV_TOL_CNT,0) AS srodivtolcnt,
+			     nvl(SRO_MAK_ITEM_DIV_RATE,0) rate,
+			     B.REF_SRO_NO
+		   FROM  LOG0111D A , LOG0112D B ,SYS0026M C , LOG0047M D
+		WHERE A.SRO_NO =B.SRO_NO
+		 AND  B.SRO_STK_CODE  = C.STK_CODE
+		 AND  A.SRO_REQST_NO  =D.REQST_NO(+)
+		 AND A.SRO_TO_WH_LOC_CODE  =( SELECT  SRO_TO_WH_LOC_CODE FROM  GBSLCVD.LOG0111D WHERE SRO_NO =#{srono}  )
+		 AND B.SRO_STK_CODE  = #{srostkcode}
+		 ORDER BY A.SRO_NO DESC
+   </select>
+
+    <select id="selectSroMgmtDetailState" parameterType="Map" resultType="egovMap" >
+
+	     SELECT
+	          CASE   WHEN (A.SRO_ITM_REPL_CON_QTY  = A.SRO_ITM_REPL_SUP_QTY) THEN 'C'  ELSE 'A'  END srostate
+	         ,B.SRO_REF_SRO_NO   AS srorefsrono
+	     FROM LOG0112D  A , LOG0111d B
+	    WHERE A.SRO_NO  =B.SRO_NO
+	     AND   A.sro_no = #{newsrono}
+	     AND   A.SRO_STK_CODE  = #{srostkcode}
+    </select>
+
+
+     <select id="SP_LOGITIC_SRO_UPDATE"  statementType="CALLABLE" parameterType="Map">
+             { call SP_LOGITIC_SRO_UPDATE ( #{refno} , #{userId},#{type} ,#{result},#{item})  }
+     </select>
+
+
+    <update id="updateLOG0112D">
+	     UPDATE  LOG0112D
+		    SET (SRO_ITM_REPL_CON_QTY  ,SRO_ITM_REPL_FUL_QTY,SRO_ITM_STATE_CD   ,UPD_DT ,UPD_USER_ID )=
+			     (
+			        SELECT
+			             X.SRO_ITM_REPL_CON_QTY
+			            ,X.SRO_ITM_REPL_FUL_QTY -                         X.SRO_ITM_REPL_CON_QTY
+			            ,CASE   WHEN (X.SRO_ITM_REPL_CON_QTY  = X.SRO_ITM_REPL_SUP_QTY) THEN 'C'  ELSE 'A'  END
+			            ,SYSDATE
+			            ,#{updUserId}
+			        FROM LOG0112D X  WHERE  X.SRO_NO = #{newsrono}   AND X.SRO_STK_CODE =#{srostkcode}
+			     )
+		WHERE SRO_NO  =  #{srono}
+		  AND SRO_STK_CODE =#{srostkcode}
+
+    </update>
+
+    <update id="updateStateLOG0112D">
+
+     UPDATE  LOG0112D  X
+             SET ( SRO_ITM_STATE_CD  ,UPD_DT ,UPD_USER_ID )=
+                (SELECT
+                       A.SRO_ITM_STATE_CD  , SYSDATE,  #{updUserId}
+                 FROM LOG0112D  A , LOG0111d B
+                WHERE A.SRO_NO  =B.SRO_NO
+                  AND   A.SRO_NO =#{srono}
+                  AND   A.SRO_STK_CODE   = #{srostkcode}
+                )
+         WHERE SRO_NO  IN
+         (      SELECT
+                        A.SRO_NO
+                 FROM GBSLCVD.LOG0112D  A , GBSLCVD.LOG0111d B
+                WHERE A.SRO_NO  =B.SRO_NO
+                 AND  B.SRO_REF_SRO_NO = #{srono}
+                 AND  A.SRO_STK_CODE    = #{srostkcode}
+         )
+    </update>
+
+    <update id="updateReqNoLOG0111D">
+
+	    UPDATE LOG0111D
+	    SET SRO_REQST_NO  =#{reqno}
+	       ,UPD_USER_ID       =#{updUserId}
+	       ,UPD_DT               =SYSDATE
+	    WHERE SRO_NO        = #{newsrono}
+    </update>
+
+
+     <update id="deleteUpdateLOG0112D">
+		UPDATE  LOG0112D
+		 SET SRO_ITM_STATE_CD ='D'
+		      ,SRO_ITM_RESULT_MSG  ='it was deleted by manual'
+		      ,UPD_DT  =sysdate
+		      ,UPD_USER_ID      =#{updUserId}
+		WHERE SRO_NO          =#{srono}
+		 AND SRO_STK_CODE   =#{srostkcode}
+    </update>
+
+
+
+
+     <select id="selectSTODataInfo" parameterType="Map" resultType="egovMap" >
+
+		     SELECT  s26m.STK_ID                AS itmid
+		          , s26m.STK_CODE                 AS itmcd
+		          , s26m.STK_DESC                 AS itmname
+		          , nvl(l56m.QTY ,0)                 AS aqty
+		          ,(SELECT CODE_ID FROM     SYS0013M WHERE CODE_ID = s26m.UOM) AS uom
+		          , #{requestqty}                    AS rqty
+		          ,(SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE  =  l11d.SRO_TO_WH_LOC_CODE ) AS tlocation
+		          ,(SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE  =  l11d.SRO_FR_WH_LOC_CODE ) AS flocation
+		          ,to_char(SYSDATE ,'dd/mm/yyyy') AS reqcrtdate
+		          ,'auto Replenishment'              AS dochdertxt
+		          ,'US'                                    AS sttype
+		          ,'US03'                                 AS smtype
+		          ,'M'                                      AS pridic
+		    FROM    LOG0111D l11d
+		          , LOG0112D l12d
+		          , SYS0026M s26m
+		          , LOG0056M l56m
+		          , SYS0028M s28m
+		    WHERE l11d.SRO_NO  = l12d.SRO_NO
+		     AND  l11d.SRO_FR_WH_LOC_CODE  =s28m.WH_LOC_CODE
+		     AND  l12d.SRO_STK_CODE  = s26m.STK_CODE
+		     AND  s28m.WH_LOC_ID     = l56m.LOC_ID (+)
+		     AND  l12d.SRO_STK_CODE  = l56m.STK_CODE
+		     AND  l11d.sro_no =#{srono}
+		     AND  l12d.SRO_STK_CODE  =#{srostkcode}
+
+     </select>
+
+
+       <select id="selectSMODataInfo" parameterType="Map" resultType="egovMap" >
+              SELECT   s26m.STK_ID                AS itmid
+		                  , s26m.STK_CODE                 AS itmcd
+		                  , s26m.STK_DESC                 AS itmname
+		                  , s26m.STK_TYPE_ID              AS itmtype
+		                  , nvl(l56m.QTY ,0)                 AS aqty
+		                  ,(SELECT CODE_ID FROM     SYS0013M WHERE CODE_ID = s26m.UOM) AS uom
+		                  , #{requestqty}                    AS rqty
+		                  ,(SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE  =  l11d.SRO_TO_WH_LOC_CODE ) AS tlocation
+		                  ,(SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE  =  l11d.SRO_FR_WH_LOC_CODE ) AS flocation
+		                  ,to_char(SYSDATE ,'dd/mm/yyyy') AS reqcrtdate
+		                  ,to_char(SYSDATE ,'dd/mm/yyyy') AS docdate
+		                  ,'SMO'                                  AS headtitle
+		                  ,'auto Replenishment'              AS dochdertxt
+		                  ,'UM'                                    AS sttype
+		                  ,'UM03'                                 AS smtype
+		                  ,'M'                                      AS pridic
+		                  ,'02'                                     AS movpath
+            FROM LOG0111D l11d
+                  , LOG0112D l12d
+                  , SYS0026M s26m
+                  , LOG0056M l56m
+                  , SYS0028M s28m
+            WHERE l11d.SRO_NO  = l12d.SRO_NO
+             AND  l11d.SRO_FR_WH_LOC_CODE  =s28m.WH_LOC_CODE
+             AND  l12d.SRO_STK_CODE  = s26m.STK_CODE
+             AND  s28m.WH_LOC_ID     = l56m.LOC_ID (+)
+             AND  l12d.SRO_STK_CODE  = l56m.STK_CODE
+             AND  l11d.sro_no =#{srono}
+             AND  l12d.SRO_STK_CODE  =#{srostkcode}
+
+     </select>
+
+</mapper>

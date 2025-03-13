@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.miles.impl.MilesMeasMapper">
+
+  <select id="getMilesMeasMasterList" parameterType="Map" resultType="egovMap">
+    SELECT A.MEM_ID AS MEM_ID,
+               B.MEM_CODE AS MEM_CDE,
+               B.NAME AS MEM_NM,
+               C.CODE AS BR_CDE,
+               C.NAME AS BR_NM,
+               SUM(T_MIL) AS TTL_MIL,
+               SUM(T_TRV_DIST) AS TTL_TRV_DIST,
+               TO_CHAR(SUM(T_AMT), '999,999,999,999.99') AS TTL_AMT
+    FROM SVC0137M A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    JOIN SYS0005M C ON B.BRNCH = C.BRNCH_ID
+    WHERE A.DISB = 0
+
+    <if test=" startDt  != null  and startDt !=''  ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{startDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="endDt != null   and endDt != '' ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{endDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="claimID != null and claimID != '' ">
+      AND A.MIL_CLM_NO = #{claimID}
+    </if>
+
+    <if test="memCode != null and memCode != '' ">
+      AND B.MEM_CODE = #{memCode}
+    </if>
+
+    <if test="branchIdList != null and branchIdList != ''">
+      AND B.BRNCH IN
+      <foreach item="item" collection="branchIdList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    GROUP BY A.MEM_ID, B.MEM_CODE, B.NAME, C.CODE, C.NAME
+  </select>
+
+
+  <select id="getMilesMeasList" parameterType="Map" resultType="egovMap">
+    SELECT 'M' AS IND,
+               A.MIL_CLM_NO AS CLM_NO,
+               TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS CLM_DT,
+               B.MEM_CODE AS MEM_CDE,
+               '' AS SALES_ORD_NO,
+               C.CODE AS BR_CDE,
+               '' AS SRV_NO,
+               '' AS JOB_LATT,
+               '' AS JOB_LONGT,
+               '' AS INST_LATT,
+               '' AS INST_LONGT,
+               T_MIL AS TTL_MIL,
+               T_TRV_DIST AS TTL_TRV_DIST,
+               TO_CHAR(T_AMT, '999,999,999,999.99') AS TTL_AMT,
+               MIL_REMARK AS RMK
+    FROM SVC0137M A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    JOIN SYS0005M C ON B.BRNCH = C.BRNCH_ID
+    WHERE A.DISB = 0
+
+    <if test=" startDt  != null  and startDt !=''  ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{startDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="endDt != null   and endDt != '' ">
+      <![CDATA[ AND ( TO_CHAR(A.CLM_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{endDt}, 'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+    </if>
+
+    <if test="hidClmNo != null and hidClmNo != '' ">
+      AND A.MEM_ID = #{hidClmNo}
+    </if>
+
+    ORDER BY A.MIL_CLM_NO, A.CRT_DT
+  </select>
+
+  <select id="getMilesMeasDetailList" parameterType="Map" resultType="egovMap">
+    SELECT 'S' AS IND,
+               B.MIL_CLM_SUB_NO AS CLM_NO,
+               TO_CHAR(B.CLM_DT, 'DD/MM/YYYY') AS CLM_DT,
+               C.MEM_CODE AS MEM_CDE,
+               D.SALES_ORD_NO AS SALES_ORD_NO,
+               F.CODE AS BR_CDE,
+               B.SVC_NO AS SRV_NO,
+               B.LONGTITUDE AS JOB_LATT,
+               B.LATITUDE AS JOB_LONGT,
+               E.LATITUDE AS INST_LATT,
+               E.LONGITUDE AS INST_LONGT,
+               B.MIL AS TTL_MIL,
+               B.TRV_DIST AS TTL_TRV_DIST,
+               '' AS TTL_AMT,
+               B.MIL_REMARK AS RMK
+    FROM SVC0137M A
+    JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
+    JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    LEFT JOIN SAL0023D E ON D.CUST_ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
+    WHERE A.MIL_CLM_NO = #{clmNo}
+    AND A.DISB = 0
+    ORDER BY B.MIL_CLM_NO, B.CRT_DT, B.MIL_CLM_SUB_NO
+  </select>
+
+  <select id="getMilesMeasRaw" parameterType="Map" resultType="egovMap">
+    SELECT A.RAW_DSC_CDE,
+               A.RAW_CT_CDE,
+               A.RAW_CLAIM_DT,
+               A.RAW_ORD_NO,
+               A.RAW_SRV_NO,
+               A.RAW_TTL_MILES,
+               A.RAW_TM_TRAV,
+               A.RAW_TTL_AMT,
+               B.CODE AS RAW_SRV_STAT,
+               A.RAW_SRV_FAIL_AT
+    FROM ( SELECT B.MIL_CLM_NO AS MIL_CLM_NO,
+                          B.CRT_DT AS CRT_DT,
+                          B.MIL_CLM_SUB_NO AS MIL_CLM_SUB_NO,
+                          F.CODE AS RAW_DSC_CDE,
+                          C.MEM_CODE AS RAW_CT_CDE,
+                          TO_CHAR(A.CLM_DT, 'DD/MM/YYYY') AS RAW_CLAIM_DT,
+                          D.SALES_ORD_NO AS RAW_ORD_NO,
+                          B.SVC_NO AS RAW_SRV_NO,
+                          J.DEFECT_DESC AS RAW_SRV_FAIL_AT,
+                          CASE WHEN G.STUS_CODE_ID IS NOT NULL THEN G.STUS_CODE_ID ELSE CASE WHEN H.AS_STUS_ID IS NOT NULL THEN H.AS_STUS_ID ELSE CASE WHEN I.STUS_CODE_ID IS NOT NULL THEN I.STUS_CODE_ID ELSE 0 END END END AS RAW_SRV_STAT,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_MIL
+                                                                  ELSE B.MIL END AS RAW_TTL_MILES,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_TRV_DIST
+                                                                  ELSE B.TRV_DIST END AS RAW_TM_TRAV,
+                          CASE WHEN B.SVC_NO = 'S' THEN A.T_AMT
+                                                                  ELSE 0 END AS RAW_TTL_AMT
+               FROM SVC0137M A
+               JOIN SVC0138D B ON A.MIL_CLM_NO = B.MIL_CLM_NO
+               JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+               LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+               JOIN SYS0005M F ON C.BRNCH = F.BRNCH_ID
+               LEFT JOIN SAL0046D G ON B.SVC_NO = G.INSTALL_ENTRY_NO
+               LEFT JOIN SAL0047D K ON FN_GET_SAL0047D_MAX_ID(G.INSTALL_ENTRY_ID, '1') = K.RESULT_ID
+               LEFT JOIN SVC0001D H ON B.SVC_NO = H.AS_NO
+               LEFT JOIN LOG0038D I ON B.SVC_NO = I.RETN_NO
+               LEFT JOIN SYS0100M J ON K.FAIL_LOC = J.DEFECT_ID AND J.DEFECT_TYP = 'IF' AND J.DEFECT_STATUS = 1
+
+               WHERE A.DISB = 0 AND B.DISB = 0
+                   AND A.CLM_DT BETWEEN TO_DATE(#{dpDateRangeFr} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')  AND TO_DATE(#{dpDateRangeTo} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                   AND C.BRNCH = #{rawBranchId}
+               <if test="rawMemCode != null and rawMemCode != '' ">
+                 AND C.MEM_CODE = #{rawMemCode}
+               </if>
+
+               <if test="rawOrdNo != null and rawOrdNo != '' ">
+                 AND D.SALES_ORD_NO = #{rawOrdNo}
+               </if>
+
+               <if test="rawSrvNo != null and rawSrvNo != '' ">
+                 AND B.SVC_NO = #{rawSrvNo}
+               </if>
+
+               <if test="rawSrvFailAt != null and rawSrvFailAt != '' ">
+                 AND K.FAIL_LOC = #{rawSrvFailAt}
+               </if>
+
+    ) A LEFT JOIN SYS0038M B ON A.RAW_SRV_STAT = B.STUS_CODE_ID
+    WHERE 1=1
+    <if test="rawSrvStat != null and rawSrvStat != '' ">
+      AND A.RAW_SRV_STAT = #{rawSrvStat}
+    </if>
+    ORDER BY A.MIL_CLM_NO,
+                   A.CRT_DT,
+                   A.MIL_CLM_SUB_NO
+  </select>
+
+  <select id="selectSrvStat" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID,
+               CODE
+    FROM SYS0038M
+    WHERE STUS_CODE_ID IN ('1', '4', '10', '19', '21')
+  </select>
+
+  <select id="selectSrvFailInst" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.DEFECT_ID STUS_CODE_ID,
+               Extent1.DEFECT_DESC CODE
+    FROM SYS0100M Extent1
+    WHERE DEFECT_TYP = 'IF'
+        AND DEFECT_STATUS = 1
+    ORDER BY DEFECT_ID
+  </select>
+</mapper>

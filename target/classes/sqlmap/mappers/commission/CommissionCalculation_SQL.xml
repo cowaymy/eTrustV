@@ -1,0 +1,4057 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.commission.calculation.impl.CommissionCalculationMapper">
+
+	<!-- searchCommission Procedure Gruop Code All List -->
+    <select id="selectCommPrdGroupListl" parameterType="Map" resultType="EgovMap">
+		SELECT  CODE FROM(
+		  SELECT SUBSTR(CODE,1,2) CODE ,
+		  CODE_ID
+		  FROM SYS0013M
+		  WHERE CODE_MASTER_ID=#{mstId}
+		)
+		<![CDATA[
+		  WHERE CODE NOT IN ( 'BS'  , 'BA')
+		]]>
+		GROUP BY CODE
+		ORDER BY CODE
+    </select>
+
+    <!-- searchOrganization Gruop Code All List -->
+    <select id="selectOrgCdListAll" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+    SELECT
+    ORG_CD ,
+    ORG_NM
+    FROM CMM0041C
+    WHERE 1=1
+      AND START_YEARMONTH < END_YEARMONTH
+     ]]>
+        <if test="orgRgCombo != null and orgRgCombo != ''">
+            AND ORG_GR_CD = #{orgRgCombo}
+        </if>
+    <![CDATA[
+    GROUP BY ORG_CD, ORG_NM
+    ORDER BY ORG_CD
+     ]]>
+    </select>
+
+    <!-- search Calculation Procedure List -->
+    <select id="selectCalculationList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+	   SELECT
+		    T1.CODE_MASTER_ID ,
+		    T2.CODE_ID ,
+		    substr(T2.CODE,0,7) code,
+		    T2.CODE_NAME ,
+		    T2.CODE_DESC AS CDDS,
+		    T4.CAL_STATE,
+		    (CASE T4.CAL_STATE WHEN '0' THEN 'SUCCESS'
+                    WHEN '1' THEN 'RODING'
+                    WHEN '9' THEN 'FAIL'
+                    WHEN '8' THEN 'STOP'
+            END) stateNm,
+		    TO_CHAR(T4.CAL_START_TIME,'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME,
+		    SUBSTR(T2.CODE,0,2)  CD, SUBSTR(T2.CODE,9,9) NM
+		FROM SYS0012M T1 JOIN SYS0013M T2
+		        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+		    LEFT JOIN (
+		        SELECT  CAL_CODE,MAX(CAL_SEQ) AS CAL_SEQ
+		        FROM CMM0053M
+		        WHERE CAL_YEAR_MONTH=#{searchDt}
+		        GROUP BY CAL_CODE
+		    )  T3
+		        ON T2.CODE_ID = T3.CAL_CODE
+		   LEFT JOIN CMM0053M T4 ON T4.CAL_SEQ = T3.CAL_SEQ
+        WHERE 1=1
+           AND T2.DISAB =0
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID=#{mstId}
+        </if>
+        <if test="ItemGrCd != null and ItemGrCd != ''">
+            AND T2.CODE LIKE #{ItemGrCd} ||'%'
+        </if>
+            AND CODE NOT LIKE 'BS%'
+        ORDER BY CD, NM
+    </select>
+
+    <!-- search Basic Procedure List -->
+    <select id="selectBasicList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+        SELECT
+		    T1.CODE_MASTER_ID , T2.CODE_ID ,
+		    substr(T2.CODE,0,7) code, T2.CODE_NAME , T2.CODE_DESC AS CDDS, SUBSTR(T2.CODE,9,9) NM
+		FROM SYS0012M T1 JOIN SYS0013M T2
+		        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+		WHERE 1=1
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID=#{mstId}
+        </if>
+            AND CODE LIKE 'BSD%'
+            AND T2.DISAB =0
+        ORDER BY NM
+    </select>
+    <select id="selectBasicStatus" parameterType="Map" resultType="Map">
+        SELECT
+			TO_CHAR(T1.CAL_START_TIME,'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME,
+			(CASE T1.CAL_STATE WHEN '0' THEN 'SUCCESS'
+                    WHEN '1' THEN 'RODING'
+                    WHEN '9' THEN 'FAIL'
+                    WHEN '8' THEN 'STOP'
+            END) stateNm
+		FROM CMM0053M t1 join (
+		        SELECT MAX(CAL_SEQ) CAL_SEQ
+		        FROM CMM0053M
+		        WHERE CAL_CODE=2455
+		          AND CAL_YEAR_MONTH = #{searchDt}
+		    ) T2 ON T1.CAL_SEQ = T2.CAL_SEQ
+    </select>
+
+   	<!-- proceduar Log Insert -->
+    <insert id="callCommPrdLogIns" parameterType="Map">
+        INSERT INTO CMM0053M(CAL_SEQ, CAL_CODE, CAL_NAME, CAL_STATE, CAL_START_TIME, CAL_CHECK_LAST_YN, CRT_USER_ID, CRT_DT,CAL_YEAR_MONTH,CAL_TYPE)
+            VALUES(CMM0053M_CAL_SEQ.nextval, ${codeId}, #{procedureNm}, #{state}, sysdate, 'Y', #{loginId}, sysdate,#{calYM},#{actionType})
+    </insert>
+
+    <!-- proceduar Last Log Extraction Select -->
+    <select id="selectCommRunningPrdLog" parameterType="Map" resultType="EgovMap">
+        SELECT
+            CAL_SEQ, CAL_CODE, CAL_NAME, CAL_STATE, CAL_START_TIME,
+            CAL_CHECK_LAST_YN, CRT_USER_ID, CRT_DT,CAL_YEAR_MONTH
+        FROM CMM0053M
+        WHERE 1=1
+            <if test="codeId != null and codeId != ''">
+                AND CAL_CODE = #{codeId}
+            </if>
+            AND CAL_CHECK_LAST_YN = 'Y' AND CAL_STATE= 1
+        ORDER BY CAL_START_TIME DESC
+    </select>
+
+    <!-- proceduar Log  Last Update -->
+    <update id="callCommLogUpdate">
+        UPDATE CMM0053M SET
+            CAL_CHECK_LAST_YN = 'N' ,
+            UPD_USER_ID = #{loginId} ,
+            UPD_DT = sysdate
+        WHERE CAL_CODE = #{codeId}
+    </update>
+
+    <!-- proceduar Log Update -->
+    <update id="callCommPrdLog" parameterType="Map">
+        UPDATE CMM0053M SET
+			CAL_CHECK_LAST_YN = 'Y' ,
+			CAL_END_TIME = sysdate ,
+            <if test="v_sqlcode != null and v_sqlcode != ''">
+			CAL_ERROR_CODE =#{v_sqlcode},
+			</if>
+			<if test="v_sqlcont != null and v_sqlcont != ''">
+			 CAL_ERROR_CONTENTS =#{v_sqlcont},
+			</if>
+			CAL_STATE = #{state}
+        WHERE CAL_CODE = #{codeId}
+            AND CAL_SEQ= #{calSeq}
+    </update>
+
+
+    <!-- proceduar call -->
+    <select id="callCommProcedure" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  ${procedureNm}(${taskId},#{searchDt},${loginId},#{v_procname,mode=OUT,jdbcType=VARCHAR},#{v_result,mode=OUT,jdbcType=VARCHAR}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+    <!-- Log List select -->
+    <select id="selectLogList" parameterType="Map" resultType="EgovMap">
+        SELECT
+		  SUBSTR(T2.CODE,1,3) CODE,
+		  T2.CODE_NAME,
+		  T2.CODE_DESC ,
+		  to_char(T1.CAL_START_TIME, 'dd-mm-yyyy hh24:mi:ss') CAL_START_TIME,
+		  to_char(T1.CAL_END_TIME, 'dd-mm-yyyy hh24:mi:ss') CAL_END_TIME,
+		  T1.CAL_STATE,
+		  (CASE T1.CAL_STATE WHEN '0' THEN 'SUCCESS'
+                    WHEN '1' THEN 'RODING'
+                    WHEN '9' THEN 'FAIL'
+                    WHEN '8' THEN 'STOP'
+            END) stateNm,
+		  T1.CAL_ERROR_CODE,
+		  T1.CAL_ERROR_CONTENTS,
+		  T1.CRT_USER_ID,
+		  T1.CAL_YEAR_MONTH
+		FROM CMM0053M T1 JOIN SYS0013M T2
+		ON T1.CAL_CODE=T2.CODE_ID
+		WHERE 1=1
+		<if test="codeId != null and codeId != ''">
+		  and T1.CAL_CODE= #{codeId}
+		</if>
+		<if test="calName != null and calName != ''">
+          and T1.CAL_NAME LIKE #{calName}||'%'
+        </if>
+		ORDER BY T1.CAL_SEQ DESC
+    </select>
+
+    <!-- searchOrganization Gruop List -->
+    <select id="selectOrgGrList" parameterType="Map" resultType="EgovMap">
+       <![CDATA[
+        SELECT
+        T2.CODE_MASTER_ID AS mstId ,
+        T1.CODE_MASTER_NAME AS mstNm,
+        T2.CODE_ID AS cdId,
+        T2.CODE AS cd,
+        T2.CODE_NAME AS cdNm,
+        T2.CODE_DESC AS cdDs
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE 1=1
+         ]]>
+        <if test="mstId != null and mstId != ''">
+            AND T1.CODE_MASTER_ID = #{mstId}
+            AND T2.CODE_ID IN (1,2,3)
+        </if>
+         <![CDATA[
+        ORDER BY T2.CODE
+         ]]>
+    </select>
+
+    <!-- ########################################################## -->
+    <!--                                                   CMM0028D                                                     -->
+    <!-- ########################################################## -->
+    <select id="cntCMM0028D" parameterType="Map" resultType="integer">
+        SELECT
+          count(*) cnt
+        FROM CMM0028D T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test=" bizType != null and emplyLev == 4 and codeGruop == 'CD' ">
+              AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+          </if>
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="selectCMM0028DCT" parameterType="Map" resultType="EgovMap">
+		SELECT
+		  T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+		  nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
+		  nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
+		  nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14 ,(nvl(V1,0) + nvl(V5,0) + nvl(V7,0) ) TOTAL_JOB
+		FROM CMM0028D T1 JOIN ORG0001D T2
+		      ON T1.EMPLY_ID = T2.MEM_ID
+		  JOIN SYS0013M T3
+		      ON T2.MEM_TYPE = T3.CODE_ID
+		  JOIN CMM0006T T4
+		      ON T1.EMPLY_ID= T4.EMPLY_ID
+		          AND T4.COMM_TASK_ID = #{taskId}
+		WHERE T1.TASK_ID = #{taskId}
+		  AND T3.CODE = #{codeGruop}
+		  AND T4.EMPLY_LEV = #{emplyLev}
+		  <if test="memberCd != null and memberCd != ''">
+		      AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+		  </if>
+    </select>
+    <select id="selectCMM0028DCD" parameterType="Map" resultType="EgovMap">
+        SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE,
+          case when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1375 then 'CDN'
+          when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1376  then 'CDC'
+            when t4.EMPLY_LEV =3 then 'CM'
+            when t4.EMPLY_LEV =2 then 'SCM'
+            when t4.EMPLY_LEV =1 then 'GCM'
+            end EMPLY_CODE_RANK,
+          T2.MEM_TYPE MEM_TYPE,
+          nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
+          nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
+          nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14,nvl(V15,'0') v15,
+          nvl(V16,'0') v16,nvl(V17,'0') v17,nvl(V18,'0') v18,nvl(V19,'0') v19,nvl(V20,'0') v20,
+          nvl(V21,'0') v21,nvl(V22,'0') v22,nvl(V23,'0') v23,nvl(V24,'0') v24,nvl(V25,'0') v25,
+          nvl(V26,'0') v26,nvl(V27,'0') v27,nvl(V29,'0') v29,nvl(V30,'0') v30,
+          nvl(V31,'0') v31,nvl(V32,'0') v32,nvl(V33,'0') v33
+        FROM CMM0028D T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="emplyLev == 4 and bizType != null">
+              AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+          </if>
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0028DHP" parameterType="Map" resultType="EgovMap">
+        SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+          nvl(V1,'0') v1,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V13,'0') v13,nvl(V14,'0') v14,
+          nvl(V15,'0') v15,nvl(V16,'0') v16,nvl(V17,'0') v17,nvl(V18,'0') v18,nvl(V19,'0') v19,
+          nvl(V20,'0') v20, nvl(V21,'0') v21,nvl(V22,'0') v22,nvl(V24,'0') v24,nvl(V25,'0') v25,
+          nvl(V26,'0') v26,nvl(V27,'0') v27,nvl(V28,'0') v28
+        FROM CMM0028D T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+
+    <select id="selectCMM0028DHT" parameterType="Map" resultType="EgovMap">
+        select * from ( SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+            nvl(V1,'0') v1
+            ,nvl(V2,'0') v2
+            ,nvl(V3,'0') v3
+            ,nvl(V4,'0') v4
+            ,nvl(V5,'0') v5
+            ,nvl(V6,'0') v6
+            ,nvl(V7,'0') v7
+            ,nvl(V8,'0') v8
+            ,nvl(V9,'0') v9
+            ,nvl(V10,'0') v10
+            ,nvl(V11,'0') v11
+            ,nvl(V12,'0') v12
+            ,nvl(V13,'0') v13
+            ,nvl(V14,'0') v14
+            ,nvl(V15,'0') v15
+            ,product_type
+            ,total_cs
+        FROM CMM0028D T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+          LEFT join
+            (SELECT M.emply_id, M.product_type, sum(M.com_cs) total_cs
+                FROM CMM0089T M
+                where M.task_id = #{taskId}
+            group by M.emply_id, M.product_type ) AAA
+            ON T1.EMPLY_ID = AAA.EMPLY_ID
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+          )pivot (
+            sum(total_cs) for product_type in ('KING' as CS_KING, 'QUEEN' as CS_QUEEN, 'SINGLE' AS CS_SINGLE)
+            )
+            order by EMPLY_CODE
+    </select>
+
+    <!-- ########################################################## -->
+    <!--                                                   CMM0029D                                                     -->
+    <!-- ########################################################## -->
+    <select id="cntCMM0029D" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0029D T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test=" bizType != null and emplyLev == 4 and codeGruop == 'CD' ">
+                AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+            </if>
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="selectCMM0029DCT" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R6,'0') r6,nvl(T1.R7 ,'0') r7,nvl(T1.R8 ,'0') r8
+		FROM CMM0029D T1 JOIN ORG0001D T2
+		        ON T1.EMPLY_ID = T2.MEM_ID
+		    JOIN SYS0013M T3
+		        ON T2.MEM_TYPE = T3.CODE_ID
+		    JOIN CMM0006T T4
+		        ON T1.EMPLY_ID= T4.EMPLY_ID
+		             AND T4.COMM_TASK_ID = #{taskId}
+		WHERE T1.TASK_ID = #{taskId}
+		    AND T3.CODE = #{codeGruop}
+		    AND T4.EMPLY_LEV = #{emplyLev}
+		    <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0029DCD" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+         case when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1375 then 'CDN'
+          when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1376  then 'CDC'
+            when t4.EMPLY_LEV =3 then 'CM'
+            when t4.EMPLY_LEV =2 then 'SCM'
+            when t4.EMPLY_LEV =1 then 'GCM'
+            end EMPLY_CODE_RANK,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3 ,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R6,'0') r6,nvl(T1.R7,'0') r7,nvl(T1.R8,'0') r8,nvl(T1.R10,'0') r10,nvl(T1.R11,'0')r11,
+            nvl(T1.R13,'0') r13,nvl(T1.R18,'0') r18,nvl(T1.R19,'0') r19,nvl(T1.R20,'0') r20, nvl(T1.R21,'0') r21,
+            nvl(T1.R22,'0') r22,nvl(T1.R23,'0') r23,nvl(T1.R24,'0') r24,nvl(T1.R26,'0') r26,nvl(T1.R27,'0') r27,
+            nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,
+            nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,nvl(T1.R36,'0') r36,nvl(T1.R38,'0') r38,
+            nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,nvl(T1.R99,'0') r99,
+            nvl(T1.R50,'0') r50,nvl(T1.R100,'0') r100
+        FROM CMM0029D T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test=" bizType != null and emplyLev == 4 ">
+                AND T4.EMPLY_BIZ_TYPE_ID =#{bizType}
+            </if>
+			<if test="memberCd != null and memberCd != ''">
+			    AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+			</if>
+    </select>
+    <select id="selectCMM0029DHP" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R13,'0') r13,nvl(T1.R18,'0') r18,nvl(T1.R19,'0') r19,nvl(T1.R20,'0') r20,nvl(T1.R21,'0') r21,
+            nvl(T1.R22,'0') r22,nvl(T1.R25,'0') r25,nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,
+            nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,
+            nvl(T1.R36,'0') r36,nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,
+            nvl(T1.R99,'0') r99,nvl(T1.R50,'0') r50,nvl(T1.R100,'0') r100
+        FROM CMM0029D T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="selectCMM0029DHT" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1
+            , nvl(T1.R2,'0') r2
+            , nvl(T1.R3,'0') r3
+            , nvl(T1.R4,'0') r4
+            , nvl(T1.R5,'0') r5
+            , nvl(T1.R7,'0') r7
+            , nvl(T1.R8,'0') r8
+            , nvl(T1.R11,'0') r11
+            , nvl(T1.R66,'0') r66
+            , nvl(T1.R67,'0') r67
+            , nvl(T1.R68,'0') r68
+            , nvl(T1.R100,'0') r100
+        FROM CMM0029D T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+
+    <!-- ########################################################## -->
+    <!--                                                        BAISC                                                      -->
+    <!-- ########################################################## -->
+    <select id="cntCMM0006T" parameterType="Map" resultType="int">
+        SELECT COUNT(*) FROM(
+	        SELECT T1.COMM_TASK_ID,T1.IS_EXCLUDE
+	        FROM CMM0006T T1 JOIN ORG0001D T2
+	                ON T1.EMPLY_ID = T2.MEM_ID
+	            JOIN SYS0013M T3
+	                ON T2.MEM_TYPE = T3.CODE_ID
+	         WHERE T1.COMM_TASK_ID = #{taskId}
+	            <if test="codeId != null and codeId != ''">
+	              AND T3.CODE_ID= #{codeId}
+	            </if>
+	            <if test="memberCd != null and memberCd != ''">
+                  AND T1.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+                </if>
+            ) scr
+            WHERE scr.COMM_TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+              AND  scr.IS_EXCLUDE = #{useYnCombo}
+            </if>
+    </select>
+    <select id="selectCMM0006T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            NVL( DEPT_CODE,' ') DEPT_CODE,
+			NVL( MANGR_ID,0) mangrId,
+			NVL( MEM_ID,0) MEM_ID,
+			NVL( EMPLY_TYPE_CODE ,' ') EMPLY_TYPE_CODE,
+			NVL( joinDt,' ') joinDt,
+			NVL( EMPLY_LEV,0) EMPLY_LEV,
+			NVL(EMPLY_LEV_AGE,0) EMPLY_LEV_AGE,
+			NVL( WORKING_MONTH,0) WORKING_MONTH,
+			NVL(SPONS_CODE,' ') SPONS_CODE,
+			NVL(EMPLY_STUS_ID,0) EMPLY_STUS_ID,
+			NVL( EMPLY_STUS_CODE,' ') EMPLY_STUS_CODE,
+			NVL(EMPLY_LEV_RANK,0) EMPLY_LEV_RANK,
+			NVL(EMPLY_VEH,0) emplyVeh,
+			NVL(EMPLY_BIZ_TYPE_ID,0) EMPLY_BIZ_TYPE_ID,
+			NVL(MANGR_CODE ,' ') mangrCode,
+			NVL(EMPLY_CODE,' ') emplyCode,
+			NVL(PAY_STUS,0) payStus,
+			NVL(IS_HSPTLZ,0) isHsptlz,
+			NVL( RUN_ID,0) RUN_ID,
+			NVL(COMM_TASK_ID,0) taskId,
+			NVL(IS_EXCLUDE  ,0) IS_EXCLUDE
+         FROM(
+	        SELECT
+	          T1.DEPT_CODE, T1.MANGR_ID, T2.MEM_ID,T1.EMPLY_TYPE_CODE,TO_CHAR(T1.JOIN_DT,'dd-mm-yyyy') joinDt,
+	          T1.EMPLY_LEV,T1.EMPLY_LEV_AGE,T1.WORKING_MONTH,T1.SPONS_CODE,T1.EMPLY_STUS_ID,
+	          T1.EMPLY_STUS_CODE,T1.EMPLY_LEV_RANK,T1.EMPLY_VEH,T1.EMPLY_BIZ_TYPE_ID,
+	          T1.MANGR_CODE, T1.EMPLY_CODE, T1.PAY_STUS, T1.IS_HSPTLZ,
+	          T1.RUN_ID,T1.COMM_TASK_ID,nvl(T1.IS_EXCLUDE,'0') IS_EXCLUDE
+	        FROM CMM0006T T1 JOIN ORG0001D T2
+	                ON T1.EMPLY_ID = T2.MEM_ID
+	            JOIN SYS0013M T3
+	                ON T2.MEM_TYPE = T3.CODE_ID
+	         WHERE T1.COMM_TASK_ID = #{taskId}
+	            <if test="codeId != null and codeId != ''">
+	              AND T3.CODE_ID= #{codeId}
+	            </if>
+	            <if test="memberCd != null and memberCd != ''">
+	              AND T1.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+	            </if>
+            ) scr
+            WHERE scr.COMM_TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+              AND  scr.IS_EXCLUDE = #{useYnCombo}
+            </if>
+         ORDER BY scr.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0007T" parameterType="Map" resultType="integer">
+        SELECT COUNT(*) cnt FROM(
+	        SELECT
+                *
+            FROM CMM0007T T1 JOIN CMM0006T T2
+                    ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
+                    AND T1.TASK_ID=T2.COMM_TASK_ID
+                    AND T2.IS_EXCLUDE=0
+                JOIN SYS0013M T3
+                    ON T2.EMPLY_TYPE_ID = T3.CODE_ID
+             WHERE T1.TASK_ID = #{taskId}
+                 <if test="codeId != null and codeId != ''">
+                  AND T3.CODE_ID= #{codeId}
+                </if>
+                <if test="memberCd != null and memberCd != ''">
+                  AND T2.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+                </if>
+                <if test="ordId != null and ordId != ''">
+                  AND T1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+            ) scr
+            WHERE scr.TASK_ID=#{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+              AND  scr.IS_EXCLUDE = #{useYnCombo}
+            </if>
+    </select>
+    <select id="selectCMM0007T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(ORD_ID,'0') ORD_ID,
+			nvl(EMPLY_ID,'0') MEM_ID,
+			nvl(CODE,'0') CODE,
+			nvl(ORD_TYPE_ID,'0') ORD_TYPE_ID,
+			nvl(PRODUCT_ID,'0') PRODUCT_ID,
+			nvl(UNIT_VALU,'0') UNIT_VALU,
+			nvl(PRC,'0') PRC,
+			nvl(PV_VALU,'0') PV_VALU,
+			nvl(RUN_ID,'0') RUN_ID,
+			nvl(TASK_ID,'0') TASK_ID,
+			nvl(IS_EXCLUDE,'0') IS_EXCLUDE,
+			nvl(EMPLY_CODE,'0') MEM_CODE,
+			nvl(SALES_ORD_NO ,'0') SALES_ORD_NO,
+            nvl(STK_DESC ,'0') STK_DESC
+         FROM(
+            SELECT
+	            T1.ORD_ID, T2.EMPLY_ID,T3.CODE,  T1.ORD_TYPE_ID, T1.PRODUCT_ID, T1.UNIT_VALU,
+	            T1.PRC, T1.PV_VALU,T1.RUN_ID,T1.TASK_ID, T1.IS_EXCLUDE, T2.EMPLY_CODE,
+	            T4.SALES_ORD_NO, T4.STK_DESC
+			FROM CMM0007T T1 JOIN CMM0006T T2
+			        ON T1.SALES_EMPLY_ID = T2.EMPLY_ID
+			         AND T1.TASK_ID=T2.COMM_TASK_ID
+			         AND T2.IS_EXCLUDE=0
+			    JOIN SYS0013M T3
+			        ON T2.EMPLY_TYPE_ID = T3.CODE_ID
+			    LEFT OUTER JOIN
+	                ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC  FROM SAL0001D T1
+	                     JOIN SAL0002D T2
+	                        ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+	                     LEFT OUTER JOIN SYS0026M T3
+	                        ON T2.ITM_STK_ID=T3.STK_ID
+	                     GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+	                )T4 ON T1.ORD_ID=T4.SALES_ORD_ID
+			 WHERE T1.TASK_ID = #{taskId}
+			     <if test="codeId != null and codeId != ''">
+	              AND T3.CODE_ID= #{codeId}
+	            </if>
+			    <if test="memberCd != null and memberCd != ''">
+			      AND T2.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+			    </if>
+			    <if test="ordId != null and ordId != ''">
+			      AND T1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+			    </if>
+		    )scr
+		    WHERE scr.TASK_ID=#{taskId}
+		    <if test="useYnCombo != null and useYnCombo != ''">
+		      AND  scr.IS_EXCLUDE = #{useYnCombo}
+		    </if>
+         ORDER BY scr.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0008T" parameterType="Map" resultType="integer">
+         SELECT
+            count(*) cnt
+        FROM CMM0008T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0008T s1 JOIN CMM0006T s2
+                  ON s1.SVC_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID=#{taskId}
+                  <if test="svcPersonCd != null and svcPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{svcPersonCd} ||'%'
+                  </if>
+                  <if test="codeId != null and codeId != ''">
+                    AND s2.EMPLY_TYPE_ID = #{codeId}
+                  </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+              AND T2.IS_EXCLUDE = #{useYnCombo}
+            </if>
+    </select>
+    <select id="selectCMM0008T" parameterType="Map" resultType="EgovMap">
+		 SELECT
+		    nvl(T1.BS_SCHDUL_ID,'0') BS_SCHDUL_ID,
+			nvl(T1.SVC_PERSON_ID,'0') SVC_PERSON_ID,
+			nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+			nvl(T1.BS_STUS_ID,'0') BS_STUS_ID,
+			nvl(T1.CRDIT_POINT,'0') CRDIT_POINT,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+			nvl(T1.TASK_ID,'0') TASK_ID,
+			nvl(T2.IS_EXCLUDE, '0') IS_EXCLUDE,
+			nvl(T2.SALES_ORD_ID, '0') ORD_ID,
+			nvl(T2.NO, '0') BSR_NO
+		FROM CMM0008T T1 JOIN (
+			SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE, s3.SALES_ORD_ID, s3.NO
+			FROM CMM0008T s1 JOIN CMM0006T s2
+					ON s1.SVC_PERSON_ID=s2.EMPLY_ID
+						AND s2.IS_EXCLUDE=0
+						AND s2.COMM_TASK_ID=#{taskId}
+				JOIN SVC0008D s3
+				    ON s1.BS_SCHDUL_ID = s3.SCHDUL_ID
+
+			WHERE s1.TASK_ID=#{taskId}
+                  <if test="svcPersonCd != null and svcPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{svcPersonCd} ||'%'
+                  </if>
+                  <if test="codeId != null and codeId != ''">
+                    AND s2.EMPLY_TYPE_ID = #{codeId}
+                  </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+			<if test="useYnCombo != null and useYnCombo != ''">
+	          AND T2.IS_EXCLUDE = #{useYnCombo}
+	        </if>
+		ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0009T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0009T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0009T s1 JOIN CMM0006T s2
+                  ON s1.SVC_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="svcPersonCd != null and svcPersonCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{svcPersonCd} ||'%'
+                </if>
+                <if test="ordId != null and ordId != ''">
+                  AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0009T" parameterType="Map" resultType="EgovMap">
+		SELECT
+		    nvl(T1.SVC_PERSON_ID,'0') SVC_PERSON_ID,
+			nvl(T1.HAPY_CALL_ID,'0') HAPY_CALL_ID ,
+			nvl(T1.ORD_ID,'0') ORD_ID ,
+			nvl(T1.CUST_RESPNS_ID,'0') CUST_RESPNS_ID,
+			nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+			nvl(T1.PNCTULT,'0') PNCTULT,
+			nvl(T1.APPRAN,'0') APPRAN,
+			nvl(T1.XPLNT,'0') XPLNT,
+			nvl(T1.QLY,'0') QLY,
+			nvl(T1.OVERAL,'0')OVERAL ,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0009T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0009T s1 JOIN CMM0006T s2
+                  ON s1.SVC_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID=#{taskId}
+		        <if test="svcPersonCd != null and svcPersonCd != ''">
+		          AND s2.EMPLY_CODE LIKE '%'|| #{svcPersonCd} ||'%'
+		        </if>
+		        <if test="ordId != null and ordId != ''">
+		          AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+		ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0010T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0010T T1 JOIN (
+                SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,'0') IS_EXCLUDE
+                FROM CMM0010T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="salesPersonCd != null and salesPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+                </if>
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+        )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID =#{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0010T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.SALES_PERSON_ID,'0') SALES_PERSON_ID ,
+            nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+			nvl(T1.MBRSH_ID,'0') MBRSH_ID ,
+			nvl(T1.ORD_ID,'0') ORD_ID ,
+			nvl(T1.MBRSH_AMT,'0')MBRSH_AMT ,
+			nvl(T1.RUN_ID,'0') RUN_ID,
+			nvl(T1.TASK_ID,'0') TASK_ID,
+			nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0010T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0010T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+	            <if test="salesPersonCd != null and salesPersonCd != ''">
+	                AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+	            </if>
+	            <if test="ordId != null and ordId != ''">
+	                AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+	            </if>
+	            <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+	    )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID =#{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+         ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0011T" parameterType="Map" resultType="integer">
+        SELECT
+             count(*) cnt
+         FROM CMM0011T T1 JOIN (
+                SELECT s1.RCORD_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0011T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="salesPersonCd != null and salesPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+                </if>
+                 <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RCORD_ID=t2.RCORD_ID
+         WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0011T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.RCORD_ID, '0') RCORD_ID,
+            nvl(T1.ORD_ID , '0') ORD_ID,
+            nvl(T1.SALES_PERSON_ID, '0') SALES_PERSON_ID,
+            nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+            nvl(T1.INSTLMT, '0') INSTLMT,
+            nvl(T1.PV, '0') PV,
+            nvl(T1.PRC ,'0') PRC,
+		    nvl(T1.ORD_TYPE_ID, '0') ORD_TYPE_ID,
+		    nvl(T1.BILL_RUN_ID,'0') runId,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE,
+		    nvl(T3.SALES_ORD_NO ,'0') SALES_ORD_NO,
+            nvl(T3.STK_DESC ,'0') STK_DESC
+		FROM CMM0011T T1 JOIN (
+		        SELECT s1.RCORD_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0011T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+		        <if test="salesPersonCd != null and salesPersonCd != ''">
+		            AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+		        </if>
+		         <if test="ordId != null and ordId != ''">
+		            AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RCORD_ID=t2.RCORD_ID
+		    LEFT OUTER JOIN
+			    ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC  FROM SAL0001D T1
+			         JOIN SAL0002D T2
+			            ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+			         LEFT OUTER JOIN SYS0026M T3
+			            ON T2.ITM_STK_ID=T3.STK_ID
+			         GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+			    )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+         WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+         ORDER BY t2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0012T" parameterType="Map" resultType="integer">
+        SELECT
+	        count(*) cnt
+        FROM CMM0012T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0012T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="clctrCd != null and clctrCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{clctrCd} ||'%'
+                </if>
+                <if test="ordId != null and ordId != ''">
+                  AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0012T" parameterType="Map" resultType="EgovMap">
+        SELECT
+	       nvl(T1.CLCTR_ID, 0) CLCTR_ID,
+	       nvl(T1.ORD_ID, 0) ORD_ID,
+	       nvl(T1.TRGET_AMT, 0) TRGET_AMT,
+	       nvl(T1.COLCT_AMT, 0) COLCT_AMT,
+	       nvl(T1.CUST_RACE_ID , 0) CUST_RACE_ID,
+		   nvl(T1.RENT_PAY_MODE_ID,  0) RENT_PAY_MODE_ID,
+		   nvl(T1.CUST_ID, 0) CUST_ID,
+		   nvl(T2.EMPLY_CODE, ' ') EMPLY_CODE,
+		   nvl(T1.RUN_ID, 0) RUN_ID,
+		   nvl(T1.TASK_ID, 0) TASK_ID,
+		   nvl(T2.IS_EXCLUDE, 0) IS_EXCLUDE
+		FROM CMM0012T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0012T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+		        <if test="clctrCd != null and clctrCd != ''">
+		          AND s2.EMPLY_CODE LIKE '%'|| #{clctrCd} ||'%'
+		        </if>
+		        <if test="ordId != null and ordId != ''">
+		          AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+         ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0013T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0013T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0013T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+                <if test="clctrCd != null and clctrCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{clctrCd} ||'%'
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0013T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.CLCTR_ID, '0') CLCTR_ID,
+            nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T1.STRTG_OS, '0') STRTG_OS,
+            nvl(T1.CLOS_OS, '0') CLOS_OS,
+            nvl(T1.IS_DROP,'0') IS_DROP,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0013T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0013T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+		        <if test="ordId != null and ordId != ''">
+		            AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+                <if test="clctrCd != null and clctrCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{clctrCd} ||'%'
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+         ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0014T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0014T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE ,s2.EMPLY_CODE
+                FROM CMM0014T s1 JOIN CMM0006T s2
+                  ON s1.EMPLY_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="emplyCd != null and emplyCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0014T" parameterType="Map" resultType="EgovMap">
+		SELECT
+		    nvl(T1.EMPLY_ID, '0') EMPLY_ID,
+		    nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+		    nvl(T1.SPONS_ID, '0') SPONS_ID,
+		    nvl(T1.INSTLMT, '0') INSTLMT,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID,'0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0014T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE ,s2.EMPLY_CODE
+		        FROM CMM0014T s1 JOIN CMM0006T s2
+                  ON s1.EMPLY_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+		        <if test="emplyCd != null and emplyCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+		ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0015T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0015T T1 JOIN (
+                SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0015T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="ordId != null and ordId != ''">
+                  AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0015T" parameterType="Map" resultType="EgovMap">
+		SELECT
+		    nvl(T1.PAY_ID, '0') PAY_ID,
+		    nvl(T1.ORD_ID, '0') ORD_ID,
+		    nvl(T1.CLCTR_ID,'0') CLCTR_ID,
+		    nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+		    nvl(T1. AMT,'0') AMT,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID , '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0015T T1 JOIN (
+		        SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0015T s1 JOIN CMM0006T s2
+                  ON s1.CLCTR_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID= #{taskId}
+		        <if test="ordId != null and ordId != ''">
+		          AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="emplyCd != null and emplyCd != ''">
+                  AND s2.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0016T" parameterType="Map" resultType="integer">
+        SELECT
+          count(*) cnt
+        FROM CMM0016T t1 JOIN CMM0006T t2
+               ON t1.P_MEM_ID=t2.EMPLY_ID
+                   AND t2.IS_EXCLUDE=0
+                   AND t2.COMM_TASK_ID=#{taskId}
+        WHERE t1.TASK_ID = #{taskId}
+            <if test="pMemCd != null and pMemCd != ''">
+              AND t2.EMPLY_CODE LIKE '%'|| #{pMemCd} ||'%'
+            </if>
+    </select>
+    <select id="selectCMM0016T" parameterType="Map" resultType="EgovMap">
+        SELECT
+		  nvl(T1.TASK_ID, '0') TASK_ID,
+		  nvl(T1.CMMS_DT, sysdate) CMMS_DT,
+		  nvl(T1.C_MEM_ID, '0') C_MEM_ID,
+		  nvl(T1.C_MEM_LEV, '0') C_MEM_LEV,
+		  nvl(T1.P_MEM_ID,'0') P_MEM_ID,
+		  nvl(T1.P_MEM_LEV, '0') P_MEM_LEV,
+		  nvl(T1.TBB_LEV, '0') TBB_LEV,
+		  nvl(T1.CNS_UNIT, '0') CNS_UNIT,
+		  nvl(T1.CNSPV_TOT, '0') CNSPV_TOT,
+		  nvl(T1.PNS_UNIT, '0') PNS_UNIT,
+		  nvl(T1.TBB_TOT, '0') TBB_TOT,
+		  nvl(T1.RUN_ID, '0') RUN_ID,
+		  nvl(T2.EMPLY_CODE,'0') EMPLY_CODE
+		FROM CMM0016T t1 JOIN CMM0006T t2
+               ON t1.P_MEM_ID=t2.EMPLY_ID
+                   AND t2.IS_EXCLUDE=0
+                   AND t2.COMM_TASK_ID=#{taskId}
+		WHERE t1.TASK_ID = #{taskId}
+	        <if test="pMemCd != null and pMemCd != ''">
+              AND t2.EMPLY_CODE LIKE '%'|| #{pMemCd} ||'%'
+            </if>
+        ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0017T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0017T T1 JOIN (
+                SELECT a.RUN_ID, a.IS_EXCLUDE, a.MEM_CODE MEM_ID, b.EMPLY_CODE MEM_CODE
+                FROM CMM0017T a join CMM0006T b
+                    ON a.TASK_ID = b.COMM_TASK_ID
+                      AND a.MEM_CODE = b.EMPLY_ID
+                      AND b.IS_EXCLUDE = '0'
+                WHERE a.TASK_ID= #{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND a.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="memCd != null and memCd != ''">
+                    AND b.EMPLY_CODE LIKE '%'|| #{memCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND b.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0017T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T1.TRGET_AMT, '0') TRGET_AMT,
+            nvl(T1.COLCT_AMT, '0') COLCT_AMT,
+            nvl(T2.MEM_ID, '0') MEM_ID,
+            nvl(T2.MEM_CODE, '0') MEM_CODE,
+            nvl(T1.HM_CODE, '0') HM_CODE,
+		    nvl(T1.SM_CODE, '0') SM_CODE,
+		    nvl(T1.GM_CODE, '0') GM_CODE,
+		    nvl(T1.RCM_YEAR, '0') RCM_YEAR,
+		    nvl(T1.RCM_MONTH, '0') RCM_MONTH,
+		    nvl(T1.RUN_ID,'0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0017T T1 JOIN (
+		        SELECT a.RUN_ID, a.IS_EXCLUDE, a.MEM_CODE MEM_ID, b.EMPLY_CODE MEM_CODE
+		        FROM CMM0017T a join CMM0006T b
+			        ON a.TASK_ID = b.COMM_TASK_ID
+			          AND a.MEM_CODE = b.EMPLY_ID
+			          AND b.IS_EXCLUDE = '0'
+		        WHERE a.TASK_ID= #{taskId}
+		        <if test="ordId != null and ordId != ''">
+		            AND a.ORD_ID LIKE '%'|| #{ordId} ||'%'
+		        </if>
+		        <if test="memCd != null and memCd != ''">
+                    AND b.EMPLY_CODE LIKE '%'|| #{memCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND b.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.MEM_CODE
+    </select>
+
+    <select id="cntCMM0018T" parameterType="Map" resultType="integer">
+        SELECT
+          count(*) cnt
+        FROM CMM0018T T1 JOIN (
+                SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0018T s1 JOIN ORG0001D s2
+                  ON s1.INST_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="instPersonCd != null and instPersonCd != ''">
+                    and s2.MEM_CODE LIKE '%'|| #{instPersonCd} ||'%'
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID= #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0018T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.TASK_ID ,'0') TASK_ID,
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T3.SALES_ORD_NO, '0') ORD_NO,
+            nvl(T1.INST_ID ,'0') INST_ID,
+            nvl(T5.INSTALL_ENTRY_NO ,'0') INST_NO,
+            nvl(T1.STOCK_ID ,'0') STOCK_ID,
+            nvl(T3.STK_DESC, '0') STOCK_DESC,
+            nvl(T1.APP_TYPE_ID ,'0') APP_TYPE_ID,
+            nvl(T4.CODE_DESC,' ') APP_DESC,
+		    nvl(T1.INST_PERSON_ID ,'0') INST_PERSON_ID,
+		    nvl(T2.MEM_CODE,'0') EMPLY_CODE,
+		    nvl(T1.PRC, '0') PRC,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0018T T1 JOIN (
+		        SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0018T s1 JOIN ORG0001D s2
+                  ON s1.INST_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="instPersonCd != null and instPersonCd != ''">
+                    and s2.MEM_CODE LIKE '%'|| #{instPersonCd} ||'%'
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		    JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+                      FROM SAL0001D T1 JOIN SAL0002D T2
+                         ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+                      LEFT OUTER JOIN SYS0026M T3
+                         ON T2.ITM_STK_ID=T3.STK_ID
+                      GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+                 )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN SYS0013M T4 ON T1.APP_TYPE_ID = T4.CODE_ID
+            JOIN SAL0046D T5 ON T1.INST_ID = T5.INSTALL_ENTRY_ID
+        WHERE T1.TASK_ID= #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+         order by T2.MEM_CODE
+    </select>
+
+    <select id="cntCMM0019T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0019T T1 JOIN (
+                SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0019T s1 JOIN ORG0001D s2
+                  ON s1.BS_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID= #{taskId}
+                 <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="bsPersonCd != null and bsPersonCd != ''">
+                    AND s2.MEM_CODE LIKE '%'|| #{bsPersonCd} ||'%'
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0019T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T1.BSR_ID, '0') BSR_ID,
+            nvl(T1.STOCK_ID, '0') STOCK_ID,
+            nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
+            nvl(T1.BS_PERSON_ID, '0') BS_PERSON_ID,
+            nvl(T2.MEM_CODE,'0') EMPLY_CODE,
+		    nvl(T1.PRC, '0') PRC,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0019T T1 JOIN (
+		        SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0019T s1 JOIN ORG0001D s2
+                  ON s1.BS_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID= #{taskId}
+                 <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="bsPersonCd != null and bsPersonCd != ''">
+                    AND s2.MEM_CODE LIKE '%'|| #{bsPersonCd} ||'%'
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.MEM_CODE
+    </select>
+
+    <select id="cntCMM0020T" parameterType="Map" resultType="integer">
+       SELECT
+            count(*) cnt
+        FROM CMM0020T T1 JOIN (
+                SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0020T s1 JOIN ORG0001D s2
+                  ON s1.AS_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="asEntryCd != null and asEntryCd != ''">
+                    AND s2.MEM_CODE LIKE '%'|| #{asEntryCd} ||'%'
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0020T" parameterType="Map" resultType="EgovMap">
+       SELECT
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T3.SALES_ORD_NO, '0') ORD_NO,
+            nvl(T1.AS_ENTRY_ID, '0') AS_ENTRY_ID,
+            nvl(T1.ASR_ID, '0') ASR_ID,
+            nvl(T4.AS_NO,'0') AS_NO,
+            nvl(T1.STOCK_ID, '0') STOCK_ID,
+            nvl(T3.STK_DESC, '0') STOCK_DESC,
+            nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
+            nvl(T5.CODE_DESC,' ') APP_DESC,
+		    nvl(T1.AS_PERSON_ID,'0') AS_PERSON_ID,
+		    nvl(T2.MEM_CODE,'0') EMPLY_CODE,
+		    nvl(T1.PRC, '0') PRC,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0020T T1 JOIN (
+		        SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0020T s1 JOIN ORG0001D s2
+                  ON s1.AS_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID= #{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="asEntryCd != null and asEntryCd != ''">
+                    AND s2.MEM_CODE LIKE '%'|| #{asEntryCd} ||'%'
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+		    JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+			          FROM SAL0001D T1 JOIN SAL0002D T2
+	                     ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+	                  LEFT OUTER JOIN SYS0026M T3
+	                     ON T2.ITM_STK_ID=T3.STK_ID
+	                  GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+	             )T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN (SELECT a.AS_RESULT_ID,b.AS_NO
+	                FROM SVC0004D a JOIN SVC0001D b
+	                       ON a.AS_ENTRY_ID=b.AS_ID
+                )T4 ON t1.ASR_ID=T4.AS_RESULT_ID
+            JOIN SYS0013M T5 ON T1.APP_TYPE_ID = T5.CODE_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.MEM_CODE
+    </select>
+
+    <select id="cntCMM0021T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0021T T1 JOIN (
+                SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0021T s1 JOIN ORG0001D s2
+                  ON s1.RET_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                  AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="retPCd != null and retPCd != ''">
+                  AND s2.MEM_CODE LIKE '%'|| #{retPCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.MEM_TYPE = #{codeId}
+                </if>
+            )T2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0021T" parameterType="Map" resultType="EgovMap">
+        SELECT
+			nvl(T1.ORD_ID, '0') ORD_ID,
+			nvl(T3.SALES_ORD_NO, '0') ORD_NO,
+			nvl(T1.RET_ID, '0') RET_ID,
+			nvl(T4.RETN_NO, '0') RETN_NO,
+			nvl(T2.MEM_CODE,'0') EMPLY_CODE,
+			nvl(T1.STOCK_ID, '0') STOCK_ID,
+			nvl(T3.STK_DESC, '0') STOCK_DESC,
+			nvl(T1.APP_TYPE_ID, '0') APP_TYPE_ID,
+			nvl(T5.CODE_DESC,' ') APP_DESC,
+			nvl(T1.RET_PERSON_ID,'0') RET_PERSON_ID,
+		    nvl(T1.PRC,0) prc,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0021T T1 JOIN (
+		        SELECT s1.RUN_ID, nvl(s1.IS_EXCLUDE,0) IS_EXCLUDE, s2.MEM_CODE
+                FROM CMM0021T s1 JOIN ORG0001D s2
+                  ON s1.RET_PERSON_ID=s2.MEM_ID
+                      <![CDATA[ AND s1.IS_EXCLUDE <> 1 ]]>
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                  AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="retPCd != null and retPCd != ''">
+                  AND s2.MEM_CODE LIKE '%'|| #{retPCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.MEM_TYPE = #{codeId}
+                </if>
+		    )T2 ON t1.RUN_ID=t2.RUN_ID
+			JOIN ( SELECT T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+				     FROM SAL0001D T1 JOIN SAL0002D T2
+				        ON T1.SALES_ORD_ID = T2.SALES_ORD_ID
+				     LEFT OUTER JOIN SYS0026M T3
+				        ON T2.ITM_STK_ID=T3.STK_ID
+				     GROUP BY T1.SALES_ORD_ID, T1.SALES_ORD_NO,T3.STK_DESC
+				)T3 ON T1.ORD_ID=T3.SALES_ORD_ID
+            JOIN LOG0038D T4 ON T1.RET_ID = T4.STK_RETN_ID
+            JOIN SYS0013M T5 ON T1.APP_TYPE_ID=T5.CODE_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.MEM_CODE
+    </select>
+
+    <select id="cntCMM0022T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0022T T1 JOIN (
+                SELECT s1.BILL_RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+                FROM CMM0022T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+                WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="salesPersonCd != null and salesPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )T2 ON T1.BILL_RUN_ID = T2.BILL_RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0022T" parameterType="Map" resultType="EgovMap">
+        SELECT
+            nvl(T1.ORD_ID,'0') ORD_ID,
+            nvl(T1.SRV_CNTRCT_ID,'0') SRV_CNTRCT_ID,
+            nvl(T1.SRV_CNTRCT_NO, '0') SRV_CNTRCT_NO,
+            nvl(T1.SALES_PERSON_ID,'0') SALES_PERSON_ID,
+            nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+            nvl(T1.INSTLMT, '0') INSTLMT,
+		    nvl(T1.PV, '0') PV,
+		    nvl(T1.PRC, '0') PRC,
+		    nvl(T1.ORD_TYPE_ID, '0') ORD_TYPE_ID,
+		    nvl(T1.BILL_RUN_ID,'0')  runId,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(T2.IS_EXCLUDE,'0') IS_EXCLUDE
+		FROM CMM0022T T1 JOIN (
+		        SELECT s1.BILL_RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		        FROM CMM0022T s1 JOIN CMM0006T s2
+                  ON s1.SALES_PERSON_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		        WHERE s1.TASK_ID=#{taskId}
+	            <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="salesPersonCd != null and salesPersonCd != ''">
+                    AND s2.EMPLY_CODE LIKE '%'|| #{salesPersonCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )T2 ON T1.BILL_RUN_ID=T2.BILL_RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0023T" parameterType="Map" resultType="integer">
+       SELECT
+            count(*) cnt
+        FROM CMM0023T T1 JOIN (
+              SELECT s1.RUN_ID, s1.IS_EXCLUDE
+              FROM CMM0023T s1 JOIN CMM0006T s2
+                  ON s1.MEM_CODE=s2.EMPLY_CODE
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+              WHERE s1.TASK_ID=#{taskId}
+                <if test="ordId != null and ordId != ''">
+                    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+                </if>
+                <if test="memCode != null and memCode != ''">
+                    AND s1.MEM_CODE LIKE '%'|| #{memCode} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            )t2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0023T" parameterType="Map" resultType="EgovMap">
+       SELECT
+            nvl(T1.ORD_ID ,'0') ORD_ID,
+            nvl(T1.TRGET_AMT, '0') TRGET_AMT,
+            nvl(T1.COLCT_AMT, '0') COLCT_AMT,
+            nvl(T2.EMPLY_CODE, '0') MEM_CODE,
+            nvl(T1.HM_CODE, '0') HM_CODE,
+		    nvl(T1.SM_CODE,'0') SM_CODE,
+		    nvl(T1.GM_CODE , '0') GM_CODE,
+		    nvl(T1.RCM_YEAR ,'0') RCM_YEAR,
+		    nvl(T1.RCM_MONTH, '0') RCM_MONTH,
+		    nvl(T1.SRV_CNTRCT_ID, '0') SRV_CNTRCT_ID,
+		    nvl(T1.RUN_ID, '0') RUN_ID,
+		    nvl(T1.TASK_ID, '0') TASK_ID,
+		    nvl(t2.IS_EXCLUDE,'0') IS_EXCLUDE
+        FROM CMM0023T T1 JOIN (
+		      SELECT s1.RUN_ID, s1.IS_EXCLUDE, s2.EMPLY_CODE
+		      FROM CMM0023T s1 JOIN CMM0006T s2
+                  ON s1.MEM_CODE=s2.EMPLY_CODE
+                      AND s2.IS_EXCLUDE=0
+                      AND s2.COMM_TASK_ID=#{taskId}
+		      WHERE s1.TASK_ID=#{taskId}
+				<if test="ordId != null and ordId != ''">
+				    AND s1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+				</if>
+				<if test="memCode != null and memCode != ''">
+				    AND s2.EMPLY_CODE LIKE '%'|| #{memCode} ||'%'
+				</if>
+				<if test="codeId != null and codeId != ''">
+                  AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    )t2 ON t1.RUN_ID=t2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0024T" parameterType="Map" resultType="integer">
+        SELECT
+           count(*) cnt
+        FROM CMM0024T t1 JOIN CMM0006T t2
+                  ON t1.EMPLY_CODE=t2.EMPLY_CODE
+                      AND t2.IS_EXCLUDE=0
+                      AND t2.COMM_TASK_ID=#{taskId}
+        WHERE t1.TASK_ID=#{taskId}
+        <if test="emplyCd != null and emplyCd != ''">
+          AND t1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+        </if>
+        <if test="codeId != null and codeId != ''">
+          AND t2.EMPLY_TYPE_ID = #{codeId}
+        </if>
+    </select>
+    <select id="selectCMM0024T" parameterType="Map" resultType="EgovMap">
+        SELECT
+			nvl(t1.EMPLY_ID,'0') EMPLY_ID,
+			nvl(t1.EMPLY_CODE, '0') EMPLY_CODE,
+			nvl(t1.PRFOM_PRCNT, '0') PRFOM_PRCNT,
+			nvl(t1.PRFOMNC_RANK, '0') PRFOMNC_RANK,
+			nvl(t1.TOT_EMPLY, '0') TOT_EMPLY,
+			nvl(t1.CUMLT_DSTRIB, '0') CUMLT_DSTRIB,
+			nvl(t1.PAYOUT_PRCNT, '0') PAYOUT_PRCNT,
+			nvl(t1.PAYOUT_AMT,'0') PAYOUT_AMT,
+			nvl(t1.TASK_ID,'0') TASK_ID
+		FROM CMM0024T t1 JOIN CMM0006T t2
+                  ON t1.EMPLY_CODE=t2.EMPLY_CODE
+                      AND t2.IS_EXCLUDE=0
+                      AND t2.COMM_TASK_ID=#{taskId}
+		WHERE t1.TASK_ID=#{taskId}
+		<if test="emplyCd != null and emplyCd != ''">
+		  AND t1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		</if>
+		<if test="codeId != null and codeId != ''">
+          AND t2.EMPLY_TYPE_ID = #{codeId}
+        </if>
+        ORDER BY t1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0025T" parameterType="Map" resultType="integer">
+       SELECT
+            count(*) cnt
+        FROM CMM0025T t1 JOIN CMM0006T t2
+              ON t1.EMPLY_ID=t2.EMPLY_ID
+                  AND t2.IS_EXCLUDE=0
+                  AND t2.COMM_TASK_ID=#{taskId}
+        WHERE t1.TASK_ID = #{taskId}
+        <if test="ordId != null and ordId != ''">
+            AND t1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+        </if>
+        <if test="emplyCd != null and emplyCd != ''">
+            AND t2.EMPLY_CODE = #{emplyCd}
+        </if>
+        <if test="codeId != null and codeId != ''">
+          AND t2.EMPLY_TYPE_ID = #{codeId}
+        </if>
+    </select>
+    <select id="selectCMM0025T" parameterType="Map" resultType="EgovMap">
+       SELECT
+            nvl(T1.EMPLY_ID, '0') EMPLY_ID,
+            nvl(T2.EMPLY_CODE,'0') EMPLY_CODE,
+            nvl(T1.ORD_ID, '0') ORD_ID,
+            nvl(T1.STOCK_ID, '0') STOCK_ID,
+            nvl(T1.PROMT_ID, '0') PROMT_ID,
+            nvl(T1.PAID_MONTH, '0') PAID_MONTH,
+            nvl(T1.PAID_AMT,'0') PAID_AMT,
+            nvl(T1.RUN_ID,'0') RUN_ID,
+            nvl(T1.TASK_ID,'0') TASK_ID
+        FROM CMM0025T t1 JOIN CMM0006T t2
+              ON t1.EMPLY_ID=t2.EMPLY_ID
+                  AND t2.IS_EXCLUDE=0
+                  AND t2.COMM_TASK_ID=#{taskId}
+        WHERE t1.TASK_ID = #{taskId}
+        <if test="ordId != null and ordId != ''">
+            AND t1.ORD_ID LIKE '%'|| #{ordId} ||'%'
+        </if>
+        <if test="emplyCd != null and emplyCd != ''">
+            AND t2.EMPLY_CODE = #{emplyCd}
+        </if>
+        <if test="codeId != null and codeId != ''">
+          AND t2.EMPLY_TYPE_ID = #{codeId}
+        </if>
+        ORDER BY T2.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0026T" parameterType="Map" resultType="integer">
+       SELECT
+        count(*) cnt
+        FROM CMM0056M T1 JOIN (
+           SELECT s1.EMPLY_ID, s1.IS_EXCLUDE
+           FROM CMM0056M  s1 JOIN CMM0006T s2
+                  ON s1.EMPLY_ID=s2.EMPLY_ID
+                      AND s2.IS_EXCLUDE=0
+                      AND s1.task_id = s2.COMM_TASK_ID
+            WHERE s1.TASK_ID= #{taskId}
+            <if test="emplyCd != null and emplyCd != ''">
+                AND s1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+            </if>
+            <if test="codeId != null and codeId != ''">
+               AND s2.EMPLY_TYPE_ID = #{codeId}
+             </if>
+            )T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+        WHERE T1.TASK_ID=#{taskId} AND T1.GRP_NAME IS NOT NULL
+        <if test="useYnCombo != null and useYnCombo != ''">
+           AND T2.IS_EXCLUDE = #{useYnCombo}
+       </if>
+    </select>
+    <select id="selectCMM0026T" parameterType="Map" resultType="EgovMap">
+       SELECT
+        NVL(T1.EMPLY_ID, '0') EMPLY_ID,
+        NVL(T1.EMPLY_CODE, '0') EMPLY_CODE,
+        NVL(T1.WEEK_1, '0') WEEK_1,
+        NVL(T1.WEEK_2,'0') WEEK_2,
+        NVL(T1.WEEK_3, '0') WEEK_3,
+        NVL(T1.WEEK_4, '0') WEEK_4,
+        NVL(T1.TOT_LV, '0') TOT_LV,
+        NVL(T1.WEEKLY_LV, '0') WEEKLY_LV,
+        NVL(T1.MONTH_LV, '0') MONTH_LV,
+        NVL(T1.WEEKLY_LV_R,'0') weekLylvR,
+        NVL(T1.MONTH_LV_R, '0') MONTH_LV_R,
+        NVL(T1.RUN_ID, '0') RUN_ID,
+        NVL(T1.TASK_ID, '0') TASK_ID,
+        NVL(T2.IS_EXCLUDE,'0') IS_EXCLUDE ,
+        T1.GRP_NAME ,
+        NVL(T2.EMPLY_TYPE_CODE, '0') EMPLY_TYPE_CODE,
+        T1.AWARD AS C_AWARD,
+        T3.AWARD AS L_AWARD,
+        T1.MONTH_LV_R||' MONTH' AS C_CRITERIA,
+        T3.MONTH_LV_R||' MONTH' AS L_CRITERIA,
+        NVL(T1.WEEK_1, '0')+NVL(T1.WEEK_2, '0')+NVL(T1.WEEK_3, '0')+NVL(T1.WEEK_4, '0') TOT
+    FROM CMM0056M T1 JOIN (
+          SELECT s1.EMPLY_ID, s1.IS_EXCLUDE  ,s2.EMPLY_TYPE_CODE
+          FROM CMM0056M  s1 JOIN CMM0006T s2
+                  ON s1.EMPLY_ID=s2.EMPLY_ID
+                      AND s1.TASK_ID=s2.COMM_TASK_ID
+                      AND s2.IS_EXCLUDE=0
+          WHERE s1.TASK_ID= #{taskId}
+            <if test="emplyCd != null and emplyCd != ''">
+                  AND s1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+              </if>
+              <if test="codeId != null and codeId != ''">
+                 AND s2.EMPLY_TYPE_ID = #{codeId}
+                </if>
+        )T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+        LEFT OUTER JOIN CMM0056M T3
+        ON T1.TASK_ID-1=T3.TASK_ID AND T1.EMPLY_ID=T3.EMPLY_ID
+    WHERE T1.TASK_ID=#{taskId} AND T1.GRP_NAME IS NOT NULL
+    <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0060T" parameterType="Map" resultType="integer">
+        SELECT
+            COUNT(*)
+        FROM CMM0060M t1 JOIN (
+                SELECT
+                    a.RUN_ID
+                FROM CMM0060M a JOIN cmm0006t b
+                    on a.EMPLY_ID = b.EMPLY_ID
+                        AND a.TASK_ID=b.COMM_TASK_ID
+                        AND b.IS_EXCLUDE=0
+                WHERE a.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+                    and b.EMPLY_TYPE_ID= #{codeId}
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                    and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
+                </if>
+            )t2
+            ON t1.RUN_ID = t2.RUN_ID
+        WHERE t1.TASK_ID=#{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND t2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+
+    <select id="selectCMM0060T" parameterType="Map" resultType="EgovMap">
+	    SELECT
+			NVL(t1.RUN_ID, '0')  RUN_ID,
+			NVL(t1.TASK_ID,'0')  TASK_ID,
+			NVL(t2.EMPLY_CODE,'0')  EMPLY_CODE,
+			NVL(t2.EMPLY_ID,'0')  EMPLY_ID,
+			NVL(t1.M_RANK,'0')  M_RANK,
+			NVL(t1.Q_RANK,'0')  Q_RANK,
+			NVL(t1.Y_RANK,'0')  Y_RANK,
+			NVL(t1.OUTRGT,'0')  OUTRGT,
+			NVL(t1.INSTLMT,'0')  INSTLMT,
+			NVL(t1.RENTAL,'0')  RENTAL,
+			NVL(t1.OUTRIGHT_PLUS, '0')  OUTRIGHT_PLUS,
+			NVL(t1.PV,'0')  PV,
+			NVL(t1.TOT,'0')  TOT,
+			NVL(t1.PV_YEAR,'0')  PV_YEAR,
+			NVL(t1.PV_MONTH,'0')  PV_MONTH,
+			NVL(t1.DEPT_CODE,'-')  DEPT_CODE,
+			NVL(t1.GRP_CODE,'-')  GRP_CODE,
+			NVL(t1.ORG_CODE,'-')  ORG_CODE,
+			t2.IS_EXCLUDE,
+			t2.ORG_TYPE_CODE
+		FROM CMM0060M t1 JOIN (
+		        SELECT
+		            a.RUN_ID,
+		            b.EMPLY_CODE,
+		            b.EMPLY_ID,
+		            case when (a.IS_EXCLUDE is null) then 0 else a.IS_EXCLUDE  end IS_EXCLUDE,
+		            case when b.emply_type_id=1  and b.emply_lev = 4 and  EMPLY_LEV_RANK = 'PRO' then 'FULL TIME'
+				        when b.emply_type_id=1  and b.emply_lev = 4 and  EMPLY_LEV_RANK = 'ACT' then 'PART TIME'
+				        when b.emply_type_id=1  and b.emply_lev = 3 then 'HM'
+				        when b.emply_type_id=1  and b.emply_lev = 2 then 'SM'
+				        when b.emply_type_id=1  and b.emply_lev = 1 then 'GM'
+				    end ORG_TYPE_CODE
+		        FROM CMM0060M a JOIN cmm0006t b
+		            on a.EMPLY_ID = b.EMPLY_ID
+		                AND a.TASK_ID=b.COMM_TASK_ID
+		                AND b.IS_EXCLUDE=0
+		        WHERE a.TASK_ID=#{taskId}
+				<if test="codeId != null and codeId != ''">
+				    and b.EMPLY_TYPE_ID= #{codeId}
+				</if>
+				<if test="emplyCd != null and emplyCd != ''">
+				    and b.EMPLY_CODE LIKE  '%'|| #{emplyCd} ||'%'
+				</if>
+		    )t2
+		    ON t1.RUN_ID = t2.RUN_ID
+	    WHERE t1.TASK_ID=#{taskId}
+	    <if test="useYnCombo != null and useYnCombo != ''">
+	      AND t2.IS_EXCLUDE = #{useYnCombo}
+	    </if>
+		ORDER BY t1.M_RANK
+    </select>
+
+    <select id="cntCMM0067T" parameterType="Map" resultType="integer">
+        SELECT COUNT(*)
+		FROM CMM0067T T1 JOIN (
+		    SELECT T1.RUN_ID , NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		    FROM CMM0067T T1
+		        JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+		            AND T1.TASK_ID=T2.COMM_TASK_ID
+		            AND T2.IS_EXCLUDE=0
+		    WHERE T1.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+		        AND T2.EMPLY_TYPE_ID= #{codeId}
+		        </if>
+		        <if test="emplyCd != null and emplyCd != ''">
+		        AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		        </if>
+		    )T2 ON T1.RUN_ID=T2.RUN_ID
+		WHERE T1.TASK_ID=#{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+		    AND T2.IS_EXCLUDE= #{useYnCombo}
+		    </if>
+    </select>
+    <select id="selectCMM0067T" parameterType="Map" resultType="EgovMap">
+        SELECT
+		    T1.TASK_ID,
+		    T1.GRP_NAME,
+		    T1.EMPLY_CODE,
+		    T1.EMPLY_ID,
+		    T1.NEO_CNT,
+		    T1.TOT,
+		    T1.OUTRGT,
+		    T1.INSTLMT,
+		    T1.RENTAL,
+		    T1.PV,
+		    T1.PV_YEAR,
+		    T1.PV_MONTH,
+		    T1.DEPT_CODE,
+		    T1.GRP_CODE,
+		    T1.ORG_CODE,
+		    T2.IS_EXCLUDE,
+		    T1.RUN_ID
+		FROM CMM0067T T1 JOIN (
+		    SELECT T1.RUN_ID , NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+            FROM CMM0067T T1
+                JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+                    AND T1.TASK_ID=T2.COMM_TASK_ID
+                    AND T2.IS_EXCLUDE=0
+            WHERE T1.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+                AND T2.EMPLY_TYPE_ID= #{codeId}
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+            )T2 ON T1.RUN_ID=T2.RUN_ID
+        WHERE T1.TASK_ID=#{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE= #{useYnCombo}
+            </if>
+		ORDER BY T1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0068T" parameterType="Map" resultType="integer">
+        SELECT COUNT(*)
+		FROM CMM0068T T1 JOIN (
+		        SELECT T1.RUN_ID, NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		        FROM CMM0068T T1
+		            JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+		                AND T1.TASK_ID=T2.COMM_TASK_ID
+		                AND T2.IS_EXCLUDE=0
+		        WHERE T1.TASK_ID = #{taskId}
+                    <if test="codeId != null and codeId != ''">
+		            AND T2.EMPLY_TYPE_ID = #{codeId}
+		            </if>
+		            <if test="emplyCd != null and emplyCd != ''">
+		            AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		            </if>
+		    )T2 ON T1.RUN_ID=T2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+		    AND T2.IS_EXCLUDE = #{useYnCombo}
+		    </if>
+    </select>
+    <select id="selectCMM0068T" parameterType="Map" resultType="EgovMap">
+        SELECT
+		    T1.RUN_ID,
+		    T1.TASK_ID,
+		    T1.GRP_NAME,
+		    T1.EMPLY_CODE,
+		    T1.EMPLY_ID,
+		    T1.TOT,
+		    T1.OUTRGT,
+		    T1.INSTLMT,
+		    T1.RENTAL,
+		    T1.PV,
+		    T1.PV_YEAR,
+		    T1.PV_MONTH,
+		    T1.DEPT_CODE,
+		    T1.GRP_CODE,
+		    T1.ORG_CODE,
+		    T2.IS_EXCLUDE
+		FROM CMM0068T T1 JOIN (
+		        SELECT T1.RUN_ID, NVL(T1.IS_EXCLUDE,0) IS_EXCLUDE
+		        FROM CMM0068T T1
+		            JOIN CMM0006T T2 ON T1.EMPLY_ID=T2.EMPLY_ID
+		                AND T1.TASK_ID=T2.COMM_TASK_ID
+		                AND T2.IS_EXCLUDE=0
+		        WHERE T1.TASK_ID = #{taskId}
+                    <if test="codeId != null and codeId != ''">
+                    AND T2.EMPLY_TYPE_ID = #{codeId}
+                    </if>
+                    <if test="emplyCd != null and emplyCd != ''">
+                    AND T1.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                    </if>
+            )T2 ON T1.RUN_ID=T2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+            <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+            </if>
+        ORDER BY T1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0069T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*)
+        FROM CMM0069T T1 JOIN (
+                SELECT A.RUN_ID , NVL(A.IS_EXCLUDE,'0') IS_EXCLUDE, A.TASK_ID
+                FROM CMM0069T A JOIN CMM0006T B
+                    ON A.TASK_ID=B.COMM_TASK_ID
+                        AND A.EMPLY_ID=B.EMPLY_ID
+                        AND B.IS_EXCLUDE = 0
+                WHERE A.TASK_ID = #{taskId}
+                <if test="codeId != null and codeId != ''">
+                    AND B.EMPLY_TYPE_ID = #{codeId}
+                </if>
+                <if test="emplyCd != null and emplyCd != ''">
+                    AND B.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+            ) T2 ON T1.RUN_ID=T2.RUN_ID AND T1.TASK_ID=T2.TASK_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+          AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0069T" parameterType="Map" resultType="EgovMap">
+		SELECT
+		    T1.GRP_NAME,
+		    T1.EMPLY_CODE,
+		    T1.EMPLY_ID,
+		    T1.SPONS_CODE,
+		    T1.OUTRGT,
+		    T1.INSTLMT,
+		    T1.RENTAL,
+		    T1.OUTRGT_PLUS,
+		    T1.TOT,
+		    T1.NN_UNIT,
+		    T1.DEPT_CODE,
+		    T2.IS_EXCLUDE,
+		    T1.TASK_ID,
+		    T1.RUN_ID
+		FROM CMM0069T T1 JOIN (
+		        SELECT A.RUN_ID , NVL(A.IS_EXCLUDE,'0') IS_EXCLUDE, A.TASK_ID
+		        FROM CMM0069T A JOIN CMM0006T B
+			        ON A.TASK_ID=B.COMM_TASK_ID
+			          AND A.EMPLY_ID=B.EMPLY_ID
+			          AND B.IS_EXCLUDE = 0
+		        WHERE A.TASK_ID = #{taskId}
+		        <if test="codeId != null and codeId != ''">
+			        AND B.EMPLY_TYPE_ID = #{codeId}
+			    </if>
+			    <if test="emplyCd != null and emplyCd != ''">
+			        AND B.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+			    </if>
+		    ) T2 ON T1.RUN_ID=T2.RUN_ID AND T1.TASK_ID=T2.TASK_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+		  AND T2.IS_EXCLUDE = #{useYnCombo}
+		</if>
+		ORDER BY T1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0070T" parameterType="Map" resultType="integer">
+	    SELECT COUNT(*)
+	    FROM CMM0070T T1 JOIN (
+                SELECT A.RUN_ID ,A.TASK_ID, NVL(A.IS_EXCLUDE,0) IS_EXCLUDE
+                FROM CMM0070T A JOIN CMM0006T B
+                    ON A.TASK_ID = B.COMM_TASK_ID
+                        AND A.EMPLY_ID = B.EMPLY_ID
+                        <![CDATA[ AND B.IS_EXCLUDE <> 1 ]]>
+                WHERE A.TASK_ID = #{taskId}
+                <if test="emplyCd != null and emplyCd != ''">
+                    AND A.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+                    AND B.EMPLY_TYPE_ID = #{codeId}
+                </if>
+            ) T2 ON T1.TASK_ID=T2.TASK_ID AND T1.RUN_ID=T2.RUN_ID
+        WHERE T1.TASK_ID = #{taskId}
+        <if test="useYnCombo != null and useYnCombo != ''">
+            AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+    </select>
+    <select id="selectCMM0070T" parameterType="Map" resultType="EgovMap">
+	    SELECT
+			T1.GRP_NAME
+			,T1.EMPLY_CODE
+			,T1.EMPLY_ID
+			,T1.POS_ITM_ID
+			,T1.POS_ID
+			,T1.POS_ITM_STOCK_ID
+			,T1.STK_DESC
+			,T1.STK_CODE
+			,T1.POS_ITM_QTY
+			,T1.POS_ITM_UNIT_PRC
+			,T1.POS_ITM_TOT
+			,T1.POS_ITM_CHRG
+			,T1.POS_ITM_TXS
+			,T1.RCV_STUS_ID
+			,T1.POS_TYPE_ID
+			,T1.POS_MODULE_TYPE_ID
+			,T2.IS_EXCLUDE
+			,T1.RUN_ID
+			,T1.TASK_ID
+		FROM CMM0070T T1 JOIN (
+		        SELECT A.RUN_ID ,A.TASK_ID, NVL(A.IS_EXCLUDE,0) IS_EXCLUDE
+		        FROM CMM0070T A JOIN CMM0006T B
+		            ON A.TASK_ID = B.COMM_TASK_ID
+		                AND A.EMPLY_ID = B.EMPLY_ID
+		                <![CDATA[ AND B.IS_EXCLUDE <> 1 ]]>
+		        WHERE A.TASK_ID = #{taskId}
+		        <if test="emplyCd != null and emplyCd != ''">
+		            AND A.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+                </if>
+                <if test="codeId != null and codeId != ''">
+		            AND B.EMPLY_TYPE_ID = #{codeId}
+                </if>
+		    ) T2 ON T1.TASK_ID=T2.TASK_ID AND T1.RUN_ID=T2.RUN_ID
+		WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+		    AND T2.IS_EXCLUDE = #{useYnCombo}
+        </if>
+        ORDER BY T1.EMPLY_CODE
+    </select>
+
+    <select id="cntCMM0071T" parameterType="Map" resultType="integer">
+    SELECT COUNT(*)
+	FROM CMM0071T T1 JOIN (
+		    SELECT
+		        A.RUN_ID, A.TASK_ID, NVL(A.IS_EXCLUDE,0) IS_EXCLUDE
+		    FROM CMM0071T A JOIN CMM0006T B
+		        ON A.TASK_ID=B.COMM_TASK_ID
+		            AND A.EMPLY_CODE=B.EMPLY_ID
+		            <![CDATA[ AND B.IS_EXCLUDE <> 1 ]]>
+		    WHERE A.TASK_ID=#{taskId}
+                <if test="codeId != null and codeId != ''">
+		          AND B.EMPLY_TYPE_ID=#{codeId}
+		        </if>
+		        <if test="emplyCd != null and emplyCd != ''">
+		          AND A.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+		        </if>
+		)T2 ON T1.RUN_ID=T2.RUN_ID AND T1.TASK_ID=T2.TASK_ID
+	WHERE T1.TASK_ID = #{taskId}
+		<if test="useYnCombo != null and useYnCombo != ''">
+		   AND T2.IS_EXCLUDE = #{useYnCombo}
+	    </if>
+    </select>
+    <select id="selectCMM0071T" parameterType="Map" resultType="EgovMap">
+	    SELECT
+            T1.GRP_NAME,
+			T1.EMPLY_CODE,
+			T1.EMPLY_ID,
+			T1.DOCENTRY,
+			T1.REQDATE,
+			T1.REQPERNM,
+			T1.REQDEPTNM,
+			T1.DOCDATE,
+			T1.ACCTCODE,
+			T1.ACCTNAME,
+			T1.AMT,
+			T1.VATAMT,
+			T1.VAT_NON,
+			T1.TAMT,
+			T1.VATCODE,
+			T1.DIMENSION1,
+			T2.IS_EXCLUDE,
+			T1.TASK_ID,
+			T1.RUN_ID
+	    FROM CMM0071T T1 JOIN (
+	            SELECT
+	                A.RUN_ID, A.TASK_ID, NVL(A.IS_EXCLUDE,0) IS_EXCLUDE
+	            FROM CMM0071T A JOIN CMM0006T B
+	                ON A.TASK_ID=B.COMM_TASK_ID
+	                    AND A.EMPLY_CODE=B.EMPLY_ID
+	                    <![CDATA[ AND B.IS_EXCLUDE <> 1 ]]>
+	            WHERE A.TASK_ID=#{taskId}
+	                <if test="codeId != null and codeId != ''">
+	                  AND B.EMPLY_TYPE_ID=#{codeId}
+	                </if>
+	                <if test="emplyCd != null and emplyCd != ''">
+	                  AND A.EMPLY_CODE LIKE '%'|| #{emplyCd} ||'%'
+	                </if>
+	        )T2 ON T1.RUN_ID=T2.RUN_ID AND T1.TASK_ID=T2.TASK_ID
+	    WHERE T1.TASK_ID = #{taskId}
+	        <if test="useYnCombo != null and useYnCombo != ''">
+	           AND T2.IS_EXCLUDE = #{useYnCombo}
+	        </if>
+	    ORDER BY T1.EMPLY_CODE
+    </select>
+    <!-- ########################################################## -->
+    <!-- 												Is Exclude Update													-->
+    <!-- ########################################################## -->
+
+    <update id="udtDataCMM0006T" parameterType="Map">
+        UPDATE CMM0006T SET IS_EXCLUDE = #{isExclude}
+        WHERE COMM_TASK_ID= #{taskid}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0007T" parameterType="Map">
+        UPDATE CMM0007T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0008T" parameterType="Map">
+        UPDATE CMM0008T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0009T" parameterType="Map">
+        UPDATE CMM0009T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0010T" parameterType="Map">
+        UPDATE CMM0010T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0011T" parameterType="Map">
+        UPDATE CMM0011T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RCORD_ID=#{rcordId}
+    </update>
+
+    <update id="udtDataCMM0012T" parameterType="Map">
+        UPDATE CMM0012T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0013T" parameterType="Map">
+        UPDATE CMM0013T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0014T" parameterType="Map">
+        UPDATE CMM0014T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0015T" parameterType="Map">
+        UPDATE CMM0015T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0017T" parameterType="Map">
+        UPDATE CMM0017T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0018T" parameterType="Map">
+        UPDATE CMM0018T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0019T" parameterType="Map">
+        UPDATE CMM0019T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0020T" parameterType="Map">
+        UPDATE CMM0020T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0021T" parameterType="Map">
+        UPDATE CMM0021T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0022T" parameterType="Map">
+        UPDATE CMM0022T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND BILL_RUN_ID=#{runid}
+    </update>
+
+    <update id="udtDataCMM0023T" parameterType="Map">
+        UPDATE CMM0023T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0026T" parameterType="Map">
+        UPDATE CMM0056M SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0060T" parameterType="Map">
+        UPDATE CMM0060M SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0067T" parameterType="Map">
+        UPDATE CMM0067T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0068T" parameterType="Map">
+        UPDATE CMM0068T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0069T" parameterType="Map">
+        UPDATE CMM0069T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0070T" parameterType="Map">
+        UPDATE CMM0070T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <update id="udtDataCMM0071T" parameterType="Map">
+        UPDATE CMM0071T SET IS_EXCLUDE = #{isExclude}
+        WHERE TASK_ID= #{taskId}
+        AND RUN_ID=#{runId}
+    </update>
+
+    <select id="adjustmentCodeList" parameterType="Map" resultType="EgovMap">
+    <![CDATA[
+	    SELECT
+	        CODE_ID, CODE, CODE_NAME, CODE_DESC
+	    FROM SYS0013M
+	    WHERE CODE_MASTER_ID=#{mstId}
+	    AND CODE_ID <> '1157'
+	  ]]>
+    </select>
+
+    <select id="memberInfoSearch" parameterType="Map" resultType="Map">
+        SELECT
+            MEM_ID memId,
+            MEM_CODE memCode
+        FROM ORG0001D
+        WHERE MEM_CODE=#{memCode} AND ROWNUM=1
+    </select>
+
+    <select id="ordNoInfoSearch" parameterType="Map" resultType="Map">
+	    SELECT
+			SALES_ORD_ID ordId,
+			SALES_ORD_NO ordNo
+		FROM SAL0001D
+		WHERE SALES_ORD_NO=#{ordNo}
+		AND ROWNUM=1
+   </select>
+
+   <insert id="adjustmentInsert" parameterType="Map">
+	   INSERT INTO CMM0026T(ID,TASK_ID,ORD_ID,AYEAR,AMONTH,EMPLY_ID,A_TYPE_ID,PRC,TYPE_DESC,UPD_USER_ID,UPD_DT)
+	       VALUES(CMM0026T_ID_SEQ.nextval, #{taskId}, #{ordId}, #{aYear}, #{aMonth},#{memId}, #{adjustmentType}, #{adjustmentAmt}, #{adjustmentDesc}, #{loginId}, sysdate)
+   </insert>
+
+   <delete id="neoProDel" parameterType="Map">
+        DELETE FROM ORG0011D
+        WHERE PV_MONTH =#{pvMonth} and PV_YEAR = #{pvYear}
+    </delete>
+
+   <insert id="neoProInsert" parameterType="Map">
+       INSERT INTO ORG0011D(HP_CODE, HP_TYPE, PV_MONTH, PV_YEAR, USER_ADD, DT_ADD, JOIN_DT, IS_NW, HP_RANK_ID)
+           VALUES(#{hpCode},#{hpType},#{pvMonth},#{pvYear},#{loginId},sysdate,to_date(#{joinDt},'yyyy-mm-dd'),#{isNw},ORG0011D_HP_RANK_ID_SEQ.nextval)
+   </insert>
+
+   <delete id="ctUploadDel" parameterType="Map">
+        DELETE FROM CMM0002D
+        WHERE F_MONTH =#{fMonth} and F_YEAR = #{fYear}
+   </delete>
+
+   <insert id="ctUploadInsert" parameterType="Map">
+       INSERT INTO CMM0002D(ID, F_BATCH_ID, F_CT_CODE, F_CT_RANK, F_CT_PER_FAC, F_CFF_CMPLMT, F_CFF_CMPLNT, F3C, F_ATT_LAT, F_ATT_EL, F_ATT_MC, F_DT_ALLOW, F_ADJ, F_CFF_REWRD, F_YEAR, F_MONTH)
+           VALUES(CMM0002D_ID_SEQ.nextval, #{fBatchId}, #{fCtCode}, #{fCtRank}, #{fCtPerFac}, #{fCffCmplmt}, #{fCffCmplnt}, #{f3c}, #{fAttLat}, #{fAttEl}, #{fAttMc}, #{fDtAllow}, #{fAdj}, #{fCffRewrd}, #{fYear}, #{fMonth})
+   </insert>
+
+   <select id="incentiveStatus" parameterType="Map" resultType="EgovMap">
+        SELECT B.STUS_CODE_ID ,C.CODE ,C.NAME CODE_NAME ,B.SEQ_NO ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
+        FROM SYS0036M A ,SYS0037M B ,SYS0038M C
+        WHERE
+            A.STUS_CTGRY_ID = B.STUS_CTGRY_ID
+	        AND B.STUS_CODE_ID = C.STUS_CODE_ID
+	        AND A.STUS_CTGRY_ID = #{statusId}
+        ORDER BY B.SEQ_NO
+   </select>
+
+   <select id="incentiveType" resultType="EgovMap">
+        SELECT
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE T2.CODE_ID IN (1,2,7)
+        ORDER BY T2.CODE
+   </select>
+
+   <select id="incentiveTargetList" parameterType="Map" resultType="EgovMap">
+	    SELECT
+	        t1.UPLOAD_ID AS UPLOAD_ID,
+	        t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+	        t1.STUS_ID AS STUS_ID,
+	        to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+	        to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+	        t1.CRT_USER_ID AS CRT_USER_ID,
+	        to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+	        t1.UPD_USER_ID AS UPD_USER_ID,
+	        t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+	        t2.CODE AS CODE,
+	        t2.NAME AS NAME,
+	        t3.CODE_NAME AS CODE_NAME,
+	        t4.CODE_NAME AS CODENAME1,
+	        CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+	        CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+	    FROM  CMM0003D  t1
+	        JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+	        JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+	        JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+	        LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+	        LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+	    WHERE 1=1
+	    <if test="uploadId != null and uploadId != ''">
+	       AND t1.UPLOAD_ID= #{uploadId}
+	    </if>
+	    <if test="statusList != null and statusList != ''">
+	       AND t1.STUS_ID IN (${statusList})
+	    </if>
+	    <if test="typeList != null and typeList != ''">
+	          AND t1.UPLOAD_TYPE_ID IN (${typeList})
+	       </if>
+	       <if test="actionDate != null and actionDate != ''">
+	           AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+	       </if>
+	       <if test="uploadDateFr != null and uploadDateFr != ''">
+	           <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+	       </if>
+	       <if test="uploadDateTo != null and uploadDateTo != ''">
+
+	          <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+	       </if>
+	       <if test="creator != null and creator != ''">
+	           AND t6.USER_NAME = #{creator}
+	       </if>
+	       <if test="memberTypeList != null and memberTypeList != ''">
+	          AND t1.MEM_TYPE_ID IN (${memberTypeList})
+	       </if>
+		ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+   <select id="incentiveSample" parameterType="Map" resultType="EgovMap">
+	   SELECT
+		    t1.CODE_ID AS CODE_ID,
+		    t1.CODE_MASTER_ID AS CODE_MASTER_ID,
+		    t1.CODE AS CODE,
+		    t1.CODE_NAME AS CODE_NAME,
+		    t1.CODE_DESC AS TYPE_DESC,
+		    t1.CRT_USER_ID,
+		    t1.DISAB,
+		    t1.UPD_USER_ID
+	    FROM SYS0013M  t1
+	    WHERE t1.CODE_MASTER_ID = #{mstId}
+	      AND ((CASE WHEN (t1.DISAB IS NOT NULL) THEN t1.DISAB ELSE (0) END) = 0)
+	ORDER BY t1.CODE ASC
+   </select>
+
+   <select id="cntUploadBatch" parameterType="Map" resultType="integer">
+		SELECT
+		   COUNT(*)
+		FROM (
+			SELECT *
+			FROM      CMM0003D  t1
+				INNER JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+				INNER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+				INNER JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+				LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+				LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+			WHERE 1=1
+			    <if test="statusId != null and statusId != ''">
+	            AND t1.STUS_ID = #{statusId}
+	            </if>
+	            <if test="cmbType != null and cmbType != ''">
+				AND t1.UPLOAD_TYPE_ID = #{cmbType}
+				</if>
+				<if test="cmbMemberType != null and cmbMemberType != ''">
+				AND t1.MEM_TYPE_ID = #{cmbMemberType}
+				</if>
+		)   sub
+   </select>
+
+   <insert id="insertIncentiveMaster" parameterType="Map" >
+    INSERT INTO CMM0003D (UPLOAD_ID, UPLOAD_TYPE_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+    VALUES (CMM0003D_UPLOAD_ID_SEQ.nextval, ${uploadID}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+
+   <select id="selectUploadId" parameterType="Map" resultType="String">
+        SELECT MAX(UPLOAD_ID) FROM CMM0003D WHERE ROWNUM > 0
+   </select>
+
+   <insert id="insertIncentiveDetail" parameterType="Map" >
+	    INSERT INTO CMM0004D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+			, USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+			, SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+			, SYS_MEM_TYPE_ID, BONUS_RATE)
+		VALUES(CMM0004D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+		  ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
+		  ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
+		  ,#{sysMemberTypeID}, #{bonusCandyRate})
+   </insert>
+
+   <select id="callIncentiveDetail" parameterType="integer">
+        {
+        call  SP_INCNTIV_TRGET_UP_DET_VERIFY(#{uploadId})
+        }
+    </select>
+
+    <select id="incentiveMasterDetail" parameterType="integer" resultType="Map">
+	    SELECT
+		    t1.UPLOAD_ID AS UPLOAD_ID,
+		    t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+		    t1.STUS_ID AS STUS_ID,
+		    to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+		    t1.CRT_DT AS CRT_DT,
+		    t1.CRT_USER_ID AS CRT_USER_ID,
+		    t1.UPD_DT AS UPD_DT,
+		    t1.UPD_USER_ID AS UPD_USER_ID,
+		    t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+		    t2.CODE AS CODE,
+		    t2.NAME AS NAME,
+		    t3.CODE_NAME AS CODE_NAME,
+		    t4.CODE_NAME AS CODENAME1,
+		    CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+		    CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+	    FROM CMM0003D  t1
+		    JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+		    JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+		    JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+		    LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+		    LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+	    WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="incentiveItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+		  COUNT(*) cnt
+		FROM ( SELECT *
+		    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+		    LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+		    LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+		    WHERE t1.STUS_ID=1
+		      AND t1.UPLOAD_ID = #{uploadId}
+		      <if test="vStusId != null and vStusId != ''">
+		      AND t1.VALID_STUS_ID = #{vStusId}
+		      </if>
+		      <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+		)   sub
+    </select>
+
+    <select id="incentiveItemList" parameterType="Map" resultType="EgovMap">
+
+	  SELECT
+		    t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+		    t1.UPLOAD_ID AS UPLOAD_ID,
+		    t1.VALID_STUS_ID AS VALID_STUS_ID,
+		    t1.VALID_REM AS VALID_REM,
+		    t1.USER_MEM_CODE AS USER_MEM_CODE,
+		    t1.USER_REF_CODE AS USER_REF_CODE,
+		    <!-- t1.USER_TRGET_AMT AS USER_TRGET_AMT, -->
+		    (CASE t3.UPLOAD_TYPE_ID WHEN 7479 THEN TO_CHAR(t1.BONUS_RATE)
+            ELSE TO_CHAR(t1.USER_TRGET_AMT) END) AS USER_TRGET_AMT,
+		    t1.USER_REF_LVL AS USER_REF_LVL,
+		    t1.SYS_MEM_ID AS SYS_MEM_ID,
+		    t1.SYS_REF_CODE AS SYS_REF_CODE,
+		    t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+		    t1.SYS_REF_LVL AS SYS_REF_LVL,
+		    t1.UPD_DT AS UPD_DT,
+		    t1.UPD_USER_ID AS UPD_USER_ID,
+		    t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+		    t2.CODE AS CODE,
+		    CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+		    CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+	    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+	    LEFT JOIN CMM0003D t3 on t1.UPLOAD_ID = t3.UPLOAD_ID
+	    LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+	    LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+	    WHERE  t1.STUS_ID=1
+	        AND t1.UPLOAD_ID = #{uploadId}
+	       <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+		ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <update id="removeIncentiveItem"  parameterType="Map">
+	    UPDATE CMM0004D
+	    SET
+	        STUS_ID = #{statusId},
+	        UPD_DT  = sysdate,
+	        UPD_USER_ID = #{loginId}
+	    WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="incentiveItemAddMem" parameterType="Map" resultType="Map">
+	    SELECT
+			t1.MEM_ID,
+			t1.MEM_CODE,
+			t1.MEM_TYPE,
+			t1.NAME,
+			t1.FULL_NAME,
+			t1.JOIN_DT,
+			t1.RESIGN_DT,
+			t1.TRM_DT,
+			t1.RENEW_DT,
+			t1.AGRMNT_NO,
+			t1.BRNCH,
+			t1.STUS,
+			t1.SYNC_CHK,
+			t1.RANK,
+			t1.TRNSPRT,
+			t1.PROMO_DT,
+			t1.TR_NO,
+			t1.CRT_DT,
+			t1.CRT_USER_ID,
+			t1.UPD_DT,
+			t1.UPD_USER_ID,
+			t1.MEM_IS_OUT_SRC,
+			t1.APLICNT_ID,
+			t1.BIZ_TYPE,
+			t1.HSPTLZ,
+			t1.AREA_ID,
+			t1.ADDR_DTL,
+			t1.STREET
+		FROM ORG0001D t1
+		WHERE t1.MEM_CODE = #{itemMemCd}
+    </select>
+
+    <select id="cntIncentiveMem" parameterType="Map" resultType="integer">
+	    SELECT
+	       COUNT(*) cnt
+	    FROM    CMM0004D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+	        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+	        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+	    WHERE t1.STUS_ID = #{statusId}
+	        AND t1.UPLOAD_ID = #{uploadId}
+	        AND t1.VALID_STUS_ID = #{vStusId}
+	        AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+    <select id="cntUploadMemberCheck" parameterType="Map" resultType="integer">
+	    SELECT
+		COUNT(*) cnt
+		FROM CMM0004D t1
+		WHERE t1.UPLOAD_ID = #{uploadId}
+		  AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+    <select id="incentiveUploadMember" parameterType="Map" resultType="Map">
+        SELECT
+			t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+			t1.UPLOAD_ID AS UPLOAD_ID,
+			t1.STUS_ID AS STUS_ID,
+			t1.VALID_STUS_ID AS VALID_STUS_ID,
+			t1.VALID_REM AS VALID_REM,
+			t1.USER_MEM_CODE AS USER_MEM_CODE,
+			t1.USER_REF_CODE AS USER_REF_CODE,
+			t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+			t1.USER_REF_LVL AS USER_REF_LVL,
+			t1.SYS_MEM_ID AS SYS_MEM_ID,
+			t1.SYS_REF_CODE AS SYS_REF_CODE,
+			t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+			t1.SYS_REF_LVL AS SYS_REF_LVL,
+			t1.UPD_DT AS UPD_DT,
+			t1.UPD_USER_ID AS UPD_USER_ID,
+			t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID
+		FROM CMM0004D t1
+		WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+    <insert  id="incentiveItemInsert" parameterType="Map">
+	    INSERT INTO CMM0004D
+			(UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+			, USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+			, SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+			, SYS_MEM_TYPE_ID)
+		VALUES
+		   (CMM0004D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+		   , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemRCd}, #{hiddenMemberID}
+		   , #{itemRCd}, #{itemTAmt}, #{itemLvl}, sysdate, #{loginId}
+		   , #{hiddenMemberTypeID})
+    </insert>
+
+    <update id="incentiveItemUpdate" parameterType="Map">
+	    UPDATE CMM0004D
+		SET
+		   VALID_STUS_ID = #{vStatusId},
+		   VALID_REM = '',
+		   USER_REF_CODE = #{itemRCd},
+		   USER_TRGET_AMT = #{itemTAmt},
+		   USER_REF_LVL = #{itemRCd},
+		   SYS_REF_CODE = #{itemRCd},
+		   SYS_TRGET_AMT = #{itemTAmt},
+		   SYS_REF_LVL = #{itemRCd},
+		   UPD_DT = sysdate,
+		   UPD_USER_ID = #{loginId}
+		WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+    <select id="deactivateCheck" parameterType="String" resultType="integer">
+	    SELECT COUNT(*) FROM CMM0003D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <update id="incentiveDeactivate" parameterType="Map">
+	    UPDATE CMM0003D
+		SET
+	        STUS_ID = #{statusId},
+	        UPD_DT = sysdate,
+	        UPD_USER_ID = #{loginId}
+		WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callIncentiveConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+     <!-- ########################################################## -->
+     <!--                                           Simulation calculation                                              -->
+     <!-- ########################################################## -->
+    <select id="cntCMM0028T" parameterType="Map" resultType="integer">
+        SELECT
+          count(*) cnt
+        FROM CMM0028T T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="selectCMM0028TCT" parameterType="Map" resultType="EgovMap">
+        SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+          nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
+          nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
+          nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14
+        FROM CMM0028T T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0028TCD" parameterType="Map" resultType="EgovMap">
+        SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+          nvl(V1,'0') v1,nvl(V2,'0') v2,nvl(V3,'0') v3,nvl(V4,'0') v4,nvl(V5,'0') v5,
+          nvl(V6,'0') v6,nvl(V7,'0') v7,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V10,'0') v10,
+          nvl(V11,'0') v11,nvl(V12,'0') v12,nvl(V13,'0') v13,nvl(V14,'0') v14,nvl(V15,'0') v15,
+          nvl(V16,'0') v16,nvl(V17,'0') v17,nvl(V18,'0') v18,nvl(V19,'0') v19,nvl(V20,'0') v20,
+          nvl(V21,'0') v21,nvl(V22,'0') v22,nvl(V23,'0') v23,nvl(V24,'0') v24,nvl(V25,'0') v25,
+          nvl(V26,'0') v26,nvl(V27,'0') v27,nvl(V29,'0') v29,nvl(V30,'0') v30,
+          nvl(V31,'0') v31,nvl(V32,'0') v32,nvl(V33,'0') v33
+        FROM CMM0028T T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0028THP" parameterType="Map" resultType="EgovMap">
+        SELECT
+          T1.TASK_ID,T1.RUN_ID,T1.EMPLY_ID,T4.EMPLY_CODE ,T2.MEM_TYPE MEM_TYPE,
+          nvl(V1,'0') v1,nvl(V8,'0') v8,nvl(V9,'0') v9,nvl(V13,'0') v13,nvl(V14,'0') v14,
+          nvl(V15,'0') v15,nvl(V16,'0') v16,nvl(V17,'0') v17,nvl(V18,'0') v18,nvl(V19,'0') v19,
+          nvl(V20,'0') v20, nvl(V21,'0') v21,nvl(V22,'0') v22,nvl(V24,'0') v24,nvl(V25,'0') v25,
+          nvl(V26,'0') v26,nvl(V27,'0') v27,nvl(V28,'0') v28
+        FROM CMM0028T T1 JOIN ORG0001D T2
+              ON T1.EMPLY_ID = T2.MEM_ID
+          JOIN SYS0013M T3
+              ON T2.MEM_TYPE = T3.CODE_ID
+          JOIN CMM0006T T4
+              ON T1.EMPLY_ID= T4.EMPLY_ID
+                  AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+          AND T3.CODE = #{codeGruop}
+          AND T4.EMPLY_LEV = #{emplyLev}
+          <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="cntCMM0029T" parameterType="Map" resultType="integer">
+        SELECT
+            count(*) cnt
+        FROM CMM0029T T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="selectCMM0029TCT" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R6,'0') r6,nvl(T1.R7 ,'0') r7,nvl(T1.R8 ,'0') r8
+        FROM CMM0029T T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0029TCD" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3 ,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R6,'0') r6,nvl(T1.R7,'0') r7,nvl(T1.R8,'0') r8,nvl(T1.R10,'0') r10,nvl(T1.R11,'0')r11,
+            nvl(T1.R13,'0') r13,nvl(T1.R18,'0') r18,nvl(T1.R19,'0') r19,nvl(T1.R20,'0') r20, nvl(T1.R21,'0') r21,
+            nvl(T1.R22,'0') r22,nvl(T1.R23,'0') r23,nvl(T1.R24,'0') r24,nvl(T1.R26,'0') r26,nvl(T1.R27,'0') r27,
+            nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,
+            nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,nvl(T1.R36,'0') r36,nvl(T1.R38,'0') r38,
+            nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,nvl(T1.R99,'0') r99
+        FROM CMM0029T T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+    <select id="selectCMM0029THP" parameterType="Map" resultType="EgovMap">
+        SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+            nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
+            nvl(T1.R13,'0') r13,nvl(T1.R18,'0') r18,nvl(T1.R19,'0') r19,nvl(T1.R20,'0') r20,nvl(T1.R21,'0') r21,
+            nvl(T1.R22,'0') r22,nvl(T1.R25,'0') r25,nvl(T1.R28,'0') r28,nvl(T1.R29,'0') r29,nvl(T1.R30,'0') r30,
+            nvl(T1.R31,'0') r31,nvl(T1.R32,'0') r32,nvl(T1.R33,'0') r33,nvl(T1.R34,'0') r34,nvl(T1.R35,'0') r35,
+            nvl(T1.R36,'0') r36,nvl(T1.R39,'0') r39,nvl(T1.R40,'0') r40,nvl(T1.R41,'0') r41,nvl(T1.R42,'0') r42,
+            nvl(T1.R99,'0') r99
+        FROM CMM0029T T1 JOIN ORG0001D T2
+                ON T1.EMPLY_ID = T2.MEM_ID
+            JOIN SYS0013M T3
+                ON T2.MEM_TYPE = T3.CODE_ID
+            JOIN CMM0006T T4
+                ON T1.EMPLY_ID= T4.EMPLY_ID
+                     AND T4.COMM_TASK_ID = #{taskId}
+        WHERE T1.TASK_ID = #{taskId}
+            AND T3.CODE = #{codeGruop}
+            AND T4.EMPLY_LEV = #{emplyLev}
+            <if test="memberCd != null and memberCd != ''">
+              AND T4.EMPLY_CODE LIKE '%'|| #{memberCd} ||'%'
+          </if>
+    </select>
+
+    <select id="runningPrdCheck"  parameterType="Map" resultType="EgovMap">
+        SELECT
+            A.CAL_SEQ,
+            C.CD,
+            A.CAL_NAME,
+            A.CAL_STATE,
+            A.CAL_START_TIME,
+            A.CAL_END_TIME,
+            to_char(to_date(A.CAL_YEAR_MONTH,'mmyyyy'),'mm/yyyy') CAL_YEAR_MONTH
+        FROM CMM0053M A
+            JOIN (
+                    SELECT CAL_SEQ,CAL_NAME FROM CMM0053M
+                     WHERE CAL_STATE= #{stateId}
+                         AND CAL_START_TIME BETWEEN SYSDATE-20/(24*60)
+                         AND SYSDATE AND CAL_NAME NOT LIKE 'BS%'
+                     group by CAL_SEQ,CAL_NAME
+                ) B ON A.CAL_SEQ=B.CAL_SEQ
+            JOIN (
+                    SELECT CODE,SUBSTR(CODE,0,2) CD,CODE_NAME FROM SYS0013M
+                    <if test="mstId != null and mstId != ''">
+                      WHERE CODE_MASTER_ID= #{mstId}
+                    </if>
+                ) C ON A.CAL_NAME=C.CODE_NAME
+      <!--   <if test="prdNm != null and prdNm != ''">
+        WHERE A.CAL_NAME = #{prdNm}
+        </if> -->
+    </select>
+
+    <select id="runPrdTimeValid"  parameterType="Map" resultType="EgovMap">
+        SELECT
+            to_char(to_date(A.CAL_YEAR_MONTH,'mmyyyy'),'mm/yyyy') CAL_YEAR_MONTH
+        FROM CMM0053M A
+            JOIN (
+                SELECT  CAL_CODE,MAX(CAL_SEQ) AS CAL_SEQ
+                FROM CMM0053M
+                GROUP BY CAL_CODE
+                ) B ON A.CAL_SEQ=B.CAL_SEQ
+            JOIN (
+                    SELECT CODE,SUBSTR(CODE,0,2) CD,CODE_NAME FROM SYS0013M
+                    <if test="mstId != null and mstId != ''">
+                      WHERE CODE_MASTER_ID= #{mstId}
+                    </if>
+                ) C ON A.CAL_NAME=C.CODE_NAME
+        WHERE c.CD = #{ItemGrCd}
+            and a.CAL_STATE= #{stateId}
+             <![CDATA[ AND sysdate > a.CAL_START_TIME-30/(24*60)]]>
+             AND a.CAL_NAME NOT LIKE 'BS%'
+        group by CAL_YEAR_MONTH
+    </select>
+
+    <insert id="prdBatchSuccessHistory" parameterType="Map">
+        INSERT INTO CMM0005T(TASK_ID, COMM_SYS_ID, COMM_MEM_TYPE_ID, COMM_YEAR, COMM_MONTH, PAY_DT, STUS, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT, IS_CNFM)
+            VALUES(#{taskId}, CMM0005T_COMM_SYS_ID_SEQ.nextval, #{ItemGrCd}, #{year}, #{month}, sysdate, 1, #{loginId}, sysdate,#{loginId},sysdate, 0)
+    </insert>
+
+    <select id="mboTargetList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  CMM0076D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+        <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test="statusList != null and statusList != ''">
+           AND t1.STUS_ID IN (${statusList})
+        </if>
+        <if test="typeList != null and typeList != ''">
+              AND t1.UPLOAD_TYPE_ID IN (${typeList})
+           </if>
+           <if test="actionDate != null and actionDate != ''">
+               AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+           </if>
+           <if test="uploadDateFr != null and uploadDateFr != ''">
+               <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+           </if>
+           <if test="uploadDateTo != null and uploadDateTo != ''">
+
+              <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+           </if>
+           <if test="creator != null and creator != ''">
+               AND t6.USER_NAME = #{creator}
+           </if>
+           <if test="memberTypeList != null and memberTypeList != ''">
+              AND t1.MEM_TYPE_ID IN (${memberTypeList})
+           </if>
+        ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+   <select id="mboActiveUploadBatch" parameterType="Map" resultType="integer">
+            SELECT COUNT(*) FROM CMM0076D  t1
+            WHERE 1=1
+                <if test="statusId != null and statusId != ''">
+                AND t1.STUS_ID = #{statusId}
+                </if>
+                <if test="cmbType != null and cmbType != ''">
+                AND t1.UPLOAD_TYPE_ID = #{cmbType}
+                </if>
+                <if test="cmbMemberType != null and cmbMemberType != ''">
+                AND t1.MEM_TYPE_ID = #{cmbMemberType}
+                </if>
+   </select>
+
+    <insert id="insertMboMaster" parameterType="Map" >
+        INSERT INTO CMM0076D (UPLOAD_ID, UPLOAD_TYPE_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+        VALUES (#{uploadId}, ${uploadTypeID}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+   <insert id="insertMboDetail" parameterType="Map" >
+        INSERT INTO CMM0077D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES(CMM0077D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+          ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
+          ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
+          ,#{sysMemberTypeID})
+   </insert>
+
+   <select id="mboMasterUploadId" resultType="Integer">
+        SELECT CMM0076D_UPLOAD_ID_SEQ.nextval FROM dual
+   </select>
+
+    <select id="callMboDetail" parameterType="integer">
+        {call  SP_MBO_TRGET_UP_DET_VERIFY(#{uploadId})}
+    </select>
+
+    <select id="mboMasterDetail" parameterType="integer" resultType="Map">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            t1.CRT_DT AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+        FROM CMM0076D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="mboItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+          COUNT(*) cnt
+        FROM ( SELECT *
+            FROM    CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+            WHERE t1.STUS_ID=1
+              AND t1.UPLOAD_ID = #{uploadId}
+              <if test="vStusId != null and vStusId != ''">
+              AND t1.VALID_STUS_ID = #{vStusId}
+              </if>
+              <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+              <if test="itemMemCd != null and itemMemCd != ''">
+              AND t1.USER_MEM_CODE = #{itemMemCd}
+              </if>
+        )   sub
+    </select>
+
+    <select id="mboItemList" parameterType="Map" resultType="EgovMap">
+      SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_REF_CODE AS USER_REF_CODE,
+            t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+            t1.USER_REF_LVL AS USER_REF_LVL,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_REF_CODE AS SYS_REF_CODE,
+            t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+            t1.SYS_REF_LVL AS SYS_REF_LVL,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+            CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+        FROM  CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE  t1.STUS_ID=1
+            AND t1.UPLOAD_ID = #{uploadId}
+           <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+            <if test="itemMemCd != null and itemMemCd != ''">
+             AND t1.USER_MEM_CODE = #{itemMemCd}
+            </if>
+        ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <update id="mboDeactivate" parameterType="Map">
+        UPDATE CMM0076D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callMboConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        { call  SP_MBO_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR}) }
+    </select>
+
+        <update id="removeMboItem"  parameterType="Map">
+        UPDATE CMM0077D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="cntMboMem" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*) cnt
+        FROM    CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE t1.STUS_ID = #{statusId}
+            AND t1.UPLOAD_ID = #{uploadId}
+            AND t1.VALID_STUS_ID = #{vStusId}
+            AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+        <select id="cntMboUploadMemberCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt
+        FROM CMM0077D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+      <update id="mboItemUpdate" parameterType="Map">
+        UPDATE CMM0077D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_REF_CODE = #{itemRCd},
+           USER_TRGET_AMT = #{itemTAmt},
+           USER_REF_LVL = #{itemRCd},
+           SYS_REF_CODE = #{itemRCd},
+           SYS_TRGET_AMT = #{itemTAmt},
+           SYS_REF_LVL = #{itemRCd},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+    <insert  id="mboItemInsert" parameterType="Map">
+        INSERT INTO CMM0077D
+            (UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES
+           (CMM0077D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemRCd}, #{hiddenMemberID}
+           , #{itemRCd}, #{itemTAmt}, #{itemLvl}, SYSDATE, #{loginId}
+           , #{hiddenMemberTypeID})
+    </insert>
+
+    <select id="cffList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  CMM0079D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+        <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test="statusList != null and statusList != ''">
+           AND t1.STUS_ID IN (${statusList})
+        </if>
+        <if test="actionDate != null and actionDate != ''">
+           AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+        </if>
+        <if test="uploadDateFr != null and uploadDateFr != ''">
+            <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+        </if>
+        <if test="uploadDateTo != null and uploadDateTo != ''">
+            <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+        </if>
+        <if test="creator != null and creator != ''">
+            AND t6.USER_NAME = #{creator}
+        </if>
+        <if test="memberTypeList != null and memberTypeList != ''">
+            AND t1.MEM_TYPE_ID IN (${memberTypeList})
+         </if>
+        ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+   <select id="cffActiveUploadBatch" parameterType="Map" resultType="integer">
+            SELECT COUNT(*) FROM CMM0079D  t1
+            WHERE 1=1
+                <if test="statusId != null and statusId != ''">
+                AND t1.STUS_ID = #{statusId}
+                </if>
+                <if test="cmbType != null and cmbType != ''">
+                AND t1.UPLOAD_TYPE_ID = #{cmbType}
+                </if>
+                <if test="cmbMemberType != null and cmbMemberType != ''">
+                AND t1.MEM_TYPE_ID = #{cmbMemberType}
+                </if>
+   </select>
+
+    <select id="cffMasterUploadId" resultType="Integer">
+        SELECT CMM0079D_UPLOAD_ID_SEQ.nextval FROM dual
+   </select>
+
+    <insert id="insertCffMaster" parameterType="Map" >
+        INSERT INTO CMM0079D (UPLOAD_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+        VALUES (#{uploadId}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+   <insert id="insertCffDetail" parameterType="Map" >
+        INSERT INTO CMM0080D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_CFF_MARK, SYS_MEM_ID, SYS_CFF_MARK,
+            UPD_DT, UPD_USER_ID, SYS_MEM_TYPE_ID)
+        VALUES(CMM0080D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+          ,#{userMemberCode}, #{userCffMark},#{sysMemberID},#{sysCffMark},SYSDATE,#{updated},#{sysMemberTypeID})
+   </insert>
+
+      <select id="callCffDetail" parameterType="integer">
+        {call  SP_CFF_UP_DET_VERIFY(#{uploadId})}
+    </select>
+
+    <select id="cffMasterDetail" parameterType="integer" resultType="Map">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            t1.CRT_DT AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+        FROM CMM0079D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="cffItemList" parameterType="Map" resultType="EgovMap">
+      SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_CFF_MARK AS USER_CFF_MARK,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_CFF_MARK AS SYS_CFF_MARK,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+            CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+        FROM  CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE  t1.STUS_ID=1
+            AND t1.UPLOAD_ID = #{uploadId}
+           <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+            <if test="itemMemCd != null and itemMemCd != ''">
+             AND t1.USER_MEM_CODE = #{itemMemCd}
+            </if>
+        ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <select id="cffItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+          COUNT(*) cnt
+        FROM ( SELECT *
+            FROM    CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+            WHERE t1.STUS_ID=1
+              AND t1.UPLOAD_ID = #{uploadId}
+              <if test="vStusId != null and vStusId != ''">
+              AND t1.VALID_STUS_ID = #{vStusId}
+              </if>
+              <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+              <if test="itemMemCd != null and itemMemCd != ''">
+              AND t1.USER_MEM_CODE = #{itemMemCd}
+              </if>
+        )   sub
+    </select>
+
+    <select id="cntCffMem" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*) cnt
+        FROM    CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE t1.STUS_ID = #{statusId}
+            AND t1.UPLOAD_ID = #{uploadId}
+            AND t1.VALID_STUS_ID = #{vStusId}
+            AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+    <update id="cffItemUpdate" parameterType="Map">
+        UPDATE CMM0077D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_TRGET_AMT = #{itemMark},
+           SYS_TRGET_AMT = #{itemMark},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+   <insert id="cffItemInsert" parameterType="Map" >
+        INSERT INTO CMM0080D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_CFF_MARK, SYS_MEM_ID, SYS_CFF_MARK,
+            UPD_DT, UPD_USER_ID, SYS_MEM_TYPE_ID)
+        VALUES
+          (CMM0080D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemMark}, #{hiddenMemberID}, #{itemMark}, SYSDATE, #{loginId}, #{hiddenMemberTypeID})
+   </insert>
+
+   <select id="deactivateMboCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0076D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="deactivateCffCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0079D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <update id="cffDeactivate" parameterType="Map">
+        UPDATE CMM0079D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callCffConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        { call  SP_CFF_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR}) }
+    </select>
+
+    <update id="removeCffItem"  parameterType="Map">
+        UPDATE CMM0080D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="nonIncentiveType" resultType="EgovMap">
+        SELECT
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE T2.CODE_ID IN (1,2,7)
+        ORDER BY T2.CODE
+   </select>
+
+   <select id="nonIncentiveSample" parameterType="Map" resultType="EgovMap">
+       SELECT
+            t1.CODE_ID AS CODE_ID,
+            t1.CODE_MASTER_ID AS CODE_MASTER_ID,
+            t1.CODE AS CODE,
+            t1.CODE_NAME AS CODE_NAME,
+            t1.CODE_DESC AS TYPE_DESC,
+            t1.CRT_USER_ID,
+            t1.DISAB,
+            t1.UPD_USER_ID
+        FROM SYS0013M  t1
+        WHERE t1.CODE_MASTER_ID = #{mstId}
+          AND ((CASE WHEN (t1.DISAB IS NOT NULL) THEN t1.DISAB ELSE (0) END) = 0)
+    ORDER BY t1.CODE ASC
+   </select>
+
+   <insert id="insertNonIncentiveMaster" parameterType="Map" >
+    INSERT INTO CMM0104D (UPLOAD_ID, UPLOAD_TYPE_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+    VALUES (CMM0104D_UPLOAD_ID_SEQ.nextval, ${uploadID}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+
+    <select id="selectNonIncentiveUploadId" parameterType="Map" resultType="String">
+        SELECT MAX(UPLOAD_ID) FROM CMM0104D WHERE ROWNUM > 0
+   </select>
+
+   <insert id="insertNonIncentiveDetail" parameterType="Map" >
+        INSERT INTO CMM0105D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES(CMM0105D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+          ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
+          ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
+          ,#{sysMemberTypeID})
+   </insert>
+
+   <select id="callNonIncentiveDetail" parameterType="integer">
+        {
+        call  SP_NON_INCNTIV_UP_DET_VERIFY(#{uploadId})
+        }
+    </select>
+
+    <select id="nonIncentiveTargetList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  CMM0104D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+        <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test="statusList != null and statusList != ''">
+           AND t1.STUS_ID IN (${statusList})
+        </if>
+        <if test="typeList != null and typeList != ''">
+              AND t1.UPLOAD_TYPE_ID IN (${typeList})
+           </if>
+           <if test="actionDate != null and actionDate != ''">
+               AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+           </if>
+           <if test="uploadDateFr != null and uploadDateFr != ''">
+               <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+           </if>
+           <if test="uploadDateTo != null and uploadDateTo != ''">
+
+              <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+           </if>
+           <if test="creator != null and creator != ''">
+               AND t6.USER_NAME = #{creator}
+           </if>
+           <if test="memberTypeList != null and memberTypeList != ''">
+              AND t1.MEM_TYPE_ID IN (${memberTypeList})
+           </if>
+        ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+   <select id="nonIncentiveMasterDetail" parameterType="integer" resultType="Map">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            t1.CRT_DT AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+        FROM CMM0104D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="nonIncentiveItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+          COUNT(*) cnt
+        FROM ( SELECT *
+            FROM    CMM0105D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+            WHERE t1.STUS_ID=1
+              AND t1.UPLOAD_ID = #{uploadId}
+              <if test="vStusId != null and vStusId != ''">
+              AND t1.VALID_STUS_ID = #{vStusId}
+              </if>
+              <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+        )   sub
+    </select>
+
+    <select id="nonIncentiveItemList" parameterType="Map" resultType="EgovMap">
+
+      SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_REF_CODE AS USER_REF_CODE,
+            t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+            t1.USER_REF_LVL AS USER_REF_LVL,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_REF_CODE AS SYS_REF_CODE,
+            t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+            t1.SYS_REF_LVL AS SYS_REF_LVL,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+            CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+        FROM    CMM0105D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE  t1.STUS_ID=1
+            AND t1.UPLOAD_ID = #{uploadId}
+           <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+        ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <select id="nonIncentiveItemAddMem" parameterType="Map" resultType="Map">
+        SELECT
+            t1.MEM_ID,
+            t1.MEM_CODE,
+            t1.MEM_TYPE,
+            t1.NAME,
+            t1.FULL_NAME,
+            t1.JOIN_DT,
+            t1.RESIGN_DT,
+            t1.TRM_DT,
+            t1.RENEW_DT,
+            t1.AGRMNT_NO,
+            t1.BRNCH,
+            t1.STUS,
+            t1.SYNC_CHK,
+            t1.RANK,
+            t1.TRNSPRT,
+            t1.PROMO_DT,
+            t1.TR_NO,
+            t1.CRT_DT,
+            t1.CRT_USER_ID,
+            t1.UPD_DT,
+            t1.UPD_USER_ID,
+            t1.MEM_IS_OUT_SRC,
+            t1.APLICNT_ID,
+            t1.BIZ_TYPE,
+            t1.HSPTLZ,
+            t1.AREA_ID,
+            t1.ADDR_DTL,
+            t1.STREET
+        FROM ORG0001D t1
+        WHERE t1.MEM_CODE = #{itemMemCd}
+    </select>
+
+    <select id="cntNonIncentiveMem" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*) cnt
+        FROM    CMM0105D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE t1.STUS_ID = #{statusId}
+            AND t1.UPLOAD_ID = #{uploadId}
+            AND t1.VALID_STUS_ID = #{vStusId}
+            AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+    <select id="cntUploadNonIncentiveMemberCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt
+        FROM CMM0105D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+          AND STUS_ID = 1
+    </select>
+
+    <select id="nonIncentiveUploadMember" parameterType="Map" resultType="Map">
+        SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_REF_CODE AS USER_REF_CODE,
+            t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+            t1.USER_REF_LVL AS USER_REF_LVL,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_REF_CODE AS SYS_REF_CODE,
+            t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+            t1.SYS_REF_LVL AS SYS_REF_LVL,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID
+        FROM CMM0105D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+    <update id="nonIncentiveItemUpdate" parameterType="Map">
+        UPDATE CMM0105D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_REF_CODE = #{itemRCd},
+           USER_TRGET_AMT = #{itemTAmt},
+           USER_REF_LVL = #{itemRCd},
+           SYS_REF_CODE = #{itemRCd},
+           SYS_TRGET_AMT = #{itemTAmt},
+           SYS_REF_LVL = #{itemRCd},
+           UPD_DT = sysdate,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+    <insert  id="nonIncentiveItemInsert" parameterType="Map">
+        INSERT INTO CMM0105D
+            (UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES
+           (CMM0105D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemRCd}, #{hiddenMemberID}
+           , #{itemRCd}, #{itemTAmt}, #{itemLvl}, sysdate, #{loginId}
+           , #{hiddenMemberTypeID})
+    </insert>
+
+    <update id="removeNonIncentiveItem"  parameterType="Map">
+        UPDATE CMM0105D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = sysdate,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="nonIncentiveDeactivateCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0104D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <update id="nonIncentiveDeactivate" parameterType="Map">
+        UPDATE CMM0104D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = sysdate,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callNonIncentiveConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_NON_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+    <select id="cntNonIncentiveUploadBatch" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*)
+        FROM (
+            SELECT *
+            FROM      CMM0104D  t1
+                INNER JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+                INNER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+                INNER JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+                LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+                LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+            WHERE 1=1
+                <if test="statusId != null and statusId != ''">
+                AND t1.STUS_ID = #{statusId}
+                </if>
+                <if test="cmbType != null and cmbType != ''">
+                AND t1.UPLOAD_TYPE_ID = #{cmbType}
+                </if>
+                <if test="cmbMemberType != null and cmbMemberType != ''">
+                AND t1.MEM_TYPE_ID = #{cmbMemberType}
+                </if>
+        )   sub
+   </select>
+
+   <select id="selectUploadTypeId" parameterType="Map" resultType="integer">
+        SELECT UPLOAD_TYPE_ID FROM CMM0003D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="advIncentiveSample" parameterType="Map" resultType="EgovMap">
+       SELECT
+            t1.CODE_ID AS CODE_ID,
+            t1.CODE_MASTER_ID AS CODE_MASTER_ID,
+            t1.CODE AS CODE,
+            t1.CODE_NAME AS CODE_NAME,
+            t1.CODE_DESC AS TYPE_DESC,
+            t1.CRT_USER_ID,
+            t1.DISAB,
+            t1.UPD_USER_ID
+        FROM SYS0013M  t1
+        JOIN sys0012M T2 ON T2.CODE_MASTER_ID = T1.CODE_MASTER_ID
+        WHERE
+        1=1
+        <if test="mstCode != null and mstCode != ''">
+            AND t2.CODE_MASTER_NAME = #{mstCode}
+        </if>
+        <if test="code != null and code != ''">
+            AND T1.CODE = #{code}
+        </if>
+          AND ((CASE WHEN (t1.DISAB IS NOT NULL) THEN t1.DISAB ELSE (0) END) = 0)
+    ORDER BY t1.CODE ASC
+   </select>
+
+   <select id="advIncentiveType" resultType="EgovMap">
+        SELECT
+            T2.CODE_ID AS cdId,
+            T2.CODE AS cd,
+            T2.CODE_NAME AS cdNm
+        FROM SYS0012M T1
+        JOIN SYS0013M T2
+        ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
+        WHERE T1.CODE_MASTER_NAME = #{mstCodeNm}
+        ORDER BY T2.CODE
+   </select>
+
+   <insert id="insertAdvIncentiveMaster" parameterType="Map" >
+    INSERT INTO CMM0117D (UPLOAD_ID, UPLOAD_TYPE_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+    VALUES (CMM0117D_UPLOAD_ID_SEQ.nextval, ${uploadID}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+
+    <select id="selectAdvIncentiveUploadId" parameterType="Map" resultType="String">
+        SELECT MAX(UPLOAD_ID) FROM CMM0117D WHERE ROWNUM > 0
+   </select>
+
+   <insert id="insertAdvIncentiveDetail" parameterType="Map" >
+        INSERT INTO CMM0118D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID,ADV_DT)
+        VALUES(CMM0118D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+          ,#{userMemberCode}, #{userRefCode}, #{userTargetAmt},#{userRefLvl},#{sysMemberID}
+          ,'',#{sysTargetAmt},#{sysRefLvl},sysdate,#{updated}
+          ,#{sysMemberTypeID},to_date(#{advDt},'DD/MM/YYYY'))
+   </insert>
+
+   <select id="callAdvIncentiveDetail" parameterType="integer">
+        {
+        call  SP_ADV_INCNTIV_UP_DET_VERIFY(#{uploadId})
+        }
+    </select>
+
+    <select id="cntAdvIncentiveUploadBatch" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*)
+        FROM (
+            SELECT *
+            FROM      CMM0117D  t1
+                INNER JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+                INNER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+                INNER JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+                LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+                LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+            WHERE 1=1
+                <if test="statusId != null and statusId != ''">
+                AND t1.STUS_ID = #{statusId}
+                </if>
+                <if test="cmbType != null and cmbType != ''">
+                AND t3.CODE = #{cmbType}
+                </if>
+                <if test="cmbMemberType != null and cmbMemberType != ''">
+                AND t1.MEM_TYPE_ID = #{cmbMemberType}
+                </if>
+        )   sub
+   </select>
+
+    <select id="advIncentiveMasterDetail" parameterType="integer" resultType="Map">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            t1.CRT_DT AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+        FROM CMM0117D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="advIncentiveItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+          COUNT(*) cnt
+        FROM ( SELECT *
+            FROM    CMM0118D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+            WHERE t1.STUS_ID=1
+              AND t1.UPLOAD_ID = #{uploadId}
+              <if test="vStusId != null and vStusId != ''">
+              AND t1.VALID_STUS_ID = #{vStusId}
+              </if>
+              <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+        )   sub
+    </select>
+
+    <select id="advIncentiveItemList" parameterType="Map" resultType="EgovMap">
+
+      SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_REF_CODE AS USER_REF_CODE,
+            t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+            t1.USER_REF_LVL AS USER_REF_LVL,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_REF_CODE AS SYS_REF_CODE,
+            t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+            t1.SYS_REF_LVL AS SYS_REF_LVL,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+            CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+        FROM    CMM0118D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE  t1.STUS_ID=1
+            AND t1.UPLOAD_ID = #{uploadId}
+           <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+        ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <select id="cntUploadAdvIncentiveMemberCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt
+        FROM CMM0118D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+          AND STUS_ID = 1
+    </select>
+
+    <select id="advIncentiveUploadMember" parameterType="Map" resultType="Map">
+        SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_REF_CODE AS USER_REF_CODE,
+            t1.USER_TRGET_AMT AS USER_TRGET_AMT,
+            t1.USER_REF_LVL AS USER_REF_LVL,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_REF_CODE AS SYS_REF_CODE,
+            t1.SYS_TRGET_AMT AS SYS_TRGET_AMT,
+            t1.SYS_REF_LVL AS SYS_REF_LVL,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID
+        FROM CMM0118D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+    <update id="advIncentiveItemUpdate" parameterType="Map">
+        UPDATE CMM0118D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_REF_CODE = #{itemRCd},
+           USER_TRGET_AMT = #{itemTAmt},
+           USER_REF_LVL = #{itemRCd},
+           SYS_REF_CODE = #{itemRCd},
+           SYS_TRGET_AMT = #{itemTAmt},
+           SYS_REF_LVL = #{itemRCd},
+           UPD_DT = sysdate,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+    <insert  id="advIncentiveItemInsert" parameterType="Map">
+        INSERT INTO CMM0118D
+            (UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES
+           (CMM0118D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemLvl}, #{hiddenMemberID}
+           , #{itemRCd}, #{itemTAmt}, #{itemLvl}, sysdate, #{loginId}
+           , #{hiddenMemberTypeID})
+    </insert>
+
+    <update id="removeAdvIncentiveItem"  parameterType="Map">
+        UPDATE CMM0118D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = sysdate,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="advIncentiveDeactivateCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0117D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <update id="advIncentiveDeactivate" parameterType="Map">
+        UPDATE CMM0117D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = sysdate,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callAdvIncentiveConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        {
+        call  SP_ADV_INCNTIV_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})
+        }
+    </select>
+
+    <select id="advIncentiveTargetList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID AS UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  CMM0117D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+        <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test="statusList != null and statusList != ''">
+           AND t1.STUS_ID IN (${statusList})
+        </if>
+        <if test="typeList != null and typeList != ''">
+              AND t1.UPLOAD_TYPE_ID IN (${typeList})
+           </if>
+           <if test="actionDate != null and actionDate != ''">
+               AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+           </if>
+           <if test="uploadDateFr != null and uploadDateFr != ''">
+               <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+           </if>
+           <if test="uploadDateTo != null and uploadDateTo != ''">
+
+              <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+           </if>
+           <if test="creator != null and creator != ''">
+               AND t6.USER_NAME = #{creator}
+           </if>
+           <if test="memberTypeList != null and memberTypeList != ''">
+              AND t1.MEM_TYPE_ID IN (${memberTypeList})
+           </if>
+        ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+</mapper>

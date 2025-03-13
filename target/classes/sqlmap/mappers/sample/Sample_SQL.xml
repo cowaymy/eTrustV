@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sample.impl.SampleMapper">
+
+    <!-- 
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+	<resultMap id="sampleClobMap" type="EgovMap">
+        <result property="requestComment" column="request_comment" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="cdcConfirmComment" column="cdc_confirm_comment" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="hqConfirmComment" column="hq_confirm_comment" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+    
+    <resultMap id="sampleClobMap2" type="EgovMap">
+        <result property="otherXml" column="other_xml" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+    <resultMap id="sampleClobMap3" type="EgovMap">
+        <result property="memoCntnt" column="MEMO_CNTNT" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="selectEditor" parameterType="Map"  resultMap="sampleClobMap3">
+        <![CDATA[
+        SELECT M.MEMO_ID
+              ,M.STUS_CODE_ID
+              ,M.MEMO_TITLE
+              ,M.MEMO_CNTNT
+              ,M.IS_STAFF_MEMO
+              ,M.IS_CODY_MEMO
+              ,M.IS_HP_MEMO
+              ,M.CRT_USER_ID
+              ,M.CRT_DT
+              ,M.UPD_USER_ID
+              ,M.UPD_DT
+          FROM MSC0010D M
+          where rownum < 100
+          AND 'T' = CASE WHEN #{memoId} IS NULL OR M.MEMO_ID = #{memoId}
+                                    THEN 'T'
+                                    ELSE 'F'
+                          END
+	]]>
+    </select>
+
+    <insert id="insertEditor" parameterType="Map">
+
+        <selectKey keyProperty="memoId" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(MEMO_ID),0) + 1 from MSC0010D
+        </selectKey>
+
+        INSERT INTO MSC0010D(
+               MEMO_ID
+              ,STUS_CODE_ID
+              ,MEMO_TITLE
+              ,MEMO_CNTNT
+              ,IS_STAFF_MEMO
+              ,IS_CODY_MEMO
+              ,IS_HP_MEMO
+              ,CRT_USER_ID
+              ,CRT_DT
+              ,UPD_USER_ID
+              ,UPD_DT)
+        VALUES(
+              #{memoId}
+              ,1
+              , 'test'
+              ,#{memoCntnt}
+              ,1
+              ,1
+              ,1
+              ,9999
+              ,SYSDATE
+              ,9999
+              ,SYSDATE
+        )
+    </insert>
+
+	<insert id="insertSample" parameterType="SampleVO">
+        INSERT INTO SYS0052M
+            (id, 
+            language, 
+            country, 
+            message)
+        VALUES
+            (#{id}, 
+            #{language}, 
+            #{country}, 
+            #{message})
+	</insert>
+	
+	<select id="selectClobData" parameterType="Map"  resultMap="sampleClobMap">
+	<![CDATA[
+		SELECT 
+            base_cdc, 
+            status_code, 
+            request_dt,
+            TO_CHAR(request_dt, 'yyyymmdd') as request_dt_format,
+            request_comment, /* CLOB */
+            cdc_confirm_comment, /* CLOB */
+            hq_confirm_comment /* CLOB */
+		FROM TST_SUPPLY_PLAN
+		WHERE ROWNUM < 100
+	]]>
+	</select>
+
+    <resultMap id="chartMap" type="egovMap"></resultMap>
+    <select id="selectChartDataProcedure" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_KEY_IN_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=chartMap})
+        }
+    </select>
+
+    <select id="selectLineChartDataProcedure" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_APP_TYPE_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=chartMap})
+        }
+    </select>
+	
+	<insert id="insertClobData" parameterType="Map">
+        INSERT INTO TST_SUPPLY_PLAN
+		(   base_year,
+			base_week,
+			base_cdc,
+			request_comment
+		)VALUES(
+			#{baseYear},
+            #{baseWeek},
+            #{baseCdc},
+            #{requestComment}
+		)
+	</insert>
+
+    <select id="selectClobOtherData" parameterType="Map"  resultMap="sampleClobMap2">
+    <![CDATA[
+        SELECT
+            'aa' as aa,
+            'bb' as bb,
+            other_xml 
+        FROM TOAD_PLAN_TABLE
+        WHERE other_xml IS NOT NULL
+    ]]>
+    </select>
+	
+
+	
+	<insert id="insertSampleByMap" parameterType="Map">
+        INSERT INTO SYS0052M
+            (id, 
+            language, 
+            country, 
+            message)
+        VALUES
+            (#{id}, 
+            #{language}, 
+            #{country}, 
+            #{message})
+    </insert>
+	
+
+	<update id="updateSample">
+
+			UPDATE SAMPLE
+			SET ID=#{id}
+				, NAME=#{name}
+				, DESCRIPTION=#{description}
+				, USE_YN=#{useYn}
+				  WHERE ID=#{id}
+
+	</update>
+
+	<delete id="deleteSample">
+
+			DELETE FROM SAMPLE
+			WHERE ID=#{id}
+
+	</delete>
+
+	<select id="selectSampleVO" parameterType="searchVO" resultType="SampleVO">
+			SELECT
+				'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+			FROM DUAL
+	</select>
+	
+	<select id="selectSample" parameterType="Map" resultType="egovMap">
+            SELECT
+                'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+            FROM DUAL
+    </select>
+
+	<select id="selectSampleList" parameterType="searchVO" resultType="egovMap">
+
+			SELECT
+				'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+			FROM DUAL
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND	ID LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 1">
+						AND	NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+	</select>
+	
+	<select id="selectSampleByParamsList" parameterType="Map" resultType="egovMap">
+
+        select * from (
+
+        SELECT
+        'ID' as ID, 'NAME' as NAME, 'DESCRIPTION' as DESCRIPTION, 'USE_YN' as USE_YN, 'REG_USER' as REG_USER
+        FROM DUAL
+        WHERE 1=1
+        <if test="sId != null and sId != ''">AND #{sId} = #{sId}
+        </if>
+
+            <if test="
+
+        sName != null and sName != ''">
+                AND #{sName} = #{sName}
+            </if>
+
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchCondition == 0">
+                        AND ID LIKE '%' || #{searchKeyword} || '%'
+                    </when>
+                    <when test="searchCondition == 1">
+                        AND NAME LIKE '%' || #{searchKeyword} || '%'
+                    </when>
+                </choose>
+            </if>
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+            UNION ALL
+             SELECT
+                'ID2' as ID, 'NAME2' as NAME, 'DESCRIPTION2' as DESCRIPTION, 'USE_YN2' as USE_YN, 'REG_USER2' as REG_USER
+            FROM DUAL
+        ) tbl
+        WHERE rownum <![CDATA[ <= ]]> #{rowNum}
+            
+    </select>
+
+	<select id="selectSampleListTotCnt" parameterType="sampleVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM DUAL
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND ID LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 1">
+						AND	NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+	</select>
+
+
+
+
+    <insert id="insertBatch" parameterType="Map">
+        INSERT INTO TEST_EXCEL(ID, FIRST_NAME, LAST_NAME)
+        VALUES (
+        #{id},
+        #{firstName},
+        #{lastName}
+        )
+    </insert>
+
+</mapper>

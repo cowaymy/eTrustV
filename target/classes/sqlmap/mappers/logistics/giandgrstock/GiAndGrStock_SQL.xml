@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.giandgrstock.impl.GiAndGrStockMapper">
+
+<!-- @author Adrian C. -->
+
+    <select id="selectLocation" parameterType="Map" resultType="egovMap">
+        SELECT
+	        STK_CODE CODE_ID,
+	        STK_DESC CODE_NAME
+
+        FROM SYS0026M
+    </select>
+
+    <!-- <select id="stockBalanceSearchList" parameterType="Map" resultType="egovMap">
+        SELECT
+            (s28.WH_LOC_CODE || ' - ' || s28.WH_LOC_DESC) AS mainloc,
+            s28.WH_LOC_CODE AS loccode,
+	        l88.STK_CODE AS itmcode,
+	        s26.STK_DESC AS itmdesc,
+	        SUM(NVL(l88.QTY, 0)) AS baseqty,
+            SUM(NVL(l56.QTY, 0)) AS currqty,
+            SUM (NVL (l88.QTY, 0))-SUM (NVL (l56.QTY, 0)) AS qtyy,
+	        type.CODE_NAME AS itmtype,
+	        ctgry.CODE_NAME AS itmctgry,
+	        um.CODE_NAME AS uom
+        FROM LOG0056M l56
+            LEFT JOIN LOG0088M l88 ON l56.STK_CODE = l88.STK_CODE AND l56.LOC_ID = l88.LOG_ID
+            JOIN SYS0028M s28 ON l88.LOG_ID = s28.WH_LOC_ID
+	        JOIN SYS0026M s26 ON l88.STK_CODE = s26.STK_CODE
+	        JOIN SYS0013M type ON s26.STK_TYPE_ID = type.CODE_ID
+	        JOIN SYS0013M ctgry ON s26.STK_CTGRY_ID = ctgry.CODE_ID
+            JOIN SYS0013M um ON s26.UOM = um.CODE_ID
+
+        WHERE l88.ZMONTH = #{basedt}
+
+        <if test="loctype !=null and loctype !=''">
+            AND s28.WH_LOC_GB IN
+            <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="locgrade !=null and locgrade !=''">
+            AND s28.WH_LOC_STK_GRAD = #{locgrade}
+        </if>
+
+        <if test="locname !=null and locname !=''">
+            AND s28.WH_LOC_CODE IN
+             <foreach item="item" collection="locname" index="index" open="(" separator="," close=")">
+                #{item}
+             </foreach>
+        </if>
+
+        <if test="materialcode !=null and materialcode !=''">
+            AND l88.STK_CODE = #{materialcode}
+        </if>
+
+        <if test="smattype !=null and smattype !=''">
+            AND s26.STK_TYPE_ID IN
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="smatcate !=null and smatcate !=''">
+            AND s26.STK_CTGRY_ID IN
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        GROUP BY s28.WH_LOC_CODE,
+				         s28.WH_LOC_DESC,
+                         l88.STK_CODE,
+                         s26.STK_DESC,
+                         type.CODE_NAME,
+                         ctgry.CODE_NAME,
+                         um.CODE_NAME
+
+        ORDER BY l88.STK_CODE ASC
+    </select> -->
+
+    <select id="selectStockBalanceDetailsList" parameterType="Map" resultType="egovMap">
+        SELECT
+            l59.MATRL_DOC_NO AS docno,
+            l60.MATRL_DOC_ITM AS docnoitm,
+            l59.MATRL_DOC_YEAR AS docyear,
+	        tt.CODE_NAME AS transtype,
+	        l60.DELVRY_NO AS delvryno,
+	        l59.REF_DOC_NO AS refdocno,
+	        l60.STOCK_TRNSFR_REQST AS reqstno,
+            mt.CODE_NAME AS movetype,
+	        DECODE (l60.DEBT_CRDIT_INDICT, 'H', 'Credit', 'S', 'Debit', l60.DEBT_CRDIT_INDICT) AS debitcrdt,
+	        l60.MATRL_NO AS itmcode,
+	        s26.STK_DESC AS itmdesc,
+	        DECODE(l60.DEBT_CRDIT_INDICT, 'H', (l60.QTY * -1), 'S', l60.QTY, l60.QTY) AS qty,
+	        ut.CODE_NAME AS uom,
+	        (f28.WH_LOC_CODE || ' - ' || f28.WH_LOC_DESC) AS reqststorg,
+	        (t28.WH_LOC_CODE || ' - ' || t28.WH_LOC_DESC) AS rcivstorg,
+	        TO_CHAR(TO_DATE(l59.USNAM , 'YYYYMMDD') , 'DD/MM/YYYY') AS postingdt,
+	        l59.CRT_DT AS crtdt
+
+        FROM LOG0059M l59
+	        JOIN LOG0060D l60 ON l59.MATRL_DOC_NO = l60.MATRL_DOC_NO
+	        JOIN SYS0026M s26 ON l60.MATRL_NO = s26.STK_CODE
+	        LEFT JOIN SYS0028M f28 ON l60.STORG_LOC = f28.WH_LOC_ID
+	        LEFT JOIN SYS0028M t28 ON l60.RCIV_ISSU_STORG_LOC = t28.WH_LOC_ID
+	        JOIN SYS0013M tt ON l59.TRNSC_TYPE_CODE = tt.CODE AND tt.CODE_MASTER_ID = 306
+	        JOIN SYS0013M mt ON l60.INVNTRY_MOV_TYPE = mt.CODE AND mt.CODE_MASTER_ID = 308
+	        JOIN SYS0013M ut ON l60.MEASURE_BAS_UNIT = ut.CODE_ID AND ut.CODE_MASTER_ID = 42
+
+        WHERE l60.AUTO_CRT_ITM = 'M'
+                    AND f28.WH_LOC_CODE = #{loccode}
+                    AND l60.MATRL_NO = #{itmcode}
+
+        <if test="postingdt !=null and postingdt !=''">
+            AND L60.DOC_POSTNG_DT
+                   BETWEEN TO_CHAR(TO_DATE(#{basedt}, 'DD/MM/YYYY'), 'YYYYMMDD') AND
+                                   TO_CHAR(TO_DATE(#{postingdt}, 'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+
+        <if test="transtype !=null and transtype !=''">
+            AND l59.TRNSC_TYPE_CODE IN
+            <foreach item="item" collection="transtype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        <if test="movetype !=null and movetype !=''">
+            AND l60.INVNTRY_MOV_TYPE IN
+            <foreach item="item" collection="movetype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+
+        ORDER BY l60.DOC_POSTNG_DT ASC
+    </select>
+
+    <select id="stockBalanceMovementType" parameterType="Map" resultType="egovMap">
+        SELECT
+            S8.CODE,
+            S8.CODE_NAME
+
+        FROM (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '308') S8,
+                  (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '306'
+	               <if test="strctype != null and strctype !=''">
+	                   AND CODE IN
+	                  <foreach item="item" collection="strctype" index="index" open="(" separator="," close=")">
+	                      #{item}
+	                  </foreach>
+	               </if>
+	              ) S6
+
+        WHERE S8.CODE LIKE S6.CODE || '%'
+        ORDER BY S8.CODE
+    </select>
+    
+   <select id="stockBalanceSearchList" parameterType="Map" resultType="egovMap">
+	       SELECT LOCATE,
+	         STK_CODE AS itmcode,
+	         STK_DESC AS itmdesc,
+	         SUM (BQTY) AS baseqty,
+	         SUM (MQTY) AS currqty,
+	         (SUM (BQTY) + SUM (MQTY)) qtyy,
+	         (s28m.WH_LOC_CODE || ' - ' || s28m.WH_LOC_DESC) AS mainloc,
+	         TYPE.CODE_NAME AS itmtype,
+	         ctgry.CODE_NAME AS itmctgry,
+	         um.CODE_NAME AS uom
+	    FROM (  SELECT TO_NUMBER (locate) locate,
+	                   STK_CODE,
+	                   STK_DESC,
+	                  S26.STK_TYPE_ID,
+	                 S26.STK_CTGRY_ID,
+	                 S26.UOM,
+	                   0 BQTY,
+	                   SUM (
+	                      CASE
+	                         WHEN DEBT_CRDIT_INDICT = 'S' THEN qty * 1
+	                         ELSE qty * -1
+	                      END)
+	                      Mqty
+	              FROM (SELECT INVNTRY_MOV_TYPE,
+	                           DEBT_CRDIT_INDICT,
+	                           MATRL_NO,
+	                           CASE
+	                              WHEN (SELECT trnsc_type_code
+	                                      FROM log0046m
+	                                     WHERE mov_type = log0060d.INVNTRY_MOV_TYPE) IN
+	                                      ('PO', 'OG', 'AD')
+	                              THEN
+	                                 CASE
+	                                    WHEN invntry_mov_type = 'AD02' THEN STORG_LOC
+	                                    ELSE RCIV_ISSU_STORG_LOC
+	                                 END
+	                              ELSE
+	                                 STORG_LOC
+	                           END
+	                              locate,
+	                           STORG_LOC,
+	                           RCIV_ISSU_STORG_LOC,
+	                           qty
+	                      FROM log0060d    
+	                     WHERE     doc_postng_dt BETWEEN #{basedt} AND #{tobasedt}
+	                           AND auto_crt_itm = 'M'),
+	                   SYS0026M S26
+	             WHERE S26.STK_CODE = MATRL_NO(+)
+	          GROUP BY locate, STK_CODE, STK_DESC,STK_TYPE_ID,STK_CTGRY_ID,UOM
+	          UNION ALL
+	          SELECT LOG_ID locate,
+	                 S26.STK_CODE,
+	                 S26.STK_DESC,
+	                 S26.STK_TYPE_ID,
+	                 S26.STK_CTGRY_ID,
+	                 S26.UOM,
+	                 QTY BQTY,
+	                 0 MQTY
+	            FROM SYS0026M S26, LOG0088M L88
+	           WHERE     S26.STK_CODE = L88.STK_CODE(+)
+	                 AND L88.ZMONTH =
+	                        TO_CHAR (
+	                           ADD_MONTHS (TO_DATE (#{basedt}, 'YYYYMMDD'), -1),
+	                           'YYYYMM')) t1,sys0028m s28m,SYS0013M TYPE,SYS0013M ctgry,SYS0013M um  
+	    WHERE                       
+	    t1.LOCATE IS NOT NULL 
+	    <!-- AND LOCATE = 72677 AND STK_CODE = '112441' -->
+	    and s28m.wh_loc_id=t1.LOCATE
+	    AND TYPE.CODE_ID = t1.STK_TYPE_ID
+	    AND ctgry.CODE_ID = t1.STK_CTGRY_ID 
+	    AND um.CODE_ID = t1.UOM 
+	    <if test="locgrade !=null and locgrade !=''">
+            AND s28m.WH_LOC_STK_GRAD = #{locgrade}
+        </if>
+        <if test="loctype !=null and loctype !=''">
+            AND s28m.WH_LOC_GB IN
+            <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="locname !=null and locname !=''">
+            AND s28m.WH_LOC_CODE IN
+             <foreach item="item" collection="locname" index="index" open="(" separator="," close=")">
+                #{item}
+             </foreach>
+        </if>
+        <if test="materialcode !=null and materialcode !=''">
+            AND t1.STK_CODE = #{materialcode}
+        </if>
+         <if test="smattype !=null and smattype !=''">
+            AND t1.STK_TYPE_ID IN
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="smatcate !=null and smatcate !=''">
+            AND t1.STK_CTGRY_ID IN
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+	GROUP BY LOCATE, STK_CODE, STK_DESC ,s28m.wh_loc_desc,TYPE.CODE_NAME,ctgry.CODE_NAME,um.CODE_NAME,s28m.WH_LOC_CODE
+    </select> 
+    
+</mapper>

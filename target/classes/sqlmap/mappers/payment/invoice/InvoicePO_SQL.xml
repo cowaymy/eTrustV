@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.InvoicePOMapper">
+
+    <!-- Reconciliation 리스트 조회 -->
+	<select id="selectOrderBasicInfoByOrderId" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.ORD_ID ORD_ID  ,
+		       Extent1.ORD_NO ORD_NO  ,
+		       Extent1.RENTAL_STUS RENTAL_STUS  ,
+		       Extent1.ORD_STUS_ID ORD_STUS_ID  ,
+		       Extent1.ORD_STUS_CODE ORD_STUS_CODE  ,
+		       Extent1.ORD_STUS_NAME ORD_STUS_NAME  ,
+		       Extent1.ORD_DT ORD_DT  ,
+		       Extent1.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+		       Extent1.ORD_AMT ORD_AMT  ,
+		       Extent1.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+		       Extent1.ORD_PV ORD_PV  ,
+		       Extent1.ORD_PV_MONTH ORD_PV_MONTH  ,
+		       Extent1.ORD_PV_YEAR ORD_PV_YEAR  ,
+		       Extent1.ORD_REF_NO ORD_REF_NO  ,
+		       Extent1.ORD_PO_NO ORD_PO_NO  ,
+		       Extent1.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+		       Extent1.ORD_GRP_CODE ORD_GRP_CODE  ,
+		       Extent1.ORD_ORG_CODE ORD_ORG_CODE  ,
+		       Extent1.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+		       Extent1.ORD_CRT_DT ORD_CRT_DT  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
+		       Extent1.APP_TYPE_DESC APP_TYPE_DESC  ,
+		       Extent1.STOCK_ID STOCK_ID  ,
+		       Extent1.STOCK_CODE STOCK_CODE  ,
+		       Extent1.STOCK_DESC STOCK_DESC  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_TYPE CUST_TYPE  ,
+		       Extent1.CUST_NAME CUST_NAME  ,
+		       Extent1.CUST_NRIC CUST_NRIC  ,
+		       Extent1.CUST_DOB CUST_DOB  ,
+		       Extent1.CUST_NATION CUST_NATION  ,
+		       Extent1.CUST_GENDER CUST_GENDER  ,
+		       Extent1.CUST_RACE CUST_RACE  ,
+		       Extent1.CUST_EMAIL CUST_EMAIL  ,
+		       Extent1.CUST_VA_NO CUST_VA_NO  ,
+		       Extent1.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+		       Extent1.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+		       Extent1.ORD_PROMO_ID ORD_PROMO_ID  ,
+		       Extent1.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+		       Extent1.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+		       Extent1.ORD_MEM_ID ORD_MEM_ID  ,
+		       Extent1.ORD_MEM_CODE ORD_MEM_CODE  ,
+		       Extent1.ORD_MEM_NAME ORD_MEM_NAME  ,
+		       Extent1.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+		       Extent1.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+		       Extent1.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+		       Extent1.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+		       Extent1.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+		       Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+		       Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+		       Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+		       Extent1.ORD_REM ORD_REM  ,
+		       Extent1.RENT_CHK_ID RENT_CHK_ID  ,
+		       Extent1.ORD_HM_ID ORD_HM_ID  ,
+		       Extent1.ORD_SM_ID ORD_SM_ID  ,
+		       Extent1.ORD_GM_ID ORD_GM_ID  ,
+		       Extent1.ORD_ADDR_ID ORD_ADDR_ID  ,
+		       Extent1.ORD_CNTC_ID ORD_CNTC_ID  ,
+		       Extent1.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.JOM_PAY_REF JOM_PAY_REF  ,
+		       Extent1.STK_CTGRY_ID STK_CTGRY_ID  ,
+		       Extent1.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+		       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+		       Extent1.OBLIGT_YEAR OBLIGT_YEAR
+	  FROM SAL1006V Extent1
+	 WHERE Extent1.ORD_ID = #{orderId}
+	</select>
+
+	<select id="selectHTOrderBasicInfoByOrderId" parameterType="Map" resultType="egovMap">
+   SELECT Extent1.ORD_ID ORD_ID  ,
+               Extent1.ORD_NO ORD_NO  ,
+               Extent1.ORD_STUS_ID ORD_STUS_ID  ,
+               Extent1.ORD_STUS_CODE ORD_STUS_CODE  ,
+               Extent1.ORD_STUS_NAME ORD_STUS_NAME  ,
+               Extent1.ORD_DT ORD_DT  ,
+               Extent1.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+               Extent1.ORD_AMT ORD_AMT  ,
+               Extent1.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+               Extent1.ORD_PV ORD_PV  ,
+               Extent1.ORD_PV_MONTH ORD_PV_MONTH  ,
+               Extent1.ORD_PV_YEAR ORD_PV_YEAR  ,
+               Extent1.ORD_REF_NO ORD_REF_NO  ,
+               Extent1.ORD_PO_NO ORD_PO_NO  ,
+               Extent1.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+               Extent1.ORD_GRP_CODE ORD_GRP_CODE  ,
+               Extent1.ORD_ORG_CODE ORD_ORG_CODE  ,
+               Extent1.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+               Extent1.ORD_CRT_DT ORD_CRT_DT  ,
+               Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+               Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
+               Extent1.APP_TYPE_DESC APP_TYPE_DESC  ,
+               Extent1.CUST_ID CUST_ID  ,
+               Extent1.CUST_TYPE CUST_TYPE  ,
+               Extent1.CUST_NAME CUST_NAME  ,
+               Extent1.CUST_NRIC CUST_NRIC  ,
+               Extent1.CUST_DOB CUST_DOB  ,
+               Extent1.CUST_NATION CUST_NATION  ,
+               Extent1.CUST_GENDER CUST_GENDER  ,
+               Extent1.CUST_RACE CUST_RACE  ,
+               Extent1.CUST_EMAIL CUST_EMAIL  ,
+               Extent1.CUST_VA_NO CUST_VA_NO  ,
+               Extent1.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+               Extent1.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+               Extent1.ORD_PROMO_ID ORD_PROMO_ID  ,
+               Extent1.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+               Extent1.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+               Extent1.ORD_MEM_ID ORD_MEM_ID  ,
+               Extent1.ORD_MEM_CODE ORD_MEM_CODE  ,
+               Extent1.ORD_MEM_NAME ORD_MEM_NAME  ,
+               Extent1.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+               Extent1.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+               Extent1.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+               Extent1.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+               Extent1.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+               Extent1.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+               Extent1.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+               Extent1.ORD_REM ORD_REM  ,
+               Extent1.RENT_CHK_ID RENT_CHK_ID  ,
+               Extent1.ORD_HM_ID ORD_HM_ID  ,
+               Extent1.ORD_SM_ID ORD_SM_ID  ,
+               Extent1.ORD_GM_ID ORD_GM_ID  ,
+               Extent1.ORD_ADDR_ID ORD_ADDR_ID  ,
+               Extent1.ORD_CNTC_ID ORD_CNTC_ID  ,
+               Extent1.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+               Extent1.UPD_DT UPD_DT  ,
+               Extent1.UPD_USER_ID UPD_USER_ID  ,
+               Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
+               Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+               Extent1.OBLIGT_YEAR OBLIGT_YEAR
+      FROM ( SELECT
+        SOM.SRV_ORD_ID ORD_ID,
+        SOM.SRV_ORD_NO ORD_NO,
+        SOM.STUS_CODE_ID ORD_STUS_ID,
+        S.CODE ORD_STUS_CODE,
+        S.NAME ORD_STUS_NAME,
+        SOM.SALES_DT ORD_DT,
+        NVL(SOM.INST_PRIOD,0) INSTLMT_PRIOD
+       ,
+        SOM.TOT_AMT AS ORD_AMT,
+        (
+            CASE
+                WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.MTH_RENT_AMT,0)
+                ELSE 0
+            END
+        ) ORD_MTH_RENTAL,
+        NVL(SOM.TOT_PV,0) ORD_PV,
+        NVL(SOM.PV_MONTH,0) ORD_PV_MONTH,
+        NVL(SOM.PV_YEAR,0) ORD_PV_YEAR,
+        NVL(SOM.REF_NO,' ') ORD_REF_NO,
+        NVL(SOM.CUST_PO_NO,' ') ORD_PO_NO,
+        NVL(SOM.DEPT_CODE,' ') ORD_DEPT_CODE,
+        NVL(SOM.GRP_CODE,' ') ORD_GRP_CODE,
+        NVL(SOM.ORG_CODE,' ') ORD_ORG_CODE,
+        NVL(U.USER_NAME,' ') ORD_CRT_USER_ID,
+        SOM.CRT_DT ORD_CRT_DT,
+        SOM.APP_TYPE_ID,
+        T.CODE APP_TYPE_CODE,
+        T.CODE_NAME APP_TYPE_DESC,
+        C.CUST_ID CUST_ID,
+        (
+            CASE
+                WHEN C.TYPE_ID NOT IN 964
+                     AND C.CORP_TYPE_ID > 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
+                || ' ('
+                || NVL(CORPTYPE.CODE_NAME,' ')
+                || ')' )
+                ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+            END
+        ) CUST_TYPE,
+        C.NAME CUST_NAME,
+        C.NRIC CUST_NRIC
+       ,
+        (
+            CASE
+                WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
+                ELSE TO_DATE('19000101','YYYYMMDD')
+            END
+        ) AS CUST_DOB,
+        NVL(CO.NAME,' ') CUST_NATION,
+        (
+            CASE
+                WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
+                ELSE ' '
+            END
+        ) CUST_GENDER,
+        NVL(RC.CODE_NAME,' ') CUST_RACE,
+        NVL(C.EMAIL,' ') CUST_EMAIL,
+        NVL(C.CUST_VA_NO,' ') CUST_VA_NO,
+        C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
+        C.VISA_EXPR CUST_VISA_EXPR,
+        NVL(SOM.PROMO_ID,0) ORD_PROMO_ID,
+        NVL(PM.PROMO_CODE,' ') ORD_PROMO_CODE,
+        NVL(PM.PROMO_DESC,' ') ORD_PROMO_DESC,
+        NVL(MEM.MEM_ID,0) ORD_MEM_ID,
+        NVL(MEM.MEM_CODE,' ') ORD_MEM_CODE,
+        NVL(MEM.NAME,' ') ORD_MEM_NAME,
+        NVL(MEM.NRIC,' ') ORD_MEM_NRIC,
+        NVL(MEM.MEM_TYPE,0) ORD_MEM_TYPE_ID,
+        NVL(MT.CODE,' ') ORD_MEM_TYPE_CODE,
+        NVL(MT.CODE_NAME,' ') ORD_MEM_TYPE_NAME,
+        NVL(SOM.BRNCH_ID,0) KEYIN_BRNCH_ID,
+        NVL(B.CODE,' ') KEYIN_BRNCH_CODE,
+        NVL(B.NAME,' ') KEYIN_BRNCH_NAME,
+        NVL(SOM.REM,' ') ORD_REM,
+        (
+            CASE
+                WHEN SOM.APP_TYPE_ID = 66 THEN NVL(SOM.REN_CHK_ID,0)
+                ELSE 0
+            END
+        ) RENT_CHK_ID,
+        NVL(SOM.SALES_HM_ID,0) ORD_HM_ID,
+        NVL(SOM.SALES_SM_ID,0) ORD_SM_ID,
+        NVL(SOM.SALES_GM_ID,0) ORD_GM_ID,
+        NVL(SOM.CUST_ADD_ID,0) ORD_ADDR_ID,
+        NVL(SOM.CUST_CNT_ID,0) ORD_CNTC_ID,
+        NVL(SOM.CUST_CARE_CNT_ID,0) CUST_CARE_CNT_ID,
+        NVL(SOM.BINDING_NO,' ') ORD_PROMO_RELATED_NO,
+        SOM.UPD_DT UPD_DT,
+        NVL(U2.USER_NAME,' ') UPD_USER_ID,
+       C.TYPE_ID CUST_TYPE_ID,
+        NVL(SOM.CUST_BILL_ID,0) CUST_BILL_ID,
+        NVL(SOC.CNTRCT_OBLIGT_PRIOD,0) OBLIGT_YEAR,
+        SOM.EMP_CHK,
+        SOM.EX_TRADE,
+        SOM.GST_CHK,
+        SOM.CNVR_SCHEME_ID,
+        SOM.PROMO_DISC_PERIOD_TP,
+        PERD.CODE_NAME PROMO_DISC_PERIOD_TP_NM,
+        SOM.PROMO_DISC_PERIOD,
+        SOM.NOR_AMT,
+        SOM.NOR_RNT_FEE,
+        SOM.DISC_RNT_FEE,
+        SOM.SRV_PAC_ID,
+        SOM.ADV_BILL,
+        FLOOR(MONTHS_BETWEEN(SYSDATE,C.CRT_DT) ) CRT_DUR,
+        EKEY.EKEY_CRT_USER,
+        EKEY.EKEY_BRNCH_NAME
+    FROM
+        SAL0225D SOM
+        JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+        LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID <![CDATA[<>]]>  964 AND C.CORP_TYPE_ID > 0
+        LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
+        JOIN SYS0013M T ON T.CODE_ID = SOM.APP_TYPE_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        LEFT JOIN SYS0047M U ON U.USER_ID = SOM.CRT_USER_ID
+        LEFT JOIN SYS0047M U2 ON U2.USER_ID = SOM.UPD_USER_ID
+        LEFT JOIN SYS0005M B ON B.BRNCH_ID = SOM.BRNCH_ID
+        LEFT JOIN SYS0015M CO ON CO.CNTY_ID = C.NATION AND NVL(C.TYPE_ID,0) = 964
+        LEFT JOIN SYS0013M RC ON RC.CODE_ID = C.RACE_ID AND NVL(C.TYPE_ID,0) = 964
+        LEFT JOIN SAL0017D PM ON PM.PROMO_ID = SOM.PROMO_ID AND NVL(SOM.PROMO_ID,0) <![CDATA[<>]]> 0
+        LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = SOM.MEM_ID AND NVL(SOM.MEM_ID,0) <![CDATA[<>]]> 0
+        LEFT JOIN SYS0013M MT ON MEM.MEM_TYPE = MT.CODE_ID
+        LEFT JOIN SAL0003D SOC ON SOC.CNTRCT_SALES_ORD_ID = SOM.SRV_ORD_ID
+        LEFT JOIN SYS0013M PERD ON PERD.CODE_ID = SOM.PROMO_DISC_PERIOD_TP
+        LEFT JOIN
+            (  SELECT SALES_ORD_ID,CRTUSER.USER_NAME AS EKEY_CRT_USER,
+                CASE WHEN SOF.DOC_SO_ID IS NOT NULL THEN '(' || BRNCH.CODE || ')' ||BRNCH.NAME
+                ELSE ' - ' END AS EKEY_BRNCH_NAME FROM SAL0213M EKEY
+             LEFT JOIN ORG0010D SOF ON EKEY.SALES_ORD_ID = SOF.DOC_SO_ID AND DOC_TYPE_ID = 3198
+             LEFT JOIN SYS0047M CRTUSER ON EKEY.CRT_USER_ID = CRTUSER.USER_ID
+             LEFT JOIN SYS0047M SUBMIT_BRNCH ON SOF.CRT_USER_ID = SUBMIT_BRNCH.USER_ID
+             LEFT JOIN SYS0005M BRNCH ON SUBMIT_BRNCH.USER_BRNCH_ID = BRNCH.BRNCH_ID) EKEY ON EKEY.SALES_ORD_ID = SOM.SRV_ORD_ID
+    WHERE
+        ( SOM.STUS_CODE_ID NOT IN (8) )) Extent1
+     WHERE Extent1.ORD_ID = #{orderId}
+    </select>
+
+	<select id="selectOrderDataByOrderId" parameterType="Map" resultType="egovMap">
+		   SELECT Extent1.ID ID  ,
+			       Extent1.PO_ORD_ID PO_ORD_ID  ,
+			       Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent5.CUST_ID CUST_ID  ,
+			       Extent5.NAME NAME  ,
+			       Extent1.PO_REF_NO PO_REF_NO  ,
+			       Extent1.PO_START_INSTLMT || '~' ||Extent1.PO_END_INSTLMT period ,
+			       TO_CHAR(Extent1.PO_CRT_DT, 'YYYY-MM-DD HH24:MI:SS') PO_CRT_DT,
+			       Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+			       Extent3.USER_NAME USER_NAME  ,
+			       Extent1.PO_UPD_DT PO_UPD_DT  ,
+			       Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+			       Extent2.USER_NAME USERNAME1  ,
+			       Extent1.PO_STUS_ID PO_STUS_ID  ,
+			       Extent6.NAME NAME1,
+			       Extent1.FILE_ID,
+	               Extent7.ATCH_FILE_GRP_ID,
+	               Extent8.ATCH_FILE_ID,
+	               Extent8.ATCH_FILE_NAME,
+	               Extent8.FILE_SUB_PATH || '.' || Extent8.FILE_EXTSN AS FILE_SUB_PATH,
+	               Extent8.PHYSICL_FILE_NAME
+		  FROM PAY0015D Extent1
+		         LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.PO_UPD_USER_ID
+		         LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.PO_CRT_USER_ID
+		         LEFT JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent1.PO_ORD_ID
+		         LEFT JOIN SAL0029D Extent5   ON Extent5.CUST_ID = Extent4.CUST_ID
+		         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PO_STUS_ID
+		         LEFT JOIN SYS0070M Extent7 ON Extent7.ATCH_FILE_GRP_ID = Extent1.FILE_ID
+	             LEFT JOIN SYS0071D Extent8 ON Extent8.ATCH_FILE_ID = Extent7.ATCH_FILE_ID
+		 WHERE  Extent1.PO_ORD_ID = #{orderId}
+	</select>
+
+	<update id="updateInvoiceStatement" parameterType="Map">
+	   UPDATE PAY0015D
+	   SET PO_STUS_ID = 8,
+             PO_UPD_USER_ID = #{userId},
+             PO_UPD_DT = sysdate
+	   WHERE ID = #{poEntryId}
+	</update>
+
+	<select id="selectInvoiceStatementByOrdId" parameterType="Map" resultType="egovMap">
+	   SELECT Extent1.ID ID  ,
+	       Extent1.PO_ORD_ID PO_ORD_ID  ,
+	       Extent1.PO_REF_NO PO_REF_NO  ,
+	       Extent1.PO_START_INSTLMT PO_START_INSTLMT  ,
+	       Extent1.PO_END_INSTLMT PO_END_INSTLMT  ,
+	       Extent1.PO_REM PO_REM  ,
+	       Extent1.PO_STUS_ID PO_STUS_ID  ,
+	       Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+	       Extent1.PO_CRT_DT PO_CRT_DT  ,
+	       Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+	       Extent1.PO_UPD_DT PO_UPD_DT  ,
+	       Extent1.PO_CNTRCT_ID PO_CNTRCT_ID
+	  FROM PAY0015D Extent1
+	 WHERE  ( Extent1.PO_ORD_ID = #{orderId} )
+	          AND ( 1 = Extent1.PO_STUS_ID )
+	          AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{startPeriod} )
+	          AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{startPeriod} )
+	</select>
+
+	<insert id="insertInvoicStatement" parameterType="Map">
+	       INSERT INTO PAY0015D
+			(
+			  ID,
+			  PO_ORD_ID,
+			  PO_REF_NO,
+			  PO_START_INSTLMT,
+			  PO_END_INSTLMT,
+			  PO_REM,
+			  PO_STUS_ID,
+			  PO_CRT_USER_ID,
+			  PO_CRT_DT,
+			  PO_UPD_USER_ID,
+			  PO_UPD_DT,
+			  PO_CNTRCT_ID,
+			  FILE_ID
+			)
+			VALUES
+			(
+			  PAY0015D_ID_SEQ.NEXTVAL,
+			  #{poOrderId},
+			  #{referenceNo},
+			  #{startPeriod},
+			  #{endPeriod},
+			  #{remark},
+			  #{poStatusId},
+			  #{userId},
+			  sysdate,
+			  NULL,
+			  NULL,
+			  0,
+			  #{fileId}
+			)
+	</insert>
+
+    <select id="selectInvoiceStatementStart" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.ID ID  ,
+           Extent1.PO_ORD_ID PO_ORD_ID  ,
+           Extent1.PO_REF_NO PO_REF_NO  ,
+           Extent1.PO_START_INSTLMT PO_START_INSTLMT  ,
+           Extent1.PO_END_INSTLMT PO_END_INSTLMT  ,
+           Extent1.PO_REM PO_REM  ,
+           Extent1.PO_STUS_ID PO_STUS_ID  ,
+           Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+           Extent1.PO_CRT_DT PO_CRT_DT  ,
+           Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+           Extent1.PO_UPD_DT PO_UPD_DT  ,
+           Extent1.PO_CNTRCT_ID PO_CNTRCT_ID
+      FROM PAY0015D Extent1
+     WHERE  ( Extent1.PO_ORD_ID = #{orderId} )
+              AND ( 1 = Extent1.PO_STUS_ID )
+              AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{startPeriod} )
+              AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{startPeriod} )
+    </select>
+
+        <select id="selectInvoiceStatementEnd" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.ID ID  ,
+           Extent1.PO_ORD_ID PO_ORD_ID  ,
+           Extent1.PO_REF_NO PO_REF_NO  ,
+           Extent1.PO_START_INSTLMT PO_START_INSTLMT  ,
+           Extent1.PO_END_INSTLMT PO_END_INSTLMT  ,
+           Extent1.PO_REM PO_REM  ,
+           Extent1.PO_STUS_ID PO_STUS_ID  ,
+           Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+           Extent1.PO_CRT_DT PO_CRT_DT  ,
+           Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+           Extent1.PO_UPD_DT PO_UPD_DT  ,
+           Extent1.PO_CNTRCT_ID PO_CNTRCT_ID
+      FROM PAY0015D Extent1
+     WHERE  ( Extent1.PO_ORD_ID = #{orderId} )
+              AND ( 1 = Extent1.PO_STUS_ID )
+              AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{endPeriod} )
+              AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{endPeriod} )
+    </select>
+
+    <select id="selectCustBillId" parameterType="Map" resultType="java.lang.String">
+       SELECT
+            Extent1.CUST_BILL_ID CUST_BILL_ID
+        FROM SAL0001D Extent1
+        WHERE  Extent1.SALES_ORD_ID = #{orderId}
+        AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+
+    <select id="selectInvoiceBillGroupList" parameterType="Map" resultType="egovMap">
+       SELECT
+            CUST_BILL_GRP_NO,
+            SALES_ORD_ID,
+            SALES_ORD_NO,
+            REF_NO,
+            TO_CHAR(SALES_DT, 'DD/MM/YY') ORDER_DATE,
+            CODE STATUS,
+            APP_TYPE,
+            PRODUCT,
+            CUST_NAME,
+            CUST_BILL_ID
+          FROM ( SELECT Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                        Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                        Project2.SALES_DT SALES_DT  ,
+                        Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Project2.REF_NO,
+                        Project2.PRODUCT PRODUCT  ,
+                        Project2.CODE CODE  ,
+                        Project2.APP_TYPE,
+                        Project2.CUST_NAME,
+                        Project2.CUST_BILL_ID
+          FROM ( SELECT Project2.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                        Project2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Project2.REF_NO,
+                        Project2.CODE CODE  ,
+                        Project2.APP_TYPE,
+                        Project2.CUST_NAME,
+                        Project2.SALES_ORD_ID SALES_ORD_ID  ,
+                        Project2.SALES_DT SALES_DT  ,
+                        Project2.PRODUCT PRODUCT  ,
+                        Project2.CUST_BILL_ID,
+                        ROW_NUMBER() OVER ( ORDER BY Project2.SALES_ORD_NO ASC  ) ROW_NUMBER
+                 FROM ( SELECT Distinct1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                               Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+                               Distinct1.REF_NO,
+                               Distinct1.CODE CODE  ,
+                               Distinct1.APP_TYPE,
+                               Distinct1.CUST_NAME,
+                               Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+                               Distinct1.SALES_DT SALES_DT  ,
+                               Distinct1.PRODUCT PRODUCT  ,
+                               Distinct1.CUST_BILL_ID
+                        FROM ( SELECT DISTINCT Extent1.CUST_BILL_GRP_NO CUST_BILL_GRP_NO,
+                                            Extent2.SALES_ORD_ID SALES_ORD_ID  ,
+                                               Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                                               Extent2.REF_NO REF_NO,
+                                               Extent5.NAME CODE  ,
+                                               Extent6.CODE_NAME APP_TYPE,
+                                               Extent7.NAME CUST_NAME,
+                                               Extent1.CUST_BILL_ID CUST_BILL_ID,
+                                               CASE
+                                                    WHEN ( Extent2.SALES_DT IS NOT NULL ) THEN Extent2.SALES_DT
+                                               ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')
+                                                  END SALES_DT  ,
+                                               Extent4.STK_CODE || ' - ' || Extent4.STK_DESC PRODUCT
+                               FROM SAL0024D Extent1
+                                      JOIN SAL0001D Extent2   ON ( Extent2.CUST_BILL_ID = Extent1.CUST_BILL_ID )
+                                      AND ( 8 <![CDATA[<> ]]>   Extent2.STUS_CODE_ID )
+                                      JOIN SAL0002D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
+                                      JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent3.ITM_STK_ID
+                                      JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent2.STUS_CODE_ID
+                                      JOIN SYS0013M Extent6 ON Extent2.APP_TYPE_ID = Extent6.CODE_ID
+                                      JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_BILL_CUST_ID
+                                WHERE  Extent1.CUST_BILL_ID = #{custBillId} ) Distinct1 ) Project2 ) Project2
+         WHERE  Project2.ROW_NUMBER > 0
+          ORDER BY Project2.SALES_ORD_NO ASC )
+    </select>
+</mapper>

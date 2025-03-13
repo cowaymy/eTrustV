@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.ProductLostBillingMapper">
+    <select id="selectRentalProductLostPenalty" parameterType="java.lang.String" resultType="egovMap">
+        SELECT Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+			       Extent1.SALES_DT SALES_DT  ,
+			       NVL(Extent1.SALES_PRC,0) SALES_PRC  ,
+			       Extent1.BILL_MONTH BILL_MONTH  ,
+			       CASE WHEN Extent1.PNALTY >= 0 THEN PNALTY ELSE 0 END PNALTY ,
+			       Extent1.CUST_NAME CUST_NAME  ,
+			       Extent1.CONTACTNAME CNTC_NAME  ,
+			       Extent1.ADD1 ADD1  ,
+			       Extent1.ADD2 ADD2  ,
+			       Extent1.ADD3 ADD3  ,
+			       Extent1.SAREA SAREA  ,
+			       Extent1.SPOST_CODE SPOST_CODE  ,
+			       Extent1.SSTATE SSTATE  ,
+			       Extent1.SCOUNTRY SCOUNTRY  ,
+			       Extent1.STK_CODE STK_CODE  ,
+			       Extent1.STK_DESC STK_DESC  ,
+			       Extent1.INSTALL_ADDR1 INSTALL_ADDR1  ,
+			       Extent1.INSTALL_ADDR2 INSTALL_ADDR2  ,
+			       Extent1.INSTALL_ADDR3 INSTALL_ADDR3  ,
+			       Extent1.INSTALL_AREA INSTALL_AREA  ,
+			       Extent1.INSTALL_POST_CODE INSTALL_POST_CODE  ,
+			       Extent1.INSTALL_STATE INSTALL_STATE  ,
+			       Extent1.INSTALL_CNTY INSTALL_CNTY  ,
+			       Extent1.SERIAL_NO SERIAL_NO  ,
+			       Extent1.INSTALL_DT INSTALL_DT,
+                   Extent1.OUTSTANDING OUTSTANDING
+		  FROM SAL1018V Extent1
+		WHERE Extent1.SALES_ORD_ID = #{value}
+    </select>
+
+    <select id="getDocNumberForProductLost" resultType="String">
+        select FN_GET_DOCNO(#{value}) from dual
+    </select>
+
+    <select id="getZRLocationId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT NVL(Extent3.ZR_LOC_ID, 0) ZR_LOC_ID
+		  FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		                        <!-- [19-09-2018] FIX ADDRESS ISSUE  -->
+				                <!-- nads.POSTCODE POST_CODE_ID  , -->
+				                Extent2.POSTCODEID POST_CODE_ID  ,
+				                <!-- [19-09-2018] FIX ADDRESS ISSUE  -->
+				                <!-- Extent2.AREA_ID AREA_ID,  -->
+				                Extent2.AREAID AREA_ID,
+				                <!-- [19-09-2018] FIX ADDRESS ISSUE  -->
+				                <!-- nads.STATE STATE_ID   -->
+				                Extent2.STATEID STATE_ID
+		                FROM SAL0045D Extent1
+		                JOIN SAL0023D Extent2   ON Extent1.ADD_ID = Extent2.CUST_ADD_ID
+		         LEFT JOIN SYS0064M nads ON Extent2.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1
+		             WHERE  8 <![CDATA[<>]]> Extent1.STUS_CODE_ID ) Filter1
+		  JOIN SAL0044D Extent3   ON ( Filter1.POST_CODE_ID = Extent3.ZR_LOC_POST_CODE_ID )
+		   AND ( Filter1.STATE_ID = Extent3.ZR_LOC_STATE_ID )
+		   AND ( Filter1.AREA_ID = Extent3.ZR_LOC_AREA_ID )
+	   WHERE   ( 1 = Extent3.ZR_LOC_STUS_ID )
+		   AND ( Filter1.SALES_ORD_ID = #{value} )
+		   AND ROWNUM = 1
+    </select>
+
+    <select id="getRSCertificateId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT Extent1.EURC_ID EURC_ID
+		  FROM SAL0042D Extent1
+		WHERE  ( 1 = Extent1.EURC_STUS_CODE_ID )
+		    AND ( Extent1.EURC_SALES_ORD_ID = #{value} )
+		    AND ROWNUM = 1
+    </select>
+
+    <insert id="insertLedger" parameterType="Map">
+        <selectKey keyProperty="rentRunId" resultType="int" order="BEFORE">
+            SELECT PAY0022D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0022D
+		(
+		    RENT_RUN_ID,
+		    RENT_ID,
+		    RENT_SO_ID,
+		    RENT_DOC_NO,
+		    RENT_DOC_TYPE_ID,
+		    RENT_DT_TM,
+		    RENT_AMT,
+		    RENT_BATCH_NO,
+		    RENT_INST_NO,
+		    RENT_UPD_USER_ID,
+		    RENT_UPD_DT,
+		    RENT_IS_SYNC,
+		    RENT_BILL_RUNNG_TOT,
+		    R01,
+		    R02
+		)
+		  VALUES
+		(
+		    #{rentRunId},
+		    #{rentId},
+		    #{rentSoId},
+		    #{rentDocNo},
+		    #{rentDocTypeId},
+		    TO_DATE(#{rentDateTime}, 'YYYY-MM-DD HH24:MI:SS'),
+		    #{rentAmount},
+		    #{rentBatchNo},
+		    #{rentInstNo},
+		    #{rendUpdateBy},
+		    TO_DATE(#{rentUpdateAt}, 'YYYY-MM-DD HH24:MI:SS'),
+		    #{rentIsSync},
+		    #{rentBillrunningTotal},
+		    NULL,
+		    NULL
+		)
+    </insert>
+
+    <insert id="insertOrderBill" parameterType="Map">
+        INSERT INTO PAY0016D
+		(
+		  ACC_BILL_ID,
+		  ACC_BILL_TASK_ID,
+		  ACC_BILL_REF_DT,
+		  ACC_BILL_REF_NO,
+		  ACC_BILL_ORD_ID,
+		  ACC_BILL_ORD_NO,
+		  ACC_BILL_TYPE_ID,
+		  ACC_BILL_MODE_ID,
+		  ACC_BILL_SCHDUL_ID,
+		  ACC_BILL_SCHDUL_PRIOD,
+		  ACC_BILL_ADJ_ID,
+		  ACC_BILL_SCHDUL_AMT,
+		  ACC_BILL_ADJ_AMT,
+		  ACC_BILL_TXS_AMT,
+		  ACC_BILL_NET_AMT,
+		  ACC_BILL_STUS,
+		  ACC_BILL_REM,
+		  ACC_BILL_CRT_DT,
+		  ACC_BILL_CRT_USER_ID,
+		  ACC_BILL_GRP_ID,
+		  ACC_BILL_TAX_CODE_ID,
+		  ACC_BILL_TAX_RATE,
+		  ACC_BILL_ACCT_CNVR,
+		  ACC_BILL_CNTRCT_ID
+		)
+		  VALUES
+		(
+		  PAY0016D_SEQ.NEXTVAL,
+		  #{accBillTaskId},
+		  TO_DATE(#{accBillRefDate}, 'YYYY-MM-DD HH24:MI:SS'),
+		  #{accBillRefNo},
+		  #{accBillOrderId},
+		  #{accBillOrderNo},
+		  #{accBillTypeId},
+		  #{accBillModeId},
+		  #{accBillScheduleId},
+		  #{accBillSchedulePeriod},
+		  #{accBillAdjustmentId},
+		  #{accBillScheduleAmount},
+		  #{accBillAdjustmentAmount},
+		  #{accBillTaxesAmount},
+		  #{accBillNetAmount},
+		  #{accBillStatus},
+		  #{accBillRemark},
+		  TO_DATE(#{accBillCreateAt}, 'YYYY-MM-DD HH24:MI:SS'),
+		  #{accBillCreateBy},
+		  #{accBillGroupId},
+		  #{accBillTaxCodeId},
+		  #{accBillTaxRate},
+		  0,
+		  0
+		)
+    </insert>
+
+     <insert id="insertInvoiceM" parameterType="Map">
+        <selectKey keyProperty="taxInvoiceId" resultType="int" order="BEFORE">
+            SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0031D
+		(
+		    TAX_INVC_ID,
+		    TAX_INVC_REF_NO,
+		    TAX_INVC_REF_DT,
+		    TAX_INVC_SVC_NO,
+		    TAX_INVC_TYPE,
+		    TAX_INVC_CUST_NAME,
+		    TAX_INVC_CNTC_PERSON,
+		    TAX_INVC_ADDR1,
+		    TAX_INVC_ADDR2,
+		    TAX_INVC_ADDR3,
+		    TAX_INVC_ADDR4,
+		    TAX_INVC_POST_CODE,
+		    TAX_INVC_STATE_NAME,
+		    TAX_INVC_CNTY,
+		    TAX_INVC_TASK_ID,
+		    TAX_INVC_REM,
+		    TAX_INVC_CHRG,
+		    TAX_INVC_TXS,
+		    TAX_INVC_AMT_DUE,
+		    TAX_INVC_CRT_DT,
+		    TAX_INVC_CRT_USER_ID
+		)
+		VALUES
+		(
+		    #{taxInvoiceId},
+		    #{taxInvoiceRefNo},
+		    TO_DATE(#{taxInvoiceRefDate}, 'YYYY-MM-DD HH24:MI:SS'),
+		    #{taxInvoiceserviceNo},
+		    #{taxInvoiceType},
+		    #{taxInvoiceCustName},
+		    #{taxInvoiceContactPerson},
+		    #{taxInvoiceAddress1},
+		    #{taxInvoiceAddress2},
+		    #{taxInvoiceAddress3},
+		    #{taxInvoiceAddress4},
+		    #{taxInvoicePostCode},
+		    #{taxInvoiceStateName},
+		    #{taxInvoiceCountry},
+		    #{taxInvoiceTaskId},
+		    #{taxInvoiceRemark},
+		    #{taxInvoiceCharges},
+		    #{taxInvoiceTaxes},
+		    #{taxInvoiceAmoutDue},
+		    TO_DATE(#{taxInvoiceCreated}, 'YYYY-MM-DD HH24:MI:SS'),
+		    #{taxInvoiceCreator}
+		)
+     </insert>
+
+     <insert id="insertInvoiceD" parameterType="Map">
+            INSERT INTO PAY0032D
+			(
+			    INVC_ITM_ID,
+			    TAX_INVC_ID,
+			    INVC_ITM_TYPE,
+			    INVC_ITM_ORD_NO,
+			    INVC_ITM_PO_NO,
+			    INVC_ITM_CODE,
+			    INVC_ITM_DESC1,
+			    INVC_ITM_DESC2,
+			    INVC_ITM_SERIAL_NO,
+			    INVC_ITM_QTY,
+			    INVC_ITM_UNIT_PRC,
+			    INVC_ITM_GST_RATE,
+			    INVC_ITM_GST_TXS,
+			    INVC_ITM_CHRG,
+			    INVC_ITM_AMT_DUE,
+			    INVC_ITM_ADD1,
+			    INVC_ITM_ADD2,
+			    INVC_ITM_ADD3,
+			    INVC_ITM_ADD4,
+			    INVC_ITM_POST_CODE,
+			    INVC_ITM_AREA_NAME,
+			    INVC_ITM_STATE_NAME,
+			    INVC_ITM_CNTY,
+			    INVC_ITM_INSTALL_DT,
+			    INVC_ITM_RETN_DT,
+			    INVC_ITM_BILL_REF_NO
+			)
+			VALUES
+			(
+			    PAY0032D_SEQ.NEXTVAL,
+			    #{taxInvoiceId},
+			    #{invoiceItemType},
+			    #{invoiceItemOrderNo},
+			    #{invoiceItemPoNo},
+			    #{invoiceItemCode},
+			    #{invoiceItemDescription1},
+			    #{invoiceItemDescription2},
+			    #{invoiceItemSerialNo},
+			    #{invoiceItemQuantity},
+			    0,
+			    #{invoiceItemGSTRate},
+			    #{invoiceItemGSTTaxes},
+			    #{invoiceItemCharges},
+			    #{invoiceItemAmountDue},
+			    #{invoiceItemAdd1},
+			    #{invoiceItemAdd2},
+			    #{invoiceItemAdd3},
+			    NULL,
+			    #{invoiceItemPostCode},
+			    NULL,
+			    #{invoiceItemStateName},
+			    #{invoiceItemCountry},
+			    TO_DATE(#{invoiceItemInstallDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			     NULL,
+			     NULL
+			)
+     </insert>
+</mapper>

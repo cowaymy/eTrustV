@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.hasratCody.impl.HasratCodyMapper">
+
+    <select id="selectHasratCodyList" parameterType="Map" resultType="egovMap">
+        SELECT
+            ID
+            , CODY_ID
+            , CODY_CODE
+            , CODY_NAME
+            , CODY_EMAIL
+            , B.CODE branchCode
+            , R.CODE_NAME region
+            , CODY_CNTC
+            , C.CODE_NAME Category
+            , SENDER
+            , M.RECIPIENT
+            , to_char(M.CRT_DT , 'DD/MM/YYYY') crtdt
+            , U.USER_NAME userName
+            , CM_CODE
+            , SCM_CODE
+            , GCM_CODE
+            , EMAIL_CONTENT
+        FROM ORG0032M M LEFT JOIN SYS0005M B ON M.BRANCH_ID = B.BRNCH_ID
+        LEFT JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 458) C ON C.CODE = M.ISSUE_CAT
+        LEFT JOIN SYS0013M R ON B.REGN_ID = R.CODE_ID
+        LEFT JOIN SYS0047M U ON U.USER_ID = M.CRT_USER_ID
+        WHERE 1 = 1
+        <if test="sCodyBranch != null and sCodyBranch !=''">
+            AND M.BRANCH_ID = #{sCodyBranch}
+        </if>
+        <if test="sCodyCode != null and sCodyCode !=''">
+            AND M.CODY_CODE = #{sCodyCode}
+        </if>
+        <if test="sCodyEmail != null and sCodyEmail !=''">
+            AND M.CODY_EMAIL = #{sCodyEmail}
+        </if>
+        <if test="sCategory != null and sCategory !=''">
+            AND M.ISSUE_CAT = #{sCategory}
+        </if>
+        <if test="id != null and id != ''">
+            AND M.ID = #{id}
+        </if>
+
+        order by ID desc
+    </select>
+
+    <insert id="insertHasratCody" parameterType="Map">
+        INSERT INTO ORG0032M (
+            ID
+            , CODY_ID
+            , CODY_CODE
+            , CODY_NAME
+            , CODY_EMAIL
+            , BRANCH_ID
+            , CM_CODE
+            , SCM_CODE
+            , GCM_CODE
+            , CODY_CNTC
+            , ISSUE_CAT
+            , SENDER
+            , RECIPIENT
+            , CRT_DT
+            , CRT_USER_ID
+            , EMAIL_CONTENT
+        ) VALUES (
+            ORG0032M_SEQ.NEXTVAL
+            , #{ncodyId}
+            , #{ncodyCode}
+            , #{ncodyName}
+            , #{ncodyEmail}
+            , #{nbranchId}
+            , #{ncmCode}
+            , #{nscmCode}
+            , #{ngcmCode}
+            , #{ncontactNumber}
+            , #{nreasonCat}
+            , #{nsender}
+            , #{nrecipient}
+            , SYSDATE
+            , #{user_id}
+            , #{neContent}
+        )
+    </insert>
+
+    <select id="selectCodyBranchList" parameterType="Map" resultType="egovMap">
+        select BRNCH_ID code,code || '-' || NAME CODE_NAME
+        from sys0005m where
+        TYPE_ID = 42 ORDER BY CODE_NAME
+    </select>
+
+    <select id="selectUserInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+		    M.NAME username
+		    , M.MEM_ID userid
+		    , M.MEM_CODE usercode
+		    , G.LAST_DEPT_CODE cmcode
+		    , G.LAST_GRP_CODE scmcode
+		    , G.LAST_ORG_CODE gcmcode
+		    , B.CODE || ' - ' || B.NAME AS branch
+		    , B.BRNCH_ID branchid
+		    , M.TEL_MOBILE contactno
+		FROM
+		    SYS0047M U
+		    JOIN ORG0001D M ON U.HR_CODE = M.MEM_CODE
+		    LEFT JOIN ORG0005D G ON G.MEM_ID = M.MEM_ID
+		    LEFT JOIN SYS0005M B ON B.BRNCH_ID = M.BRNCH
+		WHERE
+		    U.USER_ID = #{loginId}
+    </select>
+
+</mapper>

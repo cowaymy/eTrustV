@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRCMapper">
+   
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+		 SELECT BRNCH_ID   ,
+		            CODE ||' - '||NAME BRNCH_NAME  
+		 FROM SYS0005M 
+		  WHERE STUS_ID = 1
+		ORDER BY BRNCH_NAME   
+    </select>
+    
+    <select id="selectReasonList" parameterType="Map" resultType="egovMap">
+		SELECT RESN_ID RESN_ID  ,
+		       CODE CODE  ,
+		       CODE || ' - ' || RESN_DESC RESN_NAME  
+		  FROM SYS0032M 
+		 WHERE  RESN_TYPE_ID = 1371 
+		      AND  STUS_CODE_ID = 1
+    </select>
+    
+    <select id="selectCancellationList" parameterType="Map" resultType="egovMap">
+		 SELECT A.TRMNAT_ID   ,
+                A.TRMNAT_REF_NO   ,
+                A.TRMNAT_CNTRCT_ID   ,
+                A.TRMNAT_RESN_ID   ,
+                A.TRMNAT_REM   ,
+                A.TRMNAT_OBLIGT_PRIOD   ,
+                A.TRMNAT_CNTRCT_SUB_PRIOD   ,
+                A.TRMNAT_PNALTY   ,
+                TO_CHAR(A.TRMNAT_CRT_DT , 'DD-MM-YYYY')  TRMNAT_CRT_DT ,
+                B.SRV_CNTRCT_REF_NO   ,
+                C.SALES_ORD_NO   ,
+                D.RESN_DESC   ,
+                E.CODE_NAME   ,
+                F.USER_NAME   ,
+                G.BRNCH_ID   ,
+                G.CODE   ,
+                H.TAX_INVC_REF_NO   
+         FROM SAL0086D A
+                JOIN SAL0077D B   ON B.SRV_CNTRCT_ID = A.TRMNAT_CNTRCT_ID
+                JOIN SAL0001D C   ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+                JOIN SYS0032M D   ON D.RESN_ID = A.TRMNAT_RESN_ID
+                JOIN SYS0013M E   ON E.CODE_ID = A.TRMNAT_REQSTER
+                JOIN SYS0047M F   ON F.USER_ID = A.TRMNAT_CRT_USER_ID
+                JOIN SYS0005M G   ON G.BRNCH_ID = F.USER_BRNCH_ID
+                JOIN PAY0031D H   ON H.TAX_INVC_SVC_NO = A.TRMNAT_REF_NO
+          WHERE 1=1
+          <if test="trmnatRefNo != null and trmnatRefNo != '' ">
+               AND A.TRMNAT_REF_NO = UPPER(#{trmnatRefNo})
+          </if> 
+          <if test="srvCntrctRefNo != null and srvCntrctRefNo != '' ">
+               AND B.SRV_CNTRCT_REF_NO = #{srvCntrctRefNo}
+          </if>  
+          <if test="salesOrdNo != null and salesOrdNo != '' ">
+               AND C.SALES_ORD_NO = #{salesOrdNo}
+          </if>  
+          <if test="stTrmnatCrtDt != null and stTrmnatCrtDt != '' ">
+          AND TO_CHAR(A.TRMNAT_CRT_DT , 'DD/MM/YYYY') BETWEEN #{stTrmnatCrtDt} AND #{edTrmnatCrtDt}                          
+          </if>  
+          <if test="userName != null and userName != '' ">
+               AND F.USER_NAME = #{userName}
+          </if>  
+          <if test="reason != null and reason != '' ">
+               AND A.TRMNAT_RESN_ID = #{reason}
+          </if>  
+          <if test="branch != null and branch != '' ">
+               AND G.BRNCH_ID = #{branch}  
+          </if> 
+            ORDER BY TRMNAT_ID DESC
+  
+    </select>
+    
+    <select id="selectCancellationInfo" parameterType="Map" resultType="egovMap">
+		 SELECT A.TRMNAT_ID   ,
+			       A.TRMNAT_REF_NO   ,
+			       A.TRMNAT_CNTRCT_ID   ,
+			       B.SRV_CNTRCT_REF_NO   ,
+			       C.SALES_ORD_NO   ,
+			       A.TRMNAT_RESN_ID   ,
+			       D.RESN_DESC   ,
+			       TO_CHAR(A.TRMNAT_CRT_DT, 'DD/MM/YYYY')   TRMNAT_CRT_DT ,
+			       F.USER_NAME   ,
+			       G.BRNCH_ID   ,
+			       G.CODE   ,
+			       A.TRMNAT_PNALTY   ,
+			       H.TAX_INVC_REF_NO   ,
+			       E.CODE_NAME   ,
+			       A.TRMNAT_REM   ,
+			       A.TRMNAT_OBLIGT_PRIOD   ,
+			       A.TRMNAT_CNTRCT_SUB_PRIOD   
+			  FROM SAL0086D A
+			         JOIN SAL0077D B   ON B.SRV_CNTRCT_ID = A.TRMNAT_CNTRCT_ID
+			         JOIN SAL0001D C   ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+			         JOIN SYS0032M D   ON D.RESN_ID = A.TRMNAT_RESN_ID
+			         JOIN SYS0013M E   ON E.CODE_ID = A.TRMNAT_REQSTER
+			         JOIN SYS0047M F   ON F.USER_ID = A.TRMNAT_CRT_USER_ID
+			         JOIN SYS0005M G   ON G.BRNCH_ID = F.USER_BRNCH_ID
+			         JOIN PAY0031D H   ON H.TAX_INVC_SVC_NO = A.TRMNAT_REF_NO
+			 WHERE  A.TRMNAT_ID = #{trmnatId} 
+			 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+		SELECT A.DEPT_CODE   ,
+		       B.MEM_ID    ,
+		       B.NAME   ,
+		       B.FULL_NAME   ,
+		       CASE 
+		            WHEN ( 4 = A.MEM_LVL ) THEN B.MEM_CODE || ' - ' || B.NAME
+		       ELSE A.DEPT_CODE || ' - ' || B.NAME
+		          END DEPT_CODE_NAME  
+		  FROM ORG0005D A
+		         JOIN ORG0001D B   ON A.MEM_ID = B.MEM_ID
+		 WHERE   A.DEPT_CODE IS NOT NULL 
+		          AND  ' ' <![CDATA[<> ]]>A.DEPT_CODE 
+		          AND  1 = B.STUS 
+		          AND  B.MEM_TYPE = #{memType} 
+		          AND  A.MEM_LVL = #{memLvl} 
+		          AND  A.MEM_UP_ID = #{memUpId}
+		          AND  B.STUS IN ( 1,8 )         
+		  ORDER BY A.DEPT_CODE ASC
+    </select>
+    
+    <select id="selectCancellReqInfo" parameterType="Map" resultType="egovMap">
+		SELECT A.SRV_CNTRCT_ID   ,
+		       A.SRV_CNTRCT_REF_NO   ,
+		       A.SRV_CNTRCT_ORD_ID   ,
+		       E.SALES_ORD_NO   ,
+		       C.CODE  STATUS ,
+		       D.CNTRCT_RENTAL_STUS   ,
+		       TO_CHAR(B.SRV_PRD_START_DT , 'DD-MM-YYYY')   SRV_PRD_START_DT,
+		       TO_CHAR(B.SRV_PRD_EXPR_DT, 'DD-MM-YYYY')    SRV_PRD_EXPR_DT
+		  FROM SAL0077D A
+		         JOIN SAL0088D B   ON B.SRV_PRD_CNTRCT_ID = A.SRV_CNTRCT_ID
+		         JOIN SYS0038M C   ON C.STUS_CODE_ID = A.SRV_CNTRCT_STUS_ID
+		         JOIN SAL0078D D   ON D.SRV_CNTRCT_ID = A.SRV_CNTRCT_ID
+		         JOIN SAL0001D E   ON  E.SALES_ORD_ID = A.SRV_CNTRCT_ORD_ID 
+		         AND  4 = E.STUS_CODE_ID 
+		 WHERE   4 = A.SRV_CNTRCT_STUS_ID 
+		 
+          <if test="searchType == 'ORDER' ">
+             AND  E.SALES_ORD_NO = #{searchNo}
+             </if> 
+             
+          <if test="searchType == 'RSVM'  ">
+             AND  A.SRV_CNTRCT_REF_NO = #{searchNo}
+             </if> 
+    </select>
+    
+    <select id="selectCancellMemInfo" parameterType="Map" resultType="egovMap">
+		SELECT A.SRV_CNTRCT_ID   ,
+			       A.SRV_CNTRCT_REF_NO   ,
+			       A.SRV_CNTRCT_ORD_ID   ,
+			       A.SRV_CNTRCT_STUS_ID   ,
+			       A.SRV_CNTRCT_PCKG_ID   ,
+			       A.SRV_CNTRCT_NET_MONTH   ,
+			       A.SRV_CNTRCT_NET_YEAR   ,
+			       A.SRV_CNTRCT_RENTAL   ,
+			       TO_CHAR(A.SRV_CNTRCT_CRT_DT,'DD-MM-YYYY')  SRV_CNTRCT_CRT_DT  ,
+			       B.CNTRCT_RENTAL_STUS   ,
+			       C.SRV_CNTRCT_PAC_DESC   ,
+			       D.PO_REF_NO   ,
+			       E.USER_NAME CRT_USER_NAME  ,
+			       F.USER_NAME UPD_USER_NAME  ,
+			       TO_CHAR(G.SRV_PRD_START_DT,'DD-MM-YYYY')  SRV_PRD_START_DT  ,
+			       TO_CHAR(G.SRV_PRD_EXPR_DT  ,'DD-MM-YYYY') SRV_PRD_EXPR_DT ,
+			       H.CODE  CNTRCT_STUS_CODE ,
+			       I.MEM_CODE   SALESMAN_CODE,
+			       I.NAME   SALESMAN_NAME,
+			       A0.QOTAT_REF_NO   ,
+			       A0.QOTAT_CNTRCT_DUR   ,
+			       A0.QOTAT_CNTRCT_FREQ   ,
+			       TO_CHAR(A0.QOTAT_CRT_DT ,'DD-MM-YYYY')  QOTAT_CRT_DT ,
+			       A3.CNFM_REM   ,
+			       A4.CODE_NAME  CNFM_TYPE ,
+			       A5.RESN_DESC   ,
+			       A6.SALES_ORD_NO   ,
+			       A7.NAME  CUST_NAME ,
+			       A8.USER_NAME  QOTAT_CRT_USER_NAME ,
+			       TO_CHAR(A.SRV_CNTRCT_UPD_DT,'DD-MM-YYYY')  SRV_CNTRCT_UPD_DT,
+			       CASE WHEN  A.SRV_CNTRCT_PROMO_ID IS NOT NULL  THEN A.SRV_CNTRCT_PROMO_ID ELSE 0 END SRV_CNTRCT_PROMO_ID  ,
+			       CASE WHEN  A1.PROMO_ID IS NOT NULL  THEN A1.PROMO_DESC ELSE '-' END PAC_PROMO_DESC  ,
+			       CASE WHEN  A2.PROMO_ID IS NOT NULL  THEN A2.PROMO_DESC ELSE '-' END FIL_PROMO_DESC  
+			  FROM SAL0077D A
+			         JOIN SAL0078D B   ON B.SRV_CNTRCT_ID = A.SRV_CNTRCT_ID
+			         JOIN SAL0081D C   ON C.SRV_CNTRCT_PAC_ID = A.SRV_CNTRCT_PCKG_ID
+			         LEFT JOIN PAY0015D D   ON D.PO_CNTRCT_ID = A.SRV_CNTRCT_ID
+			         JOIN SYS0047M E   ON E.USER_ID = A.SRV_CNTRCT_CRT_USER_ID
+			         JOIN SYS0047M F   ON F.USER_ID = A.SRV_CNTRCT_UPD_USER_ID
+			         JOIN SAL0088D G   ON G.SRV_PRD_CNTRCT_ID = A.SRV_CNTRCT_ID
+			         JOIN SYS0038M H   ON H.STUS_CODE_ID = A.SRV_CNTRCT_STUS_ID
+			         LEFT JOIN ORG0001D I   ON I.MEM_ID = A.SRV_CNTRCT_SALESMAN
+			         JOIN SAL0083D A0   ON A0.QOTAT_ID = A.SRV_CNTRCT_QUOT_ID
+			         LEFT JOIN SAL0017D A1   ON A1.PROMO_ID = A0.QOTAT_PAC_PROMO_ID
+			         LEFT JOIN SAL0017D A2   ON A2.PROMO_ID = A0.QOTAT_FIL_PROMO_ID
+			         JOIN SAL0079D A3   ON A3.CNFM_CNTRCT_ID = A.SRV_CNTRCT_ID
+			         LEFT JOIN SYS0013M A4   ON A4.CODE_ID = A3.CNFM_TYPE_ID
+			         LEFT JOIN SYS0032M A5   ON A5.RESN_ID = A3.CNFM_FDBCK_ID
+			         JOIN SAL0001D A6   ON A6.SALES_ORD_ID = A.SRV_CNTRCT_ORD_ID
+			         JOIN SAL0029D A7   ON A7.CUST_ID = A6.CUST_ID
+			         JOIN SYS0047M A8   ON A8.USER_ID = A0.QOTAT_CRT_USER_ID
+			 WHERE  A.SRV_CNTRCT_ID = #{srvCntrctId} 
+			    AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectBillInfo" parameterType="Map" resultType="int">
+		SELECT MAX(A.SRV_LDGR_CNTRCT_SCHDUL_NO) SRV_LDGR_CNTRCT_SCHDUL_NO 
+			  FROM PAY0023D A
+			         LEFT JOIN PAY0017D B   ON B.ACC_INV_VOID_INVC_NO = A.SRV_LDGR_REF_NO
+			 WHERE   A.SRV_LDGR_CNTRCT_ID = #{srvCntrctId} 
+	            AND  A.SRV_LDGR_AMT <![CDATA[>]]> 0 
+	            AND  160 <![CDATA[<>]]> A.SRV_LDGR_TYPE_ID 
+	            AND  1307 <![CDATA[<> ]]>A.SRV_LDGR_TYPE_ID
+	            AND  B.ACC_INV_VOID_ID IS NULL 
+                GROUP BY SRV_LDGR_CNTRCT_ID
+    </select>
+    
+    <select id="selectContractSchedules" parameterType="Map" resultType="egovMap">
+		SELECT A.SRV_PAY_SCHDUL_ID   ,
+			       A.SRV_PAY_CNTRCT_ID   ,
+			       A.SRV_PAY_SCHDUL_ORD_ID   ,
+			       A.SRV_PAY_SCHDUL_NO   ,
+			       A.SRV_PAY_SCHDUL_MONTH   ,
+			       A.SRV_PAY_SCHDUL_YEAR   ,
+			       A.SRV_PAY_SCHDUL_TYPE_ID   ,
+			       A.SRV_PAY_SCHDUL_AMT   ,
+			       A.SRV_PAY_SCHDUL_STUS_ID   ,
+			       A.SRV_PAY_SCHDUL_REM   
+			  FROM SAL0085D A
+			 WHERE  A.SRV_PAY_CNTRCT_ID = #{srvCntrctId}  
+			     AND  A.SRV_PAY_SCHDUL_MONTH = TO_CHAR(sysdate, 'MM') 
+			     AND  A.SRV_PAY_SCHDUL_YEAR = TO_CHAR(sysdate, 'YYYY')
+			     AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectContractLedger" parameterType="Map" resultType="float">
+		SELECT SUM(A.SRV_LDGR_AMT) AS  SRV_LDGR_AMT 
+			  FROM PAY0023D A
+			 WHERE  A.SRV_LDGR_CNTRCT_ID = #{srvCntrctId}   
+             GROUP BY SRV_LDGR_CNTRCT_ID
+    </select>
+    
+    <select id="selectOrdInfo" parameterType="Map" resultType="egovMap">
+		SELECT A.ORD_ID   ,
+			       A.ORD_NO   ,
+			       A.RENTAL_STUS   ,
+			       A.ORD_STUS_ID   ,
+			       A.ORD_STUS_CODE   ,
+			       A.ORD_STUS_NAME   ,
+			       TO_CHAR(A.ORD_DT, 'DD-MM-YYYY')  ORD_DT  ,
+			       A.INSTLMT_PRIOD   ,
+			       A.ORD_AMT   ,
+			       A.ORD_MTH_RENTAL   ,
+			       A.ORD_PV   ,
+			       A.ORD_PV_MONTH   ,
+			       A.ORD_PV_YEAR   ,
+			       A.ORD_REF_NO   ,
+			       A.ORD_PO_NO   ,
+			       A.ORD_DEPT_CODE   ,
+			       A.ORD_GRP_CODE   ,
+			       A.ORD_ORG_CODE   ,
+			       A.ORD_CRT_USER_ID   ,
+			       A.ORD_CRT_DT   ,
+			       A.APP_TYPE_ID   ,
+			       A.APP_TYPE_CODE   ,
+			       A.APP_TYPE_DESC   ,
+			       A.STOCK_ID   ,
+			       A.STOCK_CODE   ,
+			       A.STOCK_DESC   ,
+			       A.CUST_ID   ,
+			       A.CUST_TYPE   ,
+			       A.CUST_NAME   ,
+			       A.CUST_NRIC   ,
+			       A.CUST_DOB   ,
+			       A.CUST_NATION   ,
+			       A.CUST_GENDER   ,
+			       A.CUST_RACE   ,
+			       A.CUST_EMAIL   ,
+			       A.CUST_VA_NO   ,
+			       A.CUST_PASSPORT_EXPR   ,
+			       A.CUST_VISA_EXPR   ,
+			       A.ORD_PROMO_ID   ,
+			       A.ORD_PROMO_CODE   ,
+			       A.ORD_PROMO_DESC   ,
+			       A.ORD_MEM_ID   ,
+			       A.ORD_MEM_CODE   ,
+			       A.ORD_MEM_NAME   ,
+			       A.ORD_MEM_NRIC   ,
+			       A.ORD_MEM_TYPE_ID   ,
+			       A.ORD_MEM_TYPE_CODE   ,
+			       A.ORD_MEM_TYPE_NAME   ,
+			       A.COOL_OFF_PRIOD   ,
+			       A.KEYIN_BRNCH_ID   ,
+			       A.KEYIN_BRNCH_CODE   ,
+			       A.KEYIN_BRNCH_NAME   ,
+			       A.ORD_REM   ,
+			       A.RENT_CHK_ID   ,
+			       A.ORD_HM_ID   ,
+			       A.ORD_SM_ID   ,
+			       A.ORD_GM_ID   ,
+			       A.ORD_ADDR_ID   ,
+			       A.ORD_CNTC_ID   ,
+			       A.ORD_PROMO_RELATED_NO   ,
+			       A.UPD_DT   ,
+			       A.UPD_USER_ID   ,
+			       A.JOM_PAY_REF   ,
+			       A.STK_CTGRY_ID   ,
+			       A.STK_CTGRY_NAME   ,
+			       A.CUST_TYPE_ID   ,
+			       A.CUST_BILL_ID   ,
+			       A.OBLIGT_YEAR   
+			  FROM SAL1006V A
+			 WHERE  A.ORD_ID = #{srvCntrctOrdId}
+    </select>
+    
+    <select id="selectSrvMemConfigInfo" parameterType="Map" resultType="egovMap">
+		SELECT SRV_CONFIG_ID
+		           ,SRV_PRD_ID
+		           ,TO_CHAR(SRV_PRD_EXPR_DT, 'DD-MM-YYYY') SRV_PRD_EXPR_DT
+		           ,PAC_DESC  
+		  FROM (  SELECT A.SRV_CONFIG_ID   ,
+		                B.SRV_PRD_ID   ,
+		                B.SRV_PRD_EXPR_DT   ,
+		                CASE WHEN  C.SRV_MEM_ID IS NOT NULL AND  E.SRV_MEM_PAC_ID IS NOT NULL THEN E.SRV_MEM_DESC
+		                         WHEN  D.SRV_CNTRCT_ID IS NOT NULL AND  F.SRV_CNTRCT_PAC_ID IS NOT NULL THEN F.SRV_CNTRCT_PAC_DESC 
+		                ELSE '' END PAC_DESC   
+		         FROM SAL0090D A
+		                JOIN SAL0088D B   ON  B.SRV_CONFIG_ID = A.SRV_CONFIG_ID 
+		                AND  B.SRV_PRD_EXPR_DT > to_date('1900-01-01', 'yyyy-mm-dd') 
+		                AND  1 = B.SRV_PRD_STUS_ID 
+		                LEFT JOIN SAL0095D C   ON  C.SRV_MEM_ID = B.SRV_MBRSH_ID 
+		                AND  4 = C.SRV_STUS_CODE_ID 
+		                LEFT JOIN SAL0077D D   ON  D.SRV_CNTRCT_ID = B.SRV_PRD_CNTRCT_ID 
+		                AND  4 = D.SRV_CNTRCT_STUS_ID 
+		                LEFT JOIN SAL0091M E   ON E.SRV_MEM_PAC_ID = C.SRV_MEM_PAC_ID
+		                LEFT JOIN SAL0081D F   ON F.SRV_CNTRCT_PAC_ID = D.SRV_CNTRCT_PCKG_ID
+		          WHERE  A.SRV_SO_ID = #{srvCntrctOrdId}
+		                   AND 1 = A.SRV_STUS_ID 
+		  ORDER BY B.SRV_PRD_ID DESC )
+		  WHERE ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectMemAddrInfo" parameterType="Map" resultType="egovMap">
+		SELECT A.ORD_ID ,
+			       A.INST_ADDR_DTL ,
+			       A.INST_STREET,
+			       A.INST_COUNTRY  ,
+			       A.INST_CITY,
+			       A.INST_STATE ,
+			       A.INST_AREA ,
+			       A.INST_POSTCODE ,
+			       A.INST_CNT_NAME ,
+			       A.INST_CNT_NRIC ,
+			       A.INST_CNT_EMAIL ,
+			       A.INST_CNT_TEL_M ,
+			       A.INST_CNT_TEL_O ,
+			       A.INST_CNT_TEL_R ,
+			       A.INST_CNT_TEL_F ,
+			       A.INST_CNT_GENDER ,
+			       A.FIRST_INSTALL_NO ,
+			       A.FIRST_INSTALL_CT_CODE ,
+			       A.FIRST_INSTALL_CT_NAME ,
+			       A.FIRST_INSTALL_DT ,
+			       A.FIRST_INSTALL_REM ,
+			       A.FIRST_INSTALL_SIRIM_NO ,
+			       A.FIRST_INSTALL_SERIAL_NO ,
+			       A.LAST_INSTALL_NO ,
+			       A.LAST_INSTALL_CT_CODE ,
+			       A.LAST_INSTALL_CT_NAME ,
+			       A.LAST_INSTALL_DT ,
+			       A.LAST_INSTALL_REM ,
+			       A.LAST_INSTALL_SIRIM_NO ,
+			       A.LAST_INSTALL_SERIAL_NO ,
+			       A.DSC_ID ,
+			       A.DSC_CODE ,
+			       A.DSC_NAME ,
+			       A.INSTCT ,
+			       A.PREFER_INST_DT ,
+			       A.PREFER_INST_TM ,
+			       A.INSTALL_ADDR_ID ,
+			       A.INSTALL_CNTC_ID ,
+			       A.INST_CNT_DEPT ,
+			       A.INST_CNT_POST ,
+			       A.VRIFY_REM 
+			  FROM SAL1010V A
+			 WHERE  A.ORD_ID = #{srvCntrctOrdId} 
+				 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectCustInfo" parameterType="Map" resultType="egovMap">
+		SELECT A.CUST_ID   ,
+			       A.NAME   ,
+			       A.NRIC   ,
+			       A.NATION   ,
+			       A.DOB   ,
+			       A.GENDER   ,
+			       A.RACE_ID   ,
+			       A.EMAIL   ,
+			       A.REM   ,
+			       A.STUS_CODE_ID   ,
+			       A.UPD_USER_ID   ,
+			       A.UPD_DT   ,
+			       A.REN_GRP   ,
+			       A.PST_TERMS   ,
+			       A.ID_OLD   ,
+			       A.CRT_USER_ID   ,
+			       A.CRT_DT   ,
+			       A.TYPE_ID   ,
+			       A.PAS_SPORT_EXPR   ,
+			       A.VISA_EXPR   ,
+			       A.CUST_VA_NO   ,
+			       A.CORP_TYPE_ID   ,
+			       A.GST_RGIST_NO   
+			  FROM SAL0029D A
+			 WHERE  A.CUST_ID = #{custId}
+				 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectCustContactInfo" parameterType="Map" resultType="egovMap">
+		SELECT T.CUST_CNTC_ID   ,
+			       T.NAME   ,
+			       T.CUST_INITIAL   ,
+			       T.NRIC   ,
+			       T.POS   ,
+			       T.TEL_M1   ,
+			       T.TEL_M2   ,
+			       T.TEL_O   ,
+			       T.TEL_R   ,
+			       T.TELF   ,
+			       T.DOB   ,
+			       T.GENDER   ,
+			       T.RACE_ID   ,
+			       T.EMAIL   ,
+			       T.STUS_CODE_ID   ,
+			       T.UPDATED1   ,
+			       T.UPDATOR1   ,
+			       T.ID_OLD   ,
+			       T.DEPT   ,
+			       T.DCM   ,
+			       T.CREATED1 CRT_DT  ,
+			       T.CREATOR1 CRT_USER_ID  ,
+			       T.CODE_NAME CODE_NAME  ,
+			       T.CODE_NAME1 CODE_NAME1  
+			  FROM ( SELECT A.CUST_CNTC_ID   ,
+			                A.CUST_ID   ,
+			                A.NAME   ,
+			                A.CUST_INITIAL   ,
+			                A.NRIC   ,
+			                A.POS   ,
+			                A.TEL_M1   ,
+			                A.TEL_M2   ,
+			                A.TEL_O   ,
+			                A.TEL_R   ,
+			                A.TELF   ,
+			                A.DOB   ,
+			                A.GENDER   ,
+			                A.RACE_ID   ,
+			                A.EMAIL   ,
+			                A.STUS_CODE_ID   ,
+			                A.UPD_DT UPDATED1  ,
+			                A.UPD_USER_ID UPDATOR1  ,
+			                A.ID_OLD   ,
+			                A.DEPT   ,
+			                A.DCM   ,
+			                A.CRT_DT CREATED1  ,
+			                A.CRT_USER_ID CREATOR1  ,
+			                B.CODE_NAME CODE_NAME,  
+                            C.CODE_NAME CODE_NAME1  
+			         FROM SAL0027D A
+			                LEFT JOIN SYS0013M B   ON A.CUST_INITIAL = B.CODE_ID
+			                LEFT JOIN SYS0013M C   ON A.RACE_ID = C.CODE_ID
+			          WHERE   (9 = A.STUS_CODE_ID OR  1 = A.STUS_CODE_ID) 
+			              AND CUST_ID = #{custId}
+                      ORDER BY A.STUS_CODE_ID DESC
+			           ) T
+			  WHERE ROWNUM <![CDATA[<= ]]> 1
+			         
+    </select>
+	 
+    <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>   
+     
+    <insert id="insert_SAL0086D" parameterType="Map">
+    
+	    INSERT INTO SAL0086D
+		 (
+		      TRMNAT_ID,
+		      TRMNAT_REF_NO,
+		      TRMNAT_REF_DT,
+		      TRMNAT_CNTRCT_ID,
+		      TRMNAT_ORD_ID,
+		      TRMNAT_CNTRCT_PAC_ID,
+		      TRMNAT_CNTRCT_STK_ID,
+		      TRMNAT_STUS_ID,
+		      TRMNAT_REQSTER,
+		      TRMNAT_RESN_ID,
+		      TRMNAT_REM,
+		      TRMNAT_OBLIGT_PRIOD,
+		      TRMNAT_CNTRCT_SUB_PRIOD,
+		      TRMNAT_CNTRCT_RENTAL,
+		      TRMNAT_PNALTY,
+		      TRMNAT_CRT_DT,
+		      TRMNAT_CRT_USER_ID,
+		      TRMNAT_UPD_DT,
+		      TRMNAT_UPD_USER_ID
+		)
+		VALUES 
+		(
+		     SAL0086D_TRMNAT_ID_SEQ.nextval,
+		     #{docNo},
+		     SYSDATE,
+		     #{hSrvContractID},
+		     #{hOrderID},
+		     #{hPackageID},
+		     #{hStockID},
+		     4,         /* TRMNAT_STUS_ID */
+		     #{newRequestor},
+		     #{newReason},
+		     #{newRemark},
+		     #{newObPeriod},        
+		     #{newScheduleNo},
+		     #{newRentalAmt},
+		     #{newPenaltyCharge},
+		     SYSDATE,
+		     #{userId},
+		     SYSDATE,
+		     #{userId}
+		 )
+    </insert>
+    
+    <select id="selectServiceContracts" parameterType="Map" resultType="egovMap">
+	    SELECT A.SRV_CNTRCT_ID   ,
+			       A.SRV_CNTRCT_REF_NO   ,
+			       A.SRV_CNTRCT_QUOT_ID   ,
+			       A.SRV_CNTRCT_ORD_ID   ,
+			       A.SRV_CNTRCT_STUS_ID   ,
+			       A.SRV_CNTRCT_PCKG_ID   ,
+			       A.SRV_CNTRCT_REM   ,
+			       A.SRV_CNTRCT_NET_MONTH   ,
+			       A.SRV_CNTRCT_NET_YEAR   ,
+			       A.SRV_CNTRCT_RENTAL   ,
+			       A.SRV_CNTRCT_EXP_FILTER   ,
+			       A.SRV_CNTRCT_BRNCH_ID   ,
+			       A.SRV_CNTRCT_SALESMAN   ,
+			       A.SRV_CNTRCT_CRT_DT   ,
+			       A.SRV_CNTRCT_CRT_USER_ID   ,
+			       A.SRV_CNTRCT_UPD_DT   ,
+			       A.SRV_CNTRCT_UPD_USER_ID   ,
+			       A.SRV_CNTRCT_PROMO_ID   ,
+			       A.SRV_CNTRCT_FORM_NO   
+			  FROM SAL0077D A
+			 WHERE  A.SRV_CNTRCT_ID = #{hSrvContractID} 			 
+                 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    <update id="update_SAL0077D" parameterType="Map" >
+	    UPDATE SAL0077D
+		   SET SRV_CNTRCT_STUS_ID = 10,
+		       SRV_CNTRCT_REM = #{msg},
+		       SRV_CNTRCT_UPD_DT = SYSDATE,
+		       SRV_CNTRCT_UPD_USER_ID = #{userId}
+		 WHERE   SRV_CNTRCT_ID = #{hSrvContractID}     
+    </update>
+    
+    <select id="selectSrvConfigPeriods" parameterType="Map" resultType="egovMap">
+		SELECT A.SRV_PRD_ID   ,
+			       A.SRV_CONFIG_ID   ,
+			       A.SRV_MBRSH_ID   ,
+			       A.SRV_PRD_START_DT   ,
+			       A.SRV_PRD_EXPR_DT   ,
+			       A.SRV_PRD_DUR   ,
+			       A.SRV_PRD_STUS_ID   ,
+			       A.SRV_PRD_REM   ,
+			       A.SRV_PRD_CRT_DT   ,
+			       A.SRV_PRD_CRT_USER_ID   ,
+			       A.SRV_PRD_UPD_DT   ,
+			       A.SRV_PRD_UPD_USER_ID   ,
+			       A.SRV_PRD_CNTRCT_ID   
+			  FROM SAL0088D A
+			 WHERE  A.SRV_PRD_CNTRCT_ID = #{hSrvContractID}	 
+                 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <update id="update_SAL0088D" parameterType="Map" >
+		UPDATE SAL0088D
+		   SET SRV_PRD_STUS_ID = 10,
+		       SRV_PRD_REM = #{msg},
+		       SRV_PRD_UPD_DT = SYSDATE,
+		       SRV_PRD_UPD_USER_ID = #{userId}
+		 WHERE  SRV_PRD_ID = #{srvPrdId}
+    </update>
+    
+    <select id="selectServiceContractDetail" parameterType="Map" resultType="egovMap">
+		SELECT A.CNTRCT_ID   ,
+			       A.SRV_CNTRCT_ID   ,
+			       A.CNTRCT_RENTAL_STUS   ,
+			       A.CNTRCT_REM   ,
+			       A.CNTRCT_UPD_DT   ,
+			       A.CNTRCT_UPD_USER_ID   
+			  FROM SAL0078D A
+			 WHERE  A.SRV_CNTRCT_ID = #{hSrvContractID}
+                 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <update id="update_SAL0078D" parameterType="Map" >
+		UPDATE SAL0078D
+			   SET CNTRCT_RENTAL_STUS = #{stus},
+			       CNTRCT_REM = #{msg}
+			 WHERE SRV_CNTRCT_ID =  #{hSrvContractID}     
+    </update>    
+            
+     <select id="saveCanclPnaltyBill"  statementType="CALLABLE"   parameterType="Map">
+       <![CDATA[ 
+            {
+                  call SP_INST_RSC_CANCL_PNALTY_BILL ( #{hSrvContractID} ,  #{userId} )
+            }
+         ]]>
+      </select> 
+</mapper>

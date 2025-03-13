@@ -1,0 +1,2629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.CommonMapper">
+
+  <select id="selectMenuList" parameterType="Map" resultType="egovMap">
+   SELECT 'Lvl'||MENU_LVL DIV
+            , A.MENU_LVL
+            , A.MENU_CODE
+            , A.MENU_NAME
+            , A.PGM_CODE
+            , B.PGM_NAME
+            , A.STATUS_CODE
+            , A.UPPER_MENU_CODE
+            , A.MENU_ORDER
+     FROM SYS0051M A
+           , SYS0050M B
+   WHERE A.PGM_CODE = B.PGM_CODE(+)
+    <if test='menuCode !=null and menuCode != "" '>
+       AND (UPPER(A.MENU_CODE) LIKE  UPPER(#{menuCode}) || '%' OR
+                UPPER(A.MENU_NAME) LIKE '%' || UPPER(#{menuCode}) || '%')
+    </if>
+    <if test='pgmCode !=null and pgmCode !="" '>
+       AND (UPPER(A.PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(B.PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
+    </if>
+    ORDER BY SUBSTR(A.MENU_CODE,1,3) ,A.MENU_LVL ,A.MENU_ORDER
+    </select>
+
+    <select id="selectUpperMenuList" parameterType="Map" resultType="egovMap">
+       SELECT DISTINCT MENU_CODE
+            , MENU_NAME
+        FROM SYS0051M
+       WHERE 1=1
+     <if test='menuSelectBox == "01" '>
+         AND UPPER(MENU_CODE) LIKE UPPER(#{menuCdNm}) || '%'
+     </if>
+
+     <if test='menuSelectBox == "02"  '>
+         AND UPPER(MENU_NAME) LIKE UPPER(#{menuCdNm}) || '%'
+     </if>
+       ORDER BY MENU_CODE
+  </select>
+
+  <delete id="deleteMenuId" parameterType="Map">
+      DELETE SYS0051M  WHERE MENU_CODE  = #{menuCode}
+  </delete>
+
+<insert id="insertMenuCode" parameterType="Map">
+      INSERT INTO SYS0051M
+          (
+            MENU_CODE
+           ,MENU_NAME
+           ,PGM_CODE
+           ,MENU_LVL
+           ,MENU_ORDER
+           ,STATUS_CODE
+           ,UPPER_MENU_CODE
+           ,CRT_USER_ID
+           ,CRT_DT
+           ,UPD_USER_ID
+           ,UPD_DT
+          )
+    VALUES
+       (
+             UPPER(#{menuCode})
+            ,#{menuName}
+            ,#{pgmCode}
+            ,#{menuLvl}
+            ,( DECODE (#{menuLvl},'1','10',NVL(#{menuOrder},10))  )
+            ,NVL(#{statusCode},'00')
+            ,( DECODE(#{menuLvl}, '1', '', #{upperMenuCode} ) )
+            ,#{crtUserId}
+            ,SYSDATE
+            ,#{updUserId}
+            ,SYSDATE
+       )
+  </insert>
+
+  <update id="updateMenuCode" parameterType="Map">
+      UPDATE SYS0051M
+         SET MENU_NAME    = #{menuName}
+            ,PGM_CODE     = #{pgmCode}
+            ,MENU_LVL     = #{menuLvl}
+            ,MENU_ORDER   = #{menuOrder}
+            ,STATUS_CODE  = #{statusCode}
+            ,UPPER_MENU_CODE = #{upperMenuCode}
+            ,CRT_USER_ID  = #{crtUserId}
+            ,CRT_DT       = SYSDATE
+            ,UPD_USER_ID  = #{updUserId}
+            ,UPD_DT       = SYSDATE
+       WHERE MENU_CODE    =  UPPER(#{menuCode})
+  </update>
+
+<!-- Program Management -->
+
+  <delete id="deletePgmId" parameterType="Map">
+      DELETE SYS0050M  WHERE PGM_CODE  = #{pgmCode}
+  </delete>
+
+  <update id="updPgmIdTrans" parameterType="Map">
+      UPDATE SYS0050M
+         SET FUNC_VIEW        = #{funcView}
+            ,FUNC_CHNG        = #{funcChng}
+            ,FUNC_PRT         = #{funcPrt}
+       <choose>
+         <when test='funcUserDfn1 == "N" '>
+             ,FUNC_USER_DFN1   = 'N'
+             ,DESC_USER_DFN1   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN1   = #{funcUserDfn1}
+             ,DESC_USER_DFN1   = #{descUserDfn1}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn2 == "N" '>
+             ,FUNC_USER_DFN2   = 'N'
+             ,DESC_USER_DFN2   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN2   = #{funcUserDfn2}
+             ,DESC_USER_DFN2   = #{descUserDfn2}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn3 == "N" '>
+             ,FUNC_USER_DFN3   = 'N'
+             ,DESC_USER_DFN3   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN3   = #{funcUserDfn3}
+             ,DESC_USER_DFN3   = #{descUserDfn3}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn4 == "N" '>
+             ,FUNC_USER_DFN4   = 'N'
+             ,DESC_USER_DFN4   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN4   = #{funcUserDfn4}
+             ,DESC_USER_DFN4   = #{descUserDfn4}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn5 == "N" '>
+             ,FUNC_USER_DFN5   = 'N'
+             ,DESC_USER_DFN5   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN5   = #{funcUserDfn5}
+             ,DESC_USER_DFN5   = #{descUserDfn5}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn6 == "N" '>
+             ,FUNC_USER_DFN6   = 'N'
+             ,DESC_USER_DFN6   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN6   = #{funcUserDfn6}
+             ,DESC_USER_DFN6   = #{descUserDfn6}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn7 == "N" '>
+             ,FUNC_USER_DFN7   = 'N'
+             ,DESC_USER_DFN7   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN7   = #{funcUserDfn7}
+             ,DESC_USER_DFN7   = #{descUserDfn7}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn8 == "N" '>
+             ,FUNC_USER_DFN8   = 'N'
+             ,DESC_USER_DFN8   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN8   = #{funcUserDfn8}
+             ,DESC_USER_DFN8   = #{descUserDfn8}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn9 == "N" '>
+             ,FUNC_USER_DFN9   = 'N'
+             ,DESC_USER_DFN9   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN9   = #{funcUserDfn9}
+             ,DESC_USER_DFN9   = #{descUserDfn9}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn10 == "N" '>
+             ,FUNC_USER_DFN10   = 'N'
+             ,DESC_USER_DFN10   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN10   = #{funcUserDfn10}
+             ,DESC_USER_DFN10   = #{descUserDfn10}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn11 == "N" '>
+             ,FUNC_USER_DFN11   = 'N'
+             ,DESC_USER_DFN11   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN11   = #{funcUserDfn11}
+             ,DESC_USER_DFN11   = #{descUserDfn11}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn12 == "N" '>
+             ,FUNC_USER_DFN12   = 'N'
+             ,DESC_USER_DFN12   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN12   = #{funcUserDfn12}
+             ,DESC_USER_DFN12   = #{descUserDfn12}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn13 == "N" '>
+             ,FUNC_USER_DFN13   = 'N'
+             ,DESC_USER_DFN13   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN13   = #{funcUserDfn13}
+             ,DESC_USER_DFN13   = #{descUserDfn13}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn14 == "N" '>
+             ,FUNC_USER_DFN14   = 'N'
+             ,DESC_USER_DFN14   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN14   = #{funcUserDfn14}
+             ,DESC_USER_DFN14   = #{descUserDfn14}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn15 == "N" '>
+             ,FUNC_USER_DFN15   = 'N'
+             ,DESC_USER_DFN15   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN15   = #{funcUserDfn15}
+             ,DESC_USER_DFN15   = #{descUserDfn15}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn16 == "N" '>
+             ,FUNC_USER_DFN16   = 'N'
+             ,DESC_USER_DFN16   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN16   = #{funcUserDfn16}
+             ,DESC_USER_DFN16   = #{descUserDfn16}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn17 == "N" '>
+             ,FUNC_USER_DFN17   = 'N'
+             ,DESC_USER_DFN17   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN17   = #{funcUserDfn17}
+             ,DESC_USER_DFN17   = #{descUserDfn17}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn18 == "N" '>
+             ,FUNC_USER_DFN18   = 'N'
+             ,DESC_USER_DFN18   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN18   = #{funcUserDfn18}
+             ,DESC_USER_DFN18   = #{descUserDfn18}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn19 == "N" '>
+             ,FUNC_USER_DFN19   = 'N'
+             ,DESC_USER_DFN19   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN19   = #{funcUserDfn19}
+             ,DESC_USER_DFN19   = #{descUserDfn19}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn20 == "N" '>
+             ,FUNC_USER_DFN20   = 'N'
+             ,DESC_USER_DFN20   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN20   = #{funcUserDfn20}
+             ,DESC_USER_DFN20   = #{descUserDfn20}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn21 == "N" '>
+             ,FUNC_USER_DFN21   = 'N'
+             ,DESC_USER_DFN21   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN21   = #{funcUserDfn21}
+             ,DESC_USER_DFN21   = #{descUserDfn21}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn22 == "N" '>
+             ,FUNC_USER_DFN22   = 'N'
+             ,DESC_USER_DFN22   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN22   = #{funcUserDfn22}
+             ,DESC_USER_DFN22   = #{descUserDfn22}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn23 == "N" '>
+             ,FUNC_USER_DFN23   = 'N'
+             ,DESC_USER_DFN23   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN23   = #{funcUserDfn23}
+             ,DESC_USER_DFN23   = #{descUserDfn23}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn24 == "N" '>
+             ,FUNC_USER_DFN24   = 'N'
+             ,DESC_USER_DFN24   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN24   = #{funcUserDfn24}
+             ,DESC_USER_DFN24   = #{descUserDfn24}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn25 == "N" '>
+             ,FUNC_USER_DFN25   = 'N'
+             ,DESC_USER_DFN25   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN25   = #{funcUserDfn25}
+             ,DESC_USER_DFN25   = #{descUserDfn25}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn26 == "N" '>
+             ,FUNC_USER_DFN26   = 'N'
+             ,DESC_USER_DFN26   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN26   = #{funcUserDfn26}
+             ,DESC_USER_DFN26   = #{descUserDfn26}
+         </otherwise>
+       </choose>
+
+		<choose>
+         <when test='funcUserDfn27 == "N" '>
+             ,FUNC_USER_DFN27   = 'N'
+             ,DESC_USER_DFN27   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN27   = #{funcUserDfn27}
+             ,DESC_USER_DFN27   = #{descUserDfn27}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn28 == "N" '>
+             ,FUNC_USER_DFN28   = 'N'
+             ,DESC_USER_DFN28   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN28   = #{funcUserDfn28}
+             ,DESC_USER_DFN28   = #{descUserDfn28}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn29 == "N" '>
+             ,FUNC_USER_DFN29   = 'N'
+             ,DESC_USER_DFN29   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN29   = #{funcUserDfn29}
+             ,DESC_USER_DFN29   = #{descUserDfn29}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn30 == "N" '>
+             ,FUNC_USER_DFN30   = 'N'
+             ,DESC_USER_DFN30   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN30   = #{funcUserDfn30}
+             ,DESC_USER_DFN30   = #{descUserDfn30}
+         </otherwise>
+       </choose>
+
+            ,UPD_USER_ID      = #{updUserId}
+            ,UPD_DT           = SYSDATE
+       WHERE PGM_CODE         = #{pgmCode}
+  </update>
+
+  <update id="updatePgmId" parameterType="Map">
+  /* [com.coway.trust.biz.common.impl.CommonMapper.updatePgmId] 20190903 - KR OHK */
+      UPDATE SYS0050M
+         SET PGM_NAME    = #{pgmName}
+            ,PGM_PATH    = #{pgmPath}
+            ,PGM_DESC    = #{pgmDesc}
+            ,UPD_USER_ID = #{updUserId}
+            ,UPD_DT      = SYSDATE
+
+            ,FROM_DT_TYPE_ID = #{fromDtTypeId}
+            ,FROM_DT_FIELD_NM = #{fromDtFieldNm}
+            ,FROM_DT_VAL = #{fromDtVal}
+            ,TO_DT_TYPE_ID = #{toDtTypeId}
+            ,TO_DT_FIELD_NM = #{toDtFieldNm}
+            ,TO_DT_VAL = #{toDtVal}
+       WHERE PGM_CODE    = #{pgmCode}
+  </update>
+
+  <insert id="insertPgmId" parameterType="Map">
+  /* [com.coway.trust.biz.common.impl.CommonMapper.insertPgmId] 20190903 - KR OHK */
+   INSERT INTO SYS0050M
+          (
+             PGM_CODE
+            ,PGM_NAME
+            ,PGM_PATH
+            ,PGM_DESC
+            ,FUNC_VIEW
+            ,FUNC_CHNG
+            ,FUNC_PRT
+
+            ,FUNC_USER_DFN1
+            ,FUNC_USER_DFN2
+            ,FUNC_USER_DFN3
+            ,FUNC_USER_DFN4
+            ,FUNC_USER_DFN5
+            ,FUNC_USER_DFN6
+            ,FUNC_USER_DFN7
+            ,FUNC_USER_DFN8
+            ,FUNC_USER_DFN9
+            ,FUNC_USER_DFN10
+            ,FUNC_USER_DFN11
+            ,FUNC_USER_DFN12
+            ,FUNC_USER_DFN13
+            ,FUNC_USER_DFN14
+            ,FUNC_USER_DFN15
+            ,FUNC_USER_DFN16
+            ,FUNC_USER_DFN17
+            ,FUNC_USER_DFN18
+            ,FUNC_USER_DFN19
+            ,FUNC_USER_DFN20
+            ,FUNC_USER_DFN21
+            ,FUNC_USER_DFN22
+            ,FUNC_USER_DFN23
+            ,FUNC_USER_DFN24
+            ,FUNC_USER_DFN25
+            ,FUNC_USER_DFN26
+            ,FUNC_USER_DFN27
+            ,FUNC_USER_DFN28
+            ,FUNC_USER_DFN29
+            ,FUNC_USER_DFN30
+
+            ,CRT_USER_ID
+            ,CRT_DT
+            ,UPD_USER_ID
+            ,UPD_DT
+
+            ,FROM_DT_TYPE_ID
+            ,FROM_DT_FIELD_NM
+            ,FROM_DT_VAL
+            ,TO_DT_TYPE_ID
+            ,TO_DT_FIELD_NM
+            ,TO_DT_VAL
+          )
+    VALUES
+         (
+           ( SELECT #{orgCode} || LPAD(DECODE(COUNT(1),0,'1',MAX(PGMID_SEQ)+1),3,'0') PGMCD FROM
+                        (
+                         SELECT CASE WHEN  (( SELECT COUNT (A.PGM_CODE) FROM SYS0050M A  WHERE A.PGM_CODE = #{orgCode} || '001') > 0  )  THEN SUBSTR(B.PGM_CODE,4,6)  ELSE '0' END PGMID_SEQ
+                           FROM SYS0050M B GROUP BY (SUBSTR(B.PGM_CODE,4,6))
+                         )
+            )
+            ,#{pgmName}
+            ,#{pgmPath}
+            ,NVL(#{pgmDesc},#{pgmName})
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+            ,'N'
+
+            ,#{crtUserId}
+            ,SYSDATE
+            ,#{updUserId}
+            ,SYSDATE
+
+            ,#{fromDtTypeId}
+            ,#{fromDtFieldNm}
+            ,#{fromDtVal}
+            ,#{toDtTypeId}
+            ,#{toDtFieldNm}
+            ,#{toDtVal}
+         )
+  </insert>
+
+  <select id="selectProgramList" parameterType="Map" resultType="egovMap">
+  /* [com.coway.trust.biz.common.impl.CommonMapper.selectProgramList] 20190903 - KR OHK */
+        SELECT
+               PGM_CODE
+              ,SUBSTR(PGM_CODE,1,3) ORG_CODE
+              ,PGM_NAME
+              ,PGM_PATH
+              ,PGM_DESC
+              ,FUNC_VIEW
+              ,FUNC_CHNG
+              ,FUNC_PRT
+            ,FUNC_USER_DFN1
+            ,FUNC_USER_DFN2
+            ,FUNC_USER_DFN3
+            ,FUNC_USER_DFN4
+            ,FUNC_USER_DFN5
+            ,FUNC_USER_DFN6
+            ,FUNC_USER_DFN7
+            ,FUNC_USER_DFN8
+            ,FUNC_USER_DFN9
+            ,FUNC_USER_DFN10
+            ,FUNC_USER_DFN11
+            ,FUNC_USER_DFN12
+            ,FUNC_USER_DFN13
+            ,FUNC_USER_DFN14
+            ,FUNC_USER_DFN15
+            ,FUNC_USER_DFN16
+            ,FUNC_USER_DFN17
+            ,FUNC_USER_DFN18
+            ,FUNC_USER_DFN19
+            ,FUNC_USER_DFN20
+            ,FUNC_USER_DFN21
+            ,FUNC_USER_DFN22
+            ,FUNC_USER_DFN23
+            ,FUNC_USER_DFN24
+            ,FUNC_USER_DFN25
+            ,FUNC_USER_DFN26
+            ,FUNC_USER_DFN27
+            ,FUNC_USER_DFN28
+            ,FUNC_USER_DFN29
+            ,FUNC_USER_DFN30
+
+              ,DESC_USER_DFN1
+              ,DESC_USER_DFN2
+              ,DESC_USER_DFN3
+              ,DESC_USER_DFN4
+              ,DESC_USER_DFN5
+              ,DESC_USER_DFN6
+              ,DESC_USER_DFN7
+              ,DESC_USER_DFN8
+              ,DESC_USER_DFN9
+              ,DESC_USER_DFN10
+              ,DESC_USER_DFN11
+              ,DESC_USER_DFN12
+              ,DESC_USER_DFN13
+              ,DESC_USER_DFN14
+              ,DESC_USER_DFN15
+              ,DESC_USER_DFN16
+              ,DESC_USER_DFN17
+              ,DESC_USER_DFN18
+              ,DESC_USER_DFN19
+              ,DESC_USER_DFN20
+              ,DESC_USER_DFN21
+              ,DESC_USER_DFN22
+              ,DESC_USER_DFN23
+              ,DESC_USER_DFN24
+              ,DESC_USER_DFN25
+              ,DESC_USER_DFN26
+              ,DESC_USER_DFN27
+              ,DESC_USER_DFN28
+              ,DESC_USER_DFN29
+              ,DESC_USER_DFN30
+
+              ,CRT_USER_ID
+              ,CRT_DT
+              ,UPD_USER_ID
+              ,UPD_DT
+
+              ,FROM_DT_TYPE_ID
+              ,FROM_DT_FIELD_NM
+              ,FROM_DT_VAL
+              ,TO_DT_TYPE_ID
+              ,TO_DT_FIELD_NM
+              ,TO_DT_VAL
+          FROM SYS0050M
+         WHERE 1 = 1
+
+      <if test="pgmCode !=null and pgmCode != ''">
+        AND (UPPER(PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
+                UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
+      </if>
+      <if test="pgmNm !=null and pgmNm != ''">
+        AND UPPER(PGM_NAME) LIKE '%' || #{pgmNm} || '%'
+      </if>
+
+      <if test='programSelectBox == "01" '>
+         AND PGM_CODE LIKE #{programCdNm} || '%'
+      </if>
+      <if test='programSelectBox == "02" '>
+         AND UPPER(PGM_NAME) LIKE '%' || #{programCdNm} || '%'
+      </if>
+
+     ORDER BY  PGM_CODE
+  </select>
+
+  <select id="selectPgmTranList" parameterType="Map" resultType="egovMap">
+    SELECT
+                PGM_CODE
+                ,FUNC_VIEW
+                ,FUNC_CHNG
+                ,FUNC_PRT
+                ,FUNC_USER_DFN1
+                ,FUNC_USER_DFN2
+                ,FUNC_USER_DFN3
+                ,FUNC_USER_DFN4
+                ,FUNC_USER_DFN5
+                ,FUNC_USER_DFN6
+                ,FUNC_USER_DFN7
+                ,FUNC_USER_DFN8
+                ,FUNC_USER_DFN9
+                ,FUNC_USER_DFN10
+                ,FUNC_USER_DFN11
+                ,FUNC_USER_DFN12
+                ,FUNC_USER_DFN13
+                ,FUNC_USER_DFN14
+                ,FUNC_USER_DFN15
+                ,FUNC_USER_DFN16
+                ,FUNC_USER_DFN17
+                ,FUNC_USER_DFN18
+                ,FUNC_USER_DFN19
+                ,FUNC_USER_DFN20
+                ,FUNC_USER_DFN21
+                ,FUNC_USER_DFN22
+                ,FUNC_USER_DFN23
+                ,FUNC_USER_DFN24
+                ,FUNC_USER_DFN25
+	            ,FUNC_USER_DFN26
+	            ,FUNC_USER_DFN27
+	            ,FUNC_USER_DFN28
+	            ,FUNC_USER_DFN29
+	            ,FUNC_USER_DFN30
+
+                ,DESC_USER_DFN1
+                ,DESC_USER_DFN2
+                ,DESC_USER_DFN3
+                ,DESC_USER_DFN4
+                ,DESC_USER_DFN5
+                ,DESC_USER_DFN6
+                ,DESC_USER_DFN7
+                ,DESC_USER_DFN8
+                ,DESC_USER_DFN9
+                ,DESC_USER_DFN10
+                ,DESC_USER_DFN11
+                ,DESC_USER_DFN12
+                ,DESC_USER_DFN13
+                ,DESC_USER_DFN14
+                ,DESC_USER_DFN15
+                ,DESC_USER_DFN16
+                ,DESC_USER_DFN17
+                ,DESC_USER_DFN18
+                ,DESC_USER_DFN19
+                ,DESC_USER_DFN20
+                ,DESC_USER_DFN21
+                ,DESC_USER_DFN22
+                ,DESC_USER_DFN23
+                ,DESC_USER_DFN24
+                ,DESC_USER_DFN25
+	              ,DESC_USER_DFN26
+	              ,DESC_USER_DFN27
+	              ,DESC_USER_DFN28
+	              ,DESC_USER_DFN29
+	              ,DESC_USER_DFN30
+    FROM SYS0050M
+    WHERE PGM_CODE = #{paramPgmId}
+    ORDER BY PGM_CODE
+  </select>
+
+
+  <insert id="insertStatusCategoryCode" parameterType="Map">
+                    MERGE INTO SYS0037M
+                    USING DUAL
+                       ON (STUS_CTGRY_ID = #{stusCtgryId} AND STUS_CODE_ID= #{stusCodeId} )
+                     WHEN MATCHED THEN
+                          UPDATE
+                             SET DISAB  = 0
+                           WHERE STUS_CTGRY_ID = #{stusCtgryId}
+                             AND STUS_CODE_ID = #{stusCodeId}
+
+                     WHEN NOT MATCHED THEN
+                          INSERT
+                          (
+                            STUS_CTGRY_ID
+                           ,STUS_CODE_ID
+                           ,SEQ_NO
+                           ,DISAB
+                          )
+                         VALUES
+                         (
+                            #{stusCtgryId}
+                          , #{stusCodeId}
+                          , (SELECT DECODE(COUNT(SEQ_NO),0,1,(MAX(SEQ_NO)+1)) FROM ( SELECT SEQ_NO FROM SYS0037M GROUP BY STUS_CTGRY_ID,SEQ_NO HAVING STUS_CTGRY_ID = #{stusCtgryId} ) )
+                          , 0
+                         )
+  </insert>
+
+    <update id="updateCategoryCodeYN" parameterType="Map">
+        UPDATE  SYS0037M
+          SET DISAB  = DECODE(#{codeDisab},'Y',1,0)
+         <if test="seqNo !=null and seqNo != ''">
+             ,SEQ_NO = #{seqNo}
+         </if>
+        WHERE STUS_CTGRY_ID = #{stusCtgryId}
+          AND STUS_CODE_ID = #{stusCodeId}
+  </update>
+
+    <update id="deleteCategoryCode" parameterType="Map">
+        DELETE FROM SYS0037M
+         WHERE STUS_CTGRY_ID = #{stusCtgryId}
+           AND STUS_CODE_ID  = #{stusCodeId}
+  </update>
+
+  <insert id="insertStatusCode" parameterType="Map">
+         INSERT INTO SYS0038M
+            (
+              STUS_CODE_ID
+             ,NAME
+             ,CODE
+           )
+        VALUES
+           (
+              ( SELECT MAX(STUS_CODE_ID) +1 FROM SYS0038M  )
+            , #{codeName}
+            , #{code}
+          )
+  </insert>
+
+  <update id="updateStatusCode" parameterType="Map">
+        UPDATE  SYS0038M
+          SET NAME  = NVL(#{codeName},NAME)
+            , CODE  = #{code}
+        WHERE STUS_CODE_ID = #{stusCodeId}
+  </update>
+
+  <insert id="insertStatusCategory" parameterType="Map">
+         INSERT INTO SYS0036M
+            (
+              STUS_CTGRY_ID
+            , STUS_CTGRY_NAME
+            , STUS_CTGRY_DESC
+            , CRT_DT
+            , CRT_USER_ID
+            , UPD_DT
+            , UPD_USER_ID
+           )
+        VALUES
+           (
+              (SELECT MAX(NVL(STUS_CTGRY_ID,0)) + 1 FROM SYS0036M )
+            , #{stusCtgryName}
+            , NVL(#{stusCtgryDesc},DBMS_LOB.SUBSTR(#{stusCtgryName} ,4000) )
+            , SYSDATE
+            , #{crtUserId}
+            , SYSDATE
+            , #{updUserId}
+          )
+  </insert>
+
+  <delete id="deleteStatusCategoryMst" parameterType="Map">
+        DELETE FROM SYS0036M WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </delete>
+
+  <delete id="deleteStatusCategoryCode" parameterType="Map">
+        DELETE FROM SYS0037M WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </delete>
+
+  <update id="updateStatusCategory" parameterType="Map">
+        UPDATE  SYS0036M
+          SET STUS_CTGRY_NAME  = NVL(#{stusCtgryName},STUS_CTGRY_NAME)
+            , STUS_CTGRY_DESC  = NVL(#{stusCtgryDesc},DBMS_LOB.SUBSTR(STUS_CTGRY_NAME,4000) )
+            , CRT_USER_ID      = #{crtUserId}
+            , UPD_USER_ID      = #{updUserId}
+            , UPD_DT           = SYSDATE
+        WHERE STUS_CTGRY_ID = #{stusCtgryId}
+  </update>
+
+  <select id="selectStatusCategoryList" parameterType="Map" resultType="egovMap">
+    SELECT  A.STUS_CTGRY_ID
+           ,A.STUS_CTGRY_NAME
+           ,A.STUS_CTGRY_DESC
+           ,A.CRT_USER_ID
+           ,A.UPD_USER_ID
+           ,A.UPD_DT
+     FROM SYS0036M A
+    WHERE 1=1
+      <if test="txtCategoryId !=null and txtCategoryId != ''">
+        AND A.STUS_CTGRY_ID = #{txtCategoryId}
+      </if>
+      <if test="paramCategoryNM !=null and paramCategoryNM != ''">
+        AND UPPER(A.STUS_CTGRY_NAME) LIKE '%' || UPPER(#{paramCategoryNM}) || '%'
+      </if>
+      <if test="paramCreateID !=null and paramCreateID != ''">
+        AND A.CRT_USER_ID = #{paramCreateID}
+      </if>
+     ORDER BY  A.STUS_CTGRY_ID , A.UPD_DT DESC
+  </select>
+
+  <select id="selectStatusCodeList" parameterType="Map" resultType="egovMap">
+            SELECT
+                  0 CHECK_FLAG
+                 ,STUS_CODE_ID
+                 ,CODE
+                 ,NAME CODE_NAME
+            FROM SYS0038M
+            ORDER BY CODE_NAME ASC
+  </select>
+
+  <select id="selectStatusCategoryCodeList" parameterType="Map" resultType="egovMap">
+                    SELECT  B.STUS_CODE_ID
+                           ,C.CODE
+                           ,C.NAME CODE_NAME
+                           ,B.SEQ_NO
+                           ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
+                      FROM SYS0036M A
+                          ,SYS0037M B
+                          ,SYS0038M C
+                     WHERE A.STUS_CTGRY_ID = B.STUS_CTGRY_ID
+                       AND B.STUS_CODE_ID = C.STUS_CODE_ID
+       <if test="selCategoryId !=null and selCategoryId != ''">
+             AND A.STUS_CTGRY_ID = #{selCategoryId}
+       </if>
+             <if test="parmDisab !=null and parmDisab != ''">
+            AND B.DISAB = #{parmDisab}
+       </if>
+       ORDER BY B.SEQ_NO
+  </select>
+
+    <select id="getAccCodeCount" parameterType="Map" resultType="int">
+        SELECT COUNT(*) COUNT
+      FROM (
+             SELECT ACC_CODE FROM SYS0001M GROUP BY ACC_CODE HAVING ACC_CODE= #{popUpAccCode} AND COUNT(ACC_CODE) > 0
+           )
+    </select>
+
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+        </if>
+        <if test="Codeval != null and Codeval !=''">
+           AND CODE = #{Codeval}
+        </if>
+        <if test="likeValue != null and likeValue !=''">
+           AND CODE LIKE #{likeValue}||'%'
+        </if>
+        <if test="codeMasterNameVal != null and codeMasterNameVal !=''">
+          and CODE_MASTER_ID = (select code_master_id from sys0012m where CODE_MASTER_NAME = #{codeMasterNameVal})
+        </if>
+        <if test="notlike != null and notlike !=''">
+           AND CODE NOT LIKE #{notlike}||'%'
+        </if>
+        <if test="notin != null and notin !=''"> <!-- TODO : 파라미터는 notin 인데, 아래 쿼리는 in 이네요.... 왜 그럴까요??? -->
+              AND CODE IN
+              <foreach item="item" collection="notin" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+        <!--<if test="userTypeId != null and userTypeId !=''">
+           AND CODE_ID = #{userTypeId}
+        </if>-->
+
+        <if test='codeIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+            AND CODE IN (SELECT     REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL)
+                                    FROM DUAL
+                                    CONNECT BY REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+        <if test="codeName != null and codeName !=''">
+            AND CODE_NAME = #{codeName}
+        </if>
+
+        <if test="flg != null and flg !='' and flg == 'NOTI'">
+            UNION ALL
+
+            SELECT
+			CODE_ID ,
+			CODE ,
+			CODE_NAME ,
+			DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+			FROM SYS0013M
+			WHERE DISAB = 0
+			AND CODE_MASTER_ID = 556
+        </if>
+
+
+
+        <choose>
+          <when test="orderValue !=null and orderValue !=''">
+              ORDER BY ${orderValue}
+          </when>
+          <otherwise>
+              ORDER BY CODE_NAME
+          </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectCodeGroup" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS0094M
+        WHERE 1=1
+        <if test='ind !=null and ind != "" '>
+        AND IND = #{ind}
+        </if>
+    </select>
+
+    <select id="selectHCMaterialCtgryList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+        SELECT S13M.CODE_ID CODE_ID,
+               S13M.CODE_MASTER_ID CODE_MASTER_ID,
+               S94M.CODE CODE,
+               S94M.CODE_NAME CODE_NAME
+        FROM SYS0013M S13M
+        LEFT JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE
+        WHERE S13M.DISAB = S94M.DISB AND S94M.IND= 'HOMECARE'
+      ]]>
+     <if test="groupCode != null and groupCode !=''">
+         AND CODE_MASTER_ID = #{groupCode}
+      </if>
+    </select>
+
+    <select id="codeNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+       SELECT CODE_NAME
+       FROM SYS0013M
+       WHERE CODE_ID = #{value}
+    </select>
+
+    <select id="selectI18NList" parameterType="Map" resultType="egovMap">
+            SELECT * FROM SYS0052M
+  </select>
+
+  <insert id="mergeAccountCode" parameterType="Map" >
+    MERGE INTO SYS0001M
+      USING DUAL
+         ON (ACC_ID = #{popUpAccCodeId} )
+            WHEN MATCHED THEN
+                  UPDATE
+                    SET ACC_DESC  = NVL(#{popUpAccDesc},ACC_DESC)
+                      , ACC_ADDR1 = NVL(#{address1},ACC_ADDR1)
+                      , ACC_ADDR2 = NVL(#{address2},ACC_ADDR2)
+                      , ACC_ADDR3 = NVL(#{address3},ACC_ADDR3)
+                      , ACC_ADD_STATE_ID = NVL(#{mstate},ACC_ADD_STATE_ID)
+                      , ACC_ADD_CNTY_ID  = NVL(#{mcountry},ACC_ADD_CNTY_ID)
+                      , ACC_ADD_POST_CODE_ID = NVL(#{mpostcd},ACC_ADD_POST_CODE_ID)
+                      , ACC_ADD_AREA_ID      = NVL(#{marea},ACC_ADD_AREA_ID)
+                      , ACC_TEL_NO1          = NVL(#{tel1},ACC_TEL_NO1)
+                      , ACC_TEL_NO2          = NVL(#{tel2},ACC_TEL_NO2)
+                      , ACC_UPD_USER_ID      = NVL(#{updUserId},ACC_UPD_USER_ID)
+                      , ACC_UPD_DT           = SYSDATE
+                      , IS_PAY_CASH          = NVL(#{popUpIsPayCash},IS_PAY_CASH)
+                      , IS_PAY_ONLINE        = NVL(#{popUpIsPayOnline},IS_PAY_ONLINE)
+                      , IS_PAY_CHQ           = NVL(#{popUpIsPayChq},IS_PAY_CHQ)
+                      , IS_PAY_CRC           = NVL(#{popUpIsPayCrc},IS_PAY_CRC)
+
+            WHEN NOT MATCHED THEN
+                     INSERT
+                        (
+                           ACC_ID
+                         , SAP_ACC_CODE
+                         , ACC_CODE
+                         , ACC_DESC
+                         , ACC_GRP
+                         , ACC_TYPE
+                         , ACC_CURR_ID
+                         , ACC_LINK
+                         , ACC_IS_MFG
+                         , ACC_PAY_TYPE_ID
+                         , ACC_ADDR1
+                         , ACC_ADDR2
+                         , ACC_ADDR3
+                         , ACC_ADD_POST_CODE_ID
+                         , ACC_ADD_AREA_ID
+                         , ACC_ADD_STATE_ID
+                         , ACC_ADD_CNTY_ID
+                         , ACC_TEL_NO1
+                         , ACC_TEL_NO2
+                         , ACC_CRT_USER_ID
+                         , ACC_CRT_DT
+                         , ACC_UPD_USER_ID
+                         , ACC_UPD_DT
+                         , ACC_STUS_ID
+                         , IS_PAY_CASH
+                         , IS_PAY_ONLINE
+                         , IS_PAY_CHQ
+                         , IS_PAY_CRC
+                       )
+                    VALUES
+                       ( (SELECT (MAX(ACC_ID) +1) FROM SYS0001M ) /*ACC_ID                    */
+                          ,#{popUpSapAccCode}                     /*SAP_ACC_CODE              */
+                          ,#{popUpAccCode}                        /*ACC_CODE                  */
+                          ,#{popUpAccDesc}                        /*ACC_DESC                  */
+                          ,''                                     /*ACC_GRP                   */
+                          ,0                                      /*ACC_TYPE                  */
+                          ,''                                     /*ACC_CURR_ID               */
+                          ,''                                     /*ACC_LINK                  */
+                          ,0                                      /*ACC_IS_MFG                */
+                          ,0                                      /*ACC_PAY_TYPE_ID           */
+                          ,#{address1}                            /*ACC_ADDR1                 */
+                          ,#{address2}                            /*ACC_ADDR2                 */
+                          ,#{address3}                            /*ACC_ADDR3                 */
+                          ,NVL(#{mpostcd},0)                      /*ACC_ADD_POST_CODE_ID      */
+                          ,NVL(#{marea},0)                        /*ACC_ADD_AREA_ID           */
+                          ,NVL(#{mstate},0)                       /*ACC_ADD_STATE_ID          */
+                          ,NVL(#{mcountry},0)                     /*ACC_ADD_CNTY_ID           */
+                          ,#{tel1}                                /*ACC_TEL_NO1               */
+                          ,#{tel2}                                /*ACC_TEL_NO2               */
+                          ,#{crtUserId}                           /*ACC_CRT_USER_ID           */
+                          ,SYSDATE                                /*ACC_CRT_DT                */
+                          ,#{updUserId}                           /*ACC_UPD_USER_ID           */
+                          ,SYSDATE                                /*ACC_UPD_DT                */
+                          ,1                                      /*ACC_STUS_ID               */
+                          ,#{popUpIsPayCash}                      /*IS_PAY_CASH               */
+                          ,#{popUpIsPayOnline}                    /*IS_PAY_ONLINE             */
+                          ,#{popUpIsPayChq}                       /*IS_PAY_CHQ                */
+                          ,#{popUpIsPayCrc}                       /*IS_PAY_CRC                */
+                        )
+  </insert>
+
+  <select id="getAccountCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              ACC_ID AS ACC_ID
+              ,ACC_CODE AS ACC_CODE
+              ,ACC_DESC AS ACC_DESC
+              ,ACC_CRT_USER_ID AS ACC_CRT_USER_ID
+              ,ACC_UPD_USER_ID AS ACC_UPD_USER_ID
+              ,ACC_STUS_ID AS ACC_STUS_ID
+              ,IS_PAY_CASH AS IS_PAY_CASH
+              ,IS_PAY_ONLINE AS IS_PAY_ONLINE
+              ,IS_PAY_CHQ AS IS_PAY_CHQ
+              ,IS_PAY_CRC AS IS_PAY_CRC
+              ,SYS0038M.Code AS STATUS_CODE
+              ,SYS0038M.NAME AS STATUS_NAME
+              ,CASE WHEN (ACC_CURR_ID IS NOT NULL) THEN ACC_CURR_ID ELSE '' END AS ACC_CURR_ID
+              ,CASE WHEN (ACC_GRP IS NOT NULL) THEN ACC_GRP ELSE '' END AS ACC_GRP
+              ,CASE WHEN (ACC_IS_MFG IS NOT NULL) THEN ACC_IS_MFG ELSE 0 END AS ACC_IS_MFG
+              ,CASE WHEN (ACC_LINK IS NOT NULL) THEN ACC_LINK ELSE '' END AS ACC_LINK
+              ,CASE WHEN (ACC_PAY_TYPE_ID IS NOT NULL) THEN ACC_PAY_TYPE_ID ELSE 0 END AS ACC_PAY_TYPE_ID
+              ,CASE WHEN (ACC_TYPE IS NOT NULL) THEN ACC_TYPE ELSE 0 END AS ACC_TYPE
+              ,CASE WHEN (ACC_ADDR1 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR1,4000)  ELSE '' END AS ACC_ADDR1
+              ,CASE WHEN (ACC_ADDR2 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR2,4000)  ELSE '' END AS ACC_ADDR2
+              ,CASE WHEN (ACC_ADDR3 IS NOT NULL) THEN DBMS_LOB.SUBSTR (ACC_ADDR3,4000)  ELSE '' END AS ACC_ADDR3
+              ,CASE WHEN (ACC_ADD_AREA_ID IS NOT NULL) THEN ACC_ADD_AREA_ID ELSE 0 END AS ACC_ADD_AREA_ID
+              ,CASE WHEN (Extent4.AREA_ID IS NOT NULL) THEN Extent4.AREA_NAME ELSE '' END AS AREA_NAME
+              ,CASE WHEN (ACC_ADD_CNTY_ID IS NOT NULL) THEN ACC_ADD_CNTY_ID ELSE 0 END AS ACC_ADD_CNTY_ID
+              ,CASE WHEN (Extent6.CNTY_ID IS NOT NULL) THEN Extent6.NAME ELSE '' END AS NAME15
+              ,CASE WHEN (ACC_CRT_DT IS NOT NULL) THEN  TO_CHAR(ACC_CRT_DT,'DD-MON-YYYY HH24:MI:SS')   ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS ACC_CRT_DT
+              ,CASE WHEN (Extent7.USER_ID IS NOT NULL) THEN Extent7.USER_NAME ELSE '' END AS USER_NAME47
+              ,CASE WHEN (ACC_ADD_POST_CODE_ID IS NOT NULL) THEN ACC_ADD_POST_CODE_ID ELSE 0 END AS ACC_ADD_POST_CODE_ID
+              ,CASE WHEN (Extent3.POST_CODE_ID IS NOT NULL) THEN Extent3.POST_CODE_ID ELSE 0 END AS POST_CODE_ID
+              ,CASE WHEN (SAP_ACC_CODE IS NOT NULL) THEN SAP_ACC_CODE ELSE '' END AS SAP_ACC_CODE
+              ,CASE WHEN (ACC_ADD_STATE_ID IS NOT NULL) THEN ACC_ADD_STATE_ID ELSE 0 END AS ACC_ADD_STATE_ID
+              ,CASE WHEN (Extent5.STATE_ID IS NOT NULL) THEN Extent5.NAME ELSE '' END AS NAME35
+              ,CASE WHEN (ACC_TEL_NO1 IS NOT NULL) THEN ACC_TEL_NO1 ELSE '' END AS ACC_TEL_NO1
+              ,CASE WHEN (ACC_TEL_NO2 IS NOT NULL) THEN ACC_TEL_NO2 ELSE '' END AS ACC_TEL_NO2
+              ,CASE WHEN (ACC_UPD_DT IS NOT NULL) THEN TO_CHAR(ACC_UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE  TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS ACC_UPD_DT
+              ,CASE WHEN (Extent8.USER_ID IS NOT NULL) THEN Extent8.USER_NAME ELSE '' END AS USER_NAME
+          FROM  SYS0001M
+                INNER JOIN SYS0038M  ON SYS0038M.STUS_CODE_ID = ACC_STUS_ID
+                  LEFT OUTER JOIN SYS0030C  Extent3 ON Extent3.POST_CODE_ID = ACC_ADD_POST_CODE_ID
+                  LEFT OUTER JOIN SYS0039M  Extent4 ON Extent4.AREA_ID = ACC_ADD_AREA_ID
+                  LEFT OUTER JOIN SYS0035M  Extent5 ON Extent5.STATE_ID = ACC_ADD_STATE_ID
+                  LEFT OUTER JOIN SYS0015M  Extent6 ON Extent6.CNTY_ID = ACC_ADD_CNTY_ID
+                  LEFT OUTER JOIN SYS0047M  Extent7 ON Extent7.USER_ID = ACC_CRT_USER_ID
+                  LEFT OUTER JOIN SYS0047M  Extent8 ON Extent8.USER_ID = ACC_UPD_USER_ID
+          WHERE 1 = 1
+          <if test="accStusId !=null and accStusId != 0">
+            AND ACC_STUS_ID = #{accStusId}
+          </if>
+          <if test="accId !=null and accId != ''">
+            AND ACC_ID = #{accId}
+          </if>
+          <if test="accCode !=null and accCode != ''">
+            AND ACC_CODE LIKE #{accCode} || '%'
+          </if>
+          <if test="accDesc !=null and accDesc != ''">
+            AND ACC_DESC LIKE  '%' || #{accDesc} || '%'
+          </if>
+          <if test="sapAccCode !=null and sapAccCode != ''">
+            AND SAP_ACC_CODE = #{sapAccCode}
+          </if>
+          <if test="paymentCd !=null and paymentCd == 'CSH' ">
+            AND IS_PAY_CASH = 1
+          </if>
+          <if test="paymentCd !=null and paymentCd == 'ONL' ">
+            AND IS_PAY_ONLINE = 1
+          </if>
+          <if test="paymentCd !=null and paymentCd == 'CHQ' ">
+            AND IS_PAY_CHQ = 1
+          </if>
+          <if test="paymentCd !=null and paymentCd == 'CRC' ">
+            AND IS_PAY_CRC = 1
+          </if>
+         ORDER BY ACC_CODE ASC
+  </select>
+
+    <select id="selectCommonCodes" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT CD_DTL.CODE_ID
+                        ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
+                        ,CD_DTL.DISAB AS CODE_DISAB
+            FROM SYS0013M CD_DTL
+            WHERE 1=1
+            AND 'T' =  CASE WHEN #{codeDisab} = 99
+                                                  OR CD_DTL.DISAB = #{codeDisab}
+                                        THEN 'T'
+                                        ELSE 'F'
+                              END
+            AND CD_DTL.CODE_MASTER_ID = #{codeMasterId}
+            ORDER BY CD_DTL.CODE_MASTER_ID
+        ]]>
+    </select>
+
+    <select id="selectAllCommonCodes" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT CD_MST.CODE_MASTER_ID
+                        ,CD_MST.CODE_MASTER_NAME
+                        ,CD_MST.DISAB AS CODE_MASTER_DISAB
+                        ,CD_DTL.CODE_ID
+                        ,CD_DTL.CODE
+                        ,CD_DTL.CODE_DESC
+                        ,CD_DTL.DISAB AS CODE_DISAB
+                        ,CD_DTL.OLD_CODE_ID
+            FROM SYS0012M CD_MST, SYS0013M CD_DTL
+            WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+            ORDER BY CODE_MASTER_ID
+        ]]>
+    </select>
+
+    <select id="selectCommonCodesPage" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (
+                                SELECT CD_MST.CODE_MASTER_ID
+                                            ,CD_MST.CODE_MASTER_NAME
+                                            ,CD_MST.DISAB AS CODE_MASTER_DISAB
+                                            ,CD_DTL.CODE_ID
+                                            ,CD_DTL.CODE
+                                            ,CD_DTL.CODE_DESC
+                                            ,CD_DTL.DISAB AS CODE_DISAB
+                                            ,CD_DTL.OLD_CODE_ID
+                                FROM SYS0012M CD_MST, SYS0013M CD_DTL
+                                WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+                                AND 'T' =  CASE WHEN #{codeMasterId} = 0
+                                                                      OR CD_MST.CODE_MASTER_ID = #{codeMasterId}
+                                                            THEN 'T'
+                                                            ELSE 'F'
+                                                  END
+                                ORDER BY CODE_MASTER_ID
+                    ) Z
+                    WHERE ROWNUM <= ( (#{pageNo} + 1) * #{contentSize}) )
+        WHERE RNUM > (#{pageNo} * #{contentSize})
+
+        ]]>
+    </select>
+
+    <select id="selectDefectMasters" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1020V
+    </select>
+
+    <select id="selectDefectDetails" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1019V
+    </select>
+
+    <select id="selectDefectDetailsHc" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1025V
+    </select>
+
+    <select id="selectMalfunctionReasons" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1022V
+    </select>
+
+    <select id="selectMalfunctionCodes" parameterType="Map" resultType="egovMap">
+        SELECT * FROM SYS1021V
+    </select>
+
+    <select id="selectReasonCodes" parameterType="Map" resultType="egovMap">
+        SELECT CODEDETAIL.CODE_ID RESN_MASTER_TYPE_ID
+                    ,CODEDETAIL.CODE RESN_MASTER_CODE
+                    ,CODEDETAIL.CODE_NAME RESN_MASTER_DESC
+                    ,CODEDETAIL.DISAB
+                    ,REASONCODE.RESN_TYPE_ID
+                    ,REASONCODE.RESN_ID
+                    ,REASONCODE.CODE RESN_CODE
+                    , REASONCODE.CODE || ' - ' || REASONCODE.RESN_DESC RESN_DESC
+                    ,REASONCODE.STUS_CODE_ID
+        FROM SYS0032M REASONCODE, SYS0013M CODEDETAIL
+        WHERE REASONCODE.RESN_TYPE_ID = CODEDETAIL.CODE_ID
+        AND REASONCODE.RESN_TYPE_ID IN (166, 167, 174, 336, 1332, 537, 894, 340, 172, 6582)
+        AND REASONCODE.STUS_CODE_ID = 1
+       ORDER BY CODEDETAIL.CODE_ID, REASONCODE.RESN_ID
+    </select>
+
+    <select id="selectProductMasters" parameterType="Map" resultType="egovMap">
+        SELECT A.CODE_ID AS STOCK_CATEGORY_ID
+              ,A.CODE AS STOCK_CATEGORY_CODE
+              ,A.CODE_NAME AS STOCK_CATEGORY_DESC
+          FROM SYS0013M A
+         WHERE (CODE_ID IN (SELECT DISTINCT STK_CTGRY_ID
+                                       FROM SYS0026M B
+                                       WHERE B.STUS_CODE_ID = 1) )
+          AND A.DISAB = 0
+          ORDER BY A.CODE_ID
+    </select>
+
+    <select id="selectProductDetails" parameterType="Map" resultType="egovMap">
+        SELECT STK.STK_ID AS STOCK_ID
+          ,STK.STK_CODE AS STOCK_CODE
+          ,STK.STK_DESC AS STOCK_DESC
+          ,STK.STK_CTGRY_ID AS STOCK_CATEGORY_ID
+        FROM SYS0026M STK
+        WHERE STK.STK_TYPE_ID = 61
+        AND STK.STUS_CODE_ID = 1
+        ORDER BY STK.STK_CTGRY_ID, STK.STK_ID
+    </select>
+
+    <select id="selectCommonCodeTotalCount" parameterType="Map" resultType="Integer">
+        SELECT   COUNT(1) AS cnt
+        FROM SYS0012M CD_MST, SYS0013M CD_DTL
+        WHERE CD_MST.CODE_MASTER_ID = CD_DTL.CODE_MASTER_ID
+        AND 'T' = CASE WHEN #{codeMasterId} = 0 OR CD_MST.CODE_MASTER_ID = #{codeMasterId}
+                                    THEN 'T'
+                                    ELSE 'F'
+                          END
+        ORDER BY CD_MST.CODE_MASTER_ID
+    </select>
+
+    <select id="getMstCommonCodeList" parameterType="Map" resultType="egovMap">
+
+            SELECT
+                 CdMst.CODE_MASTER_ID AS CODE_MASTER_ID,
+                 CdMst.CODE_MASTER_NAME AS CODE_MASTER_NAME,
+                 CdMst.CODE_DESC AS CODE_DESC,
+                 /* CASE WHEN (CdMst.CRT_DT IS NOT NULL) THEN  TO_CHAR(CdMst.CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT, */
+                 CdMst.CRT_DT,
+                 CASE WHEN (CdMst.CRT_USER_ID IS NOT NULL) THEN CdMst.CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
+                 CASE WHEN (User1.USER_ID IS NOT NULL) THEN User1.USER_NAME ELSE '' END AS CREATE_NAME,
+                 DECODE(CASE WHEN (CdMst.DISAB IS NOT NULL) THEN CdMst.DISAB ELSE 0 END,0,'N',1,'Y','N') AS DISABLED,
+                 CASE WHEN (CdMst.UPD_DT IS NOT NULL) THEN  TO_CHAR(CdMst.UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
+                 CASE WHEN (CdMst.UPD_USER_ID IS NOT NULL) THEN CdMst.UPD_USER_ID ELSE 0 END AS UPD_USER_ID,
+                 CASE WHEN (User2.USER_ID IS NOT NULL) THEN User2.USER_NAME ELSE '' END AS USER_NAME2
+                 FROM SYS0012M  CdMst
+                 LEFT OUTER JOIN SYS0047M  User1 ON User1.USER_ID = CdMst.CRT_USER_ID
+                 LEFT OUTER JOIN SYS0047M  User2 ON User2.USER_ID = CdMst.UPD_USER_ID
+            WHERE 1 = 1
+                <if test="cdMstId !=null and cdMstId != ''">
+                    AND  CdMst.CODE_MASTER_ID  = #{cdMstId}
+                </if>
+                <if test="cdMstNm !=null and cdMstNm != ''">
+                    AND (UPPER(CdMst.CODE_MASTER_NAME) LIKE '%' || UPPER(#{cdMstNm}) || '%' )
+                </if>
+                <if test="cdMstDesc !=null and cdMstDesc != ''">
+                    AND (UPPER(CdMst.CODE_DESC) LIKE '%' || UPPER(#{cdMstDesc})  || '%' )
+                </if>
+                <if test="cdMstDisabled !=null and cdMstDisabled != ''">
+                    AND (CdMst.DISAB = #{cdMstDisabled})
+                </if>
+                <if test="createID !=null and createID != ''">
+                    AND (User1.USER_NAME = #{createID} )
+                </if>
+                <if test="crtDtFrom !=null and crtDtFrom != ''">
+                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') <![CDATA[ >= ]]> TO_CHAR(TO_DATE(#{crtDtFrom} , 'DD/MM/YYYY'),'YYYYMMDD')||'000000'
+                </if>
+                <if test="crtDtTo !=null and crtDtTo != ''">
+                    AND TO_CHAR(CdMst.CRT_DT,'YYYYMMDDHH24MISS') <![CDATA[ <= ]]> TO_CHAR(TO_DATE(#{crtDtTo} , 'DD/MM/YYYY'),'YYYYMMDD')||'235959'
+                </if>
+            ORDER BY CdMst.CODE_MASTER_NAME ASC
+
+    </select>
+
+    <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
+             SELECT
+                  CODE_ID detailCodeId,
+                  CODE_MASTER_ID,
+                  CODE detailCode,
+                  CODE_NAME detailCodeName,
+                  DBMS_LOB.SUBSTR (CODE_DESC, 4000) detailCodeDesc,
+                  CASE WHEN (CRT_DT IS NOT NULL) THEN  TO_CHAR(CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT,
+                  CASE WHEN (CRT_USER_ID IS NOT NULL) THEN CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
+                  DECODE(CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END , 0,'N',1,'Y','N')  AS detailDisabled,
+                  CASE WHEN (UPD_DT IS NOT NULL) THEN  TO_CHAR(UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
+                  CASE WHEN (UPD_USER_ID IS NOT NULL) THEN UPD_USER_ID ELSE 0 END AS UPD_USER_ID
+                  FROM SYS0013M
+            WHERE CODE_MASTER_ID = #{mstCdId}
+                <if test="dtailDisabled !=null and dtailDisabled != ''">
+                    AND DISAB = #{dtailDisabled}
+                </if>
+            ORDER BY CODE ASC
+    </select>
+
+    <insert id="addCommCodeGrid" parameterType="Map">
+      INSERT INTO SYS0012M
+        ( CODE_MASTER_ID  /*pk*/
+         , CODE_MASTER_NAME  /*NN*/
+         , CODE_DESC  /*NN*/
+         , DISAB
+         , CRT_DT
+         , CRT_USER_ID
+         , UPD_DT
+         , UPD_USER_ID
+        )
+        VALUES
+        ( (SELECT MAX(CODE_MASTER_ID)+1 CODE_MASTER_ID_SEQ FROM SYS0012M)
+         , #{codeMasterName}
+         , NVL(#{codeDesc},DBMS_LOB.SUBSTR (#{codeMasterName},4000) )
+         , DECODE(#{disabled},'N',0,'Y',1,0)
+         , SYSDATE
+         , #{crtUserId}
+         , SYSDATE
+         , #{updUserId}
+         )
+    </insert>
+
+    <update id="updCommCodeGrid" parameterType="Map">
+        UPDATE SYS0012M
+           SET CODE_DESC   = NVL(#{codeDesc},DBMS_LOB.SUBSTR (#{codeMasterName},4000) )
+             , CODE_MASTER_NAME = #{codeMasterName}
+             , DISAB       = DECODE(#{disabled},'N',0,'Y',1,0)
+             , UPD_USER_ID = #{updUserId}
+             , UPD_DT      = SYSDATE
+        WHERE CODE_MASTER_ID = #{codeMasterId}
+    </update>
+
+    <insert id="addDetailCommCodeGrid" parameterType="Map">
+        INSERT INTO SYS0013M
+                ( CODE_ID
+                , CODE_MASTER_ID
+                , CODE
+                , CODE_NAME
+                , CODE_DESC
+                , DISAB
+                , CRT_DT
+                , CRT_USER_ID
+                , UPD_DT
+                , UPD_USER_ID
+                , OLD_CODE_ID
+                )
+        VALUES
+                ( (SELECT (MAX(CODE_ID) +1) FROM SYS0013M)
+                 , #{codeMasterId}
+                 , #{detailcode}
+                 , #{detailcodename}
+                 , NVL(#{detailcodedesc}, #{detailcodename})
+                 , DECODE(#{detaildisabled},'N',0,'Y',1,0)
+                 , SYSDATE
+                 , #{crtUserId}
+                 , SYSDATE
+                 , #{updUserId}
+                 , 0
+                 )
+    </insert>
+
+    <update id="updDetailCommCodeGrid" parameterType="Map">
+        UPDATE SYS0013M
+           SET CODE        = #{detailcode}
+             , CODE_NAME   = #{detailcodename}
+             , CODE_DESC   = #{detailcodedesc}
+             , DISAB       = DECODE(#{detaildisabled},'N',0,'Y',1,0)
+             , UPD_USER_ID = #{updUserId}
+             , UPD_DT      = SYSDATE
+        WHERE CODE_ID      = #{detailcodeid}
+    </update>
+
+	<select id="selectProductSizeList" parameterType="Map" resultType="egovMap">
+	    SELECT CODE_NAME AS CODE_ID ,CODE_DESC AS CODE_NAME
+	    FROM SYS0013M
+	    WHERE CODE_MASTER_ID = #{groupCode}
+	    AND CODE_ID <![CDATA[<>]]> '5759'
+	    ORDER BY CODE_NAME
+	</select>
+
+   <select id="selectProductSizeListSearch" parameterType="Map" resultType="egovMap">
+       SELECT CODE_NAME AS CODE_ID ,CODE_DESC AS CODE_NAME
+       FROM SYS0013M
+       WHERE CODE_MASTER_ID = #{groupCode}
+       ORDER BY CODE_NAME
+    </select>
+
+	<select id="selectServiceTypeList" parameterType="Map" resultType="egovMap">
+	    SELECT  CODE_ID ,CODE_DESC AS CODE_NAME
+	    FROM SYS0013M
+	    WHERE CODE_MASTER_ID = #{groupCode}
+	    ORDER BY 1
+	</select>
+
+	<select id="selectBrandTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
+    <select id="selectUnitTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY 1
+    </select>
+
+     <select id="selectUniformSizeList" parameterType="Map" resultType="egovMap">
+        SELECT  CODE_ID as ID, CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY ID
+    </select>
+
+    <select id="selectMuslimahScarftList" parameterType="Map" resultType="egovMap">
+        SELECT  CODE_ID as ID, CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY ID
+    </select>
+
+    <select id="selectInnerTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID AS ID ,CODE_DESC AS CODE_ID ,CODE_DESC AS CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        ORDER BY ID
+    </select>
+
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+        SELECT <choose>
+                  <when test='groupCode == "0"'>
+                     BRNCH_ID,CODE,NAME,ADDR1,ADDR2,ADDR3,ADDR4,AREA_ID,POST_CODE_ID,STATE_CODE_ID,CNTY_ID,TEL1,TEL2,FAX,CNTC,TYPE_ID,STUS_ID,UPD_USER_ID,UPD_DT,IS_SYNC,REGN_ID
+                  </when>
+                  <otherwise>
+                     BRNCH_ID CODE_ID
+                     , CODE ||#{separator}|| NAME  CODE_NAME
+                     , TYPE_ID
+                  </otherwise>
+              </choose>
+
+          FROM SYS0005M
+         WHERE 1 = 1
+           AND #{groupCode} = #{groupCode}
+         <choose>
+              <when test='groupCode == "2" or groupCode == "5"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (40 , 43)
+              </when>
+              <when test='groupCode == "3"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (40 , 43 , 42, 5754 ,48)
+              </when>
+              <when test='groupCode == "4"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (42)
+              </when>
+              <when test='groupCode == "7"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (1160)
+              </when>
+              <when test='groupCode == "45"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (45)
+              </when>
+              <when test='groupCode == "48"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (42,48)
+              </when>
+              <when test='groupCode == "5758"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (5754)
+              </when>
+              <when test='groupCode == "10"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (42,43,45,5754,48)
+              </when>
+              <when test='groupCode == "6672"'><!-- ADDED BY KEYI - ADD LT MEM TYPE -->
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (5754)
+              </when>
+              <when test='groupCode == "11"'><!-- DT ASSIGNMENT HC ORDER CANCELLATION ( FOR AIRCOND ) -->
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (43)
+              </when>
+              <otherwise>
+                 <!-- AND STUS_ID = 1 -->
+              </otherwise>
+          </choose>
+        <choose>
+            <when test='groupCode == "0"'>
+               ORDER BY CODE
+            </when>
+            <when test='groupCode == "1"'>
+               ORDER BY CODE
+            </when>
+            <otherwise>
+               ORDER BY CODE_NAME
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--Branch ID로 User 정보 조회 -->
+     <select id="getUsersByBranch" parameterType="Map" resultType="egovMap">
+        SELECT
+            USER_ID AS CODE_ID, USER_NAME AS CODE_NAME
+        FROM
+            SYS1012V        /* SystemUserView */
+        WHERE
+            BRNCH_ID = #{groupCode}
+        ORDER BY
+            USER_NAME
+    </select>
+
+    <select id="selectReasonCodeList" parameterType="Map" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||#{separator}|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+                       UNION ALL
+                      SELECT 1 C1
+                           , T2.RESN_ID CODE_ID
+                           , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                       WHERE T2.RESN_ID = #{inputId}
+                    ) T
+             ) TT ORDER BY CODE_NAME
+    </select>
+
+    <!--Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)  -->
+    <select id="getAccountList" parameterType="Map" resultType="egovMap">
+        SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM
+            SYS0001M
+        WHERE
+            ACC_STUS_ID = 1
+            <if test="groupCode != null and groupCode == 'CRC'">
+                AND IS_PAY_CRC = 1
+            </if>
+            <if test="groupCode != null and groupCode == 'CASH'">
+                AND IS_PAY_CASH = 1
+            </if>
+            <if test="groupCode != null and groupCode == 'CHQ'">
+                AND IS_PAY_CHQ = 1
+            </if>
+            <if test="groupCode != null and groupCode == 'ONLINE'">
+                AND IS_PAY_ONLINE = 1
+            </if>
+            <if test="groupCode != null and groupCode == 'CRC2708' ">
+                AND IS_PAY_CRC = 1
+                AND ACC_ID IN (102,107)
+            </if>
+            <if test="groupCode != null and groupCode == 'CRC2709' ">
+                AND IS_PAY_CRC = 1
+                AND ACC_ID IN (102,107)
+            </if>
+            <if test="groupCode != null and groupCode == 'CRC2710' ">
+                AND IS_PAY_CRC = 1
+                AND ACC_ID IN (100,102,104,105,106,107,553,563,871)
+            </if>
+            <if test="groupCode != null and groupCode == 'CRC2711' ">
+                AND IS_PAY_CRC = 1
+                AND ACC_ID = 102
+            </if>
+            <if test="groupCode != null and groupCode == 'CRC2712' ">
+                AND IS_PAY_CRC = 1
+                AND ACC_ID = 102
+            </if>
+        ORDER BY ACC_CODE ASC
+    </select>
+
+    <select id="getOrgCodeList" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT EXT1.ORG_CODE AS CODE_NAME, EXT1.ORG_CODE AS CODE_ID FROM ORG1001V EXT1
+     JOIN ORG0001D EXT2 ON EXT2.MEM_CODE = EXT1.MEM_CODE
+     WHERE EXT2.STUS = '1'
+     ORDER BY 1
+    </select>
+
+    <select id="getGrpCodeList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT EXT1.GRP_CODE  AS CODE_NAME,EXT1. GRP_CODE AS CODE_ID   FROM ORG1001V EXT1
+    JOIN ORG0001D EXT2 ON EXT2.MEM_CODE = EXT1.MEM_CODE
+    <if test = "groupCode != null and groupCode != '' ">
+    WHERE EXT1.ORG_CODE =  #{groupCode}
+    </if>
+    AND EXT2.STUS = '1'
+    ORDER BY 1
+    </select>
+
+     <select id="getDeptCodeList" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT EXT1.DEPT_CODE AS CODE_NAME, EXT1.DEPT_CODE AS CODE_ID FROM ORG1001V EXT1
+     JOIN ORG0001D EXT2 ON EXT2.MEM_CODE = EXT1.MEM_CODE
+     WHERE 1 = 1
+     <if test = "orgCodes != null and orgCodes != '' ">
+     and EXT1.ORG_CODE =  #{orgCodes}
+    </if>
+
+    <if test = "grpCodes != null and grpCodes != '' ">
+     and EXT1.GRP_CODE =  #{grpCodes}
+    </if>
+    AND EXT2.STUS = '1'
+     ORDER BY 1
+     </select>
+
+    <select id ="selectBankAccountList" parameterType="Map" resultType="egovMap">
+        SELECT
+             B.CODE_ID,
+             B.CODE || '-' || A.ACC_DESC  AS CODE_NAME
+        FROM SYS0001M A
+        JOIN SYS0013M B ON A.ACC_CODE = B.CODE
+        WHERE CODE_MASTER_ID = 384
+        AND DISAB = '0'
+    </select>
+
+    <select id="selectCountryList" parameterType="Map" resultType="egovMap">
+       SELECT CNTY_ID CODE_ID, NAME CODE_NAME FROM SYS0015M
+    </select>
+
+    <select id="selectStateList" parameterType="Map" resultType="egovMap">
+        SELECT STATE_ID CODE_ID, NAME CODE_NAME
+        FROM SYS0035M
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND CNTY_ID = #{groupCode}
+        </if>
+    </select>
+
+    <select id="selectAreaList" parameterType="Map" resultType="egovMap">
+        SELECT AREA_ID CODE_ID, area_name CODE_NAME
+        FROM SYS0039M
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND AREA_STATE_ID = #{groupCode}
+        </if>
+    </select>
+
+    <select id="selectPostCdList" parameterType="Map" resultType="egovMap">
+        SELECT post_code CODE_ID, POST_CODE CODE_NAME
+        FROM SYS0030C
+        WHERE 1=1
+        <if test = "groupCode != null and groupCode != ''">
+         AND AREA_ID = #{groupCode}
+        </if>
+    </select>
+
+    <select id="selectAddrSelCode" parameterType="Map" resultType="egovMap">
+        SELECT
+              <choose>
+                  <when test="groupCode !=null and groupCode == 'country'">
+                      country CODE_ID , country CODE_NAME
+                  </when>
+                  <when test="groupCode !=null and groupCode == 'state'">
+                      state CODE_ID , state CODE_NAME
+                  </when>
+                  <when test="groupCode !=null and groupCode == 'area'">
+                      area CODE_ID , area CODE_NAME
+                  </when>
+                  <when test="groupCode !=null and groupCode == 'post'">
+                      POSTCODE CODE_ID , POSTCODE CODE_NAME
+                  </when>
+              </choose>
+          FROM sys0064m
+          WHERE STATUS_ID = '1'
+              <if  test="groupCode !=null and groupCode == 'country'">
+                group by country
+               </if>
+               <if  test="groupCode !=null and groupCode == 'state'">
+                AND COUNTRY = #{country}
+                group by state
+
+               </if>
+               <if  test="groupCode !=null and groupCode == 'area'">
+               AND COUNTRY = #{country}
+               AND STATE   = #{state}
+                group by area
+               </if>
+               <if  test="groupCode !=null and groupCode == 'post'">
+               AND COUNTRY = #{country}
+               AND STATE   = #{state}
+               AND AREA    = #{area}
+                group by POSTCODE
+               </if>
+
+    </select>
+
+    <!--Product 정보 조회 -->
+    <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
+        SELECT STK_ID
+                 , C1
+                 , CODE_NAME
+         FROM
+        (
+            SELECT DISTINCT T1.STK_ID
+                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                     , T3.CODE_NAME
+             FROM SYS0026M T1
+                     , SYS0013M T3
+            WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+               AND 61 = T1.STK_TYPE_ID
+               AND T1.STUS_CODE_ID = 1
+               <choose>
+                   <when test="selProdGubun !=null and selProdGubun == 'EXHC'"> /* Exclusion Homecare */
+                       AND NOT EXISTS (SELECT M1.STK_CTGRY_ID
+                                                  FROM SYS0026M M1
+                                                 WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                                           WHERE AA.CODE = BB.CODE
+                                                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                                                    AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
+                        )
+                   </when>
+                   <when test="selProdGubun !=null and selProdGubun == 'HC'"> /* Only Homecare */
+                       AND EXISTS (SELECT M1.STK_CTGRY_ID
+                                          FROM SYS0026M M1
+                                         WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                                                   WHERE AA.CODE = BB.CODE
+                                                                                       AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                                            AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
+                        )
+                   </when>
+                   <!-- specify loanable product type - by Hui Ding, 13-02-2020 -->
+                   <when test="selProdGubun !=null and selProdGubun == 'LOAN_PROD'">
+                            AND T1.STK_CTGRY_ID in (SELECT M1.STK_CTGRY_ID
+                            FROM SYS0026M M1
+                            WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                             WHERE AA.CODE = BB.CODE
+                                                             AND BB.DISB = 0
+                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'LOAN_PROD'))
+                   </when>
+               </choose>
+        )
+        ORDER BY CODE_NAME ASC, STK_ID ASC
+    </select>
+    <select id="selectInStckSelCodeList" parameterType="Map" resultType="egovMap">
+            SELECT
+                              STK.STK_ID CODE_ID
+                            , (STK.STK_CODE || ' - ' || STK.STK_DESC) CODE_NAME
+              FROM
+                          SYS0026M STK LEFT JOIN SYS0013M CD
+                          ON STK.STK_TYPE_ID = CD.CODE_ID
+                  <choose>
+                      <when test="groupCode !=null and groupCode == 'filtercd'">
+                           WHERE STK.STK_TYPE_ID = 62
+                      </when>
+                      <when test="groupCode !=null and groupCode == 'sparecd'">
+                           WHERE STK.STK_TYPE_ID IN (63,64)
+                      </when>
+                  </choose>
+                             AND STK.STK_CTGRY_ID = #{codevalue}
+                             AND STK.STUS_CODE_ID = 1
+                              ORDER BY CODE_NAME
+        </select>
+
+    <select id="selectStockLocationList" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                WH_LOC_CODE CODE ,
+               WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+          FROM SYS0028M S28M
+         WHERE 1 = 1
+           AND S28M.WH_LOC_STUS_ID = 1
+           <if test="grade != null and grade != ''">
+              <choose>
+                  <when test='equv !=null and equv == "N"'>
+                    AND S28M.WH_LOC_STK_GRAD <![CDATA[<>]]> #{grade}
+                  </when>
+                  <otherwise>
+                     AND S28M.WH_LOC_STK_GRAD = #{grade}
+                  </otherwise>
+              </choose>
+           </if>
+           <if test="sLoc != null and sLoc != ''">
+              AND S28M.WH_LOC_CODE = #{sLoc}
+           </if>
+           <if test="brnch != null and brnch != ''">
+           <choose>
+           <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
+            AND S28M.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_BRNCH_ID =#{brnch} AND ROWNUM = 1)
+           </when>
+           <otherwise>
+            AND S28M.WH_LOC_BRNCH_ID = #{brnch}
+           </otherwise>
+           </choose>
+
+           </if>
+           <if test="searchlocgb != null and searchlocgb !=''">
+              AND S28M.WH_LOC_GB IN
+              <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+           </if>
+           <if test="locgb != null and locgb != ''">
+              <choose>
+                  <when test='locgb !=null and locgb == "01"'>
+                      AND S28M.WH_LOC_GB in ('01','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "010205"'>
+                      AND S28M.WH_LOC_GB in ('01','02','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
+                      AND S28M.WH_LOC_GB in ('03','04','09','10')
+                  </when>
+                  <otherwise>
+                      AND S28M.WH_LOC_GB = #{locgb}
+                  </otherwise>
+              </choose>
+           </if>
+        <if test='stoIn !=null and stoIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+            AND S28M.WH_LOC_GB IN (SELECT     REGEXP_SUBSTR (#{stoIn}, '[^,]+', 1, LEVEL)
+                                    FROM DUAL
+                                    CONNECT BY REGEXP_SUBSTR (#{stoIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+           <if test="cdcloc != null and cdcloc != ''">
+              AND S28M.CDC_CODE = (SELECT WH_LOC_CODE FROM SYS0028M WHERE WH_LOC_ID =#{cdcloc})
+           </if>
+           <if test="rdcloc != null and rdcloc != ''">
+              AND S28M.RDC_CODE = (SELECT WH_LOC_CODE FROM SYS0028M WHERE WH_LOC_ID =#{rdcloc})
+           </if>
+           <if test="ctloc != null and ctloc != ''">
+              AND S28M.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_ID =#{ctloc})
+           </if>
+           <if test="groupCode != null and groupCode == 'CODY'">
+              AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
+           </if>
+           <if test="stkGrade != null and stkGrade != '' and stkGrade != 'All'">
+             AND S28M.WH_LOC_STK_GRAD = #{stkGrade}
+           </if>
+           <if test="searchBranch != null and searchBranch !=''">
+          AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+        </if>
+         ORDER BY WH_LOC_GB , CODE_NAME
+    </select>
+
+    <select id="selectStockLocationListByDept" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                WH_LOC_CODE CODE ,
+                WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+         FROM SYS0028M S28M
+         LEFT JOIN ORG1001V ORV ON s28m.WH_LOC_CODE = ORV.MEM_CODE
+         WHERE 1 = 1
+            AND S28M.WH_LOC_STUS_ID = 1
+            <if test="locgb != null and locgb != ''">
+              <choose>
+                  <when test='locgb !=null and locgb == "01"'>
+                      AND S28M.WH_LOC_GB in ('01','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "010205"'>
+                      AND S28M.WH_LOC_GB in ('01','02','05')
+                  </when>
+                  <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
+                      AND S28M.WH_LOC_GB in ('03','04','09','10')
+                  </when>
+                  <otherwise>
+                      AND S28M.WH_LOC_GB = #{locgb}
+                  </otherwise>
+              </choose>
+           </if>
+           <if test="searchBranch != null and searchBranch !=''">
+            AND #{searchBranch} IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+        </if>
+        AND ORV.DEPT_CODE = #{deptCode}
+     </select>
+
+
+     <select id="selectStockLocationList4" parameterType="Map" resultType="egovMap">
+        SELECT
+                WH_LOC_ID CODE_ID,
+                WH_LOC_CODE CODE ,
+                WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+         FROM SYS0028M S28M
+         WHERE 1 = 1
+           AND S28M.WH_LOC_STUS_ID = 1
+           AND S28M.WH_LOC_GB in ('03')
+           <if test="dscBranchList != null and dscBranchList != '' ">
+           AND S28M.WH_LOC_BRNCH_ID IN
+	            <foreach item="item" collection="dscBranchList" index="index" open="(" separator="," close=")">
+	             #{item}
+	             </foreach>
+           </if>
+     </select>
+
+    <select id="selectBrnchIdByPostCode" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T.POST_CODE_SET_ID
+             , T.POST_CODE
+             , T.BRNCH_ID
+             , T.CRT_DT
+             , T.UPD_DT
+             , T.UPD_USER_ID
+             , T.STUS_CODE_ID
+          FROM
+             ( SELECT T1.POST_CODE_SET_ID
+                    , T1.POST_CODE
+                    , T1.BRNCH_ID
+                    , T1.CRT_DT
+                    , T1.UPD_DT
+                    , T1.UPD_USER_ID
+                    , T1.STUS_CODE_ID
+                 FROM SYS0031M T1
+                WHERE T1.POST_CODE = #{postCode}
+                  AND 1 = T1.STUS_CODE_ID
+                ORDER BY POST_CODE_SET_ID ASC
+             ) T
+         WHERE ROWNUM <= 1
+    ]]>
+    </select>
+
+    <select id="selectBankList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                   <if test="groupCode != null and groupCode == 'CRC2710' ">
+                        AND BANK_ID IN (5,6,17,19,20,21,28,29,30,34,38,23,3,36,32,18)
+                    </if>
+                    <if test="groupCode != null and groupCode == 'CRC2712' ">
+                        AND BANK_ID IN (3,36)
+                    </if>
+                    ) Project1
+        ORDER BY Project1.CODE ASC
+    </select>
+
+    <select id="selectBanks" parameterType="Map" resultType="egovMap">
+        SELECT BANK.BANK_ID BANK_ID
+              ,BANK.CODE BANK_CODE
+              ,BANK.NAME BANK_NAME
+              ,BANK.STUS_CODE_ID
+          FROM SYS0004M BANK
+         WHERE 'T' = CASE WHEN #{stusCodeId} = 99 OR BANK.STUS_CODE_ID = #{stusCodeId}
+                                        THEN 'T'
+                                        ELSE  'F'
+                              END
+          ORDER BY BANK.CODE
+    </select>
+
+    <select id="selectDefectCodes" parameterType="Map" resultType="egovMap">
+        SELECT BANK.BANK_ID BANK_ID
+            ,BANK.CODE BANK_CODE
+            ,BANK.NAME BANK_NAME
+            ,BANK.STUS_CODE_ID
+        FROM SYS0004M BANK
+        WHERE 'T' = CASE WHEN #{stusCodeId} IS NULL OR BANK.STUS_CODE_ID = #{stusCodeId}
+                                    THEN 'T'
+                                    ELSE  'F'
+                            END
+        ORDER BY BANK.CODE
+    </select>
+
+    <select id="selectBankInfoById" parameterType="java.lang.String" resultType="java.lang.String">
+       SELECT CODE
+       FROM SYS0004M
+       WHERE BANK_ID = #{value}
+    </select>
+
+    <select id="selectDocSubmissionList" parameterType="Map" resultType="egovMap">
+        SELECT T.CODE_ID
+             , T.TYPE_DESC
+          FROM
+             ( SELECT T1.CODE_ID
+                    , DBMS_LOB.SUBSTR (T1.CODE_DESC, 4000) TYPE_DESC
+                    , T2.TYPE_DT_SEQ
+                 FROM SYS0013M T1
+                 JOIN ORG0013C T2 ON T1.CODE_ID = T2.TYPE_ID
+                WHERE T2.TYPE_CODE_ID = #{typeCodeId}
+                  AND 1 = T2.STUS_ID
+                  AND T2.TYPE_GRP_ID = #{typeCodeId}
+             ) T
+         ORDER BY T.TYPE_DT_SEQ ASC
+    </select>
+    <select id="selectProductList" resultType="egovMap">
+       <![CDATA[
+        SELECT Project1.STK_ID STK_ID  ,
+               Project1.C1 C1  ,
+               Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.STK_ID STK_ID  ,
+                        Extent1.STK_DESC STK_DESC  ,
+                        Extent3.CODE_NAME CODE_NAME  ,
+                        Extent1.STK_CODE || ' - ' || Extent1.STK_DESC C1
+                  FROM SYS0026M Extent1
+                        JOIN SAL0016M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
+                        JOIN SYS0013M Extent3   ON Extent1.STK_CTGRY_ID = Extent3.CODE_ID
+                  WHERE  ( 1 <> UTILS.CONVERT_TO_NUMBER(Extent1.IS_NCV,10,0) )
+                           AND ( 1 = Extent1.STUS_CODE_ID )
+                           AND ( 61 = Extent1.STK_TYPE_ID )
+                           AND ( Extent2.AMT > UTILS.CONVERT_TO_FLOAT(0,53) )
+        ) Project1
+        ORDER BY Project1.CODE_NAME ASC, Project1.STK_DESC ASC
+        ]]>
+    </select>
+
+    <!-- DOC NO  채번 -->
+    <select id="selectDocNo" parameterType="String" resultType="String">
+        SELECT FN_GET_DOCNO(#{value}) from dual
+    </select>
+
+
+    <!-- Payment - Adjustment CN/DN : Adjustment Reason 정보 조회 -->
+    <select id="selectAdjReasonList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.RESN_ID AS CODE_ID ,
+            B.RESN_DESC  AS CODE_NAME
+        FROM
+            SYS0033M A
+            JOIN SYS0032M B ON A.RESN_ID = B.RESN_ID AND B.STUS_CODE_ID = 1
+        WHERE
+            A.RESN_TYPE_ID = 1278
+            AND A.RESN_PARENT_GRP_ID = #{groupCode}
+            AND A.RESN_STUS_ID = 1
+        ORDER BY B.RESN_DESC
+    </select>
+
+    <select id="SysdateCall" parameterType="String" resultType="String">
+        SELECT TO_CHAR(SYSDATE + (${value}) , 'dd/mm/yyyy') FROM DUAL
+    </select>
+
+    <select id="selectPublicHolidayList"  parameterType="Map" resultType="egovMap">
+        SELECT TO_CHAR (HOLIDAY, 'YYYYMMDD') HOLIDAY
+              ,TO_CHAR (HOLIDAY, 'YYYY') YYYY
+              ,TO_CHAR (HOLIDAY, 'MMDD') MMDD
+              ,HOLIDAY_DESC
+          FROM SYS0081M
+         WHERE HOLIDAY_TYPE = 'P'
+           AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR) )
+                           AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR) )
+    </select>
+
+    <!-- select Homecare holiday list -->
+    <select id="getHcHolidayList"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.common.impl.CommonMapper.getHcHolidayList */
+        SELECT TO_CHAR (HOLIDAY, 'YYYYMMDD') HOLIDAY
+                 , TO_CHAR (HOLIDAY, 'YYYY') YYYY
+                 , TO_CHAR (HOLIDAY, 'MMDD') MMDD
+                 , HOLIDAY_DESC
+         FROM SYS0101M
+        WHERE HOLIDAY_TYPE = 'P'
+           AND HOLIDAY BETWEEN (TRUNC (SYSDATE, 'YYYY') - ( INTERVAL '1' YEAR))
+           AND (TRUNC (SYSDATE, 'YYYY') + ( INTERVAL '2' YEAR))
+    </select>
+
+    <select id="getHomeCareGroupChkYn" parameterType="Map" resultType="String">
+        SELECT CASE WHEN USER_TYPE_ID in ('5758','6672') THEN 'Y' ELSE 'N' END
+          FROM SYS0047M
+         WHERE USER_NAME = #{userId}
+    </select>
+
+     <!-- Added for Special delivery CT enhancement by Hui Ding, 31-03-2020 -->
+    <select id="selectSuperCtInd" resultType="egovMap">
+        SELECT CODE FROM SYS0094M WHERE IND = 'FLG_SPR_CT' AND DISB = 0
+    </select>
+
+    <select id="selectSuperCtCode" resultType="egovMap">
+        SELECT CODE FROM SYS0094M WHERE IND = 'SPR_CT_CD' AND DISB = 0
+    </select>
+
+    <select id="selectMemTypeCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode} AND CODE_ID IN (1,2,3,5,7,7284)
+        </if>
+    </select>
+
+    <select id="selectReasonCodeId" resultType="egovMap">
+        SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID = #{typeId}
+                         AND 1 = T1.STUS_CODE_ID
+                    ) T
+             ) TT ORDER BY CODE_ID
+    </select>
+
+    <select id="selectDepartmentCode" resultType="egovMap">
+           SELECT
+                 DEPT_CODE CODE,
+                 DEPT_CODE CODE_NAME
+           FROM ORG1001V A
+           JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+           WHERE 1=1
+           AND B.BRNCH = #{brnchId}
+           AND B.MEM_TYPE = '2'
+           AND A.MEM_LVL = '3'
+    </select>
+
+  <select id="getMapProp" resultType="egovMap">
+    SELECT PARAM_CODE,
+               PARAM_VAL
+    FROM SYS0098M
+    WHERE MODULE = 'GEN'
+        AND SUB_MODULE = 'GPS'
+        AND DISB = 0
+  </select>
+
+  <select id="getGeneralInstInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.INSTALL_ENTRY_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE,
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
+    FROM SAL0046D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0064M F ON E.AREA_ID = F.AREA_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.INSTALL_ENTRY_ID = #{key}
+  </select>
+
+  <select id="getGeneralASInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.AS_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE,
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
+    FROM SVC0001D A
+    JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.AS_MEM_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0064M F ON E.AREA_ID = F.AREA_ID
+    WHERE A.AS_SO_ID = #{ordId}
+        AND A.AS_ID = #{key}
+  </select>
+
+  <select id="getGeneralPRInfo" resultType="egovMap">
+     SELECT TO_CHAR(A.RETN_NO) AS JOB_NO,
+               TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE,
+               UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
+    FROM LOG0038D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0064M F ON E.AREA_ID = F.AREA_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.CALL_ENTRY_ID = #{key}
+  </select>
+
+  <select id="getGeneralHSInfo" resultType="egovMap">
+    SELECT TO_CHAR(A.NO) AS JOB_NO,
+           TO_CHAR(B.SALES_ORD_NO) AS SALES_ORD_NO,
+               TO_CHAR(B.SALES_ORD_ID) AS SALES_ORD_ID,
+               TO_CHAR(C.MEM_ID) AS MEM_ID,
+               TO_CHAR(C.MEM_CODE) AS MEM_CODE,
+               TO_CHAR(C.NAME) AS NAME,
+               TO_CHAR(E.LATITUDE) AS LATITUDE,
+               TO_CHAR(E.LONGITUDE) AS LONGITUDE,
+                              UPPER(CASE WHEN E.ADDR_DTL IS NOT NULL
+                            THEN (TO_CHAR(E.ADDR_DTL) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN E.STREET IS NOT NULL
+                            THEN (TO_CHAR(E.STREET) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.POSTCODE IS NOT NULL
+                            THEN (TO_CHAR(F.POSTCODE) || ' ')
+                            ELSE ('') END ||
+                       CASE WHEN F.CITY IS NOT NULL
+                            THEN (TO_CHAR(F.CITY) || ', ')
+                            ELSE ('') END ||
+                       CASE WHEN F.STATE IS NOT NULL
+                            THEN (TO_CHAR(F.STATE) || ', ')
+                            ELSE ('') END ||
+                       F.COUNTRY) AS ADDRESS
+    FROM SVC0008D A
+    JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    JOIN ORG0001D C ON A.CODY_ID = C.MEM_ID
+    JOIN SAL0045D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+    JOIN SAL0023D E ON D.ADD_ID = E.CUST_ADD_ID
+    JOIN SYS0064M F ON E.AREA_ID = F.AREA_ID
+    WHERE A.SALES_ORD_ID = #{ordId}
+        AND A.SCHDUL_ID = #{key}
+  </select>
+
+  <select id="selectTimePick"  parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'TIME_PICK'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectSystemConfigurationParamVal" parameterType="Map" resultType="egovMap">
+  SELECT PARAM_VAL
+      FROM SYS0098M
+      WHERE
+      MODULE = #{module}
+      AND SUB_MODULE = #{subModule}
+      AND PARAM_CODE = #{paramCode}
+      AND DISB = 0
+  </select>
+
+  <select id="selectSystemConfigurationParamValue" parameterType="Map" resultType="Integer">
+  SELECT PARAM_VAL
+      FROM SYS0098M
+      WHERE
+      MODULE = #{module}
+      AND SUB_MODULE = #{subModule}
+      AND PARAM_CODE = #{paramCode}
+      AND DISB = 0
+  </select>
+
+    <select id="selectSystemDefectConfiguration" parameterType="Map" resultType="egovMap">
+      SELECT DEFECT_CODE
+      FROM SYS0100M
+      WHERE
+      1=1
+      <if test="prodCat != null and prodCat != '' ">
+      AND PROD_CAT = #{prodCat}
+      </if>
+      <if test="defectTyp != null and defectTyp != '' ">
+      AND DEFECT_TYP = #{defectTyp}
+      </if>
+      <if test="defectGrp != null and defectGrp != '' ">
+      AND DEFECT_GRP = #{defectGrp}
+      </if>
+      <if test="defectId != null and defectId != '' ">
+      AND DEFECT_ID = #{defectId}
+      </if>
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+      AND DEFECT_STATUS = 1
+  </select>
+
+  <select id="selectFilterList" parameterType="Map" resultType="egovMap">
+      SELECT
+      STK.STK_ID CODE_ID
+      , STK.STK_CODE ||' - '||STK.STK_DESC CODE_NAME
+      , STK.STK_ID CODE
+      FROM SYS0026M STK
+      LEFT JOIN SYS0013M CD ON STK.STK_TYPE_ID = CD.CODE_ID
+   	  WHERE 1=1
+   		<if test="stkTypeId != null and stkTypeId != '' ">
+   			AND	STK.STK_TYPE_ID = #{stkTypeId}
+   		</if>
+   		<if test="stkCtgryId != null and stkCtgryId != '' ">
+            AND STK.STK_CTGRY_ID = #{stkCtgryId}
+        </if>
+        <if test="stkId != null and stkId != '' ">
+            AND STK.STK_ID = #{stkId}
+        </if>
+       AND STK.STUS_CODE_ID = 1
+       ORDER BY CODE_NAME
+   </select>
+
+  <select id="getSstTaxRate" parameterType="Map" resultType="String">
+    SELECT TAX_RATE
+    FROM FCM0007C
+    WHERE INDUSTRY_CODE =
+    (
+    SELECT PARAM_VAL
+    FROM SYS0098M
+    WHERE MODULE = 'PAYMENT'
+    AND SUB_MODULE = 'PAYMENT'
+    AND PARAM_CODE = 'PAY_TAX'
+    AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    )
+  </select>
+
+  <select id="getSstRelatedInfo" parameterType="Map" resultType="egovMap">
+  SELECT S46.CODE_ID, F7.TAX_RATE, F7.TAX_CODE
+  FROM FCM0007C F7
+  JOIN SYS0046D S46 ON S46.CODE = F7.INDUSTRY_CODE
+  WHERE F7.INDUSTRY_CODE =
+  (
+  SELECT PARAM_VAL
+  FROM SYS0098M
+  WHERE MODULE = 'PAYMENT'
+  AND SUB_MODULE = 'PAYMENT'
+  AND PARAM_CODE = 'PAY_TAX'
+  AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  )
+  AND S46.INACT = 'N'
+  </select>
+
+  <select id="getReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0115D_EGHL_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="createTokenReqs" parameterType="Map">
+    INSERT INTO SYS0115D ( EGHL_REQ_ID
+                                      , EGHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , EGHL_REQ_MOD
+                                      </if>
+                                      , EGHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{eGhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateTokenResp" parameterType="Map">
+      UPDATE SYS0115D SET EGHL_RESP_TKN = #{authToken}
+                                    , EGHL_RESP_VAL = #{response}
+                                    , EGHL_RESP_STAT_CDE = #{authStat}
+                                    , EGHL_RESP_STAT_RMK = #{authRmk}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE EGHL_REQ_ID =  #{reqsId}
+  </update>
+
+  <insert id="createPmtLinkReqs" parameterType="Map">
+    INSERT INTO SYS0115D ( EGHL_REQ_ID
+                                      , EGHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , EGHL_REQ_MOD
+                                      </if>
+                                      , EGHL_REQ_PRM
+                                      , EGHL_RESP_TKN
+                                      , EGHL_EMAIL_IND
+                                      , EGHL_RESP_RECIP_NM
+                                      , EGHL_RESP_RECIP_CTNT
+                                      , EGHL_RESP_RECIP_EMAIL
+                                      , EGHL_RESP_ORD_NO
+                                      , EGHL_RESP_ORD_DESC
+                                      , EGHL_RESP_ORD_CURR
+                                      , EGHL_RESP_ORD_AMT
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                  , #{eGhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , #{epltoken}
+                  , #{ordPmtLinkEmailInd}
+                  , #{eplcustomername}
+                  , #{eplcustomercontact}
+                  , #{eplcustomeremail}
+                  , #{eplordernumber}
+                  , #{eplorderdesc}
+                  , #{eplcurrency}
+                  , #{eplamount}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updatePmtLinkResp" parameterType="Map">
+      UPDATE SYS0115D SET EGHL_RESP_PMTLK = #{pmtLink}
+                                    , EGHL_RESP_VAL = #{response}
+                                    , EGHL_RESP_STAT_CDE = #{respCde}
+                                    , EGHL_RESP_STAT_RMK = #{respRmk}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE EGHL_REQ_ID =  #{reqsId}
+  </update>
+
+   <select id="getGdexReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0116D_GDEX_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="createGdexReqs" parameterType="Map">
+    INSERT INTO SYS0116D ( GDEX_REQ_ID
+                                      , GDEX_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , GDEX_REQ_MOD
+                                      </if>
+                                      , GDEX_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{gDexTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateGdexResp" parameterType="Map">
+      UPDATE SYS0116D SET GDEX_RESP_STUS = #{status}
+                                    , GDEX_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE GDEX_REQ_ID =  #{reqsId}
+  </update>
+
+   <select id="getDhlReqsId" parameterType="Map" resultType="Integer">
+    SELECT SYS0117D_DHL_REQ_SEQ_ID.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="createDhlAuthReqs" parameterType="Map">
+    INSERT INTO SYS0117D ( DHL_REQ_ID
+                                      , DHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , DHL_REQ_MOD
+                                      </if>
+                                      , DHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{dhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateDhlAuthResp" parameterType="Map">
+      UPDATE SYS0117D SET DHL_RESP_STUS = #{status}
+                                    , DHL_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE DHL_REQ_ID =  #{reqsId}
+  </update>
+
+  <insert id="createDhlShipmDtlReqs" parameterType="Map">
+    INSERT INTO SYS0117D ( DHL_REQ_ID
+                                      , DHL_REQ_TYP
+                                      <if test="reqsMod != null and reqsMod != '' ">
+                                        , DHL_REQ_MOD
+                                      </if>
+                                      , DHL_REQ_PRM
+                                      , CRT_USR_ID
+                                      , UPD_USR_ID
+    ) VALUES ( #{reqsId}
+                    , #{dhlTyp}
+                  <if test="reqsMod != null and reqsMod != '' ">
+                    , #{reqsMod}
+                  </if>
+                  , #{reqsParam}
+                  , 349
+                  , 349
+    )
+  </insert>
+
+  <update id="updateDhlShptDtlResp" parameterType="Map">
+      UPDATE SYS0117D SET DHL_RESP_STUS = #{status}
+                                    , DHL_RESP_VAL = #{response}
+                                    , UPD_USR_ID = 349
+                                    , UPD_DT = SYSDATE
+      WHERE DHL_REQ_ID =  #{reqsId}
+  </update>
+
+  <select id="getApiKey" parameterType="Integer" resultType="String">
+    SELECT TO_CHAR(API_KEY)
+    FROM API0001M
+    WHERE API_USER_ID = #{keyId}
+  </select>
+
+  <select id="selectStoreList" parameterType="Map" resultType="egovMap">
+        SELECT CW_STORE_ID as CODE, CW_STORE_NAME as CODE_NAME
+        FROM SAL0429M
+        WHERE CW_STORE_STUS_ID = 1
+        ORDER BY CW_STORE_ID
+  </select>
+</mapper>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper">
+
+    <!-- Search rule book management list  -->
+    <select id="selectHcTerritoryDetailList"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.selectHcTerritoryDetailList */
+        SELECT A.AREA_ID
+                 , A.AREA
+                 , A.CITY
+                 , A.POSTCODE
+                 , A.STATE
+                 , A.DT_BRNCH_CODE
+                 , A.DT_SUB_GRP
+                 , A.LT_BRNCH_CODE
+                 , A.LT_SUB_GRP
+                 , A.AC_BRNCH_CODE
+                 , A.AC_SUB_GRP
+
+         FROM SYS0064M A
+           JOIN SYS0005M B
+             ON A.AREA_ID    = B.AREA_ID
+
+        WHERE B.TYPE_ID     = #{brnchType}
+           AND A.AREA_ID IN(SELECT AREA_ID FROM ORG0019M WHERE REQST_NO=#{reqstNo})
+	</select>
+
+	<!-- Search Current Territory list -->
+	<select id="selectCurrentHcTerritory"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.selectCurrentHcTerritory */
+        SELECT A.AREA_ID
+                 , A.AREA
+                 , A.CITY
+                 , A.POSTCODE
+                 , A.STATE
+                 , A.DT_BRNCH_CODE
+                 , A.DT_SUB_GRP
+                 , A.LT_BRNCH_CODE
+                 , A.LT_SUB_GRP
+                 , A.AC_BRNCH_CODE
+                 , A.AC_SUB_GRP
+                 , CASE
+                 WHEN A.AREA_ID IN (SELECT AREA_ID
+                                                FROM SYS0064M
+                                               WHERE DT_BRNCH_CODE IS NULL
+                                               ) THEN 'Active'
+                   ELSE 'Complete'
+                   END AS STATUS
+
+        FROM SYS0064M A
+        <where>
+	        <if test="area != null and area != ''">
+	            AND UPPER(A.AREA) LIKE UPPER('%'||#{area}||'%')
+	        </if>
+	        <if test="areaID != null and areaID != ''">
+	            AND REPLACE(A.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
+	        </if>
+	        <if test="city != null and city != ''">
+	            AND UPPER(A.CITY) LIKE UPPER('%'||#{city}||'%')
+	        </if>
+	        <if test="state != null and state != ''">
+	            AND A.STATE = #{state}
+	        </if>
+	        <if test="postcode != null and postcode != ''">
+	            AND A.POSTCODE = #{postcode}
+	        </if>
+	        <if test="hdcBranch != null and hdcBranch != ''">
+	            AND (A.DT_BRNCH_CODE = #{hdcBranch} OR A.AC_BRNCH_CODE = #{hdcBranch})
+	        </if>
+	        <if test="status != null and status != ''">
+	            <if test="status == 'Active'">
+	                AND (CODY_BRNCH_CODE IS NULL OR CT_BRNCH_CODE IS NULL)
+	            </if>
+	            <if test="status == 'Complete'">
+	                AND (CODY_BRNCH_CODE IS NOT NULL AND CT_BRNCH_CODE IS NOT NULL)
+	            </if>
+	        </if>
+	        <if test="memType != null and memType != ''">
+                <if test="memType == '5758'">
+                    AND (DT_BRNCH_CODE IS NOT NULL OR DT_SUB_GRP IS NULL)
+                </if>
+                <if test="memType == '6672'">
+                    AND (LT_BRNCH_CODE IS NOT NULL AND LT_SUB_GRP IS NOT NULL)
+                </if>
+            </if>
+            <if test="memType == '3'">
+                    AND (AC_BRNCH_CODE IS NOT NULL AND AC_SUB_GRP IS NOT NULL)
+                </if>
+        </where>
+    </select>
+
+    <!-- Insert HomeCare Delivery Canter -->
+    <insert id="insertHDC" parameterType="java.util.List">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertHDC */
+        INSERT INTO ORG0019M (
+                   REQST_NO
+                 , AREA_ID
+                 , REQST_DT
+                 , REQST_USER_ID
+                 , DT_BRNCH_CODE        /* DT Branch Code(HDC) */
+                 , DT_SUB_GRP              /* Dt Sub Group */
+                 , BRNCH_TYPE
+                 , CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+                     , #{item.areaId}
+                     , SYSDATE
+                     , #{item.requester}
+                     , #{item.branch}
+                     , #{item.extBranch}
+                     , #{item.brnchId}
+                     , '1'
+             FROM DUAL
+        </foreach>
+    </insert>
+
+    <!-- Insert Dream Service Center -->
+    <insert id="insertDSC" parameterType="java.util.List">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertDSC */
+        INSERT INTO ORG0019M (
+                   REQST_NO
+                 , AREA_ID
+                 , REQST_DT
+                 , REQST_USER_ID
+                 , AC_BRNCH_CODE        /* AC Branch Code(DSC) */
+                 , AC_SUB_GRP              /* AC Sub Group */
+                 , BRNCH_TYPE
+                 , CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+                     , #{item.areaId}
+                     , SYSDATE
+                     , #{item.requester}
+                     , #{item.branch}
+                     , #{item.extBranch}
+                     , #{item.brnchId}
+                     , '1'
+             FROM DUAL
+        </foreach>
+    </insert>
+
+    <insert id="insertHDCLT" parameterType="java.util.List">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertHDC */
+        INSERT INTO ORG0019M (
+                   REQST_NO
+                 , AREA_ID
+                 , REQST_DT
+                 , REQST_USER_ID
+                 , LT_BRNCH_CODE        /* DT Branch Code(HDC) */
+                 , LT_SUB_GRP              /* Dt Sub Group */
+                 , BRNCH_TYPE
+                 , CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+                     , #{item.areaId}
+                     , SYSDATE
+                     , #{item.requester}
+                     , #{item.branch}
+                     , #{item.extBranch}
+                     , #{item.brnchId}
+                     , '1'
+             FROM DUAL
+        </foreach>
+    </insert>
+
+    <!-- Select Table - ORG0019M -->
+    <select id="select19M"  parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.insertHDC */
+        SELECT REQST_NO,
+                   AREA_ID,
+                   REQST_DT,
+                   REQST_USER_ID,
+                   CODY_BRNCH_CODE,
+                   CODY_MANGR_USER_ID,
+                   BRNCH_TYPE,
+                   CASE WHEN (BRNCH_TYPE = 42) THEN 'CODY BRANCH'
+                              ELSE 'DREAM SERVICE CENTER'
+                    END BRNCH_NAME,
+                   CT_BRNCH_CODE,
+                   CT_SUB_GRP,
+                   SO_BRNCH_CODE,
+                   HT_CODE,
+                   DT_BRNCH_CODE,        /* DT Branch Code(HDC) */
+                   DT_SUB_GRP,               /* Dt Sub Group */
+                   LT_BRNCH_CODE,
+                   LT_SUB_GRP,
+                   AC_BRNCH_CODE,
+                   AC_SUB_GRP
+          FROM ORG0019M
+         WHERE REQST_NO=#{reqstNo} AND BRNCH_TYPE= #{brnchType}
+    </select>
+
+    <!-- update Table - SYS0064M -->
+    <update id="updateSYS0064M" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateSYS0064M */
+        UPDATE SYS0064M SET
+                    DT_BRNCH_CODE   =  #{dtBrnchCode},
+                    DT_SUB_GRP         =  #{dtSubGrp}
+         WHERE AREA_ID                = #{areaId}
+    </update>
+
+    <update id="updateSYS0064MLT" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateSYS0064M */
+        UPDATE SYS0064M SET
+                    LT_BRNCH_CODE   =  #{ltBrnchCode},
+                    LT_SUB_GRP         =  #{ltSubGrp}
+         WHERE AREA_ID                = #{areaId}
+    </update>
+
+    <update id="updateSYS0064MAC" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateSYS0064M */
+        UPDATE SYS0064M SET
+                    AC_BRNCH_CODE   =  #{acBrnchCode},
+                    AC_SUB_GRP         =  #{acSubGrp}
+         WHERE AREA_ID                = #{areaId}
+    </update>
+
+    <!-- update Table - ORG0019M(Flag) -->
+    <update id="updateORG0019MFlag" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateORG0019MFlag */
+       UPDATE ORG0019M SET
+                   AVAIL_FLAG    = 'N'
+        WHERE AREA_ID         = #{areaId}
+           AND REQST_NO      = #{reqstNo}
+           AND BRNCH_TYPE   = #{brnchType}
+    </update>
+
+    <!-- update Table - ORG0019M -->
+    <update id="updateORG0019M" parameterType="Map">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcTerritoryMgtMapper.updateORG0019M */
+        UPDATE ORG0019M SET
+                    AVAIL_FLAG    = 'Y',
+                    CNFM_STUS    = '4'
+         WHERE AREA_ID          = #{areaId}
+            AND REQST_NO       = #{reqstNo}
+            AND BRNCH_TYPE    = #{brnchType}
+    </update>
+
+</mapper>

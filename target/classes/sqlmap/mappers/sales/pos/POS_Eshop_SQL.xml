@@ -1,0 +1,1254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pos.impl.PosEshopMapper">
+
+
+	<select id="selectItemPrice" parameterType="Map" resultType="egovMap">
+	 <![CDATA[
+			 SELECT
+			         STK.STK_CODE,
+			         CASE WHEN (61 = stk.STK_TYPE_ID) THEN
+			                CASE WHEN (sp1.AMT IS NOT NULL) THEN sp1.AMT ELSE CAST (0 AS FLOAT (53)) END
+			              WHEN (sp2.AMT IS NOT NULL) THEN sp2.AMT ELSE CAST (0 AS FLOAT (53))
+			         END AS SELLING_PRICE
+			 FROM SYS0026M STK
+			 LEFT OUTER JOIN SAL0016M SP1
+			        ON   (67 = SP1.APP_TYPE_ID)
+			        AND (61 = STK.STK_TYPE_ID)
+			        AND (SP1.STK_ID = STK.STK_ID)
+			        AND (0 = SP1.MEM_PAC_ID)
+			        AND (1 = SP1.STUS_CODE_ID)
+			  LEFT OUTER JOIN SAL0016M SP2
+			        ON   (61 <> STK.STK_TYPE_ID)
+			        AND (SP2.STK_ID = STK.STK_ID)
+			        AND (0 = SP2.MEM_PAC_ID)
+			        AND (1 = SP2.STUS_CODE_ID)
+			  WHERE STK.STK_ID = #{itemCode}
+	]]>
+	</select>
+
+
+	<select id="getSeqSAL0321D" resultType="java.lang.Integer">
+        SELECT SAL0321D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertEshopItemList" parameterType="Map">
+            INSERT INTO SAL0321D (
+                             ID
+                           , POS_TYPE
+                           , SELLING_TYPE
+                           , ITEM_ID
+                           , ITEM_CTGRY_ID
+                           , ITEM_TYPE
+                           , ITEM_QTY
+                           , ITEM_WEIGHT
+                           , ITEM_PRICE
+                           , ITEM_SIZE
+                           , ITEM_ATTCH_GRP_ID
+                           , TOTAL_PRICE
+                           , TOTAL_WEIGHT
+                           , CRT_ID
+                           , CRT_DT
+             )VALUES (
+		                     #{id}
+		                   , #{posType}
+					       , #{sellingType}
+					       , #{itemId}
+					       , #{itemCtgryId}
+					       , #{itemType}
+					       , #{itemQty}
+					       , #{itemWeight}
+					       , #{itemPrice}
+					       , #{itemSize}
+					       , #{itemAttachGrpId}
+					       , #{totalPrice}
+					       , #{totalWeight}
+					       , #{crtId}
+		                   , sysdate
+            )
+    </insert>
+
+    <select id="selectItemList" parameterType="Map" resultType="egovMap">
+			SELECT DISTINCT
+                      A.ID
+                    , B.CODE_NAME AS POS_TYPE
+                    , A.SELLING_TYPE AS SELLING_TYPE_ID
+                    , C.CODE_NAME AS SELLING_TYPE
+                    , E.CODE_NAME AS ITEM_CTGRY
+                    , A.ITEM_ID
+                    , D.STK_CODE || ' - ' || D.STK_DESC AS STK_CODE
+                    , A.ITEM_SIZE
+                    , A.ITEM_QTY
+                    , A.ITEM_WEIGHT
+                    , A.TOTAL_PRICE
+                    , A.TOTAL_WEIGHT
+                    , A.ITEM_ATTCH_GRP_ID
+                    , G.ATCH_FILE_NAME
+                    , G.FILE_SUB_PATH || '\' || G.PHYSICL_FILE_NAME AS FILEPATH
+            from SAL0321D A
+            LEFT JOIN SYS0013M B ON A.POS_TYPE = B.CODE_ID
+            LEFT JOIN SYS0013M C ON A.SELLING_TYPE = C.CODE_ID
+            LEFT JOIN SYS0026M D ON A.ITEM_ID = D.STK_ID
+            LEFT JOIN SYS0013M E ON A.ITEM_CTGRY_ID = E.CODE_ID
+            LEFT JOIN SYS0070M F ON A.ITEM_ATTCH_GRP_ID = F.ATCH_FILE_GRP_ID
+            LEFT JOIN SYS0071D G ON F.ATCH_FILE_ID = G.ATCH_FILE_ID
+            LEFT JOIN LOG0106M H ON A.ITEM_ID = H.ITEM_CODE
+            WHERE 1=1
+                  AND NVL(A.DISAB,0) = 0
+           <if test="posType_editItem != null and posType_editItem != '' ">
+                  AND  A.POS_TYPE = #{posType_editItem}
+          </if>
+           <if test="sellingType_editItem != null and sellingType_editItem != '' ">
+                  AND  A.SELLING_TYPE = #{sellingType_editItem}
+          </if>
+          <if test="imgId != null and imgId != '' ">
+                  AND A.ID =#{imgId}
+          </if>
+          <if test="locId != null and locId != '' ">
+                  AND H.LOC_ID =#{locId}
+          </if>
+    </select>
+
+     <select id="selectItemList2" parameterType="Map" resultType="egovMap">
+            SELECT DISTINCT
+                      A.ID
+                    , B.CODE_NAME AS POS_TYPE
+                    , A.SELLING_TYPE AS SELLING_TYPE_ID
+                    , C.CODE_NAME AS SELLING_TYPE
+                    , E.CODE_NAME AS ITEM_CTGRY
+                    , A.ITEM_ID
+                    , D.STK_CODE || ' - ' || D.STK_DESC AS STK_CODE
+                    , A.ITEM_SIZE
+                    , A.ITEM_QTY
+                    , A.TOTAL_PRICE
+                    , A.TOTAL_WEIGHT
+                    , A.ITEM_ATTCH_GRP_ID
+                    , G.ATCH_FILE_NAME
+                    , G.FILE_SUB_PATH || '\' || G.PHYSICL_FILE_NAME  AS FILEPATH
+                    , H.ITEM_INV_QTY
+                    , H.LOC_ID
+            from SAL0321D A
+            LEFT JOIN SYS0013M B ON A.POS_TYPE = B.CODE_ID
+            LEFT JOIN SYS0013M C ON A.SELLING_TYPE = C.CODE_ID
+            LEFT JOIN SYS0026M D ON A.ITEM_ID = D.STK_ID
+            LEFT JOIN SYS0013M E ON A.ITEM_CTGRY_ID = E.CODE_ID
+            LEFT JOIN SYS0070M F ON A.ITEM_ATTCH_GRP_ID = F.ATCH_FILE_GRP_ID
+            LEFT JOIN SYS0071D G ON F.ATCH_FILE_ID = G.ATCH_FILE_ID
+            LEFT JOIN LOG0106M H ON A.ITEM_ID = H.ITEM_CODE
+            WHERE 1=1
+                  AND NVL(A.DISAB,0) = 0
+           <if test="posType_editItem != null and posType_editItem != '' ">
+                  AND  A.POS_TYPE = #{posType_editItem}
+          </if>
+           <if test="sellingType_editItem != null and sellingType_editItem != '' ">
+                  AND  A.SELLING_TYPE = #{sellingType_editItem}
+          </if>
+          <if test="imgId != null and imgId != '' ">
+                  AND A.ID =#{imgId}
+          </if>
+          <if test="locId != null and locId != '' ">
+                  AND H.LOC_ID =#{locId}
+          </if>
+    </select>
+
+     <update id="removeEshopItemList"  parameterType="Map">
+              UPDATE SAL0321D
+                SET DISAB  = 1
+                     ,UPD_ID  = #{userId}
+                     ,UPD_DT       = SYSDATE
+            WHERE ID IN
+            <foreach collection="searchitemvalue" item="item" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+    </update>
+
+    <update id="updateEshopItemList"  parameterType="Map">
+              UPDATE SAL0321D
+                SET
+                        ITEM_QTY = #{itemQty}
+                     ,  ITEM_WEIGHT = #{itemWeight}
+                     ,  ITEM_PRICE = #{itemPrice}
+                     ,  ITEM_SIZE = #{itemSize}
+                     ,  ITEM_ATTCH_GRP_ID = #{itemAttachGrpId}
+                     ,  TOTAL_PRICE = #{totalPrice}
+                     ,  TOTAL_WEIGHT = #{totalWeight}
+                     ,  UPD_ID  = #{updId}
+                     ,  UPD_DT  = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+
+    <select id="selectShippingList" parameterType="Map" resultType="egovMap">
+            SELECT
+			      A.ID
+			    , B.CODE_NAME AS REGIONAL
+			    , A.REGIONAL_TYPE
+			    , A.TOTAL_WEIGHT_FROM
+			    , A.TOTAL_WEIGHT_TO
+			    , TO_CHAR(A.START_DT,'DD/MM/YYYY') AS START_DT
+			    , TO_CHAR(A.END_DT,'DD/MM/YYYY') AS END_DT
+			    , A.TOTAL_SHIPPING_FEE
+			    , CASE WHEN TO_CHAR(SYSDATE ,'YYYYMMDD') > TO_CHAR(A.END_DT,'YYYYMMDD')  THEN 'Expired'
+                  ELSE 'Active' END AS STATUS
+                , CASE WHEN TO_CHAR(SYSDATE ,'YYYYMMDD') >= TO_CHAR(A.START_DT,'YYYYMMDD')  THEN 'C'
+                  ELSE 'F' END AS STATUS2
+		from SAL0322D A
+		LEFT JOIN SYS0013M B ON A.REGIONAL_TYPE = B.CODE_ID
+		WHERE 1=1
+		AND NVL(A.DISAB,0) = 0
+		<if test="regional != null and regional != '' ">
+                  AND A.REGIONAL_TYPE = #{regional}
+         </if>
+         <if test="weightFrom != null and weightFrom != '' ">
+                  AND A.TOTAL_WEIGHT_FROM = #{weightFrom}
+         </if>
+         <if test="weightTo != null and weightTo != '' ">
+                  AND A.TOTAL_WEIGHT_TO = #{weightTo}
+         </if>
+          <if test="startDt != null and startDt != '' ">
+                  AND A.START_DT =  TO_DATE(#{startDt},'DD/MM/YYYY')
+         </if>
+          <if test="endDt != null and endDt != '' ">
+                  AND A.END_DT =  TO_DATE(#{endDt},'DD/MM/YYYY')
+         </if>
+          <if test="status != null and status != '' ">
+                    <choose>
+                        <when test="status == 1">
+                           AND TO_CHAR(SYSDATE ,'YYYYMMDD')  <![CDATA[<= ]]> TO_CHAR(A.END_DT,'YYYYMMDD')
+                        </when>
+                        <when test="status != 1">
+                           AND TO_CHAR(SYSDATE ,'YYYYMMDD')  <![CDATA[> ]]> TO_CHAR(A.END_DT,'YYYYMMDD')
+                        </when>
+                    </choose>
+         </if>
+    </select>
+
+    <insert id="insertEshopShippingList" parameterType="Map">
+            INSERT INTO SAL0322D (
+                             ID
+                           , REGIONAL_TYPE
+                           , TOTAL_WEIGHT_FROM
+                           , TOTAL_WEIGHT_TO
+                           , START_DT
+                           , END_DT
+                           , TOTAL_SHIPPING_FEE
+                           , CRT_ID
+                           , CRT_DT
+             )VALUES (
+                             #{id}
+                           , #{regionalType}
+                           , #{weightFrom}
+                           , #{weightTo}
+                           , TO_DATE(#{startDt}, 'DD/MM/YYYY HH24:MI:SS')
+                           , TO_DATE(#{endDt}, 'DD/MM/YYYY HH24:MI:SS')
+                           , #{shippingFee}
+                           , #{crtId}
+                           , sysdate
+            )
+    </insert>
+
+    <select id="getSeqSAL0322D" resultType="java.lang.Integer">
+        SELECT SAL0322D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <update id="removeEshopShippingList"  parameterType="Map">
+              UPDATE SAL0322D
+                SET DISAB  = 1
+                     ,UPD_ID  = #{userId}
+                     ,UPD_DT       = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+    <update id="updatePosEshopShipping"  parameterType="Map">
+              UPDATE SAL0322D
+                SET
+                        REGIONAL_TYPE           = #{regionalType}
+                     ,  TOTAL_WEIGHT_FROM  = #{weightFrom}
+                     ,  TOTAL_WEIGHT_TO      = #{weightTo}
+                     ,  START_DT                   = TO_DATE(#{startDt},'DD/MM/YYYY')
+                     ,  END_DT                      = TO_DATE(#{endDt},'DD/MM/YYYY')
+                     ,  TOTAL_SHIPPING_FEE   = #{shippingFee}
+                     ,  UPD_ID                       = #{updId}
+                     ,  UPD_DT                      = SYSDATE
+            WHERE ID = #{id}
+    </update>
+
+     <select id="selectItemImageList" parameterType="Map" resultType="egovMap">
+			 SELECT
+				      A.ID
+				    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
+			FROM SAL0321D A
+			JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
+			JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+			WHERE 1=1 AND NVL(A.DISAB,0) = 0
+    </select>
+
+    <select id="checkAvailableQtyStock" parameterType="Map" resultType="egovMap">
+             <![CDATA[
+                    SELECT
+                              A.ESHOP_ITEM_ID
+                            , D.ITEM_DESC
+                            , A.LOC_ID
+                            , D.ITEM_INV_QTY
+                            , E.ITEM_QTY
+                            , A.ITEM_ORD_QTY * E.ITEM_QTY AS BOOKING_QTY
+                            , ITEM_INV_QTY - (A.ITEM_ORD_QTY *E.ITEM_QTY) AS REMAINING_QTY
+                    FROM   GBSLCVD.SAL0327T   A
+                    LEFT JOIN SAL0321D E ON E.ID = A.ESHOP_ITEM_ID
+                    LEFT JOIN LOG0106M D ON e.ITEM_ID = D.ITEM_CODE and D.LOC_ID =  A.loc_id
+                    WHERE 1=1
+                    AND NVL(E.DISAB,0) = 0
+                    AND NVL(D.LOC_ID,0) <> 0
+                    AND NVL(D.ITEM_INV_QTY,0) <> 0
+                    AND ITEM_INV_QTY - (A.ITEM_ORD_QTY * E.ITEM_QTY) <= 0
+              ]]>
+            <if test="grpId != null and grpId != '' ">
+                    AND A.GRP_ID = #{grpId}
+            </if>
+    </select>
+
+    <select id="selectCatalogList" parameterType="Map" resultType="egovMap">
+		     <![CDATA[
+		            SELECT
+		                      A.ID
+		                    , C.FILE_SUB_PATH || '\' || C.PHYSICL_FILE_NAME  AS FILEPATH
+		                    , D.LOC_ID
+		                    , D.ITEM_INV_QTY
+                            , A.ITEM_QTY
+                            , FLOOR(D.ITEM_INV_QTY/A.ITEM_QTY) AS AVAILABLE_QTY
+		            FROM SAL0321D A
+		            LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
+		            LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+		            LEFT JOIN LOG0106M D ON A.ITEM_ID = D.ITEM_CODE
+		            WHERE 1=1
+		            AND NVL(A.DISAB,0) = 0
+		            AND NVL(D.LOC_ID,0) <> 0
+		            AND NVL(D.ITEM_INV_QTY,0) <> 0
+		            AND FLOOR(D.ITEM_INV_QTY/A.ITEM_QTY) > 0
+		      ]]>
+            <if test="esnFromLocId != null and esnFromLocId != '' ">
+                    AND D.LOC_ID = #{esnFromLocId}
+            </if>
+            <if test="sellingType != null and sellingType != '' ">
+                    AND A.SELLING_TYPE = #{sellingType}
+            </if>
+             <if test="itemFromLocId != null and itemFromLocId != '' ">
+                    AND A.ID IN #{sellingType}
+            </if>
+    </select>
+
+    <select id="getSeqSAL0327T" resultType="java.lang.Integer">
+        SELECT SAL0327T_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getGrpSeqSAL0327T" resultType="java.lang.Integer">
+        SELECT SAL0327T_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertItemToCart" parameterType="Map">
+            INSERT INTO SAL0327T (
+                             GRP_ID
+                           , ID
+                           , ESHOP_ITEM_ID
+                           , ITEM_ORD_QTY
+                           , LOC_ID
+                           , CRT_ID
+                           , CRT_DT
+             )VALUES (
+                             #{grpId}
+                           , #{id}
+                           , #{eshopItemId}
+                           , #{itemOrdQty}
+                           , #{locId}
+                           , #{crtId}
+                           , SYSDATE
+            )
+    </insert>
+
+	 <select id="selectItemCartList" parameterType="Map" resultType="egovMap">
+			 SELECT
+<!-- 			          '<img src="\resources\WebShare' || D.FILE_SUB_PATH || '\' || D.PHYSICL_FILE_NAME || '" height="200px" width="200px">'AS FILEPATH -->
+				       '\resources\WebShare'||D.FILE_SUB_PATH || '\' || D.PHYSICL_FILE_NAME AS FILEPATH
+				      , E.STK_CODE || ' - ' || E.STK_DESC AS STK_CODE
+				      , B.ITEM_PRICE
+				      , B.ITEM_QTY
+				      , A.ITEM_ORD_QTY
+				      , B.ITEM_WEIGHT * B.ITEM_QTY * A.ITEM_ORD_QTY AS ITEM_WEIGHT
+				      , B.ITEM_PRICE * B.ITEM_QTY * A.ITEM_ORD_QTY AS TOTAL_PRICE
+				      , B.ITEM_QTY * A.ITEM_ORD_QTY AS TOTAL_QTY
+				      , A.ID
+			 FROM SAL0327T A
+			 LEFT JOIN SAL0321D B ON A.ESHOP_ITEM_ID = B.ID
+			 LEFT JOIN SYS0070M C ON B.ITEM_ATTCH_GRP_ID = C.ATCH_FILE_GRP_ID
+			 LEFT JOIN SYS0071D D ON C.ATCH_FILE_ID = D.ATCH_FILE_ID
+			 LEFT JOIN SYS0026M E ON B.ITEM_ID = E.STK_ID
+			 WHERE A.GRP_ID = #{grpId}
+	  </select>
+
+	   <select id="selectItemCartList2" parameterType="Map" resultType="egovMap">
+            SELECT
+                      B.ITEM_ID AS ITEM_CODE
+                    , E.STK_CODE || ' - ' || E.STK_DESC AS ITEM_DESC
+                    , B.ITEM_CTGRY_ID
+                    , A.ITEM_ORD_QTY
+                    , B.ITEM_PRICE
+                    , B.ITEM_WEIGHT
+                    , B.SELLING_TYPE
+                    , B.ITEM_PRICE * B.ITEM_QTY * A.ITEM_ORD_QTY AS TOTAL_ORD_PRICE
+                    , B.ITEM_WEIGHT * B.ITEM_QTY * A.ITEM_ORD_QTY AS TOTAL_ORD_WEIGHT
+                    , B.ITEM_QTY
+                    , A.ESHOP_ITEM_ID
+             FROM SAL0327T A
+             LEFT JOIN SAL0321D B ON A.ESHOP_ITEM_ID = B.ID
+             LEFT JOIN SYS0070M C ON B.ITEM_ATTCH_GRP_ID = C.ATCH_FILE_GRP_ID
+             LEFT JOIN SYS0071D D ON C.ATCH_FILE_ID = D.ATCH_FILE_ID
+             LEFT JOIN SYS0026M E ON B.ITEM_ID = E.STK_ID
+             WHERE A.GRP_ID = #{grpId}
+      </select>
+
+	   <select id="selectDefaultBranchList" parameterType="Map" resultType="egovMap">
+	           SELECT
+	                   B.BRNCH_ID
+                FROM SYS0064M A
+                JOIN SYS0005M B ON A.SO_BRNCH_CODE = B.CODE
+                WHERE A.AREA_ID  = #{areaId}
+                AND ROWNUM <![CDATA[<= ]]> 1
+	   </select>
+
+	   <select id="selectTotalPrice" parameterType="Map" resultType="egovMap">
+         SELECT
+                   SUM(B.ITEM_WEIGHT * B.ITEM_QTY * A.ITEM_ORD_QTY) AS TOTAL_WEIGHT
+                 , SUM(B.ITEM_PRICE * B.ITEM_QTY * A.ITEM_ORD_QTY) AS TOTAL_PRICE
+              FROM SAL0327T A
+             LEFT JOIN SAL0321D B ON A.ESHOP_ITEM_ID = B.ID
+             LEFT JOIN SYS0070M C ON B.ITEM_ATTCH_GRP_ID = C.ATCH_FILE_GRP_ID
+             LEFT JOIN SYS0071D D ON C.ATCH_FILE_ID = D.ATCH_FILE_ID
+             LEFT JOIN SYS0026M E ON B.ITEM_ID = E.STK_ID
+             WHERE A.GRP_ID = #{grpId}
+             GROUP BY A.GRP_ID
+      </select>
+
+      <select id="selectShippingFee" parameterType="Map" resultType="egovMap">
+	        SELECT
+	               *
+	        FROM SAL0322D
+	        WHERE 1=1
+	        AND TO_CHAR(SYSDATE ,'YYYYMMDD') BETWEEN TO_CHAR(START_DT,'YYYYMMDD') AND TO_CHAR(END_DT,'YYYYMMDD')
+	        AND NVL(DISAB,0) = 0
+	        <if test="regionType != null and regionType != '' ">
+                    AND REGIONAL_TYPE = #{regionType}
+            </if>
+            <if test="weight != null and weight != '' ">
+                    AND #{weight} BETWEEN TOTAL_WEIGHT_FROM AND TOTAL_WEIGHT_TO
+            </if>
+	        AND ROWNUM = 1
+      </select>
+
+	  <select id="getSeqSAL0325M" resultType="java.lang.Integer">
+	        SELECT SAL0325M_ID_SEQ.NEXTVAL FROM DUAL
+	   </select>
+
+       <select id="getSeqSAL0326D" resultType="java.lang.Integer">
+           SELECT SAL0326D_ID_SEQ.NEXTVAL FROM DUAL
+       </select>
+
+      <insert id="insertSAL0325M" parameterType="Map">
+            INSERT INTO SAL0325M (
+					  ESN_NO
+					, ESN_STATUS
+					, ESN_CONTACT_PIC
+					, ESN_CONTACT_NO
+					, ESN_ADDR1
+					, ESN_ADDR2
+					, ESN_STATE
+					, ESN_CITY
+					, ESN_POSTCODE
+					, ESN_AREA
+					, ESN_COUNTRY
+					, ESN_LOC_ID
+					, PAY_ATTACH_ID
+					, SHIPPING_FEE
+					, POS_TYPE
+					, AREA_ID
+					, CRT_USER_ID
+					, CRT_DT
+            )VALUES (
+                      #{esnNo}
+				    , 44
+				    , #{userId}
+				    , #{contactNo}
+				    , #{addrDtl}
+				    , #{streetDtl}
+				    , #{mState}
+				    , #{mCity}
+				    , #{mPostCd}
+				    , #{mArea}
+				    , #{mCountry}
+				    , #{esnFromLocId}
+				    , #{hiddenAttachmentPaySlip}
+				    , #{totalShippingFee}
+				    , '6795'
+				    , #{areaId}
+				    , #{userId}
+				    , SYSDATE
+            )
+        </insert>
+
+        <insert id="insertSAL0326D" parameterType="Map">
+             INSERT INTO SAL0326D (
+                      ESN_NO
+					, ITEM_CODE
+					, ITEM_DESC
+					, ITEM_CTGRY_ID
+					, ITEM_ORD_QTY
+					, ITEM_PRICE
+					, ITEM_WEIGHT
+					, SELLING_TYPE
+					, TOTAL_ORD_PRICE
+					, TOTAL_ORD_WEIGHT
+					, ITEM_QTY
+					, ESHOP_ITEM_ID
+					, CRT_USER_ID
+					, CRT_DT
+            )VALUES (
+                      #{esnNo}
+                    , #{itemCode}
+                    , #{itemDesc}
+                    , #{itemCtgryId}
+                    , #{itemOrdQty}
+                    , #{itemPrice}
+                    , #{itemWeight}
+                    , #{sellingType}
+                    , #{totalOrdPrice}
+                    , #{totalOrdWeight}
+                    , #{itemQty}
+                    , #{eshopItemId}
+                    , #{userId}
+                    , SYSDATE
+            )
+
+
+        </insert>
+
+       <select id="checkDiffWarehouse" parameterType="Map" resultType="egovMap">
+            SELECT
+                    DISTINCT LOC_ID AS LOC_ID
+            FROM SAL0327T
+            WHERE GRP_ID = #{grpId}
+      </select>
+
+       <update id="updateFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+                 SELECT
+                         B.ITEM_CODE, B.ITEM_ORD_QTY * B.ITEM_QTY AS ITEM_ORD_QTY, A.ESN_LOC_ID
+                  FROM SAL0325M A
+                  JOIN SAL0326D B on A.ESN_NO = b.ESN_NO
+                  WHERE A.ESN_NO = #{esnNo}
+             ) N
+            ON ( C.LOC_ID = N.ESN_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+                SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) - (N.ITEM_ORD_QTY)
+                    , C.UPD_USER_ID  = #{userId}
+                    , C.UPD_DT       = SYSDATE
+        </update>
+
+        <update id="reverseFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+                 SELECT
+                         B.ITEM_CODE, B.ITEM_ORD_QTY * B.ITEM_QTY AS ITEM_ORD_QTY , A.ESN_LOC_ID
+                  FROM SAL0325M A
+                  JOIN SAL0326D B on A.ESN_NO = b.ESN_NO
+                  WHERE A.ESN_NO = #{esnNo}
+             ) N
+            ON ( C.LOC_ID = N.ESN_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+                SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) - (-N.ITEM_ORD_QTY)
+                    , C.UPD_USER_ID  = #{userId}
+                    , C.UPD_DT       = SYSDATE
+        </update>
+
+        <select id="selectEshopList" parameterType="Map" resultType="egovMap">
+            SELECT DISTINCT
+				         A.ESN_NO
+				       , C.CODE_NAME AS POS_TYPE
+				       , D.NAME AS STATUS
+				       , TO_CHAR(A.CRT_DT,'DD-MM-YYYY') AS CRT_DT
+				       , TO_CHAR(A.UPD_DT,'DD-MM-YYYY') AS UPD_DT
+				       , E.USER_NAME AS CRT_BY
+				       , F.USER_NAME AS UPD_BY
+				       , A.POS_NO
+				       , G.CODE_NAME AS COURIER_SVC
+                       , A.WAYBILL_NO
+			FROM  SAL0325M A
+			JOIN SAL0326D B ON A.ESN_NO = B.ESN_NO
+			LEFT JOIN SYS0013M C ON A.POS_TYPE = C.CODE_ID
+            LEFT JOIN SYS0038M D ON A.ESN_STATUS = D.STUS_CODE_ID
+            LEFT JOIN SYS0047M E ON A.CRT_USER_ID = E.USER_ID
+            LEFT JOIN SYS0047M F ON A.UPD_USER_ID = F.USER_ID
+            LEFT JOIN SYS0013M G ON A.COURIER_SVC = G.CODE_ID
+            LEFT JOIN ORG0001D H ON E.HR_CODE = H.MEM_CODE
+            LEFT JOIN ORG1001V I ON I.MEM_ID = H.MEM_ID
+            WHERE 1=1
+            <if test="posType != null and posType != '' ">
+                    AND  A.POS_TYPE = #{posType}
+            </if>
+            <if test="refNo != null and refNo != '' ">
+                    AND  A.ESN_NO = #{refNo}
+            </if>
+            <if test="statusArray != null  and statusArray.length > 0">
+                    AND A.ESN_STATUS IN
+                    <foreach collection="statusArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+            </if>
+            <if test="fromSalesDt != null and fromSalesDt != '' ">
+                    <![CDATA[
+                    AND  A.CRT_DT >=  TO_DATE(#{fromSalesDt}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                     ]]>
+             </if>
+             <if test="toSalesDt != null and toSalesDt != '' ">
+                   <![CDATA[
+                    AND  A.CRT_DT <= TO_DATE(#{toSalesDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                    ]]>
+            </if>
+            <if test="memberId != null and memberId != '' ">
+                    AND  UPPER(E.USER_NAME) LIKE UPPER('%' ||  #{memberId} || '%')
+            </if>
+             <if test="orgCode != null and orgCode != '' ">
+                    AND  I.ORG_CODE = #{orgCode}
+            </if>
+             <if test="grpCode != null and grpCode != '' ">
+                    AND  I.GRP_CODE = #{grpCode}
+            </if>
+             <if test="deptCode != null and deptCode != '' ">
+                    AND  I.DEPT_CODE  = #{deptCode}
+            </if>
+              <if test="branch != null and branch != '' ">
+                    AND  A.ESN_LOC_ID = #{branch}
+            </if>
+
+			ORDER BY ESN_NO DESC
+      </select>
+
+       <select id="selectPosEshopApprovalViewList" parameterType="Map" resultType="egovMap">
+            SELECT
+                        F.USER_NAME AS ESN_CONTACT_PIC
+                      , A.ESN_CONTACT_NO
+                      , A.ESN_ADDR1
+                      , A.ESN_ADDR2
+                      , A.ESN_STATE
+                      , A.ESN_CITY
+                      , A.ESN_POSTCODE
+                      , A.ESN_AREA
+                      , A.ESN_COUNTRY
+                      , A.SHIPPING_FEE
+                      , A.PAY_ATTACH_ID
+                      , D.ATCH_FILE_ID
+                      , D.FILE_SUB_PATH || '\' || D.PHYSICL_FILE_NAME AS FILEPATH
+                      , E.STK_CODE || ' - ' || E.STK_DESC AS STK_CODE
+                      , B.ITEM_PRICE
+                      , B.ITEM_QTY * B.ITEM_ORD_QTY AS ITEM_QTY
+                      , B.ITEM_ORD_QTY
+                      , B.ITEM_WEIGHT * B.ITEM_QTY * B.ITEM_ORD_QTY AS ITEM_WEIGHT
+                      , B.ITEM_PRICE * B.ITEM_QTY * B.ITEM_ORD_QTY AS TOTAL_PRICE
+                      , A.ESN_CONTACT_PIC AS CRT_ID
+                      , B.ITEM_CODE
+                      , E.STK_CODE AS STK_CODE1
+                      , E.STK_DESC
+                      , B.ITEM_PRICE * B.ITEM_QTY AS PRICE
+                      , G.CODE_NAME AS POS_TYPE
+                      , H.CODE_NAME AS COURIER_SVC
+                      , A.WAYBILL_NO
+                      , I.NAME AS ESN_STATUS
+                      , J.USER_NAME AS HP_CODE
+                      , J.USER_FULL_NAME AS HP_NAME
+                      , A.POS_NO
+                      , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS SALES_DT
+                      , K.CODE || '-' || K.NAME BRANCH
+                      , A.ESN_RJT_REMARK
+             FROM SAL0325M A
+             JOIN SAL0326D B ON A.ESN_NO = B.ESN_NO
+             LEFT JOIN SYS0070M C ON A.PAY_ATTACH_ID = C.ATCH_FILE_GRP_ID
+             LEFT JOIN SYS0071D D ON C.ATCH_FILE_ID = D.ATCH_FILE_ID
+             LEFT JOIN SYS0026M E ON B.ITEM_CODE = E.STK_ID
+             LEFT JOIN SYS0047M F ON A.ESN_CONTACT_PIC = F.USER_ID
+             LEFT JOIN SYS0013M G ON A.POS_TYPE = G.CODE_ID
+             LEFT JOIN SYS0013M H ON A.COURIER_SVC = H.CODE_ID
+             LEFT JOIN SYS0038M I ON A.ESN_STATUS = I.STUS_CODE_ID
+             LEFT JOIN SYS0047M J ON A.CRT_USER_ID = J.USER_ID
+             LEFT JOIN SYS0005M K ON K.BRNCH_ID = A.ESN_LOC_ID
+             WHERE A.ESN_NO = #{esnNo}
+      </select>
+
+       <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+            SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+      </select>
+
+      <select id="getSeqSal0057D" resultType="java.lang.Integer">
+         SELECT SAL0057D_POS_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+       <select id="selectWarehouse"  parameterType="Map" resultType="egovMap">
+          SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                S28.WH_LOC_ID ,
+                S28.WH_LOC_CODE ,
+                S28.WH_LOC_DESC ,
+                S28.WH_LOC_GB ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB,
+                S28.SERIAL_REQUIRE_CHK_YN
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05', '08')
+            AND S5.BRNCH_ID = (SELECT DISTINCT ESN_LOC_ID from SAL0325M WHERE ESN_NO = #{esnNo})
+            <![CDATA[
+            AND ROWNUM <= 1
+            ]]>
+   </select>
+
+   <insert id="insertPosMaster" parameterType="Map" >
+        INSERT INTO SAL0057D
+                  ( POS_ID,
+                    POS_NO,
+                    POS_BILL_ID,
+                    POS_CUST_NAME,
+                    POS_DT,
+                    POS_TYPE_ID,
+                    POS_MODULE_TYPE_ID,
+                    POS_TOT_AMT,
+                    POS_TOT_CHRG,
+                    POS_TOT_TXS,
+                    POS_TOT_DSCNT,
+                    POS_WH_ID,
+                    POS_REM,
+                    POS_MTCH_ID,
+                    POS_MEM_ID,
+                    POS_CUST_ID,
+                    POS_CRT_USER_ID,
+                    POS_CRT_DT,
+                    POS_CRT_DEPT_ID,
+                    CR_ACC_ID,
+                    DR_ACC_ID,
+                    POS_RESN_ID,
+                    BRNCH_ID,
+                    POS_RCV_DT,
+                    STUS_ID,
+                    AREA_ID,
+                    ADDR_DTL,
+                    STREET,
+                    CRT_USER_ID,
+                    CRT_DT,
+                    UPD_USER_ID,
+                    UPD_DT,
+                    POS_CRT_DEPT_CODE )
+		  VALUES ( #{posMasterSeq},
+		           #{docNoPsn},
+		           #{posBillId},
+		           #{posCustName},
+		           SYSDATE,
+		           #{insPosSystemType},
+		           #{insPosModuleType},
+		           #{posTotalAmt},
+		           #{posCharge},
+		           #{posTaxes},
+		           #{posDiscount},
+		           #{hidLocId},
+		           #{posRemark},
+		           #{posMtchId},
+		           #{salesmanPopId},
+		           #{posCustomerId},
+		           #{userId},
+		           SYSDATE,
+		           '0',
+		           #{crAccId},
+		           #{drAccId},
+		           #{posReason},
+		           #{cmbWhBrnchIdPop},
+		           SYSDATE,
+		           #{posStusId},
+		           #{areaId},
+		           #{addrDtl},
+		           #{streetDtl},
+		           #{userId},
+		           SYSDATE,
+		           #{userId},
+		           SYSDATE,
+		           #{userDeptCode})
+    </insert>
+
+    <select id="getSeqSal0058D" resultType="java.lang.Integer">
+        SELECT SAL0058D_POS_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+     <insert id="insertPosDetail" parameterType="Map">
+            INSERT INTO SAL0058D
+              ( POS_ITM_ID,
+                POS_ID,
+                POS_ITM_STOCK_ID,
+                POS_ITM_QTY,
+                POS_ITM_UNIT_PRC,
+                POS_ITM_TOT,
+                POS_ITM_CHRG,
+                POS_ITM_TXS,
+                POS_ITM_TAX_CODE_ID,
+                MEM_ID,
+                RCV_STUS_ID,
+                CRT_USER_ID,
+                CRT_DT,
+                UPD_USER_ID,
+                UPD_DT )
+              VALUES ( #{posDetailSeq},
+                       #{posMasterSeq},
+                       #{stkId},
+                       #{inputQty},
+                       #{amt},
+                       #{totalAmt},
+                       #{subTotal},
+                       #{subChng},
+                       #{posItemTaxCodeId},
+                       #{posMemId},
+                       #{posRcvStusId},
+                       #{userId},
+                       SYSDATE,
+                       #{userId},
+                       SYSDATE)
+    </insert>
+
+    <update id="updateEshopPosNo"  parameterType="java.util.Map">
+              UPDATE SAL0325M
+                SET  POS_NO  = #{docNoPsn}
+                     , ESN_STATUS = 104
+                     , UPD_USER_ID  =  #{userId}
+                     , UPD_DT       = SYSDATE
+            WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <select id="getSeqPay0007D" resultType="java.lang.Integer">
+        SELECT PAY0007D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPosBilling" parameterType="Map">
+                INSERT INTO PAY0007D
+                  ( BILL_ID,
+                    BILL_TYPE_ID,
+                    BILL_SO_ID,
+                    BILL_MEM_ID,
+                    BILL_AS_ID,
+                    BILL_PAY_TYPE_ID,
+                    BILL_NO,
+                    BILL_MEM_SHIP_NO,
+                    BILL_DT,
+                    BILL_AMT,
+                    BILL_REM,
+                    BILL_IS_PAID,
+                    BILL_IS_COMM,
+                    UPD_USER_ID,
+                    UPD_DT,
+                    SYNC_CHK,
+                    COURS_ID,
+                    STUS_ID )
+                  VALUES ( #{posBillSeq},
+                           #{posBillTypeId},
+                           #{posBillSoId},
+                           #{posBillMemId},
+                           #{posBillAsId},
+                           #{posBillPayTypeId},
+                           #{docNoPsn},
+                           #{posMemberShipNo},
+                           SYSDATE,
+                           #{posBillAmt},
+                           #{posBillRem},
+                           #{posBillIsPaid},
+                           #{posBillIsComm},
+                           #{userId},
+                           SYSDATE,
+                           #{posSyncChk},
+                           #{posCourseId},
+                           #{posStatusId})
+    </insert>
+
+    <update id="updatePosMasterPosBillId" parameterType="Map">
+                UPDATE
+                    SAL0057D
+                SET
+                    POS_BILL_ID = #{posBillSeq}
+                WHERE
+                    POS_ID = #{posMasterSeq}
+    </update>
+
+    <select id="getSeqPay0016D" resultType="java.lang.Integer">
+        SELECT PAY0016D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPosOrderBilling" parameterType="Map">
+        INSERT INTO PAY0016D
+                  ( ACC_BILL_ID,
+                    ACC_BILL_TASK_ID,
+                    ACC_BILL_REF_DT,
+                    ACC_BILL_REF_NO,
+                    ACC_BILL_ORD_ID,
+                    ACC_BILL_ORD_NO,
+                    ACC_BILL_TYPE_ID,
+                    ACC_BILL_MODE_ID,
+                    ACC_BILL_SCHDUL_ID,
+                    ACC_BILL_SCHDUL_PRIOD,
+                    ACC_BILL_ADJ_ID,
+                    ACC_BILL_SCHDUL_AMT,
+                    ACC_BILL_ADJ_AMT,
+                    ACC_BILL_TXS_AMT,
+                    ACC_BILL_NET_AMT,
+                    ACC_BILL_STUS,
+                    ACC_BILL_REM,
+                    ACC_BILL_CRT_DT,
+                    ACC_BILL_CRT_USER_ID,
+                    ACC_BILL_GRP_ID,
+                    ACC_BILL_TAX_CODE_ID,
+                    ACC_BILL_TAX_RATE,
+                    ACC_BILL_ACCT_CNVR,
+                    ACC_BILL_CNTRCT_ID )
+          VALUES (     #{posOrderBillSeq},
+                            #{posOrdBillTaskId},
+                            SYSDATE,
+                            #{posOrdBillRefNo},
+                            #{posOrdBillOrdId},
+                            #{posOrdBillOrdNo},
+                            #{posOrdBillTypeId},
+                            #{posOrdBillModeId},
+                            #{posOrdBillScheduleId},
+                            #{posOrdBillSchedulePeriod},
+                            #{posOrdBillAdjustmentId},
+                            #{posOrdBillScheduleAmt},
+                            #{posOrdBillAdjustmentAmt},
+                            #{posOrdBillTaxesAmt},
+                            #{posOrdBillNetAmount},
+                            #{posOrdBillStatus},
+                            #{posOrdBillRem},
+                            SYSDATE,
+                            #{userId},
+                            #{posOrdBillGroupId},
+                            #{posOrdBillTaxCodeId},
+                            #{posOrdBillTaxRate},
+                            #{posOrdBillAcctCnvr},
+                            #{posOrdBillCntrctId})
+    </insert>
+
+    <select id="getSeqPay0031D" resultType="java.lang.Integer">
+        SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+      <insert id="insertPosTaxInvcMisc" parameterType="Map">
+        INSERT INTO PAY0031D
+                              ( TAX_INVC_ID,
+                                TAX_INVC_REF_NO,
+                                TAX_INVC_REF_DT,
+                                TAX_INVC_SVC_NO,
+                                TAX_INVC_TYPE,
+                                TAX_INVC_CUST_NAME,
+                                TAX_INVC_CNTC_PERSON,
+                                <!-- 추후 삭제 -->
+                               <!--  TAX_INVC_ADDR1,
+                                TAX_INVC_ADDR2,
+                                TAX_INVC_ADDR3,
+                                TAX_INVC_ADDR4,
+                                TAX_INVC_POST_CODE,
+                                TAX_INVC_STATE_NAME,
+                                TAX_INVC_CNTY,   -->
+
+                                TAX_INVC_TASK_ID,
+                                TAX_INVC_REM,
+                                TAX_INVC_CHRG,
+                                TAX_INVC_TXS,
+                                TAX_INVC_AMT_DUE,
+                                TAX_INVC_CRT_DT,
+                                TAX_INVC_CRT_USER_ID )
+                          VALUES ( #{accTaxInvMiscSeq},
+                                           #{posTaxInvRefNo},
+                                           SYSDATE,
+                                           #{posTaxInvSvcNo},
+                                           #{posTaxInvType},
+                                           #{posTaxInvCustName},
+                                           #{posTaxInvCntcPerson},
+                                            <!-- 추후 삭제 -->
+                                          <!--  #{addr1},
+                                           #{addr2},
+                                           #{addr3},
+                                           #{addr4},
+                                           #{postCode},
+                                           #{stateName},
+                                           #{cnty}, -->
+
+                                           #{posTaxInvTaskId},
+                                           #{posTaxInvUserName},
+                                           #{posTaxInvCharges},
+                                           #{posTaxInvTaxes},
+                                           #{posTaxInvTotalCharges},
+                                           SYSDATE,
+                                           #{userId}
+                                           )
+    </insert>
+
+    <select id="getSeqPay0032D" resultType="java.lang.Integer">
+        SELECT PAY0032D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPosTaxInvcMiscSub" parameterType="Map">
+        INSERT INTO PAY0032D
+                      ( INVC_ITM_ID,
+                        TAX_INVC_ID,
+                        INVC_ITM_TYPE,
+                        INVC_ITM_ORD_NO,
+                        INVC_ITM_PO_NO,
+                        INVC_ITM_CODE,
+                        INVC_ITM_DESC1,
+                        INVC_ITM_DESC2,
+                        INVC_ITM_SERIAL_NO,
+                        INVC_ITM_QTY,
+                        INVC_ITM_UNIT_PRC,
+                        INVC_ITM_GST_RATE,
+                        INVC_ITM_GST_TXS,
+                        INVC_ITM_CHRG,
+                        INVC_ITM_AMT_DUE,
+                        <!-- 추후 삭제  Magic Address -->
+                      <!--   INVC_ITM_ADD1,
+                        INVC_ITM_ADD2,
+                        INVC_ITM_ADD3,
+                        INVC_ITM_ADD4,
+                        INVC_ITM_POST_CODE,
+                        INVC_ITM_AREA_NAME,
+                        INVC_ITM_STATE_NAME,
+                        INVC_ITM_CNTY, -->
+
+                        INVC_ITM_INSTALL_DT,
+                        INVC_ITM_RETN_DT,
+                        INVC_ITM_BILL_REF_NO )
+                      VALUES ( #{invDetailSeq},
+                               #{accTaxInvMiscSeq},
+                               #{invItemTypeID},
+                               #{posTaxInvSubOrdNo},
+                               #{posTaxInvSubItmPoNo},
+                               #{stkCode},
+                               #{stkDesc},
+                               #{posTaxInvSubDescSub},
+                               #{posTaxInvSubSerialNo},
+                               #{inputQty},
+                               #{amt},
+                               #{posTaxInvSubGSTRate},
+                               #{subChng},
+                               #{subTotal},
+                               #{totalAmt},
+                               <!-- 추후 삭제 Magic Address -->
+                              <!--  #{posTaxInvSubAddr1},
+                               #{posTaxInvSubAddr2},
+                               #{posTaxInvSubAddr3},
+                               #{posTaxInvSubAddr4},
+                               #{posTaxInvSubPostCode},
+                               #{posTaxInvSubAreaName},
+                               #{posTaxInvSubStateName},
+                               #{posTaxInvSubCntry},             -->
+
+                               NULL,
+                               NULL,
+                               NULL )
+    </insert>
+
+
+    <update id="rejectPos"  parameterType="Map">
+              UPDATE SAL0325M
+                SET
+                        ESN_STATUS = #{eshopStatus}
+                     ,  ESN_RJT_REMARK = #{eshopRemark}
+                     ,  UPD_USER_ID  = #{userId}
+                     ,  UPD_DT  = SYSDATE
+            WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="eshopUpdateCourierSvc"  parameterType="Map">
+              UPDATE SAL0325M
+                SET
+                        COURIER_SVC = #{courierSvc}
+                     ,  WAYBILL_NO = #{waybillNo}
+                     ,  ESN_STATUS = 115
+                     ,  UPD_USER_ID  = #{userId}
+                     ,  UPD_DT  = SYSDATE
+            WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="completePos"  parameterType="Map">
+              UPDATE SAL0325M
+                SET
+                        ESN_STATUS = #{eshopStatus}
+                     ,  UPD_USER_ID  = #{userId}
+                     ,  UPD_DT  = SYSDATE
+            WHERE ESN_NO = #{esnNo}
+    </update>
+
+
+    <select id="selectEshopWhBrnchList" parameterType="Map" resultType="egovMap">
+           SELECT DISTINCT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE
+<!--                 S28.WH_LOC_ID , -->
+<!--                 S28.WH_LOC_CODE , -->
+<!--                 S28.WH_LOC_DESC , -->
+<!--                 S28.WH_LOC_GB , -->
+<!--                 (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB -->
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('02' , '05' , '08')
+            <if test="branchId != null and branchId != '' ">
+            AND S5.BRNCH_ID = #{branchId}
+            </if>
+            ORDER BY   S5.CODE
+    </select>
+
+
+    <select id="checkDuplicatedStock" parameterType="Map" resultType="egovMap">
+            SELECT
+                    DISTINCT ITEM_ID
+            FROM SAL0321D
+            WHERE ITEM_ID = #{purcItems_addItem}
+     </select>
+
+      <update id="deleteCartItem"  parameterType="Map">
+              DELETE FROM SAL0327T WHERE ID = #{id}
+     </update>
+
+     <select id="selectEshopWhSOBrnchList" resultType="egovMap">
+        SELECT
+                S5.BRNCH_ID CODE_ID,
+                S5.CODE || '-' || S5.NAME CODE_NAME,
+                S5.NAME ,
+                S5.CODE ,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
+            FROM
+                SYS0005M S5 ,SYS0028M S28
+            WHERE
+                S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3, WH_LOC_BRNCH_ID4, WH_LOC_BRNCH_ID5)
+            AND S28.WH_LOC_STK_GRAD = 'A'
+            AND S28.WH_LOC_GB IN ('08')
+            AND S5.STUS_ID = 1
+        ORDER BY S5.CODE
+   </select>
+
+
+   <select id="selectWhSOBrnchItemList" resultType="egovMap">
+        <![CDATA[
+        SELECT
+                              A.ID AS CODE_ID
+                            , E.STK_CODE || ' - ' || E.STK_DESC AS CODE_NAME
+         FROM SAL0321D A
+         LEFT JOIN SYS0070M B ON A.ITEM_ATTCH_GRP_ID = B.ATCH_FILE_GRP_ID
+         LEFT JOIN SYS0071D C ON B.ATCH_FILE_ID = C.ATCH_FILE_ID
+         LEFT JOIN LOG0106M D ON A.ITEM_ID = D.ITEM_CODE
+         LEFT JOIN SYS0026M E ON D.ITEM_CODE = E.STK_ID
+         WHERE 1=1
+         AND NVL(A.DISAB,0) = 0
+         AND NVL(D.LOC_ID,0)  <> 0
+         AND NVL(D.ITEM_INV_QTY,0) <> 0
+        AND D.LOC_ID = #{branchId}
+        ]]>
+   </select>
+
+   <select id="selectEshopStockList" resultType="egovMap">
+            SELECT DISTINCT
+                E.CODE || ' ' || E.NAME WAREHOUSE,
+                C.CODE_NAME SELLING_TYPE,
+                A.STK_CODE ITEM_CODE,
+                A.STK_DESC ITEM_DESC,
+                A.STK_CODE || '-' || A.STK_DESC ITEM_FULL_DESC,
+                NVL(D.ITEM_INV_QTY,0) STOCK_BAL
+            FROM SAL0321D B
+            LEFT JOIN LOG0106M D ON D.ITEM_CODE = B.ITEM_ID
+            LEFT JOIN SYS0026M A ON A.STK_ID = D.ITEM_CODE
+            LEFT JOIN SYS0013M C ON B.SELLING_TYPE = C.CODE_ID AND C.CODE_MASTER_ID = 507
+            LEFT JOIN SYS0005M E ON D.LOC_ID = E.BRNCH_ID
+            WHERE NVL(B.DISAB,0) = 0
+            AND E.STUS_ID = 1
+            <if test="stockBranch != null and stockBranch != '' ">
+            AND D.LOC_ID = #{stockBranch}
+            </if>
+            <if test="stockType != null and stockType != '' ">
+            AND B.SELLING_TYPE = #{stockType}
+            </if>
+            <if test="stockCategory != null and stockCategory != '' ">
+            AND B.ITEM_CTGRY_ID = #{stockCategory}
+            </if>
+            <if test="stockItem != null and stockItem != '' ">
+            AND D.ITEM_CODE = #{stockItem}
+            </if>
+   </select>
+
+   <select id="selectPaymentInfo" resultType="egovMap">
+		   SELECT
+			    B.ESN_NO,
+			    A.SHIPPING_FEE,
+			    SUM(B.TOTAL_ORD_PRICE) AS TOTAL_PRICE
+			FROM SAL0325M A
+			JOIN SAL0326D B ON A.ESN_NO = B.ESN_NO
+			WHERE B.ESN_NO = #{esnNo}
+			GROUP BY B.ESN_NO, A.SHIPPING_FEE
+   </select>
+
+   <select id="checkValidationEsn" resultType="egovMap">
+            SELECT
+                    ESN_STATUS,
+                    COUNT(PAY_ATTACH_ID) CHECK_FILE
+			FROM SAL0325M
+			WHERE ESN_NO = #{esnNo}
+			GROUP BY ESN_STATUS
+   </select>
+
+   <update id="confirmPayment"  parameterType="Map">
+             UPDATE SAL0325M
+             SET PAY_ATTACH_ID = #{fileId},
+                   ESN_STATUS =1 ,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE
+             WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="deactivatePaymentAndEsn"  parameterType="Map">
+             UPDATE SAL0325M
+             SET ESN_STATUS = 8 ,
+                   UPD_USER_ID = #{userId},
+                   UPD_DT = SYSDATE
+             WHERE ESN_NO = #{esnNo}
+    </update>
+
+    <update id="revertFloatingStockLOG0106M" parameterType="Map">
+            MERGE INTO LOG0106M C
+            USING
+            (
+                 SELECT
+                         B.ITEM_CODE, B.ITEM_ORD_QTY * B.ITEM_QTY AS ITEM_ORD_QTY, A.ESN_LOC_ID
+                  FROM SAL0325M A
+                  JOIN SAL0326D B on A.ESN_NO = b.ESN_NO
+                  WHERE A.ESN_NO = #{esnNo}
+             ) N
+            ON ( C.LOC_ID = N.ESN_LOC_ID AND C.ITEM_CODE =N.ITEM_CODE)
+            WHEN MATCHED THEN
+                UPDATE
+                SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0) + (N.ITEM_ORD_QTY)
+                    , C.UPD_USER_ID  = #{userId}
+                    , C.UPD_DT       = SYSDATE
+     </update>
+
+
+</mapper>

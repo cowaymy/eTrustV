@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.ecash.service.impl.ECashDeductionMapper">
+
+    <!--E-Cash - eCash List -->
+    <select id="selectECashDeductList" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.FILE_BATCH_ID,
+            Extent1.FILE_BATCH_NAME,
+            Extent1.FILE_BATCH_BANK_ID,
+            Extent3.CODE as BANK_CODE,
+            Extent3.NAME as BANK_NAME,
+            NVL(Extent1.FILE_BATCH_TOT_RCORD,0) AS FILE_BATCH_TOT_RCORD,
+            NVL(Extent1.FILE_BATCH_TOT_AMT,0) AS FILE_BATCH_TOT_AMT,
+            NVL(Extent1.FILE_BATCH_REJCT_RCORD,0) AS  FILE_BATCH_REJCT_RCORD,
+            NVL(Extent1.FILE_BATCH_APPV_RCORD,0) AS FILE_BATCH_APPV_RCORD,
+            NVL(Extent1.FILE_BATCH_APPV_AMT,0) AS FILE_BATCH_APPV_AMT,
+            Extent2.CODE AS STUS_CODE  ,
+            Extent2.NAME AS STUS_NAME  ,
+            NVL(Extent1.FILE_BATCH_STUS_ID,0) AS FILE_BATCH_STUS_ID,
+            Extent1.FILE_BATCH_REM,
+            Extent1.FILE_BATCH_CRT_USER_ID,
+            Extent4.USER_NAME as FILE_BATCH_CRT_USER_NAME,
+            NVL(TO_CHAR(Extent1.FILE_BATCH_CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_BATCH_CRT_DT,
+            Extent1.FILE_BATCH_UPD_USER_ID,
+            Extent5.USER_NAME as FILE_BATCH_UPD_USER_NAME,
+            NVL(TO_CHAR(Extent1.FILE_BATCH_UPD_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_BATCH_UPD_DT,
+             (CASE WHEN Extent1.FILE_BATCH_APPV_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_BATCH_APPV_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_BATCH_APPV_DT
+         FROM
+            PAY0245M Extent1 <!-- eAutoDebitDedution -->
+            JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.FILE_BATCH_STUS_ID <!-- StatusCode -->
+            LEFT JOIN SYS0004M Extent3   ON Extent3.BANK_ID = Extent1.FILE_BATCH_BANK_ID <!-- bank -->
+            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.FILE_BATCH_CRT_USER_ID <!-- user -->
+            LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.FILE_BATCH_UPD_USER_ID <!-- user -->
+        WHERE
+            1=1
+            <if test="batchId != null and batchId != ''">
+            AND Extent1.FILE_BATCH_ID = #{batchId}
+            </if>
+            <if test="creator != null and creator != ''">
+            AND EXTENT4.USER_NAME =#{creator}
+            </if>
+            <if test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+                AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>
+            <if test="status != null and status != ''">
+                AND Extent1.FILE_BATCH_STUS_ID = #{status}
+            </if>
+            <if test="deductDt1 != null and deductDt2 != null and deductDt1 != '' and deductDt2 != '' ">
+                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') +1
+            </if>
+            <if test='issueBank != null and issueBank != ""'>
+	             AND Extent1.FILE_BATCH_BANK_ID IN
+	             <foreach item="item" collection="issueBank" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+            <if test="batchName != null and batchName != ''">
+                AND Extent1.FILE_BATCH_NAME = #{batchName}
+            </if>
+            <if test="IS_GRP != null and IS_GRP != ''">
+                AND Extent1.FILE_BATCH_GROUP = #{IS_GRP}
+            </if>
+         ORDER BY Extent1.FILE_BATCH_ID
+    </select>
+
+    <select id="selectECashDeductById" parameterType="Map" resultType="egovMap">
+        SELECT
+	        FILE_BATCH_ID ,
+			FILE_BATCH_NAME ,
+			FILE_BATCH_BANK_ID ,
+			FILE_BATCH_TOT_RCORD ,
+			FILE_BATCH_TOT_AMT ,
+			FILE_BATCH_REJCT_RCORD ,
+			FILE_BATCH_APPV_RCORD ,
+			FILE_BATCH_APPV_AMT ,
+			FILE_BATCH_STUS_ID ,
+			FILE_BATCH_REM ,
+			FILE_BATCH_CRT_USER_ID ,
+			NVL(TO_CHAR(FILE_BATCH_CRT_DT,'YYYY-MM-DD'),'1900-01-01') as FILE_BATCH_CRT_DT,
+            FILE_BATCH_UPD_USER_ID,
+            NVL(TO_CHAR(FILE_BATCH_UPD_DT,'YYYY-MM-DD'),'1900-01-01') as FILE_BATCH_UPD_DT,
+             (CASE WHEN FILE_BATCH_APPV_DT IS NOT NULL
+                THEN NVL(TO_CHAR(FILE_BATCH_APPV_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_BATCH_APPV_DT
+        FROM PAY0245M
+        WHERE
+            FILE_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectECashDeductSubById" parameterType="Map" resultType="egovMap">
+    SELECT
+        EXTENT1.FILE_ITM_ID,
+        EXTENT2.SALES_ORD_NO,
+        EXTENT1.FILE_ITM_ACC_NO,
+        EXTENT1.FILE_ITM_AMT,
+        (
+                SELECT
+                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+                FROM
+                    SAL0001D som
+                    JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                    LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
+                WHERE
+                    som.STUS_CODE_ID <![CDATA[   <> ]]>  10
+                    AND rs.MODE_ID = 131
+                    AND som.APP_TYPE_ID = 66
+                    AND rs.BANK_ID IN (19,34,17,28,18,31,16,23)
+                    AND som.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+                    AND ROWNUM = 1
+                ) AS FILE_ITM_ACC_EXPR,
+        EXTENT1.FILE_ITM_REF,
+        EXTENT4.CUST_CRC_OWNER,
+        EXTENT3.ISSU_NRIC
+        FROM  SAL0152M EXTENT1
+            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+        WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+         ORDER BY Extent1.FILE_ITM_ID
+    </select>
+
+    <select id="selectECashDeductSubByIdPaging" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM,
+        Z.* from (
+		    SELECT
+		        EXTENT1.FILE_ITM_ID,
+		        EXTENT2.SALES_ORD_NO,
+		        EXTENT1.FILE_ITM_ACC_NO,
+		        EXTENT1.FILE_ITM_AMT,
+		        (
+		                SELECT
+		                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+		                FROM
+		                    SAL0001D som
+		                    JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                    LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
+		                WHERE
+		                    som.STUS_CODE_ID <![CDATA[   <> ]]>  10
+		                    AND rs.MODE_ID = 131
+		                    AND som.APP_TYPE_ID = 66
+		                    AND rs.BANK_ID IN (19,34,17,28,18,31,16,23)
+		                    AND som.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+		                    AND ROWNUM = 1
+		                ) AS FILE_ITM_ACC_EXPR,
+		        EXTENT1.FILE_ITM_REF,
+		        EXTENT4.CUST_CRC_OWNER,
+		        EXTENT3.ISSU_NRIC
+		        FROM  SAL0152M EXTENT1
+		            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+		            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+		            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+		        WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+		         ORDER BY Extent1.FILE_ITM_ID ) Z
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY FILE_ITM_ACC_NO ASC)
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
+    <select id="selectECashDeductSubByIdPagingMBB" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM,
+        #{pageNo} as PAGENO,
+        Z.*
+        ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+        ,COUNT(FILE_ITM_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+        from (
+            SELECT
+                EXTENT1.FILE_ITM_ID,
+                EXTENT2.SALES_ORD_NO,
+                EXTENT1.FILE_ITM_ACC_NO,
+                EXTENT1.FILE_ITM_AMT,
+                CASE WHEN LENGTH(EXTENT1.FILE_ITM_ACC_EXPR) <![CDATA[<]]> 4 THEN '0000'
+                     WHEN TO_DATE(EXTENT1.FILE_ITM_ACC_EXPR,'MMYY') > SYSDATE THEN EXTENT1.FILE_ITM_ACC_EXPR
+                     ELSE '0000' END FILE_ITM_ACC_EXPR,
+                EXTENT1.FILE_ITM_REF,
+                EXTENT4.CUST_CRC_OWNER,
+                EXTENT3.ISSU_NRIC
+                FROM  SAL0152M EXTENT1
+                    JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+                    JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+                    JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+                WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+                 ORDER BY Extent1.FILE_ITM_ID ) Z
+        <if test="rowCount != null and rowCount != '' ">
+            WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY ROWNUM ASC
+        </if>
+        )
+        <if test="rowCount != null and rowCount != '' ">
+            WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+        </if>
+    </select>
+
+    <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
+    SELECT
+        COUNT(1) AS CNT
+        FROM  SAL0152M EXTENT1
+            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+        WHERE Extent1.FILE_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectECashDeductCCSubByIdCnt" parameterType="Map" resultType="int">
+    SELECT
+        COUNT(1) AS CNT
+        FROM  PAY0288D EXTENT1
+        WHERE Extent1.FILE_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectECashDeductBatchGen" parameterType="Map" resultType="int">
+    SELECT COUNT(1) CNT FROM (
+        SELECT
+            FILE_BATCH_CRT_DT CRT_DT
+            FROM  PAY0245M
+            WHERE TO_CHAR(FILE_BATCH_CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.')
+                BETWEEN TO_CHAR(SYSDATE,'YYYY/MM/DD')
+                AND TO_CHAR(SYSDATE,'YYYY/MM/DD hh:mi:ss A.M.') AND FILE_BATCH_BANK_ID = 19 AND FILE_BATCH_STUS_ID IN (1,4)
+            UNION
+        SELECT
+            CRT_DT
+            FROM PAY0041D
+            WHERE TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.')
+                BETWEEN TO_CHAR(SYSDATE,'YYYY/MM/DD')
+                AND TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.') AND CTRL_BANK_ID = 19 AND CTRL_STUS_ID IN (1,4)
+        )
+    </select>
+
+    <select id="selectECashDeductSubList" parameterType="Map" resultType="egovMap">
+	SELECT
+		EXTENT1.FILE_ITM_ID,
+		EXTENT1.FILE_BATCH_ID,
+		EXTENT1.FILE_ITM_STUS_ID,
+		EXTENT3.NAME as FILE_ITM_STUS_NAME,
+		EXTENT4.CODE_NAME,
+		EXTENT2.SALES_ORD_NO,
+		EXTENT1.FILE_ITM_OR_NO,
+		EXTENT1.FILE_ITM_AMT,
+		(CASE WHEN Extent1.FILE_ITM_APPR_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_APPR_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_APPR_DT,
+		EXTENT5.USER_NAME as CRT_USER,
+		NVL(TO_CHAR(Extent1.FILE_ITM_CRT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_ITM_CRT,
+		EXTENT6.USER_NAME as UPD_USER,
+		 (CASE WHEN Extent1.FILE_ITM_UPD IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_UPD,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_UPD
+	from SAL0152M EXTENT1
+		join SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+		left join SYS0038M EXTENT3 on EXTENT3.STUS_CODE_ID = EXTENT1.FILE_ITM_STUS_ID
+		left join SYS0013M EXTENT4 on EXTENT4.CODE_ID = EXTENT1.FILE_ITM_TYPE_ID
+		left join SYS0047M EXTENT5 on EXTENT5.USER_ID = EXTENT1.FILE_ITM_CRT_USER_ID
+		left join SYS0047M EXTENT6 on EXTENT6.USER_ID =EXTENT1.FILE_ITM_UPD_USER_ID
+	WHERE 1=1
+            <if test="batchId != null and batchId != ''">
+            AND Extent1.FILE_BATCH_ID = #{batchId}
+            </if>
+           <if test="status != null and status != ''">
+                AND Extent1.FILE_ITM_STUS_ID = #{status}
+            </if>
+         ORDER BY Extent1.FILE_ITM_ID
+    </select>
+
+    <select id="selectECashDeductCCSubList" parameterType="Map" resultType="egovMap">
+    SELECT
+        EXTENT1.FILE_BATCH_GRP_ID,
+        EXTENT1.FILE_BATCH_ID,
+        EXTENT1.FILE_ITM_STUS_ID,
+        EXTENT1.FILE_ITM_ACC_NO,
+        EXTENT1.FILE_ITM_ACC_EXPR,
+        EXTENT3.NAME as FILE_ITM_STUS_NAME,
+        EXTENT1.FILE_ITM_AMT,
+        (CASE WHEN Extent1.FILE_ITM_APPR_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_APPR_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_APPR_DT,
+        EXTENT5.USER_NAME as CRT_USER,
+        NVL(TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_ITM_CRT,
+        EXTENT6.USER_NAME as UPD_USER,
+         (CASE WHEN Extent1.UPD_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_UPD
+    from PAY0288D EXTENT1
+        left join SYS0038M EXTENT3 on EXTENT3.STUS_CODE_ID = EXTENT1.FILE_ITM_STUS_ID
+        left join SYS0047M EXTENT5 on EXTENT5.USER_ID = EXTENT1.CRT_USER_ID
+        left join SYS0047M EXTENT6 on EXTENT6.USER_ID =EXTENT1.UPD_USER_ID
+    WHERE 1=1
+            AND Extent1.FILE_BATCH_ID = 283
+         ORDER BY Extent1.FILE_BATCH_GRP_ID;
+    </select>
+
+    <!-- E-Cash - Deactivate e-AutoDebitDecution -->
+    <update id="deactivateEAutoDebitDeduction" parameterType="Map" >
+        UPDATE PAY0245M SET
+              FILE_BATCH_STUS_ID = 8
+            , FILE_BATCH_UPD_DT = SYSDATE
+            , FILE_BATCH_UPD_USER_ID = #{userId}
+        WHERE
+            FILE_BATCH_ID = #{fileBatchId}
+    </update>
+
+    <!-- E-Cash - Deactivate e-AutoDebitDecution_Sub -->
+    <update id="deactivateEAutoDebitDeductionSub" parameterType="Map" >
+        UPDATE SAL0152M SET
+              FILE_ITM_STUS_ID = 8
+            , FILE_ITM_UPD = SYSDATE
+            , FILE_ITM_UPD_USER_ID = #{userId}
+        WHERE
+            FILE_BATCH_ID = #{fileBatchId}
+    </update>
+
+    <resultMap id="resultECashDeductionMap" type="egovMap" />
+    <select id="createECashDeduction" statementType="CALLABLE" parameterType="Map">
+	<choose>
+        <when test='"1".equalsIgnoreCase(new_issueBank)'>
+        {
+            call SP_INST_ECASH_GENDEDUCTION_NEO( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+        </when>
+        <when test='"2".equalsIgnoreCase(new_issueBank)'>
+        {
+            call SP_INST_ECASH_GENDEDUCTION_WK( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+        </when>
+        <otherwise>
+        {
+            call SP_INST_ECASH_GENDEDUCTION( #{new_issueBank}, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+        </otherwise>
+    </choose>
+    </select>
+
+    <delete id="deleteECashDeductionResultItem" parameterType="Map" >
+        DELETE FROM SAL0211T
+    </delete>
+
+    <insert id="insertECashDeductionResultItem" parameterType="Map" >
+        INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE) VALUES (#{itmCnt},#{itmId},#{appvCode},#{respnsCode})
+    </insert>
+
+    <insert id="insertECashDeductionResultItemBulk" parameterType="java.util.List" >
+        INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE)
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+            #{item.itmCnt},
+            #{item.itmId},
+            #{item.appvCode},
+            #{item.respnsCode}
+        FROM DUAL
+        </foreach>
+    </insert>
+
+    <update id="updateECashDeductionResult" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
+        }
+    </update>
+
+
+    <resultMap id="resultECashGrpDeductionMap" type="egovMap" />
+    <select id="createECashGrpDeduction" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_INST_ECASH_GEN_GRP_DEDUCT( #{new_merchantBank}, #{new_cardType} , #{new_issueBank}, #{newDeductSales},#{userId}, #{v_isHA},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashGrpDeductionMap})
+        }
+    </select>
+
+    <select id="selectECashGrpDeductByIdPaging" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                            ,#{pageNo} as PAGENO
+                            ,Z.*
+                            ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+                            ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+                            ,TO_CHAR(SYSDATE, 'YYYYMMDD') AS FILEDATE
+                            ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
+         from (
+            SELECT
+                EXTENT1.FILE_BATCH_GRP_ID,
+                EXTENT1.FILE_ITM_ACC_NO,
+                EXTENT1.FILE_ITM_AMT,
+
+                <choose>
+                    <when test='fileBatchBankId == "19" '>
+                     CASE
+                         WHEN EXTENT1.FILE_ITM_ACC_EXPR = '0000' THEN EXTENT1.FILE_ITM_ACC_EXPR
+                         WHEN LENGTH(EXTENT1.FILE_ITM_ACC_EXPR) <![CDATA[<]]> 4 THEN '0000'
+                         WHEN TO_DATE(EXTENT1.FILE_ITM_ACC_EXPR,'MMYY') > SYSDATE THEN EXTENT1.FILE_ITM_ACC_EXPR
+                     ELSE '0000' END FILE_ITM_ACC_EXPR
+                    </when>
+                    <otherwise>
+                       (
+                            SELECT
+                               MAX(NVL(crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+                            FROM
+                                PAY0288D grp
+                                JOIN SAL0152M dtl on grp.FILE_BATCH_GRP_ID = dtl.FILE_BATCH_GRP_ID
+                                JOIN SAL0001D som ON som.SALES_ORD_ID = dtl.FILE_ITM_ORD_ID
+                                LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                                LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[ <> ]]> 0
+                            WHERE
+                                som.STUS_CODE_ID <![CDATA[ <> ]]>  10
+                                AND rs.MODE_ID = 131
+                                AND som.APP_TYPE_ID = 66
+                                AND rs.BANK_ID IN (19,34,17,28,18,31,16,23)
+                                AND dtl.FILE_BATCH_GRP_ID = EXTENT1.FILE_BATCH_GRP_ID
+                     ) AS FILE_ITM_ACC_EXPR
+                    </otherwise>
+                </choose>
+
+                FROM  PAY0288D EXTENT1
+                WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+                 ORDER BY Extent1.FILE_BATCH_GRP_ID ) Z
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}))
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
+    <update id="updateECashGrpDeductionResult" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_UPD_ECASH_GRP_DEDUCT_RESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
+        }
+    </update>
+
+     <!--Auto Debit - Claim Result Update : 결과 조회 -->
+    <select id="selectECashBankResult" parameterType="Map" resultType="egovMap">
+       select
+            Count(1) AS TOTAL_ITEM,
+            SUM(CASE WHEN APPV_CODE IS NULL OR APPV_CODE = '' OR APPV_CODE = '0' OR APPV_CODE = '0000' THEN 1 ELSE 0 END) TOTAL_REJECTED,
+            SUM(CASE WHEN APPV_CODE IS NOT NULL AND APPV_CODE != '0' AND APPV_CODE != '0000' THEN 1 ELSE 0 END) TOTAL_APPROVED
+        FROM SAL0211T
+    </select>
+
+    <select id="selectMstConf" parameterType="Map" resultType="egovMap">
+    SELECT
+        ID
+        , CTRL_FILE_NM
+        , CTRL_DT_FMT
+        , CTRL_FILE_EXT
+        , CTRL_SUB_PATH
+        , CTRL_EMAIL
+        , CTRL_EMAIL_SUBJ
+        , CTRL_EMAIL_TEXT
+        , CTRL_ZIP
+    FROM    PAY0289M
+        WHERE   CTRL_IS_CRC = 2
+            AND CTRL_BANK_ID = #{fileBatchBankId}
+            AND DISB = 0
+        ORDER BY CTRL_SET
+  </select>
+
+  <select id="selectSubConf" parameterType="Map" resultType="egovMap">
+    SELECT
+    CTRL_DAT_TYP
+    , CTRL_DAT_LGTH
+    , CTRL_DAT_FMT
+    , CTRL_DAT
+    ,
+    CTRL_DELIMETER
+    , CTRL_PAD
+    , CTRL_PAD_VAL
+    , CTRL_RMK
+    FROM
+    PAY0290M
+    WHERE
+    ID
+    = #{id}
+    AND CTRL_PART = #{part}
+    AND DISB = 0
+    ORDER BY
+    CTRL_SEQ
+  </select>
+</mapper>

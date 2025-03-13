@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.cardpayment.service.impl.CrcReconCRCStateMapper">
+
+    <select id="selectCrcStatementMappingList" parameterType="Map" resultType="egovMap">
+        SELECT
+            TB1.GROUP_SEQ GROUP_SEQ,
+            TB1.PAY_ITM_CC_NO PAY_ITM_CC_NO,
+            TB1.PAY_ITM_REF_DT PAY_ITM_REF_DT,
+            TB1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
+            TB1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
+            TB1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
+            TB1.CARD_MODE_NAME CARD_MODE_NAME,
+            TB1.AMOUNT AMOUNT,
+            TB1.CRC_MC_NAME CRC_MC_NAME,
+            TB2.CRC_TRNSC_ID CRC_TRNSC_ID,
+            TO_CHAR(TB2.CRC_TRNSC_DT , 'DD/MM/YYYY') CRC_TRNSC_DT,
+            TB2.CRC_TRNSC_NO CRC_TRNSC_NO,
+            TB2.CRC_TRNSC_APPV CRC_TRNSC_APPV,
+            TB2.CRDIT_CARD CRDIT_CARD,
+            TB2.CRC_STATE_ACC_ID CRC_STATE_ACC_ID,
+            TB2.GROS_AMT GROS_AMT,
+            TB2.CRC_TRNSC_MID CRC_TRNSC_MID,
+            TB2.ACC_CODE ACC_CODE
+            FROM
+                (
+                SELECT
+                    A.GROUP_SEQ,
+                    B.PAY_ITM_CC_NO,
+                    B.PAY_ITM_REF_DT,
+                    B.PAY_ITM_APPV_NO,
+                    B.PAY_ITM_CARD_MODE_ID,
+                    B.PAY_ITM_BANK_ACC_ID,
+                    C.CODE_NAME CARD_MODE_NAME,
+                    NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                    E.ACC_DESC CRC_MC_NAME
+                FROM
+                    PAY0252T A
+                    JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+                    JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.CODE_MASTER_ID = '130'
+                    JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
+                    JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                WHERE
+                    A.PAY_ITM_MODE_ID = 107
+                    AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                    <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                    AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                    /*AND B.PAY_ITM_REF_DT BETWEEN TO_DATE('30/12/2020','DD/MM/YYYY') AND TO_DATE('31/12/2020','DD/MM/YYYY')*/
+                    </if>
+                    <if test="bankAcc != null and bankAcc != ''">
+                    AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                    </if>
+                    AND (A.REV_STUS_ID IS NULL
+                           OR A.REV_STUS_ID <![CDATA[ <> ]]> 5
+                           ) <!-- ONGHC ADD FOR SKIP REVERSE AMOUNT -->
+                GROUP BY
+                    A.GROUP_SEQ,
+                    B.PAY_ITM_CC_NO,
+                    B.PAY_ITM_REF_DT,
+                    B.PAY_ITM_APPV_NO,
+                    B.PAY_ITM_CARD_MODE_ID,
+                    B.PAY_ITM_BANK_ACC_ID,
+                    C.CODE_NAME,
+                    E.ACC_DESC
+                    UNION
+                    SELECT
+                    A.GROUP_SEQ,
+                    B.PAY_ITM_CC_NO,
+                    B.PAY_ITM_REF_DT,
+                    B.PAY_ITM_APPV_NO,
+                    B.PAY_ITM_CARD_MODE_ID,
+                    B.PAY_ITM_BANK_ACC_ID,
+                    C.CODE_NAME CARD_MODE_NAME,
+                    NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                    E.ACC_DESC CRC_MC_NAME
+                FROM
+                    PAY0252T A
+                    JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+                    JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.CODE_MASTER_ID = '130'
+                    JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                WHERE
+                    A.PAY_ITM_MODE_ID = 107
+                    AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                    <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                    AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                    </if>
+                    <if test="bankAcc != null and bankAcc != ''">
+                    AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                    </if>
+                    AND (A.REV_STUS_ID IS NULL
+                           OR A.REV_STUS_ID <![CDATA[ <> ]]> 5
+                    ) <!-- ONGHC ADD FOR SKIP REVERSE AMOUNT -->
+                GROUP BY
+                    A.GROUP_SEQ,
+                    B.PAY_ITM_CC_NO,
+                    B.PAY_ITM_REF_DT,
+                    B.PAY_ITM_APPV_NO,
+                    B.PAY_ITM_CARD_MODE_ID,
+                    B.PAY_ITM_BANK_ACC_ID,
+                    C.CODE_NAME,
+                    E.ACC_DESC ) TB1
+                JOIN
+                (
+                SELECT * FROM (
+                  SELECT
+                      B.CRC_TRNSC_ID,
+                      B.CRC_TRNSC_DT,
+                      B.CRC_TRNSC_NO,
+                      B.CRC_TRNSC_APPV,
+                      B.CRDIT_CARD,
+                      A.CRC_STATE_ACC_ID,
+                      NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                      B.CRC_TRNSC_MID CRC_TRNSC_MID,
+                      C.ACC_CODE ACC_CODE,
+                      COUNT(*) OVER (PARTITION BY SUBSTR(B.CRC_TRNSC_NO, 1, 6) || SUBSTR(B.CRC_TRNSC_NO, 13,4), CRC_TRNSC_APPV, CRC_STATE_ACC_ID, NVL(SUM(B.CRC_GROS_AMT),0)) CNT
+                  FROM
+                      PAY0075D A
+                      JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                      LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID
+                  WHERE
+                      B.KEYIN_STUS_ID = 1
+                      <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                      AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                      </if>
+                      <if test="bankAcc != null and bankAcc != ''">
+                      AND A.CRC_STATE_ACC_ID = #{bankAcc}
+                      </if>
+                  GROUP BY
+                      B.CRC_TRNSC_ID,
+                      B.CRC_TRNSC_DT,
+                      B.CRC_TRNSC_NO,
+                      B.CRC_TRNSC_APPV,
+                      B.CRDIT_CARD,
+                      A.CRC_STATE_ACC_ID,
+                      B.CRC_TRNSC_MID,
+                      C.ACC_CODE
+                       ) A WHERE A.CNT = 1
+                    ) TB2 ON   SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, 13,4) = SUBSTR(TB2.CRC_TRNSC_NO, 1, 6) || SUBSTR(TB2.CRC_TRNSC_NO, 13,4)
+                                                AND TB1.PAY_ITM_APPV_NO = TB2.CRC_TRNSC_APPV
+                                                AND TB1.AMOUNT = TB2.GROS_AMT
+                                                AND TB1.PAY_ITM_BANK_ACC_ID = TB2.CRC_STATE_ACC_ID
+    </select>
+
+  <select id="selectCrcKeyInList" parameterType="Map" resultType="egovMap">
+    SELECT TB2.SALES_ORD_NO,
+               GROUP_SEQ,
+               ( CASE WHEN PAY_ITM_CC_NO IS NULL THEN ' '
+                         WHEN LENGTH(PAY_ITM_CC_NO) >= 13 THEN SUBSTR(PAY_ITM_CC_NO,0,6) || '******' || SUBSTR(PAY_ITM_CC_NO,13,LENGTH(PAY_ITM_CC_NO))
+                 ELSE PAY_ITM_CC_NO END ) PAY_ITM_CC_NO,
+               PAY_ITM_REF_DT,
+               PAY_ITM_APPV_NO,
+               PAY_ITM_CARD_MODE_ID,
+               CARD_MODE_NAME,
+               AMOUNT,
+               CRC_MC_NAME
+    FROM ( SELECT A.GROUP_SEQ GROUP_SEQ,
+                          B.PAY_ITM_ORI_CC_NO PAY_ITM_CC_NO,
+                          B.PAY_ITM_REF_DT PAY_ITM_REF_DT,
+                          B.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
+                          B.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
+                          B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
+                          NVL(C.CODE_NAME, ' ') CARD_MODE_NAME,
+                          NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                          NVL(E.ACC_DESC, ' ') CRC_MC_NAME,
+                          MAX(A.PAY_ID) AS MAX_PAY_ID
+               FROM PAY0252T A
+               JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+               LEFT JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
+               LEFT JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
+               LEFT JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+               WHERE A.PAY_ITM_MODE_ID = 107
+                   AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                   AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID <![CDATA[ <> ]]> 5)
+
+                  <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                    AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                  </if>
+
+                  <if test="bankAcc != null and bankAcc != ''">
+                    AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                  </if>
+               GROUP BY A.GROUP_SEQ,
+                              B.PAY_ITM_ORI_CC_NO,
+                              B.PAY_ITM_REF_DT,
+                              B.PAY_ITM_APPV_NO,
+                              B.PAY_ITM_CARD_MODE_ID,
+                              B.PAY_ITM_BANK_ACC_ID,
+                              C.CODE_NAME,
+                              E.ACC_DESC ) TB1
+    JOIN ( SELECT ( CASE WHEN SUB2.SALES_ORD_NO IS NOT NULL
+                                   THEN SUB2.SALES_ORD_NO
+                                   ELSE CASE WHEN (SUB5.SUP_REF_NO IS NOT NULL AND SUB1.SALES_ORD_ID = 0)
+                                                   THEN SUB5.SUP_REF_NO
+                                                   ELSE SUB4.SALES_ORD_NO END
+                                   END) AS SALES_ORD_NO,
+                         PAY_ID
+              FROM PAY0064D SUB1
+              LEFT JOIN SAL0001D SUB2 ON SUB1.SALES_ORD_ID = SUB2.SALES_ORD_ID
+              LEFT JOIN PAY0007D SUB3 ON SUB1.BILL_ID = SUB3.BILL_ID
+              LEFT JOIN SAL0001D SUB4 ON SUB3.BILL_SO_ID = SUB4.SALES_ORD_ID
+              LEFT JOIN SUP0001M SUB5 ON SUB5.SUP_REF_NO = SUB3.BILL_NO -- SUPPLEMENT MASTER TABLE
+              WHERE SUBSTR(SUB1.OR_NO, 1, 3) NOT IN ('AOR','ADR','EOR','AER', 'AFR')
+    ) TB2 ON TB2.PAY_ID = TB1.MAX_PAY_ID
+    WHERE 1 = 1
+        AND (SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, -4) ,TB1.PAY_ITM_APPV_NO,TB1.AMOUNT,TB1.PAY_ITM_BANK_ACC_ID )
+               NOT IN ( SELECT SUBSTR(B.CRC_TRNSC_NO, 1, 6) || SUBSTR(B.CRC_TRNSC_NO, -4) ,
+                                       B.CRC_TRNSC_APPV,
+                                       NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                                       A.CRC_STATE_ACC_ID
+                            FROM PAY0075D A
+                            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                            LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+                            WHERE B.KEYIN_STUS_ID = 1
+
+                            <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                              AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                            </if>
+
+                            <if test="bankAcc != null and bankAcc != ''">
+                              AND A.CRC_STATE_ACC_ID = #{bankAcc}
+                            </if>
+
+                            GROUP BY B.CRC_TRNSC_ID,
+                                           B.CRC_TRNSC_NO,
+                                           B.CRC_TRNSC_APPV,
+                                           A.CRC_STATE_ACC_ID
+    ) ORDER BY PAY_ITM_REF_DT DESC
+  </select>
+
+    <!-- <select id="selectCrcStateList" parameterType="Map" resultType="egovMap">
+        SELECT
+            CRC_TRNSC_ID,
+            CRC_TRNSC_NO,
+            TO_CHAR(CRC_TRNSC_DT , 'DD/MM/YYYY') CRC_TRNSC_DT,
+            CRC_TRNSC_APPV,
+            CRDIT_CARD,
+            CRC_STATE_ACC_ID,
+            BANK_ACC_NAME,
+            GROS_AMT,
+            CRC_TRNSC_MID,
+            ACC_CODE
+            FROM
+                (
+                    SELECT
+                        B.CRC_TRNSC_ID,
+                        B.CRC_TRNSC_NO,
+                        B.CRC_TRNSC_DT,
+                        B.CRC_TRNSC_APPV,
+                        B.CRDIT_CARD,
+                        A.CRC_STATE_ACC_ID,
+                        C.ACC_DESC BANK_ACC_NAME,
+                        NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID CRC_TRNSC_MID,
+                        C.ACC_CODE
+                    FROM
+                        PAY0075D A
+                        JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                        JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+                    WHERE
+                        B.KEYIN_STUS_ID = 1
+                        <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                        AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                        </if>
+                        <if test="bankAcc != null and bankAcc != ''">
+                        AND A.CRC_STATE_ACC_ID = #{bankAcc}
+                        </if>
+                    GROUP BY
+                        B.CRC_TRNSC_ID,
+                        B.CRC_TRNSC_DT,
+                        B.CRC_TRNSC_NO,
+                        B.CRC_TRNSC_APPV,
+                        B.CRDIT_CARD,
+                        A.CRC_STATE_ACC_ID,
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID,
+                        C.ACC_CODE
+                    ) TB1
+                WHERE 1=1
+                 AND (
+                    SUBSTR(TB1.CRC_TRNSC_NO, 1, 6) || SUBSTR(TB1.CRC_TRNSC_NO, -4),
+                    TB1.CRC_TRNSC_DT,
+                    TB1.CRC_TRNSC_APPV,
+                    TB1.GROS_AMT,
+                    TB1.CRC_STATE_ACC_ID)
+                NOT IN (
+                        SELECT
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) ,
+                            B.PAY_ITM_REF_DT,
+                            B.PAY_ITM_APPV_NO,
+                            NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                            B.PAY_ITM_BANK_ACC_ID
+                        FROM
+                            PAY0252T A
+                            JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+                        WHERE
+                            A.PAY_ITM_MODE_ID = 107
+                            AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                            <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" >
+                            AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                            </if>
+                            <if test="bankAcc != null and bankAcc != ''">
+                            AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                            </if>
+                        GROUP BY
+                            B.PAY_ITM_CC_NO,
+                            B.PAY_ITM_REF_DT,
+                            B.PAY_ITM_APPV_NO,
+                            B.PAY_ITM_CARD_MODE_ID,
+                            B.PAY_ITM_BANK_ACC_ID,
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4)
+                )
+                ORDER BY CRC_TRNSC_DT DESC
+    </select> -->
+    <select id="selectCrcStateList" parameterType="Map" resultType="egovMap">
+    SELECT
+            CRC_TRNSC_ID,
+            CRC_TRNSC_NO,
+            TO_CHAR(CRC_TRNSC_DT , 'DD/MM/YYYY') CRC_TRNSC_DT,
+            CRC_TRNSC_APPV,
+            CRDIT_CARD,
+            CRC_STATE_ACC_ID,
+            BANK_ACC_NAME,
+            GROS_AMT,
+            CRC_TRNSC_MID,
+            ACC_CODE
+            FROM
+                (
+                    SELECT
+                        B.CRC_TRNSC_ID,
+                        B.CRC_TRNSC_NO,
+                        B.CRC_TRNSC_DT,
+                        B.CRC_TRNSC_APPV,
+                        B.CRDIT_CARD,
+                        A.CRC_STATE_ACC_ID,
+                        C.ACC_DESC BANK_ACC_NAME,
+                        NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID CRC_TRNSC_MID,
+                        C.ACC_CODE
+                    FROM
+                        PAY0075D A
+                        JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                        JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+                    WHERE
+                        B.KEYIN_STUS_ID = 1
+                        <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != '' and ((stmtDateFr == null or stmtDateFr == '') and (stmtDateTo == null or stmtDateTo == ''))" >
+                        AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                        <!-- /*AND B.CRC_TRNSC_DT BETWEEN TO_DATE('12/04/2021','DD/MM/YYYY') AND TO_DATE('12/04/2021','DD/MM/YYYY')*/  -->
+                        </if>
+                        <if test="stmtDateFr != null and stmtDateTo != null and stmtDateFr != '' and stmtDateTo != ''" >
+                        AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{stmtDateFr},'DD/MM/YYYY') AND TO_DATE(#{stmtDateTo},'DD/MM/YYYY')
+                        </if>
+                        <if test="bankAcc != null and bankAcc != ''">
+                        AND A.CRC_STATE_ACC_ID = #{bankAcc}
+                        </if>
+                    GROUP BY
+                        B.CRC_TRNSC_ID,
+                        B.CRC_TRNSC_DT,
+                        B.CRC_TRNSC_NO,
+                        B.CRC_TRNSC_APPV,
+                        B.CRDIT_CARD,
+                        A.CRC_STATE_ACC_ID,
+                        C.ACC_DESC,
+                        B.CRC_TRNSC_MID,
+                        C.ACC_CODE
+                    ) TB1
+                WHERE 1=1
+                 AND  NOT EXISTS (
+                    SELECT * FROM (
+                        SELECT
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) FIELD1,
+                            B.PAY_ITM_REF_DT,
+                            B.PAY_ITM_APPV_NO,
+                            NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
+                            B.PAY_ITM_BANK_ACC_ID
+                        FROM
+                            PAY0252T A
+                            JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+                        WHERE
+                            A.PAY_ITM_MODE_ID = 107
+                            AND A.CRC_STATE_MAPPING_STUS_ID = 1
+                            <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != '' and ((stmtDateFr == null or stmtDateFr == '') and (stmtDateTo == null or stmtDateTo == ''))" >
+                            AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{transDateFr},'DD/MM/YYYY') AND TO_DATE(#{transDateTo},'DD/MM/YYYY')
+                            <!-- /*AND B.PAY_ITM_REF_DT BETWEEN TO_DATE('12/04/2021','DD/MM/YYYY') AND TO_DATE('12/04/2021','DD/MM/YYYY')*/  -->
+                            </if>
+                            <if test="stmtDateFr != null and stmtDateTo != null and stmtDateFr != '' and stmtDateTo != ''" >
+                            AND B.PAY_ITM_REF_DT BETWEEN TO_DATE(#{stmtDateFr},'DD/MM/YYYY') AND TO_DATE(#{stmtDateTo},'DD/MM/YYYY')
+                            </if>
+                            <if test="bankAcc != null and bankAcc != ''">
+                            AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                            </if>
+                        GROUP BY
+                            B.PAY_ITM_CC_NO,
+                            B.PAY_ITM_REF_DT,
+                            B.PAY_ITM_APPV_NO,
+                            B.PAY_ITM_CARD_MODE_ID,
+                            B.PAY_ITM_BANK_ACC_ID,
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4)
+                            ) B
+                             WHERE (FIELD1) = (SUBSTR(TB1.CRC_TRNSC_NO,1,6) || SUBSTR(TB1.CRC_TRNSC_NO,-4))
+                                AND B.PAY_ITM_REF_DT = TB1.CRC_TRNSC_DT
+                                AND B.PAY_ITM_APPV_NO =  TB1.CRC_TRNSC_APPV
+                                AND B.AMOUNT = TB1.GROS_AMT
+                                AND B.PAY_ITM_BANK_ACC_ID = TB1.CRC_STATE_ACC_ID
+                )
+                ORDER BY CRC_TRNSC_DT DESC
+    </select>
+
+    <update id="updCrcStatement" parameterType="Map" >
+        UPDATE PAY0076D SET
+            KEYIN_STUS_ID = 4
+            , KEYIN_MAPPING_DT = SYSDATE
+            , KEYIN_MAPPING_USER_ID = #{userId}
+        WHERE
+            CRC_TRNSC_ID = #{crcTrnscId}
+    </update>
+
+    <update id="updCrcKeyIn" parameterType="Map" >
+        UPDATE PAY0252T SET
+            CRC_STATE_MAPPING_STUS_ID = 4
+            , CRC_STATE_MAPPING_DT = SYSDATE
+            , CRC_STATE_MAPPING_USER_ID = #{userId}
+            , CRC_STATE_MAPPING_ID = #{crcTrnscId}
+        WHERE
+            GROUP_SEQ = #{groupSeq}
+    </update>
+
+    <insert id="insertCrcStatementITF" parameterType="Map">
+        INSERT INTO ITF0930M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            MAPP_DATE,
+            BANKSEQ,
+            ORDER_NO,
+            WOR_NO,
+            BANK_AC,
+            CARD_NO,
+            APPROVENO,
+            TRANDATE,
+            MID_NO,
+            PAYNO,
+            PAYDATE,
+            CRC_ID,
+            PAY_AMT
+        )VALUES(
+            FN_CRT_IFKEY('930'),
+            1,
+            '930',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            #{bankSeq},
+            #{ordNo},
+            #{orNo},
+            #{crcStateAccCode},
+            #{crcTrnscNo},
+            #{crcTrnscAppv},
+            TO_CHAR(TO_DATE(#{crcTrnscDt}, 'DD/MM/YYYY'),'YYYYMMDD'),
+            #{crcTrnscMid},
+            #{groupSeq},
+            TO_CHAR(TO_DATE(#{crcTrnscDt}, 'DD/MM/YYYY'),'YYYYMMDD'),
+            #{crcTrnscId},
+            #{amount}
+        )
+    </insert>
+
+    <select id="selectCrcKeyInOrNoList" parameterType="Map" resultType="egovMap">
+        SELECT
+            F.OR_NO OR_NO,
+            G.ORD_NO ORD_NO,
+            NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS PAY_AMT
+                FROM
+                    PAY0252T A
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                    JOIN PAY0241T G ON A.GROUP_SEQ = G.ITM_SEQ
+                WHERE
+                    A.PAY_ITM_MODE_ID = '107'
+                    AND A.CRC_STATE_MAPPING_STUS_ID = '1'
+                    AND A.GROUP_SEQ = #{groupSeq}
+                GROUP BY  F.OR_NO, G.ORD_NO
+    </select>
+
+
+    <insert id="updIncomeCrcStatementIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            PAY_DT,
+            BANK_SEQ,
+            BANK_ID,
+            BANKAC,
+            DIFF_TYPE,
+            DIFF_AMT
+        )
+        SELECT
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD'),
+            (SELECT NVL(MAX(BANK_SEQ),0)+1 FROM ITF0942M WHERE PAY_DT = TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD')),
+            B.CRC_TRNSC_ID,
+            (SELECT ACC_CODE FROM SYS0001M WHERE ACC_ID = A.CRC_STATE_ACC_ID),
+            'AC003',
+            #{grosAmt}
+        FROM
+            PAY0075D A
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+        WHERE
+            B.CRC_TRNSC_ID = #{crcTrnscId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+    </insert>
+
+</mapper>

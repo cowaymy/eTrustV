@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.CashMatchingMapper">
+
+  <select id="selectCashMatching" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.CashMatchingMapper.selectCashMatching] 20191017 - KR HAN */
+               Extent1.MOB_PAY_NO MOB_PAY_NO
+             , Extent1.SALES_ORD_NO SALES_ORD_NO
+             , Extent1.PAY_AMT PAY_AMT
+             , TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') SALES_DT
+             , EXTENT3.NAME NAME
+             , CASE WHEN Extent1.PAY_MODE = '5698' THEN 'CASH ' || Extent1.SLIP_NO
+               ELSE 'CHQ ' || Extent1.CHEQUE_NO
+               END AS PAY_MODE
+             , CASE WHEN Extent1.UPLOAD_IMG is null OR Extent1.SLIP_NO is null THEN 'NEW'
+               ELSE 'PEND'
+               END AS STUS
+    FROM PAY0297D Extent1
+    LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
+    LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
+    WHERE Extent1.PAY_MODE in ('5698','5697')
+        AND ((Extent1.PAY_STUS_ID in ('1') AND Extent1.UPLOAD_IMG IS NULL  AND Extent1.SLIP_NO IS NULL) OR Extent1.PAY_STUS_ID in ('21'))
+        <!-- AND Extent1.UPLOAD_IMG IS NULL -->
+        <!-- AND Extent1.SLIP_NO IS NULL -->
+        AND Extent1.CRT_USER_ID = #{userId}
+
+    <if test="fromDate != null and fromDate != '' ">
+      AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
+    </if>
+
+    <if test="toDate != null and toDate != '' ">
+      AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
+    </if>
+  </select>
+
+  <update id="updateCashMatching" parameterType="Map">
+    UPDATE /* [com.coway.trust.biz.payment.payment.service.impl.CashMatchingMapper.updateCashMatching] 20191018 - KR HAN */
+               PAY0297D SET UPD_DT = SYSDATE
+                                  , UPD_USER_ID = #{updUserId}
+                                  , SLIP_NO = #{slipNo}
+                                  , UPLOAD_IMG = #{uploadImg1}
+                                  , UPLOAD_IMG2 = #{uploadImg2}
+                                  <!-- , UPLOAD_IMG3 = #{uploadImg3} -->
+                                  , UPLOAD_IMG4 = #{uploadImg4}
+                                  , PAY_STUS_ID = 104
+    WHERE MOB_PAY_NO = #{mobPayNo}
+        AND SALES_ORD_NO = #{salesOrdNo}
+  </update>
+</mapper>

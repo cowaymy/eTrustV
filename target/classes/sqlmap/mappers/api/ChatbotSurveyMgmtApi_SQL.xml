@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.ChatbotSurveyMgmtApiMapper">
+
+	<select id="checkAccess" parameterType="Map" resultType="egovMap">
+	    SELECT *
+	    FROM API0001M
+        WHERE API_USER_STUS_ID = 1
+            AND API_USER_NAME = #{userName}
+            AND API_KEY = #{key}
+	</select>
+
+	<insert id="insertSurveyResp" parameterType="Map">
+	   INSERT INTO CBT0005D (
+	        RESP_ID,
+			TXN_ID,
+			STATISTICS_PROCESSED,
+			STATISTICS_SENT,
+			STATISTICS_DELIVERED,
+			STATISTICS_SEEN,
+			STATISTICS_CLICKED,
+			STATISTICS_RESPONDED,
+			RESPONSE,
+			CRT_USER_ID,
+			CRT_DT,
+			UPD_USER_ID,
+			UPD_DT,
+			PROG_STATUS,
+			STATISTICS_UNSUBSCRIBED
+	   ) VALUES (
+	       CBT0005D_RESP_ID_SEQ.NEXTVAL,
+	       #{txnId},
+           #{statisticsProcessed},
+	       #{statisticsSent},
+           #{statisticsDelivered},
+	       #{statisticsSeen},
+           #{statisticsClicked},
+	       #{statisticsResponded},
+           #{response},
+           349,
+           SYSDATE,
+           349,
+           SYSDATE,
+           1,
+           #{statisticsUnsubscribed}
+	   )
+	</insert>
+
+    <insert id="insertApiAccessLog" parameterType="Map">
+	   INSERT INTO API0004M
+	   (
+	        RESP_ID
+	       ,REQ_PARAM
+	       ,RESP_PARAM
+	       ,RESP_CODE
+	       ,RESP_TM
+	       ,IP_ADDR
+	       ,PGM_PATH
+	       ,ERR_MSG
+	       ,CRT_DT
+	       ,API_USER_ID
+	       ,REF_NO
+	       ,LONG_REQ_PARAM
+	    ) VALUES (
+	        API0004M_RESP_ID_SEQ.NEXTVAL
+	        , #{reqParam}
+	        , #{respParam}
+	        , #{respCde}
+	        , #{respTm}
+	        , #{ipAddr}
+	        , #{prgPath}
+	        , #{errMsg}
+	        , SYSDATE
+	        , #{apiUserId}
+	        , #{refNo}
+	        , #{longReqParam}
+<!-- 	        , UTL_RAW.CAST_TO_RAW(#{longReqParam}) -->
+	    )
+	</insert>
+
+	<resultMap id="statusCode" type="egovMap" />
+	<resultMap id="statusRes" type="egovMap" />
+	<select id="SP_INST_CHATBOT_HAPPY_CALL_RESULT" parameterType="Map" statementType="CALLABLE" >
+        {
+            call SP_INST_CHATBOT_HAPPY_CALL_RESULT(#{apiUserId},
+            #{outStatus , mode=OUT , jdbcType=INTEGER , javaType=int , resultMap=statusCode}
+            , #{outResult , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=statusRes}
+            )
+        }
+    </select>
+
+<!--     Below query: select value of BLOB in API0004M -->
+<!--     <select id="selectReqParam" resultType="String"> -->
+<!--         SELECT SUBSTR (TO_CLOB (LONG_REQ_PARAM), 1, 1000000) FROM API0004M -->
+<!--         WHERE RESP_ID = 36918477 -->
+<!--     </select> -->
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.CommonMyPopMapper">
+
+<select id="selectDefaultList" parameterType="Map" resultType="egovMap">
+    <choose>
+    <when test="queryId eq 'selectCommonCode'.toString()">
+        <include refid="com.coway.trust.biz.common.impl.CommonMyPopMapper.selectCommonCode">
+            <property name="codeMasterId" value="codeMasterId"/>
+        </include>
+    </when>
+    <when test="queryId eq 'selectBranchList'.toString()">
+        <include refid="com.coway.trust.biz.common.impl.CommonMyPopMapper.selectBranchList"></include>
+    </when>
+    <when test="queryId eq 'selectDepartmentList'.toString()">
+        <include refid="com.coway.trust.biz.common.impl.CommonMyPopMapper.selectDepartmentList"></include>
+    </when>
+    <otherwise>
+    SELECT 'NOT FOUND' as code ,
+               'NOT FOUND' as name
+      FROM DUAL
+    </otherwise>
+    </choose>
+</select>
+
+<sql id="selectBranchList">
+	SELECT brnch_id as id ,
+	           code ,
+	           name
+	  FROM SYS0005M
+</sql>
+
+<sql id="selectDepartmentList">
+    SELECT dept_id as id ,
+               dept_code as code ,
+               dept_name as name
+      FROM SYS0040M
+</sql>
+
+<sql id="selectCommonCode">
+    SELECT a.code_id,
+	           a.code_master_id,
+			   a.code,
+			   a.code_name,
+			   a.code_desc,
+			   a.disab
+    FROM SYS0013M a
+   WHERE a.code_master_id = ${codeMasterId}
+</sql>
+</mapper>

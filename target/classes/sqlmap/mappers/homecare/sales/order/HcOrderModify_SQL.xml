@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcOrderModifyMapper">
+
+    <!-- Select Order Marster (SAL0001D)  -->
+    <select id="select_SAL0001D" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderModifyMapper.select_SAL0001D */
+        SELECT TOT_AMT
+                 , PROMO_ID
+                 , TOT_PV
+                 , MTH_RENT_AMT
+                 , DEF_RENT_AMT
+                 , PROMO_DISC_PERIOD_TP
+                 , PROMO_DISC_PERIOD
+                 , DISC_RNT_FEE
+                 , NOR_AMT
+
+         FROM SAL0001D
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+    <!-- Homecare Order Modify - Save Promotion -->
+    <update id="updateHcPromoPriceInfo" parameterType="salesOrderMVO">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderModifyMapper.updateHcPromoPriceInfo */
+        UPDATE SAL0001D SET
+               UPD_DT                         = SYSDATE
+             , UPD_USER_ID                 = #{updUserId}
+             , TOT_AMT                       = #{totAmt}
+             , PROMO_ID                     = #{promoId}
+             , TOT_PV                          = #{totPv}
+             , MTH_RENT_AMT             = #{mthRentAmt}
+             , PROMO_DISC_PERIOD_TP = #{promoDiscPeriodTp}
+             , PROMO_DISC_PERIOD      = #{promoDiscPeriod}
+             , DISC_RNT_FEE                 = #{discRntFee}
+             , NOR_AMT                      = #{norAmt}
+             , TNB_ACC_NO                   = #{tnbAccNo}
+
+         WHERE SALES_ORD_ID           = #{salesOrdId}
+    </update>
+
+</mapper>

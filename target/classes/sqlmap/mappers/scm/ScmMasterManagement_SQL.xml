@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmMasterManagementMapper">
+
+<!-- SCM Master Manager -->
+<select id="selectScmMasterList" parameterType="Map" resultType="egovMap">
+SELECT A.STK_ID AS STOCK_ID
+     , DECODE(B.STOCK_ID, NULL, '1', '0') AS IS_NEW /* 1 : have to insert, 0 : have to update */
+     , A.STK_CODE AS STOCK_CODE
+     , A.STK_DESC AS STOCK_DESC
+     , A.STK_CTGRY_ID AS CATEGORY_ID
+     , C.CODE_NAME AS CATEGORY
+     , A.STK_TYPE_ID AS TYPE_ID
+     , D.CODE_NAME AS TYPE
+     , B.IS_TRGET
+     , B.MEMO
+     , TO_CHAR(B.START_DT, 'MM-DD-YYYY') AS START_DT
+     , TO_CHAR(B.END_DT, 'MM-DD-YYYY') AS END_DT
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2010') AS KL_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2020') AS PN_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2030') AS JB_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2040') AS KK_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2050') AS KC_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2010') AS KL_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2020') AS PN_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2030') AS JB_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2040') AS KK_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC = '2050') AS KC_MOQ
+     , NVL(B.SAFETY_STOCK, 0) AS SAFETY_STOCK
+     , NVL(B.LEAD_TM, 0) AS LEAD_TM
+     , NVL(B.LOADING_QTY, 0) AS LOADING_QTY
+     , NVL(B.MIN_ORD_QTY, 0) AS MIN_ORD_QTY
+     , B.DFLT_STOCK
+  FROM SYS0026M A
+  LEFT OUTER JOIN SCM0008M B ON (A.STK_ID = B.STOCK_ID)
+  LEFT OUTER JOIN SYS0013M C ON (A.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M D ON (A.STK_TYPE_ID = D.CODE_ID AND D.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_NCV = 0
+	<if test="scmStockCode != null and scmStockCode != ''">
+   AND (A.STK_CODE LIKE '%' || #{scmStockCode} || '%' OR A.STK_DESC LIKE '%' || #{scmStockCode} || '%')
+	</if>
+	<if test="scmStockTypeCbBox != null and !scmStockTypeCbBox.isEmpty">
+   AND A.STK_TYPE_ID IN 
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+	<if test="scmStockCategoryCbBox != null and !scmStockCategoryCbBox.isEmpty">
+   AND A.STK_CTGRY_ID IN 
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND A.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.STK_CTGRY_ID, A.STK_TYPE_ID, A.STK_DESC
+</select>
+
+<update id="saveScmMaster" parameterType="Map">
+MERGE INTO SCM0008M
+USING DUAL
+ON (STOCK_ID = #{stockId})
+WHEN MATCHED THEN
+     UPDATE
+        SET IS_TRGET = NVL(#{isTrget}, 0)
+          , MEMO = #{memo}
+          , START_DT = TO_DATE(#{startDt}, 'YYYY-MM-DD')
+          , END_DT = TO_DATE(#{endDt}, 'YYYY-MM-DD')
+          , SAFETY_STOCK = NVL(#{safetyStock}, 0)
+          , LEAD_TM = NVL(#{leadTm}, 0)
+          , LOADING_QTY = NVL(#{loadingQty}, 0)
+          , DFLT_STOCK = #{dfltStock}
+WHEN NOT MATCHED THEN
+     INSERT
+     (
+            STOCK_ID
+          , STOCK_CODE
+          , IS_TRGET
+          , MEMO
+          , START_DT
+          , END_DT
+          , SAFETY_STOCK
+          , LEAD_TM
+          , MIN_ORD_QTY
+          , LOADING_QTY
+          , DFLT_STOCK
+      )
+     VALUES
+     (
+            #{stockId}
+          , #{stockCode}
+          , NVL(#{isTrget}, 0)
+          , #{memo}
+          , TO_DATE(#{startDt}, 'YYYY-MM-DD')
+          , TO_DATE(#{endDt}, 'YYYY-MM-DD')
+          , NVL(#{safetyStock}, 0)
+          , NVL(#{leadTm}, 0)
+          , NVL(#{minOrdQty}, 0)
+          , NVL(#{loadingQty}, 0)
+          , #{dfltStock}
+      )
+</update>
+
+<update id="saveScmMaster2" parameterType="Map">
+MERGE INTO SCM0017M
+USING DUAL
+ON (STOCK_ID = #{stockId} AND CDC = #{cdc})
+WHEN MATCHED THEN
+     UPDATE
+        SET IS_TRGET = NVL(#{isTrget}, 0)
+          , MOQ = NVL(#{moq}, 0)
+WHEN NOT MATCHED THEN
+     INSERT
+     (
+            CDC
+          , STOCK_ID
+          , STOCK_CODE
+          , IS_TRGET
+          , MOQ
+      )
+     VALUES
+     (
+            #{cdc}
+          , #{stockId}
+          , #{stockCode}
+          , NVL(#{isTrget}, 0)
+          , NVL(#{moq}, 0)
+      )
+</update>
+
+<delete id="deleteScmMaster2" parameterType="Map">
+DELETE FROM SCM0017M
+ WHERE CDC = #{cdc}
+   AND STOCK_ID = #{stockId}
+</delete>
+
+<!-- CDC Warehouse Mapping -->
+<select id="selectCdcWhMappingList" parameterType="Map" resultType="egovMap">
+SELECT '0' AS CHK
+     , B.CODE AS SYS_CODE
+     , B.CODE_DESC AS CDC_CODE
+     , B.CODE_NAME AS CDC_NAME
+     , A.WH_ID
+     , C.WH_LOC_ID
+     , C.WH_LOC_CODE
+     , C.WH_LOC_DESC
+     , A.LEAD_TM
+  FROM SCM0022M A /* CDC-Warehouse Mapping */
+  LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0) /* System Code */
+  LEFT OUTER JOIN SYS0028M C ON (C.WH_LOC_ID = A.WH_ID) /* Warehouse Code */
+ WHERE C.WH_LOC_CODE NOT LIKE 'CT%'
+	<if test="scmCdcCbBox != null and !scmCdcCbBox.isEmpty">
+   AND B.CODE IN 
+		<foreach item="item" collection="scmCdcCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+	<if test="brnchLoc != null and !brnchLoc.isEmpty">
+   AND C.WH_LOC_CODE IN
+        <foreach item="item" collection="brnchLoc" index="index" open="(" separator="," close=")">
+       #{item}
+        </foreach>
+    </if>
+ ORDER BY B.CODE, A.WH_ID
+</select>
+
+<select id="selectCdcWhUnmappingList" parameterType="Map" resultType="egovMap">
+SELECT '' AS CDC
+     , A.WH_LOC_ID WH_ID
+     , A.WH_LOC_CODE AS WH_CODE
+     , A.WH_LOC_DESC AS WH_NAME
+  FROM SYS0028M A /* Warehouse Master */
+ WHERE A.WH_LOC_DESC LIKE 'DSC%'
+   AND A.WH_LOC_ID NOT IN (SELECT WH_ID FROM SCM0022M)
+ ORDER BY A.WH_LOC_ID, A.WH_LOC_CODE
+</select>
+
+<insert id="insertCdcWhMapping" parameterType="Map">
+INSERT INTO SCM0022M
+(
+       WH_ID
+     , CDC
+)
+VALUES
+(
+       #{whId}
+     , #{cdc}
+)
+</insert>
+
+<delete id="deleteCdcWhMapping" parameterType="Map">
+DELETE FROM SCM0022M WHERE WH_ID = #{whLocId} AND CDC = #{sysCode}
+</delete>
+
+<!-- CDC Branch Mapping -->
+<select id="selectCdcBrMappingList" parameterType="Map" resultType="egovMap">
+SELECT '0' AS CHK
+     , B.CODE AS SYS_CODE
+     , B.CODE_DESC AS CDC_CODE
+     , B.CODE_NAME AS CDC_NAME
+     , C.BRNCH_ID
+     , C.CODE AS BRNCH_CODE
+     , C.NAME AS BRNCH_NAME
+  FROM LOG0028D A
+  LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0)
+  LEFT OUTER JOIN SYS0005M C ON (C.BRNCH_ID = A.BRNCH_ID)
+	<if test="scmCdcCbBox != null and !scmCdcCbBox.isEmpty">
+   AND B.CODE IN 
+		<foreach item="item" collection="scmCdcCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+ ORDER BY B.CODE, A.BRNCH_ID
+</select>
+
+<select id="selectCdcBrUnmappingList" parameterType="Map" resultType="egovMap">
+SELECT '' AS CDC
+     , A.BRNCH_ID
+     , A.CODE AS BRNCH_CODE
+     , A.NAME AS BRNCH_NAME
+  FROM SYS0005M A /* Branch Master */
+ WHERE A.BRNCH_ID NOT IN (SELECT BRNCH_ID FROM LOG0028D)
+ ORDER BY A.BRNCH_ID, A.CODE
+</select>
+
+<insert id="insertCdcBrMapping" parameterType="Map">
+INSERT INTO LOG0028D
+(
+       BRNCH_ID
+     , CDC
+)
+VALUES
+(
+       #{brnchId}
+     , #{cdc}
+)
+</insert>
+
+<delete id="deleteCdcBrMapping" parameterType="Map">
+DELETE FROM LOG0028D WHERE BRNCH_ID = #{brnchId} AND CDC = #{sysCode}
+</delete>
+
+<update id="updateCdcLeadTimeMapping" parameterType="Map">
+	UPDATE SCM0022M SET
+	LEAD_TM = #{leadTm}
+	,UPD_USER_ID = #{crtUserId}
+	,UPD_DT = SYSDATE
+	WHERE WH_ID = #{whId} AND CDC = #{sysCode}
+</update>
+
+</mapper>

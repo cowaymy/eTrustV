@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.BillingMgmtMapper">
+
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+    
+    <!-- Reconciliation 리스트 조회 -->
+	<select id="selectBillingMgnt" parameterType="Map" resultType="egovMap">
+	   SELECT Extent1.TASK_ID TASK_ID  ,
+       Extent1.TASK_TYPE TASK_TYPE  ,
+       Extent1.BILLING_YEAR BILLING_YEAR  ,
+       Extent1.BILLING_MONTH BILLING_MONTH  ,
+       Extent1.TOT_CNT TOT_CNT  ,
+       Extent1.TOT_AMT TOT_AMT  ,
+       Extent1.START_DT START_DT  ,
+       Extent1.STUS STUS  ,
+       Extent1.END_DT END_DT  ,
+       Extent1.IS_CNFM IS_CNFM  ,
+       Extent1.IS_INVC_GENRT IS_INVC_GENRT  ,
+       Extent1.CRT_DT CRT_DT  ,
+       Extent1.CRT_USER_ID CRT_USER_ID  ,
+       Extent1.UPD_DT UPD_DT  ,
+       Extent1.UPD_USER_ID UPD_USER_ID  ,
+       Extent1.TASK_REM TASK_REM  
+  FROM PAY0047D Extent1
+ WHERE  'ADV BILL'   <![CDATA[<>]]> Extent1.TASK_TYPE
+ <if test="year != null and year != '' ">
+    AND BILLING_YEAR = #{year}
+ </if>
+ <if test="month != null and month != '' ">
+    AND BILLING_MONTH = #{month}
+ </if>
+  ORDER BY Extent1.TASK_ID DESC
+	</select>
+	
+	<select id="selectBillingMaster" parameterType="Map" resultType="egovMap">
+	   SELECT Extent1.TASK_ID TASK_ID  ,
+	       Extent1.TASK_TYPE TASK_TYPE  ,
+	       Extent1.BILLING_YEAR BILLING_YEAR  ,
+	       Extent1.BILLING_MONTH BILLING_MONTH  ,
+	       Extent1.TOT_CNT TOT_CNT  ,
+	       Extent1.TOT_AMT TOT_AMT  ,
+	       Extent1.START_DT START_DT  ,
+	       Extent1.STUS STUS  ,
+	       Extent1.END_DT END_DT  ,
+	       Extent1.IS_CNFM IS_CNFM  ,
+	       Extent1.CRT_DT CRT_DT  ,
+	       Extent1.CRT_USER_ID CRT_USER_ID  ,
+	       Extent1.UPD_DT UPD_DT  ,
+	       Extent1.UPD_USER_ID UPD_USER_ID  ,
+	       Extent1.IS_INVC_GENRT IS_INVC_GENRT  ,
+	       Extent1.TASK_REM TASK_REM  
+	   FROM PAY0047D Extent1
+	   WHERE  Extent1.TASK_ID = #{taskId}
+	               AND ROWNUM = 1 
+	</select>
+	
+	
+    <select id="selectBillingDetail" parameterType="Map" resultType="egovMap">
+        <include refid="pagingStart" />
+        SELECT 
+            Extent1.TASK_ID TASK_ID  ,
+			Extent1.TASK_BILL_SO_ID TASK_BILL_SO_ID  ,
+			Extent1.TASK_REF_NO TASK_REF_NO  ,
+			Extent1.TASK_BILL_TYPE_ID TASK_BILL_TYPE_ID  ,
+			Extent2.CODE_NAME CODE_NAME  ,
+			Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+			Extent4.NAME NAME  ,
+			0 C1  ,
+			TO_NUMBER(Extent1.TASK_BILL_AMT) TASK_BILL_AMT  ,
+			TO_DATE(Extent1.TASK_REF_DT_TM) TASK_REF_DT_TM  ,
+			CASE WHEN ( Extent1.TASK_BILL_GRP_ID IS NULL ) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END TASK_BILL_GRP_ID  ,
+            TO_NUMBER(Extent1.TASK_BILL_INST_NO) TASK_BILL_INST_NO  
+        FROM 
+            PAY0048D Extent1
+			JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
+			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
+			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+        WHERE  
+            Extent1.TASK_ID = #{taskId}
+            <if test="orderNo != 'null' and orderNo != '' ">
+                AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="billNo != null and billNo != '' ">
+                AND Extent1.TASK_REF_NO = #{billNo}
+            </if> 
+            <if test="custName != null and custName != '' ">
+                AND Extent4.NAME = #{custName}
+            </if>
+            <if test="group != null and group != '' ">
+                AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
+            </if>
+        ORDER BY Extent1.TASK_BILL_SO_ID ASC
+        <include refid="pagingEnd" />
+	</select>
+	
+	<select id="selectBillingDetailCount" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(1) AS CNT  
+        FROM 
+            PAY0048D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TASK_BILL_TYPE_ID
+            JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.TASK_BILL_SO_ID
+            JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+        WHERE  
+            Extent1.TASK_ID = #{taskId}
+            <if test="orderNo != 'null' and orderNo != '' ">
+                AND Extent3.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="billNo != null and billNo != '' ">
+                AND Extent1.TASK_REF_NO = #{billNo}
+            </if> 
+            <if test="custName != null and custName != '' ">
+                AND Extent4.NAME = #{custName}
+            </if>
+            <if test="group != null and group != '' ">
+                AND (CASE WHEN (Extent1.TASK_BILL_GRP_ID IS NULL) THEN 0 ELSE Extent1.TASK_BILL_GRP_ID END) = #{group}
+            </if>        
+    </select>
+	
+	<resultMap id="earyBillMap" type="egovMap"></resultMap>
+	<select id="callEaryBillProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INITIIZE_BILL_GST_EARY_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=earyBillMap})}
+    </select>
+    
+    <resultMap id="billMap" type="egovMap"></resultMap>
+    <select id="callBillProcedure" statementType="CALLABLE" parameterType="Map">
+        {call SP_INITIIZE_BILL_GST_RENT(#{year}, #{month}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=billMap})}
+    </select>
+    
+    <select id="getExistBill" parameterType="Map" resultType ="java.lang.Integer">
+        SELECT count(*) cnt
+		FROM PAY0047D Extent1
+		WHERE  ( 1 = Extent1.IS_CNFM ) 
+                  AND ( Extent1.TASK_ID = #{taskId} )
+		<if test="month != '' and month != null">
+		          AND ( Extent1.BILLING_MONTH = #{month} )
+		</if>
+		<if test="year != '' and year != null">
+		          AND ( Extent1.BILLING_YEAR = #{year} )
+		</if>
+		          AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <resultMap id="cEarlyBills" type="egovMap"></resultMap>
+    <select id="confirmEarlyBills" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_EARLY_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cEarlyBills})}
+    </select>
+    
+    <resultMap id="cBills" type="egovMap"></resultMap>
+    <select id="confirmBills" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_RENTAL(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cBills})}
+    </select>
+    
+    <select id="countMonthlyRawData" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(1) AS COUNT
+        FROM 
+            (
+            SELECT 
+				TO_CHAR(B.ACC_BILL_REF_DT, 'YYYY-MM-DD') AS ACC_BILL_REF_DT,
+				B.ACC_BILL_REF_NO,
+				B.ACC_BILL_ORD_NO,
+				D.CODE_NAME AS MODE_NM,
+				B.ACC_BILL_SCHDUL_PRIOD,
+				B.ACC_BILL_NET_AMT,
+				B.ACC_BILL_TXS_AMT
+            FROM 
+				PAY0047D L
+				JOIN PAY0016D B   ON B.ACC_BILL_TASK_ID = L.TASK_ID
+				JOIN SYS0013M D   ON D.CODE_ID = B.ACC_BILL_MODE_ID
+            WHERE 
+                L.TASK_TYPE IN ( 'BILL','EARLY BILL' )
+                AND L.BILLING_MONTH = TO_NUMBER(#{month})
+                AND L.BILLING_YEAR = TO_NUMBER(#{year})
+            UNION ALL
+            SELECT 
+                TO_CHAR(B.ACC_BILL_REF_DT, 'YYYY-MM-DD') AS ACC_BILL_REF_DT,
+                B.ACC_BILL_REF_NO,
+				B.ACC_BILL_ORD_NO,
+				D.CODE_NAME AS MODE_NM,
+				B.ACC_BILL_SCHDUL_PRIOD,
+				B.ACC_BILL_NET_AMT,
+				B.ACC_BILL_TXS_AMT
+            FROM 
+				SAL0001D M
+				JOIN SAL0070D S   ON S.SALES_ORD_ID = M.SALES_ORD_ID
+				JOIN PAY0016D B   ON B.ACC_BILL_SCHDUL_ID = S.RENT_INST_ID
+				JOIN SYS0013M D   ON D.CODE_ID = B.ACC_BILL_MODE_ID
+            WHERE 
+                EXTRACT(MONTH FROM M.SALES_DT) = EXTRACT(MONTH FROM ADD_MONTHS(TO_DATE(#{year} || '-' || #{month} || '-' || '01','YYYY-MM-DD'),-1))
+                AND EXTRACT(YEAR FROM M.SALES_DT) = EXTRACT(YEAR FROM ADD_MONTHS(TO_DATE(#{year} || '-' || #{month} || '-' || '01','YYYY-MM-DD'),-1))
+                AND M.APP_TYPE_ID = 66
+                AND M.STUS_CODE_ID = 4
+                AND EXTRACT(MONTH FROM S.RENT_INST_DT) = TO_NUMBER(#{month})
+                AND EXTRACT(YEAR FROM S.RENT_INST_DT) = TO_NUMBER(#{year})
+                AND B.ACC_BILL_SCHDUL_PRIOD <![CDATA[ <> ]]> 0 
+            )
+  
+    </select> 
+    
+    <select id="selectMonthlyRawData" parameterType="Map" resultType="egovMap">        
+         SELECT 
+             TO_CHAR(B.ACC_BILL_REF_DT, 'YYYY-MM-DD') AS ACC_BILL_REF_DT,
+             B.ACC_BILL_REF_NO,
+             B.ACC_BILL_ORD_NO,
+             D.CODE_NAME AS MODE_NM,
+             B.ACC_BILL_SCHDUL_PRIOD,
+             B.ACC_BILL_NET_AMT,
+             B.ACC_BILL_TXS_AMT
+         FROM 
+             PAY0047D L
+             JOIN PAY0016D B   ON B.ACC_BILL_TASK_ID = L.TASK_ID
+             JOIN SYS0013M D   ON D.CODE_ID = B.ACC_BILL_MODE_ID
+         WHERE 
+             L.TASK_TYPE IN ( 'BILL','EARLY BILL' )
+             AND L.BILLING_MONTH = TO_NUMBER(#{month})
+             AND L.BILLING_YEAR = TO_NUMBER(#{year})
+         UNION ALL
+         SELECT 
+             TO_CHAR(B.ACC_BILL_REF_DT, 'YYYY-MM-DD') AS ACC_BILL_REF_DT,
+             B.ACC_BILL_REF_NO,
+             B.ACC_BILL_ORD_NO,
+             D.CODE_NAME AS MODE_NM,
+             B.ACC_BILL_SCHDUL_PRIOD,
+             B.ACC_BILL_NET_AMT,
+             B.ACC_BILL_TXS_AMT
+         FROM 
+             SAL0001D M
+             JOIN SAL0070D S   ON S.SALES_ORD_ID = M.SALES_ORD_ID
+             JOIN PAY0016D B   ON B.ACC_BILL_SCHDUL_ID = S.RENT_INST_ID
+             JOIN SYS0013M D   ON D.CODE_ID = B.ACC_BILL_MODE_ID
+         WHERE 
+             EXTRACT(MONTH FROM M.SALES_DT) = EXTRACT(MONTH FROM ADD_MONTHS(TO_DATE(#{year} || '-' || #{month} || '-' || '01','YYYY-MM-DD'),-1))
+             AND EXTRACT(YEAR FROM M.SALES_DT) = EXTRACT(YEAR FROM ADD_MONTHS(TO_DATE(#{year} || '-' || #{month} || '-' || '01','YYYY-MM-DD'),-1))
+             AND M.APP_TYPE_ID = 66
+             AND M.STUS_CODE_ID = 4
+             AND EXTRACT(MONTH FROM S.RENT_INST_DT) = TO_NUMBER(#{month})
+             AND EXTRACT(YEAR FROM S.RENT_INST_DT) = TO_NUMBER(#{year})
+             AND B.ACC_BILL_SCHDUL_PRIOD <![CDATA[ <> ]]> 0
+    </select>
+</mapper>

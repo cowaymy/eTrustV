@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.requestBillingGroup.service.impl.RequestBillingGroupMapper">
+
+    <select id="selectRequestBillingGroupList" parameterType="Map" resultType="egovMap">
+		SELECT   /* [com.coway.trust.biz.payment.requestBillingGroup.service.impl.RequestBillingGroupMapper.selectRequestBillingGroupList] 20191023 - KR HAN */
+				     Extent2.MOB_TICKET_NO MOB_TICKET_NO,
+				     Extent1.SALES_ORD_NO SALES_ORD_NO,
+				     Extent1.REQ_SEQ_NO REQ_SEQ_NO,
+				     TO_CHAR(Extent1.CRT_DT, 'dd-mm-yyyy hh24:mi:ss') CRT_DT,
+				     Extent1.REQ_STUS_ID REQ_STUS_ID,
+				     Extent3.NAME REQ_STUS_NM,
+				     Extent1.CUST_BILL_ID_OLD CUST_BILL_ID_OLD,
+	                 ( SELECT CUST_BILL_GRP_NO FROM SAL0024D t1 WHERE t1.CUST_BILL_ID = Extent1.CUST_BILL_ID_OLD  ) CUST_BILL_NM_OLD,
+				     Extent1.CUST_BILL_ID_NW CUST_BILL_ID_NW,
+                     ( SELECT CUST_BILL_GRP_NO FROM SAL0024D t1 WHERE t1.CUST_BILL_ID = Extent1.CUST_BILL_ID_NW  ) CUST_BILL_NM_NW,
+                     (
+	                     SELECT     t2.SALES_ORD_NO
+	                     FROM        SAL0024D t1
+	                                        JOIN SAL0001D t2
+	                                            ON t1.CUST_BILL_ID = t2.CUST_BILL_ID
+	                                            AND t1.CUST_BILL_SO_ID = t2.SALES_ORD_ID
+	                     WHERE      t2.CUST_BILL_ID = Extent1.CUST_BILL_ID_NW
+                     ) SALES_ORD_NO_NM,
+				     Extent1.REM REM,
+				     Extent2.CRT_USER_BRNCH CRT_USER_BRNCH,
+				     Extent4.CODE CRT_USER_BRNCH_CD,
+                     Extent4.NAME CRT_USER_BRNCH_NM,
+				     Extent1.CRT_USER_ID CRT_USER_ID,
+				     T9.USER_NAME CRT_USER_NM,
+				     TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY hh24:mi:ss') UPD_DT,
+				     Extent1.UPD_USER_ID UPD_USER_ID,
+				     T10.USER_NAME UPD_USER_NM
+            FROM PAY0299D Extent1
+						JOIN MOB0001D Extent2
+						      ON Extent1.MOB_TICKET_NO = Extent2.MOB_TICKET_NO
+						          AND Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
+						JOIN SYS0038M Extent3
+						      ON Extent1.REQ_STUS_ID = Extent3.STUS_CODE_ID
+						INNER JOIN SYS0005M Extent4
+                              ON  Extent2.CRT_USER_BRNCH = Extent4.BRNCH_ID
+                        LEFT JOIN SYS0047M T9
+                              ON T9.USER_ID = Extent1.CRT_USER_ID
+                        LEFT JOIN SYS0047M T10
+                              ON T10.USER_ID = Extent1.UPD_USER_ID
+         <where>
+             <if test="_reqstStartDt != null and _reqstStartDt != '' ">
+                 AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+             </if>
+             <if test="_reqstEndDt != null and _reqstEndDt != '' ">
+                 AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+             </if>
+             <if test="ticketNo != null and ticketNo != '' ">
+                 AND Extent2.MOB_TICKET_NO = #{ticketNo}
+             </if>
+             <if test="orderNo != null and orderNo != '' ">
+                 AND Extent1.SALES_ORD_NO = #{orderNo}
+             </if>
+             <if test="ticketStatus != null and ticketStatus != '' ">
+                 AND Extent1.REQ_STUS_ID = #{reqStusId}
+             </if>
+             <if test="branchCode != null and branchCode != '' ">
+                 AND Extent4.CODE = #{branchCode}
+             </if>
+             <if test="memberCode != null and memberCode != '' ">
+                 AND Extent1.CRT_USER_ID = #{memberCode}
+             </if>
+         </where>
+         ORDER BY CAST(Extent2.MOB_TICKET_NO AS INT) DESC
+    </select>
+
+    <update id="updateRequestBillingGroupReject" parameterType="Map">
+            UPDATE  /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.updateRequestBillingGroupReject] 20191023 - KR HAN */
+                        PAY0299D SET
+                        REQ_STUS_ID = 6
+                       ,REM = #{etc}
+                       ,UPD_DT = SYSDATE
+                       ,UPD_USER_ID = #{userId}
+            WHERE   SALES_ORD_NO =  #{salesOrdNo}
+            AND       REQ_SEQ_NO =   #{reqSeqNo}
+	</update>
+
+    <update id="updateRequestBillingGroupArrpove" parameterType="Map">
+            UPDATE  /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.updateRequestBillingGroupArrpove] 20191023 - KR HAN */
+                        PAY0299D SET
+                        REQ_STUS_ID = 5
+                       ,UPD_DT = SYSDATE
+                       ,UPD_USER_ID = #{userId}
+            WHERE   SALES_ORD_NO =  #{salesOrdNo}
+            AND       REQ_SEQ_NO =   #{reqSeqNo}
+    </update>
+
+</mapper>

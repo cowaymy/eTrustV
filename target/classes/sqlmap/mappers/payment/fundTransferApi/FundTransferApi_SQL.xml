@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper">
+
+
+
+<select id="selectReasonList" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.selectReasonList] 20191021 - KR JAEMAJEM */
+SELECT  CODE_ID                                                                 AS CODE_ID
+    ,   CODE_NAME                                                               AS CODE_NAME
+FROM    SYS0013M
+WHERE   DISAB = 0
+AND     CODE_MASTER_ID = 396
+ORDER BY CODE_NAME
+]]>
+</select>
+
+
+
+<select id="selectFundTransfer" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.selectFundTransfer] 20191021 - KR JAEMAJEM */
+SELECT  A.SALES_ORD_NO                                                          AS FT_ORD_NO
+    ,   B.NAME                                                                  AS FT_CUST_NAME
+    ,   A.STUS_CODE_ID                                                          AS FT_STUS_ID
+    ,   E.NAME                                                                  AS FT_STUS_NAME
+    ,   D.STK_DESC                                                              AS FT_PRODUCT_NAME
+    ,   A.APP_TYPE_ID                                                           AS FT_APP_TYPE_ID
+FROM    SAL0001D A
+        INNER JOIN SAL0029D B
+            ON  B.CUST_ID = A.CUST_ID
+        INNER JOIN SAL0002D C
+            ON  C.SALES_ORD_ID = A.SALES_ORD_ID
+        INNER JOIN SYS0026M D
+            ON  D.STK_ID = C.ITM_STK_ID
+        INNER JOIN SYS0038M E
+            ON  E.STUS_CODE_ID = A.STUS_CODE_ID
+WHERE   A.SALES_ORD_NO = #{salesOrdNo}
+]]>
+</select>
+
+
+
+<insert id="insertPAY0296D" parameterType="Map">
+<selectKey keyProperty="ftReqId" resultType="int" order="BEFORE">
+    SELECT PAY0260D_FT_REQ_ID_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+/* [com.coway.trust.biz.payment.fundTransferApi.impl.FundTransferApiMapper.insertPAY0296D] 20191022 - KR JAEMAJEM */
+INSERT
+INTO    PAY0296D                                                                --Mobile Request Fund Transfer
+(
+        FT_REQ_ID                                                               --Mobile Request Fund Transfer Number
+    ,   CUR_ORD_NO                                                              --Current Order Number
+    ,   CUR_CUST_NAME                                                           --Current Order Customer Name
+    ,   CUR_WOR_NO                                                              --Current WOR Number
+    ,   CUR_AMT                                                                 --Current Amount
+    ,   CUR_PAY_TYPE_ID                                                         --Current WOR Payment Type ID
+    ,   NEW_ORD_NO                                                              --New Order Number
+    ,   NEW_CUST_NAME                                                           --New Order Customer Name
+    ,   NEW_AMT                                                                 --New Amount
+    ,   FT_RESN                                                                 --Fund Tranfer Reason
+    ,   FT_REM                                                                  --Remarks
+    ,   FT_ATTCH_IMG                                                            --Attachment Group ID : SYS0070M
+    ,   FT_STUS_ID                                                              --Fund Tranfer Status
+    ,   MOB_TICKET_NO                                                           --
+    ,   CRT_DT                                                                  --Create Date
+    ,   CRT_USER_ID                                                             --Create User Id
+    ,   UPD_DT                                                                  --Update Date
+    ,   UPD_USER_ID                                                             --Update User Id
+)VALUES(
+        #{ftReqId}                                                              --Mobile Request Fund Transfer Number
+    ,   #{curOrdNo}                                                             --Current Order Number
+    ,   #{curCustName}                                                          --Current Order Customer Name
+    ,   #{curWorNo}                                                             --Current WOR Number
+    ,   #{curAmt}                                                               --Current Amount
+    ,   #{curPayTypeId}                                                         --Current WOR Payment Type ID
+    ,   #{newOrdNo}                                                             --New Order Number
+    ,   #{newCustName}                                                          --New Order Customer Name
+    ,   #{newAmt}                                                               --New Amount
+    ,   #{ftResn}                                                               --Fund Tranfer Reason
+    ,   #{ftRem}                                                                --Remarks
+    ,   #{ftAttchImg}                                                           --Attachment Group ID : SYS0070M
+    ,   1                                                                       --Fund Tranfer Status
+    ,   #{mobTicketNo}                                                          --
+    ,   SYSDATE                                                                 --Create Date
+    ,   #{crtUserId}                                                            --Create User Id
+    ,   SYSDATE                                                                 --Update Date
+    ,   #{updUserId}                                                            --Update User Id
+)
+</insert>
+</mapper>

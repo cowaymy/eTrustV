@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.MenuMapper">
+
+    <select id="selectMenuList" parameterType="sessionVO" resultType="egovMap">
+     /* [com.coway.trust.biz.common.impl.MenuMapper.selectMenuList] 20190903 - KR OHK */
+        SELECT MENU.MENU_LVL
+                  ,MENU.MENU_CODE
+                  ,MENU.UPPER_MENU_CODE
+                  ,MENU.MENU_NAME
+                  ,MENU.PGM_CODE
+                  ,MENU.PGM_PATH
+                  ,MENU.STATUS_CODE
+                  ,MENU.FUNC_VIEW
+                  ,MENU.MENU_ORDER
+                  ,CONNECT_BY_ISLEAF AS IS_LEAF
+                  ,SYS_CONNECT_BY_PATH (MENU.MENU_CODE, '|!|') AS PATH_CODE
+                  ,SYS_CONNECT_BY_PATH (MENU.MENU_NAME, '|!|') AS PATH_NAME
+                  ,MENU.FROM_DT_TYPE
+                  ,MENU.FROM_DT_FIELD_NM
+                  ,MENU.FROM_DT_VAL
+                  ,MENU.TO_DT_TYPE
+                  ,MENU.TO_DT_FIELD_NM
+                  ,MENU.TO_DT_VAL
+              FROM (SELECT DISTINCT MENU.*
+                                   ,PGM.PGM_PATH
+                                   ,PGM.FUNC_VIEW
+                                   ,COM1.CODE AS FROM_DT_TYPE
+                                   ,PGM.FROM_DT_FIELD_NM
+                                   ,PGM.FROM_DT_VAL
+                                   ,COM2.CODE AS TO_DT_TYPE
+                                   ,PGM.TO_DT_FIELD_NM
+                                   ,PGM.TO_DT_VAL
+                               FROM SYS0051M MENU, SYS0050M PGM, SYS0013M COM1, SYS0013M COM2
+                              WHERE MENU.PGM_CODE = PGM.PGM_CODE(+)
+                                  AND PGM.FROM_DT_TYPE_ID = COM1.CODE_ID(+)
+                                  AND COM1.CODE_MASTER_ID(+) = '423'
+                                  AND PGM.TO_DT_TYPE_ID = COM2.CODE_ID(+)
+                                  AND COM2.CODE_MASTER_ID(+) = '423'
+                         START WITH MENU.MENU_CODE IN (
+                                  SELECT DISTINCT I.MENU_CODE
+                                  FROM (SELECT DISTINCT H.MENU_CODE
+                                                       ,H.PGM_TRN_CODE
+                                                       ,H.VALID_DT_FROM
+                                                       ,H.VALID_DT_TO
+                                                       ,H.FUNC_YN
+                                                       ,H.EXIST_YN
+                                                       ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
+                                                        ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
+                                                   FROM (
+                                                         /* 선택한 권한*/
+                                                         SELECT NULL AS AUTH_CODE
+                                                               ,G.MENU_CODE
+                                                               ,G.PGM_TRN_CODE
+                                                               ,G.VALID_DT_FROM
+                                                               ,G.VALID_DT_TO
+                                                               ,G.FUNC_YN
+                                                               ,'N' AS EXIST_YN
+                                                           FROM SYS0057M G
+                                                          WHERE G.USER_ID = #{userId}
+                                                          AND G.FUNC_YN = 'Y'
+                                                          AND SYSDATE BETWEEN TO_DATE (NVL (G.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                                                                          AND TO_DATE (NVL (G.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+                                                         UNION
+                                                         /* 선택한 권한의 매핑된 Role의 상위 권한 */
+                                                         SELECT E.AUTH_CODE
+                                                               ,E.MENU_CODE
+                                                               ,E.PGM_TRN_CODE
+                                                               ,NULL AS VALID_DT_FROM
+                                                               ,NULL AS VALID_DT_TO
+                                                               ,E.FUNC_YN
+                                                               ,CASE
+                                                                   WHEN F.OWN_USER_ID IS NULL
+                                                                   AND E.FUNC_YN = 'Y'
+                                                                      THEN 'Y'
+                                                                   ELSE 'N'
+                                                                END AS EXIST_YN
+                                                           FROM SYS0056M E
+                                                               , (SELECT D.ROLE_ID
+                                                                        ,D.AUTH_CODE
+                                                                        ,C.USER_ID AS OWN_USER_ID
+                                                                    FROM (SELECT     B.USER_ID
+                                                                                    ,A.ROLE_ID
+                                                                                FROM SYS0044M A, SYS0045M B
+                                                                               WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                                                 AND B.USER_ID(+) = #{userId}
+                                                                          START WITH A.ROLE_ID = B.ROLE_ID
+                                                                          CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                                                        ,SYS0054M D
+                                                                   WHERE C.ROLE_ID = D.ROLE_ID) F
+                                                          WHERE E.AUTH_CODE = F.AUTH_CODE
+                                                          AND E.FUNC_YN = 'Y'
+                                                         UNION
+                                                         /* 예외적으로 부여받은 개인권한 */
+                                                         SELECT A.AUTH_CODE
+                                                               ,A.MENU_CODE
+                                                               ,A.PGM_TRN_CODE
+                                                               ,B.VALID_DT_FROM
+                                                               ,B.VALID_DT_TO
+                                                               ,A.FUNC_YN
+                                                               ,CASE
+                                                                   WHEN A.FUNC_YN = 'Y'
+                                                                      THEN 'Y'
+                                                                   ELSE 'N'
+                                                                END AS EXIST_YN
+                                                           FROM SYS0056M A, SYS0055M B
+                                                          WHERE A.AUTH_CODE = B.AUTH_CODE
+                                                            AND B.USER_ID = #{userId}
+                                                            AND A.FUNC_YN = 'Y'
+                                                            AND SYSDATE BETWEEN TO_DATE (NVL (B.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                                                                            AND TO_DATE (NVL (B.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+                                                            ) H) I
+                                 WHERE I.RNK = 1
+                         )
+                         CONNECT BY PRIOR UPPER_MENU_CODE = MENU_CODE) MENU
+        START WITH MENU.UPPER_MENU_CODE IS NULL
+        CONNECT BY PRIOR MENU_CODE = UPPER_MENU_CODE
+          ORDER SIBLINGS BY MENU_ORDER
+    </select>
+
+    <select id="getFavoritesList" parameterType="sessionVO" resultType="egovMap">
+    /* [com.coway.trust.biz.common.impl.MenuMapper.getFavoritesList] 20190903 - KR OHK */
+        SELECT   FAVORITES.MYMENU_CODE
+                ,FAVORITES.MYMENU_NAME
+                ,MENU.MENU_CODE
+                ,MENU.MENU_NAME
+                ,PGM.PGM_PATH
+                , (SELECT        '|!|'
+                              || RTRIM (REVERSE (SYS_CONNECT_BY_PATH (REVERSE (A.MENU_NAME), '|!|') )
+                                       ,'|!|') AS PATH_NAME
+                         FROM SYS0051M A
+                        WHERE CONNECT_BY_ISLEAF = 1
+                   START WITH A.MENU_CODE = MENU.MENU_CODE
+                   CONNECT BY PRIOR A.UPPER_MENU_CODE = A.MENU_CODE) AS PATH_NAME
+                ,COM1.CODE AS FROM_DT_TYPE
+                ,PGM.FROM_DT_FIELD_NM
+                ,PGM.FROM_DT_VAL
+                ,COM2.CODE AS TO_DT_TYPE
+                ,PGM.TO_DT_FIELD_NM
+                ,PGM.TO_DT_VAL
+            FROM SYS0059M FAVORITES, SYS0060D MAPP, SYS0051M MENU, SYS0050M PGM, SYS0013M COM1, SYS0013M COM2
+           WHERE FAVORITES.MYMENU_CODE = MAPP.MYMENU_CODE
+             AND MAPP.MENU_CODE = MENU.MENU_CODE
+             AND MENU.PGM_CODE = PGM.PGM_CODE(+)
+             AND FAVORITES.USE_YN = 'Y'
+             AND PGM.FROM_DT_TYPE_ID = COM1.CODE_ID(+)
+             AND COM1.CODE_MASTER_ID(+) = '423'
+             AND PGM.TO_DT_TYPE_ID = COM2.CODE_ID(+)
+             AND COM2.CODE_MASTER_ID(+) = '423'
+             AND (   EXISTS (
+                        SELECT 1
+                          FROM SYS0057M USER_MENU_MAPP
+                         WHERE USER_MENU_MAPP.MENU_CODE = MENU.MENU_CODE
+                           AND USER_MENU_MAPP.USER_ID = #{userId}
+                           AND USER_MENU_MAPP.FUNC_YN = 'Y'
+                           AND SYSDATE BETWEEN TO_DATE (NVL (USER_MENU_MAPP.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                                           AND TO_DATE (NVL (USER_MENU_MAPP.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+                          )
+                  OR EXISTS (
+                        SELECT 1
+                          FROM SYS0056M E
+                              , (SELECT D.ROLE_ID
+                                       ,D.AUTH_CODE
+                                       ,C.USER_ID AS OWN_USER_ID
+                                   FROM (SELECT     B.USER_ID
+                                                   ,A.ROLE_ID
+                                               FROM SYS0044M A, SYS0045M B
+                                              WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                AND B.USER_ID(+) = #{userId}
+                                         START WITH A.ROLE_ID = B.ROLE_ID
+                                         CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                       ,SYS0054M D
+                                  WHERE C.ROLE_ID = D.ROLE_ID) F
+                         WHERE E.AUTH_CODE = F.AUTH_CODE
+                           AND E.FUNC_YN = 'Y'
+                           AND E.MENU_CODE = MENU.MENU_CODE)
+                  OR EXISTS (
+                        SELECT 1
+                          FROM SYS0056M A, SYS0055M B
+                         WHERE A.AUTH_CODE = B.AUTH_CODE
+                           AND B.USER_ID = #{userId}
+                           AND A.FUNC_YN = 'Y'
+                           AND A.MENU_CODE = MENU.MENU_CODE
+                           AND SYSDATE BETWEEN TO_DATE (NVL (B.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                                           AND TO_DATE (NVL (B.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+                        )
+                 )
+             AND FAVORITES.USER_ID = MAPP.USER_ID
+             AND FAVORITES.USER_ID = #{userId}
+        ORDER BY FAVORITES.MYMENU_ORDER
+    </select>
+
+    <select id="selectPageAuth" parameterType="Map" resultType="pageAuthVO">
+        SELECT   DISTINCT
+                    MIN (DECODE (PGM_TRN_CODE, 'VIEW', FUNC_YN) ) AS funcView
+                    ,MIN (DECODE (PGM_TRN_CODE, 'CHNG', FUNC_YN) ) AS funcChange
+                    ,MIN (DECODE (PGM_TRN_CODE, 'PRNT', FUNC_YN) ) AS funcPrint
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN1', FUNC_YN) ) AS funcUserDefine1
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN2', FUNC_YN) ) AS funcUserDefine2
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN3', FUNC_YN) ) AS funcUserDefine3
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN4', FUNC_YN) ) AS funcUserDefine4
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN5', FUNC_YN) ) AS funcUserDefine5
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN6', FUNC_YN) ) AS funcUserDefine6
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN7', FUNC_YN) ) AS funcUserDefine7
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN8', FUNC_YN) ) AS funcUserDefine8
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN9', FUNC_YN) ) AS funcUserDefine9
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN10', FUNC_YN) ) AS funcUserDefine10
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN11', FUNC_YN) ) AS funcUserDefine11
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN12', FUNC_YN) ) AS funcUserDefine12
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN13', FUNC_YN) ) AS funcUserDefine13
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN14', FUNC_YN) ) AS funcUserDefine14
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN15', FUNC_YN) ) AS funcUserDefine15
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN16', FUNC_YN) ) AS funcUserDefine16
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN17', FUNC_YN) ) AS funcUserDefine17
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN18', FUNC_YN) ) AS funcUserDefine18
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN19', FUNC_YN) ) AS funcUserDefine19
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN20', FUNC_YN) ) AS funcUserDefine20
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN21', FUNC_YN) ) AS funcUserDefine21
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN22', FUNC_YN) ) AS funcUserDefine22
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN23', FUNC_YN) ) AS funcUserDefine23
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN24', FUNC_YN) ) AS funcUserDefine24
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN25', FUNC_YN) ) AS funcUserDefine25
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN26', FUNC_YN) ) AS funcUserDefine26
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN27', FUNC_YN) ) AS funcUserDefine27
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN28', FUNC_YN) ) AS funcUserDefine28
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN29', FUNC_YN) ) AS funcUserDefine29
+                    ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN30', FUNC_YN) ) AS funcUserDefine30
+                    ,MIN (DECODE (PGM_TRN_CODE, 'VIEW', PDPA_MONTH)) AS pdpaMonth
+            FROM (SELECT I.MENU_CODE
+                        ,I.PGM_TRN_CODE
+                        ,I.VALID_DT_FROM
+                        ,I.VALID_DT_TO
+                        ,I.FUNC_YN
+                        ,I.EXIST_YN
+                        ,I.PDPA_MONTH
+                    FROM (SELECT DISTINCT H.MENU_CODE
+                                         ,H.PGM_TRN_CODE
+                                         ,H.VALID_DT_FROM
+                                         ,H.VALID_DT_TO
+                                         ,H.FUNC_YN
+                                         ,H.EXIST_YN
+                                         ,H.PDPA_MONTH
+                                         ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
+                                          ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
+                                     FROM (
+                                           /* 선택한 권한*/
+                                           SELECT NULL AS AUTH_CODE
+                                                 ,G.MENU_CODE
+                                                 ,G.PGM_TRN_CODE
+                                                 ,G.VALID_DT_FROM
+                                                 ,G.VALID_DT_TO
+                                                 ,G.FUNC_YN
+                                                 ,'N' AS EXIST_YN
+                                                 ,G.PDPA_MONTH
+                                             FROM SYS0057M G
+                                            WHERE G.USER_ID = #{userId}
+                                           UNION
+                                           /* 선택한 권한의 매핑된 Role의 상위 권한 */
+                                           SELECT E.AUTH_CODE
+                                                 ,E.MENU_CODE
+                                                 ,E.PGM_TRN_CODE
+                                                 ,NULL AS VALID_DT_FROM
+                                                 ,NULL AS VALID_DT_TO
+                                                 ,E.FUNC_YN
+                                                 ,CASE
+                                                     WHEN F.OWN_USER_ID IS NULL
+                                                     AND E.FUNC_YN = 'Y'
+                                                        THEN 'Y'
+                                                     ELSE 'N'
+                                                  END AS EXIST_YN
+                                                 ,E.PDPA_MONTH
+                                             FROM SYS0056M E
+                                                 , (SELECT D.ROLE_ID
+                                                          ,D.AUTH_CODE
+                                                          ,C.USER_ID AS OWN_USER_ID
+                                                      FROM (SELECT     B.USER_ID
+                                                                      ,A.ROLE_ID
+                                                                  FROM SYS0044M A, SYS0045M B
+                                                                 WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                                   AND B.USER_ID(+) = #{userId}
+                                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                                          ,SYS0054M D
+                                                     WHERE C.ROLE_ID = D.ROLE_ID) F
+                                            WHERE E.AUTH_CODE = F.AUTH_CODE
+                                           UNION
+                                           /* 예외적으로 부여받은 개인권한 */
+                                           SELECT A.AUTH_CODE
+                                                 ,A.MENU_CODE
+                                                 ,A.PGM_TRN_CODE
+                                                 ,B.VALID_DT_FROM
+                                                 ,B.VALID_DT_TO
+                                                 ,A.FUNC_YN
+                                                 ,'N' AS EXIST_YN
+                                                 ,A.PDPA_MONTH
+                                             FROM SYS0056M A, SYS0055M B
+                                            WHERE A.AUTH_CODE = B.AUTH_CODE
+                                              AND B.USER_ID = #{userId}) H) I
+                   WHERE I.RNK = 1
+                     AND EXISTS (
+                            SELECT 1
+                              FROM SYS0050M A, SYS0051M B
+                             WHERE A.PGM_CODE = B.PGM_CODE
+                               AND A.PGM_PATH = #{pgmPath}
+                               AND I.MENU_CODE = B.MENU_CODE)
+                     AND SYSDATE BETWEEN TO_DATE (NVL (I.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                                     AND TO_DATE (NVL (I.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24') ) T
+        GROUP BY T.MENU_CODE
+    </select>
+
+    <select id="selectMenuAuthByPgmPath" parameterType="Map" resultType="egovMap">
+        WITH CURRENT_MENU AS
+             (SELECT /*+ Full(a) Full(b) */
+                            B.MENU_CODE
+                FROM SYS0050M A, SYS0051M B
+               WHERE A.PGM_CODE = B.PGM_CODE
+                 AND A.PGM_PATH = #{pgmPath})
+        SELECT  DISTINCT T.FUNC_YN
+                    ,W.MENU_CODE
+          FROM (SELECT DISTINCT H.MENU_CODE
+                               ,H.VALID_DT_FROM
+                               ,H.VALID_DT_TO
+                               ,H.FUNC_YN
+                               ,H.EXIST_YN
+                               ,RANK () OVER (PARTITION BY H.MENU_CODE, H.PGM_TRN_CODE ORDER BY H.FUNC_YN DESC
+                                ,H.EXIST_YN, H.VALID_DT_FROM, H.VALID_DT_TO DESC) AS RNK
+                           FROM (
+                                 /* 선택한 권한*/
+                                 SELECT NULL AS AUTH_CODE
+                                       ,G.MENU_CODE
+                                       ,G.PGM_TRN_CODE
+                                       ,G.VALID_DT_FROM
+                                       ,G.VALID_DT_TO
+                                       ,G.FUNC_YN
+                                       ,'N' AS EXIST_YN
+                                   FROM SYS0057M G, CURRENT_MENU T
+                                  WHERE G.USER_ID = #{userId}
+                                    AND G.MENU_CODE = T.MENU_CODE
+                                    AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN G.VALID_DT_FROM AND G.VALID_DT_TO
+                                 UNION
+                                 /* 선택한 권한의 매핑된 Role의 상위 권한 */
+                                 SELECT E.AUTH_CODE
+                                       ,E.MENU_CODE
+                                       ,E.PGM_TRN_CODE
+                                       ,NULL AS VALID_DT_FROM
+                                       ,NULL AS VALID_DT_TO
+                                       ,E.FUNC_YN
+                                       ,CASE
+                                           WHEN F.OWN_USER_ID IS NULL
+                                           AND E.FUNC_YN = 'Y'
+                                              THEN 'Y'
+                                           ELSE 'N'
+                                        END AS EXIST_YN
+                                   FROM SYS0056M E
+                                       , (SELECT D.ROLE_ID
+                                                ,D.AUTH_CODE
+                                                ,C.USER_ID AS OWN_USER_ID
+                                            FROM (SELECT     B.USER_ID
+                                                            ,A.ROLE_ID
+                                                        FROM SYS0044M A, SYS0045M B
+                                                       WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                                         AND B.USER_ID(+) = #{userId}
+                                                  START WITH A.ROLE_ID = B.ROLE_ID
+                                                  CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+                                                ,SYS0054M D
+                                           WHERE C.ROLE_ID = D.ROLE_ID) F
+                                       ,CURRENT_MENU T
+                                  WHERE E.AUTH_CODE = F.AUTH_CODE
+                                    AND E.MENU_CODE = T.MENU_CODE
+                                 UNION
+                                 /* 예외적으로 부여받은 개인권한 */
+                                 SELECT A.AUTH_CODE
+                                       ,A.MENU_CODE
+                                       ,A.PGM_TRN_CODE
+                                       ,B.VALID_DT_FROM
+                                       ,B.VALID_DT_TO
+                                       ,A.FUNC_YN
+                                       ,'N' AS EXIST_YN
+                                   FROM SYS0056M A, SYS0055M B, CURRENT_MENU T
+                                  WHERE A.AUTH_CODE = B.AUTH_CODE
+                                    AND B.USER_ID = #{userId}
+                                    AND A.MENU_CODE = T.MENU_CODE) H) T
+                                    ,CURRENT_MENU W
+         WHERE W.MENU_CODE = T.MENU_CODE(+)
+            AND T.RNK = 1
+            AND (T.FUNC_YN = 'Y' OR T.EXIST_YN = 'Y')
+            AND SYSDATE BETWEEN TO_DATE (NVL (T.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+                           AND TO_DATE (NVL (T.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+    </select>
+
+    <select id="getCountCommAuth" parameterType="Map" resultType="integer">
+      SELECT COUNT(A.PGM_CODE) AS CNT
+      FROM SYS0050M A
+      JOIN SYS0051M B ON A.PGM_CODE = B.PGM_CODE
+      WHERE A.PGM_PATH = #{pgmPath}
+    </select>
+</mapper>

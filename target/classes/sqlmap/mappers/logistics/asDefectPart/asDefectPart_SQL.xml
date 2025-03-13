@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.asDefectPart.impl.asDefectPartMapper">
+
+<select id="searchAsDefPartList" parameterType="Map" resultType="egovMap">
+    SELECT
+		A.DEF_PART_ID,
+		A.PROD_CAT AS PROD_CAT_ID,
+		B.CODE_NAME AS PROD_CAT,
+		A.PROD_TYPE AS PROD_TYPE_ID,
+		C.CODE_NAME AS PROD_TYPE,
+		A.MAT_CODE,
+		F.STK_DESC AS MAT_NAME,
+		A.DEF_PART_CODE,
+		A.DEF_PART_NAME,
+		A.STUS AS STUS_ID,
+		D.NAME AS STUS,
+		A.CRT_USER_ID,
+		E.USER_NAME AS CRT_USER,
+		A.CRT_DT
+	FROM GBSLCVD.SVC0131D A
+	JOIN SYS0013M B ON A.PROD_CAT = B.CODE_ID AND B.CODE_MASTER_ID = 11
+	JOIN SYS0013M C ON A.PROD_TYPE = C.CODE_ID AND C.CODE_MASTER_ID = 15
+	JOIN SYS0038M D ON A.STUS = D.STUS_CODE_ID
+	JOIN SYS0047M E ON A.CRT_USER_ID = E.USER_ID
+    JOIN SYS0026M F ON A.MAT_ID = F.STK_ID
+    WHERE 1 = 1
+
+           <if test='arrProductCtgry != null and arrProductCtgry != ""'>
+             AND A.PROD_CAT IN
+             <foreach item="item" collection="arrProductCtgry" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='arrMatType != null and arrMatType != ""'>
+             AND A.PROD_TYPE IN
+             <foreach item="item" collection="arrMatType" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+           </if>
+           <if test='stkCd != null and stkCd != ""'>
+             AND A.MAT_CODE = #{stkCd}
+           </if>
+           <if test='stkNm != null and stkNm != ""'>
+             AND F.STK_DESC LIKE UPPER('%' || #{stkNm} || '%')
+           </if>
+    ORDER BY A.DEF_PART_ID ASC
+  </select>
+
+    <select id="selectAsDefectPartInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+		A.DEF_PART_ID
+		, A.PROD_CAT AS PROD_CAT_ID
+		, A.PROD_TYPE AS PROD_TYPE_ID
+		, A.MAT_CODE
+		, B.STK_DESC AS MAT_NAME
+		, A.DEF_PART_CODE
+		, A.DEF_PART_NAME
+		, A.STUS
+	FROM GBSLCVD.SVC0131D A
+    JOIN SYS0026M B ON A.MAT_ID = B.STK_ID
+	WHERE DEF_PART_ID = #{defPartId}
+  </select>
+
+  <insert id="addDefPart" parameterType="Map">
+        INSERT INTO SVC0131D (
+			DEF_PART_ID,
+			PROD_CAT,
+			PROD_TYPE,
+			MAT_ID,
+			MAT_CODE,
+			DEF_PART_CODE,
+			DEF_PART_NAME,
+			STUS,
+			CRT_USER_ID,
+			CRT_DT
+		)
+		VALUES (
+		    SVC0131D_DEF_PART_ID_SEQ.NEXTVAL,
+			#{productCtgry},
+			#{matType},
+			#{matId},
+			#{matCode},
+			#{defPartCode},
+			#{defPartName},
+			#{stus},
+			#{creator},
+			SYSDATE
+		)
+    </insert>
+
+  <update id="updateDefPart" parameterType="Map">
+    UPDATE SVC0131D
+    SET
+        PROD_CAT = #{productCtgry} ,
+        PROD_TYPE = #{matType},
+        MAT_ID = #{matId},
+        MAT_CODE = #{matCode},
+        DEF_PART_CODE = #{defPartCode},
+        DEF_PART_NAME = #{defPartName},
+	    UPD_DT = SYSDATE,
+	    UPD_USER_ID = #{updator}
+    WHERE DEF_PART_ID = #{defPartId}
+  </update>
+
+    <update id="updateDefPartStus" parameterType="Map">
+        UPDATE SVC0131D
+        SET
+             STUS = #{updStus},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{updator}
+        WHERE DEF_PART_ID = #{defPartId}
+      </update>
+
+      <select id="getStkInfo" parameterType="Map" resultType="egovMap">
+	    SELECT
+	    STK_ID
+	    , STK_CODE
+	    , STK_DESC
+	FROM SYS0026M
+	where STK_CODE =  #{matCode}
+  </select>
+
+  <select id="checkDefPart" parameterType="Map" resultType="egovMap">
+	  SELECT
+	   DEFECT_TYP,
+	   DEFECT_CODE,
+	   DEFECT_DESC
+	  FROM SYS0100M
+	  WHERE DEFECT_TYP = 'DP'
+	     AND DEFECT_CODE = #{dpCode}
+	     AND DEFECT_STATUS = 1
+   </select>
+
+	<select id="chkDupLinkage" parameterType="Map" resultType="egovMap">
+	 SELECT
+        MAT_CODE,
+        DEF_PART_CODE,
+        DEF_PART_NAME
+     FROM svc0131d
+     WHERE DEF_PART_CODE = #{dpCode}
+        AND MAT_CODE = #{matCode}
+        AND STUS = 1
+	</select>
+
+</mapper>

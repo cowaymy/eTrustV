@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.coway.trust.biz.services.report.impl.HSReportMapper">
+  <select id="selectHSReportSingle" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT Distinct1.SCHDUL_ID SCHDUL_ID ,
+                 Distinct1.NO NO ,
+                 Distinct1.MONTH MONTH ,
+                 Distinct1.YEAR YEAR ,
+                 Distinct1.CODY_ID CODY_ID ,
+                 Distinct1.STUS_CODE_ID STUS_CODE_ID ,
+                 Distinct1.CODE CODE ,
+                 Distinct1.SALES_ORD_ID SALES_ORD_ID ,
+                 Distinct1.SALES_ORD_NO SALES_ORD_NO ,
+                 Extent4.NAME NAME ,
+                 Extent4.NRIC NRIC ,
+                 Extent5.CODE CODE1 ,
+                 1 C1 ,
+                 CASE WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                   Extent7.RESULT_ID
+                 ELSE 0 END C2 ,
+                 CASE WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                   Extent7.NO
+                 ELSE '' END C3 ,
+                 CASE WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                   Extent8.MEM_TYPE
+                 ELSE 0 END C4 ,
+                 CASE WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                   Extent8.MEM_CODE
+                 ELSE '' END C5 ,
+                 CASE WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                   Extent8.STUS
+                 ELSE 0 END C6 ,
+                 CASE WHEN ( Extent6.FIRST_INSTALL_DT IS NOT NULL ) THEN
+                   Extent6.FIRST_INSTALL_DT
+                 ELSE '1900-01-01' END C7 ,
+                 CASE WHEN ( Extent9.MEM_ID IS NOT NULL ) THEN
+                   Extent9.MEM_CODE
+                 ELSE '' END C8
+      FROM (SELECT DISTINCT Extent1.SCHDUL_ID  ,
+                                         Extent1.NO  ,
+                                         Extent1.MONTH  ,
+                                         Extent1.YEAR  ,
+                                         Extent1.CODY_ID  ,
+                                         Extent1.STUS_CODE_ID  ,
+                                         Extent2.CODE CODE ,
+                                         Extent3.SALES_ORD_ID  ,
+                                         Extent3.SALES_ORD_NO  ,
+                                         Extent3.CUST_ID ,
+                                         Extent3.APP_TYPE_ID
+               FROM SVC0008D Extent1
+               LEFT JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+               LEFT JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+               WHERE 1=1
+    ]]>
+
+    <if test="hsMonth != null and hsMonth != ''">
+       AND ( Extent1.YEAR = TO_NUMBER(TO_CHAR(TO_DATE(#{hsMonth},'mm/yyyy'), 'yyyy')) )
+       AND ( Extent1.MONTH = TO_NUMBER(TO_CHAR(TO_DATE(#{hsMonth},'mm/yyyy'), 'mm')) )
+    </if>
+
+    <if test="hsNumber != null and hsNumber != ''">
+       AND Extent1.NO = UPPER(#{hsNumber})
+    </if>
+
+    <if test="orderNumber != null and orderNumber != ''">
+      AND Extent3.Sales_Ord_No = #{orderNumber}
+    </if>
+
+    <![CDATA[
+      ) Distinct1
+      LEFT JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Distinct1.CUST_ID
+      LEFT JOIN SYS0013M Extent5 ON Extent5.CODE_ID = Distinct1.APP_TYPE_ID
+      LEFT JOIN SVC0006D Extent7 ON ( Extent7.SCHDUL_ID = Distinct1.SCHDUL_ID )
+                                              AND ( 306 = Extent7.TYPE_ID )
+                                              AND ( 1 = Extent7.RESULT_IS_CURR )
+      LEFT JOIN ORG0001D Extent8 ON Extent8.MEM_ID = Distinct1.CODY_ID
+      LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_ID = Extent7.CODY_ID
+      LEFT JOIN SAL1010V Extent6 ON Extent6.ORD_ID = Distinct1.SALES_ORD_ID
+      WHERE 1=1
+    ]]>
+
+    <if test="memberCode != null and memberCode != ''">
+      AND (CASE WHEN (Extent8.Mem_ID IS NOT NULL) THEN Extent8.Mem_Code ELSE '' END) = UPPER(#{memberCode})
+    </if>
+
+     <![CDATA[ AND ROWNUM < 100 ORDER BY Distinct1.SCHDUL_ID ASC ]]>
+  </select>
+
+  <select id="selectHSReportGroup" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT Distinct2.C1 C1  ,
+                 Distinct2.C2 C2  ,
+                 Distinct2.C3 C3
+      FROM ( SELECT DISTINCT 1 C1  ,
+                            CASE WHEN ( Distinct1.MEM_CODE LIKE 'CT%' ) THEN Distinct1.MEM_CODE || '_' || #{dayYear} || '_' || #{dayMonth}
+                            ELSE Distinct1.DEPT_CODE || '_' || #{dayYear} || '_' || #{dayMonth} END C2  ,
+                            CASE
+                            WHEN ( Distinct1.MEM_CODE LIKE 'CT%' ) THEN Distinct1.MEM_CODE
+                            ELSE Distinct1.DEPT_CODE END C3
+                 FROM ( SELECT DISTINCT Extent2.MEM_CODE MEM_CODE  ,
+                                                     Extent2.DEPT_CODE DEPT_CODE  ,
+                                                     Extent2.GRP_CODE GRP_CODE  ,
+                                                     Extent2.ORG_CODE ORG_CODE  ,
+                                                     Extent2.TOP_ORG_CODE TOP_ORG_CODE
+                            FROM SVC0008D Extent1
+                            JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                                 vMemberOrg.MEM_CODE MEM_CODE  ,
+                                                 vMemberOrg.MEM_LVL MEM_LVL  ,
+                                                 vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                                 vMemberOrg.GRP_CODE GRP_CODE  ,
+                                                 vMemberOrg.ORG_CODE ORG_CODE  ,
+                                                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                                 vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                                      FROM ORG1001V vMemberOrg
+                                      UNION
+                                      SELECT vmemberorg2.mem_id mem_id,
+                                                 vmemberorg2.mem_code mem_code,
+                                                 vmemberorg2.mem_lvl mem_lvl,
+                                                 vmemberorg2.dept_code dept_code,
+                                                 vmemberorg2.grp_code grp_code,
+                                                 vmemberorg2.org_code org_code,
+                                                 vmemberorg2.top_org_code top_org_code,
+                                                 vmemberorg2.mem_up_id mem_up_id,
+                                                 vmemberorg2.lvl3_up_id lvl3_up_id,
+                                                 vmemberorg2.lvl2_up_id lvl2_up_id,
+                                                 vmemberorg2.lvl1_up_id lvl1_up_id,
+                                                 vmemberorg2.lvl0_up_id lvl0_up_id
+                                      FROM
+                            org1001v vmemberorg2
+                                      WHERE vmemberorg2.MEM_ID IN (SELECT MEM_ID FROM ORG0005D WHERE BRNCH_ID = 151)
+                             ) Extent2   ON Extent2.MEM_ID = Extent1.CODY_ID
+                             WHERE  ( Extent1.MONTH =  to_char(sysdate, 'mm' ) )
+                                  AND ( Extent1.YEAR = to_char(sysdate, 'yyyy' ) )
+    ]]>
+
+    <if test="orgCode != null and orgCode != ''">
+      AND Extent2.ORG_CODE = #{orgCode}
+    </if>
+
+    <if test="grpCode != null and grpCode != ''">
+      AND Extent2.GRP_CODE =#{grpCode}
+    </if>
+
+    <if test="deptCode != null and deptCode != ''">
+      AND Extent2.DEPT_CODE = #{deptCode}
+    </if>
+
+    <![CDATA[
+      ) Distinct1 ) Distinct2
+      WHERE C3 NOT LIKE ('CHT%')
+    ]]>
+  </select>
+
+  <select id="selectCMGroupList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_ID CODE_ID  ,
+               Project1.MEM_CODE MEM_CODE  ,
+               Project1.NAME NAME  ,
+               Project1.C1 CODE_NAME  ,
+               Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+               Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+               Project1.LAST_ORG_CODE LAST_ORG_CODE
+    FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                          Extent1.MEM_CODE MEM_CODE  ,
+                          Extent1.NAME NAME  ,
+                          Extent2.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                          Extent2.LAST_GRP_CODE LAST_GRP_CODE  ,
+                          Extent2.LAST_ORG_CODE LAST_ORG_CODE  ,
+                          Extent2.DEPT_CODE || ' - ' || Extent1.NAME C1
+               FROM ORG0001D Extent1
+               JOIN ORG0005D Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                                                AND ( 3 = Extent2.MEM_LVL )
+                                                AND ( Extent2.BRNCH_ID = #{groupCode} )
+    WHERE ( 1 = Extent1.STUS )
+        AND ( 2 = Extent1.MEM_TYPE ) ) Project1
+  </select>
+
+  <select id="selectCodyList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.MEM_ID CODE_ID  ,
+               Extent1.MEM_CODE MEM_CODE  ,
+               Extent1.NAME NAME  ,
+               Extent1.MEM_CODE || ' - ' || Extent1.NAME CODE_NAME  ,
+               Extent2.DEPT_CODE DEPT_CODE  ,
+               Extent2.GRP_CODE GRP_CODE  ,
+               Extent2.ORG_CODE ORG_CODE
+    FROM ORG0001D Extent1
+    JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                         vMemberOrg.MEM_CODE MEM_CODE  ,
+                         vMemberOrg.MEM_LVL MEM_LVL  ,
+                         vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                         vMemberOrg.GRP_CODE GRP_CODE  ,
+                         vMemberOrg.ORG_CODE ORG_CODE  ,
+                         vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                         vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                         vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                         vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                         vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                         vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+              FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                                                                    AND ( Extent2.LVL3_UP_ID = #{groupCode} )
+    WHERE  1 = Extent1.STUS AND Extent1.MEM_TYPE IN (2,3)
+  </select>
+
+  <select id="selectReportBranchCodeList" parameterType="Map" resultType="egovMap">
+     SELECT Project1.BRNCH_ID CODE_ID  ,
+                Project1.C1 CODE_NAME
+     FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                           Extent1.CODE || '-' || Extent1.NAME C1,
+                           EXTENT1.REGN_ID
+                FROM SYS0005M Extent1
+                WHERE  ( 1 = Extent1.STUS_ID )
+                     AND ( 42 = Extent1.TYPE_ID )
+                     AND EXTENT1.REGN_ID = #{groupCode}
+                UNION ALL
+                SELECT 0 BRNCH_ID  ,
+                           'All Cody Branches(NationWide)',
+                           'Region'
+                FROM DUAL ) Project1
+     ORDER BY Project1.BRNCH_ID ASC
+  </select>
+
+  <!--
+  <select id="selectDeptCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Distinct1.C1 C1,
+               Distinct1.DEPT_CODE CODE_ID,
+               Distinct1.C2 CODE_NAME
+    FROM ( SELECT DISTINCT Extent1.DEPT_CODE DEPT_CODE  ,
+                                        1 C1  ,
+                                        Extent1.DEPT_CODE || ' - ' || Extent2.NAME C2
+               FROM ORG0005D Extent1
+               JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+               WHERE  1=1
+
+              <if test="groupCode != null and groupCode != ''">
+                AND ( Extent1.MEM_LVL = #{groupCode} )
+              </if>
+
+
+                AND Extent2.MEM_TYPE = 2
+                AND ( 1 = Extent1.ORG_STUS_CODE_ID )
+
+                UNION
+
+                SELECT DISTINCT Extent1.DEPT_CODE DEPT_CODE  ,
+                                         1 C1  ,
+                                         Extent1.DEPT_CODE || ' - ' || Extent2.NAME C2
+                FROM ORG0005D Extent1
+                JOIN ORG0001D Extent2 ON Extent1.MEM_ID = Extent2.MEM_ID
+                WHERE  1=1
+                     AND ( Extent1.MEM_LVL = '3' )
+                     AND ( Extent1.DEPT_CODE = 'CTS3167' )
+                     AND ( 1 = Extent1.ORG_STUS_CODE_ID )
+    ) Distinct1
+    ORDER BY  Distinct1.DEPT_CODE
+  </select>
+  -->
+
+  <select id="selectDeptCodeList" parameterType="Map" resultType="egovMap">
+    SELECT T1.USER_NAME,
+               T1.CODE_ID,
+               T1.CODE_NAME
+    FROM (
+            SELECT A.USER_NAME,
+                B.DEPT_CODE as CODE_ID,
+                B.DEPT_CODE || ' - ' || C.NAME as CODE_NAME
+            FROM SYS0047M A
+            JOIN ORG1001V B ON B.MEM_CODE = A.USER_NAME
+            JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+            WHERE 1 = 1
+
+            <choose>
+                <when test='memLvl != null and memLvl !="" and (memLvl.equals("3") or memLvl.equals("4"))'>
+                    AND B.DEPT_CODE = #{deptCode}
+                </when>
+                <when test='memLvl != null and memLvl !="" and memLvl.equals("2")'>
+                    AND B.GRP_CODE = #{grpCode}
+                </when>
+                <when test='memLvl != null and memLvl !="" and memLvl.equals("1")'>
+                    AND B.ORG_CODE = #{orgCode}
+                </when>
+            </choose>
+
+            <if test='!deptCode.equals("CTS3167")'>
+                    AND C.MEM_TYPE = '2'
+            </if>
+
+             AND B.MEM_LVL = '3'
+             AND C.STUS = '1'
+
+            <if test='memLvl == null or memLvl.equals("")'>
+             UNION
+                (SELECT A.USER_NAME,
+                    B.DEPT_CODE as CODE_ID,
+                    B.DEPT_CODE || ' - ' || C.NAME as CODE_NAME
+                 FROM SYS0047M A
+                 JOIN ORG1001V B ON B.MEM_CODE = A.USER_NAME
+                 JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+                 AND (B.MEM_LVL = '3')
+                 AND (B.DEPT_CODE = 'CTS3167')
+                 AND (C.STUS = '1'))
+            </if>
+
+    ) T1 ORDER BY T1.CODE_ID
+  </select>
+
+  <select id="selectDscCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.BRNCH_ID CODE_ID  ,
+               Project1.C1 CODE_NAME
+    FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                          Extent1.CODE || '-' || Extent1.NAME C1
+               FROM SYS0005M Extent1
+               WHERE  ( 1 = Extent1.STUS_ID )
+                    AND ( Extent1.TYPE_ID IN ( 40,43 )
+                ) ) Project1
+    ORDER BY Project1.C1 ASC
+  </select>
+
+  <select id="selectInsStatusList" parameterType="Map" resultType="egovMap">
+     SELECT Project1.STATE_ID CODE_ID  ,
+                Project1.CODE CODE  ,
+                Project1.NAME CODE_NAME  ,
+                Project1.CNTY_ID CNTY_ID  ,
+                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+                Project1.CRT_DT CRT_DT  ,
+                Project1.CRT_USER_ID CRT_USER_ID  ,
+                Project1.UPD_DT UPD_DT  ,
+                Project1.UPD_USER_ID UPD_USER_ID
+     FROM ( SELECT Extent1.STATE_ID STATE_ID  ,
+                           Extent1.CODE CODE  ,
+                           Extent1.NAME NAME  ,
+                           Extent1.CNTY_ID CNTY_ID  ,
+                           Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                           Extent1.CRT_DT CRT_DT  ,
+                           Extent1.CRT_USER_ID CRT_USER_ID  ,
+                           Extent1.UPD_DT UPD_DT  ,
+                           Extent1.UPD_USER_ID UPD_USER_ID
+                FROM SYS0035M Extent1
+
+                <if test="groupCode != null and groupCode != ''">
+                   WHERE  ( Extent1.CNTY_ID = #{groupCode} )
+                 </if>
+
+                  AND ( 1 = Extent1.STUS_CODE_ID ) ) Project1
+    ORDER BY Project1.NAME ASC
+  </select>
+
+  <select id="selectCodyCodeList_1" parameterType="Map" resultType="egovMap">
+    SELECT A.MEM_CODE as CODE_ID,
+               A.MEM_CODE   || '-' || a.NAME  as CODE_NAME
+    FROM ORG0001D A,
+             ORG0005D B
+    WHERE A.MEM_ID = B.MEM_ID AND A.STUS = '1' AND B.DEPT_CODE = #{groupCode}
+        AND A.MEM_TYPE IN ( 2,3 )
+    ORDER BY A.MEM_CODE
+  </select>
+
+  <select id="selectCodyCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_CODE CODE_ID  ,
+               Project1.MEM_CODE   || '-' || Project1.NAME  as CODE_NAME,
+               Project1.NAME NAME  ,
+               Project1.NRIC NRIC  ,
+               Project1.MEM_TYPE MEM_TYPE  ,
+               Project1.CODE_NAME CODE_NAME  ,
+               Project1.C1 C1  ,
+               Project1.C2 C2  ,
+               Project1.C3 C3  ,
+               Project1.C4 C4  ,
+               Project1.C5 C5  ,
+               Project1.C6 C6  ,
+               Project1.C7 C7  ,
+               Project1.C8 C8
+    FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                          Extent1.MEM_CODE MEM_CODE  ,
+                          Extent1.MEM_TYPE MEM_TYPE  ,
+                          Extent1.NAME NAME  ,
+                          Extent1.NRIC NRIC  ,
+                          Extent2.CODE_NAME CODE_NAME  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.DEPT_CODE
+                          ELSE '' END C1  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.GRP_CODE
+                          ELSE '' END C2  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.ORG_CODE
+                          ELSE '' END C3  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.MEM_LVL
+                          ELSE 0 END C4  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL3_UP_ID
+                          ELSE 0 END C5  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL2_UP_ID
+                          ELSE 0 END C6  ,
+                          CASE WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL1_UP_ID
+                          ELSE 0 END C7  ,
+                          CASE WHEN ( Extent4.WH_LOC_ID IS NOT NULL ) THEN Extent4.WH_LOC_ID
+                          ELSE 0 END C8
+              FROM ORG0001D Extent1
+              JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.MEM_TYPE
+              LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                          vMemberOrg.MEM_CODE MEM_CODE  ,
+                                          vMemberOrg.MEM_LVL MEM_LVL  ,
+                                          vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                          vMemberOrg.GRP_CODE GRP_CODE  ,
+                                          vMemberOrg.ORG_CODE ORG_CODE  ,
+                                          vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                          vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                          vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                          vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                          vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                               FROM ORG1001V vMemberOrg ) Extent3 ON Extent3.MEM_ID = Extent1.MEM_ID
+                               LEFT JOIN SYS0028M Extent4 ON Extent4.WH_LOC_CODE = Extent1.MEM_CODE
+                               WHERE ( 1 = Extent1.STUS )
+                                   AND ( Extent1.MEM_TYPE IN ( 2,3 )
+    ) ) Project1
+    <if test="memCode != null and memCode !=''">
+        WHERE  (Project1.MEM_CODE = #{memCode})
+    </if>
+    <if test="deptCode != null and deptCode != ''">
+        WHERE  (Project1.C1 = #{deptCode})
+    </if>
+    ORDER BY Project1.MEM_CODE ASC
+  </select>
+
+  <select id="selectAreaCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.AREA_ID CODE_ID  ,
+               Extent1.AREA_NAME CODE_NAME  ,
+               Extent1.AREA_STATE_ID AREA_STATE_ID  ,
+               Extent1.AREA_IDCM AREA_IDCM  ,
+               Extent1.AREA_STUS_ID AREA_STUS_ID  ,
+               Extent1.CRT_DT CRT_DT  ,
+               Extent1.CRT_DT CRT_DT  ,
+               Extent1.UPD_DT UPD_DT  ,
+               Extent1.UPD_USER_ID UPD_USER_ID
+    FROM SYS0039M Extent1
+    WHERE 1 = Extent1.AREA_STUS_ID
+    ORDER BY Extent1.AREA_NAME ASC
+  </select>
+
+  <select id="safetyLevelList" parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID,
+               CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 444
+  </select>
+
+  <!-- Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28 -->
+  <select id="safetyLevelQtyList" parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID,
+               CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 454
+  </select>
+
+  <select id="getCodyList2" parameterType="Map" resultType="egovMap">
+    SELECT A.MEM_ID as CODE_ID
+             , A.MEM_CODE   || '-' || a.NAME  as CODE_NAME
+    FROM ORG0001D A
+    WHERE A.MEM_CODE  =#{userName}
+    ORDER BY A.MEM_CODE
+  </select>
+
+  <select id="getCdUpMem" parameterType="Map" resultType="egovMap">
+     SELECT C.MEM_ID AS CODE_ID
+              , C.DEPT_CODE || '-' || D.NAME AS CODE_NAME FROM ORG0001D A
+     JOIN ORG0005D B on B.MEM_ID = A.MEM_ID
+     JOIN ORG0005D C on C.MEM_ID = B.MEM_UP_ID
+     JOIN ORG0001D D on D.MEM_ID = C.MEM_ID
+     WHERE A.MEM_CODE =#{userName}
+  </select>
+
+  <select id="selectCodyBranch" parameterType="Map" resultType="egovMap">
+    SELECT s005m.brnch_id AS CODE_ID
+             , s005m.code || '-' || s005m.name AS CODE_NAME
+    FROM SYS0005M s005m
+           , SYS0013M s0013m
+    WHERE s005m.type_id = s0013m.code_id
+        AND s005m.type_id IN (42)
+        AND S005M.CODE = (SELECT C.CODE
+                                      FROM ORG0001D A,
+                                               ORG0005D B,
+                                               SYS0005M C
+                                      WHERE A.MEM_ID = B.MEM_ID
+                                          AND A.BRNCH = C.BRNCH_ID
+                                          AND A.MEM_CODE = #{userName})
+    ORDER BY s005m.CODE ASC
+  </select>
+
+  <select id="selectHSReportCustSign" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+    SELECT A.SCHDUL_ID,
+               A.NO,
+               A.MONTH,
+               A.YEAR,
+               A.CODY_ID,
+               A.STUS_CODE_ID,
+               A.CODE CODE,
+               A.SALES_ORD_ID,
+               A.SALES_ORD_NO,
+               A.CUST_ID,
+               A.APP_TYPE_ID,
+
+               B.NAME NAME ,
+               B.NRIC NRIC ,
+               C.CODE CODE1 ,
+               1 C1 ,
+               CASE WHEN ( D.RESULT_ID IS NOT NULL ) THEN
+                                   D.RESULT_ID
+               ELSE 0 END C2 ,
+               CASE WHEN ( D.RESULT_ID IS NOT NULL ) THEN
+                                   D.NO
+               ELSE '' END C3 ,
+               CASE WHEN ( E.MEM_ID IS NOT NULL ) THEN
+                                   E.MEM_TYPE
+               ELSE 0 END C4 ,
+               CASE WHEN ( E.MEM_ID IS NOT NULL ) THEN
+                                   E.MEM_CODE
+               ELSE '' END C5 ,
+               CASE WHEN ( E.MEM_ID IS NOT NULL ) THEN
+                                   E.STUS
+               ELSE 0 END C6 ,
+               CASE WHEN ( F.MEM_ID IS NOT NULL ) THEN
+                                   F.MEM_CODE
+               ELSE '' END C8
+
+    FROM ( SELECT DISTINCT A.SCHDUL_ID,
+                                        A.NO,
+                                        A.MONTH,
+                                        A.YEAR,
+                                        A.CODY_ID,
+                                        A.STUS_CODE_ID,
+                                        D.CODE CODE,
+                                        C.SALES_ORD_ID,
+                                        C.SALES_ORD_NO,
+                                        C.CUST_ID,
+                                        C.APP_TYPE_ID
+               FROM SVC0008D A
+               JOIN SVC0006D B ON A.SCHDUL_ID = B.SCHDUL_ID
+               JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+               JOIN SYS0038M D ON A.STUS_CODE_ID = D.STUS_CODE_ID
+
+               WHERE 1 = 1
+
+   ]]>
+
+     <if test="hsMonth != null and hsMonth != ''">
+       AND A.YEAR  = EXTRACT(YEAR  FROM TO_DATE(#{hsMonth},'mm/yyyy'))
+       AND A.MONTH = EXTRACT(MONTH FROM TO_DATE(#{hsMonth},'mm/yyyy'))
+     </if>
+
+     <if test="hsNumber != null and hsNumber != ''">
+       AND A.NO = #{hsNumber}
+     </if>
+
+     <if test="orderNumber != null and orderNumber != ''">
+       AND C.SALES_ORD_NO = #{orderNumber}
+     </if>
+
+     <if test="settleDtFrm != null and settleDtFrm != ''and settleDtTo != null and settleDtTo != ''">
+       AND B.SETL_DT <![CDATA[>=]]> to_date(#{settleDtFrm}|| ' 00:00:00', 'dd/mm/yyyy hh24:mi:ss')
+       AND B.SETL_DT <![CDATA[<=]]> to_date(#{settleDtTo} || ' 23:59:59', 'dd/mm/yyyy hh24:mi:ss')
+     </if>
+
+    <![CDATA[
+      AND SGN_DT IS NOT NULL
+
+    ) A
+    LEFT JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+    LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+    LEFT JOIN SVC0006D D ON ( D.SCHDUL_ID = A.SCHDUL_ID )
+                                   AND ( 306 = D.TYPE_ID )
+                                   AND ( 1 = D.RESULT_IS_CURR )
+    LEFT JOIN ORG0001D E ON E.MEM_ID = A.CODY_ID
+    LEFT JOIN ORG0001D F ON F.MEM_ID = D.CODY_ID
+    ]]>
+
+    <if test="memberCode != null and memberCode != ''">
+      WHERE E.Mem_Code = #{memberCode}
+    </if>
+
+     <![CDATA[ ORDER BY A.SCHDUL_ID ASC ]]>
+  </select>
+
+    <select id="selectEVoucherList" resultType="egovMap">
+    SELECT CODE_ID,CODE_NAME
+FROM sys0013m
+WHERE CODE_MASTER_ID = '471' --AND DISAB = '0'
+ORDER BY CODE_ID
+  </select>
+
+    <select id="selectRegion" resultType="egovMap">
+        SELECT Extent1.CODE_ID CODE_ID ,
+        Extent1.CODE_MASTER_ID CODE_MASTER_ID ,
+        Extent1.CODE_NAME CODE_NAME
+        FROM SYS0013M Extent1
+        WHERE ( 0 = Extent1.DISAB )
+        AND ( Extent1.CODE_MASTER_ID = 49 )
+        ORDER BY Extent1.CODE_NAME ASC
+  </select>
+
+</mapper>

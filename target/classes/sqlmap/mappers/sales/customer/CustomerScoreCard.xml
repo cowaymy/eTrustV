@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.sales.customer.impl.CustomerScoreCardMapper">
+
+	<select id="customerScoreCardList" parameterType="Map" resultType="egovMap">
+    SELECT
+        D1.ORD_NO AS ORD_NO
+        , D1.APP_TYPE AS APP_TYPE_CODE
+        , D1.PROMO_DESC AS PROMO_DESC
+        , TO_DATE(D1.SALES_DT) AS ORD_DT
+        , D1.APP_DT AS ORDER_CANCELLATION_DATE
+        , D1.INSTALL_DT AS INS_DT
+        , D1.STK_CODE AS PRODUCT_CODE
+        , D1.STK_DESC AS PRODUCT_NAME
+        , UPPER (D1.INST_ADD) AS INS_ADDR
+        , D1.PAY_MODE AS PAY_MODE
+        , (CASE WHEN D1.CARD_TYPE IS NOT NULL THEN D1.CARD_TYPE || ' ('|| D1.VISA_TYPE || ')' ELSE D1.PAY_MODE END) AS CARD_TYPE
+        , D1.BILL_NO_MONTH AS BILL_NO_MONTH
+        , D1.REN_STUS AS ORD_STUS_CODE
+        , ROUND(TO_CHAR(D1.AGING_MTH),2) AS AGING_MONTH
+        , D1.OUT_AMT AS OUT_AMT
+        , D1.ROT_DATE AS ROT_DATE
+        ,D1.SO_EXCHG_CRT_DT AS SO_EXCHG_CRT_DT
+        , D1.SALES_DT || <![CDATA[',']]> || D1.INSTALL_DT || <![CDATA[',']]> || D1.APP_DT AS COMBINE_DT
+        --, D1.SRV_STUS AS MEM_STUS
+        , D1.RENT_INST_NO
+        , D1.MTH_RENT_AMT
+        , D1.SALES_ORD_ID
+        , D1.INS_AREA
+        , D1.UN_BILL_AMT
+            FROM (
+
+            WITH L38 AS
+                (SELECT MAX(APP_DT) APP_DT, SALES_ORD_ID FROM LOG0038D GROUP BY SALES_ORD_ID)
+
+            SELECT
+            D.SALES_ORD_NO AS ORD_NO
+            , M.CODE AS APP_TYPE
+            , PRM.PROMO_DESC
+            , D.SALES_DT
+           --, (SELECT MAX(APP_DT) FROM LOG0038D WHERE SALES_ORD_ID = D.SALES_ORD_ID GROUP BY SALES_ORD_ID) APP_DT
+            , L38.APP_DT
+            , IR.INSTALL_DT
+            , ST.STK_CODE
+            , ST.STK_DESC
+            , CASE WHEN (INS.STUS_CODE_ID =1 OR INS.STUS_CODE_ID =4) THEN
+                UPPER(INSA.ADDR_DTL ||' '||INSA.STREET ||' ' ||B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||', '|| B.STATE ||', '|| B.COUNTRY)
+                ELSE '-'
+                END AS INST_ADD
+            , M1.CODE AS PAY_MODE
+            , NVL (SYS.CODE_NAME, '') CARD_TYPE
+            , NVL (SYC.CODE_NAME, '') VISA_TYPE
+
+            , (CASE WHEN D.STUS_CODE_ID = 10 THEN 0
+                    ELSE (SELECT MAX(RENT_INST_NO) FROM PAY0022D WHERE RENT_SO_ID = D.SALES_ORD_ID AND RENT_DOC_TYPE_ID = 159)
+                    END )AS BILL_NO_MONTH
+
+            , F.STUS_CODE_ID AS REN_STUS
+            --, (CASE WHEN SRV.SRV_EXPR_DT >= SYSDATE THEN 'ACTIVE' ELSE 'EXPIRED' END) SRV_STUS
+            , (SELECT NVL(SUM(RENT_AMT) , 0) AMT
+                FROM PAY0022D
+                WHERE RENT_SO_ID = D.SALES_ORD_ID
+                GROUP BY RENT_SO_ID) OUT_AMT
+            , NVL((SELECT (SELECT NVL(SUM(RENT_AMT) , 0) AMT
+                FROM PAY0022D
+                WHERE RENT_SO_ID = D.SALES_ORD_ID
+                GROUP BY RENT_SO_ID)/(CASE WHEN A.REBATE_AMT_PER_INSTLMT IS NOT NULL THEN (S.MTH_RENT_AMT - A.REBATE_AMT_PER_INSTLMT) ELSE  S.MTH_RENT_AMT  END ) MTH_RENT_AMT
+                FROM SAL0001D S
+                LEFT JOIN PAY0286D A ON A.ORD_ID = S.SALES_ORD_ID AND A.STUS_ID = 1 AND A.CNTRCT_ID = 0
+                WHERE S.SALES_ORD_ID = D.SALES_ORD_ID AND S.APP_TYPE_ID = 66), 0) AGING_MTH
+            , (CASE WHEN ROT.ROT_STUS = 5 THEN TO_CHAR(D.UPD_DT,'DD/MM/YYYY') ELSE '' END) AS ROT_DATE
+            , (SELECT TO_CHAR(MAX(SO_EXCHG_CRT_DT),'DD/MM/YYYY') FROM SAL0004D WHERE SO_EXCHG_STUS_ID = 4 AND SO_ID = D.SALES_ORD_ID GROUP BY SO_ID) AS SO_EXCHG_CRT_DT
+            , (CASE
+                WHEN F.STUS_CODE_ID='TER' THEN 0
+                WHEN F.STUS_CODE_ID='WOF_1' THEN 0
+                ELSE NVL(s70.RENT_INST_NO,0)
+               END) AS RENT_INST_NO
+            , D.MTH_RENT_AMT
+            , D.SALES_ORD_ID
+            , B.AREA INS_AREA
+            , r10.UN_BILL_AMT
+            FROM SAL0029D C
+            JOIN SAL0001D D ON D.CUST_ID = C.CUST_ID
+            JOIN SAL0002D E ON E.SALES_ORD_ID = D.SALES_ORD_ID
+            JOIN SYS0026M ST ON ST.STK_ID = E.ITM_STK_ID
+            LEFT JOIN SAL0071D F ON F.SALES_ORD_ID = D.SALES_ORD_ID
+            LEFT JOIN SYS0013M M ON M.CODE_ID = D.APP_TYPE_ID
+            LEFT JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = FN_GET_SAL0046D_MAX_ID(D.SALES_ORD_ID ,'2' )
+            LEFT JOIN SAL0047D IR ON IR.ENTRY_ID = IE.INSTALL_ENTRY_ID
+            LEFT JOIN SAL0045D INS ON INS.SALES_ORD_ID = D.SALES_ORD_ID AND (INS.STUS_CODE_ID =1 OR INS.STUS_CODE_ID =4)
+            LEFT JOIN SAL0023D INSA ON INSA.CUST_ADD_ID = INS.ADD_ID
+            LEFT OUTER JOIN SYS0064M B ON B.AREA_ID = INSA.AREA_ID AND B.STATUS_ID = 1
+            LEFT JOIN SAL0074D P ON P.SALES_ORD_ID = D.SALES_ORD_ID AND P.SVC_CNTRCT_ID = 0
+            LEFT JOIN SYS0013M M1 ON M1.CODE_ID = P.MODE_ID
+            --LEFT JOIN SAL0095D SRV ON SRV.SRV_MEM_ID = FN_GET_SAL0095D_MAX_ID(D.SALES_ORD_ID,'1')
+            LEFT JOIN SAL0017D PRM ON PRM.PROMO_ID = D.PROMO_ID
+            LEFT JOIN SAL0028D CRC ON CRC.CUST_CRC_ID = P.CUST_CRC_ID AND P.CUST_CRC_ID <![CDATA[<>]]> 0
+            LEFT JOIN SYS0013M SYS ON SYS.CODE_ID = CRC.CARD_TYPE_ID
+            LEFT JOIN SYS0013M SYC ON SYC.CODE_ID = CRC.CUST_CRC_TYPE_ID
+            LEFT JOIN SAL0275M ROT ON ROT.ROT_ORD_NO = D.SALES_ORD_NO AND ROT.ROT_STUS = '5'
+            LEFT JOIN L38 on  L38.SALES_ORD_ID = D.SALES_ORD_ID
+            LEFT JOIN SAL0070D s70 on s70.SALES_ORD_ID = d.SALES_ORD_ID AND EXTRACT(MONTH FROM S70.RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE) AND EXTRACT(YEAR FROM S70.RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
+            LEFT JOIN REP0010S r10 on r10.ORD_NO = D.sales_ord_no
+    	    WHERE 1=1
+
+    		<if test="custId != null and custId != ''">
+    			AND C.CUST_ID = #{custId}
+    		</if>
+    		<!-- <if test="custName != null and custName != ''"> AND UPPER(C.CUST_NAME)
+    			like '%'|| UPPER(#{custName}) ||'%' </if> -->
+    		<if test="custIc != null and custIc != ''">
+    			AND C.NRIC = #{custIc}
+    		</if>
+
+    		AND M.CODE <![CDATA[<>]]>  'AUX'
+
+    <!-- 	UNION ALL
+    	   SELECT
+    	   D.SRV_ORD_NO
+    	   , F.STUS_CODE_ID AS REN_STUS
+    	   , M.CODE AS APP_TYPE
+    	   , D.SALES_DT
+    	   , IR.INSTALL_DT
+    	   , ST.STK_CODE
+    	   , ST.STK_DESC
+    	   ,CASE WHEN (INS.STUS_CODE_ID =1 OR INS.STUS_CODE_ID =4) THEN
+    	       UPPER(INSA.ADDR_DTL ||' '||INSA.STREET ||' ' ||B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||', '|| B.STATE ||', '|| B.COUNTRY)
+    	       ELSE '-'
+    	       END AS INST_ADD
+    	   , M1.CODE AS PAY_MODE
+    	   , (CASE WHEN SRV.SRV_EXPR_DT >= SYSDATE THEN 'ACTIVE' ELSE 'EXPIRED' END)SRV_STUS
+    	   , (SELECT NVL(SUM(RENT_AMT) , 0) AMT
+    	       FROM PAY0022D WHERE RENT_SO_ID = D.SRV_ORD_ID
+    	       GROUP BY RENT_SO_ID) OUT_AMT
+    	   , (SELECT (SELECT NVL(SUM(RENT_AMT) , 0) AMT
+    	       FROM PAY0022D WHERE RENT_SO_ID = D.SRV_ORD_ID
+    	       GROUP BY RENT_SO_ID)/(CASE WHEN A.REBATE_AMT_PER_INSTLMT IS NOT NULL THEN (S.MTH_RENT_AMT - A.REBATE_AMT_PER_INSTLMT) ELSE  S.MTH_RENT_AMT  END ) MTH_RENT_AMT
+    	       FROM SAL0001D S
+    	       LEFT JOIN PAY0286D A ON A.ORD_ID = S.SALES_ORD_ID AND A.STUS_ID = 1 AND A.CNTRCT_ID = 0
+    	       WHERE S.SALES_ORD_ID = D.SRV_ORD_ID) AGING_MTH
+    	   FROM SAL0029D C
+    	   JOIN SAL0225D D ON D.CUST_ID = C.CUST_ID
+    	   JOIN SAL0002D E ON E.SALES_ORD_ID = D.SRV_ORD_ID
+    	   JOIN SYS0026M ST ON ST.STK_ID = E.ITM_STK_ID
+    	   LEFT JOIN SAL0071D F ON F.SALES_ORD_ID = D.SRV_ORD_ID
+    	   LEFT JOIN SYS0013M M ON M.CODE_ID = D.APP_TYPE_ID
+    	   LEFT JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = FN_GET_SAL0046D_MAX_ID(D.SRV_ORD_ID ,'2' )
+    	   LEFT JOIN SAL0047D IR ON IR.ENTRY_ID = IE.INSTALL_ENTRY_ID
+    	   LEFT JOIN SAL0045D INS ON INS.SALES_ORD_ID = D.SRV_ORD_ID AND (INS.STUS_CODE_ID =1 OR INS.STUS_CODE_ID =4)
+    	   LEFT JOIN SAL0023D INSA ON INSA.CUST_ADD_ID = INS.ADD_ID
+    	   LEFT OUTER JOIN SYS0064M B ON B.AREA_ID = INSA.AREA_ID AND B.STATUS_ID = 1
+    	   LEFT JOIN SAL0074D P ON P.SALES_ORD_ID = D.SRV_ORD_ID AND P.SVC_CNTRCT_ID = 0
+    	   LEFT JOIN SYS0013M M1 ON M1.CODE_ID = P.MODE_ID
+    	   LEFT JOIN SAL0095D SRV ON SRV.SRV_MEM_ID =
+    	   FN_GET_SAL0095D_MAX_ID(D.SRV_ORD_ID,'1')
+    	   WHERE 1=1
+    		<if test="custId != null and custId != ''">
+    			AND UPPER(C.CUST_ID) = UPPER(#{custId})
+    		</if>
+    		<if test="custName != null and custName != ''"> AND UPPER(C.CUST_NAME)
+    			like '%'|| UPPER(#{custName}) ||'%' </if>
+    		<if test="custIc != null and custIc != ''">
+    			AND UPPER(C.NRIC) = UPPER(#{custIc})
+    		</if> -->
+    		) D1
+    		ORDER BY D1.ORD_NO
+	</select>
+
+	<select id="getLatestBillNo" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(MAX(RENT_INST_NO),0) AS LAST_RENT_INST_NO
+        FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{salesOrdId}
+            AND RENT_AMT <![CDATA[ > ]]> 0
+            AND RENT_DOC_TYPE_ID != 160
+    </select>
+
+
+    <select id="getMemType" parameterType="Map"  resultType="String">
+        SELECT
+            MEM_TYPE
+        FROM
+            ORG0001D
+        WHERE
+            MEM_ID = #{memId}
+    </select>
+
+
+</mapper>

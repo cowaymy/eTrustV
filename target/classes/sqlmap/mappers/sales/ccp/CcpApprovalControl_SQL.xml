@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.CcpApprovalControlMapper">
+
+
+<select id="selectProductControlList" parameterType="Map" resultType="egovMap">
+    SELECT
+        T2.CODE_NAME STK_CTGRY
+        , T1.STK_ID
+        , T1.STK_DESC
+        , NVL(T3.HIGH_SCORE,0) HIGH_SCORE
+        , NVL(T3.LOW_SCORE,0) LOW_SCORE
+        , NVL(T3.NO_SCORE_NOCCRIS,0) NO_SCORE_NOCCRIS
+        , NVL(T3.NO_SCORE_INSUFF_CCRIS,0) NO_SCORE_INSUFF_CCRIS
+        , NVL(T3.CHS_GREEN,0) CHS_GREEN
+        , NVL(T3.CHS_YELLOW,0) CHS_YELLOW
+        , CASE WHEN 0 IN (NVL(T3.HIGH_SCORE,0)
+                        , NVL(T3.LOW_SCORE,0)
+                        , NVL(T3.NO_SCORE_NOCCRIS,0)
+                        , NVL(T3.NO_SCORE_INSUFF_CCRIS,0)
+                        , NVL(T3.CHS_GREEN,0)
+                        , NVL(T3.CHS_YELLOW,0)) THEN 0 ELSE 1 END FUNC_YN
+        , t3.upd_user_id
+        , T3.UPD_DT
+    FROM SYS0026M T1
+    JOIN SYS0013M T2 ON T2.CODE_ID = T1.STK_CTGRY_ID
+    LEFT JOIN GBSLCVD.SAL0350D T3 ON T3.STK_ID = T1.STK_ID
+    WHERE
+    T1.STUS_CODE_ID = 1
+    AND T1.STK_TYPE_ID = 61
+    AND T1.STK_CTGRY_ID NOT IN (59,924)
+    AND T1.ALLOW_SALES = 1
+    ORDER BY T1.STK_CTGRY_ID, T1.STK_CODE
+</select>
+
+<update id="updateProductControl" parameterType="Map">
+    MERGE INTO SAL0350D D
+    USING (
+        SELECT
+              #{stkId} STK_ID
+            , #{highScore} HIGH_SCORE
+            , #{lowScore} LOW_SCORE
+            , #{noScoreNoccris} NO_SCORE_NOCCRIS
+            , #{noScoreInsuffCcris} NO_SCORE_INSUFF_CCRIS
+            , #{chsGreen} CHS_GREEN
+            , #{chsYellow} CHS_YELLOW
+            , SYSDATE UPD_DT
+            , #{userId} UPD_USER_ID
+        FROM DUAL
+    ) S ON (s.STK_ID = D.STK_ID)
+    WHEN MATCHED THEN UPDATE SET D.HIGH_SCORE = S.HIGH_SCORE,
+                                 D.LOW_SCORE  = S.LOW_SCORE,
+                                 D.NO_SCORE_NOCCRIS = S.NO_SCORE_NOCCRIS,
+                                 D.NO_SCORE_INSUFF_CCRIS = S.NO_SCORE_INSUFF_CCRIS,
+                                 D.CHS_GREEN = S.CHS_GREEN,
+                                 D.CHS_YELLOW = S.CHS_YELLOW,
+                                 D.UPD_DT = S.UPD_DT,
+                                 D.UPD_USER_ID = S.UPD_USER_ID
+    WHEN NOT MATCHED THEN
+    INSERT (  STK_ID
+            , HIGH_SCORE
+            , LOW_SCORE
+            , NO_SCORE_NOCCRIS
+            , NO_SCORE_INSUFF_CCRIS
+            , CHS_GREEN
+            , CHS_YELLOW
+            , STUS_CODE_ID
+            , CRT_USER_ID
+            , CRT_DT
+            , UPD_USER_ID
+            , UPD_DT )
+    VALUES (  S.STK_ID
+            , S.HIGH_SCORE
+            , S.LOW_SCORE
+            , S.NO_SCORE_NOCCRIS
+            , S.NO_SCORE_INSUFF_CCRIS
+            , S.CHS_GREEN
+            , S.CHS_YELLOW
+            , 1
+            , S.UPD_USER_ID
+            , S.UPD_DT
+            , S.UPD_USER_ID
+            , S.UPD_DT)
+
+</update>
+
+
+<resultMap type="egovMap" id="chsControlListClobMap">
+    <result property="CCP_REM" column="CCP_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+<select id="selectChsControlList" parameterType="Map" resultType="egovMap" resultMap="chsControlListClobMap">
+  SELECT
+    REMARK_ID, CHS_RSN, UPD_ID, UPD_DT, IS_AUTO, CCP_REM, CCP_RESN_ID, IS_HOLD
+  FROM SAL0344D
+  WHERE
+  CHS_RSN
+  IN (
+      'DEFAULT'
+      ,'EXCEED_AGE'
+      ,'EXCEED_15'
+      ,'CREDIT_SCORE'
+      ,'CURRENT_OS'
+      ,'PAYMENT_MODE'
+      ,'OWN_PURCHASE'
+      ,'REN_STATUS'
+      ,'TERMINATE_OS'
+      ,'AVERAGE_OS'
+      ,'BAD_DEBT'
+      ,'NO_RENTAL'
+      ,'ROOT'
+      ,'EXCEED_6'
+
+  )
+  AND STUS = 1
+  ORDER BY CHS_RSN
+</select>
+
+<update id="updateChsControl" parameterType="Map">
+    UPDATE SAL0344D
+        SET UPD_ID = #{userId}, UPD_DT = SYSDATE, IS_AUTO = #{isAuto}, CCP_REM = #{ccpRem}, CCP_RESN_ID = #{ccpResnId}, IS_HOLD = #{isHold}
+    WHERE CHS_RSN = #{chsRsn}
+</update>
+
+<!-- <select id="selectScoreRangeControlList" parameterType="Map" resultType="egovMap"> -->
+<!--     SELECT * -->
+<!--     FROM SAL0351D -->
+<!--     WHERE STUS_CODE_ID = 1 ORDER BY SCORE_RANGE_ID -->
+<!-- </select> -->
+
+<select id="selectScoreRangeControlList" parameterType="Map" resultType="egovMap">
+    SELECT
+        A.SCORE_RANGE_ID,
+		B.CODE_NAME SCORE_PROV,
+		C.CODE_NAME SCORE_GRP,
+		F.CODE_NAME HOME_CAT,
+		A.HOME_CAT HOME_CAT_CODE,
+		A.START_SCORE,
+		A.END_SCORE,
+		A.REASON ,
+		TO_CHAR(A.START_DT, 'DD-MM-YYYY') START_DT,
+		TO_CHAR(A.END_DT, 'DD-MM-YYYY') END_DT,
+		TO_CHAR(A.CRT_DT, 'DD-MM-YYYY HH:MI:SS AM') CRT_DT,
+		D.USER_FULL_NAME CRT_BY,
+		TO_CHAR(A.UPD_DT, 'DD-MM-YYYY HH:MI:SS AM') UPD_DT,
+		E.USER_FULL_NAME UPD_BY
+    FROM SAL0425D A
+    LEFT JOIN SYS0013M B ON B.CODE = A.SCORE_PROV AND B.CODE_MASTER_ID = 549 <!-- SCORE PROVIDER -->
+    LEFT JOIN SYS0013M C ON C.CODE = A.SCORE_GRP AND C.CODE_MASTER_ID = 607 <!-- SCORE GROUP -->
+    LEFT JOIN SYS0013M F ON F.CODE = A.HOME_CAT AND F.CODE_MASTER_ID = 605 <!-- HOME CATEGORY -->
+    LEFT JOIN SYS0047M D ON D.USER_ID = A.CRT_USER_ID
+    LEFT JOIN SYS0047M E ON E.USER_ID = A.UPD_USER_ID
+    WHERE 1=1
+    <if test="homeCat == 'HA' ">
+        AND A.HOME_CAT = 'HA'
+        AND A.STUS = 1
+    </if>
+     <if test="homeCat == 'HC' ">
+        AND A.HOME_CAT = 'HC'
+        AND A.STUS = 1
+    </if>
+     <if test="homeCat == 'HIST' ">
+        AND A.REASON IS NOT NULL
+        AND A.STUS = 8
+    </if>
+    ORDER BY A.SCORE_RANGE_ID
+</select>
+
+<update id="updateScoreRangeControl" parameterType="Map">
+    UPDATE SAL0351D
+        SET START_SCORE = #{startScore},  END_SCORE = #{endScore}, UPD_USER_ID = #{userId}, UPD_DT = SYSDATE
+    WHERE SCORE_RANGE_ID = #{scoreRangeId}
+</update>
+
+<select id="getScoreRangeControl" parameterType="Map" resultType="egovMap">
+    SELECT
+        SCORE_RANGE_ID,
+        SCORE_PROV,
+        SCORE_GRP,
+        HOME_CAT,
+        START_SCORE,
+        END_SCORE,
+        TO_CHAR(START_DT, 'DD-MM-YYYY') START_DT,
+        TO_CHAR(END_DT, 'DD-MM-YYYY') END_DT
+    FROM SAL0425D
+    WHERE 1=1
+        AND HOME_CAT = #{homeCat}
+        AND SCORE_RANGE_ID = #{scoreRangeId}
+</select>
+
+<update id="updateScoreRange" parameterType="Map">
+    UPDATE SAL0425D
+        SET REASON = #{reason},
+              END_DT = #{oldEndDate},
+              STUS = 8,
+              UPD_USER_ID = #{userId},
+              UPD_DT = SYSDATE
+    WHERE SCORE_RANGE_ID = #{scoreRangeId}
+</update>
+
+<insert id="insertScoreRange" parameterType="Map">
+     INSERT INTO SAL0425D (
+        SCORE_RANGE_ID,
+	    SCORE_PROV,
+	    SCORE_GRP,
+	    HOME_CAT,
+	    START_SCORE,
+	    END_SCORE,
+	    STUS,
+	    START_DT,
+	    END_DT,
+	    CRT_DT,
+	    CRT_USER_ID,
+	    UPD_DT,
+	    UPD_USER_ID
+	 ) VALUES (
+	    SAL0425D_SCORE_RANGE_ID_SEQ.NEXTVAL,
+	    #{scoreProv},
+	    #{scoreGrp},
+	    #{homeCat},
+	    #{startScore},
+	    #{endScore},
+	    1,
+	    #{newStartDate},
+	    #{newEndDate},
+	    SYSDATE,
+	    #{userId},
+	    SYSDATE,
+	    #{userId}
+	)
+</insert>
+
+<select id="selectUnitEntitleControlList" parameterType="Map" resultType="egovMap">
+    SELECT
+        UNIT_ENTITLE_ID,
+        CUST_TYPE,
+        SCORE_GRP,
+        CHS_STUS,
+        CUST_CAT,
+        UNIT_ENTITLE,
+        PROD_ENTITLE,
+        RENT_FEE_LIMIT
+    FROM SAL0426D
+    WHERE STUS = 1
+</select>
+
+<update id="updateUnitEntitle" parameterType="Map">
+    UPDATE SAL0426D
+    SET END_DT = #{oldEndDate},
+              STUS = 8,
+              UPD_USER_ID = #{userId},
+              UPD_DT = SYSDATE
+    WHERE UNIT_ENTITLE_ID = #{unitEntitleId}
+</update>
+
+<insert id="insertUnitEntitle" parameterType="Map">
+     INSERT INTO SAL0426D (
+        UNIT_ENTITLE_ID,
+        CUST_TYPE,
+        SCORE_GRP,
+        CHS_STUS,
+        CUST_CAT,
+        UNIT_ENTITLE,
+        PROD_ENTITLE,
+        RENT_FEE_LIMIT,
+        STUS,
+        START_DT,
+        END_DT,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID
+     ) VALUES (
+        SAL0426D_UNIT_ENTITLE_ID_SEQ.NEXTVAL,
+        #{custType},
+        #{scoreGrp},
+        #{chsStus},
+        #{custCat},
+        #{unitEntitle},
+        #{prodEntitle},
+        #{rentFeeLimit},
+        1,
+        #{newStartDate},
+        #{newEndDate},
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    )
+</insert>
+
+<select id="selectProdEntitleControlList" parameterType="Map" resultType="egovMap">
+		SELECT PROD_CAT,
+		        PROD_CAT_CODE,
+		        EXCLSCORE, GOODSCORE, LOWSCORE, INSUFCCRIS,
+		        NOSCORE, EXCL, GOOD, MODERATE, POOR, GREEN, YELLOW,
+		        CODE_ID SEQ
+		FROM (
+		    SELECT
+		        A.PROD_CAT , A.PROD_CAT_CODE, A.CODE_ID,
+		        B.SCORE_TYPE_CODE,
+		        C.RECOMMEND
+		    FROM (
+			    SELECT T2.CODE_NAME PROD_CAT, T2.CODE PROD_CAT_CODE, T2.CODE_ID
+			    FROM SYS0026M T1
+			    JOIN SYS0013M T2 ON T2.CODE_ID = T1.STK_CTGRY_ID
+			    WHERE
+			        T1.STUS_CODE_ID = 1
+			        AND T1.STK_TYPE_ID = 61
+			        AND T1.STK_CTGRY_ID NOT IN (59,924)
+			        AND T1.ALLOW_SALES = 1
+			    GROUP BY T2.CODE_NAME, T2.CODE, T2.CODE_ID
+			    ORDER BY T2.CODE_ID
+		    ) A CROSS JOIN (
+		        SELECT CODE SCORE_TYPE_CODE FROM SYS0013M WHERE CODE_MASTER_ID = 607
+		        UNION ALL
+		        SELECT 'GREEN' AS SCORE_TYPE_CODE FROM DUAL
+		        UNION ALL
+		        SELECT 'YELLOW' AS SCORE_TYPE_CODE FROM DUAL
+		    ) B
+		    LEFT JOIN SAL0427D C ON A.PROD_CAT_CODE = C.PROD_CAT AND B.SCORE_TYPE_CODE = C.SCORE_TYPE AND C.STUS = 1
+		)PIVOT(
+		    MAX(RECOMMEND) FOR SCORE_TYPE_CODE IN (
+		        'EXCLSCORE' AS EXCLSCORE,'GOODSCORE' AS GOODSCORE,
+		        'LOWSCORE' AS LOWSCORE, 'INSUFCCRIS' AS INSUFCCRIS, 'NOSCORE' AS NOSCORE,
+		        'EXCL' AS EXCL, 'GOOD' AS GOOD, 'MODERATE' AS MODERATE, 'POOR' AS POOR,
+		        'GREEN' AS GREEN, 'YELLOW' AS YELLOW
+		    )
+		) ORDER BY SEQ
+</select>
+
+<select id="getActiveProdEntitle" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0427D
+    WHERE STUS = 1 AND
+            PROD_CAT = #{prodCatCode} AND
+            SCORE_TYPE = #{scoreType} AND
+            RECOMMEND = #{recommend}
+</select>
+
+<update id="updateProdEntitle" parameterType="Map">
+    UPDATE SAL0427D
+    SET
+        END_DT = #{oldEndDate},
+        STUS = 8,
+        UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE
+    WHERE PROD_CAT = #{prodCatCode} AND
+            SCORE_TYPE = #{scoreType} AND
+            STUS = 1
+</update>
+
+<insert id="insertProdEntitle" parameterType="Map">
+     INSERT INTO SAL0427D (
+        PROD_ENTITLE_ID,
+        SCORE_TYPE,
+        PROD_CAT,
+        RECOMMEND,
+        START_DT,
+        END_DT,
+        STUS,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID
+     ) VALUES (
+        SAL0427D_PROD_ENTITLE_ID_SEQ.NEXTVAL,
+        #{scoreType},
+        #{prodCatCode},
+        #{recommend},
+        #{newStartDate},
+        #{newEndDate},
+        1,
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId}
+    )
+</insert>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.InterfaceManagementMapper">
+
+<select id="selectInterfaceManagementList" parameterType="Map" resultType="egovMap">
+	SELECT if_type
+	         , if_type_nm
+	         , if_snd
+	         , if_rcv
+	         , chk_col
+	         , biz_col
+	         , table_nm
+	         , dscn_nm
+	         , if_type as row_id
+	  FROM ITF0001M
+	 WHERE 1=1
+	 <if test="ifType != null and ifType !=''">
+         AND (UPPER(if_type) LIKE  UPPER(#{ifType}) || '%' OR
+                 UPPER(if_type_nm) LIKE '%' || UPPER(#{ifType}) || '%')
+     </if>
+     ORDER BY if_type
+</select>
+
+<insert id="insertInterfaceManagementList" parameterType="Map">
+	INSERT INTO ITF0001M
+	(
+	     if_type
+	   , if_type_nm
+	   , if_snd
+       , if_rcv
+	   , chk_col
+	   , biz_col
+	   , table_nm
+	   , dscn_nm
+	   , crt_user_id
+	   , crt_dt
+	   , upd_user_id
+	   , upd_dt
+	)
+	VALUES
+	(
+	     #{ifType}
+	   , #{ifTypeNm}
+	   , #{ifSnd}
+       , #{ifRcv}
+	   , #{chkCol}
+	   , #{bizCol}
+	   , #{tableNm}
+	   , #{dscnNm}
+	   , #{crtUserId}
+	   , SYSDATE
+	   , #{updUserId}
+	   , SYSDATE
+	)
+</insert>
+
+<insert id="insertInterfaceItfKey" parameterType="Map">
+	INSERT INTO ITF0002S
+	(
+	    IF_TYPE
+	    , IF_KEY
+	    , IF_DATE
+	)
+	VALUES
+	(
+	    #{ifType}
+	    , #{ifType}||TO_CHAR(SYSDATE,'YYMMDD')||'_0000000'
+	    , TO_CHAR(SYSDATE,'YYMMDD')
+	)
+</insert>
+
+<update id="updateInterfaceManagementList" parameterType="Map">
+	UPDATE ITF0001M
+	     SET if_type_nm = #{ifTypeNm}
+	         , if_snd = #{ifSnd}
+             , if_rcv = #{ifRcv}
+	         , chk_col = #{chkCol}
+	         , biz_col = #{bizCol}
+	         , table_nm = #{tableNm}
+	         , dscn_nm = #{dscnNm}
+	         , upd_user_id = #{updUserId}
+             , upd_dt = SYSDATE
+	 WHERE if_type = #{ifType}
+</update>
+
+<delete id="deleteInterfaceManagementList" parameterType="Map">
+	DELETE
+	  FROM ITF0001M
+	 WHERE if_type = #{ifType}
+</delete>
+
+</mapper>

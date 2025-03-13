@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.supplement.colorGrid.service.impl.SupplementColorGridMapper">
+
+  <select id="colorGridList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT A.SUP_REF_NO AS ORD_NO,
+                             A.SUP_REF_ID AS ORD_ID,
+                             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:mm PM') AS ORD_DT,
+                             STUS.NAME AS ORD_STATUS,
+                             STG.CODE_NAME AS ORD_STAGE,
+                             APPTYPE.CODE_NAME AS APP_TYPE,
+                             NVL(SUBBR.CODE, '') AS SUB_BR,
+                             NVL(REG.CODE, '') AS SUB_REG,
+                             A.CUST_ID AS CUST_ID,
+                             CUST.NAME AS CUST_NAME,
+                             NVL(CUST.GENDER, '') AS CUST_GENDER,
+                             NVL(RACE.CODE_NAME, '') AS CUST_RACE,
+                             NVL(MEMTYP.CODE, '') AS SALESMAN_TYP,
+                             NVL(EM.MEM_CODE, '-') AS SALESMAN_CODE,
+                             NVL(ORG.FULL_NAME, '-') AS SALESMAN_NAME,
+                             NVL(SALMANBR.CODE, '-') AS SALESMAN_NAME_BR,
+                             NVL(DELSTUS.CODE_NAME,'-') AS DELIVERY_STATUS ,
+
+                             <![CDATA[
+                             (CASE WHEN NVL (A.PV_MONTH, 0)  >  0
+                                      THEN (CASE WHEN NVL(A.PV_MONTH, 0) < 10
+                                                        THEN '0' || NVL (A.PV_MONTH, 0) || '/' || NVL (A.PV_YEAR, 0)
+                                                        ELSE NVL (A.PV_MONTH, 0) || '/' || NVL (A.PV_YEAR, 0) END)
+                                      ELSE  '-'
+                                      END) ]]> AS NET_MONTH,
+                              NVL(EM.ORG_CODE, '-') AS ORG_CODE,
+                              NVL(EM.GRP_CODE, '-') AS GRP_CODE,
+                              NVL(EM.DEPT_CODE, '-') AS DEPT_CODE,
+                              NVL(A.PV_MONTH, 0) PV_MONTH,
+                              NVL(A.PV_YEAR, 0) PV_YEAR,
+                              NVL(EXTRACT(MONTH FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) , 0) AS KEY_IN_MONTH,
+                              NVL(EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT, 'DD/MM/YYYY')), 0) AS KEY_IN_YEAR,
+                              A.SUP_RTN_RFND AS IS_REFUND,
+                              NVL(RTNDVYSTUS.NAME,'-') AS RETURN_DELIVERY_STATUS,
+                              NVL(SUBAPPUSR.USER_NAME, '') AS SUB_UPDBY,
+                              CASE WHEN A.SUP_TYP = 0 THEN 'Sales' ELSE 'Free Gift' END AS SUP_TYP ,
+               				  NVL(SOM.SALES_ORD_NO,'-') SALES_ORD_NO
+    FROM SUP0001M A
+    JOIN SUP0002D B ON A.SUP_REF_ID = B.SUP_REF_ID
+    JOIN ORG1001V EM ON EM.MEM_ID = A.MEM_ID
+    JOIN SAL0029D CUST ON CUST.CUST_ID = A.CUST_ID
+    LEFT JOIN ORG0001D ORG ON ORG.MEM_ID = EM.MEM_ID
+    LEFT JOIN SYS0026M C ON B.SUP_STK_ID = C.STK_ID
+    LEFT JOIN SUP0007M CC ON CC.SUP_REF_ID = A.SUP_REF_ID
+    LEFT JOIN SUP0008M RG ON RG.SUP_REF_ID =  CC.SUP_REF_ID AND RG.SUP_REQ_CANC_ID = CC.SUP_REQ_CANC_ID AND RG.DEL_FLG = 'N'
+    LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = A.SUP_REF_STUS
+    LEFT JOIN SYS0013M APPTYPE ON APPTYPE.CODE_ID = A.SUP_APPL_TYP AND APPTYPE.CODE_MASTER_ID = '10'
+    LEFT JOIN SYS0013M STG ON STG.CODE = A.SUP_REF_STG AND STG.CODE_MASTER_ID = '584'
+    LEFT JOIN SYS0013M DELSTUS ON DELSTUS.CODE = A.SUP_REF_DEL_STUS AND DELSTUS.CODE_MASTER_ID = '585'
+    LEFT JOIN SYS0013M EXTCUST ON EXTCUST.CODE_ID = CUST.IS_EXST_CUST AND EXTCUST.CODE_MASTER_ID = '566'
+    LEFT JOIN SYS0038M RTNDVYSTUS ON RG.SUP_RTN_STAT = RTNDVYSTUS.STUS_CODE_ID
+    LEFT JOIN SYS0013M RACE ON CUST.RACE_ID = RACE.CODE_ID AND RACE.CODE_MASTER_ID = 2
+    LEFT JOIN SYS0005M SALMANBR ON SALMANBR.BRNCH_ID = ORG.BRNCH
+    LEFT JOIN SYS0005M SUBBR ON SUBBR.BRNCH_ID = A.MEM_BRNCH_ID
+    LEFT JOIN SYS0013M REG ON REG.CODE_ID = SUBBR.REGN_ID AND REG.CODE_MASTER_ID = 49
+    LEFT JOIN SYS0013M MEMTYP ON MEMTYP.CODE_ID = ORG.MEM_TYPE AND MEMTYP.CODE_MASTER_ID = 1
+    LEFT JOIN SYS0047M SUBAPPUSR ON SUBAPPUSR.USER_ID = A.CRT_USR_ID
+    LEFT JOIN SAL0001D SOM ON A.SALES_ORD_ID_GIFT = SOM.SALES_ORD_ID
+    WHERE A.DEL_FLG = 'N'
+
+    <if test="ordNo != null and ordNo != ''">
+      AND A.SUP_REF_NO = #{ordNo}
+    </if>
+
+    <if test="orgCode != null and orgCode != ''">
+      AND NVL (EM.ORG_CODE, '-') = #{orgCode}
+    </if>
+
+    <if test="grpCode != null and grpCode != ''">
+      AND NVL (EM.GRP_CODE, '-') = #{grpCode}
+    </if>
+
+    <if test="deptCode != null and deptCode != ''">
+       AND NVL (EM.DEPT_CODE, '-') = #{deptCode}
+    </if>
+
+    <if test="memtype!= null and memtype != ''">
+      AND NVL (ORG.MEM_TYPE, '') = #{memtype}
+    </if>
+
+    <if test="salesmanCode != null and salesmanCode != ''">
+      AND NVL (EM.MEM_CODE, '-') = #{salesmanCode}
+    </if>
+
+    <if test="cmbCustomerType != null and cmbCustomerType != ''">
+      AND CUST.TYPE_ID IN
+      <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="custName != null and custName != ''">
+      AND UPPER(CUST.NAME) = UPPER(#{custName})
+    </if>
+
+    <if test="custIc != null and custIc != ''">
+      AND CUST.NRIC = #{custIc}
+    </if>
+
+    <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
+      AND A.SUP_APPL_TYP IN
+      <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="createStDate != null and createStDate != ''">
+       AND A.CRT_DT <![CDATA[ >= ]]>TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test="createEnDate != null and createEnDate != ''">
+      AND A.CRT_DT <![CDATA[ <= ]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test="netSalesMonth != null and netSalesMonth != ''">
+       AND NVL (A.PV_YEAR, 0) = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+       AND NVL (A.PV_MONTH, 0) = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+    </if>
+
+    <if test="cmbProduct != null and cmbProduct != ''">
+      AND B.SUP_STK_ID IN
+      <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="keyInMonth != null and keyInMonth != ''">
+       AND (EXTRACT(MONTH FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) =#{keyinMon}
+       OR EXTRACT(YEAR FROM TO_DATE(A.SUP_REF_DT,'DD/MM/YYYY')) = #{keyinYear})
+    </if>
+
+     <if test=" null != isRefund and '' != isRefund">
+        AND A.SUP_RTN_RFND = #{isRefund}
+      </if>
+
+    <if test="supSubmRefStatArray != null and supSubmRefStatArray != '' ">
+       AND A.SUP_REF_STUS IN
+     <foreach item="item" collection="supSubmRefStatArray" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="supplementType != '' and supplementType != null">
+      AND A.SUP_TYP = #{supplementType}
+    </if>
+
+    <if test="salesOrdNo != '' and salesOrdNo != null ">
+      AND SOM.SALES_ORD_NO = #{salesOrdNo}
+    </if>
+
+    ORDER BY A.SUP_REF_NO
+  </select>
+
+  <select id="colorGridCmbProduct" resultType="egovMap">
+    SELECT S.STK_ID CODE_ID
+             , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+             , C.CODE_NAME GROUP_CD
+    FROM SYS0026M S,
+             SAL0016M P,
+             SYS0013M C
+    WHERE S.STK_ID = P.STK_ID
+        AND S.STK_CTGRY_ID = C.CODE_ID
+        AND S.IS_NCV <![CDATA[<>]]> 1
+        AND S.STUS_CODE_ID = 1
+        AND S.STK_TYPE_ID = 61
+        AND P.AMT <![CDATA[>]]> 0
+        AND C.CODE = 'FS'
+    GROUP BY S.STK_ID,
+                   S.STK_CODE,
+                   S.STK_DESC,
+                   C.CODE_NAME
+    ORDER BY C.CODE_NAME,
+                   S.STK_DESC
+  </select>
+
+  <select id="getMemID" parameterType="Map" resultType="String">
+    SELECT E1.MEM_ID
+    FROM ORG0001D E1
+    WHERE 1=1
+
+    <if test="memCode != null and memCode != ''" >
+      AND  E1.MEM_CODE = #{memCode}
+    </if>
+  </select>
+
+  <select id="selectProductCategoryList" resultType="egovMap">
+    SELECT T2.CODE_ID
+             , T2.CODE
+             , T2.CODE_NAME
+    FROM ( SELECT DISTINCT STK_CTGRY_ID
+               FROM SYS0026M
+               WHERE STK_TYPE_ID = '61'
+                   AND STK_CTGRY_ID IS NOT NULL) T1
+             , SYS0013M T2
+    WHERE T1.STK_CTGRY_ID = T2.CODE_ID
+        AND T2.CODE = 'FS'
+    ORDER BY T2.CODE_ID
+  </select>
+
+  <select id="selectCodeList" resultType="egovMap">
+    SELECT CODE_ID ,
+               CODE ,
+               CODE_NAME ,
+               DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+    FROM SYS0013M
+    WHERE DISAB = 0
+        AND CODE = 'OOUT'
+        AND CODE_MASTER_ID = 10
+  </select>
+
+  <select id="getSupplementDetailList"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SUP_STK_ID AS ITEM_CODE,
+               Extent2.STK_DESC AS ITEM_DESC,
+               Extent1.SUP_ITM_QTY AS QUANTITY,
+               Extent1.SUP_ITM_UNTPRC AS UNIT_PRICE,
+               Extent1.SUP_TOT_AMT AS TOTAL_AMOUNT
+    FROM SUP0002D Extent1
+    JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.SUP_STK_ID
+    JOIN SUP0001M Extent3 ON Extent1.SUP_REF_ID = Extent3.SUP_REF_ID
+    WHERE Extent3.SUP_REF_ID = #{ordId}
+  </select>
+
+  <select id="selectSupRefStus"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.STUS_CODE_ID CODE_ID
+             , Extent1.CODE CODE
+             , Extent1.NAME CODE_NAME
+    FROM SYS0038M Extent1
+    WHERE Extent1.STUS_CODE_ID IN (1,4,10)
+  </select>
+
+</mapper>

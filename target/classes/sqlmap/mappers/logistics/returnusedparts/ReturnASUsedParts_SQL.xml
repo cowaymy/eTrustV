@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.returnusedparts.impl.ReturnASUsedPartsMapper">
+
+  <insert id="returnPartsInsert" parameterType="String">
+    INSERT INTO LOG0082M (SEQ,
+                          SVC_ORD_ID,
+                          CUST_ID,
+                          SVC_DT,
+                          STK_ID,
+                          QTY,
+                          OLD_SERIAL,
+                          NEW_SERIAL,
+                          CRT_DT ,
+                          CRT_USER_ID
+    ) SELECT LOG0082M_SEQ.nextval
+           , S08.NO
+           , S01.CUST_ID
+           , S87.SRV_FILTER_PRV_CHG_DT
+           , S87.SRV_FILTER_STK_ID
+           , S07.BS_RESULT_PART_QTY
+           , S87.SRV_FILTER_PREV_SERIAL
+           , S87.SRV_FILTER_LAST_SERIAL
+           , S06.RESULT_CRT_DT
+           , S06.RESULT_CRT_USER_ID
+      FROM SVC0006D S06
+         , SVC0008D S08
+         , SVC0007D S07
+         , SAL0090D S90
+         , SAL0087D S87
+         , SAL0001D S01
+      WHERE S08.SALES_ORD_ID = S01.SALES_ORD_ID
+        AND S06.SCHDUL_ID = S08.SCHDUL_ID
+        AND S06.RESULT_ID = S07.BS_RESULT_ID
+        AND S06.SALES_ORD_ID = S90.SRV_SO_ID
+        AND S90.SRV_CONFIG_ID = S87.SRV_CONFIG_ID
+        AND S07.BS_RESULT_PART_ID = S87.SRV_FILTER_STK_ID
+        AND S08.NO = #{param}
+  </insert>
+
+  <select id="returnPartsList" parameterType="Map" resultType="egovMap">
+
+SELECT
+    z.rnum,
+    z.seq,
+    z.service_order,
+    z.asr_no,
+    z.order_no,
+    z.customer,
+    z.customer_name,
+    z.service_date,
+    z.material_code,
+    z.material_code_actual,
+    z.material_name,
+    z.stk_id,
+    z.product_code,
+    z.product_name,
+    z.product_cat,
+    z.serial_number,
+    z.serial,
+    z.qty,
+    z.text,
+    z.return_complete,
+    z.return_complete_date,
+    z.no_parts_return,
+    z.crt_dt,
+    z.crt_user_id,
+    z.upd_dt,
+    z.upd_user_id,
+    z.serial_chk,
+    z.stk_type_id,
+    z.stk_id_new,
+    z.brnch,
+    z.mem_code,
+    z.name,
+    z.code,
+    z.brnch_name,
+    z.deftyp,
+    z.defcde,
+    z.install_dt,
+    z.as_aging,
+    z.as_type,
+    nvl(o.defect_desc, '-') error_details,
+    nvl(p.defect_desc, '-') errordesc,
+    z.PEND_SCAN_NAME,
+    z.PEND_SCAN,
+	        z.UNMATCH_ID,
+	        z.UNMATCH_REASON
+FROM (
+    <if test="asTyp != 'ihr'">
+        SELECT
+            t1.rnum,
+            t1.seq,
+            t1.service_order,
+            t1.asr_no,
+            t1.order_no,
+            t1.customer,
+            t1.customer_name,
+            t1.service_date,
+            t1.material_code,
+            t1.material_code_actual,
+            t1.material_name,
+            t1.stk_id,
+            t1.product_code,
+            t1.product_name,
+            t1.product_cat,
+            t1.serial_number,
+            t1.serial,
+            t1.qty,
+            t1.text,
+            t1.return_complete,
+            t1.return_complete_date,
+            t1.no_parts_return,
+            t1.crt_dt,
+            t1.crt_user_id,
+            t1.upd_dt,
+            t1.upd_user_id,
+            t1.serial_chk,
+            t1.stk_type_id,
+            t1.stk_id_new,
+            t1.brnch,
+            t1.mem_code,
+            t1.name,
+            t1.code,
+            t1.brnch_name,
+            t1.deftyp,
+            t1.defcde,
+            to_char(p.install_dt, 'YYYY/MM/DD') install_dt,
+            CASE
+                WHEN t1.as_setl_dt IS NOT NULL THEN
+                    months_between(fn_get_first_day_month(t1.as_setl_dt),
+                                   fn_get_first_day_month(p.install_dt))
+                ELSE  0
+            END                                 AS as_aging,
+            t1.as_malfunc_id,
+            t1.as_malfunc_resn_id,
+            t1.as_type,
+            t1.PEND_SCAN_NAME,
+            t1.PEND_SCAN,
+	        t1.UNMATCH_ID,
+	        t1.UNMATCH_REASON
+        FROM
+                 (
+                SELECT
+                    ROWNUM                                                    rnum,
+                    a.seq                                                     AS seq,
+                    a.result_id,
+                    c.sales_ord_id,
+                    g.as_setl_dt,
+                    a.svc_ord_id                                              AS service_order,
+                    g.as_result_no                                            AS asr_no,
+                    c.sales_ord_no                                            AS order_no,
+                    c.cust_id                                                 AS customer,
+                    d.name                                                    AS customer_name,
+                    to_char(g.as_setl_dt, 'YYYY/MM/DD')                       AS service_date,
+                    (
+                        SELECT
+                            stk_code
+                        FROM
+                            sys0026m
+                        WHERE
+                            stk_id = a.stk_id
+                    )                                                         AS material_code,
+                    e.stk_code                                                AS material_code_actual,
+                    e.stk_desc                                                AS material_name,
+                    a.stk_id,
+                    m.stk_code                                                AS product_code,
+                    m.stk_desc                                                AS product_name,
+                    n.code_desc                                               AS product_cat,
+                    a.old_serial                                              AS serial_number,
+                    a.new_serial                                              AS serial,
+                    a.qty                                                     AS qty,
+                    a.comments                                                AS text,
+                    a.cmplt_yn                                                AS return_complete,
+                    to_char(a.cmplt_dt, 'YYYY/MM/DD')                         return_complete_date,
+                    a.resn_code                                               no_parts_return,
+                    a.crt_dt,
+                    a.crt_user_id,
+                    a.upd_dt,
+                    a.upd_user_id,
+                    CASE WHEN E.STK_TYPE_ID = 61 THEN
+                    CASE WHEN E.SERIAL_CHK = 'Y'
+                               AND S28.SERIAL_PD_CHK = 'Y'
+                               AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                            ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 62 THEN
+                      CASE WHEN E.SERIAL_CHK = 'Y'
+                                 AND S28.SERIAL_FT_CHK = 'Y'
+                                 AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 63 THEN
+                        CASE WHEN E.SERIAL_CHK = 'Y'
+                                   AND S28.SERIAL_PT_CHK = 'Y'
+                                   AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    ELSE 'N' END SERIAL_CHK,
+                    e.stk_type_id,
+                    a.stk_id_new,
+                    f.brnch,
+                    f.mem_code,
+                    f.name,
+                    (
+                        SELECT
+                            code
+                        FROM
+                            sys0005m
+                        WHERE
+                            brnch_id = f.brnch
+                    )                                                         code,
+                    (
+                        SELECT
+                            name
+                        FROM
+                            sys0005m
+                        WHERE
+                            brnch_id = f.brnch
+                    )                                                         brnch_name,
+                    decode(j.defect_desc, NULL, r.defect_desc, j.defect_desc) AS deftyp,
+                    decode(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
+                    b.as_malfunc_id,
+                    b.as_malfunc_resn_id,
+                    q.code_desc                                               as_type,
+                    S38.NAME PEND_SCAN_NAME,
+                	CASE WHEN a.PEND_SCAN = '44' THEN 'Y' ELSE '' END  PEND_SCAN,
+	                S13.CODE_ID UNMATCH_ID,
+	                S13.CODE_NAME UNMATCH_REASON
+                FROM
+                         log0103m a
+                    JOIN svc0001d b ON b.as_no = a.svc_ord_id
+                    JOIN sal0001d c ON b.as_so_id = c.sales_ord_id
+                    JOIN sal0029d d ON c.cust_id = d.cust_id
+                    JOIN sys0026m e ON a.stk_id = e.stk_id
+                    JOIN org0001d f ON a.mem_id = f.mem_id
+                    JOIN svc0004d g ON a.result_id = g.as_result_id
+                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
+                                            AND j.defect_typ = 'DT'
+                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
+                                            AND k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m r ON g.as_defect_type_id = r.defect_id
+                                            AND r.defect_typ = 'HDT'
+                    LEFT JOIN sys0100m s ON g.as_defect_id = s.defect_id
+                                            AND s.defect_typ = 'HDC'
+                    JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
+                    JOIN sys0026m m ON m.stk_id = l.itm_stk_id
+                    JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
+                    JOIN sys0013m q ON q.code_id = b.as_type_id
+    				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
+    				LEFT JOIN SVC0005D S05 ON S05.AS_RESULT_ID = a.result_id
+    														AND S05.ASR_ITM_PART_ID = A.STK_ID
+    				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S05.FILTER_SRL_UNMATCH_RSN)
+					LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = f.MEM_CODE
+    				AND S13.CODE_MASTER_ID = '611'
+                WHERE
+                        1 = 1
+                    AND a.result_id IN (
+                        SELECT
+                            cc.result_id
+                        FROM
+                            log0103m cc
+                        WHERE
+                            cc.result_id = a.result_id
+                        GROUP BY
+                            cc.result_id
+                        HAVING
+                            SUM(cc.qty) <![CDATA[<>]]> 0
+                    )
+
+                        <if test="searchOder != null and searchOder !=''">
+                    AND A.SVC_ORD_ID = #{searchOder}
+                  </if>
+                  <if test="searchCustomer != null and searchCustomer !=''">
+                    AND D.NAME = #{searchCustomer}
+                  </if>
+                   <if test="searchBranch != null and searchBranch !=''">
+                    AND B.AS_BRNCH_ID = #{searchBranch}
+                  </if>
+                  <if test="searchMaterialCode != null and searchMaterialCode !=''">
+                    AND E.STK_CODE = #{searchMaterialCode}
+                  </if>
+                  <if test="searchMaterialType != null and searchMaterialType !=''">
+                    AND E.STK_TYPE_ID = #{searchMaterialType}
+                  </if>
+                  <if test="searchComplete != null and searchComplete !=''">
+                    <choose>
+                      <when test='searchComplete == "Y" '>
+                        AND A.CMPLT_YN= #{searchComplete}
+                      </when>
+                      <otherwise>
+                        AND A.CMPLT_YN IS NULL
+                      </otherwise>
+                    </choose>
+                  </if>
+                  <if test="servicesdt !=null and servicesdt !=''">
+                    AND A.SVC_DT <![CDATA[>=]]> TO_DATE(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="serviceedt !=null and serviceedt !=''">
+                    AND A.SVC_DT <![CDATA[<=]]> TO_DATE(#{serviceedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="returnsdt !=null and returnsdt !=''">
+                    AND A.CMPLT_DT <![CDATA[>=]]> TO_DATE(#{returnsdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="returnedt !=null and returnedt !=''">
+                    AND A.CMPLT_DT <![CDATA[<=]]> TO_DATE(#{returnedt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="searchLoc != null and searchLoc !=''">
+                    AND F.MEM_CODE IN
+                    <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+                  <if test="searchDefTyp !=null and searchDefTyp !=''">
+                    AND J.DEFECT_ID = #{searchDefTyp}
+                  </if>
+                  <if test="searchSltCde !=null and searchSltCde !=''">
+                    AND G.AS_SLUTN_RESN_ID IN
+                    <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
+                      #{item2}
+                    </foreach>
+                  </if>
+                  <if test="searchDefCde !=null and searchDefCde !=''">
+                    AND K.DEFECT_ID IN
+                    <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
+                      #{item3}
+                    </foreach>
+                  </if>
+
+            ) t1
+            JOIN (SELECT * FROM  LOG0103M AA WHERE AA.RESULT_ID = (SELECT MAX(bb.result_id) FROM LOG0103M BB WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID))H ON ( T1.SEQ = H.SEQ )
+            JOIN sal0046d o ON o.install_entry_id = (
+                    SELECT
+                        MIN(sal0046d.install_entry_id)
+                    FROM
+                        sal0046d
+                    WHERE
+                            sal0046d.sales_ord_id = t1.sales_ord_id
+                        AND sal0046d.stus_code_id = '4'
+                    GROUP BY
+                        sal0046d.sales_ord_id
+                )
+                               AND o.sales_ord_id = t1.sales_ord_id
+            JOIN sal0047d p ON o.install_entry_id = p.entry_id
+            </if>
+            <if test="asTyp != 'as' and asTyp != 'ihr'">
+            UNION
+            </if>
+            <if test="asTyp != 'as'">
+            SELECT
+            t2.rnum,
+            t2.seq,
+            t2.service_order,
+            t2.asr_no,
+            t2.order_no,
+            t2.customer,
+            t2.customer_name,
+            t2.service_date,
+            t2.material_code,
+            t2.material_code_actual,
+            t2.material_name,
+            t2.stk_id,
+            t2.product_code,
+            t2.product_name,
+            t2.product_cat,
+            t2.serial_number,
+            t2.serial,
+            t2.qty,
+            t2.text,
+            t2.return_complete,
+            t2.return_complete_date,
+            t2.no_parts_return,
+            t2.crt_dt,
+            t2.crt_user_id,
+            t2.upd_dt,
+            t2.upd_user_id,
+            t2.serial_chk,
+            t2.stk_type_id,
+            t2.stk_id_new,
+            t2.brnch,
+            t2.mem_code,
+            t2.name,
+            t2.code,
+            t2.brnch_name,
+            t2.deftyp,
+            t2.defcde,
+            to_char(p.install_dt, 'YYYY/MM/DD') install_dt,
+            CASE
+                WHEN t2.as_setl_dt IS NOT NULL THEN
+                    months_between(fn_get_first_day_month(t2.as_setl_dt),
+                                   fn_get_first_day_month(p.install_dt))
+                ELSE   0
+            END                                 AS as_aging,
+            t2.as_malfunc_id,
+            t2.as_malfunc_resn_id,
+            t2.as_type,
+            t2.PEND_SCAN_NAME,
+            t2.PEND_SCAN,
+            t2.UNMATCH_ID,
+            t2.UNMATCH_REASON
+        FROM
+                 (
+                SELECT
+                    ROWNUM                                                    rnum,
+                    a.seq                                                     AS seq,
+                    a.result_id,
+                    c.sales_ord_id,
+                    g.as_setl_dt,
+                    a.svc_ord_id                                              AS service_order,
+                    g.as_result_no                                            AS asr_no,
+                    c.sales_ord_no                                            AS order_no,
+                    c.cust_id                                                 AS customer,
+                    d.name                                                    AS customer_name,
+                    to_char(g.as_setl_dt, 'YYYY/MM/DD')                       AS service_date,
+                    (
+                        SELECT
+                            stk_code
+                        FROM
+                            sys0026m
+                        WHERE
+                            stk_id = a.stk_id
+                    )                                                         AS material_code,
+                    e.stk_code                                                AS material_code_actual,
+                    e.stk_desc                                                AS material_name,
+                    a.stk_id,
+                    m.stk_code                                                AS product_code,
+                    m.stk_desc                                                AS product_name,
+                    n.code_desc                                               AS product_cat,
+                    a.old_serial                                              AS serial_number,
+                    a.new_serial                                              AS serial,
+                    a.qty                                                     AS qty,
+                    a.comments                                                AS text,
+                    a.cmplt_yn                                                AS return_complete,
+                    to_char(a.cmplt_dt, 'YYYY/MM/DD')                         return_complete_date,
+                    a.resn_code                                               no_parts_return,
+                    a.crt_dt,
+                    a.crt_user_id,
+                    a.upd_dt,
+                    a.upd_user_id,
+                    CASE WHEN E.STK_TYPE_ID = 61 THEN
+                    CASE WHEN E.SERIAL_CHK = 'Y'
+                               AND S28.SERIAL_PD_CHK = 'Y'
+                               AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                            ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 62 THEN
+                      CASE WHEN E.SERIAL_CHK = 'Y'
+                                 AND S28.SERIAL_FT_CHK = 'Y'
+                                 AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    WHEN E.STK_TYPE_ID = 63 THEN
+                        CASE WHEN E.SERIAL_CHK = 'Y'
+                                   AND S28.SERIAL_PT_CHK = 'Y'
+                                   AND NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') = 'Y' THEN 'Y'
+                              ELSE 'N' END
+                    ELSE 'N' END SERIAL_CHK,
+                    e.stk_type_id,
+                    a.stk_id_new,
+                    f.brnch,
+                    f.mem_code,
+                    f.name,
+                    (
+                        SELECT
+                            code
+                        FROM
+                            sys0005m
+                        WHERE
+                            brnch_id = f.brnch
+                    )                                                         code,
+                    (
+                        SELECT
+                            name
+                        FROM
+                            sys0005m
+                        WHERE
+                            brnch_id = f.brnch
+                    )                                                         brnch_name,
+                    decode(j.defect_desc, NULL, r.defect_desc, j.defect_desc) AS deftyp,
+                    decode(k.defect_desc, NULL, s.defect_desc, k.defect_desc) AS defcde,
+                    b.as_malfunc_id,
+                    b.as_malfunc_resn_id,
+                    q.code_desc                                               as_type,
+                    S38.NAME PEND_SCAN_NAME,
+                	CASE WHEN a.PEND_SCAN = '44' THEN 'Y' ELSE '' END  PEND_SCAN,
+	                S13.CODE_ID UNMATCH_ID,
+	                S13.CODE_NAME UNMATCH_REASON
+                FROM
+                         log0103m a
+                    JOIN svc0108d b ON b.as_no = a.svc_ord_id
+                    JOIN sal0001d c ON b.as_so_id = c.sales_ord_id
+                    JOIN sal0029d d ON c.cust_id = d.cust_id
+                    JOIN sys0026m e ON a.stk_id = e.stk_id
+                    JOIN org0001d f ON a.mem_id = f.mem_id
+                    JOIN svc0109d g ON a.result_id = g.as_result_id
+                    LEFT JOIN sys0100m j ON g.as_defect_type_id = j.defect_id
+                                            AND j.defect_typ = 'DT'
+                    LEFT JOIN sys0100m k ON g.as_defect_id = k.defect_id
+                                            AND k.defect_typ = 'DC'
+                    LEFT JOIN sys0100m r ON g.as_defect_type_id = r.defect_id
+                                            AND r.defect_typ = 'HDT'
+                    LEFT JOIN sys0100m s ON g.as_defect_id = s.defect_id
+                                            AND s.defect_typ = 'HDC'
+                    JOIN sal0002d l ON l.sales_ord_id = c.sales_ord_id
+                    JOIN sys0026m m ON m.stk_id = l.itm_stk_id
+                    JOIN sys0013m n ON n.code_id = m.stk_ctgry_id
+                    JOIN sys0013m q ON q.code_id = b.as_type_id
+    				LEFT JOIN SYS0038M S38 ON S38.STUS_CODE_ID = a.PEND_SCAN
+    				LEFT JOIN SVC0110D S0110 ON S0110.AS_RESULT_ID = a.result_id
+    												AND S0110.ASR_ITM_PART_ID = A.STK_ID
+    				LEFT JOIN SYS0013M S13 ON S13.CODE = TO_CHAR(S0110.FILTER_SRL_UNMATCH_RSN)
+                    LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = f.MEM_CODE
+    				AND S13.CODE_MASTER_ID = '611'
+                WHERE
+                        1 = 1
+                    AND a.result_id IN (
+                        SELECT
+                            cc.result_id
+                        FROM
+                            log0103m cc
+                        WHERE
+                            cc.result_id = a.result_id
+                        GROUP BY
+                            cc.result_id
+                        HAVING
+                            SUM(cc.qty) <![CDATA[<>]]> 0
+                    )
+
+                   <if test="searchOder != null and searchOder !=''">
+                    AND A.SVC_ORD_ID = #{searchOder}
+                  </if>
+                  <if test="searchCustomer != null and searchCustomer !=''">
+                    AND D.NAME = #{searchCustomer}
+                  </if>
+                   <if test="searchBranch != null and searchBranch !=''">
+                    AND B.AS_BRNCH_ID = #{searchBranch}
+                  </if>
+                  <if test="searchMaterialCode != null and searchMaterialCode !=''">
+                    AND E.STK_CODE = #{searchMaterialCode}
+                  </if>
+                  <if test="searchMaterialType != null and searchMaterialType !=''">
+                    AND E.STK_TYPE_ID = #{searchMaterialType}
+                  </if>
+                  <if test="searchComplete != null and searchComplete !=''">
+                    <choose>
+                      <when test='searchComplete == "Y" '>
+                        AND A.CMPLT_YN= #{searchComplete}
+                      </when>
+                      <otherwise>
+                        AND A.CMPLT_YN IS NULL
+                      </otherwise>
+                    </choose>
+                  </if>
+                  <if test="servicesdt !=null and servicesdt !=''">
+                    AND A.SVC_DT <![CDATA[>=]]> TO_DATE(#{servicesdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="serviceedt !=null and serviceedt !=''">
+                    AND A.SVC_DT <![CDATA[<=]]> TO_DATE(#{serviceedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="returnsdt !=null and returnsdt !=''">
+                    AND A.CMPLT_DT <![CDATA[>=]]> TO_DATE(#{returnsdt} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="returnedt !=null and returnedt !=''">
+                    AND A.CMPLT_DT <![CDATA[<=]]> TO_DATE(#{returnedt} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                  </if>
+                  <if test="searchLoc != null and searchLoc !=''">
+                    AND F.MEM_CODE IN
+                    <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+                  <if test="searchDefTyp !=null and searchDefTyp !=''">
+                    AND J.DEFECT_ID = #{searchDefTyp}
+                  </if>
+                  <if test="searchSltCde !=null and searchSltCde !=''">
+                    AND G.AS_SLUTN_RESN_ID IN
+                    <foreach item="item2" collection="searchSltCde" index="index" open="(" separator="," close=")">
+                      #{item2}
+                    </foreach>
+                  </if>
+                  <if test="searchDefCde !=null and searchDefCde !=''">
+                    AND K.DEFECT_ID IN
+                    <foreach item="item3" collection="searchDefCde" index="index" open="(" separator="," close=")">
+                      #{item3}
+                    </foreach>
+                  </if>
+
+            ) t2
+            JOIN (SELECT * FROM  LOG0103M AA WHERE AA.RESULT_ID = (SELECT MAX(bb.result_id) FROM LOG0103M BB WHERE BB.SVC_ORD_ID = AA.SVC_ORD_ID))H ON ( t2.SEQ = H.SEQ )
+            JOIN sal0046d o ON o.install_entry_id = (
+                    SELECT
+                        MIN(sal0046d.install_entry_id)
+                    FROM
+                        sal0046d
+                    WHERE
+                            sal0046d.sales_ord_id = t2.sales_ord_id
+                        AND sal0046d.stus_code_id = '4'
+                    GROUP BY
+                        sal0046d.sales_ord_id
+                )
+                               AND o.sales_ord_id = t2.sales_ord_id
+            JOIN sal0047d p ON o.install_entry_id = p.entry_id
+    </if>
+    )        z
+    LEFT JOIN sys0100m o ON o.defect_typ = 'EC'
+                            AND o.defect_id = z.as_malfunc_id
+                            AND o.defect_status = 1
+    LEFT JOIN sys0100m p ON p.defect_typ = 'ED'
+                            AND p.defect_grp = z.as_malfunc_id
+                            AND p.defect_id = z.as_malfunc_resn_id
+                            AND p.defect_status = 1
+  </select>
+
+  <update id="upReturnParts" parameterType="Map">
+		UPDATE LOG0103M
+		SET
+<!-- 		NEW_SERIAL=#{serial}, -->
+		OLD_SERIAL=#{serialNumber},
+		QTY =#{qty},
+		RESN_CODE=#{noPartsReturn},
+		COMMENTS=#{text},
+		STK_ID=(select STK_ID from sys0026m where STK_CODE=#{materialCode}),
+<!-- 		STK_ID_NEW=(select STK_ID from sys0026m where STK_CODE=#{materialCodeActual}), -->
+		CMPLT_YN ='Y',
+		CMPLT_DT=SYSDATE,
+		UPD_DT = SYSDATE,
+        UPD_USER_ID=#{userId},
+        CRT_DT = SYSDATE,
+        CRT_USER_ID=#{userId}
+		WHERE SEQ =#{seq}
+  </update>
+
+  <delete id="returnPartsCanCle" parameterType="Map">
+    DELETE FROM LOG0082M
+    WHERE SEQ =#{seq}
+  </delete>
+
+  <delete id="returnPartsdelete" parameterType="String">
+    DELETE FROM LOG0082M
+    WHERE SVC_ORD_ID =#{param}
+  </delete>
+
+  <select id="validMatCodeSearch" parameterType="String" resultType="integer">
+    SELECT COUNT(*) FROM SYS0026M WHERE STK_CODE = #{matcode}
+  </select>
+
+  <select id="returnPartsdupchek" parameterType="Map" resultType="integer">
+    SELECT COUNT(*)
+    FROM LOG0103M
+    WHERE SEQ = #{seq}
+      AND CMPLT_YN ='Y'
+  </select>
+
+  <select id="getDeptCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.MEM_ID CODE_ID ,
+           Extent2.DEPT_CODE || ' - '  || Extent1.NAME CODE_NAME
+    FROM ORG0001D Extent1 JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                                       vMemberOrg.MEM_CODE MEM_CODE ,
+                                       vMemberOrg.MEM_LVL MEM_LVL ,
+                                       vMemberOrg.DEPT_CODE DEPT_CODE ,
+                                       vMemberOrg.GRP_CODE GRP_CODE ,
+                                       vMemberOrg.ORG_CODE ORG_CODE ,
+                                       vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                                       vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                                       vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                                       vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                                       vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                                       vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                                FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                                                                  AND ( Extent2.MEM_LVL  = #{memLvl} )
+    WHERE ( 1 = Extent1.STUS )
+    AND ( Extent1.MEM_TYPE = #{memType} )
+    ORDER BY Extent2.DEPT_CODE
+  </select>
+
+  <select id="getCodyCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.MEM_ID CODE_ID ,
+           Extent1.MEM_CODE MEM_CODE ,
+           Extent1.NAME NAME ,
+           Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME ,
+           Extent2.DEPT_CODE DEPT_CODE ,
+           Extent2.GRP_CODE GRP_CODE ,
+           Extent2.ORG_CODE ORG_CODE
+    FROM ORG0001D Extent1
+    JOIN (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                 vMemberOrg.MEM_CODE MEM_CODE ,
+                 vMemberOrg.MEM_LVL MEM_LVL ,
+                 vMemberOrg.DEPT_CODE DEPT_CODE ,
+                 vMemberOrg.GRP_CODE GRP_CODE ,
+                 vMemberOrg.ORG_CODE ORG_CODE ,
+                 vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                 vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                 vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                 vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                 vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                 vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+          FROM ORG1001V vMemberOrg ) Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                                            AND ( Extent2.MEM_LVL  = #{memLvl} )
+    WHERE ( 1 = Extent1.STUS )
+      AND ( Extent1.MEM_TYPE = #{memType} )
+      AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
+    ORDER BY Extent1.MEM_CODE
+  </select>
+
+  <select id="selectBranchCodeList" parameterType="Map" resultType="egovMap">
+    SELECT BRNCH_ID AS CODE_ID,
+           CODE || '-' || NAME AS CODE_NAME
+    FROM SYS0005M
+    WHERE TYPE_ID = 43
+    AND STUS_ID = 1
+    ORDER BY CODE
+  </select>
+
+  <select id="getBchBrowse" parameterType="Map" resultType="egovMap">
+    SELECT BRNCH_ID AS CODE,
+           CODE || '-' || NAME AS CODE_NAME
+    FROM SYS0005M
+    WHERE TYPE_ID = 43
+    AND STUS_ID = 1
+    ORDER BY CODE
+  </select>
+
+  <select id="getLoc" parameterType="Map" resultType="egovMap">
+    SELECT WH_LOC_ID CODE_ID,
+          WH_LOC_CODE CODE ,
+          WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+    FROM SYS0028M S28M
+    WHERE 1 = 1
+    AND S28M.WH_LOC_STUS_ID = 1
+
+    <if test="grade != null and grade != ''">
+      <choose>
+        <when test='equv !=null and equv == "N"'>
+          AND S28M.WH_LOC_STK_GRAD <![CDATA[<>]]> #{grade}
+        </when>
+        <otherwise>
+          AND S28M.WH_LOC_STK_GRAD = #{grade}
+        </otherwise>
+      </choose>
+    </if>
+
+    <if test="brnch != null and brnch != ''">
+      <choose>
+        <when test='locgb !=null and locgb == "CT" or locgb =="CTOR"'>
+          AND S28M.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_BRNCH_ID =#{brnch} AND ROWNUM = 1)
+        </when>
+        <otherwise>
+          AND S28M.WH_LOC_BRNCH_ID = #{brnch}
+        </otherwise>
+      </choose>
+    </if>
+
+    <if test="searchlocgb != null and searchlocgb !=''">
+      AND S28M.WH_LOC_GB IN
+      <foreach item="item" collection="searchlocgb" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="getDefGrp" parameterType="Map" resultType="egovMap">
+    SELECT DEFECT_ID AS CODE,
+           DEFECT_CODE || '-' || DEFECT_DESC AS CODE_NAME
+    FROM SYS0100M WHERE DEFECT_ID IN ( SELECT DISTINCT DEFECT_GRP
+                                       FROM SYS0100M
+                                       WHERE AS_USD_PRT = 1
+                                         AND DEFECT_TYP = 'SC'
+                                      ) AND DEFECT_TYP = 'DT'
+  </select>
+
+  <select id="getSltCde" parameterType="Map" resultType="egovMap">
+    SELECT DEFECT_ID AS CODE,
+           DEFECT_CODE || '-' || DEFECT_DESC AS CODE_NAME
+    FROM SYS0100M
+    WHERE AS_USD_PRT = 1
+      AND DEFECT_TYP = 'SC'
+      AND DEFECT_GRP = #{grp}
+  </select>
+
+  <select id="getProdCat" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT CODE AS CODE,
+                    CODE || '-' || CODE_NAME AS CODE_NAME
+    FROM SYS0100M A JOIN SYS0013M B ON B.CODE_MASTER_ID = 11 AND B.CODE = A.PROD_CAT
+    WHERE DEFECT_TYP = 'DC' AND DEFECT_STATUS = 1
+  </select>
+
+  <select id="getdefCde" parameterType="Map" resultType="egovMap">
+    SELECT DEFECT_ID AS CODE,
+           DEFECT_CODE || '-' || DEFECT_DESC AS CODE_NAME
+    FROM SYS0100M
+    WHERE DEFECT_STATUS = 1
+      AND DEFECT_TYP = 'DC'
+      AND PROD_CAT = #{grp}
+  </select>
+
+  <select id="getRptType" parameterType="Map" resultType="egovMap">
+     SELECT CODE AS CODE,
+            CODE_NAME AS CODE_NAME
+     FROM SYS0094M
+     WHERE IND = 'ASUSD_RPT'
+     ORDER BY CODE
+  </select>
+
+  <select id="getRtnStat" parameterType="Map" resultType="egovMap">
+     SELECT CODE AS CODE,
+            CODE_NAME AS CODE_NAME
+     FROM SYS0094M
+     WHERE IND = 'ASUSD_RTN'
+     ORDER BY CODE
+  </select>
+
+  <select id="getCodyInfo" parameterType="Map" resultType="egovMap">
+		SELECT MEM_ID,MEM_CODE FROM ORG0001D WHERE MEM_CODE = #{memCode} AND ROWNUM = 1
+  </select>
+
+	<select id="selectScanSerialList" parameterType="Map" resultType="egovMap">
+SELECT STK_ID, STK_CODE, STK_DESC, RETURN_QTY, SUM(SCAN_QTY) AS SCAN_QTY  FROM (
+    select A.STK_ID, A.STK_CODE, A.STK_DESC, A.RETURN_QTY
+        ,(
+            select count(1)
+            from LOG0103M
+            WHERE MEM_ID = #{codyMem} AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            and scan_no = #{scanNo}
+            and STK_ID = A.STK_ID
+            ) SCAN_QTY
+        from (
+            SELECT
+                S26.STK_ID
+                ,S26.STK_CODE
+                ,S26.STK_DESC
+                ,COUNT(1) RETURN_QTY
+            FROM LOG0103M L103
+            JOIN SYS0026M S26 ON L103.STK_ID=S26.STK_ID
+            JOIN SVC0004D S04 ON S04.AS_RESULT_ID=L103.RESULT_ID and S04.AS_RESULT_IS_CURR = 1
+            JOIN SVC0005D S05 ON S05.AS_RESULT_ID = S04.AS_RESULT_ID AND S05.ASR_ITM_PART_ID = L103.STK_ID
+            WHERE MEM_ID = #{codyMem}
+            AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            AND NVL(S05.FILTER_SRL_UNMATCH_RSN,0) = 0
+            GROUP BY S26.STK_ID,S26.STK_CODE,S26.STK_DESC
+        )a
+
+        UNION ALL
+
+     select A.STK_ID, A.STK_CODE, A.STK_DESC, A.RETURN_QTY
+        ,(
+            select count(1)
+            from LOG0103M
+            WHERE MEM_ID = #{codyMem} AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            and scan_no = #{scanNo}
+            and STK_ID = A.STK_ID
+            ) SCAN_QTY
+        from (
+            SELECT
+                S26.STK_ID
+                ,S26.STK_CODE
+                ,S26.STK_DESC
+                ,COUNT(1) RETURN_QTY
+            FROM LOG0103M L103
+            JOIN SYS0026M S26 ON L103.STK_ID=S26.STK_ID
+            JOIN SVC0109D S109 ON S109.AS_RESULT_ID=L103.RESULT_ID and S109.AS_RESULT_IS_CURR = 1
+            JOIN SVC0110D S110 ON S110.AS_RESULT_ID = S109.AS_RESULT_ID AND S110.ASR_ITM_PART_ID = L103.STK_ID
+            WHERE MEM_ID = #{codyMem}
+            AND NVL(CMPLT_YN,'N') = 'N' AND PEND_SCAN = '44'
+            AND NVL(S110.FILTER_SRL_UNMATCH_RSN,0) = 0
+            GROUP BY S26.STK_ID,S26.STK_CODE,S26.STK_DESC
+        )a
+        ) GROUP BY STK_ID, STK_CODE, STK_DESC, RETURN_QTY
+  </select>
+
+  <update id="saveScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            CMPLT_YN ='Y',
+            CMPLT_DT=SYSDATE,
+            pend_scan = #{pendScan},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ in (SELECT seq FROM LOG0103M
+        WHERE scan_no = #{scanNo}
+        )
+    </update>
+
+	<update id="deleteTempScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            scan_no = null,
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ in (SELECT seq FROM LOG0103M
+        WHERE scan_no = #{scanNo}
+        )
+    </update>
+
+   <select id="getScanNoSequence" parameterType="Map" resultType="String">
+        SELECT 'S' || TO_CHAR(SYSDATE,'YYMMDD') || LPAD(LOG0103M_SCAN_NO_SEQ.NEXTVAL, 10, 0) FROM DUAL
+  </select>
+
+   <select id="checkScanSerial" parameterType="Map" resultType="egovMap">
+	SELECT SEQ,STK_ID,STK_CODE,STK_DESC FROM (
+    <![CDATA[
+        SELECT /*+INDEX (A LOG0103M_IDX2) */
+           A.SEQ
+           ,A.STK_ID
+           ,B.STK_CODE
+           ,B.STK_DESC
+        FROM LOG0103M A
+        LEFT JOIN SYS0026M B ON B.STK_ID = A.STK_ID
+        JOIN SVC0004D S04 ON S04.AS_RESULT_ID=A.RESULT_ID  and S04.AS_RESULT_IS_CURR = 1
+        JOIN SVC0005D S05 ON S05.AS_RESULT_ID = S04.AS_RESULT_ID AND S05.ASR_ITM_PART_ID = A.STK_ID
+        WHERE
+        A.PEND_SCAN = '44'
+        AND NVL(S05.FILTER_SRL_UNMATCH_RSN,0) = 0
+        AND A.OLD_SERIAL = #{barcode}
+        and MEM_ID = #{codyId}
+        ]]>
+
+        <if test="servicesdt !=null and servicesdt !=''">
+            AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+            AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+
+       <![CDATA[
+       UNION ALL
+        SELECT /*+INDEX (A LOG0103M_IDX2) */
+           A.SEQ
+           ,A.STK_ID
+           ,B.STK_CODE
+           ,B.STK_DESC
+        FROM LOG0103M A
+        LEFT JOIN SYS0026M B ON B.STK_ID = A.STK_ID
+        JOIN SVC0109D S109 ON S109.AS_RESULT_ID= A.RESULT_ID  and S109.AS_RESULT_IS_CURR = 1
+        JOIN SVC0110D S110 ON S110.AS_RESULT_ID = S109.AS_RESULT_ID AND S110.ASR_ITM_PART_ID = A.STK_ID
+        WHERE
+        A.PEND_SCAN = '44'
+        AND NVL(S110.FILTER_SRL_UNMATCH_RSN,0) = 0
+        AND A.OLD_SERIAL = #{barcode}
+        and MEM_ID = #{codyId}
+        ]]>
+
+        <if test="servicesdt !=null and servicesdt !=''">
+            AND A.SVC_DT <![CDATA[>=]]>  to_date(#{servicesdt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+       <if test="serviceedt !=null and serviceedt !=''">
+            AND A.SVC_DT <![CDATA[<=]]>  to_date(#{serviceedt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+       </if>
+        ) GROUP BY  SEQ,STK_ID,STK_CODE,STK_DESC
+
+  </select>
+
+    <update id="upTempScanSerial" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            scan_no = #{scanNo},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{updUserId}
+        WHERE SEQ = #{seq}
+
+    </update>
+
+	<update id="upToPendReturnParts" parameterType="Map">
+        UPDATE LOG0103M
+        SET
+            PEND_SCAN = #{pendSts},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID=#{userId}
+        WHERE SEQ =#{seq}
+    </update>
+
+  <update id="upToFailedReturnParts" parameterType="Map">
+       UPDATE LOG0103M
+       SET
+           CMPLT_YN ='Y',
+           CMPLT_DT=SYSDATE,
+           PEND_SCAN = #{pendSts},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID=#{userId}
+       WHERE SEQ =#{seq}
+   </update>
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper">
+
+  <select id="selectMobileTicketList" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketList] 20191108 - KR HAN */
+               t1.MOB_TICKET_NO
+             , LISTAGG(t1.SALES_ORD_NO,',') WITHIN GROUP(ORDER BY t1.SALES_ORD_NO) AS SALES_ORD_NO
+             , t1.CUST_NAME
+             , t1.TICKET_STUS_NAME
+             , t1.CRT_DT
+             , t1.TICKET_TYPE_ID
+             , t1.TICKET_TYPE_NAME
+             , t1.CANCEL_YN
+    FROM ( SELECT A.MOB_TICKET_NO MOB_TICKET_NO
+                        , A.SALES_ORD_NO SALES_ORD_NO
+                        , C.NAME CUST_NAME
+                        , Y.NAME TICKET_STUS_NAME
+                        , TO_CHAR(A.CRT_DT , 'DD/MM/YYYY') CRT_DT
+                        , A.TICKET_TYPE_ID TICKET_TYPE_ID
+                        , Z.CODE_NAME TICKET_TYPE_NAME
+                        , CASE WHEN (A.TICKET_TYPE_ID = '5674' OR A.TICKET_TYPE_ID = '5673') AND A.TICKET_STUS_ID = 1
+                                  THEN 'Y'
+                                  ELSE 'N' END CANCEL_YN
+               FROM MOB0001D A
+               JOIN SAL0001D B ON A.SALES_ORD_NO = B.SALES_ORD_NO
+               JOIN SAL0029D C ON B.CUST_ID = C.CUST_ID
+               JOIN SYS0038M Y ON A.TICKET_STUS_ID = Y.STUS_CODE_ID
+               JOIN SYS0013M Z ON A.TICKET_TYPE_ID = Z.CODE_ID AND Z.CODE_MASTER_ID = 435
+
+               <where>
+                <if test="userId != null and userId != '' ">
+                  AND A.CRT_USER_ID = #{userId}
+                </if>
+                <if test="fromDate != null and fromDate != '' ">
+                  AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate},   'YYYYMMDD'),'YYYY-MM-DD')
+                </if>
+                <if test="toDate != null and toDate != '' ">
+                  AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate},   'YYYYMMDD'),'YYYY-MM-DD')
+                </if>
+                <if test="ticketType != null and ticketType != '' ">
+                  AND A.TICKET_TYPE_ID = #{ticketType}
+                </if>
+              </where>
+    ) t1
+    GROUP BY t1.MOB_TICKET_NO,
+                   t1.CUST_NAME,
+                   t1.TICKET_STUS_NAME,
+                   t1.CRT_DT,
+                   t1.TICKET_TYPE_ID,
+                   t1.TICKET_TYPE_NAME,
+                   t1.CANCEL_YN
+    ORDER BY CAST(t1.MOB_TICKET_NO AS INT) DESC
+  </select>
+
+  <select id="selectMobileTicketReqStus" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketReqStus] 20191108 - KR HAN */
+               DISTINCT MOB_TICKET_NO MOB_TICKET_NO
+             , TICKET_TYPE_ID TICKET_TYPE_ID
+    FROM MOB0001D
+    WHERE MOB_TICKET_NO = #{mobTicketNo}
+        AND TICKET_STUS_ID  = '1'
+  </select>
+
+  <update id="updateMobileTicketInvoiceCancel"  parameterType="Map">
+    UPDATE  /* [com.coway.trust.biz.common.impl.MobileAppTicketApiCommonMapper.updateMobileTicketInvoiceCancel] 20191111 - KR HAN */
+                PAY0300D SET REQ_STUS_ID = 10
+                                   , UPD_DT = SYSDATE
+                                   , UPD_USER_ID = #{userId}
+    WHERE MOB_TICKET_NO = #{mobTicketNo}
+        AND REQ_STUS_ID = 1
+  </update>
+
+  <update id="updateMobileTicketGroupOrderCancel"  parameterType="Map">
+    UPDATE  /* [com.coway.trust.biz.common.impl.MobileAppTicketApiCommonMapper.updateMobileTicketGroupOrderCancel] 20191111 - KR HAN */
+               PAY0299D SET REQ_STUS_ID = 10
+                                  , UPD_DT = SYSDATE
+                                  , UPD_USER_ID = #{userId}
+    WHERE MOB_TICKET_NO = #{mobTicketNo}
+        AND REQ_STUS_ID = 1
+  </update>
+
+  <select id="selectMobileTicketBillingGroupDetail" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketBillingGroupDetail] 20191111 - KR HAN */
+               A.TICKET_TYPE_ID TICKET_TYPE_ID
+            , ( SELECT CUST_BILL_GRP_NO
+                FROM SAL0024D C
+                WHERE C.CUST_BILL_ID = B.CUST_BILL_ID_OLD ) CUST_BILL_NO_OLD
+            , ( SELECT CUST_BILL_GRP_NO
+                FROM SAL0024D C
+                WHERE C.CUST_BILL_ID = B.CUST_BILL_ID_NW ) CUST_BILL_NO_NW
+            , NVL(B.REM, '') AS REM
+    FROM MOB0001D A
+    JOIN PAY0299D B ON A.SALES_ORD_NO= B.SALES_ORD_NO
+                            AND A.MOB_TICKET_NO = B.MOB_TICKET_NO
+    WHERE A.MOB_TICKET_NO = #{mobTicketNo}
+  </select>
+
+  <select id="selectMobileTicketPaymentKeyInDetail" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketPaymentKeyInDetail] 20191111 - KR HAN */
+               A.TICKET_TYPE_ID TICKET_TYPE_ID
+             , A.SALES_ORD_NO SALES_ORD_NO
+             , B.PAY_MODE PAY_MODE
+             , C.CODE_NAME PAY_MODE_NAME
+             , B.PAY_AMT PAY_AMT
+              , D.CODE ||'-'|| D.RESN_DESC ||'-'||B.PAY_REM AS REM
+    FROM MOB0001D A
+    JOIN PAY0297D B ON A.MOB_TICKET_NO = B.MOB_TICKET_NO AND A.SALES_ORD_NO = B.SALES_ORD_NO
+    JOIN SYS0013M C ON B.PAY_MODE = C.CODE_ID
+                           AND C.CODE_MASTER_ID = 439
+    LEFT JOIN SYS0032M D ON D.RESN_ID = B.FAIL_RESN_ID
+    WHERE A.MOB_TICKET_NO = #{mobTicketNo}
+  </select>
+
+  <select id="selectMobileTicketInvoiceDetail" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketInvoiceDetail] 20191112 - KR HAN */
+               t1.MOB_TICKET_NO
+            ,  t1.TICKET_TYPE_ID
+            ,  LISTAGG(t1.SALES_ORD_NO,',') WITHIN GROUP(ORDER BY t1.SALES_ORD_NO) AS SALES_ORD_NO
+            ,  t1.INVC_TYPE
+            ,  t1.EMAIL
+            ,  t1.ADD_EMAIL
+            ,  t1.INVC_ADV_PRD
+            ,  t1.REQ_INVC
+            ,  t1.DISC_RATE
+            ,  t1.REM
+    FROM ( SELECT DISTINCT A.MOB_TICKET_NO MOB_TICKET_NO
+                                      , A.TICKET_TYPE_ID TICKET_TYPE_ID
+                                      , A.SALES_ORD_NO SALES_ORD_NO
+                                      , B.INVC_TYPE INVC_TYPE
+                                      , C.EMAIL EMAIL
+                                      , C.EMAIL2  ADD_EMAIL
+                                      , C.INVC_ADV_PRD INVC_ADV_PRD
+                                      , TO_CHAR(TO_DATE(C.REQ_INVC_YEAR||C.REQ_INVC_MONTH, 'YYYYMM'), 'MM/YYYY')||' ~ '||TO_CHAR(ADD_MONTHS(TO_DATE(C.REQ_INVC_YEAR||C.REQ_INVC_MONTH, 'YYYYMM'), C.INVC_ADV_PRD) , 'MM/YYYY')  REQ_INVC
+                                      , C.INVC_ITM_DISC_RATE DISC_RATE
+                                      , B.REM
+               FROM MOB0001D A
+               JOIN PAY0300D B ON A.MOB_TICKET_NO = B.MOB_TICKET_NO
+               JOIN PAY0301D C ON B.REQ_INVC_NO = C.REQ_INVC_NO
+               WHERE   A.MOB_TICKET_NO = #{mobTicketNo}
+    ) t1
+    GROUP BY t1.MOB_TICKET_NO,
+                   t1.TICKET_TYPE_ID,
+                   t1.INVC_TYPE,
+                   t1.EMAIL,
+                   t1.ADD_EMAIL,
+                   t1.INVC_ADV_PRD,
+                   t1.REQ_INVC,
+                   t1.DISC_RATE,
+                   t1.REM
+  </select>
+
+  <select id="selectMobileTicketRefundDetail" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketInvoiceDetail] 20191112 - KR HAN */
+               A.MOB_TICKET_NO MOB_TICKET_NO
+             , A.TICKET_TYPE_ID TICKET_TYPE_ID
+             , A.SALES_ORD_NO SALES_ORD_NO
+             , B.WOR_NO WOR_NO
+             , B.AMT PAY_AMT
+             , B.REM
+    FROM MOB0001D A
+    JOIN PAY0298D B ON A.MOB_TICKET_NO = B.MOB_TICKET_NO
+    WHERE A.MOB_TICKET_NO = #{mobTicketNo}
+  </select>
+
+  <select id="selectMobileTicketFundTransferDetail" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.payment.service.impl.MobileTicketApiMapper.selectMobileTicketFundTransferDetail] 20191112 - KR HAN */
+               A.MOB_TICKET_NO MOB_TICKET_NO
+             , A.TICKET_TYPE_ID TICKET_TYPE_ID
+             , B.CUR_ORD_NO  ORD_NO_OLD
+             , B.CUR_WOR_NO  WOR_NO
+             , B.CUR_AMT CUR_AMT
+             , B.NEW_ORD_NO  ORD_NO_NW
+             , B.FT_REM
+    FROM MOB0001D A
+    JOIN PAY0296D B ON A.MOB_TICKET_NO = B.MOB_TICKET_NO
+    WHERE A.MOB_TICKET_NO = #{mobTicketNo}
+  </select>
+</mapper>

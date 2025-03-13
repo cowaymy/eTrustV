@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.FileMapper">
+
+
+    <select id="selectFileGroupKey" resultType="int">
+        SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertFileGroup" parameterType="fileGroupVO">
+        INSERT INTO SYS0070M (
+        ATCH_FILE_GRP_ID
+        , ATCH_FILE_ID
+        , CHENAL_TYPE
+        , CRT_USER_ID
+        , CRT_DT
+        , UPD_USER_ID
+        , UPD_DT
+        )VALUES (
+        #{atchFileGrpId}
+        ,#{atchFileId}
+        ,#{chenalType}
+        ,#{crtUserId}
+        ,SYSDATE
+        ,#{crtUserId}
+        ,SYSDATE
+        )
+    </insert>
+
+    <insert id="insertFileDetail" parameterType="fileVO">
+
+        <selectKey keyProperty="atchFileId" resultType="int" order="BEFORE">
+            SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        )
+    </insert>
+
+    <select id="selectFilesByGroupId" parameterType="int" resultType="fileVO">
+        SELECT FILEDTL.ATCH_FILE_ID AS atchFileId
+              ,FILEDTL.ATCH_FILE_NAME AS atchFileName
+              ,FILEDTL.FILE_SUB_PATH AS fileSubPath
+              ,FILEDTL.PHYSICL_FILE_NAME AS physiclFileName
+              ,FILEDTL.FILE_EXTSN AS fileExtsn
+              ,FILEDTL.FILE_SIZE AS fileSize
+              ,FILEDTL.FILE_PASSWORD AS filePassword
+          FROM SYS0071D FILEDTL
+         WHERE FILEDTL.ATCH_FILE_ID IN (SELECT FILEGROUP.ATCH_FILE_ID
+                                          FROM SYS0070M FILEGROUP
+                                         WHERE FILEGROUP.ATCH_FILE_GRP_ID = #{groupId})
+    </select>
+
+    <select id="selectFileByFileId" parameterType="int" resultType="fileVO">
+        SELECT FILEDTL.ATCH_FILE_ID AS atchFileId
+        ,FILEDTL.ATCH_FILE_NAME AS atchFileName
+        ,FILEDTL.FILE_SUB_PATH AS fileSubPath
+        ,FILEDTL.PHYSICL_FILE_NAME AS physiclFileName
+        ,FILEDTL.FILE_EXTSN AS fileExtsn
+        ,FILEDTL.FILE_SIZE AS fileSize
+        ,FILEDTL.FILE_PASSWORD AS filePassword
+        FROM SYS0071D FILEDTL
+        WHERE FILEDTL.ATCH_FILE_ID  = #{fileId}
+    </select>
+
+    <delete id="deleteFileGroupByGroupId" parameterType="int">
+        DELETE
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
+    </delete>
+
+    <delete id="deleteFileByGroupId" parameterType="int">
+        DELETE
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT  ATCH_FILE_ID
+              FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
+        )
+    </delete>
+
+    <delete id="deleteFileGroupByFileId" parameterType="int">
+        DELETE
+        FROM SYS0070M
+        WHERE ATCH_FILE_ID = #{fileId}
+    </delete>
+
+    <delete id="deleteFileByFileId" parameterType="int">
+        DELETE
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{fileId}
+    </delete>
+
+    <select id="selectFileGroupCountByFileId" parameterType="int" resultType="int">
+        SELECT COUNT(1) CNT
+        FROM SYS0070M
+        WHERE  ATCH_FILE_GRP_ID = (
+            SELECT GRP.ATCH_FILE_GRP_ID
+              FROM SYS0070M GRP
+             WHERE GRP.ATCH_FILE_ID = #{fileId}
+        )
+    </select>
+
+    <update id="updateFileDetail" parameterType="fileVO">
+        UPDATE SYS0071D
+        SET ATCH_FILE_NAME = #{atchFileName}
+	        , FILE_SUB_PATH = #{fileSubPath}
+	        , PHYSICL_FILE_NAME = #{physiclFileName}
+	        , FILE_EXTSN = #{fileExtsn}
+	        , FILE_SIZE = #{fileSize}
+	        , FILE_PASSWORD = #{filePassword}
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </update>
+
+    <update id="updateFileMaster" parameterType="Map">
+        UPDATE SYS0070M
+        SET
+            UPD_USER_ID = #{crtUserId}
+           , UPD_DT = SYSDATE
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </update>
+
+    <update id="updateCodyDocumentQty" parameterType="Map">
+		MERGE INTO ORG0010D ORG10
+		USING (
+		    SELECT A.*, B.CODE_ID, C.TYPE_CODE_ID AS TYPE_CODE_ID
+		    FROM (
+		        SELECT A.MEM_ID, CASE FILE_KEY_SEQ
+		            WHEN '1' THEN 'CD-APP-FORM'
+		            WHEN '2' THEN 'NRIC'
+		            WHEN '3' THEN 'CD-CLASS-D'
+		            WHEN '4' THEN 'BANK'
+		            WHEN '5' THEN 'VACC-DIG-CERT'
+		            WHEN '6' THEN 'PASS-SIZE-PHOTO'
+		            WHEN '7' THEN 'CD-PA'
+		            WHEN '8' THEN 'STO-ENT-CHK-CONS-LET'
+		            WHEN '9' THEN 'CD-CA'
+		            WHEN '10' THEN 'CD-EOCN'
+		            WHEN '11' THEN 'CD-EXT-CHK'
+		        END AS CODE, T1.UPD_USER_ID, T1.UPD_DT
+		        FROM ORG0001D A
+		        JOIN SYS0070M T1 ON T1.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+		        JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+		        WHERE A.MEM_ID = #{memId}
+		    ) A
+		    JOIN SYS0013M B ON B.CODE_MASTER_ID = 16 AND B.CODE = A.CODE
+		    JOIN ORG0013C C ON C.TYPE_ID = B.CODE_ID AND C.TYPE_CODE_ID = 1417
+		) SYS71 ON (SYS71.MEM_ID = ORG10.DOC_MEM_ID AND SYS71.CODE_ID = ORG10.DOC_TYPE_ID)
+		WHEN MATCHED THEN
+		UPDATE
+		    SET
+		       ORG10.UPD_USER_ID = CASE WHEN SYS71.UPD_DT > ORG10.UPD_DT THEN SYS71.UPD_USER_ID ELSE ORG10.UPD_USER_ID END,
+               ORG10.UPD_DT = CASE WHEN SYS71.UPD_DT > ORG10.UPD_DT THEN SYS71.UPD_DT ELSE ORG10.UPD_DT END
+		WHEN NOT MATCHED THEN
+		INSERT (DOC_SUB_ID,DOC_SUB_TYPE_ID,DOC_TYPE_ID,DOC_SO_ID,DOC_MEM_ID,DOC_SUB_DT,DOC_COPY_QTY,STUS_ID,CRT_USER_ID,CRT_DT,UPD_USER_ID,UPD_DT,DOC_SUB_BATCH_ID,DOC_SUB_BRNCH_ID)
+		VALUES (ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL,SYS71.TYPE_CODE_ID,SYS71.CODE_ID,0,SYS71.MEM_ID,SYS71.UPD_DT,1,1,SYS71.UPD_USER_ID,SYS71.UPD_DT,SYS71.UPD_USER_ID,SYS71.UPD_DT,0,NULL)
+    </update>
+
+    <delete id="deleteCodyDocumentQty" parameterType="Map">
+        DELETE FROM ORG0010D
+		WHERE DOC_MEM_ID = #{memId} AND DOC_SUB_TYPE_ID = 1417
+		AND (DOC_MEM_ID, DOC_TYPE_ID) NOT IN (
+		    SELECT A.MEM_ID, B.CODE_ID
+		    FROM (
+		        SELECT A.MEM_ID, CASE FILE_KEY_SEQ
+		            WHEN '1' THEN 'CD-APP-FORM'
+		            WHEN '2' THEN 'NRIC'
+		            WHEN '3' THEN 'CD-CLASS-D'
+		            WHEN '4' THEN 'BANK'
+		            WHEN '5' THEN 'VACC-DIG-CERT'
+		            WHEN '6' THEN 'PASS-SIZE-PHOTO'
+		            WHEN '7' THEN 'CD-PA'
+		            WHEN '8' THEN 'STO-ENT-CHK-CONS-LET'
+		            WHEN '9' THEN 'CD-CA'
+		            WHEN '10' THEN 'CD-EOCN'
+		            WHEN '11' THEN 'CD-EXT-CHK'
+		        END AS CODE, T1.UPD_USER_ID, T1.UPD_DT
+		        FROM ORG0001D A
+		        JOIN SYS0070M T1 ON T1.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
+		        JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+		        WHERE A.MEM_ID = #{memId}
+		    ) A
+		    JOIN SYS0013M B ON B.CODE_MASTER_ID = 16 AND B.CODE = A.CODE
+		    JOIN ORG0013C C ON C.TYPE_ID = B.CODE_ID AND C.TYPE_CODE_ID = 1417
+		)
+    </delete>
+</mapper>

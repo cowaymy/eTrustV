@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.notice.impl.NoticeMapper">
+
+    <!-- 공통코드 활용해서 SELECT하기 -->
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+       SELECT CODE_ID,
+              CODE_NAME
+         FROM SYS0013M
+        WHERE DISAB = 0
+          AND CODE_ID IN (2562,2563,2564,2565)
+
+   </select>
+
+    <select id="checkPassword" resultType="int">
+        SELECT COUNT(*)
+          FROM SYS0069M
+         WHERE NTCE_NO = #{ntceNo}
+           AND PASSWORD = #{password}
+    </select>
+
+
+    <update id="deleteNotice" parameterType="Map">
+        UPDATE SYS0069M
+           SET STUS_FLAG = 'Y'
+         WHERE NTCE_NO = #{ntceNo}
+    </update>
+
+    <update id="updateNotice" parameterType="Map">
+        UPDATE SYS0069M
+        SET NTCE_SUBJECT = #{ntceSubject},
+        NTCE_CNTNT = #{ntceCntnt},
+        ATCH_FILE_GRP_ID = nvl(#{atchFileGrpId}, ATCH_FILE_GRP_ID),
+        NTCE_START_DT = TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY'),
+        NTCE_END_DT = TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY'),
+        PASSWORD = #{password},
+        EMGNCY_FLAG = #{emgncyFlag},
+        <!-- UPD_USER_ID     = #{userId} -->
+        UPD_DT = SYSDATE
+        WHERE NTCE_NO = #{ntceNo}
+    </update>
+
+    <select id="noticeInfo" parameterType="Map" resultType="egovMap">
+
+        SELECT
+             NTCE_NO
+            ,NTCE_SUBJECT
+            ,RGST_USER_NM
+            ,TO_CHAR(NTCE_START_DT, 'DD/MM/YYYY') AS NTCE_START_DT
+            ,TO_CHAR(NTCE_END_DT, 'DD/MM/YYYY') AS NTCE_END_DT
+            ,READ_CNT
+            ,EMGNCY_FLAG
+            ,PASSWORD
+            ,NTCE_CNTNT
+            ,ATCH_FILE_GRP_ID
+            ,TO_CHAR(CRT_DT, 'DD/MM/YYYY') AS CRT_DT
+            ,CRT_USER_ID
+        FROM SYS0069M
+        WHERE NTCE_NO = #{ntceNo}
+
+    </select>
+
+    <select id="noticeList" parameterType="Map" resultType="egovMap">
+
+	      SELECT
+	             NTCE_NO,
+	             NTCE_SUBJECT,
+	             RGST_USER_NM,
+	             READ_CNT,
+	             CRT_DT,
+	             SYSDATE,
+	             ATCH_FILE_GRP_ID,
+	             CASE
+	                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N'
+	                 ELSE 'Y'
+	             END IMG_FLAG
+	        FROM
+	             SYS0069M
+	       WHERE STUS_FLAG = 'N'
+               <if test="noticeSearch == 2562 ">
+		        AND NTCE_SUBJECT LIKE '%' || #{keyword} || '%'
+		         OR NTCE_CNTNT LIKE '%' || #{keyword} || '%'
+		         OR RGST_USER_NM LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2563 ">
+		        AND NTCE_SUBJECT LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2564 ">
+		        AND NTCE_CNTNT LIKE '%' || #{keyword} || '%'
+		        </if>
+		        <if test="noticeSearch == 2565 ">
+		        AND RGST_USER_NM LIKE '%' || #{keyword} || '%'
+		        </if>
+	         AND EMGNCY_FLAG IS NOT NULL
+	    ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC
+
+    </select>
+
+
+    <update id="updateViewCnt" parameterType="Map">
+        UPDATE SYS0069M
+           SET READ_CNT = READ_CNT +1
+           WHERE NTCE_NO = #{ntceNo}
+    </update>
+
+    <select id="getNtceNOSeq" resultType="Integer">
+        SELECT SYS0069M_NTCE_NO_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <insert id="insertNotice" parameterType="Map">
+        INSERT INTO SYS0069M(
+			     NTCE_NO
+			    ,NTCE_SUBJECT
+			    ,RGST_USER_NM
+			    ,EMGNCY_FLAG
+			    ,PASSWORD
+			    ,NTCE_CNTNT
+			    ,NTCE_START_DT
+			    ,NTCE_END_DT
+			    ,RGST_USER_ID
+			    ,ATCH_FILE_GRP_ID
+			    ,CRT_USER_ID
+			    ,CRT_DT
+			    ,UPD_USER_ID
+			    ,UPD_DT
+			    ,READ_CNT
+              )
+		VALUES
+		    (
+		        #{noticeSeq}
+		       ,#{ntceSubject}
+		       ,#{rgstUserNm}
+		       ,#{emgncyFlag}
+		       ,#{password}
+		       ,#{ntceCntnt}
+		       ,TO_DATE(#{ntceStartDt}, 'DD/MM/YYYY')
+		       ,TO_DATE(#{ntceEndDt}, 'DD/MM/YYYY')
+		       ,#{userId}
+		       ,#{atchFileGrpId}
+		       ,#{userId}
+		       ,SYSDATE
+		       ,#{userId}
+		       ,SYSDATE
+		       ,0
+		    )
+    </insert>
+
+
+    <select id="selectAttachmentFileInfo" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+
+    <select id="selectNtfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            NTF_ID,
+            NTF_TYPE,
+            NTF_TYPE_DESC,
+            NTF_KEY,
+            NTF_KEY_STUS,
+            CASE WHEN NTF_KEY_STUS = 'J' THEN 'Rejected'
+            WHEN NTF_KEY_STUS = 'R' THEN 'Approval in Progress'
+            WHEN NTF_KEY_STUS = 'A' THEN 'Approved' END AS NTF_KEY_STUS_DESC,
+            NTF_REM,
+            NTF_FLAG,
+            CASE WHEN NTF_TYPE = 'J2' THEN a.CLM_MONTH WHEN NTF_TYPE = 'J4' THEN b.CLM_MONTH END PERIOD,
+            TO_CHAR(SYS0092M.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+            C.USER_NAME
+        FROM SYS0092M
+        INNER JOIN SYS0047M c
+            ON SYS0092M.CRT_USER = C.USER_ID
+        LEFT JOIN FCM0013M a
+            ON SYS0092M.NTF_KEY = a.CLM_NO
+        LEFT JOIN FCM0019M b
+            ON SYS0092M.NTF_KEY = b.CLM_NO
+        LEFT JOIN PAY0344M D
+            ON SYS0092M.NTF_KEY = TO_CHAR(D.REQ_ID)
+        WHERE
+        <if test="apprGrp == null or apprGrp == '' ">
+           NTF_USER_ID = #{userId}
+       </if>
+       <if test="apprGrp == 1 ">
+           NTF_USER_ID IN (#{userId}, (SELECT APPR_GRP FROM FCM0023M WHERE APPR_MEM_NAME = #{userId} and GRP_NTF = '1'))
+       </if>
+        <if test="ntfFlag != null and ntfFlag != '' ">
+            AND NTF_FLAG = #{ntfFlag}
+        </if>
+        <if test="createDate != null and createDate != ''">
+        <![CDATA[
+             AND SYS0092M.CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+        <![CDATA[
+             AND SYS0092M.CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        <if test="clmType != null and clmType != ''">
+              AND NTF_TYPE  IN <!-- (SELECT * FROM (SELECT NTF_TYPE FROM SYS0092M WHERE SYS0092M.NTF_TYPE IN -->
+         <foreach item="item" collection="clmType" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+                <!-- UNION
+                  SELECT NTF_TYPE FROM SYS0092M WHERE SYS0092M.NTF_TYPE IN (SELECT NTF_TYPE FROM SYS0092M WHERE NTF_TYPE IN ('DCF', 'FT', 'REF')))) -->
+        </if>
+        ORDER BY SYS0092M.CRT_DT DESC
+    </select>
+
+    <update id="updateNtfStus" parameterType="Map">
+        <!-- deleteMasterClaim -->
+        UPDATE SYS0092M
+        SET
+            NTF_FLAG = #{ntfFlag},
+            UPD_USER = #{updUserId}
+        WHERE NTF_ID = #{ntfId}
+        AND NTF_KEY = #{ntfKey}
+    </update>
+</mapper>

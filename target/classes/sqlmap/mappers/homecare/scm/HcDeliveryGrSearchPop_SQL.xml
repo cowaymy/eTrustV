@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcDeliveryGrSearchPopMapper">
+
+    <select id="selectDeliveryGrSearchPop" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrSearchPopMapper.selectDeliveryGrSearchPop] - KR JIN */
+        SELECT B.CDC
+		     , A.HMC_DELVRY_NO
+		     , (SELECT SUM(X.DELVRY_QTY) FROM HMC0008D X WHERE X.HMC_DELVRY_NO = A.HMC_DELVRY_NO GROUP BY X.HMC_DELVRY_NO ) AS DELVRY_QTY
+		     , A.DELVRY_GI_DT
+		     , A.PO_NO
+		     , B.MEM_ACC_ID VENDOR_ID
+		     , C.MEM_ACC_NAME VENDOR
+		  from HMC0007M A
+		     , HMC0004M B
+		     , FCM0006M C
+		 WHERE A.PO_NO = B.PO_NO
+		 <!-- Added to resolved unable to search HDVR by supplier issue -->
+		      AND C.MEM_ACC_ID = B.MEM_ACC_ID
+		   AND DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND DISAB = '0' AND CODE = '20')
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		 <if test='pCdc != null and pCdc != ""'>
+		   AND B.CDC = #{pCdc}
+		 </if>
+		 <if test="pMemAccId != null and pMemAccId !=''">
+		   AND B.MEM_ACC_ID = #{pMemAccId}
+		 </if>
+		 <if test="sDlvGiDtFrom != null and sDlvGiDtFrom !=''">
+		   AND A.DELVRY_GI_DT <![CDATA[>=]]> TO_DATE(#{sDlvGiDtFrom}, 'YYYYMMDD')
+		 </if>
+		 <if test="sDlvGiDtTo != null and sDlvGiDtTo !=''">
+		   AND A.DELVRY_GI_DT <![CDATA[<=]]> TO_DATE(#{sDlvGiDtTo}, 'YYYYMMDD') + 1
+		 </if>
+		 <if test="sHmcDelvryNo != null and sHmcDelvryNo !=''">
+		   AND A.HMC_DELVRY_NO = #{sHmcDelvryNo}
+		 </if>
+         <if test="pPoNo != null and pPoNo !=''">
+           AND A.PO_NO = #{pPoNo}
+         </if>
+    </select>
+
+</mapper>

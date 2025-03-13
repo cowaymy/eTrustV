@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.AsFromCodyApiServiceMapper">
+
+  <insert id="insertAsFromCodyRequest" parameterType="Map"  >
+    INSERT  /* [.com/coway/trust/biz/services/as/impl/AsFromCodyApiServiceMapper.java] */
+    INTO SVC0130D( AS_CD_SEQ
+                          , SALES_ORDER_NO
+                          , STUS
+                          , CUST_NAME
+                          , PRODUCT_CODE
+                          , PRODUCT_NAME
+                          , APP_TYPE
+                          , SALES_PROMOTION
+                          , CONTRACT_DURATION
+                          , OUTSTANDING
+                          , SIRIM_NO
+                          , SERIAL_NO
+                          , MEMBERSHIP_CONTRACT_EXPIRY
+                          , DSC_CODE
+                          , PROD_CAT
+                          , REG_ID
+                          , DEFECT_CODE
+                          , DEFECT_DESC
+                          , CRT_USER_ID
+                          , CRT_DT
+                          , UPD_USER_ID
+                          , UPD_DT
+                          , REMARK
+
+    ) VALUES ( SVC0130D_ID_SEQ.NEXTVAL
+                  ,#{salesOrderNo}
+                  ,#{stus}
+                  ,#{custName}
+                  ,#{productCode}
+                  ,#{productName}
+                  ,#{appType}
+                  ,#{salesPromotion}
+                  ,#{contractDuration}
+                  ,#{outstanding}
+                  ,#{sirimNo}
+                  ,#{serialNo}
+                  ,#{membershipContractExpiry}
+                  ,#{dscCode}
+                  ,#{prodCat}
+                  ,#{regId}
+                  ,#{defectCode}
+                  ,#{defectDesc}
+                  ,#{crtUserId}
+                  ,SYSDATE
+                  ,#{updUserId}
+                  ,SYSDATE
+                  ,#{remark}
+    )
+  </insert>
+
+  <select id="selectSubmissionRecords" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       WITH TBL_SAL09 AS (
+         SELECT * FROM (
+           SELECT A.SALES_ORD_NO,
+                      B.PRGRS_ID,
+                      ROW_NUMBER() OVER(PARTITION BY A.SALES_ORD_ID ORDER BY B.LOG_ID DESC) row_num
+           FROM SAL0001D A
+           JOIN SAL0009D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+           WHERE A.SALES_ORD_NO = #{salesOrderNo}
+         ) WHERE ROW_NUM = 1
+       )
+
+       SELECT DISTINCT CASE WHEN A.STUS_CODE_ID <> 4 THEN  A.SALES_ORD_NO
+                                WHEN B.STUS IN ( '1','44' ) THEN B.SALES_ORDER_NO
+                                WHEN C.AS_STUS_ID IN ( '1','19' ) THEN A.SALES_ORD_NO
+                                WHEN D.PRGRS_ID <> 5 THEN  D.SALES_ORD_NO END SALES_ORDER_NO
+       FROM SAL0001D A
+       LEFT JOIN SVC0130D B ON A.SALES_ORD_NO = B.SALES_ORDER_NO AND B.STUS IN ( '1','44' )
+       LEFT JOIN SVC0001D C ON A.SALES_ORD_ID = C.AS_SO_ID AND C.AS_STUS_ID IN ( '1','19' )
+       LEFT JOIN TBL_SAL09 D ON A.SALES_ORD_NO = D.SALES_ORD_NO
+       WHERE A.SALES_ORD_NO = #{salesOrderNo} AND ROWNUM =1
+    ]]>
+  </select>
+
+  <select id="selectSubmissionRecordsAll" parameterType="Map" resultType="egovMap">
+    SELECT A.REG_ID AS USER_ID,
+               A.SALES_ORDER_NO AS SALES_ORDER_NO,
+               A.PROD_CAT AS PROD_CAT,
+               C.NAME AS STUS,
+               TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') AS CRT_DT,
+               A.APPV_REMARK AS REMARK,
+               A.PRODUCT_NAME AS PRODUCT_NAME,
+               A.CUST_NAME AS CUST_NAME
+    FROM SVC0130D A
+    JOIN SYS0047M B on A.REG_ID = B.USER_NAME
+    JOIN SYS0038M C on C.STUS_CODE_ID = A.STUS
+    WHERE 1 = 1
+
+        AND B.USER_ID = #{userId}
+
+        <if test="fromDate != null and fromDate != '' ">
+          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{fromDate}, 'YYYYMMDD'),'YYYY-MM-DD')
+        </if>
+
+        <if test="toDate != null and toDate != '' ">
+          AND TO_CHAR (A.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{toDate}, 'YYYYMMDD'),'YYYY-MM-DD')
+        </if>
+
+        <if test="salesOrderNo != null and salesOrderNo != '' ">
+          AND A.SALES_ORDER_NO = #{salesOrderNo}
+        </if>
+
+        <if test="stus != null and stus != '' ">
+          AND A.STUS = #{stus}
+        </if>
+
+    ORDER BY A.CRT_DT DESC
+  </select>
+
+  <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT SALES_ORDER_NO
+               , PROD_CAT
+               , APP_TYPE
+               , MAIL_ADDRESS
+               , RESULTIC_MOBILE_NO
+               , CUSTOMER_TYPE
+               , CORP_TYPE_ID
+               , CUSTOMER_ID
+               , CUST_NAME
+               , PRODUCT_CODE
+               , PRODUCT_NAME
+               , TO_CHAR (MEMBERSHIP_CONTRACT_EXPIRY, 'YYYYMMDD') AS MEMBERSHIP_CONTRACT_EXPIRY
+               , OUTSTANDING
+      FROM ( SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
+                                        , G.CODE AS PROD_CAT
+                                        , A.APP_TYPE_ID AS APP_TYPE
+                                        , C.EMAIL AS MAIL_ADDRESS
+                                        , C.NRIC AS RESULTIC_MOBILE_NO
+                                        , D.TYPE_ID AS CUSTOMER_TYPE
+                                        , D.CORP_TYPE_ID AS CORP_TYPE_ID
+                                        , D.CUST_ID AS CUSTOMER_ID
+                                        , D.NAME AS CUST_NAME
+                                        , F.STK_CODE AS PRODUCT_CODE
+                                        , F.STK_DESC AS PRODUCT_NAME
+                                        , E.SRV_EXPR_DT AS MEMBERSHIP_CONTRACT_EXPIRY
+                                        , TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS OUTSTANDING
+                 FROM SAL0001D A
+                  JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                  JOIN SAL0027D C ON C.CUST_ID = A.CUST_ID
+                  JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+                  JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+                  JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
+                  JOIN SYS0013M G ON G.CODE_ID = F.STK_CTGRY_ID
+                  LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+                  WHERE A.SALES_ORD_NO = #{salesOrderNo}
+                  ORDER BY MEMBERSHIP_CONTRACT_EXPIRY DESC
+      )
+      WHERE ROWNUM < 2
+    ]]>
+  </select>
+</mapper>

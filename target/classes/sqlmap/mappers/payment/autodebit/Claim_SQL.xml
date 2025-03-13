@@ -1,0 +1,1649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.autodebit.service.impl.ClaimMapper">
+
+  <!--Auto Debit - Claim List 리스트 조회 -->
+  <select id="selectClaimList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.CTRL_ID,
+    Extent1.CTRL_BATCH_NO,
+    Extent1.CTRL_BANK_ID,
+    NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD-MM-YYYY'),'01-01-1900') AS
+    CTRL_BATCH_DT,
+    NVL(Extent1.CTRL_BILL_AMT,0) AS CTRL_BILL_AMT,
+    NVL(Extent1.CTRL_BILL_PAY_AMT,0) AS CTRL_BILL_PAY_AMT,
+    NVL(Extent1.CTRL_IS_CLOS,0) AS CTRL_IS_CLOS,
+    NVL(Extent1.CTRL_STUS_ID,0) AS CTRL_STUS_ID,
+    Extent1.CRT_USER_ID,
+    Extent1.UPD_USER_ID,
+    TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.') AS CRT_DT,
+    NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,
+    Extent1.CTRL_IS_CRC,
+    (CASE WHEN 1 = Extent1.CTRL_IS_CRC THEN 'Credit Card'
+    WHEN 134 =
+    Extent1.CTRL_IS_CRC THEN 'FPX'
+    ELSE 'Direct Debit' END
+    ) AS
+    CTRL_IS_CRC_NAME,
+    Extent1.CTRL_REM,
+    NVL(Extent1.CTRL_FAIL_SMS_IS_PUMP,0) AS CTRL_FAIL_SMS_IS_PUMP,
+    <!-- Extent1.CTRL_TOT_ITM, -->
+    NVL(Extent7.TOT_ITM, Extent1.CTRL_TOT_ITM) CTRL_TOT_ITM, <!--  Changed by Hui Ding for counting total item from unique account number -->
+    Extent1.CTRL_TOT_SUCCES,
+    Extent1.CTRL_TOT_FAIL,
+    Extent1.CTRL_WAIT_SYNC,
+    Extent2.CODE AS STUS_CODE ,
+    Extent2.NAME AS
+    STUS_NAME ,
+    Extent3.BANK_ID AS BANK_ID ,
+    CASE WHEN Extent3.BANK_ID IS
+    NOT NULL THEN Extent3.CODE ELSE ' ' END
+    BANK_CODE ,
+    CASE WHEN
+    Extent3.BANK_ID IS NOT NULL THEN Extent3.NAME ELSE ' ' END
+    BANK_NAME
+    ,
+    NVL(Extent4.USER_NAME,' ') AS CRT_USER_NAME,
+    NVL(Extent5.USER_NAME,' ') AS UPD_USER_NAME,
+    Extent1.CTRL_DDT_CHL,
+    Extent6.CODE_NAME
+    DDT_CHNL
+    FROM PAY0041D Extent1
+    <!--  Changed by Hui Ding for counting total item from unique account number -->
+    LEFT JOIN
+        (SELECT BANK_DTL_CTRL_ID, COUNT(1) AS TOT_ITM FROM PAY0287D D GROUP BY BANK_DTL_CTRL_ID) Extent7
+        ON Extent1.CTRL_ID = Extent7.BANK_DTL_CTRL_ID
+    JOIN SYS0038M Extent2 ON
+    Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
+    LEFT JOIN SYS0004M
+    Extent3 ON Extent3.BANK_ID = Extent1.CTRL_BANK_ID
+    LEFT JOIN SYS0047M
+    Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+    LEFT JOIN SYS0047M
+    Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+    LEFT JOIN SYS0013M
+    Extent6 ON Extent6.CODE_ID = Extent1.CTRL_DDT_CHL AND
+    Extent6.CODE_MASTER_ID = '403'
+    WHERE 1=1
+    <if test="batchId != null and batchId != ''">
+      AND Extent1.CTRL_ID = #{batchId}
+    </if>
+    <if test="creator != null and creator != ''">
+      AND EXTENT4.USER_NAME =#{creator}
+    </if>
+    <if
+      test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+      AND Extent1.CRT_DT <![CDATA[   >= ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss')
+      AND Extent1.CRT_DT <![CDATA[   <   ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss') + 1
+    </if>
+    <if test="claimType != null and claimType != ''">
+      <choose>
+        <when test='claimType == "132" '>
+          AND Extent1.CTRL_IS_CRC = 0
+        </when>
+        <when test='claimType == "131" '>
+          AND Extent1.CTRL_IS_CRC = 1
+        </when>
+        <when test='claimType == "134" '>
+          AND Extent1.CTRL_IS_CRC = 134
+        </when>
+      </choose>
+    </if>
+    <if test="status != null and status != ''">
+      AND Extent1.CTRL_STUS_ID = #{status}
+    </if>
+    <if
+      test="debitDt1 != null and debitDt2 != null and debitDt1 != '' and debitDt2 != '' ">
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   >= ]]>
+      TO_DATE(#{debitDt1},'DD/MM/YYYY')
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   <= ]]>
+      TO_DATE(#{debitDt2},'DD/MM/YYYY')
+    </if>
+    <if test="smsSend != null and smsSend != ''">
+      AND Extent1.CTRL_FAIL_SMS_IS_PUMP = #{smsSend}
+    </if>
+    <if test="issueBank != null and issueBank != ''">
+      AND Extent1.CTRL_BANK_ID = #{issueBank}
+    </if>
+    <if test="ddtChnl != null and ddtChnl != ''">
+      AND Extent1.CTRL_DDT_CHL = #{ddtChnl}
+    </if>
+    <choose>
+      <when test="IS_GRP != null and IS_GRP != '' ">
+        AND Extent1.CTRL_GROUP = 1
+      </when>
+      <otherwise>
+        AND Extent1.CTRL_GROUP != 1
+      </otherwise>
+    </choose>
+    AND Extent1.VRESCUE = 0
+    ORDER BY Extent1.CTRL_ID
+  </select>
+
+  <!--Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제 -->
+  <delete id="deleteClaimResultItem" parameterType="Map">
+    DELETE FROM
+    PAY0037D WHERE ID = #{ctrlId}
+  </delete>
+
+  <!--Auto Debit - Claim Result Deactivate 처리 : 마스터 수정 -->
+  <update id="updateClaimResultStatus" parameterType="Map">
+    UPDATE
+    PAY0041D SET CTRL_STUS_ID = 8
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE CTRL_ID = #{ctrlId}
+  </update>
+
+  <!--Auto Debit - Claim Result Update : 아이템 등록 -->
+  <insert id="insertClaimResultItem" parameterType="Map">
+    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, MAC_CODE, DESC_RESP)
+    VALUES (
+    (CASE WHEN
+    LENGTH(#{refNo}) <![CDATA[   < ]]>
+    7
+    THEN LPAD(#{refNo},7,'0')
+    WHEN LENGTH(#{refNo}) <![CDATA[   > ]]>
+    7 THEN LPAD(#{refNo},14,'0')
+    ELSE #{refNo} END
+    ),
+    (CASE WHEN #{refCode}
+    IS NULL
+    THEN #{refCode}
+    WHEN #{refCode} = 'A'
+    THEN
+    LPAD(#{refCode},3,'0')
+    WHEN LENGTH(#{refCode}) <![CDATA[   < ]]>
+    2
+    THEN LPAD(#{refCode},2,'0')
+    ELSE #{refCode} END
+    ),
+    #{id},
+    #{itemId},
+    #{apprCode},
+    #{item.macCode},
+    #{item.descResp}
+    )
+  </insert>
+
+  <!--Auto Debit - Claim Result Update : 아이템 등록 -->
+  <insert id="insertClaimResultItemBulk" parameterType="java.util.List">
+    INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID,APPR_CODE, MAC_CODE, DESC_RESP)
+    <foreach collection="list" item="item" index="index"
+      separator=" UNION ALL ">
+      SELECT
+      #{item.refNo},
+      #{item.refCode},
+      #{item.id},
+      #{item.itemId},
+      #{item.apprCode},
+      #{item.macCode},
+      #{item.descResp}
+      FROM DUAL
+    </foreach>
+  </insert>
+
+  <!--Auto Debit - Claim Result Update : 아이템 등록 -->
+  <update id="updateClaimResultItemArrange" parameterType="Map">
+    UPDATE PAY0037D SET REF_NO = (CASE WHEN LENGTH(REF_NO) <![CDATA[   < ]]>
+    7
+    THEN LPAD(REF_NO,7,'0')
+    WHEN LENGTH(REF_NO) <![CDATA[   > ]]>
+    7
+    THEN LPAD(REF_NO,16,'0')
+    ELSE REF_NO END
+    ),
+    REF_CODE = (CASE WHEN
+    REF_CODE IS NULL
+    THEN REF_CODE
+    WHEN REF_CODE = 'A'
+    THEN
+    LPAD(REF_CODE,3,'0')
+    WHEN LENGTH(REF_CODE) <![CDATA[   < ]]>
+    2
+    THEN LPAD(REF_CODE,2,'0')
+    ELSE REF_CODE END
+    )
+    WHERE ID = #{ctrlId}
+  </update>
+
+  <!--Auto Debit - Claim Result Update : 아이템 등록 -->
+  <update id="removeItmId" parameterType="Map">
+    UPDATE PAY0037D SET
+    ITM_ID = '' WHERE ID = #{ctrlId}
+  </update>
+
+  <!--Auto Debit - Claim Result Update : 결과 조회 -->
+  <select id="selectUploadResultBank" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    ID AS CTRL_ID,
+    COUNT(1) AS TOTAL_ITEM,
+    SUM(CASE WHEN
+    REF_CODE IS NULL THEN 1 ELSE 0 END) AS TOTAL_SUCCESS,
+    SUM(CASE WHEN
+    REF_CODE IS NOT NULL THEN 1 ELSE 0 END) AS TOTAL_FAIL
+    FROM
+    PAY0037D
+    WHERE
+    ID = #{ctrlId}
+    GROUP BY ID
+  </select>
+
+  <!--Auto Debit - Claim Result Update : 결과 조회 -->
+  <select id="selectUploadResultCRC" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    ID AS CTRL_ID,
+    COUNT(1) AS TOTAL_ITEM,
+    SUM(CASE WHEN
+    REF_CODE = '00' THEN 1 ELSE 0 END) AS TOTAL_SUCCESS,
+    SUM(CASE WHEN
+    REF_CODE IS NULL OR REF_CODE != '00' THEN 1 ELSE 0 END) AS
+    TOTAL_FAIL
+    FROM
+    PAY0037D
+    WHERE
+    ID = #{ctrlId}
+    GROUP BY ID
+  </select>
+
+  <update id="updateClaimResultLive" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call
+    SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId},#{ddtChnl})
+    }
+  </update>
+
+  <update id="updateCreditCardResultLive" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call
+    SP_AUTO_DEBT_UPD_RESULT_CCD(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})
+    }
+  </update>
+
+
+  <!--Auto Debit - Claim Result Update NEXT DAY -->
+  <update id="updateClaimResultNextDay" parameterType="Map">
+    UPDATE
+    PAY0041D SET
+    CTRL_WAIT_SYNC = 1
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE
+    CTRL_ID = #{ctrlId}
+  </update>
+
+  <!--Auto Debit - Claim 조회 -->
+  <select id="selectClaimById" parameterType="Map" resultType="egovMap">
+    SELECT
+    CTRL_ID
+    , CTRL_BATCH_NO
+    , CTRL_BANK_ID
+    ,
+    TO_CHAR(CTRL_BATCH_DT,'YYYY-MM-DD') AS CTRL_BATCH_DT
+    , CTRL_BILL_AMT
+    , CTRL_BILL_PAY_AMT
+    , CTRL_IS_CLOS
+    , CTRL_STUS_ID
+    , CRT_USER_ID
+    , CRT_DT
+    , UPD_DT
+    , UPD_USER_ID
+    , CTRL_IS_CRC
+    , CTRL_FAIL_SMS_IS_PUMP
+    ,
+    CTRL_TOT_ITM
+    , CTRL_TOT_SUCCES
+    , CTRL_TOT_FAIL
+    , CTRL_WAIT_SYNC
+    ,
+    CTRL_DDT_CHL
+    FROM
+    PAY0041D
+    WHERE
+    CTRL_ID = #{ctrlId}
+  </select>
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectClaimDetailById" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    Extent1.BANK_DTL_ID,
+    Extent1.BANK_DTL_CTRL_ID,
+    Extent1.SALES_ORD_ID,
+    TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') AS
+    BANK_DTL_DR_DT,
+    Extent1.BANK_DTL_DR_BANK_TYPE_ID,
+    regexp_substr
+    (Extent1.BANK_DTL_DR_ACC_NO, '[^[:space:]]+') BANK_DTL_DR_ACC_NO,
+    regexp_substr (Extent1.BANK_DTL_DR_NAME, '[^[:cntrl:]]+')
+    BANK_DTL_DR_NAME,
+    Extent1.BANK_DTL_AMT ,
+    Extent1.BANK_DTL_APPR_CODE AS
+    BANK_DTL_APPR_CODE ,
+    Extent1.BANK_DTL_OR_NO ,
+    Extent1.CRT_USER_ID ,
+    Extent1.CRT_DT ,
+    Extent1.UPD_USER_ID ,
+    Extent1.UPD_DT ,
+    regexp_substr
+    (Extent1.BANK_DTL_DR_NRIC, '[^[:space:]]+') BANK_DTL_DR_NRIC,
+    Extent1.BANK_DTL_OR_NO_RPT ,
+    Extent1.BANK_DTL_REN_STUS ,
+    Extent1.SVC_CNTRCT_ID ,
+    Extent1.BANK_DTL_BANK_ID ,
+    (CASE WHEN
+    Extent1.BANK_APPV IS NOT NULL THEN Extent1.BANK_APPV ELSE 0 END)
+    AS
+    BANK_APPV,
+    (CASE WHEN Extent1.BANK_DTL_APPR_DT IS NOT NULL THEN
+    TO_CHAR(Extent1.BANK_DTL_APPR_DT,'YYYY-MM-DD') ELSE '1900-01-01'
+    END)
+    AS BANK_DTL_APPR_DT ,
+    (CASE WHEN Extent2.BIC IS NOT NULL THEN
+    Extent2.BIC ELSE ' ' END) AS BIC ,
+    (CASE WHEN Extent1.BANK_DTL_FPX_ID
+    IS NOT NULL THEN
+    Extent1.BANK_DTL_FPX_ID ELSE 0 END) AS
+    BANK_DTL_FPX_ID,
+    CASE WHEN Extent5.F_PX_ID IS NOT NULL THEN
+    Extent5.CODE ELSE ' ' END AS
+    FPX_CODE ,
+    TRIM(Extent3.SALES_ORD_NO)
+    SALES_ORD_NO ,
+    (CASE WHEN Extent1.BANK_DTL_RPT_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_RPT_AMT ELSE 0 END) AS BANK_DTL_RPT_AMT ,
+    (CASE WHEN
+    Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_REN_AMT
+    ELSE 0 END) AS BANK_DTL_REN_AMT ,
+    (CASE WHEN
+    Extent1.BANK_DTL_CRC_EXPR IS NOT NULL THEN
+    Extent1.BANK_DTL_CRC_EXPR
+    ELSE ' ' END) AS BANK_DTL_CRC_EXPR ,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID
+    IS NOT NULL THEN
+    TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS
+    SRV_CNTRCT_REF_NO ,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
+    THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE TRIM(Extent3.SALES_ORD_NO) END) AS
+    BILL_NO,
+    case when Extent1.DD_PAYMENT_ID IS NOT NULL THEN Extent1.DD_PAYMENT_ID ELSE
+    (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+    (CASE
+    WHEN
+    LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]>
+    7 THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    END
+    )
+    ELSE
+    (CASE WHEN
+    LENGTH(Extent3.SALES_ORD_NO) = 7 AND
+    SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
+    TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))
+    ELSE
+    TRIM(Extent3.SALES_ORD_NO)
+    END)
+    END)END AS CNTRCT_N_ORD_NO,
+    Extent6.BANK_ACH_CODE,
+    Extent2.CODE
+    FROM
+    PAY0042D Extent1
+    LEFT JOIN
+    SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
+    JOIN
+    SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT
+    JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID =
+    Extent1.SVC_CNTRCT_ID
+    LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID =
+    Extent1.BANK_DTL_FPX_ID
+    LEFT JOIN SYS0093M Extent6 ON Extent2.BANK_ID
+    = Extent6.BANK_ID
+    WHERE
+    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+    ORDER BY
+    Extent1.BANK_DTL_DR_ACC_NO ASC
+  </select>
+
+
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectClaimDetailByIdCnt" parameterType="Map"
+    resultType="int">
+    SELECT
+    COUNT(1) AS CNT
+    FROM
+    PAY0042D Extent1
+    LEFT JOIN
+    SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
+    JOIN
+    SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT
+    JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID =
+    Extent1.SVC_CNTRCT_ID
+    LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID =
+    Extent1.BANK_DTL_FPX_ID
+    WHERE
+    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+
+  </select>
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectCCClaimDetailByIdCnt" parameterType="Map"
+    resultType="int">
+    SELECT
+    COUNT(1) AS CNT
+    FROM
+    PAY0287D Extent1
+    WHERE
+    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+
+  </select>
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectClaimDetailBatchGen" parameterType="Map"
+    resultType="int">
+    SELECT COUNT(1) CNT FROM (
+    SELECT
+    FILE_BATCH_CRT_DT CRT_DT
+    FROM PAY0245M
+    WHERE TO_CHAR(FILE_BATCH_CRT_DT,'YYYY/MM/DD hh:mi:ss
+    A.M.')
+    BETWEEN TO_CHAR(SYSDATE,'YYYY/MM/DD')
+    AND
+    TO_CHAR(SYSDATE,'YYYY/MM/DD hh:mi:ss A.M.') AND FILE_BATCH_BANK_ID =
+    19 AND FILE_BATCH_STUS_ID IN (1,4)
+    UNION
+    SELECT
+    CRT_DT
+    FROM PAY0041D
+    WHERE TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.')
+    BETWEEN
+    TO_CHAR(SYSDATE,'YYYY/MM/DD')
+    AND TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss
+    A.M.') AND CTRL_BANK_ID = 19 AND
+    CTRL_STUS_ID IN (1,4)
+    )
+  </select>
+
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectClaimDetailByIdPaging" parameterType="Map"
+    resultType="egovMap">
+    SELECT *
+    FROM (SELECT ROWNUM AS RNUM
+    ,Z.*
+    FROM (
+    SELECT
+    Extent1.BANK_DTL_ID,
+    Extent1.BANK_DTL_CTRL_ID,
+    Extent1.SALES_ORD_ID,
+    TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') AS BANK_DTL_DR_DT,
+    Extent1.BANK_DTL_DR_BANK_TYPE_ID,
+    Extent1.BANK_DTL_DR_ACC_NO AS
+    BANK_DTL_DR_ACC_NO,
+    Extent1.BANK_DTL_DR_NAME ,
+    Extent1.BANK_DTL_AMT ,
+    Extent1.BANK_DTL_APPR_CODE AS BANK_DTL_APPR_CODE ,
+    Extent1.BANK_DTL_OR_NO ,
+    Extent1.CRT_USER_ID ,
+    Extent1.CRT_DT ,
+    Extent1.UPD_USER_ID ,
+    Extent1.UPD_DT ,
+    Extent1.BANK_DTL_DR_NRIC ,
+    Extent1.BANK_DTL_OR_NO_RPT ,
+    Extent1.BANK_DTL_REN_STUS ,
+    Extent1.SVC_CNTRCT_ID ,
+    Extent1.BANK_DTL_BANK_ID ,
+    (CASE WHEN
+    Extent1.BANK_APPV IS NOT NULL THEN Extent1.BANK_APPV ELSE 0 END)
+    AS
+    BANK_APPV,
+    (CASE WHEN Extent1.BANK_DTL_APPR_DT IS NOT NULL THEN
+    TO_CHAR(Extent1.BANK_DTL_APPR_DT,'YYYY-MM-DD') ELSE '1900-01-01'
+    END)
+    AS BANK_DTL_APPR_DT ,
+    (CASE WHEN Extent2.BIC IS NOT NULL THEN
+    Extent2.BIC ELSE ' ' END) AS BIC ,
+    (CASE WHEN Extent1.BANK_DTL_FPX_ID
+    IS NOT NULL THEN
+    Extent1.BANK_DTL_FPX_ID ELSE 0 END) AS
+    BANK_DTL_FPX_ID,
+    CASE WHEN Extent5.F_PX_ID IS NOT NULL THEN
+    Extent5.CODE ELSE ' ' END AS
+    FPX_CODE ,
+    TRIM(Extent3.SALES_ORD_NO)
+    SALES_ORD_NO ,
+    (CASE WHEN Extent1.BANK_DTL_RPT_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_RPT_AMT ELSE 0 END) AS BANK_DTL_RPT_AMT ,
+    (CASE WHEN
+    Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_REN_AMT
+    ELSE 0 END) AS BANK_DTL_REN_AMT ,
+    (CASE WHEN
+    Extent1.BANK_DTL_CRC_EXPR IS NOT NULL THEN
+    Extent1.BANK_DTL_CRC_EXPR
+    ELSE ' ' END) AS BANK_DTL_CRC_EXPR ,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID
+    IS NOT NULL THEN
+    TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS
+    SRV_CNTRCT_REF_NO ,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
+    THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE TRIM(Extent3.SALES_ORD_NO) END) AS
+    BILL_NO,
+    (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+    (CASE
+    WHEN
+    LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]>
+    7 THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    END
+    )
+    ELSE
+    (CASE WHEN
+    LENGTH(Extent3.SALES_ORD_NO) = 7 AND
+    SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
+    TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))
+    ELSE
+    TRIM(Extent3.SALES_ORD_NO)
+    END)
+    END) AS CNTRCT_N_ORD_NO ,
+    (
+    SELECT
+    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
+    FROM
+    SAL0001D
+    som
+    JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+    LEFT JOIN
+    SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND
+    rs.CUST_CRC_ID <![CDATA[   <> ]]>
+    0
+    WHERE
+    som.STUS_CODE_ID <![CDATA[   <> ]]>
+    10
+    AND rs.MODE_ID = 131
+    AND som.APP_TYPE_ID IN (66,1412)
+    AND rs.BANK_ID
+    IN (19,34,17,28,18,31,16,23)
+    AND som.SALES_ORD_ID = Extent3.SALES_ORD_ID
+    AND ROWNUM = 1
+    ) AS RENT_PAY_CRC_EXPR
+    FROM
+    PAY0042D Extent1
+    LEFT JOIN
+    SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
+    JOIN
+    SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT
+    JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID =
+    Extent1.SVC_CNTRCT_ID
+    LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID =
+    Extent1.BANK_DTL_FPX_ID
+    WHERE
+    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+    <!-- ORDER BY Extent1.BANK_DTL_DR_ACC_NO ASC -->
+    ) Z
+    WHERE ROWNUM <![CDATA[<=]]>
+    ( #{pageNo} * #{rowCount}) ORDER BY BANK_DTL_ID ASC)
+    WHERE RNUM >
+    ((#{pageNo} - 1) * #{rowCount})
+  </select>
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectClaimDetailByIdPagingMBB" parameterType="Map"
+    resultType="egovMap">
+    SELECT *
+    FROM (SELECT ROWNUM AS RNUM
+    ,Z.*
+    ,SUM(BANK_DTL_AMT) OVER
+    (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED
+    FOLLOWING) AS
+    TOT_AMT
+    ,COUNT(BANK_DTL_ID) OVER (ORDER BY ROWNUM ROWS between 0
+    FOLLOWING AND UNBOUNDED
+    FOLLOWING) AS TOT_ITM
+    FROM (
+    SELECT
+    Extent1.BANK_DTL_ID,
+    Extent1.BANK_DTL_CTRL_ID,
+    Extent1.SALES_ORD_ID,
+    TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') AS BANK_DTL_DR_DT,
+    Extent1.BANK_DTL_DR_BANK_TYPE_ID,
+    Extent1.BANK_DTL_DR_ACC_NO AS
+    BANK_DTL_DR_ACC_NO,
+    Extent1.BANK_DTL_DR_NAME ,
+    Extent1.BANK_DTL_AMT ,
+    Extent1.BANK_DTL_APPR_CODE AS BANK_DTL_APPR_CODE ,
+    Extent1.BANK_DTL_OR_NO ,
+    Extent1.CRT_USER_ID ,
+    Extent1.CRT_DT ,
+    Extent1.UPD_USER_ID ,
+    Extent1.UPD_DT ,
+    Extent1.BANK_DTL_DR_NRIC ,
+    Extent1.BANK_DTL_OR_NO_RPT ,
+    Extent1.BANK_DTL_REN_STUS ,
+    Extent1.SVC_CNTRCT_ID ,
+    Extent1.BANK_DTL_BANK_ID ,
+    (CASE WHEN
+    Extent1.BANK_APPV IS NOT NULL THEN Extent1.BANK_APPV ELSE 0 END)
+    AS
+    BANK_APPV,
+    (CASE WHEN Extent1.BANK_DTL_APPR_DT IS NOT NULL THEN
+    TO_CHAR(Extent1.BANK_DTL_APPR_DT,'YYYY-MM-DD') ELSE '1900-01-01'
+    END)
+    AS BANK_DTL_APPR_DT ,
+    (CASE WHEN Extent2.BIC IS NOT NULL THEN
+    Extent2.BIC ELSE ' ' END) AS BIC ,
+    (CASE WHEN Extent1.BANK_DTL_FPX_ID
+    IS NOT NULL THEN
+    Extent1.BANK_DTL_FPX_ID ELSE 0 END) AS
+    BANK_DTL_FPX_ID,
+    CASE WHEN Extent5.F_PX_ID IS NOT NULL THEN
+    Extent5.CODE ELSE ' ' END AS
+    FPX_CODE ,
+    TRIM(Extent3.SALES_ORD_NO)
+    SALES_ORD_NO ,
+    (CASE WHEN Extent1.BANK_DTL_RPT_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_RPT_AMT ELSE 0 END) AS BANK_DTL_RPT_AMT ,
+    (CASE WHEN
+    Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN
+    Extent1.BANK_DTL_REN_AMT
+    ELSE 0 END) AS BANK_DTL_REN_AMT ,
+    (CASE WHEN
+    LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]>
+    4 THEN '0000'
+    WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]>
+    SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+    ELSE '0000' END) AS
+    BANK_DTL_CRC_EXPR,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN
+    TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS SRV_CNTRCT_REF_NO ,
+    (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
+    THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE TRIM(Extent3.SALES_ORD_NO) END) AS
+    BILL_NO,
+    (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+    (CASE
+    WHEN
+    LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]>
+    7 THEN
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' ||
+    TRIM(Extent3.SALES_ORD_NO)
+    ELSE
+    SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) ||
+    TRIM(Extent3.SALES_ORD_NO)
+    END
+    )
+    ELSE
+    (CASE WHEN
+    LENGTH(Extent3.SALES_ORD_NO) = 7 AND
+    SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
+    TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))
+    ELSE
+    TRIM(Extent3.SALES_ORD_NO)
+    END)
+    END) AS CNTRCT_N_ORD_NO
+    FROM
+    PAY0042D Extent1
+    LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID =
+    Extent1.BANK_DTL_BANK_ID
+    JOIN SAL0001D Extent3 ON
+    Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT JOIN SAL0077D
+    Extent4 ON Extent4.SRV_CNTRCT_ID =
+    Extent1.SVC_CNTRCT_ID
+    LEFT JOIN
+    PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
+    WHERE
+    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+    <!-- ORDER BY Extent1.BANK_DTL_DR_ACC_NO ASC -->
+    ) Z
+    WHERE ROWNUM <![CDATA[<=]]>
+    ( #{pageNo} * #{rowCount})
+    ORDER BY RNUM ASC)
+    WHERE RNUM > ((#{pageNo}
+    - 1) * #{rowCount})
+  </select>
+
+  <!--Auto Debit - Claim Detail 조회 -->
+  <select id="selectCreditCardDetailByIdPaging" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+        <if test='ctrlBankId != "17" and ctrlBankId != "23" '>
+        *
+        </if>
+        <if test='ctrlBankId == "17" or ctrlBankId == "23" '>
+        RNUM,
+        PAGENO,
+        BANK_DTL_GRP_ID,
+        BANK_DTL_CTRL_ID,
+        BANK_DTL_CRC_NO,
+        BANK_DTL_CRC_NAME,
+        (BANK_DTL_AMT * 100) BANK_DTL_AMT,
+        TRX_DATE,
+        RENT_PAY_CRC_EXPR,
+        (TOT_AMT * 100) TOT_AMT,
+        TOT_ITM ,
+        FILEDATE
+        </if>
+    FROM (
+        SELECT
+            ROWNUM RNUM
+           ,#{pageNo} as PAGENO
+           ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS FILEDATE
+           ,Z.*
+           ,SUM(BANK_DTL_AMT) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+           ,COUNT(BANK_DTL_CTRL_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+        FROM(
+            SELECT
+                Extent1.BANK_DTL_GRP_ID
+               ,Extent1.BANK_DTL_CTRL_ID
+               ,Extent1.BANK_DTL_CRC_NO
+               ,Extent1.BANK_DTL_CRC_NAME
+                <if test='ctrlBankId == "17" '>
+               ,Extent1.BANK_DTL_AMT
+                </if>
+                <if test='ctrlBankId != "17" '>
+               ,Extent1.BANK_DTL_AMT
+                </if>
+                <choose>
+                    <when test='ctrlBankId == "19" '>
+                   ,(CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
+                           WHEN Extent1.BANK_DTL_CRC_EXPR like '00%' THEN '0000'
+                           WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]> SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+                           ELSE '0000' END) AS
+                    RENT_PAY_CRC_EXPR
+                    </when>
+                    <otherwise>
+                        <if test='ctrlBankId == "17" or ctrlBankId == "23"'>
+                       ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
+                        </if>
+                       ,NVL( (
+                            SELECT
+                                MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
+                            FROM PAY0287D grp
+                            JOIN PAY0042D dtl on grp.BANK_DTL_GRP_ID = dtl.BANK_DTL_GRP_ID
+                            JOIN SAL0001D som ON som.SALES_ORD_ID = dtl.SALES_ORD_ID
+                            LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                            LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID
+                                                  AND rs.CUST_CRC_ID <![CDATA[ <> ]]> 0
+                            WHERE som.STUS_CODE_ID <![CDATA[ <> ]]> 10
+                              AND rs.MODE_ID = 131
+                              AND som.APP_TYPE_ID = 66
+                              AND rs.BANK_ID IN (19,34,17,28,18,31,16,23)
+                              AND dtl.BANK_DTL_GRP_ID = EXTENT1.BANK_DTL_GRP_ID
+                        ), '0000') AS RENT_PAY_CRC_EXPR
+                    </otherwise>
+                </choose>
+            FROM PAY0287D Extent1
+            WHERE Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+            ORDER BY Extent1.BANK_DTL_GRP_ID
+        ) Z
+        WHERE ROWNUM <![CDATA[ <= ]]> ( #{pageNo} * #{rowCount})
+        ORDER BY RNUM ASC
+    )
+    WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+  </select>
+
+  <resultMap id="resultClaimMap" type="egovMap" />
+  <select id="createClaim" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} ,
+    #{new_issueBank},
+    #{new_cardType}, #{new_debitDate}, #{userId},
+    #{new_claimDay},
+    #{new_ddtChnl}, #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultClaimMap})
+    }
+  </select>
+
+  <resultMap id="resultClaimCreditCardMap" type="egovMap" />
+  <select id="createClaimCreditCard" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
+    #{new_merchantBank},
+    #{new_cardType}, #{new_debitDate}, #{userId},
+    #{new_issueBankId},#{mayBank},#{installMonth}, #{custType},#{monthType},
+    #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultClaimMap})
+    }
+  </select>
+
+  <!--Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회 -->
+  <select id="selectFailClaimDetailList" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    Extent1.BANK_DTL_ID ,
+    Extent1.BANK_DTL_CTRL_ID ,
+    Extent1.SALES_ORD_ID ,
+    Extent1.BANK_DTL_DR_DT ,
+    Extent1.BANK_DTL_DR_BANK_TYPE_ID ,
+    Extent1.BANK_DTL_DR_ACC_NO AS
+    BANK_DTL_DR_ACC_NO,
+    Extent1.BANK_DTL_DR_NAME ,
+    Extent1.BANK_DTL_AMT ,
+    Extent1.BANK_DTL_APPR_CODE ,
+    Extent1.BANK_DTL_OR_NO ,
+    Extent1.CRT_USER_ID ,
+    Extent1.CRT_DT ,
+    Extent1.UPD_USER_ID ,
+    Extent1.UPD_DT ,
+    Extent1.BANK_DTL_DR_NRIC ,
+    Extent1.BANK_DTL_OR_NO_RPT ,
+    Extent1.BANK_DTL_REN_STUS ,
+    Extent1.SVC_CNTRCT_ID ,
+    Extent1.BANK_DTL_BANK_ID ,
+    NVL(Extent1.BANK_APPV,0) AS BANK_APPV,
+    NVL
+    (Extent1.BANK_DTL_APPR_DT,TO_DATE ('1900-01-01', 'YYYY-MM-DD')) AS
+    BANK_DTL_APPR_DT,
+    NVL(Extent2.BIC,'') AS BIC,
+    NVL(Extent1.BANK_DTL_FPX_ID,0) AS BANK_DTL_FPX_ID,
+    NVL(Extent5.F_PX_ID,'') AS F_PX_ID,
+    LTRIM(RTRIM(Extent3.SALES_ORD_NO)) SALES_ORD_NO ,
+    NVL(Extent1.BANK_DTL_RPT_AMT,0) AS BANK_DTL_RPT_AMT,
+    NVL(Extent1.BANK_DTL_REN_AMT,0) AS BANK_DTL_REN_AMT,
+    NVL(Extent1.BANK_DTL_CRC_EXPR,'') AS BANK_DTL_CRC_EXPR,
+    CASE WHEN
+    Extent4.SRV_CNTRCT_ID IS NOT NULL THEN
+    LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)) ELSE ' ' END
+    SRV_CNTRCT_REF_NO
+    ,
+    CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN
+    SUBSTR(LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)), 4 + 1, 7) ||
+    LTRIM(RTRIM(Extent3.SALES_ORD_NO))
+    ELSE
+    LTRIM(RTRIM(Extent3.SALES_ORD_NO)) END CNTRCT_N_ORD_NO
+    FROM
+    PAY0042D
+    Extent1
+    LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID =
+    Extent1.BANK_DTL_BANK_ID
+    JOIN SAL0001D Extent3 ON
+    Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+    LEFT JOIN SAL0077D
+    Extent4 ON Extent4.SRV_CNTRCT_ID =
+    Extent1.SVC_CNTRCT_ID
+    LEFT JOIN
+    PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
+    WHERE
+    Extent1.BANK_APPV = 2
+    AND Extent1.BANK_DTL_CTRL_ID = #{batchId}
+    ORDER
+    BY BANK_DTL_CTRL_ID
+  </select>
+
+  <resultMap id="resultSMS" type="egovMap" />
+  <select id="sendFaileDeduction" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} ,
+    #{userId},#{returnData,
+    mode=OUT, jdbcType=VARCHAR, javaType=String,
+    resultMap=resultSMS})
+    }
+  </select>
+
+
+  <!--Claim List - Schedule Claim Batch Pop-up 리스트 조회 -->
+  <select id="selectScheduleClaimBatchPop" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    Extent1.SCHDUL_CLM_ID SCHDUL_CLM_ID ,
+    Extent1.STUS_ID STUS_ID ,
+    Extent1.SCHDUL_ID SCHDUL_ID ,
+    Extent1.CTRL_ID CTRL_ID ,
+    Extent1.PAY_MODE_ID PAY_MODE_ID ,
+    Extent1.BANK_ID BANK_ID ,
+    Extent1.CLM_DAY CLM_DAY ,
+    Extent1.DEBT_DT DEBT_DT ,
+    Extent1.REM AS REM
+    ,
+    CASE WHEN ( Extent1.SCHDUL_CLM_DT IS NOT NULL ) THEN
+    Extent1.SCHDUL_CLM_DT
+    ELSE TO_DATE('19000101','YYYYMMDD') END
+    SCHDUL_CLM_DT ,
+    Extent2.CODE PAY_MODE_CODE ,
+    Extent2.CODE_NAME
+    PAY_MODE_NM ,
+    Extent3.CODE STUS_CODE ,
+    Extent3.NAME STUS_NM,
+    CASE WHEN
+    ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END
+    BANK_CODE ,
+    CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN
+    Extent4.NAME ELSE ' ' END
+    BANK_NAME
+    FROM
+    PAY0040D Extent1
+    JOIN SYS0013M
+    Extent2 ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+    JOIN SYS0038M
+    Extent3 ON Extent3.STUS_CODE_ID = Extent1.STUS_ID
+    LEFT JOIN SYS0004M
+    Extent4 ON Extent4.BANK_ID = Extent1.BANK_ID
+    WHERE
+    1=1
+    <if test="status != null and status != '' ">
+      AND Extent1.STUS_ID IN
+      <foreach item="item" collection="status" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="claimType != null and claimType != '' ">
+      AND Extent1.PAY_MODE_ID IN
+      <foreach item="item" collection="claimType" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="issueBank != null and issueBank != '' ">
+      AND Extent1.BANK_ID IN
+      <foreach item="item" collection="issueBank" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="claimDay != null and claimDay != '' ">
+      AND Extent1.CLM_DAY IN
+      <foreach item="item" collection="claimDay" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if
+      test="debitDt1 != null and debitDt1 != '' and debitDt2 != null and debitDt2 != '' ">
+      AND Extent1.DEBT_DT BETWEEN TO_DATE(#{debitDt1},'DD/MM/YYYY')
+      AND
+      TO_DATE(#{debitDt2},'DD/MM/YYYY')
+    </if>
+    <if
+      test="createDt1 != null and createDt1 != '' and createDt2 != null and createDt2 != '' ">
+      AND NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   >= ]]>
+      TO_DATE(#{createDt1},'DD/MM/YYYY')
+      AND
+      NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   < ]]>
+      TO_DATE(#{createDt2},'DD/MM/YYYY') + 1
+    </if>
+    ORDER BY Extent1.SCHDUL_CLM_ID
+  </select>
+
+  <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 -->
+  <select id="selectScheduleClaimSettingPop" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    Extent1.SCHDUL_ID SCHDUL_ID ,
+    Extent1.STUS_ID STUS_ID ,
+    Extent1.PAY_MODE_ID PAY_MODE_ID ,
+    Extent1.BANK_ID BANK_ID ,
+    Extent1.CLM_DAY CLM_DAY ,
+    Extent1.SCHDUL_DT SCHDUL_DT ,
+    Extent1.CRT_USER_ID CRT_USER_ID ,
+    Extent1.CRT_DT CRT_DT ,
+    Extent1.UPD_USER_ID UPD_USER_ID ,
+    Extent1.UPD_DT UPD_DT ,
+    Extent1.DEBT_DT DEBT_DT ,
+    Extent2.CODE CODE ,
+    Extent2.CODE_NAME
+    CODE_NAME ,
+    CASE WHEN ( Extent3.BANK_ID IS NOT NULL ) THEN
+    Extent3.CODE ELSE '' END
+    BANK_CODE ,
+    CASE WHEN ( Extent3.BANK_ID IS
+    NOT NULL ) THEN Extent3.NAME ELSE '' END
+    BANK_NAME ,
+    CASE WHEN (
+    Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ''
+    END
+    CRT_USER_NAME ,
+    CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN
+    Extent5.USER_NAME ELSE ''
+    END UPD_USER_NAME
+    FROM
+    PAY0039D Extent1
+    JOIN
+    SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+    LEFT JOIN
+    SYS0004M Extent3 ON Extent3.BANK_ID = Extent1.BANK_ID
+    LEFT JOIN
+    SYS0047M Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+    LEFT JOIN
+    SYS0047M Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+    WHERE
+    Extent1.STUS_ID = 1
+    AND Extent1.SCHDUL_DT BETWEEN
+    TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')) AND
+    LAST_DAY(TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')))
+    <if test="claimType != null and claimType != '' ">
+      AND Extent1.PAY_MODE_ID = #{claimType}
+    </if>
+    <if test="issueBank != null and issueBank != '' ">
+      AND Extent1.BANK_ID = #{issueBank}
+    </if>
+    ORDER BY Extent1.SCHDUL_DT ASC, Extent1.SCHDUL_ID DESC
+  </select>
+
+
+  <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 -->
+  <select id="isScheduleClaimSettingPop" parameterType="Map"
+    resultType="int">
+    SELECT
+    COUNT(1) AS CNT
+    FROM
+    PAY0039D Extent1
+    WHERE
+    Extent1.STUS_ID = 1
+    AND Extent1.SCHDUL_DT = TO_DATE(#{new_scheduleDt},'DD/MM/YYYY')
+    AND
+    Extent1.PAY_MODE_ID = #{new_claimType}
+    <if test="new_issueBank != null and new_issueBank != '' ">
+      AND Extent1.BANK_ID = #{new_issueBank}
+    </if>
+  </select>
+
+  <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
+  <insert id="saveScheduleClaimSettingPop" parameterType="Map">
+    INSERT
+    INTO PAY0039D (
+    SCHDUL_ID,
+    STUS_ID,
+    PAY_MODE_ID,
+    BANK_ID,
+    CLM_DAY,
+    SCHDUL_DT,
+    CRT_USER_ID,
+    CRT_DT,
+    UPD_USER_ID,
+    UPD_DT,
+    DEBT_DT
+    ) VALUES (
+    PAY0039D_SEQ.NEXTVAL,
+    1,
+    NVL(#{new_claimType},0),
+    NVL(#{new_issueBank},0),
+    NVL(#{new_claimDay},0),
+    TO_DATE(#{new_scheduleDt},'DD/MM/YYYY'),
+    #{userId},
+    SYSDATE,
+    #{userId},
+    SYSDATE,
+    TO_DATE(#{new_debitDt},'DD/MM/YYYY')
+    )
+  </insert>
+
+  <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
+  <update id="removeScheduleClaimSettingPop" parameterType="Map">
+    UPDATE PAY0039D SET
+    STUS_ID = 8,
+    UPD_USER_ID = #{userId},
+    UPD_DT =
+    SYSDATE
+    WHERE
+    SCHDUL_ID = #{schdulId}
+  </update>
+
+  <!--Auto Debit - -->
+  <delete id="deleteClaimFileDownloadInfo" parameterType="Map">
+    DELETE
+    FROM PAY0267M WHERE CTRL_ID = #{ctrlId}
+  </delete>
+
+  <!--Auto Debit - -->
+  <insert id="insertClaimFileDownloadInfo" parameterType="Map">
+    INSERT
+    INTO PAY0267M (CTRL_ID, FILE_NO, FILE_PATH,FILE_NAME,FILE_TYPE)
+    VALUES
+    (#{ctrlId},(select nvl(max(file_no),0)+1 from PAY0267M where CTRL_ID = #{ctrlId}),#{filePath},#{fileName},#{fileType})
+  </insert>
+
+  <!--클레임 파일 다운로드 리스트 -->
+  <select id="selectClaimFileDown" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+    CTRL_ID,
+    FILE_NO,
+    FILE_PATH,
+    FILE_NAME,
+    FILE_PATH ||
+    FILE_NAME AS FILE_FULL_PATH
+    FROM
+    PAY0267M
+    WHERE
+    CTRL_ID = #{ctrlId}
+    <if test="fileType != null and fileType != ''">
+    AND FILE_TYPE = #{fileType}
+    </if>
+    ORDER BY FILE_NO DESC
+  </select>
+
+  <select id="selectMstConf" parameterType="Map" resultType="egovMap">
+    SELECT
+    ID
+    , CTRL_FILE_NM
+    , CTRL_DT_FMT
+    , CTRL_FILE_EXT
+    , CTRL_SUB_PATH
+    , CTRL_EMAIL
+    , CTRL_EMAIL_SUBJ
+    , CTRL_EMAIL_TEXT
+    , CTRL_ZIP
+    FROM
+    PAY0289M
+    WHERE
+    CTRL_IS_CRC = #{ctrlIsCrc}
+    AND CTRL_BANK_ID = #{ctrlBankId}
+    AND DISB =
+    0
+    ORDER BY
+    CTRL_SET
+  </select>
+
+  <select id="selectBnkCde" parameterType="String" resultType="String">
+    SELECT
+    CODE
+    FROM
+    SYS0004M
+    WHERE
+    BANK_ID = #{bnkCde}
+    AND STUS_CODE_ID = '1'
+    AND ROWNUM <![CDATA[<=]]>
+    1
+  </select>
+
+  <select id="selectSubConf" parameterType="Map" resultType="egovMap">
+    SELECT
+    CTRL_DAT_TYP
+    , CTRL_DAT_LGTH
+    , CTRL_DAT_FMT
+    , CTRL_DAT
+    ,
+    CTRL_DELIMETER
+    , CTRL_PAD
+    , CTRL_PAD_VAL
+    , CTRL_RMK
+    FROM
+    PAY0290M
+    WHERE
+    ID
+    = #{id}
+    AND CTRL_PART = #{part}
+    AND DISB = 0
+    ORDER BY
+    CTRL_SEQ
+  </select>
+
+  <select id="selectClmStat" parameterType="Map" resultType="egovMap">
+    SELECT A.STUS_CODE_ID CODE_ID,
+    A.NAME CODE_NAME
+    FROM SYS0038M A
+    WHERE
+    A.STUS_CODE_ID IN ('1', '4', '8')
+    ORDER BY A.STUS_CODE_ID
+  </select>
+
+  <select id="selectListing" parameterType="Map" resultType="egovMap">
+    SELECT A.CODE CODE_ID,
+    A.CODE_NAME CODE_NAME
+    FROM SYS0094M A
+    WHERE
+    A.IND = #{ind}
+    AND A.DISB = 0
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectAccBank" parameterType="Map" resultType="egovMap">
+    SELECT B.BANK_ID CODE_ID,
+    B.CODE || ' - ' || B.NAME CODE_NAME
+    FROM SYS0093M A JOIN
+    SYS0004M B ON A.BANK_ID = B.BANK_ID
+    WHERE B.STUS_CODE_ID = 1
+    AND SYSDATE BETWEEN A.EFF_DT AND A.EXP_DT
+    AND A.BANK_CHNL = 'C'
+    AND A.DISB = 0
+    ORDER BY B.NAME
+  </select>
+
+  <select id="selectVResClaimList" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.CTRL_ID,
+    Extent1.CTRL_BATCH_NO,
+    Extent1.CTRL_BANK_ID,
+    NVL(TO_CHAR(Extent1.CTRL_BATCH_DT,'DD-MM-YYYY'),'01-01-1900') AS
+    CTRL_BATCH_DT,
+    NVL(Extent1.CTRL_BILL_AMT,0) AS CTRL_BILL_AMT,
+    NVL(Extent1.CTRL_BILL_PAY_AMT,0) AS CTRL_BILL_PAY_AMT,
+    NVL(Extent1.CTRL_IS_CLOS,0) AS CTRL_IS_CLOS,
+    NVL(Extent1.CTRL_STUS_ID,0) AS CTRL_STUS_ID,
+    Extent1.CRT_USER_ID,
+    Extent1.UPD_USER_ID,
+    TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.') AS CRT_DT,
+    NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,
+    Extent1.CTRL_IS_CRC,
+    (CASE WHEN 1 = Extent1.CTRL_IS_CRC THEN 'Credit Card'
+    WHEN 134 =
+    Extent1.CTRL_IS_CRC THEN 'FPX'
+    ELSE 'Direct Debit' END
+    ) AS
+    CTRL_IS_CRC_NAME,
+    Extent1.CTRL_REM,
+    NVL(Extent1.CTRL_FAIL_SMS_IS_PUMP,0) AS CTRL_FAIL_SMS_IS_PUMP,
+    Extent1.CTRL_TOT_ITM,
+    Extent1.CTRL_TOT_SUCCES,
+    Extent1.CTRL_TOT_FAIL,
+    Extent1.CTRL_WAIT_SYNC,
+    Extent2.CODE AS STUS_CODE ,
+    Extent2.NAME AS
+    STUS_NAME ,
+    Extent3.BANK_ID AS BANK_ID ,
+    CASE WHEN Extent3.BANK_ID IS
+    NOT NULL THEN Extent3.CODE ELSE ' ' END
+    BANK_CODE ,
+    CASE WHEN
+    Extent3.BANK_ID IS NOT NULL THEN Extent3.NAME ELSE ' ' END
+    BANK_NAME
+    ,
+    NVL(Extent4.USER_NAME,' ') AS CRT_USER_NAME,
+    NVL(Extent5.USER_NAME,' ') AS UPD_USER_NAME,
+    Extent1.CTRL_DDT_CHL,
+    Extent6.CODE_NAME
+    DDT_CHNL
+    FROM PAY0041D Extent1
+    JOIN SYS0038M Extent2 ON
+    Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
+    LEFT JOIN SYS0004M
+    Extent3 ON Extent3.BANK_ID = Extent1.CTRL_BANK_ID
+    LEFT JOIN SYS0047M
+    Extent4 ON Extent4.USER_ID = Extent1.CRT_USER_ID
+    LEFT JOIN SYS0047M
+    Extent5 ON Extent5.USER_ID = Extent1.UPD_USER_ID
+    LEFT JOIN SYS0013M
+    Extent6 ON Extent6.CODE_ID = Extent1.CTRL_DDT_CHL AND
+    Extent6.CODE_MASTER_ID = '403'
+    WHERE 1=1
+    AND Extent1.VRESCUE = 1
+    <if test="batchId != null and batchId != ''">
+      AND Extent1.CTRL_ID = #{batchId}
+    </if>
+    <if test="creator != null and creator != ''">
+      AND EXTENT4.USER_NAME =#{creator}
+    </if>
+    <if
+      test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+      AND Extent1.CRT_DT <![CDATA[   >= ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss')
+      AND Extent1.CRT_DT <![CDATA[   <   ]]>
+      TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') ||
+      '000000','yyyymmddhh24miss') + 1
+    </if>
+    <if test="claimType != null and claimType != ''">
+      <choose>
+        <when test='claimType == "132" '>
+          AND Extent1.CTRL_IS_CRC = 0
+        </when>
+        <when test='claimType == "131" '>
+          AND Extent1.CTRL_IS_CRC = 1
+        </when>
+      </choose>
+    </if>
+    <if test="status != null and status != ''">
+      AND Extent1.CTRL_STUS_ID = #{status}
+    </if>
+    <if
+      test="debitDt1 != null and debitDt2 != null and debitDt1 != '' and debitDt2 != '' ">
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   >= ]]>
+      TO_DATE(#{debitDt1},'DD/MM/YYYY')
+      AND Extent1.CTRL_BATCH_DT <![CDATA[   <= ]]>
+      TO_DATE(#{debitDt2},'DD/MM/YYYY')
+    </if>
+    <if test="smsSend != null and smsSend != ''">
+      AND Extent1.CTRL_FAIL_SMS_IS_PUMP = #{smsSend}
+    </if>
+    <if test="issueBank != null and issueBank != ''">
+      AND Extent1.CTRL_BANK_ID = #{issueBank}
+    </if>
+    <if test="ddtChnl != null and ddtChnl != ''">
+      AND Extent1.CTRL_DDT_CHL = #{ddtChnl}
+    </if>
+
+    ORDER BY Extent1.CTRL_ID
+  </select>
+
+    <select id="selectVResListing" parameterType="Map" resultType="egovMap">
+    SELECT A.CODE CODE_ID,
+    A.CODE_NAME CODE_NAME
+    FROM SYS0094M A
+    WHERE
+    A.IND = #{ind}
+    AND A.DISB = 0
+    AND A.CODE != 134
+    ORDER BY CODE_ID
+  </select>
+
+   <resultMap id="resultClaimVRescueMap" type="egovMap" />
+  <select id="createVResClaim" statementType="CALLABLE"
+    parameterType="Map">
+    {
+    call SP_AUTO_DEBT_GENRT_CLM_VRESCUE(#{new_claimType} ,
+    #{new_issueBank},
+    #{new_cardType}, #{new_debitDate}, #{userId},
+    #{new_claimDay},
+    #{new_ddtChnl},
+    #{new_merchantBank}, #{p1, mode=OUT, jdbcType=CURSOR,
+    javaType=ResultSet,
+    resultMap=resultClaimMap})
+    }
+  </select>
+
+  <update id="saveVRescueUpdate" parameterType="Map">
+
+  UPDATE SAL0074D
+            SET  GRACE_PERIOD             = 0,
+                   DEDUCT_ACC_ID               = 0
+                   <!-- ,UPD_USER_ID                 = #{userId},
+                   UPD_DT                         = SYSDATE -->
+
+            WHERE  RENT_PAY_ID         = #{rentPayId}
+</update>
+
+  <insert id="saveM2UploadBulk" parameterType="java.util.List">
+   INSERT INTO PAY0330T (ORDER_NO,ORDER_ID)
+    <foreach item="item" collection="list" index="index" separator= " UNION ALL ">
+    SELECT ORDER_NO
+    , EXT1.SALES_ORD_ID ORDER_ID FROM (
+        SELECT
+       #{item.orderNo} ORDER_NO
+       FROM DUAL
+       ) JOIN SAL0001D EXT1 ON EXT1.SALES_ORD_NO = ORDER_NO
+
+       </foreach>
+    </insert>
+
+    <delete id="clearM2UploadBulk"  parameterType="Map">
+    DELETE FROM PAY0330T WHERE 1 = 1
+    </delete>
+
+   <update id="updateM2UploadBulk"  parameterType="Map">
+    UPDATE PAY0330T SET OPEN_FLG = #{lockOpeningFlag} WHERE 1 = 1
+    </update>
+
+	  <select id="orderListMonthViewPop" parameterType="Map" resultType="egovMap">
+		 SELECT
+		       A.CTRL_ID,
+		       A.MONTH_TYPE,
+		       A.CTRL_TOT_ITM,
+		       A.CRT_DT AS ORD_CRT,
+		       TO_CHAR(A.CRT_DT,'DD-MM-YYYY') AS CRT_DT,
+		       NVL(A.CTRL_BILL_AMT,0) AS TARGET_AMT,
+		       NVL(A.CTRL_TOT_SUCCES,0) AS TOTAL_SUCCESS,
+		       NVL(A.CTRL_BILL_PAY_AMT,0) AS RECEIVED_AMT,
+		       B.CODE AS STATUS
+	    FROM PAY0041D A
+	    JOIN SYS0038M B ON  A.CTRL_STUS_ID = B.STUS_CODE_ID
+	    WHERE 1 = 1
+	    AND A.CTRL_IS_CRC = 1
+	    AND A.CTRL_GROUP = 1
+	    AND A.VRESCUE = 0
+	    AND A.MONTH_TYPE IS NOT NULL
+	    ORDER BY ORD_CRT DESC
+	  </select>
+
+	<select id="selectVRescueBulkList" parameterType="Map" resultType="egovMap">
+	SELECT M.BATCH_ID, M.BATCH_NO, STS.CODE AS STUS, M.TOT_ITEM,
+	M.CRT_DT, CRTUSER.USER_NAME AS CREATOR, UPDUSER.USER_NAME AS UPD_USER_NAME,
+	NVL(TO_CHAR(M.CRT_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS CRT_DT2,
+	NVL(TO_CHAR(M.UPD_DT,'DD-MM-YYYY hh:mi:ss
+    A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT
+	FROM SAL0347D M
+	JOIN SYS0038M STS ON STS.STUS_CODE_ID = M.BATCH_STUS
+	JOIN SYS0047M CRTUSER ON CRTUSER.USER_ID = M.CRT_USER_ID
+	JOIN SYS0047M UPDUSER ON UPDUSER.USER_ID = M.UPD_USER_ID
+	WHERE 1 = 1
+	<if test="bchId!= null and bchId != ''">
+    AND M.BATCH_ID = #{bchId}
+    </if>
+    <if test="sBatchId!= null and sBatchId != ''">
+    AND M.BATCH_ID = #{sBatchId}
+    </if>
+	<if test="batchNo!= null and batchNo != ''">
+	AND M.BATCH_NO = #{batchNo}
+	</if>
+	<if test="crtUserName != null and crtUserName != ''">
+	AND US.USER_NAME LIKE '%'||#{creator}||'%'
+	</if>
+    <if test=" '' != createDt1 and null != createDt1">
+    AND  M.CRT_DT >= TO_DATE(#{createDt1}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+    <if test=" '' != createDt2 and null != createDt2">
+     <![CDATA[ AND  M.CRT_DT <= TO_DATE(#{createDt2} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS') ]]>
+    </if>
+    ORDER BY M.BATCH_ID DESC
+
+	</select>
+
+	<select id="selectVRescueBulkDetails" parameterType="Map" resultType="egovMap">
+	SELECT A.BATCH_ID, B.BATCH_NO, A.ORD_NO, A.REMARK, C.CODE AS STATUS, D.USER_NAME, A.CRT_DT
+	FROM SAL0348D A
+	JOIN SAL0347D B ON B.BATCH_ID = A.BATCH_ID
+	JOIN SYS0038M C ON C.STUS_CODE_ID = B.BATCH_STUS
+	JOIN SYS0047M D ON D.USER_ID = A.CRT_USER_ID
+	WHERE A.BATCH_ID = #{batchId}
+	</select>
+
+	<select id="selectNextBatchId" resultType="int">
+    SELECT NVL(MAX(BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0347D
+    </select>
+
+    <select id="selectvRescueBatchNo" parameterType="int"  resultType="String">
+    SELECT BATCH_NO FROM SAL0347D WHERE BATCH_ID = #{batchId}
+    </select>
+
+    <insert id="insertVRescueBulkMaster" parameterType="Map">
+      INSERT INTO SAL0347D (
+      BATCH_ID
+      ,BATCH_NO
+      ,BATCH_STUS
+      ,TOT_ITEM
+      ,CRT_USER_ID
+      ,CRT_DT
+      ,UPD_USER_ID
+      ,UPD_DT
+      ) VALUES (
+      #{batchId}
+      ,'BVR'||LPAD(#{batchId}, 7, '0')
+      ,1
+      ,#{totItem}
+      ,#{crtUserId}
+      ,SYSDATE
+      ,#{crtUserId}
+      ,SYSDATE
+      )
+     </insert>
+
+     <insert id="insertVRescueBulkDetail" parameterType="Map">
+        INSERT INTO SAL0348D(
+        BATCH_ID
+        ,ORD_NO
+        ,REMARK
+        ,CRT_USER_ID
+        ,CRT_DT
+        ,UPD_USER_ID
+        ,UPD_DT
+        )
+
+SELECT batchId , ordNo , remark , crtUserId , crtDt , updUserId , updDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+
+            #{batchId} batchId
+            ,#{item.ordNo} ordNo
+            ,#{item.remark} remark
+            ,#{item.crtUserId} crtUserId
+            ,SYSDATE crtDt
+            ,#{item.updUserId} updUserId
+            ,SYSDATE updDt
+            FROM DUAL
+        </foreach>
+)
+    </insert>
+
+    <select id="selectRentPayIdByBchId" parameterType="Map" resultType="egovMap">
+    SELECT C.RENT_PAY_ID FROM SAL0348D A
+    JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
+    JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE C.DEDUCT_ACC_ID IS NOT NULL
+    AND A.BATCH_ID = #{batchId}
+    </select>
+
+    <!-- Update detail batch list -->
+    <update id="updateVRescueBulkDByBchId" parameterType="Map">
+    UPDATE
+    SAL0348D SET STATUS = 4
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE BATCH_ID = #{batchId}
+  </update>
+
+  <!-- Update master batch -->
+   <update id="updateVRescueBulkMByBchId" parameterType="Map">
+    UPDATE
+    SAL0347D SET BATCH_STUS = 4
+    , UPD_DT = SYSDATE
+    , UPD_USER_ID =
+    #{userId}
+    WHERE BATCH_ID = #{batchId}
+  </update>
+
+    <select id="selectUnableBulkUploadList" parameterType="java.util.List" resultType="int">
+    SELECT COUNT(*) FROM (
+    SELECT A.SALES_ORD_NO
+    FROM SAL0001D A
+    JOIN SAL0074D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    WHERE
+    A.SALES_ORD_NO IN
+        <foreach item="item" collection="list" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    AND B.MODE_ID NOT IN (130)
+ <!--    UNION
+    SELECT C.SALES_ORD_NO
+    FROM SAL0001D C
+    JOIN SAL0074D D ON D.SALES_ORD_ID = C.SALES_ORD_ID
+    WHERE
+    C.SALES_ORD_NO IN
+        <foreach item="item" collection="list" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    AND D.MODE_ID IN (130)
+    AND C.STUS_CODE_ID NOT IN (4,10) -->
+    )
+    </select>
+
+    <select id="selectUnableBulkUploadList2" parameterType="Map" resultType="egovMap">
+    SELECT B.SALES_ORD_NO, C.MODE_ID, B.STUS_CODE_ID FROM SAL0348D A
+    JOIN SAL0001D B ON B.SALES_ORD_NO = A.ORD_NO
+    JOIN SAL0074D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE A.BATCH_ID = #{batchId}
+    AND C.MODE_ID NOT IN (130)
+<!--     UNION
+    SELECT E.SALES_ORD_NO, F.MODE_ID, E.STUS_CODE_ID FROM SAL0348D D
+    JOIN SAL0001D E ON E.SALES_ORD_NO = D.ORD_NO
+    JOIN SAL0074D F ON F.SALES_ORD_ID = E.SALES_ORD_ID
+    WHERE D.BATCH_ID = #{batchId}
+    AND F.MODE_ID IN (130)
+    AND E.STUS_CODE_ID <![CDATA[ <> ]]> '10' -->
+    </select>
+
+    <select id="selectAutoDebitCcDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.BANK_DTL_CTRL_ID BATCH_NO,
+            TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') DEBIT_DT,
+            (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) <![CDATA[   > ]]> 0 THEN
+                (CASE
+                    WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]>  7 THEN
+                        SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO)
+                    ELSE
+                        SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent3.SALES_ORD_NO)
+                    END
+                )
+            ELSE
+                TRIM(Extent3.SALES_ORD_NO)
+                  END) ORD_NO,
+            Extent1.BANK_DTL_DR_ACC_NO ACCOUNT_NO,
+            Extent1.BANK_DTL_DR_NAME  ACCOUNT_NAME,
+            EXTENT6.NAME ISSUE_BANK,
+            (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 AND pay.MODE_ID <![CDATA[   <> ]]> 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0074D extent7
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = extent7.CUST_CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE extent7.SALES_ORD_ID = extent1.SALES_ORD_ID  AND extent7.SVC_CNTRCT_ID = Extent1.SVC_CNTRCT_ID AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId})
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) = 0 AND pay.MODE_ID <![CDATA[   <> ]]> 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0074D extent7
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = extent7.CUST_CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE extent7.SALES_ORD_ID = extent1.SALES_ORD_ID  AND extent7.SVC_CNTRCT_ID = 0 AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId})
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) <![CDATA[   > ]]> 0 AND pay.MODE_ID = 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0236D aaa
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = aaa.CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE aaa.SALES_ORD_ID = extent1.SALES_ORD_ID  AND aaa.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} AND ROWNUM <![CDATA[   <= ]]> 1)
+                  WHEN NVL( Extent1.SVC_CNTRCT_ID,0) = 0 AND pay.MODE_ID = 130 THEN
+                    (SELECT Extent9.CODE_NAME FROM SAL0236D aaa
+                        LEFT JOIN SAL0028D extent8 ON extent8.CUST_CRC_ID = aaa.CRC_ID
+                        LEFT JOIN SYS0013M extent9 ON extent8.CARD_TYPE_ID = EXTENT9.CODE_ID
+                        WHERE aaa.SALES_ORD_ID = extent1.SALES_ORD_ID  AND aaa.SRV_CNTRCT_ID = 0 AND Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} AND ROWNUM <![CDATA[   <= ]]> 1)
+            END) AS CARD_TYPE ,
+            Extent1.BANK_DTL_AMT AMOUNT,
+            Extent1.BANK_DTL_APPR_CODE APPROVE_CODE,
+            Extent1.BANK_DTL_GRP_ID REFERENCE_NO
+        FROM
+            PAY0042D Extent1
+            JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+            LEFT JOIN SYS0004M Extent6 ON Extent1.BANK_DTL_DR_BANK_TYPE_ID = Extent6.BANK_ID
+            LEFT JOIN SAL0074D pay ON pay.SALES_ORD_ID = Extent3.SALES_ORD_ID and pay.SVC_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+        ORDER BY Extent1.BANK_DTL_CTRL_ID
+    </select>
+
+</mapper>

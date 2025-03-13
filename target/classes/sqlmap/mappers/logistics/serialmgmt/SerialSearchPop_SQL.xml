@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialSearchPopMapper">
+    <select id="serialSearchDataList" parameterType="Map" resultType="EgovMap">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialSearchPopMapper.serialSearchDataList] - KR JUN */
+        SELECT A.SERIAL_NO
+                 , A.ITM_CODE
+                 , B.STK_DESC
+                 , C.CODE_NAME AS STK_TYPE_NM
+                 , A.STUS_CODE
+                 , A.LAST_DELVRY_GR_DT
+                 , B.STK_ID
+          FROM LOG0100M A
+          LEFT OUTER JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
+          LEFT OUTER JOIN SYS0013M C ON B.STK_TYPE_ID = C.CODE_ID
+          JOIN SYS0028M D ON A.LAST_LOC_ID = D.WH_LOC_ID
+         WHERE A.LAST_SALES_ORD_ID IS NULL
+        <if test="locCode !=null">
+            AND A.LAST_LOC_ID IN
+	        <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+        </if>
+        <if test="searchItemCodeOrName !=null and searchItemCodeOrName != ''">
+            AND (A.ITM_CODE = #{searchItemCodeOrName}
+             OR B.STK_DESC = #{searchItemCodeOrName})
+        </if>
+        <if test="searchStatus !=null">
+            AND A.STUS_CODE IN
+            <foreach item="item" collection="searchStatus" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+        </if>
+        <if test="searchSerialNo !=null and searchSerialNo != ''">
+            AND A.SERIAL_NO = #{searchSerialNo}
+        </if>
+       ORDER BY A.SERIAL_NO
+    </select>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.NeoProAndHPListMapper">
+
+    <!--
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="selectNeoProAndHPList" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEM_CODE,
+            MEM_NAME,
+            ORG_CODE,
+            GRP_CODE,
+            DEPT_CODE,
+            MEET_POINT,
+            TO_CHAR(JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
+            PREV3_MTH_NET,
+            PREV2_MTH_NET,
+            PREV1_MTH_NET,
+            TOT_NET,
+            CUR_MTH_NET
+        FROM ORG1003V
+        WHERE 1=1
+        <if test="hpCode != null and hpCode != ''">
+            AND UPPER(MEM_CODE) LIKE UPPER('%' || #{hpCode} || '%')
+        </if>
+        <if test="hpType != null and hpType != ''">
+            <if test="hpType == '0' ">
+                AND HP_TYPE = 'HP'
+            </if>
+            <if test="hpType == '1' ">
+                AND HP_TYPE = 'NEOPRO'
+            </if>
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND UPPER(ORG_CODE) LIKE UPPER('%' || #{orgCode} || '%')
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND UPPER(GRP_CODE) LIKE UPPER('%' || #{grpCode} || '%')
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND UPPER(DEPT_CODE) LIKE UPPER('%' || #{deptCode} || '%')
+        </if>
+        <if test="prev3Mth != null and prev3Mth != ''">
+            <if test="prev3Mth == 0 ">
+                AND PREV3_MTH_NET = 0
+            </if>
+            <if test="prev3Mth == 1 ">
+                AND PREV3_MTH_NET BETWEEN 0 AND 2
+            </if>
+            <if test="prev3Mth == 2 ">
+                AND PREV3_MTH_NET BETWEEN 3 AND 9
+            </if>
+            <if test="prev3Mth == 3 ">
+                AND PREV3_MTH_NET >= 10
+            </if>
+        </if>
+        <if test="prev2Mth != null and prev2Mth != ''">
+            <if test="prev2Mth == 0 ">
+                AND PREV2_MTH_NET = 0
+            </if>
+            <if test="prev2Mth == 1 ">
+                AND PREV2_MTH_NET BETWEEN 0 AND 2
+            </if>
+            <if test="prev2Mth == 2 ">
+                AND PREV2_MTH_NET BETWEEN 3 AND 9
+            </if>
+            <if test="prev2Mth == 3 ">
+                AND PREV2_MTH_NET >= 10
+            </if>
+        </if>
+        <if test="prev1Mth != null and prev1Mth != ''">
+            <if test="prev1Mth == 0 ">
+                AND PREV1_MTH_NET = 0
+            </if>
+            <if test="prev1Mth == 1 ">
+                AND PREV1_MTH_NET BETWEEN 0 AND 2
+            </if>
+            <if test="prev1Mth == 2 ">
+                AND PREV1_MTH_NET BETWEEN 3 AND 9
+            </if>
+            <if test="prev1Mth == 3 ">
+                AND PREV1_MTH_NET >= 10
+            </if>
+        </if>
+        <if test="meetPoint != null and meetPoint != ''">
+            AND MEET_POINT_ID = #{meetPoint} 
+        </if>
+        ORDER BY MEM_CODE
+    </select>
+
+    <select id="checkHpType" parameterType="Map" resultType="EgovMap">
+        SELECT
+            NVL(b.HP_TYPE, 'HP') HP_TYPE
+        FROM ORG0001D a
+        LEFT JOIN ORG0011D b
+                  ON a.MEM_CODE = b.HP_CODE
+                AND b.PV_MONTH = utils.month_(SYSDATE)
+                AND b.PV_YEAR = utils.year_(SYSDATE)
+        WHERE a.MEM_CODE = #{memCode}
+            AND a.MEM_TYPE = 1
+    </select>
+
+</mapper>

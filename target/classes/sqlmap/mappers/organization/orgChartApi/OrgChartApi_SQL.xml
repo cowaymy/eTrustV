@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.orgChartApi.impl.OrgChartApiMapper">
+
+
+
+<select id="selectOrg" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.organization.orgChartApi.impl.selectOrg] 20200108 - KR JAEMAJEM */
+SELECT  A.MEM_ID                                                                AS SELECT_MEM_ID
+    ,   A.MEM_UP_ID                                                             AS SELECT_MEM_UP_ID
+    ,   A.MEM_LVL                                                               AS SELECT_MEM_LVL
+FROM    ORG0005D A
+WHERE   A.MEM_ID = #{loginMemId}
+]]>
+</select>
+
+
+
+<select id="selectOrgChart" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.organization.orgChartApi.impl.OrgChartApiMapper] 20190905 - KR JAEMAJEM */
+SELECT  A.MEM_ID                                                                AS MEM_ID
+    ,   A.MEM_UP_ID                                                             AS MEM_UP_ID
+    ,   A.MEM_LVL                                                               AS MEM_LVL
+    ,   A.DEPT_CODE                                                             AS DEPT_CODE
+    ,   B.MEM_TYPE                                                              AS MEM_TYPE
+    ,   CASE WHEN A.MEM_LVL = 4 THEN B.MEM_CODE ||' - '||B.NAME
+                                ELSE A.DEPT_CODE||' - '||B.NAME
+                                END                                             AS MEMBER
+    ,   #{memId}                                                                AS PARAM_MEM_ID
+    ,   #{memType}                                                              AS PARAM_MEM_TYPE
+    ,   #{memLvl}                                                               AS PARAM_MEM_LVL
+FROM    ORG0005D A                                                              --MemberOrganization
+        INNER JOIN ORG0001D B                                                   --Member
+            ON  A.MEM_ID = B.MEM_ID
+            AND B.STUS = 1
+            AND B.MEM_TYPE = #{memType}
+        LEFT OUTER JOIN (
+            SELECT * FROM ORG0007D C WHERE
+             c.promo_id IN (
+                SELECT
+                    MAX(c.promo_id) AS promo_id
+                FROM
+                    org0007d c
+                WHERE
+                    to_char(c.evt_apply_dt, 'YYYYMM') <= to_char(sysdate, 'YYYYMM')
+                GROUP BY
+                    c.mem_id
+                UNION
+                SELECT
+                    MAX(c.promo_id) AS promo_id
+                FROM
+                    org0007d c
+                WHERE
+                    c.promo_id IS NULL
+            )
+           ) C                                              --MemberPromoEntry
+            ON  C.MEM_ID = A.MEM_ID
+            AND C.EVT_APPLY_DT IS NOT NULL
+            AND TO_CHAR(C.EVT_APPLY_DT, 'YYYYMM') <= TO_CHAR(SYSDATE,'YYYYMM')
+WHERE   A.DEPT_CODE IS NOT NULL
+AND     (
+                (
+                        C.PROMO_TYPE_ID IN (747, 748, 749)
+                    AND C.STUS_ID = 4
+                    AND C.MEM_LVL_TO = #{memLvl}
+]]>
+<if test='memId > 0'>
+                    AND C.PARENT_ID_TO = #{memId}
+</if>
+                )
+            OR  (
+                        C.PROMO_TYPE_ID IN (747, 748, 749)
+                    AND C.STUS_ID != 4
+                    AND A.MEM_LVL = #{memLvl}
+<if test='memId > 0'>
+                    AND A.MEM_UP_ID = #{memId}
+</if>
+                )
+            OR  (
+                        C.PROMO_TYPE_ID NOT IN (747, 748, 749)
+                    OR  C.PROMO_TYPE_ID IS NULL
+                )
+            AND A.MEM_LVL = #{memLvl}
+<if test='memId > 0'>
+            AND A.MEM_UP_ID = #{memId}
+</if>
+<![CDATA[
+        )
+]]>
+<if test="memType == 2 or memType == 5758">
+AND     (
+            (
+                    C.PROMO_TYPE_ID NOT IN (757, 758)
+                OR   C.PROMO_TYPE_ID IS NULL
+            )OR(
+                    C.STUS_ID != 4
+                OR  C.STUS_ID IS NULL
+            )
+        )
+</if>
+<if test='memType == 1 and memLvl lt selectMemLvl'>
+AND     A.MEM_ID =  (
+                        SELECT  MEM_ID
+                        FROM    ORG0005D
+                        WHERE   MEM_LVL = #{memLvl}
+                        START WITH MEM_ID = #{selectMemId}
+                        CONNECT BY NOCYCLE PRIOR MEM_UP_ID = MEM_ID
+                    )
+</if>
+ORDER BY A.DEPT_CODE ASC
+</select>
+</mapper>

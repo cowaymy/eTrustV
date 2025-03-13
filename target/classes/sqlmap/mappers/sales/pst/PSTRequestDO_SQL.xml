@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pst.impl.PSTRequestDOMapper">
+
+    <!--
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+
+    <update id="updatePstSalesM"><!--PSTSalesM-->
+        UPDATE SAL0062D
+           SET PST_TOT_AMT              = #{pstTotAmt}
+             , PST_STUS_ID              = #{pstStusId}
+         WHERE PST_SALES_ORD_ID         = #{pstSalesOrdId}
+    </update>
+
+    <update id="updatePstSalesD"><!--PSTSalesD-->
+        UPDATE SAL0063D
+           SET PST_ITM_PRC      = #{pstItmPrc}
+             , PST_ITM_TOT_PRC  = #{pstItmTotPrc}
+             , PST_ITM_CAN_QTY  = #{pstItmCanQty}
+             , PST_ITM_BAL_QTY  = #{pstItmBalQty}
+         WHERE PST_ITM_ID       = #{pstItmId}
+    </update>
+
+    <insert id="insertPstLog"><!--PSTLog-->
+        INSERT
+          INTO SAL0061D
+             ( PST_TRNSIT_ID
+             , PST_SALES_ORD_ID
+             , PST_STOCK_ID
+             , PST_STOCK_REM
+             , PST_QTY
+             , PST_TYPE_ID
+             , PST_REF_NO
+             , CRT_DT
+             , CRT_USER_ID)
+        VALUES
+             ( SAL0061D_PST_TRNSIT_ID_SEQ.NEXTVAL
+             , #{pstSalesOrdId}
+             , #{pstStockId}
+             , #{pstStockRem}
+             , #{pstQty}
+             , #{pstTypeId}
+             , #{pstRefNo}
+             , SYSDATE
+             , #{crtUserId})
+     </insert>
+
+    <select id="selectPstRequestDOList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.PST_SALES_ORD_ID ,
+                   Project1.CODE ,
+                   Project1.PST_CUST_PO ,
+                   Project1.PST_CUR_RATE ,
+                   Project1.PST_CUR_TYPE_ID ,
+                   Project1.PST_DEALER_DELVRY_ADD_ID ,
+                   Project1.PST_DEALER_DELVRY_CNT_ID ,
+                   Project1.PST_DEALER_ID ,
+                   Project1.PST_TYPE ,
+                   Project1.PIC   ,
+                   Project1.PST_REF_NO ,
+                   Project1.PST_REM ,
+                   Project1.PST_STUS_ID ,
+                   Project1.PST_DEALER_MAIL_ADD_ID ,
+                   Project1.PST_TOT_AMT ,
+                   Project1.CRT_DT  ,
+                   Project1.CRT_USER_ID   ,
+                   Project1.DEALER_NAME ,
+                   Project1.CODE1 CODE1  ,
+                   Project1.DEALER_NRIC ,
+                   Project1.USER_NAME USER_NAME  ,
+                   Project1.USERNAME1 USERNAME1  ,
+                   Project1.PST_DEALER_MAIL_CNT_ID ,
+                   Project1.WH_LOC_ID,
+                   Project1.PST_INVC_TYPE
+          FROM ( SELECT Extent1.PST_SALES_ORD_ID ,
+                                Extent1.PST_REF_NO ,
+                                Extent1.PST_DEALER_ID ,
+                                Extent1.PST_DEALER_MAIL_CNT_ID ,
+                                Extent1.PST_DEALER_DELVRY_CNT_ID ,
+                                Extent1.PST_DEALER_MAIL_ADD_ID ,
+                                Extent1.PST_DEALER_DELVRY_ADD_ID ,
+                                Extent1.PST_CUR_RATE ,
+                                Extent1.PST_CUR_TYPE_ID ,
+                                Extent1.PST_TOT_AMT ,
+                                Extent1.PST_REM ,
+                                Extent1.PST_STUS_ID ,
+                                Extent1.CRT_USER_ID ,
+                                Extent1.PIC ,
+                                Extent1.PST_CUST_PO ,
+                                Extent2.CODE CODE  ,
+                                Extent3.CODE CODE1  ,
+                                Extent4.USER_NAME USER_NAME  ,
+                                Extent5.USER_NAME USERNAME1  ,
+                                Extent6.DEALER_NAME ,
+                                Extent6.DEALER_NRIC ,
+                                Extent1.CRT_DT ,
+                                Extent1.PST_TYPE ,
+                                NVL(Extent8.WH_LOC_ID, 0) AS WH_LOC_ID,
+                                Extent1.PST_INVC_TYPE
+                       FROM SAL0062D Extent1
+                            LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PST_CUR_TYPE_ID
+                            LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.PST_STUS_ID
+                            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.PIC
+                            LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+                            LEFT JOIN SAL0030D Extent6    ON Extent6.DEALER_ID = Extent1.PST_DEALER_ID
+                            LEFT JOIN SYS0005M Extent7   ON Extent7.BRNCH_ID = Extent6.DEALER_BRNCH_ID
+                            LEFT JOIN SYS0028M Extent8   ON Extent8.WH_LOC_BRNCH_ID = Extent6.DEALER_BRNCH_ID
+                     WHERE 1=1
+                         <if test="pstStusList != null and pstStusList != ''">
+                              AND Extent1.PST_STUS_ID IN
+                             <foreach item="item" collection="pstStusList" index="index" open="(" separator="," close=")">
+                                 #{item}
+                             </foreach>
+                         </if>
+                    ) Project1
+            WHERE 1=1
+                  <if test="pstRefNo != null and pstRefNo != ''">
+                      AND UPPER(Project1.PST_REF_NO) = UPPER(#{pstRefNo})
+                  </if>
+                  <if test="createStDate != null and createStDate != '' ">
+                       AND Project1.CRT_DT <![CDATA[  >= ]]>  TO_DATE( #{createStDate} , 'DD/MM/YYYY')
+                  </if>
+                  <if test="createEnDate != null and createEnDate != ''">
+                       AND Project1.CRT_DT <![CDATA[  < ]]>  TO_DATE( #{createStDate} , 'DD/MM/YYYY') + 1
+                  </if>
+                  <if test="pstDealerId != null and pstDealerId != ''">
+                      AND Project1.PST_DEALER_ID = #{pstDealerId}
+                  </if>
+                  <if test="dealerName != null and dealerName != ''">
+                      AND UPPER(Project1.DEALER_NAME) LIKE '%'||UPPER(#{dealerName})||'%'
+                  </if>
+                  <if test="pstNric != null and pstNric != ''">
+                      AND UPPER(Project1.DEALER_NRIC) LIKE '%'|| UPPER(#{pstNric})||'%'
+                  </if>
+                  <if test="pstCustPo != null and pstCustPo != ''">
+                      AND UPPER(Project1.PST_CUST_PO) = UPPER(#{pstCustPo})
+                  </if>
+                  <if test="pInCharge != null and pInCharge != ''">
+                      AND UPPER(Project1.USER_NAME) = #UPPER({pInCharge})
+                  </if>
+                  <if test="pstTypeList != null and pstTypeList != ''">
+                      AND Project1.PST_TYPE IN
+                     <foreach item="item" collection="pstTypeList" index="index" open="(" separator="," close=")">
+                         #{item}
+                     </foreach>
+                 </if>
+         ORDER BY Project1.PST_SALES_ORD_ID ASC
+    </select>
+
+    <select id="pstRequestDOInfo" parameterType="Map" resultType="egovMap">
+        SELECT T1.PST_SALES_ORD_ID
+                 , T1.PST_REF_NO
+                 , T1.PST_DEALER_ID
+                 , T1.PST_DEALER_MAIL_CNT_ID
+                 , T1.PST_DEALER_DELVRY_CNT_ID
+                 , T1.PST_DEALER_MAIL_ADD_ID
+                 , T1.PST_DEALER_DELVRY_ADD_ID
+                 , T1.PST_CUR_RATE
+                 , T1.PST_CUR_TYPE_ID
+                 , T1.PST_TOT_AMT
+                 , T1.PST_REM
+                 , T1.PST_STUS_ID
+                 , T1.CRT_USER_ID
+                 , T1.PIC
+                 , T1.PST_CUST_PO
+                 , T2.CODE AS PST_CUR_TYPE_CODE
+                 , T3.CODE AS PST_STUS_CODE
+                 , T4.USER_NAME AS CRT_USER_NAME
+                 , T5.USER_NAME AS PIC_NAME
+                 , T6.DEALER_NAME
+                 , T6.DEALER_NRIC
+                 , TO_CHAR(T1.CRT_DT, 'DD-MM-YYYY HH:mi:SS') CRT_DT
+                 , NVL(T8.WH_LOC_ID, 0) AS WH_LOC_ID
+          FROM SAL0062D T1
+           LEFT OUTER
+           JOIN SYS0013M T2
+             ON T2.CODE_ID = T1.PST_CUR_TYPE_ID
+           LEFT OUTER
+           JOIN SYS0038M T3
+             ON T3.STUS_CODE_ID = T1.PST_STUS_ID
+           LEFT OUTER
+           JOIN SYS0047M T4
+             ON T4.USER_ID = T1.PIC
+           LEFT OUTER
+           JOIN SYS0047M T5
+             ON T5.USER_ID = T1.CRT_USER_ID
+           LEFT OUTER
+           JOIN SAL0030D T6
+             ON T6.DEALER_ID = T1.PST_DEALER_ID
+           LEFT OUTER
+           JOIN SYS0005M T7
+             ON T7.BRNCH_ID = T6.DEALER_BRNCH_ID
+           LEFT OUTER
+           JOIN SYS0028M T8
+             ON T8.WH_LOC_BRNCH_ID = T6.DEALER_BRNCH_ID
+        WHERE PST_SALES_ORD_ID = #{pstSalesOrdIdParam}
+
+    </select>
+
+    <select id="pstRequestDOMailContact" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_CNT_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.CNT_NAME   ,
+                   Extent1.DEALER_INITIAL   ,
+                   Extent1.NRIC   ,
+                   DECODE(Extent1.GENDER,'M','Male','F','Female') GENDER  ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent2.CODE DEALER_INITIAL_CODE  ,
+                   Extent3.CODE_NAME RACE_NAME   ,
+                   Extent4.CODE STUS_CODE  ,
+                   Extent1.TEL_M1  ,
+                   Extent1.TEL_M2  ,
+                   Extent1.TEL_O  ,
+                   Extent1.TEL_R  ,
+                   Extent1.TELF  ,
+                   Extent1.RACE_ID  ,
+                   Extent1.STUS_CODE_ID  ,
+                   CASE
+                        WHEN Extent1.CRT_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.CRT_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END CRT_DT  ,
+                   CASE
+                        WHEN Extent5.USER_ID IS NOT NULL THEN Extent5.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN Extent6.USER_ID IS NOT NULL THEN Extent6.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME  ,
+                   CASE
+                        WHEN Extent1.UPD_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.UPD_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END UPD_DT
+            FROM SAL0032D Extent1
+                     LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DEALER_INITIAL
+                     LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.RACE_ID
+                     LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+                     LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_CNT_ID = #{pstDealerMailCntId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+
+    </select>
+
+    <select id="pstRequestDODelvryContact" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_CNT_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.CNT_NAME   ,
+                   Extent1.DEALER_INITIAL   ,
+                   Extent1.NRIC   ,
+                   DECODE(Extent1.GENDER,'M','Male','F','Female') GENDER  ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent2.CODE DEALER_INITIAL_CODE  ,
+                   Extent3.CODE_NAME RACE_NAME   ,
+                   Extent4.CODE STUS_CODE  ,
+                   Extent1.TEL_M1  ,
+                   Extent1.TEL_M2  ,
+                   Extent1.TEL_O  ,
+                   Extent1.TEL_R  ,
+                   Extent1.TELF  ,
+                   Extent1.RACE_ID  ,
+                   Extent1.STUS_CODE_ID  ,
+                   CASE
+                        WHEN Extent1.CRT_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.CRT_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END CRT_DT  ,
+                   CASE
+                        WHEN Extent5.USER_ID IS NOT NULL THEN Extent5.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN Extent6.USER_ID IS NOT NULL THEN Extent6.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME  ,
+                   CASE
+                        WHEN Extent1.UPD_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.UPD_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END UPD_DT
+            FROM SAL0032D Extent1
+                     LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DEALER_INITIAL
+                     LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.RACE_ID
+                     LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+                     LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_CNT_ID = #{pstDealerDelvryCntId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+
+    </select>
+
+    <select id="pstRequestDOMailAddress" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_ADD_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.STUS_CODE_ID   ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent6.CODE STUS_CODE  ,
+                   Extent1.AREA_ID  ,
+                   Extent1.ADDR_DTL  ,
+                   Extent1.STREET  ,
+                   Extent1.REM ,
+                   NVL(Extent2.AREA, '') AREA,
+                   NVL(Extent2.POSTCODE, '') POSTCODE,
+                   NVL(Extent2.CITY, '') CITY,
+                   NVL(Extent2.STATE, '') STATE,
+                   NVL(Extent2.COUNTRY, '') COUNTRY,
+                   CASE WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '||
+                        NVL(Extent1.STREET, '') ||' '|| Extent2.AREA ||' '|| Extent2.POSTCODE ||' '|| Extent2.CITY ||' '|| Extent2.STATE ||' '|| Extent2.COUNTRY AS FULL_ADDR,
+                   CASE
+                        WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME
+          FROM SAL0031D Extent1
+                        JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                 LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+                 LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_ADD_ID = #{pstDealerMailAddId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+
+    </select>
+
+    <select id="pstRequestDODelvryAddress" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_ADD_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.STUS_CODE_ID   ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent6.CODE STUS_CODE  ,
+                   Extent1.ADDR_DTL  ,
+                   Extent1.STREET  ,
+                   Extent1.REM ,
+                   NVL(Extent2.AREA, '') AREA,
+                   NVL(Extent2.POSTCODE, '') POSTCODE,
+                   NVL(Extent2.CITY, '') CITY,
+                   NVL(Extent2.STATE, '') STATE,
+                   NVL(Extent2.COUNTRY, '') COUNTRY,
+                   CASE WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '||
+                        NVL(Extent1.STREET, '') ||' '|| Extent2.AREA ||' '|| Extent2.POSTCODE ||' '|| Extent2.CITY ||' '|| Extent2.STATE ||' '|| Extent2.COUNTRY AS FULL_ADDR,
+                   CASE
+                        WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME
+          FROM SAL0031D Extent1
+                        JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                 LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+                 LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_ADD_ID = #{pstDealerDelvryAddId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+
+    </select>
+
+    <select id="pstRequestDOStockList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PST_ITM_ID   ,
+                   Extent1.PST_SALES_ORD_ID   ,
+                   Extent1.PST_ITM_STK_ID   ,
+                   Extent1.PST_ITM_PRC   ,
+                   Extent1.CRT_DT  ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent2.STK_CODE || ' - ' || Extent2.STK_DESC STK_CODE_DESC  ,
+                   Extent1.PST_ITM_REQ_QTY   ,
+                   Extent1.PST_ITM_DO_QTY   ,
+                   Extent1.PST_ITM_CAN_QTY   ,
+                   Extent1.PST_ITM_BAL_QTY   ,
+                   Extent1.PST_ITM_TOT_PRC   ,
+                   Extent1.PST_ITM_TOT_PRC * Extent1.PST_ITM_BAL_QTY PST_ITM_BAL_QTY_TOT_PRC
+          FROM SAL0063D Extent1
+           LEFT JOIN SYS0026M Extent2   ON Extent2.STK_ID = Extent1.PST_ITM_STK_ID
+        WHERE  Extent1.PST_SALES_ORD_ID = #{pstSalesOrdId}
+
+    </select>
+
+    <select id="getPstRequestDOStockDetailPop" parameterType="Map" resultType="egovMap">
+        SELECT T1.PST_ITM_ID
+             , T1.PST_SALES_ORD_ID AS PST_SALES_ORD_ID
+             , T1.PST_ITM_STK_ID AS PST_ITM_STK_ID
+             , T1.PST_ITM_PRC AS PST_ITM_PRC
+             , T1.CRT_DT AS C1
+             , T1.CRT_USER_ID AS CRT_USER_ID
+             , T2.STK_CODE || ' - ' || T2.STK_DESC AS C2
+             , T1.PST_ITM_REQ_QTY AS PST_ITM_REQ_QTY
+             , T1.PST_ITM_DO_QTY  AS PST_ITM_DO_QTY
+             , T1.PST_ITM_CAN_QTY AS PST_ITM_CAN_QTY
+             , T1.PST_ITM_BAL_QTY AS PST_ITM_BAL_QTY
+             , T1.PST_ITM_TOT_PRC
+             , T1.PST_ITM_TOT_PRC *  CAST( T1.PST_ITM_BAL_QTY AS float) AS C3
+          FROM SAL0063D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T2.STK_ID = T1.PST_ITM_STK_ID
+         WHERE T1.PST_SALES_ORD_ID = #{pstSalesOrdId}
+
+    </select>
+
+    <select id="cmbPstInchargeList" parameterType="Map" resultType="egovMap">
+        SELECT USER_ID AS CODE_ID
+                 , USER_NAME AS CODE_NAME
+          FROM SYS0047M
+        WHERE USER_STUS_ID = 1
+            AND user_type_id not in ('1','2','3')
+        ORDER BY USER_NAME ASC
+    </select>
+
+    <select id="pstEditAddrDetailTopPop" parameterType="Map" resultType="egovMap">
+        SELECT Filter1.DEALER_ADD_ID   ,
+                   Filter1.DEALER_ID   ,
+                   Filter1.STATUSCODEID1 STUS_CODE_ID  ,
+                   Filter1.UPDATOR1 UPD_USER_ID  ,
+                   Filter1.UPDATED1 UPD_DT  ,
+                   Filter1.CREATOR1 CRT_USER_ID  ,
+                   Filter1.CREATED1 CRT_DT  ,
+                   Filter1.AREA_ID  ,
+                   Filter1.ADDR_DTL  ,
+                   Filter1.STREET  ,
+                   Filter1.AREA,
+                   Filter1.POSTCODE,
+                   Filter1.CITY,
+                   Filter1.STATE,
+                   Filter1.COUNTRY,
+                   Filter1.CODE1 CODE  ,
+                   CASE WHEN ( Filter1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Filter1.ADDR_DTL)) ELSE '' END ||' '||
+                         NVL (Filter1.STREET, '') ||' '|| Filter1.AREA ||' '|| Filter1.POSTCODE ||' '|| Filter1.CITY ||' '|| Filter1.STATE ||' '|| Filter1.COUNTRY AS FULL_ADDR,
+                   Filter1.REM,
+                   CASE
+                        WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME
+          FROM ( SELECT Extent1.DEALER_ADD_ID   ,
+                                Extent1.DEALER_ID   ,
+                                Extent1.AREA_ID  ,
+                                Extent1.ADDR_DTL  ,
+                                Extent1.STREET  ,
+                                NVL(Extent2.AREA, '') AREA,
+                                NVL(Extent2.POSTCODE, '') POSTCODE,
+                                NVL(Extent2.CITY, '') CITY,
+                                NVL(Extent2.STATE, '') STATE,
+                                NVL(Extent2.COUNTRY, '') COUNTRY,
+                                Extent1.STUS_CODE_ID STATUSCODEID1  ,
+                                Extent1.REM REM  ,
+                                Extent1.UPD_USER_ID UPDATOR1  ,
+                                Extent1.UPD_DT UPDATED1  ,
+                                Extent1.CRT_USER_ID CREATOR1  ,
+                                Extent1.CRT_DT CREATED1  ,
+                                Extent6.CODE CODE1  ,
+                                Extent7.USER_ID USER_ID  ,
+                                Extent7.USER_NAME USER_NAME
+                       FROM SAL0031D Extent1
+                            LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+                                 JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                            LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                      WHERE  8 <![CDATA[<>]]> Extent1.STUS_CODE_ID ) Filter1
+                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.UPDATOR1
+            WHERE ( Filter1.DEALER_ID = #{dealerId} )
+                AND ( Filter1.STATUSCODEID1 = #{stusCode} )
+                AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="pstEditAddrDetailListPop" parameterType="Map" resultType="egovMap">
+        SELECT Filter1.DEALER_ADD_ID   ,
+                   Filter1.DEALER_ID   ,
+                   Filter1.STATUSCODEID1 STUS_CODE_ID  ,
+                   Filter1.UPDATOR1 UPD_USER_ID  ,
+                   Filter1.UPDATED1 UPD_DT  ,
+                   Filter1.CREATOR1 CRT_USER_ID  ,
+                   Filter1.CREATED1 CRT_DT  ,
+                   Filter1.AREA_ID  ,
+                   Filter1.ADDR_DTL  ,
+                   Filter1.STREET  ,
+                   Filter1.AREA,
+                   Filter1.POSTCODE,
+                   Filter1.CITY,
+                   Filter1.STATE,
+                   Filter1.COUNTRY,
+                   Filter1.CODE1 CODE  ,
+                   CASE WHEN ( Filter1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Filter1.ADDR_DTL)) ELSE '' END ||' '||
+                         NVL (Filter1.STREET, '') ||' '|| Filter1.AREA ||' '|| Filter1.POSTCODE ||' '|| Filter1.CITY ||' '|| Filter1.STATE ||' '|| Filter1.COUNTRY AS FULL_ADDR,
+                   Filter1.REM,
+                   CASE
+                        WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME
+          FROM ( SELECT Extent1.DEALER_ADD_ID   ,
+                                Extent1.DEALER_ID   ,
+                                Extent1.AREA_ID  ,
+                                Extent1.ADDR_DTL  ,
+                                Extent1.STREET  ,
+                                NVL(Extent2.AREA, '') AREA,
+                                NVL(Extent2.POSTCODE, '') POSTCODE,
+                                NVL(Extent2.CITY, '') CITY,
+                                NVL(Extent2.STATE, '') STATE,
+                                NVL(Extent2.COUNTRY, '') COUNTRY,
+                                Extent1.STUS_CODE_ID STATUSCODEID1  ,
+                                Extent1.REM REM  ,
+                                Extent1.UPD_USER_ID UPDATOR1  ,
+                                Extent1.UPD_DT UPDATED1  ,
+                                Extent1.CRT_USER_ID CREATOR1  ,
+                                Extent1.CRT_DT CREATED1  ,
+                                Extent6.CODE CODE1  ,
+                                Extent7.USER_ID USER_ID  ,
+                                Extent7.USER_NAME USER_NAME
+                       FROM SAL0031D Extent1
+                            LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+                                 JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                            LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                      WHERE  8 <![CDATA[<>]]> Extent1.STUS_CODE_ID ) Filter1
+                LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.UPDATOR1
+            WHERE Filter1.DEALER_ID = #{dealerId}
+            <if test="searchAddr != null and searchAddr !=''">
+                AND UPPER(Filter1.ADDR_DTL) like '%'|| UPPER(#{searchAddr}) || '%'
+                  OR UPPER(Filter1.STREET) like '%'|| UPPER(#{searchAddr}) || '%'
+                  OR UPPER(Filter1.AREA) like '%'|| UPPER(#{searchAddr}) || '%'
+                  OR UPPER(Filter1.CITY) like '%'|| UPPER(#{searchAddr}) || '%'
+                  OR UPPER(Filter1.STATE) like '%'|| UPPER(#{searchAddr}) || '%'
+            </if>
+    </select>
+
+    <select id="pstNewCmbDealerList" parameterType="Map" resultType="egovMap">
+        SELECT DEALER_ID   ,
+                   DEALER_NAME   ,
+                   DEALER_NRIC   ,
+                   DEALER_EMAIL   ,
+                   DEALER_STUS_ID   ,
+                   DEALER_BRNCH_ID   ,
+                   CRT_DT   ,
+                   CRT_USER_ID   ,
+                   UPD_DT   ,
+                   UPD_USER_ID   ,
+                   USER_ID   ,
+                   CUST_ID   ,
+                   SBO_CODE
+           FROM SAL0030D
+         WHERE 1 = DEALER_STUS_ID
+         ORDER BY DEALER_NAME ASC
+    </select>
+
+    <select id="pstNewCmbDealerChgList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BRNCH_ID  CODE_ID ,
+                   Project1.CODE   ,
+                   Project1.BRNCH_CODE_NAME CODE_NAME
+          FROM ( SELECT Extent1.BRNCH_ID   ,
+                                Extent1.CODE   ,
+                                Extent1.CODE || '-' || Extent1.NAME AS BRNCH_CODE_NAME
+                       FROM SYS0005M Extent1
+                     WHERE 1 = Extent1.STUS_ID
+                         AND Extent1.BRNCH_ID = #{groupCode} ) Project1
+          ORDER BY Project1.BRNCH_CODE_NAME ASC
+    </select>
+
+    <select id="pstNewParticularInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_NAME   ,
+                   Extent1.DEALER_NRIC   ,
+                   Extent1.DEALER_EMAIL   ,
+                   Extent1.DEALER_BRNCH_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.USER_ID   ,
+                   Extent2.USER_NAME CRT_USER_NAME  ,
+                   Extent3.USER_NAME UPD_USER_NAME
+           FROM SAL0030D Extent1
+                 LEFT JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.UPD_USER_ID
+         WHERE Extent1.DEALER_ID = #{dealerId}
+             AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="pstNewDealerInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_NAME AS CODE_NAME  ,
+                   Extent1.DEALER_ID AS CODE_ID  ,
+                   Extent1.DEALER_NRIC   ,
+                   Extent1.DEALER_EMAIL   ,
+                   Extent1.DEALER_BRNCH_ID   ,
+                   Extent1.DEALER_TYPE  ,
+                   Extent1.CRT_DT   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.USER_ID   ,
+                   Extent2.USER_NAME CRT_USER_NAME  ,
+                   Extent3.USER_NAME UPD_USER_NAME
+           FROM SAL0030D Extent1
+                 LEFT JOIN SYS0047M Extent2 ON Extent2.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.UPD_USER_ID
+         WHERE Extent1.DEALER_TYPE = #{cmbNewDealerType}
+    </select>
+
+    <select id="pstNewContactPop" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_CNT_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.CNT_NAME   ,
+                   Extent1.DEALER_INITIAL   ,
+                   Extent1.NRIC   ,
+                   DECODE(Extent1.GENDER,'M','Male','F','Female') GENDER  ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent2.CODE DEALER_INITIAL_CODE  ,
+                   Extent3.CODE_NAME RACE_NAME   ,
+                   Extent4.CODE STUS_CODE  ,
+                   Extent1.TEL_M1  ,
+                   Extent1.TEL_M2  ,
+                   Extent1.TEL_O  ,
+                   Extent1.TEL_R  ,
+                   Extent1.TELF  ,
+                   Extent1.RACE_ID  ,
+                   Extent1.STUS_CODE_ID  ,
+                   CASE
+                        WHEN Extent1.CRT_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.CRT_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END CRT_DT  ,
+                   CASE
+                        WHEN Extent5.USER_ID IS NOT NULL THEN Extent5.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN Extent6.USER_ID IS NOT NULL THEN Extent6.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME  ,
+                   CASE
+                        WHEN Extent1.UPD_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.UPD_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END UPD_DT
+            FROM SAL0032D Extent1
+                     LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DEALER_INITIAL
+                     LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.RACE_ID
+                     LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+                     LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_ID = #{dealerId}
+            AND Extent1.STUS_CODE_ID = #{stusCode}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="pstNewContactListPop" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_CNT_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.CNT_NAME   ,
+                   Extent1.DEALER_INITIAL   ,
+                   Extent1.NRIC   ,
+                   DECODE(Extent1.GENDER,'M','Male','F','Female') GENDER  ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent2.CODE DEALER_INITIAL_CODE  ,
+                   Extent3.CODE_NAME RACE_NAME   ,
+                   Extent4.CODE STUS_CODE  ,
+                   Extent1.TEL_M1  ,
+                   Extent1.TEL_M2  ,
+                   Extent1.TEL_O  ,
+                   Extent1.TEL_R  ,
+                   Extent1.TELF  ,
+                   Extent1.RACE_ID  ,
+                   Extent1.STUS_CODE_ID  ,
+                   CASE
+                        WHEN Extent1.CRT_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.CRT_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END CRT_DT  ,
+                   CASE
+                        WHEN Extent5.USER_ID IS NOT NULL THEN Extent5.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN Extent6.USER_ID IS NOT NULL THEN Extent6.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME  ,
+                   CASE
+                        WHEN Extent1.UPD_DT <![CDATA[ >]]> TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS') THEN Extent1.UPD_DT
+                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD HH:MI:SS')
+                      END UPD_DT
+            FROM SAL0032D Extent1
+                     LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DEALER_INITIAL
+                     LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.RACE_ID
+                     LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+                     LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_ID = #{dealerId}
+        <if test="searchCont != null and searchCont !=''">
+            AND UPPER(Extent1.CNT_NAME) like '%'|| UPPER(#{searchCont}) || '%'
+              OR UPPER(Extent1.NRIC) like '%'|| UPPER(#{searchCont}) || '%'
+              OR UPPER(Extent1.TEL_M1) like '%'|| UPPER(#{searchCont}) || '%'
+              OR UPPER(Extent1.TEL_O) like '%'|| UPPER(#{searchCont}) || '%'
+              OR UPPER(Extent1.TEL_R) like '%'|| UPPER(#{searchCont}) || '%'
+              OR UPPER(Extent1.TELF) like '%'|| UPPER(#{searchCont}) || '%'
+        </if>
+    </select>
+
+    <select id="cmbChgStockItemList" parameterType="Map" resultType="egovMap">
+        SELECT Project1.STK_ID   ,
+                   Project1.STK_CODE   ,
+                   Project1.STK_DESC   ,
+                   Project1.BS_POINT   ,
+                   Project1.STK_CTGRY_ID   ,
+                   Project1.GROS_WT   ,
+                   Project1.IS_NCV   ,
+                   Project1.IS_SIRIM   ,
+                   Project1.MASTER_STK_ID   ,
+                   Project1.MEASURE_CBM   ,
+                   Project1.NET_WT   ,
+                   Project1.QTY_PER_CARTON   ,
+                   Project1.STUS_CODE_ID   ,
+                   Project1.STK_GRAD   ,
+                   Project1.STK_TYPE_ID  ,
+                   Project1.UPD_DT   ,
+                   Project1.UPD_USER_ID   ,
+                   Project1.C2 C2  ,
+                   Project1.STK_CODE_DESC
+          FROM ( SELECT Extent1.STK_ID   ,
+                                Extent1.STK_CODE   ,
+                                Extent1.STK_DESC   ,
+                                Extent1.STK_CTGRY_ID   ,
+                                Extent1.STUS_CODE_ID   ,
+                                Extent1.IS_SIRIM   ,
+                                Extent1.IS_NCV   ,
+                                Extent1.QTY_PER_CARTON   ,
+                                Extent1.UPD_USER_ID   ,
+                                Extent1.UPD_DT   ,
+                                Extent1.NET_WT   ,
+                                Extent1.GROS_WT   ,
+                                Extent1.MEASURE_CBM   ,
+                                Extent1.MASTER_STK_ID   ,
+                                Extent1.STK_GRAD   ,
+                                Extent1.BS_POINT   ,
+                                Extent1.STK_CODE || ' - ' || STK_DESC AS STK_CODE_DESC  ,
+                                CASE
+                                     WHEN ( Extent1.STK_TYPE_ID IS NOT NULL ) THEN Extent1.STK_TYPE_ID
+                                ELSE 0
+                                   END STK_TYPE_ID  ,
+                                CASE
+                                     WHEN ( Extent3.AMT IS NOT NULL ) THEN Extent3.AMT
+                                ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+                                   END C2
+                         FROM SYS0026M Extent1
+                            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.STK_CTGRY_ID
+                            LEFT JOIN SAL0016M Extent3   ON ( Extent3.STK_ID = Extent1.STK_ID )
+                            AND ( 61 = Extent1.STK_TYPE_ID )
+                            AND ( Extent3.AMT > UTILS.CONVERT_TO_FLOAT(0,53) )
+                            AND ( 1 = Extent1.STK_ALLOW_SALES )
+                      WHERE  ( Extent1.STK_TYPE_ID = #{addStockType} )
+                               AND ( Extent1.STK_CTGRY_ID = #{addStockCate} )
+                               AND ( ( ( 'A' = Extent1.STK_GRAD )
+                               AND ( 61 = Extent1.STK_TYPE_ID ) )
+                               OR ( 61 <![CDATA[<>]]> Extent1.STK_TYPE_ID ) ) ) Project1
+              ORDER BY Project1.STK_CODE ASC
+    </select>
+
+    <select id="crtSeqSAL0062D" resultType="Integer">
+        SELECT SAL0062D_PST_SALES_ORD_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqSAL0063D" resultType="Integer">
+        SELECT SAL0063D_PST_ITM_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="crtSeqSAL0061D" resultType="java.lang.String">
+        SELECT SAL0061D_PST_TRNSIT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPstSAL0062D">
+        INSERT INTO SAL0062D (
+                      PST_SALES_ORD_ID,
+                      PST_REF_NO,
+                      PST_DEALER_ID,
+                      PST_TYPE,
+                      PST_LOC_ID,
+                      PST_DEALER_MAIL_CNT_ID,
+                      PST_DEALER_DELVRY_CNT_ID,
+                      PST_DEALER_MAIL_ADD_ID,
+                      PST_DEALER_DELVRY_ADD_ID,
+                      PST_CUR_RATE,
+                      PST_CUR_TYPE_ID,
+                      PST_TOT_AMT,
+                      PST_REM,
+                      PST_STUS_ID,
+                      CRT_DT,
+                      CRT_USER_ID,
+                      PIC,
+                      PST_CUST_PO,
+                      PST_INVC_TYPE,
+                      PST_ATTACH,
+                      PST_ATTACH_FILE_GRP_ID)
+          VALUES  (#{pstSalesOrdId},
+                        #{pstRefNo},
+                        #{pstDealerId},
+                        #{pstType},
+                        #{pstLocId},
+                        #{pstDealerMailCntId},
+                        #{pstDealerDelvryCntId},
+                        #{pstDealerMailAddId},
+                        #{pstDealerDelvryAddId},
+                        #{pstCurRate},
+                        #{pstCurTypeId},
+                        #{pstTotAmt},
+                        #{pstRem},
+                        #{pstStusId},
+                        SYSDATE,
+                        #{crtUserId},
+                        #{pic},
+                        #{pstCustPo},
+                        #{pstInvcType},
+                        #{pstAttach},
+                        #{pstAttachFileGrpId})
+     </insert>
+
+     <update id="updatePstSAL0062D"><!--PSTSalesM-->
+        UPDATE SAL0062D
+             SET PST_REF_NO             = #{pstRefNo}
+         WHERE PST_SALES_ORD_ID    = #{pstSalesOrdId}
+    </update>
+
+    <insert id="insertPstSAL0063D">
+        INSERT INTO SAL0063D (
+                      PST_ITM_ID,
+                      PST_SALES_ORD_ID,
+                      PST_ITM_STK_ID,
+                      PST_ITM_PRC,
+                      PST_ITM_REQ_QTY,
+                      PST_ITM_TOT_PRC,
+                      PST_ITM_DO_QTY,
+                      PST_ITM_CAN_QTY,
+                      PST_ITM_BAL_QTY,
+                      CRT_DT,
+                      CRT_USER_ID)
+          VALUES  ( #{pstItmId},
+                        #{pstSalesOrdId},
+                        #{pstItmStkId},
+                        #{pstItmPrc},
+                        #{pstItmReqQty},
+                        #{pstItmTotPrc},
+                        #{pstItmDoQty},
+                        #{pstItmCanQty},
+                        #{pstItmBalQty},
+                        SYSDATE,
+                        #{crtUserId})
+     </insert>
+
+     <insert id="insertPstSAL0061D">
+        INSERT INTO SAL0061D (
+                      PST_TRNSIT_ID,
+                      PST_SALES_ORD_ID,
+                      PST_STOCK_ID,
+                      PST_STOCK_REM,
+                      PST_QTY,
+                      PST_TYPE_ID,
+                      PST_REF_NO,
+                      CRT_DT,
+                      CRT_USER_ID)
+          VALUES  (
+                        #{pstTrnsitId},
+                        #{pstSalesOrdId},
+                        #{pstStockId},
+                        #{pstStockRem},
+                        #{pstQty},
+                        #{pstTypeId},
+                        #{pstRefNo},
+                        SYSDATE,
+                        #{crtUserId})
+     </insert>
+
+     <select id="crtSeqSAL0031D" resultType="Integer">
+        SELECT SAL0031D_DEALER_ADD_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPstSAL0031D">
+        INSERT INTO SAL0031D
+			  ( DEALER_ADD_ID, DEALER_ID, AREA_ID, ADDR_DTL, STREET
+			  , STUS_CODE_ID, REM, UPD_USER_ID, UPD_DT, CRT_USER_ID, CRT_DT )
+	    VALUES
+	          ( #{getDealerAddId}, #{insDealerId}, #{areaId}, #{addrDtl}, #{streetDtl}, #{stusCodeId}
+	          , #{addrRem}, #{userId}, SYSDATE, #{userId}, SYSDATE )
+     </insert>
+
+     <update id="updatePstSAL0031D">
+        UPDATE SAL0031D
+			 SET ADDR_DTL = #{addrDtl},
+			       STREET = #{streetDtl},
+			       AREA_ID = #{areaId},
+			       REM = #{addrRem},
+			       UPD_DT = SYSDATE
+		 WHERE DEALER_ADD_ID = #{addrDealerAddId}
+    </update>
+
+    <update id="updateMainPstSAL0031D">
+        UPDATE SAL0031D
+             SET STUS_CODE_ID = 9,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_ADD_ID = #{dealerAddId}
+    </update>
+
+    <update id="updateSubPstSAL0031D">
+        UPDATE SAL0031D
+             SET STUS_CODE_ID = 1,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_ID = #{dealerId}
+    </update>
+
+    <select id="crtSeqSAL0032D" resultType="Integer">
+        SELECT SAL0032D_DEALER_CNT_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertPstSAL0032D">
+        INSERT INTO SAL0032D
+              ( DEALER_CNT_ID, DEALER_ID, CNT_NAME, DEALER_INITIAL, NRIC, TEL_M1, TEL_M2, TEL_O, TEL_R, TELF
+              , GENDER, RACE_ID, STUS_CODE_ID, UPD_DT, UPD_USER_ID, CRT_DT, CRT_USER_ID )
+        VALUES
+              ( #{getDealerCntId}, #{insDealerId}, #{cntcName}, #{cntcInitial}, #{cntcNric}, #{cntcTelm1}, #{cntcTelm2}, #{cntcTelo}, #{cntcTelr}, #{cntcTelf}
+              , #{cntcGender}, #{cntcCmbRaceTypeId}, #{stusCodeId}, SYSDATE, #{userId}, SYSDATE, #{userId} )
+     </insert>
+
+     <update id="updateMainPstSAL0032D">
+        UPDATE SAL0032D
+             SET STUS_CODE_ID = 9,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_CNT_ID = #{dealerCntId}
+    </update>
+
+    <update id="updateSubPstSAL0032D">
+        UPDATE SAL0032D
+             SET STUS_CODE_ID = 1,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_ID = #{dealerId}
+    </update>
+
+    <update id="delPstSAL0031D">
+        UPDATE SAL0031D
+             SET STUS_CODE_ID = 8,
+                   UPD_DT = SYSDATE
+         WHERE DEALER_ADD_ID = #{addrDealerAddId}
+    </update>
+
+     <select id="getRate" resultType="egovMap">
+		SELECT   RATE_DT,
+			         CUR_FROM,
+			         CUR_TO,
+			         RATE
+		   FROM   PAY0197M
+		 WHERE   TO_DATE(RATE_DT , 'YYYY/MM/DD') = TO_DATE(SYSDATE , 'YYYY/MM/DD')
+    </select>
+
+    <select id="pstTypeCmbList" parameterType="Map" resultType="egovMap">
+        SELECT
+	              CODE_ID ,
+	              CODE ,
+	              CODE_NAME ,
+	              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+         FROM SYS0013M
+       WHERE DISAB = 0
+           AND CODE_ID IN
+              <foreach item="item" collection="pstTypeList" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+              ORDER BY CODE
+    </select>
+
+    <select id="reportGrid" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PST_TRNSIT_ID   ,
+			       Extent1.PST_SALES_ORD_ID   ,
+			       Extent2.PST_REF_NO PST_REF_NO  ,
+			       Extent1.PST_STOCK_ID   ,
+			       Extent4.STK_CODE || ' - ' || Extent4.STK_DESC AS STK_CODE_DESC  ,
+			       Extent1.PST_STOCK_REM   ,
+			       Extent1.PST_QTY   ,
+			       Extent1.PST_TYPE_ID   ,
+			       Extent3.CODE   ,
+			       Extent1.PST_REF_NO PSTREFNO1  ,
+			       Extent1.CRT_DT   ,
+			       Extent1.CRT_USER_ID   ,
+			       Extent5.USER_NAME
+		  FROM SAL0061D Extent1
+	         LEFT JOIN SAL0062D Extent2   ON Extent2.PST_SALES_ORD_ID = Extent1.PST_SALES_ORD_ID
+	         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PST_TYPE_ID
+	         LEFT JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent1.PST_STOCK_ID
+	         LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		WHERE  Extent1.PST_SALES_ORD_ID = #{pstSalesOrdId}
+    </select>
+
+</mapper>

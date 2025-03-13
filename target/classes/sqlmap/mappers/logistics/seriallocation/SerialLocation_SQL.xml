@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.seriallocation.impl.SerialLocationMapper">
+
+<!-- @author Adrian C. -->
+
+    <select id="searchSerialLocationList" parameterType="Map"  resultType="EgovMap">
+        SELECT
+                lg63d.SERIAL_NO AS serialno,
+                NVL(lg63d.SERGRAD, '-') AS grade,
+                sy28m.WH_LOC_CODE AS loccode,
+                sy28m.WH_LOC_DESC AS locdesc,
+                (sy05m.CODE || ' - ' || sy05m.NAME) AS brnch,
+                loc.CODE_NAME AS loctype,
+                lg63d.MATNR AS itmcode,
+                sy26m.STK_DESC AS itmdesc,
+                stk.CODE_NAME AS itmtype,
+                stk2.CODE_NAME AS itmctgry,
+                TO_CHAR(TO_DATE(lg63d.GLTRI, 'YYYY/MM/DD'), 'DD/MM/YYYY') AS gltri,
+                TO_CHAR(TO_DATE(lg63d.LWEDT, 'YYYY/MM/DD'), 'DD/MM/YYYY') AS lwedt,
+                lg63d.SWAOK AS swaok,
+                (sal29d.CUST_ID || ' - ' || sal29d.NAME) AS cust,
+                TO_CHAR(lg63d.CRT_DT, 'DD/MM/YYYY') AS crtdt
+
+        FROM LOG0063D lg63d
+            LEFT JOIN SYS0028M sy28m ON lg63d.LOC_ID = sy28M.WH_LOC_ID
+            JOIN SYS0026M sy26m ON sy26m.STk_CODE = lg63d.MATNR
+            LEFT JOIN SYS0013M loc ON sy28m.WH_LOC_GB = loc.CODE AND loc.CODE_MASTER_ID = 339
+            JOIN SYS0013M stk ON sy26m.STK_TYPE_ID = stk.CODE_ID
+            JOIN SYS0013M stk2 ON sy26m.STK_CTGRY_ID = stk2.CODE_ID
+            LEFT JOIN SYS0005M sy05m ON sy28m.WH_LOC_BRNCH_ID = sy05m.BRNCH_ID
+            LEFT JOIN SAL0029D sal29d ON lg63d.CUST_ID = sal29d.CUST_ID
+
+        WHERE 1 = 1
+
+        <if test="srchmaterial !=null and srchmaterial !=''">
+              AND lg63d.MATNR  = #{srchmaterial}
+        </if>
+
+        <if test="srchserial !=null and srchserial !=''">
+             AND lg63d.SERIAL_NO = #{srchserial}
+        </if>
+
+        <if test="srchcatagorytype != null">
+                    AND sy26m.STK_CTGRY_ID IN
+                    <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+         </if>
+
+         <if test="materialtype != null">
+                    AND sy26m.STK_TYPE_ID IN
+                    <foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+         </if>
+
+          <if test="hiddenLoc != null and hiddenLoc !=''">
+                    AND lg63d.LOC_ID = #{hiddenLoc}
+         </if>
+
+        <if test="srchcrtdtfrom !=null and srchcrtdtfrom !='' and srchcrtdtto !=null and srchcrtdtto !=''">
+            AND TO_CHAR(lg63d.CRT_DT, 'YYYYMMDD')
+                   BETWEEN TO_CHAR(TO_DATE(#{srchcrtdtfrom},'DD/MM/YYYY'),'YYYYMMDD')
+                   AND TO_CHAR(TO_DATE(#{srchcrtdtto},'DD/MM/YYYY'),'YYYYMMDD')
+        </if>
+
+        ORDER BY lg63d.SERIAL_NO
+    </select>
+
+     <update id="updateItemGrade" parameterType="Map">
+        UPDATE LOG0063D
+           SET SERGRAD = #{grade}
+        WHERE SERIAL_NO = #{serialno}
+     </update>
+
+</mapper>

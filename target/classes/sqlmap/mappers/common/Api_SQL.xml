@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.ApiMapper">
+
+<!--
+**************************************
+ * Author                  Date                    Remark
+ * Chew Kah Kit        2019/04/11           API for customer portal
+**************************************
+ -->
+
+	<select id="selectCowayCustNricOrPassport" parameterType="Map" resultType="egovMap">
+		SELECT *
+		FROM CP1001V EXTENT1
+		WHERE 1=1
+		AND ROWNUM <![CDATA[ <= ]]> 1
+		AND EXTENT1.NRIC_OR_PASSPORT = #{nricOrPassport}
+	</select>
+
+    <select id="isNricOrPassportMatchInvoiceNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END NRIC_MATCH_INVOICE
+        FROM SAL0029D EXTENT1
+		JOIN SAL0001D EXTENT2 ON EXTENT2.CUST_ID = EXTENT1.CUST_ID
+		JOIN (
+			SELECT RENT_SO_ID ORD_ID, RENT_DOC_NO INVOICE_NO FROM PAY0022D WHERE RENT_DOC_NO LIKE 'BR%'
+			UNION
+			SELECT SRV_SALES_ORD_ID ORD_ID, SRV_LDGR_REF_NO INVOICE_NO FROM PAY0023D WHERE SRV_LDGR_REF_NO LIKE 'BR%'
+			UNION
+			SELECT SRV_MEM_ORD_ID ORD_ID, SRV_MEM_BATCH_NO INVOICE_NO FROM PAY0024D WHERE SRV_MEM_BATCH_NO LIKE 'BR%'
+			UNION
+			SELECT TRADE_SO_ID ORD_ID, TRADE_DOC_NO INVOICE_NO FROM PAY0035D WHERE TRADE_DOC_NO LIKE 'BR%'
+			) EXTENT3 ON EXTENT3.ORD_ID = EXTENT2.SALES_ORD_ID
+		WHERE 1=1
+        AND EXTENT1.NRIC = #{nricOrPassport} AND EXTENT3.INVOICE_NO = #{invoiceNo}
+    </select>
+
+     <select id="selectInvoiceSubscriptionsList" parameterType="Map" resultType="egovMap">
+       SELECT
+            EXTENT1.CUST_BILL_EMAIL EMAIL,
+            EXTENT2.NAME FULL_NAME
+		FROM SAL0024D EXTENT1
+		JOIN SAL0029D EXTENT2 ON EXTENT1.CUST_BILL_CUST_ID = EXTENT2.CUST_ID
+		WHERE EXTENT1.CUST_BILL_IS_ESTM = 1
+		AND EXTENT1.CUST_BILL_CUST_ID = #{cowayCustId}
+    </select>
+
+     <select id="selectAccountCode" parameterType="Map" resultType="egovMap">
+        SELECT CUST_BILL_ID
+        FROM SAL0024D
+            WHERE 1 = 1
+            AND CUST_BILL_CUST_ID = #{cowayCustId}
+            AND CUST_BILL_STUS_ID = 1
+    </select>
+
+    <select id="selectCustTotalProductsCount" parameterType="Map" resultType="egovMap">
+        SELECT TOTAL_PRODUCT_COUNT
+            FROM CP1005V EXTENT1
+            WHERE EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="selectLastPayment" parameterType="Map" resultType="egovMap">
+     SELECT * FROM
+     (SELECT SUM(AMOUNT) TOT_AMT, TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS') PAY_DATE
+        FROM CP1018V
+        WHERE CUST_ID = #{cowayCustId}
+        GROUP BY CUST_ID,PAY_DATE
+        ORDER BY PAY_DATE DESC
+        ) WHERE ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="getCustTotalOutstanding" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(EXTENT1.OTSTND_AMT,'fm9,999,990.00') OTSTND_AMT
+        FROM CP1007V EXTENT1
+        WHERE EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="getTotalMembershipExpired" parameterType="Map" resultType="egovMap">
+        SELECT
+            EXTENT1.EXPIRED_MEMBERSHIP
+        FROM CP1008V EXTENT1
+        WHERE EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+	<select id="selectCustVANo" parameterType="Map" resultType="egovMap">
+        SELECT CUST_VA_NO CustomerVirtualAccountNumber
+        FROM SAL0029D EXTENT1
+        WHERE 1=1
+        AND ROWNUM <![CDATA[ <= ]]> 1
+        AND EXTENT1.CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="selectAutoDebitEnrolmentsList" parameterType="Map" resultType="egovMap">
+        SELECT
+			STATUS ,
+			ORDER_NO ,
+			CARD_NO ,
+			EFFECTIVE_DATE ,
+			PAYMENT_METHOD ,
+			SUBMISSION_DATE ,
+			TRANSACTION_AMOUNT ,
+			RENT_PAY_MODE_CODE ,
+			CODE_NAME
+         FROM CP1010V
+         WHERE CUST_ID = #{cowayCustId}
+     </select>
+
+     <select id="selectCowayAccountProductPreviewList" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+			SELECT
+			    A.*,
+			    ROW_NUMBER() OVER (PARTITION BY SALES_ORD_NO ORDER BY UN_BILL_AMT) R
+			FROM (
+			    SELECT
+			        NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
+			        PRODUCT_TOTAL_OUTSTANDING,
+			        MEMBERSHIP_OUTSTANDING,
+			        ORDER_STUS,
+			        INSTALL_DT ,
+			        LAST_SERVICE_DT ,
+			        STK_CODE ,
+			        STK_DESC ,
+			        SALES_ORD_NO ,
+			        UN_BILL_AMT
+			    FROM CP1013V
+			    WHERE CUST_ID = #{cowayCustId}
+			)A
+		) WHERE R = 1
+     </select>
+
+     <select id="selectCowayAccountProductPreviewListByAccountCode" parameterType="Map" resultType="egovMap">
+		SELECT
+			NVL((PRODUCT_TOTAL_OUTSTANDING + MEMBERSHIP_OUTSTANDING),0) TOTAL_OUTSTANDING,
+			LAST_SERVICE_DT ,
+			INSTALL_DT ,
+
+			STK_CODE ,
+			STK_DESC ,
+			SALES_ORD_NO ,
+            UN_BILL_AMT
+		FROM CP1013V
+		WHERE ACCOUNT_CODE = #{accountCode}
+     </select>
+
+    <select id="selectProductDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            PRODUCT_TOTAL_OUTSTANDING ,
+            MEMBERSHIP_OUTSTANDING ,
+            INSTALL_DT ,
+            LAST_SERVICE_DT ,
+            SALES_ORD_NO ,
+            APP_TYPE ,
+            STK_CODE ,
+            SERIAL_NO ,
+            STK_DESC ,
+            ADD1 ,
+            ADD2 ,
+            POSTCODE ,
+            AREA ,
+            STATE_NAME ,
+            BILLER_CODE ,
+            JOMPAY_REF ,
+            MONTHLY_RENTAL ,
+            CODY_CONTACT ,
+            CODY_NAME ,
+            MAIL_CNT_NAME ,
+            MAIL_CNT_TELM ,
+            MAIL_CNT_EMAIL ,
+            MAIL_CNT_NRIC ,
+            ACCOUNT_CODE ,
+            UN_BILL_AMT
+        FROM CP1013V
+        WHERE SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectLatestMembership" parameterType="Map" resultType="egovMap">
+         SELECT
+                MEMBERSHIP_TYPE ,
+                MEMBERSHIP_START_DATE ,
+                MEMBERSHIP_EXPIRY_DATE ,
+                MEMBERSHIP_FEE ,
+                MEMBERSHIP_YEAR ,
+                IS_CHARGE
+            FROM CP1025V
+        WHERE SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectMembershipExpiredDate" parameterType="Map" resultType="egovMap">
+         SELECT
+                MEMBERSHIP_EXPIRY_DATE
+            FROM CP1025V
+        WHERE SALES_ORD_NO = #{salesOrdNo}
+    </select>
+
+    <select id="selectHeartServiceList" parameterType="Map" resultType="egovMap">
+        SELECT
+            BS_NO ,
+            CODY_NO ,
+            CODY_NAME ,
+            LAST_SERVICE_DATE
+         FROM CP1014V
+         WHERE ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectTechnicianServicesList" parameterType="Map" resultType="egovMap">
+        SELECT
+			AS_NO ,
+			CT_NAME ,
+			CT_NO ,
+			LAST_AS_DT
+		 FROM CP1015V
+         WHERE ORD_NO = #{orderNo}
+    </select>
+
+    <select id="isUserHasOrdNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END IS_USER_HAS_ORD_NO
+        FROM SAL0001D
+        WHERE 1 = 1
+        AND CUST_ID = #{cowayCustId}
+        AND SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectInvoiceListByOrderNumber" parameterType="Map" resultType="egovMap">
+    SELECT
+        TAX_INVC_ID ,
+        AMOUNT ,
+        SALES_ORD_NO ,
+        INVOICE_DT ,
+        TAX_INVC_REF_NO ,
+        TYPE
+    FROM CP1002V EXTENT1
+    WHERE EXTENT1.SALES_ORD_NO = #{orderNo}
+    </select>
+
+    <select id="selectTransactionHistoryList" parameterType="Map" resultType="egovMap">
+    SELECT
+	    SALES_ORD_NO ,
+	    ACCOUNT_CODE ,
+	    RECEIPT_NO ,
+	    TO_CHAR(PAY_DATE,'YYYY/MM/DD HH24:MI:SS')  PAY_DATE,
+	    AMOUNT
+        FROM (
+            SELECT
+                SALES_ORD_NO,
+                ACCOUNT_CODE ,
+                RECEIPT_NO ,
+                PAY_DATE,
+                AMOUNT,
+                MAX(PAY_DATE) OVER (PARTITION BY SALES_ORD_NO,ACCOUNT_CODE) LAST_PAY_DATE,
+                PAY_ID
+            FROM CP1018V
+            WHERE 1 = 1
+		) WHERE TO_CHAR(PAY_DATE,'YYYYMM') >= TO_CHAR(ADD_MONTHS(TO_DATE(LAST_PAY_DATE), -5),'YYYYMM')
+		AND SALES_ORD_NO = #{orderNo}
+		ORDER BY PAY_ID DESC
+    </select>
+
+    <select id="isUserHasTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
+		SELECT
+		   CASE WHEN COUNT(*) > 0 THEN 'YES' ELSE 'NO' END IS_USER_HAS_TAX_INVOICE_REF_NO
+		FROM SAL0001D EXTENT1
+		JOIN CP1002V EXTENT2 ON EXTENT1.SALES_ORD_NO = EXTENT2.SALES_ORD_NO
+	    WHERE 1 = 1
+	       AND EXTENT1.CUST_ID = #{cowayCustId}
+	       AND EXTENT2.TAX_INVC_REF_NO = #{taxInvoiceRefNo}
+    </select>
+
+    <select id="selectInvoiceDetailByTaxInvoiceRefNo" parameterType="Map" resultType="egovMap">
+    SELECT
+        TAX_INVC_ID ,
+        AMOUNT ,
+        SALES_ORD_NO ,
+        INVOICE_DT ,
+        TAX_INVC_REF_NO ,
+        TYPE
+    FROM CP1002V EXTENT1
+    WHERE  EXTENT1.TAX_INVC_REF_NO = #{taxInvoiceRefNo}
+    </select>
+
+    <select id="selectOrderNumberList" parameterType="Map" resultType="egovMap">
+        SELECT
+            TO_CHAR(TOTAL_OUTSTANDING,'999,990.00') TOTAL_OUTSTANDING,
+            TO_CHAR(PRODUCT_TOTAL_OUTSTANDING,'999,990.00') PRODUCT_TOTAL_OUTSTANDING,
+            TO_CHAR(MEMBERSHIP_OUTSTANDING,'999,990.00') MEMBERSHIP_OUTSTANDING,
+            ORDER_STATUS ,
+            SALES_ORD_NO
+        FROM CP1023V
+        WHERE CUST_ID = #{cowayCustId}
+    </select>
+
+    <select id="selectMembershipProgrammesList" parameterType="Map" resultType="egovMap">
+	   SELECT * FROM CP1024V
+	</select>
+
+	<select id="selectProductList" parameterType="Map" resultType="egovMap">
+       SELECT * FROM CP1026V
+    </select>
+
+    <select id="customerPortalSeq" resultType="Integer">
+        SELECT CP0001T_CP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="selectCustomerPortalTemp" parameterType="Map" resultType="egovMap">
+        SELECT
+            CP_ID ,
+			CUST_ID ,
+			NVL(CUST_NAME, ' ')  CUST_NAME,
+			NVL(CUST_MOBILE, ' ')  CUST_MOBILE,
+			NVL(CUST_EMAIL , ' ') CUST_EMAIL,
+			CUST_EMAIL_VERIFY_STUS ,
+			NVL(PIC_NAME , ' ') PIC_NAME,
+			NVL(PIC_NRIC , ' ') PIC_NRIC,
+			NVL(PIC_MOBILE , ' ') PIC_MOBILE,
+			NVL(PIC_EMAIL , ' ') PIC_EMAIL,
+			STUS_ID ,
+			CRT_USR_ID ,
+			CRT_DT ,
+			CP_TYPE_ID ,
+			ACTN_TYPE ,
+			CUST_CNTC_ID
+        FROM CP0001T WHERE CP_ID = #{id}
+        AND STUS_ID = 1
+    </select>
+
+	<insert id="addOrEditPersonInCharge" parameterType="Map">
+		INSERT INTO CP0001T
+			(CP_ID ,
+			CUST_ID ,
+			PIC_NAME ,
+			PIC_NRIC ,
+			PIC_MOBILE ,
+			PIC_EMAIL ,
+			STUS_ID ,
+			CRT_USR_ID ,
+			CRT_DT,
+			CP_TYPE_ID,
+			CUST_CNTC_ID
+		) VALUES(
+		      #{customerPortalSeq}
+			, #{cowayCustId}
+			<choose><when test="picName != null and picName !=''">,#{picName}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picIcNric != null and picIcNric !=''">,#{picIcNric}</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picMobile != null and picMobile !=''">,REPLACE(#{picMobile},' 60', '0')</when><otherwise>,NULL</otherwise></choose>
+            <choose><when test="picEmail != null and picEmail !=''">,#{picEmail}</when><otherwise>,NULL</otherwise></choose>
+			, 1
+			, 100910
+			, SYSDATE
+			, 5502
+			, #{cowayCntId}
+		)
+	</insert>
+
+	<update id="updatePersonInChargeContact" parameterType="Map">
+	   UPDATE SAL0027D
+	   SET <if test="picName != null and picName !=''">NAME = #{picName}, </if>
+            <if test="picIcNric != null and picIcNric !=''">NRIC = #{picIcNric}, </if>
+            <if test="picMobile != null and picMobile !=''">TEL_M1 = #{picMobile}, </if>
+            <if test="picEmail != null and picEmail !=''">EMAIL = #{picEmail}, </if>
+             UPD_DT = SYSDATE ,
+             UPD_USER_ID = 100910
+       WHERE CUST_ID = #{cowayCustId}
+           AND CUST_CNTC_ID = #{cowayCntId}
+	</update>
+
+	<insert id="addOrEditCustomerInfo" parameterType="Map">
+		INSERT INTO CP0001T
+	            (CP_ID ,
+	            CUST_ID ,
+	            CUST_NAME ,
+	            CUST_MOBILE ,
+	            CUST_EMAIL ,
+	            STUS_ID ,
+	            CRT_USR_ID ,
+	            CRT_DT,
+	            CP_TYPE_ID
+	        ) VALUES(
+	              #{customerPortalSeq}
+	            , #{cowayCustId}
+	            , #{fullName}
+	            <choose><when test="cowayCustMobile != null and cowayCustMobile !=''">,#{cowayCustMobile}</when><otherwise>,NULL</otherwise></choose>
+	            <choose><when test="cowayCustEmail != null and cowayCustEmail !=''">,#{cowayCustEmail}</when><otherwise>,NULL</otherwise></choose>
+	            , 1
+	            , 100910
+	            , SYSDATE
+	            , 5503
+	        )
+    </insert>
+
+    <insert id="addEInvoiceSubscription" parameterType="Map">
+	    INSERT INTO CP0001T
+	                (CP_ID
+	               , CUST_ID
+	               , CUST_EMAIL
+	               , CUST_NAME
+	               , CUST_EMAIL_VERIFY_STUS
+	               , STUS_ID
+	               , CRT_USR_ID
+	               , CRT_DT
+	               , CP_TYPE_ID
+	               , ACTN_TYPE
+	            ) VALUES(
+	                  #{customerPortalSeq}
+	                , #{cowayCustId}
+	                <choose><when test="email != null and email !=''">,#{email}</when><otherwise>,NULL</otherwise></choose>
+	                <choose><when test="fullName != null and fullName !=''">,#{fullName}</when><otherwise>,NULL</otherwise></choose>
+	                <choose><when test="emailVerifyStatus != null and emailVerifyStatus !=''">,#{emailVerifyStatus}</when><otherwise>,NULL</otherwise></choose>
+	                , 1
+	                , 100910
+	                , SYSDATE
+	                , 5504
+	                , UPPER(#{actionType})
+	            )
+    </insert>
+
+   <insert id="insertApiAccessLog" parameterType="Map">
+   INSERT INTO SYS0097M
+   (
+        RESP_ID
+       ,REQ_PARAM
+       ,RESP_PARAM
+       ,RESP_CODE
+       ,RESP_TM
+       ,IP_ADDR
+       ,PGM_PATH
+       ,ERR_MSG
+       ,CRT_DT
+       ,CRT_USER_ID
+    ) VALUES (
+        SYS0097M_RESP_ID_SEQ.NEXTVAL
+        , #{reqParam}
+        , #{respParam}
+        , #{respCde}
+        , #{respTm}
+        , #{ipAddr}
+        , #{prgPath}
+        , #{errMsg}
+        , SYSDATE
+        , 100910
+    )
+    </insert>
+
+    <insert id="insertCustomerNewContact" parameterType="Map">
+    INSERT INTO SAL0027D
+	(
+	      CUST_CNTC_ID
+	    , CUST_ID
+	    , NAME
+	    , TEL_M1
+	    , EMAIL
+	    , STUS_CODE_ID
+	    , UPD_DT
+	    , UPD_USER_ID
+	    , CRT_DT
+	    , CRT_USER_ID
+	) VALUES
+	(
+	      SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
+	    , #{custId}
+	    , #{name}
+	    , REPLACE(#{custMobile},' 60', '0')
+	    , #{email}
+	    , #{stus}
+	    , SYSDATE
+	    , #{userId}
+	    , SYSDATE
+	    , #{userId}
+
+	)
+    </insert>
+
+    <update id="updateStatus" parameterType="Map">
+        UPDATE CP0001T
+            SET STUS_ID = #{stusId}
+        WHERE CP_ID = #{id}
+    </update>
+
+    <update id="updateTokenStaging" parameterType="Map">
+        UPDATE SAL0257D
+        SET
+            BIN = SUBSTR(#{maskedPan}, 1, 6),
+            CCLAST4 = SUBSTR(#{maskedPan}, 13, 4),
+            TOKEN = #{token},
+            RES_TEXT = #{token} || '' || #{refNo},
+            STATUS = #{stusID},
+            UPD_DT = SYSDATE,
+            EXP_MONTH = #{expMonth},
+            EXP_YEAR = #{expYear}
+        WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
+        AND REF_NO = #{refNo}
+    </update>
+
+    <select id="checkRenEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'YYYY')) AS year
+		FROM PAY0029D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
+
+    <select id="checkOutEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV,
+		    TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'YYYY')) AS year
+		FROM PAY0033D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
+
+    <select id="checkSvmEInv" resultType="EgovMap">
+        SELECT
+		    CASE WHEN B.QR_CODE IS NOT NULL THEN 'Y'
+		        ELSE 'N'
+		    END AS GEN_E_INV,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'MM')) AS month,
+            TO_NUMBER(TO_CHAR(A.TAX_INVC_REF_DT,'YYYY')) AS year
+		FROM PAY0031D A
+		LEFT JOIN EIV0004D B ON B.INV_REF_NO = A.TAX_INVC_REF_NO AND B.STATUS = 4
+		WHERE A.TAX_INVC_ID = #{taxInvoiceId}
+    </select>
+
+    <select id="getEInvStrDt" resultType="EgovMap">
+        SELECT
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = 'BILLING'
+        AND DISB = '0'
+        AND PARAM_CODE = 'E_INV_STR_DT'
+    </select>
+</mapper>

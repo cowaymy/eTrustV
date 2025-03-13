@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.totaldelivery.impl.TotalDeliveryMapper">
+
+<!-- @author Adrian C. -->
+
+ <select id="selectTotalDeliveryList" parameterType="Map" resultType="egovMap">
+        SELECT Rownum rnum, X.* FROM (
+        SELECT
+               l55.delvry_no AS delno
+             , l55.delvry_no_itm AS delnoitm
+             , l55.reqst_no AS reqstno
+             , tran.code_name AS stktrans
+             , trand.code_name AS stkactivity
+             , (s28c.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) AS frmloc
+             , (s28q.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) AS toloc
+             , NVL(TO_CHAR(TO_DATE(l54.delvry_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS deldate
+             , NVL(TO_CHAR(TO_DATE(l54.delvry_gi_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS gidate
+             , NVL(TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS grdate
+             , l55.itm_code AS itmcode
+             , l55.itm_name AS itmname
+             , uomt.code_name AS uom
+             , (CASE WHEN (l48.reqst_qty - l55.delvry_qty = l48.reqst_qty) THEN 'Open'
+                          WHEN ((l48.reqst_qty - (CASE WHEN L54.delvry_gr_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) = 0)
+                          OR l48.final_cmplt = 'Y') THEN 'Completed'
+                          ELSE 'Processing' END) AS status
+             , l48.reqst_qty AS stkqty
+             , l55.delvry_qty AS delqty
+             , (l48.reqst_qty - l55.delvry_qty) AS remqty
+             , (CASE WHEN l54.delvry_gi_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS giqty
+             , (CASE WHEN l54.delvry_gr_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS grqty
+             , NVL(l54.delvry_gi_cmplt , 'N') AS gicom
+             , NVL(l54.delvry_gr_cmplt , 'N') AS grcom
+          FROM log0047m l47
+               LEFT JOIN sys0028m s28c ON l47.rciv_cdc_rdc = s28c.wh_loc_id
+               LEFT JOIN sys0028m s28q ON l47.reqst_cdc_rdc = s28q.wh_loc_id
+             , (SELECT reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name, SUM(NVL(delvry_qty, 0)) DELVRY_QTY
+                FROM log0055d GROUP BY reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name) l55
+               JOIN SYS0026M s26 ON l55.itm_code = s26.stk_code
+               LEFT JOIN (SELECT * FROM
+                                    (
+                                     SELECT delvry_no, delvry_itm_no, debt_crdit_indict, NVL(qty, 0) QTY
+                                     FROM log0060d WHERE auto_crt_itm != 'A'
+                                     )
+                                PIVOT (SUM(QTY) FOR debt_crdit_indict IN('S' AS "GR", 'H' AS "GI"))) l60
+               ON l55.delvry_no = l60.delvry_no AND l55.delvry_no_itm = l60.delvry_itm_no
+             , (SELECT reqst_no, reqst_no_itm, uom, final_cmplt, SUM(NVL(reqst_qty, 0)) REQST_QTY
+                FROM log0048d GROUP BY reqst_no, reqst_no_itm, uom, final_cmplt) l48
+             , log0054m l54
+             , (SELECT * FROM sys0013m WHERE code_master_id = 306) tran
+             , (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
+             , (SELECT * FROM sys0013m WHERE code_master_id = 42) uomt
+         WHERE 1 = 1
+           AND l47.trnsc_type = tran.code
+           AND l47.trnsc_type_dtl = trand.code
+           AND l48.uom = uomt.code_id
+           AND l48.reqst_no = l55.reqst_no
+           AND l48.reqst_no_itm = l55.delvry_no_itm
+           AND l54.delvry_no = l55.delvry_no
+           AND l47.reqst_no = l48.reqst_no
+
+           <if test="seldelno != null and seldelno != ''">
+               AND l54.delvry_no = #{seldelno}
+           </if>
+           <if test="crtsdt !=null and crtsdt !=''">
+               AND l54.delvry_dt <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="crtedt !=null and crtedt !=''">
+               AND l54.delvry_dt <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="sttype != null">
+               AND l47.trnsc_type IN
+               <foreach item="item" collection="sttype" index="index" open="(" separator="," close=")">
+                #{item}
+               </foreach>
+           </if>
+           <if test="stkreqstno != null and stkreqstno != ''">
+               AND l47.reqst_no = #{stkreqstno}
+           </if>
+           <if test="status !=null and status =='GI'">
+               AND l54.delvry_gi_cmplt <![CDATA[=]]> 'Y'
+           </if>
+           <if test="status !=null and status =='GR'">
+               AND l54.delvry_gr_cmplt <![CDATA[=]]> 'Y'
+           </if>
+           <if test="status !=null and status =='CMPLT'">
+               AND l54.delvry_cmplt <![CDATA[=]]> 'Y'
+           </if>
+	        <if test="searchMaterialCode !=null and searchMaterialCode !=''">
+	            and l55.itm_code = #{searchMaterialCode}
+	        </if>
+           <if test="smattype != null">
+               AND s26.stk_type_id IN
+               <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                #{item}
+               </foreach>
+           </if>
+           <if test="smatcate != null">
+               AND s26.stk_ctgry_id IN
+               <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                #{item}
+               </foreach>
+           </if>
+           <if test="gisdt !=null and gisdt !=''">
+               AND l54.delvry_gi_dt <![CDATA[>=]]> to_char(to_date(#{gisdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="giedt !=null and giedt !=''">
+               AND l54.delvry_gi_dt <![CDATA[<=]]> to_char(to_date(#{giedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="grsdt !=null and grsdt !=''">
+               AND l54.delvry_gr_dt <![CDATA[>=]]> to_char(to_date(#{grsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="gredt !=null and gredt !=''">
+               AND l54.delvry_gr_dt <![CDATA[<=]]> to_char(to_date(#{gredt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="flocation !=null and flocation !=''">
+               AND l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+               AND l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           ORDER BY l55.delvry_no, l55.delvry_no_itm DESC) X
+    </select>
+
+</mapper>

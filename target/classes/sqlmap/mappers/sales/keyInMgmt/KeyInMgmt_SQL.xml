@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.keyInMgmt.impl.keyInMgmtMapper">
+
+
+<select id="searchKeyinMgmtList" parameterType="Map" resultType="egovMap">
+	SELECT
+	    KEY_IN_ID,
+	    KEY_IN_NO,
+	    YEAR,
+	    MONTH,
+	    WEEK,
+	    TO_DATE(TO_CHAR(KEYIN_START_DT,'yyyy/mm/dd'),'yyyy/mm/dd') KEYIN_START_DT,
+        '00:00 am' AS KEYIN_START_TIME,
+        TO_DATE(TO_CHAR(KEYIN_END_DT,'yyyy/mm/dd'),'yyyy/mm/dd') KEYIN_END_DT,
+	    '23:59 pm' AS KEYIN_END_TIME,
+	    CRT_USER_ID,
+	    B.USER_NAME　CREATOR,
+	    CRT_DT,
+	    UPD_USER_ID,
+	    C.USER_NAME UPDATOR,
+	    UPD_DT
+	FROM SAL0340D A
+	LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+	LEFT JOIN SYS0047M C ON A.UPD_USER_ID = C.USER_ID
+	WHERE 1=1
+    <if test="fromMonth != null and fromMonth != ''">
+         <![CDATA[AND ((MONTH >= #{fromMonth} AND YEAR = #{fromYear}) AND (MONTH <= #{toMonth} AND YEAR = #{toYear}))]]>
+    </if>
+</select>
+
+  <insert id="uploadKeyInMgmt" parameterType="java.util.List">
+   INSERT INTO SAL0340D
+          (
+            KEY_IN_ID         ,
+            KEY_IN_NO         ,
+            YEAR              ,
+            MONTH             ,
+            WEEK              ,
+            KEYIN_START_DT    ,
+            KEYIN_END_DT      ,
+            CRT_USER_ID    ,
+            CRT_DT
+          )
+          SELECT SAL0340D_KEYIN_ID_SEQ.NEXTVAL, reqstNo, year, month, week, keyInStartDt, keyInEndDt, creator, crtDt FROM (
+          <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+                #{item.reqstNo} reqstNo
+                , #{item.year} year
+                , #{item.month} month
+                , #{item.week} week
+                , TO_DATE(#{item.keyInStartDt},'dd/mm/yyyy') keyInStartDt
+                , TO_DATE(#{item.keyInEndDt} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS') keyInEndDt
+                , #{creator} creator
+                , SYSDATE crtDt
+             FROM DUAL
+        </foreach>
+        )
+  </insert>
+
+    <update id="updateKeyInId" parameterType="Map">
+      UPDATE SAL0340D SET
+        YEAR                = #{year}         ,
+        MONTH               = #{month}        ,
+        WEEK                = #{week}         ,
+        KEYIN_START_DT      = TO_DATE(#{keyinStartDt},'yyyy/mm/dd'),
+        KEYIN_END_DT        = TO_DATE(#{keyinEndDt} || ' 23:59:59','YYYY/MM/DD HH24:MI:SS'),
+        UPD_USER_ID         = #{updator}      ,
+        UPD_DT              = SYSDATE
+       WHERE KEY_IN_ID  = #{keyInId}
+  </update>
+
+    <delete id="deleteKeyInId" parameterType="Map">
+      DELETE SAL0340D  WHERE KEY_IN_ID  = #{keyInId}
+  </delete>
+
+  <select id="selectDocNo" parameterType="String" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+        ]]>
+    </select>
+
+      <update id="updateDocNo" parameterType="Map">
+     <![CDATA[
+        UPDATE SYS0022C
+         SET DOC_NO = #{nextDocNo}
+           WHERE  ( DOC_NO_ID = #{docNoId} )
+        ]]>
+    </update>
+
+</mapper>

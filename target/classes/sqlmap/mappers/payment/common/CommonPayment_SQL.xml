@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper">
+
+    <select id="selectOrdIdByNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SALES_ORD_ID,
+            SALES_ORD_NO,
+            CUST_BILL_ID
+        FROM SAL0001D
+        WHERE SALES_ORD_NO=#{ordNo}
+        AND ROWNUM=1
+   </select>
+
+    <select id="selectOrderInfoRental" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+            Extent1.CUST_ID,
+            Extent4.NAME CUST_NM,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID,
+            Extent3.STUS_CODE_ID STUS_CODE_NM,
+            CASE WHEN Extent6.REBATE_AMT_PER_INSTLMT IS NOT NULL
+                    THEN Extent1.MTH_RENT_AMT - Extent6.REBATE_AMT_PER_INSTLMT
+                    ELSE Extent1.MTH_RENT_AMT END MTH_RENT_AMT,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID,
+            NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
+            NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
+            0 AS BTN_CHECK
+        FROM
+            SAL0001D Extent1
+            JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+            JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
+            LEFT JOIN (
+                            SELECT
+                                RENT_SO_ID,
+                                COUNT(1) AS RPF_CNT,
+                                NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
+                            FROM
+                                PAY0022D
+                            WHERE
+                                RENT_DOC_TYPE_ID = 161 AND RENT_AMT  <![CDATA[ >= ]]>0
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
+            LEFT JOIN pay0286d extent6 ON extent6.ord_id = extent1.sales_ord_id AND extent6.stus_id <![CDATA[ <> ]]> 8
+        WHERE
+            Extent1.APP_TYPE_ID = 66
+            <if test="orderId != null and orderId != ''">
+            AND Extent1.SALES_ORD_ID = #{orderId}
+            </if>
+            <if test="billGrpId != null and billGrpId != ''">
+            AND Extent1.CUST_BILL_ID = #{billGrpId}
+            </if>
+        ORDER BY Extent1.SALES_ORD_NO
+	</select>
+
+	<select id="selectRPFCN" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(RENT_AMT),0) AS CN_AMT
+        FROM
+            (
+            SELECT
+                DISTINCT
+                UnionAll1.RENT_RUN_ID,
+                UnionAll1.RENT_AMT
+            FROM
+                (
+                SELECT
+                    Extent1.RENT_RUN_ID RENT_RUN_ID  ,
+                    Extent1.RENT_AMT RENT_AMT
+                FROM
+                    PAY0022D Extent1
+                    JOIN PAY0002D Extent2   ON (Extent2.ADJ_ENTRY_NOTE_NO = Extent1.RENT_DOC_NO  OR (Extent2.ADJ_ENTRY_SO_ID = #{orderId}  AND  Extent1.RENT_DOC_NO LIKE 'INS%'  ) )
+                                    AND 171 = Extent2.ADJ_ENTRY_DR_ACC_ID
+                                    AND 43 = Extent2.ADJ_ENTRY_CR_ACC_ID
+                                    AND 155 = Extent2.ADJ_ENTRY_NOTE_TYPE_ID
+                WHERE
+                    Extent1.RENT_SO_ID = #{orderId}
+                    AND 155 = Extent1.RENT_DOC_TYPE_ID
+                    AND Extent1.RENT_AMT <![CDATA[ < ]]> 0
+                UNION ALL
+                SELECT
+                    Extent3.RENT_RUN_ID RENT_RUN_ID  ,
+                    Extent4.MEMO_ADJ_TOT_AMT * -1.00 C2
+                FROM
+                    PAY0022D Extent3
+                    JOIN PAY0011D Extent4   ON Extent4.MEMO_ADJ_INVC_NO = Extent3.RENT_DOC_NO
+                                                    AND 1293 = Extent4.MEMO_ADJ_TYPE_ID
+                                                    AND 4 = Extent4.MEMO_ADJ_STUS_ID
+                WHERE
+                    Extent3.RENT_SO_ID = #{orderId}
+                    AND 161 = Extent3.RENT_DOC_TYPE_ID
+                    AND Extent3.RENT_AMT <![CDATA[ > ]]> 0
+                ) UnionAll1
+            ) Distinct1
+    </select>
+
+    <select id="selectRPFDN" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(SUM(Extent2.MEMO_ADJ_TOT_AMT),0) AS DN_AMT
+        FROM
+            PAY0022D Extent1
+            JOIN PAY0011D Extent2  ON Extent2.MEMO_ADJ_INVC_NO = Extent1.RENT_DOC_NO
+                                                AND 1294 = Extent2.MEMO_ADJ_TYPE_ID
+                                                AND 4 = Extent2.MEMO_ADJ_STUS_ID
+        WHERE
+            Extent1.RENT_SO_ID = #{orderId}
+            AND 161 = Extent1.RENT_DOC_TYPE_ID
+            AND Extent1.RENT_AMT <![CDATA[>]]>  0
+    </select>
+
+    <select id="selectRpfCnAmount" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(SUM(Extent2.ADJ_ENTRY_AMT),0) AS CN_AMT
+        FROM
+            PAY0022D Extent1
+            JOIN PAY0002D Extent2   ON ( Extent2.ADJ_ENTRY_NOTE_NO = Extent1.RENT_DOC_NO OR ( Extent2.ADJ_ENTRY_SO_ID = #{orderId} AND  Extent1.RENT_DOC_NO LIKE 'INS%'  ))
+                                                AND Extent2.ADJ_ENTRY_DR_ACC_ID = 171
+                                                AND Extent2.ADJ_ENTRY_CR_ACC_ID = 43
+                                                AND Extent2.ADJ_ENTRY_NOTE_TYPE_ID = 155
+        WHERE
+            Extent1.RENT_SO_ID = #{orderId}
+            AND 155 = Extent1.RENT_DOC_TYPE_ID
+            AND Extent1.RENT_AMT <![CDATA[ < ]]> 0
+    </select>
+
+    <select id="selectRpfCnNewAmount" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(SUM(Extent5.MEMO_ITM_AMT),0) AS CN_NEW_AMT
+        FROM
+            PAY0022D Extent1
+            CROSS JOIN SAL0001D Extent2
+            JOIN PAY0030D Extent3   ON Extent3.INVC_ITM_ORD_NO = Extent2.SALES_ORD_NO
+            JOIN PAY0011D Extent4   ON Extent4.MEMO_ADJ_INVC_NO = Extent1.RENT_DOC_NO
+                                                    AND Extent4.MEMO_ADJ_TYPE_ID = 1293
+                                                    AND Extent4.MEMO_ADJ_STUS_ID = 4
+            JOIN PAY0012D Extent5   ON Extent5.MEMO_ADJ_ID = Extent4.MEMO_ADJ_ID
+                                                    AND Extent5.MEMO_ITM_INVC_ITM_ID = Extent3.INVC_ITM_ID
+        WHERE
+            Extent1.RENT_SO_ID = #{orderId}
+            AND Extent1.RENT_DOC_TYPE_ID = 161
+            AND Extent1.RENT_AMT <![CDATA[ > ]]> 0
+            AND Extent2.SALES_ORD_ID = #{orderId}
+    </select>
+
+    <select id="selectPayTotalAmount" parameterType="Map"  resultType="egovMap">
+        SELECT NVL(SUM(RENT_AMT),0) AS PAY_TOTAL FROM PAY0022D WHERE RENT_SO_ID = #{orderId}  AND RENT_AMT <![CDATA[ < ]]> 0
+    </select>
+
+    <select id="selectRpfTotBillAmount" parameterType="Map"  resultType="egovMap">
+        SELECT NVL(SUM(RENT_AMT),0) AS RPF_TOT_BILL FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_DOC_TYPE_ID = 161 AND RENT_AMT <![CDATA[ >= ]]> 0
+    </select>
+    <select id="selectReversedAmount" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(SUM(B.REV_AMT),0) AS REV_AMT
+        FROM
+            PAY0022D A
+            JOIN PAY1004V B ON A.RENT_SO_ID = B.SALES_ORD_ID
+                                    AND A.RENT_DOC_NO = B.REV_WOR
+            WHERE A.RENT_SO_ID = #{orderId}
+            AND A.RENT_DOC_TYPE_ID = 161
+            AND A.RENT_AMT <![CDATA[ < ]]> 0
+    </select>
+
+    <select id="selectRevPaymentAmount" parameterType="Map"  resultType="egovMap">
+        SELECT NVL(SUM(RENT_AMT),0) AS REV_PAYMENT_AMT FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_DOC_TYPE_ID = 160
+    </select>
+
+    <select id="selectBills" parameterType="Map"  resultType="egovMap">
+        SELECT
+            RENT_RUN_ID,
+            RENT_ID,
+            RENT_SO_ID,
+            RENT_DOC_NO,
+            RENT_DOC_TYPE_ID,
+            RENT_DT_TM,
+            RENT_AMT,
+            RENT_BATCH_NO,
+            RENT_INST_NO,
+            RENT_UPD_USER_ID,
+            RENT_UPD_DT,
+            RENT_IS_SYNC,
+            RENT_BILL_RUNNG_TOT
+         FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{orderId}
+            AND RENT_DOC_TYPE_ID != 160
+            AND RENT_AMT <![CDATA[ > ]]> 0
+    </select>
+
+    <select id="selectOrderInfoForBills" parameterType="Map"  resultType="egovMap">
+        SELECT STUS_CODE_ID,TOT_AMT,MTH_RENT_AMT FROM SAL0001D WHERE SALES_ORD_ID = #{orderId}
+    </select>
+
+   <select id="selectRpfPaidAmount" parameterType="Map"  resultType="egovMap">
+        SELECT NVL(SUM(RENT_AMT),0) AS RPF_PAID FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_AMT <![CDATA[ < ]]> 0 AND RENT_DOC_TYPE_ID = 161
+   </select>
+
+   <select id="selectLastPaymentDt" parameterType="Map"  resultType="egovMap">
+        SELECT TO_CHAR(MAX(RENT_DT_TM),'YYYY-MM-DD') AS RENT_DT_TM FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_AMT <![CDATA[ < ]]> 0
+   </select>
+
+   <select id="selectRentInstNo" parameterType="Map"  resultType="egovMap">
+        SELECT
+            RENT_INST_NO
+        FROM
+            SAL0070D
+        WHERE
+            SALES_ORD_ID = #{orderId}
+            AND EXTRACT(MONTH FROM RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE)
+            AND EXTRACT(YEAR FROM RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
+    </select>
+
+     <select id="selectLastBilledInstNo" parameterType="Map"  resultType="egovMap">
+        SELECT
+            NVL(MAX(RENT_INST_NO),0) AS LAST_RENT_INST_NO,
+            NVL(SUM(RENT_AMT),0) AS TOT_BILL_AMT
+        FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{orderId}
+            AND RENT_AMT <![CDATA[ > ]]> 0
+            AND RENT_DOC_TYPE_ID != 160
+    </select>
+
+    <select id="selectBillInfoRental" parameterType="Map" resultType="egovMap">
+        SELECT
+            BILL_ID  ,
+            0 AS TASK_ID  ,
+            ORD_ID  ,
+            ORD_NO  ,
+            BILL_AMT  ,
+            TO_CHAR(BILL_DT,'YYYY-MM-DD') AS BILL_DT,
+            BILL_NO  ,
+            BILL_GRP_ID  ,
+            CUST_NM  ,
+            INSTALLMENT,
+            BILL_TYPE_ID,
+            BILL_TYPE_NM  ,
+            0 AS REV_AMT,
+            0 AS BTN_CHECK,
+            STUS_CODE,
+            STUS_CODE_NAME  ,
+            NRIC
+        FROM
+            (
+
+                SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                TO_DATE('19000101','YYYYMMDD') AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                (CASE
+                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
+                        (CASE
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
+                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN
+                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
+                                159
+                            ELSE
+                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                        END )
+                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM,
+                STUS.CODE AS STUS_CODE,
+                STUS.NAME AS STUS_CODE_NAME,
+                Extent4.NRIC
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+
+                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
+                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
+                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                LEFT JOIN SYS0038M STUS ON Extent3.STUS_CODE_ID = STUS.STUS_CODE_ID
+                LEFT JOIN PAY0017D VV ON VV.ACC_INV_VOID_INVC_NO = Extent1.RENT_DOC_NO
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+                 AND VV.ACC_INV_VOID_ID IS NOT NULL
+
+
+            UNION
+
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                (CASE
+                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
+                        (CASE
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
+                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN
+                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
+                                159
+                            ELSE
+                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
+                        END )
+                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM,
+                STUS.CODE AS STUS_CODE,
+                STUS.NAME AS STUS_CODE_NAME,
+                Extent4.NRIC
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+
+                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
+                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
+                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                LEFT JOIN SYS0038M STUS ON Extent3.STUS_CODE_ID = STUS.STUS_CODE_ID
+                LEFT JOIN PAY0017D VV ON VV.ACC_INV_VOID_INVC_NO = Extent1.RENT_DOC_NO
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+                AND VV.ACC_INV_VOID_ID IS NULL
+            )
+        WHERE
+            BILL_AMT <![CDATA[ > ]]> 0
+            AND BILL_TYPE_ID <![CDATA[ <> ]]> 160
+            <if test='excludeRPF != null and excludeRPF == "Y" '>
+            AND BILL_TYPE_ID <![CDATA[ <> ]]> 161
+            </if>
+        ORDER BY BILL_DT
+    </select>
+
+
+    <select id="selectBillRpfPaid" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(BILL_AMT),0) * -1 AS RPF_PAID
+        FROM
+            (
+            SELECT
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            )
+        WHERE
+            BILL_AMT <![CDATA[ < ]]> 0
+            AND BILL_TYPE_ID = 161
+    </select>
+
+    <select id="selectBillRpfRev" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RPF_REV),0)  RPF_REV
+        FROM
+            (
+            SELECT
+                Extent2.PAY_ITM_AMT * -1 AS RPF_REV
+            FROM
+                PAY0064D Extent1
+                JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.TYPE_ID = 98
+            WHERE
+                Extent1.TYPE_ID = 101
+                AND Extent1.SALES_ORD_ID = #{orderId}
+            ) Filter1
+    </select>
+
+    <select id="selectBillAdjAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            ) LED
+            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4
+            AND MEMO_ADJ_REF_NO LIKE #{adjType}  || '%'
+        WHERE
+            LED.BILL_AMT <![CDATA[ > ]]> 0
+            AND LED.BILL_TYPE_ID = 161
+    </select>
+
+    <select id="selectBillRentalPaidAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(BILL_AMT),0) * -1 AS RENT_PAID
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+                LEFT JOIN PAY0011D Extent5 ON Extent5.MEMO_ADJ_REF_NO = Extent1.RENT_DOC_NO
+                LEFT JOIN PAY0022D Extent6 ON Extent5.MEMO_ADJ_INVC_NO = Extent6.RENT_DOC_NO AND Extent6.RENT_DOC_TYPE_ID = 161
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+                AND Extent6.RENT_RUN_ID IS NULL
+            ) LED
+        WHERE
+            BILL_AMT <![CDATA[ < ]]> 0
+            AND BILL_TYPE_ID NOT IN (1059,162,161)
+    </select>
+
+    <select id="selectBillRentalRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RENTAL_REV),0)  RENTAL_REV
+        FROM
+            (
+            SELECT
+                Extent2.PAY_ITM_AMT * -1 AS RENTAL_REV
+            FROM
+                PAY0064D Extent1
+                JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID
+                                                            AND 99 <![CDATA[ <> ]]> Extent4.TYPE_ID
+                                                            AND 1059 <![CDATA[ <> ]]> Extent4.TYPE_ID
+                                                            AND 98 <![CDATA[ <> ]]> Extent4.TYPE_ID
+            WHERE
+                Extent1.TYPE_ID = 101
+                AND Extent1.SALES_ORD_ID = #{orderId}
+            ) Filter1
+    </select>
+
+    <select id="selectBillPenaltyPaidAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(BILL_AMT),0) * -1 AS PENALTY_PAID
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID AS  BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            ) LED
+        WHERE
+            BILL_AMT <![CDATA[ < ]]> 0
+            AND BILL_TYPE_ID = 162
+    </select>
+
+    <select id="selectBillPenaltyRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.PENALTY_REV),0)  PENALTY_REV
+        FROM
+            (
+            SELECT
+                Extent2.PAY_ITM_AMT * -1 AS PENALTY_REV
+            FROM
+                PAY0064D Extent1
+                JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND 99 = Extent4.TYPE_ID
+            WHERE
+                Extent1.TYPE_ID = 101
+                AND Extent1.SALES_ORD_ID = #{orderId}
+            ) Filter1
+    </select>
+
+    <select id="selectBillRhfPaidAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(BILL_AMT),0) * -1 AS RHF_PAID
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            ) LED
+        WHERE
+            BILL_AMT <![CDATA[ < ]]> 0
+            AND BILL_TYPE_ID = 1059
+    </select>
+
+    <select id="selectBillRfhRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RHF_REV),0)  RHF_REV
+        FROM
+            (
+            SELECT
+                Extent2.PAY_ITM_AMT * -1 AS RHF_REV
+            FROM
+                PAY0064D Extent1
+                JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND 1059 = Extent4.TYPE_ID
+            WHERE
+                Extent1.TYPE_ID = 101
+                AND Extent1.SALES_ORD_ID = #{orderId}
+            ) Filter1
+    </select>
+
+    <select id="selectBillRhfCNAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            ) LED
+            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4 AND ADJ2.MEMO_ADJ_TYPE_ID  = 1293
+        WHERE
+            LED.BILL_AMT <![CDATA[ > ]]> 0
+            AND LED.BILL_TYPE_ID = 1059
+    </select>
+
+    <select id="selectBillRhfCNOldAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(BILL_AMT),0) AS ADJ_OLD_CN_AMT
+        FROM
+            (
+            SELECT
+                Extent1.RENT_ID BILL_ID  ,
+                Extent1.RENT_SO_ID ORD_ID  ,
+                Extent3.SALES_ORD_NO ORD_NO  ,
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DT_TM AS BILL_DT,
+                Extent1.RENT_DOC_NO BILL_NO  ,
+                CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
+                Extent4.NAME CUST_NM  ,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
+                PAY0022D Extent1
+                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
+                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
+            ) LED
+            JOIN PAY0002D ADJ2 ON LED.BILL_NO = ADJ2.ADJ_ENTRY_NOTE_NO
+                                               AND ADJ2.ADJ_ENTRY_DR_ACC_ID  = 203
+                                               AND ADJ2.ADJ_ENTRY_NOTE_TYPE_ID  = 155
+        WHERE
+            LED.BILL_AMT <![CDATA[ < ]]> 0
+            AND LED.BILL_TYPE_ID = 155
+    </select>
+
+    <select id="selectOrderInfoNonRental" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SALES_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SALES_ORD_NO,
+            Extent1.CUST_ID,
+            Extent7.NAME CUST_NM  ,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM  ,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+            Extent4.NAME STUS_CODE_NM  ,
+            Extent1.MTH_RENT_AMT ,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID  ,
+            Extent3.NAME MEM_NM  ,
+            Extent5.NAME BRNCH_NM  ,
+            Extent6.USER_ID USER_ID  ,
+            '' CREATOR_CODE,
+            Extent6.USER_NAME USER_NAME
+        FROM
+            SAL0001D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+            LEFT JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent3.BRNCH,10,0)
+            LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CRT_USER_ID
+            JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_ID
+        WHERE
+            Extent1.APP_TYPE_ID IN ( 67,68,1412 )
+            AND  Extent1.SALES_ORD_ID = #{orderId}
+    </select>
+
+        <select id="selectHTOrderInfoNonRental" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SRV_ORD_ID,
+            Extent1.CUST_BILL_ID,
+            Extent1.SRV_ORD_NO,
+            Extent1.CUST_ID,
+            Extent7.NAME CUST_NM  ,
+            Extent1.APP_TYPE_ID,
+            Extent2.CODE_NAME APP_TYPE_NM  ,
+            Extent1.PV_YEAR,
+            Extent1.PV_MONTH,
+            Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+            Extent4.NAME STUS_CODE_NM  ,
+            Extent1.MTH_RENT_AMT ,
+            Extent1.TOT_AMT,
+            0 AS BALANCE,
+            '' AS LAST_PAYMENT,
+            Extent1.MEM_ID MEM_ID  ,
+            Extent3.NAME MEM_NM  ,
+            Extent5.NAME BRNCH_NM  ,
+            Extent6.USER_ID USER_ID  ,
+            '' CREATOR_CODE,
+            Extent6.USER_NAME USER_NAME
+        FROM
+            SAL0225D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
+            JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
+            JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+            LEFT JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent3.BRNCH,10,0)
+            LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CRT_USER_ID
+            JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_ID
+        WHERE
+            Extent1.APP_TYPE_ID IN (3216,3217)
+            AND  Extent1.SRV_ORD_ID = #{orderId}
+    </select>
+
+    <select id="selectBillInfoLedgerCnt" parameterType="Map" resultType="egovMap">
+        SELECT COUNT(1) AS CNT FROM PAY0035D WHERE TRADE_SO_ID = #{orderId}
+    </select>
+
+    <select id="selectLedgerInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            MAX(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 THEN TO_CHAR(TRADE_DT_TM,'YYYY-MM-DD') ELSE '1900-01-01' END) AS LAST_PAY_DT,
+            MAX(TRADE_INST_NO) AS TRADE_INST_NO,
+            MAX(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 THEN TO_CHAR(TRADE_DT_TM,'YYYY-MM-DD') ELSE '1900-01-01' END) AS LAST_BILL_DT,
+            SUM(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 AND TRADE_DOC_TYPE_ID <![CDATA[ <> ]]> 155  THEN TRADE_AMT * -1 ELSE 0 END) AS PAID_TOTAL,
+            SUM(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 AND TRADE_DOC_TYPE_ID <![CDATA[ <> ]]> 160  THEN TRADE_AMT ELSE 0 END) AS BILL_TOTAL,
+            SUM(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 AND TRADE_DOC_TYPE_ID = 155  THEN TRADE_AMT ELSE 0 END) AS CN_TOTAL,
+            SUM(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 AND TRADE_DOC_TYPE_ID = 160  THEN TRADE_AMT ELSE 0 END) AS REV_TOTAL
+        FROM
+            PAY0035D
+        WHERE
+            TRADE_SO_ID = #{orderId}
+    </select>
+
+    <resultMap id="resultMembershipMap" type="egovMap" />
+    <select id="selectOrderInfoSVM" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_GET_OTSTND_MBRSH_BY_ORD_ID(#{orderId} , #{resultMemSvm, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultMembershipMap})
+        }
+    </select>
+
+    <select id="selectOrderInfoSrvc" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
+			Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+			Extent1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
+			Extent1.SRV_CNTRCT_NET_YEAR SRV_CNTRCT_NET_YEAR  ,
+			Extent3.SALES_ORD_ID SALES_ORD_ID  ,
+			Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+			Extent2.CNTRCT_RENTAL_STUS CNTRCT_RENTAL_STUS  ,
+			Extent1.SRV_CNTRCT_STUS_ID SRV_CNTRCT_STUS_ID  ,
+			Extent5.CODE STATUS_CODE  ,
+			Extent4.CUST_ID CUST_ID  ,
+			Extent4.NAME CUST_NAME  ,
+			CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID ELSE 0 END CUST_BILL_ID  ,
+			Extent1.SRV_CNTRCT_RENTAL SRV_CNTRCT_RENTAL  ,
+			Extent1.SRV_CNTRCT_EXP_FILTER SRV_CNTRCT_EXP_FILTER  ,
+			TO_DATE('1900-01-01','YYYY-MM-DD') AS LAST_PAY_DT,
+			0 AS BTN_CHECK
+        FROM
+            SAL0077D Extent1
+			JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
+			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
+			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+        WHERE
+            1=1
+            <if test="srvcId != null and srvcId != ''">
+            AND Extent1.SRV_CNTRCT_ID =  #{srvcId}
+            </if>
+            <if test="billGrpId != null and billGrpId != ''">
+            AND Extent3.CUST_BILL_ID = #{billGrpId}
+            </if>
+    </select>
+
+    <select id="selectOrderInfoSrvcCharge" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS FILTER_CHARGE,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS PENALTY_CHARGE
+        FROM
+            PAY0023D A
+        WHERE
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ >= ]]>  0
+    </select>
+
+    <select id="selectOrderInfoSrvcADJ" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_CN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_DN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_CN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_DN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID IN (1305,154) AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS RENTAL_CN,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID IN (1305,154) AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS RENTAL_DN
+        FROM
+            PAY0023D A
+            JOIN PAY0011D B ON A.SRV_LDGR_REF_NO = B.MEMO_ADJ_INVC_NO
+        WHERE
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ > ]]>  0
+            AND B.MEMO_ADJ_STUS_ID = 4
+    </select>
+
+    <select id="selectOrderInfoSrvcPaid" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  FILTER_PAID,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  PENALTY_PAID,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  TOTAL_PAID,
+            MAX(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(TO_CHAR(A.SRV_LDGR_REF_DT,'YYYY-MM-DD'),'1900-01-01') ELSE '1900-01-01' END) AS  LAST_PAY_DT
+        FROM
+            PAY0023D A
+        WHERE
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_AMT <![CDATA[ < ]]>  0
+    </select>
+
+    <select id="selectOrderInfoSrvcRev" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  FILTER_REV,
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  PENALTY_REV
+        FROM
+            PAY0023D A
+            JOIN (
+                    SELECT
+                        Extent1.PAY_ID PAY_ID  ,
+					    NVL(Extent4.SVC_CNTRCT_ID,0) AS SVC_CNTRCT_ID,
+					    Extent4.OR_NO OR_NO  ,
+					    NVL(Extent2.PAY_ITM_AMT,0) AS PAY_ITM_AMT,
+					    NVL(Extent4.TYPE_ID,0) AS TYPE_ID
+                    FROM
+                        PAY0064D Extent1
+                        JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+                        LEFT JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+                        JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId}
+                    WHERE
+                        Extent1.TYPE_ID = 101) B ON A.SRV_LDGR_REF_NO = B.OR_NO
+        WHERE
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
+            AND  SRV_LDGR_AMT <![CDATA[ < ]]> 0
+    </select>
+
+    <select id="selectOrderInfoSrvcTotalRev" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(A.SRV_LDGR_AMT),0) AS  TOTAL_REV
+        FROM
+            PAY0023D A
+        WHERE
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
+            AND A.SRV_LDGR_TYPE_ID = 160
+            AND A.SRV_LDGR_PAY_TYPE = 1305
+    </select>
+
+    <select id="selectOrderInfoSrvcBalance" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(SRV_LDGR_AMT),0) AS BALANCE,
+            NVL(MAX(SRV_LDGR_CNTRCT_SCHDUL_NO),0) AS MAX_SCHDUL_NO
+        FROM
+            PAY0023D
+        WHERE
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
+            AND SRV_LDGR_AMT <![CDATA[ > ]]> 0
+            AND SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 160
+            AND SRV_LDGR_TYPE_ID = 1305
+    </select>
+
+    <select id="selectOrderInfoSrvcUnbill" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SRV_PAY_SCHDUL_NO,0) AS CURR_SCHDUL_NO,
+            NVL(SRV_PAY_SCHDUL_AMT,0) AS MONTHLY_FEE
+        FROM
+            SAL0085D
+        WHERE
+            SRV_PAY_CNTRCT_ID = #{srvCntrctId}
+            AND SRV_PAY_SCHDUL_MONTH = EXTRACT(MONTH FROM SYSDATE)
+            AND SRV_PAY_SCHDUL_YEAR =EXTRACT(YEAR FROM SYSDATE)
+    </select>
+
+
+    <select id="selectBillInfoSrvcPaid" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN SRV_LDGR_TYPE_ID = 1307  THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS FILTER_PAID,
+            SUM(CASE WHEN SRV_LDGR_TYPE_ID = 1306  THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS PENALTY_PAID,
+            SUM(CASE WHEN SRV_LDGR_TYPE_ID IN (1305,154) THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS RENTAL_PAID
+        FROM
+            PAY0023D
+        WHERE
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
+            AND SRV_LDGR_AMT <![CDATA[ < ]]> 0
+    </select>
+
+    <select id="selectBillInfoSrvcRev" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(CASE WHEN Extent4.TYPE_ID = 1310 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS FILTER_REV,
+            SUM(CASE WHEN Extent4.TYPE_ID = 1309 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS PENALTY_REV,
+            SUM(CASE WHEN Extent4.TYPE_ID = 1308 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS RENTAL_REV
+        FROM
+            PAY0064D Extent1
+            JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
+            LEFT JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
+            JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId}
+        WHERE
+            Extent1.TYPE_ID = 101
+    </select>
+
+    <select id="selectBillInfoSrvcList" parameterType="Map" resultType="egovMap">
+        SELECT
+            Extent1.SRV_LDGR_CNTRCT_ID SRV_LDGR_CNTRCT_ID  ,
+            Extent2.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
+            Extent1.SRV_LDGR_REF_NO SRV_LDGR_REF_NO  ,
+            NVL(Extent3.SRV_PAY_SCHDUL_NO,0) SRV_PAY_SCHDUL_NO  ,
+            NVL(Extent1.SRV_LDGR_AMT,0) SRV_LDGR_AMT  ,
+            Extent2.SRV_CNTRCT_ORD_ID SRV_CNTRCT_ORD_ID  ,
+            Extent4.SALES_ORD_NO SALES_ORD_NO,
+            Extent1.SRV_LDGR_TYPE_ID SRV_LDGR_TYPE_ID  ,
+            Extent5.CODE_NAME SRV_LDGR_TYPE_NM  ,
+            TO_CHAR(Extent1.SRV_LDGR_REF_DT,'YYYY-MM-DD') SRV_LDGR_REF_DT  ,
+            Extent3.SRV_PAY_SCHDUL_ID SRV_PAY_SCHDUL_ID,
+            0 AS BTN_CHECK
+        FROM
+            PAY0023D Extent1
+            JOIN SAL0077D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_LDGR_CNTRCT_ID
+            LEFT JOIN SAL0085D Extent3   ON Extent3.SRV_PAY_SCHDUL_ID = Extent1.SRV_LDGR_CNTRCT_SCHDUL_ID
+            JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent2.SRV_CNTRCT_ORD_ID
+            JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent1.SRV_LDGR_TYPE_ID
+        WHERE
+            Extent1.SRV_LDGR_AMT <![CDATA[ > ]]> 0
+            AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]>  160
+            AND Extent1.SRV_LDGR_AMT <![CDATA[ > ]]> 0
+            AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 160
+            AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 1307
+            AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 1306
+            AND Extent1.SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
+        ORDER BY
+            Extent3.SRV_PAY_SCHDUL_NO,
+            Extent1.SRV_LDGR_REF_DT
+    </select>
+
+    <select id="selectOrderInfoBillPaymentAS" parameterType="Map" resultType="egovMap">
+        SELECT
+            BILL_ID,
+            BILL_TYPE_ID,
+            BILL_TYPE_NM,
+            BILL_SO_ID,
+            SALES_ORD_NO,
+            BILL_MEM_ID,
+            BILL_MEM_CODE,
+            BILL_MEM_NM,
+            BILL_AS_ID,
+            BILL_PAY_TYPE_ID,
+            RULE_DESC,
+            BILL_NO,
+            BILL_MEM_SHIP_NO,
+            BILL_DT,
+            BILL_AMT,
+            BILL_REM,
+            BILL_IS_PAID,
+            BILL_IS_COMM,
+            UPD_USER_ID,
+            UPD_USER_NM,
+            SYNC_CHK,
+            COURS_ID,
+            STUS_ID,
+            STUS_NM,
+            NRIC,
+            CUST_NM,
+            AS_LG_AMT,
+            PAID_AMT,
+            'AS' AS APP_TYPE
+        FROM
+            (
+            SELECT
+	            Extent3.BILL_ID,
+	            Extent3.BILL_TYPE_ID,
+	            Extent5.CODE_NAME AS BILL_TYPE_NM,
+	            Extent3.BILL_SO_ID,
+	            Extent9.SALES_ORD_NO,
+	            Extent3.BILL_MEM_ID,
+	            Extent4.MEM_CODE BILL_MEM_CODE,
+	            Extent4.NAME BILL_MEM_NM,
+	            Extent3.BILL_AS_ID,
+	            Extent3.BILL_PAY_TYPE_ID,
+	            Extent6.CODE_DESC AS RULE_DESC,
+	            Extent3.BILL_NO,
+	            Extent3.BILL_MEM_SHIP_NO,
+	            TO_CHAR(Extent3.BILL_DT,'YYYY-MM-DD') AS BILL_DT,
+	            Extent3.BILL_AMT,
+	            Extent3.BILL_REM,
+	            (CASE WHEN NVL(Extent3.BILL_IS_PAID,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_PAID,
+	            (CASE WHEN NVL(Extent3.BILL_IS_COMM,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_COMM,
+	            Extent3.UPD_USER_ID,
+	            Extent8.NAME UPD_USER_NM,
+	            Extent3.SYNC_CHK,
+	            Extent3.COURS_ID,
+	            Extent3.STUS_ID,
+	            Extent7.NAME STUS_NM,
+	            Extent10.NRIC,
+	            Extent10.NAME CUST_NM,
+	            NVL(TB1.AS_LG_AMT,0) AS AS_LG_AMT,
+	            (SELECT NVL(SUM(TOT_AMT),0) FROM PAY0064D WHERE BILL_ID = Extent3.BILL_ID) AS PAID_AMT
+	        FROM
+	            (
+	            SELECT
+	                Extent2.AS_RESULT_NO AS_RESULT_NO  ,
+	                SUM(Extent2.AS_LG_AMT)  AS_LG_AMT
+	            FROM
+	                PAY0007D Extent1
+	                JOIN PAY0006D Extent2   ON Extent2.AS_RESULT_NO = Extent1.BILL_NO
+	            WHERE
+	                Extent1.BILL_TYPE_ID = 238
+	            GROUP BY
+	                Extent2.AS_RESULT_NO ) TB1
+	            JOIN PAY0007D Extent3   ON Extent3.BILL_NO = TB1.AS_RESULT_NO
+	            LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent3.BILL_MEM_ID
+	            LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent3.BILL_TYPE_ID
+	            LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent3.BILL_PAY_TYPE_ID
+	            LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent3.STUS_ID
+	            LEFT JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent3.UPD_USER_ID
+	            LEFT JOIN SAL0001D Extent9   ON Extent9.SALES_ORD_ID = Extent3.BILL_SO_ID
+	            LEFT JOIN SAL0029D Extent10   ON Extent10.CUST_ID = Extent9.CUST_ID
+	        WHERE
+	            NVL(TB1.AS_LG_AMT,0)  <![CDATA[ > ]]> 0
+	            AND Extent3.BILL_TYPE_ID = 238
+	            AND (
+	                    Extent3.BILL_NO =#{billSearchTxt}
+	                    OR Extent9.SALES_ORD_NO = #{billSearchTxt}
+	                    OR Extent4.MEM_CODE = #{billSearchTxt}
+	            )
+            )
+        WHERE
+            BILL_AMT <![CDATA[ > ]]> PAID_AMT
+    </select>
+
+    <select id="selectOrderInfoBillPaymentHP" parameterType="Map" resultType="egovMap">
+        SELECT
+            BILL_ID,
+            BILL_TYPE_ID,
+            BILL_TYPE_NM  ,
+            BILL_SO_ID,
+            SALES_ORD_NO,
+            BILL_MEM_ID,
+            BILL_MEM_CODE  ,
+            BILL_MEM_NM  ,
+            BILL_AS_ID   ,
+            BILL_PAY_TYPE_ID   ,
+            RULE_DESC  ,
+            BILL_NO   ,
+            BILL_MEM_SHIP_NO   ,
+            BILL_DT,
+            BILL_AMT   ,
+            BILL_REM   ,
+            BILL_IS_PAID   ,
+            BILL_IS_COMM   ,
+            UPD_USER_ID  ,
+            UPD_USER_NM  ,
+            SYNC_CHK   ,
+            COURS_ID ,
+            STUS_ID,
+            STUS_NM  ,
+            NRIC,
+            CUST_NM,
+            PAID_AMT,
+            'HP' AS APP_TYPE
+        FROM
+            (
+            SELECT
+	            Extent1.BILL_ID,
+	            Extent1.BILL_TYPE_ID,
+	            Extent3.CODE_NAME BILL_TYPE_NM  ,
+	            Extent1.BILL_SO_ID,
+	            Extent7.SALES_ORD_NO,
+	            Extent1.BILL_MEM_ID,
+	            Extent2.MEM_CODE BILL_MEM_CODE  ,
+	            Extent2.NAME BILL_MEM_NM  ,
+	            Extent1.BILL_AS_ID   ,
+	            Extent1.BILL_PAY_TYPE_ID   ,
+	            Extent4.CODE_DESC RULE_DESC  ,
+	            Extent1.BILL_NO   ,
+	            Extent1.BILL_MEM_SHIP_NO   ,
+	            TO_CHAR(Extent1.BILL_DT,'YYYY-MM-DD') AS BILL_DT,
+	            Extent1.BILL_AMT   ,
+	            Extent1.BILL_REM   ,
+	            (CASE WHEN NVL(Extent1.BILL_IS_PAID,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_PAID,
+                (CASE WHEN NVL(Extent1.BILL_IS_COMM,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_COMM,
+	            Extent1.UPD_USER_ID  ,
+	            Extent6.NAME UPD_USER_NM  ,
+	            Extent1.SYNC_CHK   ,
+	            Extent1.COURS_ID ,
+	            Extent1.STUS_ID,
+	            Extent5.NAME STUS_NM  ,
+	            Extent8.NRIC,
+	            Extent8.NAME AS CUST_NM,
+	            (SELECT NVL(SUM(TOT_AMT),0) FROM PAY0064D WHERE BILL_ID = Extent1.BILL_ID) AS PAID_AMT
+            FROM
+                PAY0007D Extent1
+	            LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.BILL_MEM_ID
+	            LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.BILL_TYPE_ID
+	            LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.BILL_PAY_TYPE_ID
+	            LEFT JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.STUS_ID
+	            LEFT JOIN ORG0001D Extent6   ON Extent6.MEM_ID = Extent1.UPD_USER_ID
+	            LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID
+	            LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
+                JOIN (
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    WHERE p1.bill_no = #{billSearchTxt}
+                UNION
+                    SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN sal0001d p2 ON p2.sales_ord_id = p1.bill_so_id
+                    WHERE p2.sales_ord_no = #{billSearchTxt}
+                UNION
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN org0001d p3 ON p3.mem_id = p1.bill_mem_id
+                    WHERE p3.mem_code = #{billSearchTxt}
+                ) extent9 ON extent9.bill_id = extent1.bill_id
+            WHERE
+                /*Extent1.STUS_ID = 1*/
+                Extent1.BILL_TYPE_ID = 222
+                <!-- AND (
+                    Extent1.BILL_NO = #{billSearchTxt}
+                    OR Extent7.SALES_ORD_NO = #{billSearchTxt}
+                    OR Extent2.MEM_CODE = #{billSearchTxt}
+                ) -->
+            )
+        WHERE
+            BILL_AMT <![CDATA[ > ]]> PAID_AMT
+    </select>
+
+
+  <select id="selectOrderInfoBillPaymentPOS" parameterType="Map" resultType="egovMap">
+        SELECT
+            BILL_ID,
+            BILL_TYPE_ID,
+            BILL_TYPE_NM  ,
+            BILL_SO_ID,
+            SALES_ORD_NO,
+            BILL_MEM_ID,
+            BILL_MEM_CODE  ,
+            BILL_MEM_NM  ,
+            BILL_AS_ID   ,
+            BILL_PAY_TYPE_ID   ,
+            RULE_DESC  ,
+            BILL_NO   ,
+            BILL_MEM_SHIP_NO   ,
+            BILL_DT,
+            BILL_AMT   ,
+            BILL_REM   ,
+            BILL_IS_PAID   ,
+            BILL_IS_COMM   ,
+            UPD_USER_ID  ,
+            UPD_USER_NM  ,
+            SYNC_CHK   ,
+            COURS_ID ,
+            STUS_ID,
+            STUS_NM  ,
+            NRIC,
+            CUST_NM,
+            PAID_AMT,
+            'POS' AS APP_TYPE
+        FROM
+            (
+            SELECT
+                Extent1.BILL_ID,
+                Extent1.BILL_TYPE_ID,
+                Extent3.CODE_NAME BILL_TYPE_NM  ,
+                Extent1.BILL_SO_ID,
+                Extent7.SALES_ORD_NO,
+                Extent1.BILL_MEM_ID,
+                Extent2.MEM_CODE BILL_MEM_CODE  ,
+                Extent2.NAME BILL_MEM_NM  ,
+                Extent1.BILL_AS_ID   ,
+                Extent1.BILL_PAY_TYPE_ID   ,
+                Extent4.CODE_DESC RULE_DESC  ,
+                Extent1.BILL_NO   ,
+                Extent1.BILL_MEM_SHIP_NO   ,
+                TO_CHAR(Extent1.BILL_DT,'YYYY-MM-DD') AS BILL_DT,
+                Extent1.BILL_AMT   ,
+                Extent1.BILL_REM   ,
+                (CASE WHEN NVL(Extent1.BILL_IS_PAID,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_PAID,
+                (CASE WHEN NVL(Extent1.BILL_IS_COMM,0) = 1 THEN  'True' ELSE 'False' END) AS BILL_IS_COMM,
+                Extent1.UPD_USER_ID  ,
+                Extent6.NAME UPD_USER_NM  ,
+                Extent1.SYNC_CHK   ,
+                Extent1.COURS_ID ,
+                Extent1.STUS_ID,
+                Extent5.NAME STUS_NM  ,
+                Extent8.NRIC,
+                Extent8.NAME AS CUST_NM,
+                (SELECT NVL(SUM(TOT_AMT),0) FROM PAY0064D WHERE BILL_ID = Extent1.BILL_ID) AS PAID_AMT
+            FROM
+                PAY0007D Extent1
+                LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.BILL_MEM_ID
+                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.BILL_TYPE_ID
+                LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.BILL_PAY_TYPE_ID
+                LEFT JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.STUS_ID
+                LEFT JOIN ORG0001D Extent6   ON Extent6.MEM_ID = Extent1.UPD_USER_ID
+                LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID
+                LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
+                JOIN (
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    WHERE p1.bill_no = #{billSearchTxt}
+                UNION
+                    SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN sal0001d p2 ON p2.sales_ord_id = p1.bill_so_id
+                    WHERE p2.sales_ord_no = #{billSearchTxt}
+                UNION
+                   SELECT
+                        bill_id
+                    FROM pay0007d p1
+                    JOIN org0001d p3 ON p3.mem_id = p1.bill_mem_id
+                    WHERE p3.mem_code = #{billSearchTxt}
+                ) extent9 ON extent1.bill_id = extent9.bill_id
+            WHERE
+                /*Extent1.STUS_ID = 1*/
+                Extent1.BILL_TYPE_ID = 569
+                <!-- AND (
+                    Extent1.BILL_NO = #{billSearchTxt}
+                    OR Extent7.SALES_ORD_NO = #{billSearchTxt}
+                    OR Extent2.MEM_CODE = #{billSearchTxt}
+                ) -->
+            )
+        WHERE
+            BILL_AMT <![CDATA[ > ]]> PAID_AMT
+    </select>
+
+
+    <select id="selectOutSrvcOrderInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            QUOT_ID,QTY_FILTER_CHRG,QUOT_NO,PAC_ID,PAC_CODE,PAC_DESC,
+            ORD_ID,ORD_NO,PAC_AMT,FILTER_AMT,TOT_AMT,DUR,REM,VALID_DT,
+            CRT_DT,CRT_USER_ID,QUOT_STUS_ID,QUOT_STUS_CODE,UPD_DT,UPD_USER_ID,
+            CNT_ID,CNT_NAME,CNT_NRIC,CNT_TEL_MOB,CNT_TEL_OFF,CNT_TEL_FAX,
+            CNT_TEL_RES,CNT_EMAIL,CNT_GENDER,CNT_RACE,PAC_PROMO_ID,
+            PAC_PROMO_CODE,PAC_PROMO_DESC,PROMO_ID,PROMO_CODE,PROMO_DESC,
+            BS_FREQ,MEM_ID,MEM_CODE,MEM_NAME,VALID_STUS,VALID_STUS_ID,CNVR_MEM_ID,CNVR_MEM_NO,
+            STK_ID,STK_CODE,STK_DESC,CUST_NAME,CUST_IC,TOT_CNT,REF_NO
+        FROM
+            SAL1005V
+        WHERE
+            QUOT_ID = #{quotId}
+    </select>
+
+    <select id="selectOutSrvcBillInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            SRV_MEM_ID ,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+             + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+             - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+        FROM
+            PAY0024D
+        WHERE
+            SRV_MEM_ID = #{cnvrMemId}
+        GROUP BY SRV_MEM_ID
+    </select>
+
+        <select id="selectCareServicePayInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SRV_MEM_ID ,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+             + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+             - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+                - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+        FROM
+            PAY0291D A
+            JOIN SAL0095D B ON A.SRV_MEM_ID = B.SRV_MEM_ID
+        WHERE
+            B.SRV_SALES_ORD_ID = #{orderId}
+        GROUP BY A.SRV_MEM_ID
+    </select>
+
+    <!-- Payment 임시정보 Sequence 가져오기  -->
+    <select id="getPayTempSEQ" resultType="int">
+        SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <!-- proceduar Log Insert -->
+    <insert id="insertTmpPaymentInfo" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,
+            PAY_TYPE,
+            CARD_MODE_ID,
+            ISSU_BANK_ID,
+            TRNSC_DT,
+            CARD_NO,
+            CARD_TYPE,
+            CRDIT_CARD_TYPE,
+            AMT,
+            APPV_NO,
+            EXPR_DT,
+            TENURE,
+            REF_NO,
+            BANK_CHRG_AMT,
+            CC_HOLDER_NAME,
+            RUNNG_NO,
+            BANK_ACC_ID,
+            ITM_REM,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_ONLINE,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+            PAY_ITM_CARD_MODE,
+            CHQ_NO,
+            CHQ_DEP_RECIPT_NO,
+            BANK_SLIP_NO,
+            EFT_NO,
+            THRD_PARTY_IC,
+            BANK_BRNCH_ID,
+			IS_COMM_CHK
+        ) VALUES (
+			#{seq},
+			#{keyInPayType},
+			#{keyInCardMode},
+			#{keyInIssueBank},
+			TO_DATE(#{keyInTrDate},'DD/MM/YYYY'),
+			<!-- #{keyInCardNo1} || TRIM(LPAD(' ',LENGTH(#{keyInCardNo2}) + 1,'*')) || #{keyInCardNo3}, -->
+			#{keyInCardNo1} || #{keyInCardNo2} || #{keyInCardNo3} || #{keyInCardNo4},
+			#{keyCrcCardType},
+			#{keyInCrcType},
+			#{keyInAmount},
+			#{keyInApprovalNo},
+			#{keyInExpiryMonth} || '/' || #{keyInExpiryYear},
+			#{keyInTenure},
+			#{keyInRefNo},
+			#{keyInBankChrgAmount},
+			#{keyInHolderNm},
+			#{keyInRunNo},
+			#{keyInMerchantBank},
+			#{keyInRemark},
+			#{keyInTrNo},
+			TO_DATE(#{keyInTrIssueDate},'DD/MM/YYYY'),
+			#{keyInCollMemId},
+			TO_DATE(#{keyInPayDate},'DD/MM/YYYY'),
+			#{keyInIsOnline},
+			#{keyInIsLock},
+			#{keyInIsThirdParty},
+			#{keyInStatusId},
+			#{keyInIsFundTransfer},
+			#{keyInSkipRecon},
+			#{keyInPayItmCardType},
+			#{keyInPayItmCardMode},
+			#{keyInChqNo},
+			#{keyInChqDepReciptNo},
+			#{keyInBankSlipNo},
+			#{keyInEftNo},
+			#{keyInThrdPartyIc},
+			#{keyInBankBrnchId},
+			#{keyInIsCommChk}
+
+        )
+    </insert>
+
+    <select id="countTmpPaymentInfoFT" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(1) AS CNT
+        FROM
+            PAY0240T
+        WHERE
+            SEQ = #{groupSeq}
+    </select>
+
+
+
+    <!-- proceduar Log Insert -->
+    <insert id="insertTmpPaymentInfoFT" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,PAY_TYPE,CARD_MODE_ID,ISSU_BANK_ID,TRNSC_DT,CARD_NO,CARD_TYPE,CRDIT_CARD_TYPE,
+            AMT,APPV_NO,EXPR_DT,TENURE,REF_NO,BANK_CHRG_AMT,CC_HOLDER_NAME,RUNNG_NO,BANK_ACC_ID,
+            ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
+            SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
+            THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
+        )
+        SELECT
+            #{seq},PAY_TYPE,CARD_MODE_ID,ISSU_BANK_ID,TRNSC_DT,CARD_NO,CARD_TYPE,CRDIT_CARD_TYPE,
+            #{oldAmt},APPV_NO,EXPR_DT,TENURE,REF_NO,BANK_CHRG_AMT,CC_HOLDER_NAME,RUNNG_NO,BANK_ACC_ID,
+            ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
+            SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
+            THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
+        FROM
+            PAY0240T
+        WHERE
+            SEQ = #{groupSeq}
+    </insert>
+
+
+    <!-- proceduar Log Insert -->
+    <insert id="insertTmpPaymentInfoFT2" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,PAY_TYPE,CARD_MODE_ID,ISSU_BANK_ID,TRNSC_DT,CARD_NO,CARD_TYPE,CRDIT_CARD_TYPE,
+            AMT,APPV_NO,EXPR_DT,TENURE,REF_NO,BANK_CHRG_AMT,CC_HOLDER_NAME,RUNNG_NO,BANK_ACC_ID,
+            ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
+            SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
+            THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
+        )
+        SELECT
+            #{seq},
+            B.PAY_ITM_MODE_ID AS PAY_TYPE,
+            B.PAY_ITM_CARD_MODE_ID AS CARD_MODE_ID,
+            B.PAY_ITM_ISSU_BANK_ID AS ISSU_BANK_ID,
+            B.PAY_ITM_REF_DT AS TRNSC_DT,
+			B.PAY_ITM_ORI_CC_NO AS CARD_NO,
+			B.PAY_ITM_CARD_TYPE_ID AS CARD_TYPE,
+			B.PAY_ITM_CC_TYPE_ID AS CRDIT_CARD_TYPE,
+			TO_NUMBER(#{oldAmt}) AS AMT,
+			B.PAY_ITM_APPV_NO AS APPV_NO,
+			B.PAY_ITM_CC_EXPR_DT AS EXPR_DT,
+			B.TENURE AS TENURE,
+			B.PAY_ITM_REF_NO AS REF_NO,
+			B.PAY_ITM_BANK_CHRG_AMT AS BANK_CHRG_AMT,
+			B.PAY_ITM_CC_HOLDER_NAME AS CC_HOLDER_NAME,
+			B.PAY_ITM_RUNNG_NO AS RUNNG_NO,
+			B.PAY_ITM_BANK_ACC_ID AS BANK_ACC_ID,
+			B.PAY_ITM_REM AS ITM_REM,
+			A.TR_NO AS TR_NO,
+			A.TR_ISSU_DT AS TR_ISSU_DT,
+			A.COLL_MEM_ID AS COLL_MEM_ID,
+			A.PAY_DATA AS PAY_DT,
+			B.PAY_ITM_IS_ONLINE AS IS_ONLINE,
+			B.PAY_ITM_IS_LOK AS IS_LOCK,
+			B.PAY_ITM_IS_THRD_PARTY AS IS_3PARTY,
+			A.STUS_CODE_ID AS STUS_ID,
+			B.IS_FUND_TRNSFR AS IS_FUND_TRNSF,
+			B.SKIP_RECON AS SKIP_RECON,
+			B.PAY_ITM_CARD_TYPE_ID AS PAY_ITM_CARD_TYPE,
+			B.PAY_ITM_CARD_MODE_ID AS PAY_ITM_CARD_MODE,
+			B.PAY_ITM_CHQ_NO AS CHQ_NO,
+			B.PAY_ITM_CHQ_DEP_RECIPT_NO AS CHQ_DEP_RECIPT_NO,
+			B.PAY_ITM_BANK_IN_SLIP_NO AS BANK_SLIP_NO,
+			B.PAY_ITM_EFT_NO AS EFT_NO,
+			B.PAY_ITM_THRD_PARTY_IC AS THRD_PARTY_ID,
+			B.PAY_ITM_BANK_BRNCH_ID AS BANK_BRNCH_ID,
+			B.PAY_ITM_GRP_ID AS GRP_ID,
+			A.PAYER_NM AS PAYER_NAME,
+			A.REF_DTL AS REF_DTL,
+			A.BANK_TYPE_ID AS BANK_TYPE_ID,
+			A.VA_ACC_NO AS VA_ACC_NO,
+			1
+    FROM
+            PAY0064D A
+            JOIN PAY0065D B ON A.PAY_ID = B.PAY_ID
+    WHERE
+            A.PAY_ID = #{payId}
+            AND ROWNUM <![CDATA[   <= ]]> 1
+    </insert>
+
+    <insert id="insertTmpNormalPaymentInfo" parameterType="Map">
+        INSERT INTO PAY0240T
+        (
+            SEQ,
+            PAY_TYPE,
+            AMT,
+            BANK_CHRG_AMT,
+            BANK_SLIP_NO,
+            CHQ_NO,
+            PAYER_NM,
+            REF_DTL,
+            BANK_TYPE_ID,
+            BANK_ACC_ID,
+            VA_ACC_NO,
+            TRNSC_DT,
+            ITM_REM,
+            EFT_NO,
+            TR_NO,
+            TR_ISSU_DT,
+            COLL_MEM_ID,
+            PAY_DT,
+            IS_LOCK,
+            IS_3PARTY,
+            STUS_ID,
+            IS_FUND_TRNSF,
+            SKIP_RECON,
+            PAY_ITM_CARD_TYPE,
+			IS_COMM_CHK
+        )
+        VALUES
+        (
+            #{seq},
+            #{payType},
+            #{amount},
+            #{chargeAmount},
+            #{slipNo},
+            #{chqNo},
+            #{payerName},
+            #{jomPay},
+            #{bankType},
+            #{bankAcc},
+            #{va},
+            TO_DATE(#{trDate}, 'DD/MM/YYYY'),
+            #{remark},
+            #{eft},
+            #{keyInTrNo},
+            TO_DATE(#{keyInTrIssueDate}, 'DD/MM/YYYY'),
+            #{keyInCollMemId},
+            TO_DATE(#{keyInPayDate}, 'DD/MM/YYYY'),
+            #{payItemIsLock},
+            #{payItemIsThirdParty},
+            #{payItemStatusId},
+            #{isFundTransfer},
+            #{skipRecon},
+            #{payItemCardTypeId},
+			#{keyInIsCommChk}
+        )
+    </insert>
+
+    <insert id="insertTmpBillingInfo" parameterType="Map">
+        INSERT INTO PAY0241T (
+            ITM_SEQ,
+            SEQ,
+			PRCSS_SEQ,
+			APP_TYPE,
+			ADV_MONTH,
+			BILL_GRP_ID,
+			BILL_ID,
+			ORD_ID,
+			RPF,
+			RPF_PAID,
+			BILL_NO,
+			ORD_NO,
+			BILL_TYPE_ID,
+			BILL_TYPE_NM,
+			INSTLMT,
+			AMT,
+			PAID_AMT,
+			TRGET_AMT,
+			BILL_DT,
+			ASIGN_AMT,
+			BILL_STUS,
+			CUST_NM,
+			DSCNT_AMT,
+			SRV_LDGR_CNTRCT_ID,
+			BILL_AS_ID,
+			SRV_MEM_ID,
+			TR_NO,
+			COLL_MEM_ID,
+			ALLOW_COMM,
+			TR_ISSU_DT,
+			REF_DTL
+
+        ) VALUES (
+            PAY0241T_SEQ.NEXTVAL,
+			#{seq},
+			#{procSeq},
+			#{appType},
+			#{advMonth},
+			#{billGrpId},
+			#{billId},
+			#{ordId},
+			#{mstRpf},
+			#{mstRpfPaid},
+			#{billNo},
+			#{ordNo},
+			#{billTypeId},
+			#{billTypeNm},
+			#{installment},
+			#{billAmt},
+			#{paidAmt},
+			#{targetAmt},
+			TO_DATE(#{billDt},'YYYY-MM-DD'),
+			#{assignAmt},
+			#{billStatus},
+			#{custNm},
+			#{discountAmt},
+			#{srvcContractID},
+			#{billAsId},
+			#{srvMemId},
+            REGEXP_REPLACE(#{trNo}, '[[:space:]]', ''),
+            #{collectorId},
+            #{allowComm},
+            TO_DATE(#{trDt}, 'DD/MM/YYYY'),
+            #{refDtlsJPayRef}
+        )
+    </insert>
+
+    <update id="processPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_PAYMENT(#{seq},#{userid},#{keyInPayRoute}, #{keyInScrn} )}
+    </update>
+
+    <resultMap id="normalPayResultStus" type="egovMap"></resultMap>
+    <resultMap id="normalPayResultMsg" type="egovMap"></resultMap>
+
+    <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key}, #{keyInPayRoute}, #{keyInScrn},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=normalPayResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=normalPayResultMsg})}
+    </update>
+
+    <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
+ SELECT
+    a.or_no,
+    CASE WHEN SALES_ORD_NO_1 IS NULL AND SALES_ORD_NO_3 IS NULL THEN SALES_ORD_NO_2
+         WHEN SALES_ORD_NO_2 IS NULL AND SALES_ORD_NO_1 IS NULL THEN SALES_ORD_NO_3
+         WHEN SALES_ORD_NO_3 IS NULL AND SALES_ORD_NO_2 IS NULL THEN SALES_ORD_NO_1
+         ELSE SALES_ORD_NO_1
+         END AS SALES_ORD_NO ,
+         a.GROUP_SEQ
+FROM
+    (
+        SELECT DISTINCT
+            b.or_no,
+            c.SALES_ORD_NO SALES_ORD_NO_1,
+            d.SALES_ORD_NO SALES_ORD_NO_2,
+            e.SRV_ORD_NO SALES_ORD_NO_3,
+            a.group_seq
+        FROM
+            pay0252t a
+            JOIN pay0064d b ON a.pay_id = b.pay_id
+            LEFT JOIN pay0007d t7 ON b.bill_id = t7.bill_id
+            LEFT JOIN sal0001d c ON t7.bill_so_id = c.sales_ord_id
+            LEFT JOIN sal0001d d ON d.sales_ord_id = b.sales_ord_id
+            LEFT JOIN sal0225d e ON t7.bill_so_id = e.srv_ord_id
+
+    ) a
+WHERE
+            A.GROUP_SEQ =   #{seq}
+ORDER BY a.or_no
+    </select>
+
+        <select id="selectProcessCSPaymentResult" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT DISTINCT
+                B.OR_NO,
+                T2.SRV_ORD_NO SALES_ORD_NO,
+                A.GROUP_SEQ
+            FROM
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0007D T7 ON B.BILL_ID = T7.BILL_ID
+            JOIN SAL0225D T2 ON T2.SRV_ORD_ID = T7.BILL_SO_ID
+        ) A
+        WHERE
+            A.GROUP_SEQ =   #{seq}
+    </select>
+
+    <select id="selectMegaDealByOrderId" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(MEGA_DEAL,0) AS MEGA_DEAL, NVL(CNVR_SCHEME_ID,0) AS CNVR_SCHEME_ID , NVL(ADV_DISC,0) AS ADV_DISC
+        FROM
+            SAL0001D A
+            JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+        WHERE
+            A.SALES_ORD_ID = #{orderId}
+   </select>
+
+     <update id="updateCareSalesMStatus" parameterType="Map">
+        UPDATE SAL0225D
+           SET  UPD_USER_ID     = #{userId}
+                  , UPD_DT            = SYSDATE
+                 , STUS_CODE_ID  = 4
+         WHERE SRV_ORD_ID      = #{ordId}
+    </update>
+
+    <select id="selectOrderRentalAccntStatus" parameterType="Map" resultType="String">
+        SELECT STUS_CODE_ID FROM SAL0071D WHERE SALES_ORD_ID = #{orderId}
+    </select>
+
+    <select id="checkBatchPaymentExist" parameterType="Map" resultType="egovMap">
+        SELECT distinct SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) FIELD1,
+                          B.PAY_ITM_APPV_NO,
+                          B.PAY_ITM_REF_DT,
+                          A.PAY_ITM_AMT,
+                          B.PAY_ITM_BANK_ACC_ID
+        FROM PAY0252T A
+        JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
+        JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.CODE_MASTER_ID = '130'
+        JOIN SYS0001M E ON B.PAY_ITM_BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+        JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+        WHERE
+            A.PAY_ITM_MODE_ID = 107
+        AND NVL(CRC_STATE_MAPPING_STUS_ID,0) IN (1,5)
+        AND NVL(A.REV_STUS_ID,0) <![CDATA[ < ]]> 5
+        AND B.PAY_ITM_APPV_NO = #{keyInApprovalNo}
+        AND a.PAY_ITM_AMT = #{keyInAmount}
+        AND B.PAY_ITM_REF_DT BETWEEN to_date(#{keyInTrDate}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS') AND  to_date(#{keyInTrDate}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+        AND B.PAY_ITM_BANK_ACC_ID = #{keyInMerchantBank}
+        AND SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) = SUBSTR(#{keyInCardNo1} || #{keyInCardNo2},1,6) || #{keyInCardNo4}
+    </select>
+
+</mapper>

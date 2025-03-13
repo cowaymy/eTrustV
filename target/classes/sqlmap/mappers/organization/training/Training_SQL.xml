@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.training.impl.TrainingMapper">
+
+<select id="selectCourseList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectCourseList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT PROJECT1.COURS_ID,
+       PROJECT1.COURS_CODE,
+       PROJECT1.COURS_NAME,
+       PROJECT1.COURS_MEM_YN_ID,
+       PROJECT1.COURS_MEM_TYPE_ID,
+       PROJECT1.CODE_ID,
+       PROJECT1.CODE_NAME,
+       PROJECT1.STUS_CODE_ID,
+       PROJECT1.NAME NAME,
+       PROJECT1.COURS_LOC,
+       PROJECT1.COURS_LIMIT,
+       PROJECT1.COURS_START,
+       PROJECT1.COURS_END,
+       PROJECT1.COURS_UPD_USER_ID,
+       PROJECT1.C1 C1,
+       PROJECT1.TOTAL,
+       PROJECT1.PASSED,
+       PROJECT1.FAILED,
+       PROJECT1.ABSENT,
+       PROJECT1.OTHERS,
+       (
+              SELECT DECODE(Count(COURS_MEM_ID), 0, 'N', 'Y')
+              FROM   MSC0009D
+              WHERE  COURS_ID = PROJECT1.COURS_ID
+              AND    COURS_MEM_ID =
+                     (
+                               SELECT    B.MEM_ID
+                               FROM      SYS0047M A
+                               LEFT JOIN ORG0001D B
+                               ON        A.USER_NRIC = B.NRIC AND B.STUS = 1
+                               AND       B.MEM_CODE NOT LIKE '100%'
+                               WHERE     A.USER_ID = #{userId})) AS LOGIN_USER_APPLY_YN
+FROM   (
+                SELECT   PROJECT1.COURS_ID,
+                         PROJECT1.COURS_CODE,
+                         PROJECT1.COURS_NAME,
+                         PROJECT1.COURS_MEM_YN_ID,
+                         PROJECT1.COURS_MEM_TYPE_ID,
+                         PROJECT1.COURS_LOC,
+                         PROJECT1.COURS_START,
+                         PROJECT1.COURS_END,
+                         PROJECT1.COURS_UPD_USER_ID,
+                         PROJECT1.COURS_LIMIT,
+                         PROJECT1.STUS_CODE_ID,
+                         PROJECT1.NAME NAME,
+                         PROJECT1.CODE_ID,
+                         PROJECT1.CODE_NAME,
+                         PROJECT1.C1 C1,
+                         PROJECT1.TOTAL,
+                         PROJECT1.PASSED,
+                         PROJECT1.FAILED,
+                         PROJECT1.ABSENT,
+                         PROJECT1.OTHERS,
+                         ROW_NUMBER() OVER ( ORDER BY PROJECT1.COURS_ID DESC ) ROW_NUMBER
+                FROM     (
+                                SELECT EXTENT1.COURS_ID,
+                                       EXTENT1.COURS_CODE,
+                                       EXTENT1.COURS_NAME,
+                                       EXTENT1.COURS_MEM_YN_ID,
+                                       EXTENT1.COURS_MEM_TYPE_ID,
+                                       EXTENT1.COURS_LOC,
+                                       TO_CHAR(EXTENT1.COURS_START, 'DD/MM/YYYY') AS COURS_START,
+                                       TO_CHAR(EXTENT1.COURS_END, 'DD/MM/YYYY')   AS COURS_END,
+                                       EXTENT1.COURS_UPD_USER_ID,
+                                       EXTENT1.COURS_LIMIT,
+                                       EXTENT2.STUS_CODE_ID,
+                                       EXTENT2.NAME NAME,
+                                       EXTENT3.CODE_ID,
+                                       EXTENT3.CODE_NAME,
+                                       CASE
+                                              WHEN (
+                                                            EXTENT1.COURS_UPD_DT IS NOT NULL ) THEN EXTENT1.COURS_UPD_DT
+                                              ELSE TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+                                       END C1,
+                                       (
+                                              SELECT Count(*)
+                                              FROM   MSC0009D
+                                              WHERE  COURS_ID = EXTENT1.COURS_ID
+                                              AND    COURS_MEM_STUS_ID = 1) AS TOTAL,
+                                       (
+                                              SELECT Count(*)
+                                              FROM   MSC0009D
+                                              WHERE  COURS_ID = EXTENT1.COURS_ID
+                                              AND    COURS_MEM_STUS_ID = 1
+                                              AND    COURS_TEST_RESULT = 'P') AS PASSED,
+                                       (
+                                              SELECT Count(*)
+                                              FROM   MSC0009D
+                                              WHERE  COURS_ID = EXTENT1.COURS_ID
+                                              AND    COURS_MEM_STUS_ID = 1
+                                              AND    COURS_TEST_RESULT = 'F') AS FAILED,
+                                       (
+                                              SELECT Count(*)
+                                              FROM   MSC0009D
+                                              WHERE  COURS_ID = EXTENT1.COURS_ID
+                                              AND    COURS_MEM_STUS_ID = 1
+                                              AND    COURS_TEST_RESULT = 'AB') AS ABSENT,
+                                       (
+                                              SELECT Count(*)
+                                              FROM   MSC0009D
+                                              WHERE  COURS_ID = EXTENT1.COURS_ID
+                                              AND    COURS_MEM_STUS_ID = 1
+                                              AND    COURS_TEST_RESULT != 'P'
+                                              AND    COURS_TEST_RESULT != 'F'
+                                              AND    COURS_TEST_RESULT != 'AB') AS OTHERS
+                                FROM   MSC0008D EXTENT1
+                                JOIN   SYS0038M EXTENT2
+                                ON     EXTENT1.COURS_STUS_ID = EXTENT2.STUS_CODE_ID
+                                JOIN   SYS0013M EXTENT3
+                                ON     EXTENT1.COURS_TYPE_CODE_ID = EXTENT3.CODE_ID
+                                WHERE  1 = 1
+                          <if test="coursCode != null and coursCode != ''">
+                          AND ( Extent1.COURS_CODE LIKE '%' || #{coursCode} || '%' ESCAPE '~' )
+                          </if>
+                          <if test="stusCodeId != null and stusCodeId != ''">
+                          AND ( Extent2.STUS_CODE_ID = #{stusCodeId} )
+                          </if>
+                          <if test="coursStart != null and coursStart != ''">
+                          <![CDATA[
+                          AND ( Extent1.COURS_START >= TO_DATE(#{coursStart} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') )
+                          ]]>
+                          </if>
+                          <if test="generalCode != null and generalCode != ''">
+                          AND Extent1.COURS_MEM_YN_ID = #{generalCode}
+                          </if>
+                          <if test="memType != null and memType != ''">
+                          AND Extent1.COURS_MEM_TYPE_ID = #{memType}
+                          </if>
+                          <if test="coursName != null and coursName != ''">
+                          AND ( Extent1.COURS_NAME LIKE '%' || #{coursName} || '%' )
+                          </if>
+                          <if test="codeId != null and codeId != ''">
+                          AND ( Extent3.CODE_ID = #{codeId} )
+                          </if>
+                          ) Project1 ) Project1
+  ORDER BY Project1.COURS_ID DESC
+</select>
+
+<select id="selectCourseStatusList" resultType="egovMap">
+/* trainingMapper.selectCourseStatusList */
+SELECT Extent1.STUS_CODE_ID  ,
+       Extent1.CODE CODE  ,
+       Extent1.NAME NAME
+  FROM SYS0038M Extent1
+ WHERE  Extent1.STUS_CODE_ID IN ( 1,4,3, 8 )
+  ORDER BY Extent1.NAME ASC
+</select>
+
+<select id="selectCourseTypeList" resultType="egovMap">
+/* trainingMapper.selectCourseTypeList */
+SELECT Project1.CODE_ID   ,
+       Project1.CODE_MASTER_ID   ,
+       Project1.CODE CODE  ,
+       Project1.CODE_NAME   ,
+       Project1.CODE_DESC   ,
+       Project1.DISAB   ,
+       Project1.CRT_DT   ,
+       Project1.CRT_USER_ID   ,
+       Project1.UPD_DT   ,
+       Project1.UPD_USER_ID   ,
+       Project1.OLD_CODE_ID
+  FROM ( SELECT Extent1.CODE_ID,
+                Extent1.CODE_MASTER_ID   ,
+                Extent1.CODE CODE  ,
+                Extent1.CODE_NAME   ,
+                Extent1.CODE_DESC   ,
+                Extent1.DISAB   ,
+                Extent1.CRT_DT   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.UPD_DT   ,
+                Extent1.UPD_USER_ID   ,
+                Extent1.OLD_CODE_ID
+         FROM SYS0013M Extent1
+          WHERE  ( Extent1.CODE_MASTER_ID = 22 )
+                   AND ( 0 = Extent1.DISAB ) ) Project1
+  ORDER BY Project1.CODE ASC
+</select>
+
+<select id="selectAttendeeList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectAttendeeList */
+SELECT Extent1.COURS_ITM_ID   ,
+       Extent1.COURS_ID   ,
+       Extent2.MEM_TYPE,
+       Extent4.CODE_NAME || ' - ' || Extent5.CODE_NAME AS MEM_TYPE_NAME,
+       Extent1.COURS_MEM_ID  ,
+       Extent2.MEM_CODE  ,
+       Extent1.COURS_TEST_RESULT   ,
+       CASE WHEN Extent1.COURS_TEST_RESULT = 'P' THEN 'Pass'
+            WHEN Extent1.COURS_TEST_RESULT = 'F' THEN 'Fail'
+            WHEN Extent1.COURS_TEST_RESULT = 'AB' THEN 'Absent'
+            ELSE ''
+       END AS COURS_TEST_RESULT_DESC,
+       Extent1.COURS_MEM_STUS_ID   ,
+       Extent1.COURS_D_UPD_USER_ID   ,
+       Extent1.COURS_D_UPD_DT   ,
+       Extent1.COURS_MEM_SHIRT_SIZE   ,
+       Extent1.COURS_ITM_MEM_IS_VEGE  ,
+       Extent1.COURS_ITM_MEM_PUP   ,
+       Extent1.COURS_D_MEM_NAME   ,
+       Extent1.COURS_D_MEM_NRIC ,
+       DECODE(Extent1.COURS_ATTEND_DAY, 0, 0, Extent1.COURS_ATTEND_DAY) COURS_ATTEND_DAY,
+       Extent3.CODE || ' - ' || Extent3.NAME CODE
+  FROM MSC0009D Extent1
+  LEFT JOIN ORG0001D Extent2
+  ON Extent1.COURS_MEM_ID = Extent2.MEM_ID
+  LEFT JOIN SYS0005M Extent3
+  ON Extent2.BRNCH = Extent3.BRNCH_ID
+  LEFT JOIN SYS0013M Extent4
+  ON Extent2.MEM_TYPE = Extent4.CODE_ID
+  and Extent4.CODE_MASTER_ID = '1'
+  LEFT JOIN SYS0013M Extent5
+  ON Extent2.TRAINEE_TYPE = Extent5.CODE_ID
+  and Extent5.CODE_MASTER_ID = '1'
+ WHERE  ( Extent1.COURS_ID = #{coursId} )
+          AND ( 1 = Extent1.COURS_MEM_STUS_ID )
+</select>
+
+<select id="selectBranchByMemberId" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectBranchByMemberId */
+SELECT Extent1.BRNCH AS BRNCH_ID   ,
+       Extent2.CODE
+  FROM ORG0001D Extent1
+  LEFT JOIN SYS0005M Extent2
+  ON Extent1.BRNCH = Extent2.BRNCH_ID
+ WHERE  ( Extent1.MEM_ID = #{memId} )
+</select>
+
+<update id="updateCourse" parameterType="Map">
+    /* trainingMapper.updateCourse */
+    UPDATE MSC0008D
+    SET COURS_UPD_DT = SYSDATE,
+        COURS_UPD_USER_ID = #{userId}
+        <if test="codeId != null and codeId != ''">
+            , COURS_TYPE_CODE_ID = #{codeId}
+        </if>
+        <if test="coursCode != null and coursCode != ''">
+            , COURS_CODE = #{coursCode}
+        </if>
+        <if test="coursName != null and coursName != ''">
+            , COURS_NAME = #{coursName}
+        </if>
+        <if test="coursLoc != null and coursLoc != ''">
+            , COURS_LOC = #{coursLoc}
+        </if>
+        <if test="coursStart != null and coursStart != ''">
+            , COURS_START = TO_DATE(#{coursStart}, 'DD/MM/YYYY')
+        </if>
+        <if test="coursEnd != null and coursEnd != ''">
+            , COURS_END = TO_DATE(#{coursEnd}, 'DD/MM/YYYY')
+        </if>
+        <if test="coursLimit != null and coursLimit != ''">
+            , COURS_LIMIT = #{coursLimit}
+        </if>
+        <if test="stusCodeId != null and stusCodeId != ''">
+            , COURS_STUS_ID = #{stusCodeId}
+        </if>
+        <if test="generalCode != null and generalCode != ''">
+            , COURS_MEM_YN_ID = #{generalCode}
+        </if>
+        <if test="memType != null and memType != ''">
+            , COURS_MEM_TYPE_ID = #{memType}
+        </if>
+        <if test="attendance != null and attendance != ''">
+            , COURS_ATTEND_OWNER = #{attendance}
+        </if>
+    WHERE COURS_ID = #{coursId}
+</update>
+
+<update id="updateAttendee" parameterType="Map">
+    /* trainingMapper.updateAttendee */
+    UPDATE MSC0009D
+    SET
+        COURS_D_UPD_USER_ID = #{userId}
+       ,COURS_D_UPD_DT = SYSDATE
+        <!--
+        COURS_MEM_ID = #{coursMemId}
+       ,COURS_MEM_STUS_ID = #{coursMemStusId}
+       ,COURS_ITM_MEM_IS_VEGE = #{coursItmMemIsVege}
+       ,COURS_ITM_MEM_PUP = #{coursItmMemPup}
+       ,COURS_D_MEM_NAME = #{coursDMemName}
+       ,COURS_D_MEM_NRIC = #{coursDMemNric}
+        -->
+       ,COURS_TEST_RESULT = #{coursTestResult}
+       ,COURS_MEM_SHIRT_SIZE = #{coursMemShirtSize}
+       ,COURS_ATTEND_DAY = #{coursAttendDay}
+    WHERE COURS_ITM_ID = #{coursItmId}
+</update>
+
+<update id="inactiveAttendee" parameterType="Map">
+    UPDATE MSC0009D
+    SET
+        COURS_D_UPD_USER_ID = #{userId}
+      , COURS_D_UPD_DT = SYSDATE
+      , COURS_MEM_STUS_ID = 8
+    WHERE COURS_ITM_ID = #{coursItmId}
+</update>
+
+<select id="selectNextCoursId" resultType="int">
+/* trainingMapper.selectNextCoursId */
+        SELECT MSC0008D_COURS_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCourse" parameterType="Map">
+/* trainingMapper.insertCourse */
+INSERT INTO MSC0008D
+            (COURS_ID,
+             COURS_TYPE_CODE_ID,
+             COURS_CODE,
+             COURS_NAME,
+             COURS_LOC,
+             COURS_START,
+             COURS_END,
+             COURS_STUS_ID,
+             COURS_UPD_USER_ID,
+             COURS_UPD_DT,
+             COURS_LIMIT,
+             COURS_CRT_DT,
+             COURS_CRT_USER_ID,
+             COURS_MEM_YN_ID,
+             COURS_MEM_TYPE_ID,
+             COURS_ATTEND_OWNER,
+             COURS_CLS_DT)
+VALUES      ( #{coursId},
+              #{codeId},
+              #{coursCode},
+              #{coursName},
+              #{coursLoc},
+              TO_DATE( #{coursStart}, 'DD/MM/YYYY'),
+              TO_DATE( #{coursEnd}, 'DD/MM/YYYY'),
+              1,
+              #{userId},
+              SYSDATE,
+              #{coursLimit},
+              SYSDATE,
+              #{userId},
+              #{generalCode},
+              #{memType},
+              #{attendance},
+              TO_DATE( #{courseClsDt}, 'DD/MM/YYYY') )
+</insert>
+
+<insert id="insertAttendee" parameterType="Map">
+/* trainingMapper.insertAttendee */
+INSERT INTO MSC0009D
+            (
+                        COURS_ITM_ID,
+                        COURS_ID,
+                        COURS_MEM_ID,
+                        COURS_MEM_STUS_ID,
+                        COURS_D_UPD_USER_ID,
+                        COURS_D_UPD_DT,
+                        COURS_D_MEM_NAME,
+                        COURS_D_MEM_NRIC
+            )
+VALUES
+            (
+                        MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL ,
+                        #{coursId} ,
+                        #{coursMemId} ,
+                        1 ,
+                        #{userId} ,
+                        SYSDATE ,
+                        #{coursDMemName} ,
+                        #{coursDMemNric}
+            )
+</insert>
+
+<delete id="deleteAttendee" parameterType="Map">
+/* trainingMapper.deleteAttendee */
+DELETE FROM MSC0009D WHERE COURS_ID = #{coursId} AND COURS_MEM_ID = #{coursMemId}
+</delete>
+
+<select id="getUploadMemList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.getUploadMemList */
+                SELECT
+                    T1.MEM_ID AS COURS_MEM_ID,
+                    T1.MEM_CODE,
+                    T1.NAME AS COURS_D_MEM_NAME,
+                    T1.NRIC AS COURS_D_MEM_NRIC,
+                    T2.CODE,
+                    T1.BRNCH AS BRNCH_ID,
+                    T1.MEM_TYPE,
+                    (CASE T1.MEM_TYPE
+                        WHEN 1 THEN 'Health Planner'
+                        WHEN 2 THEN 'Cody'
+                        WHEN 3 THEN 'Coway Technician'
+                        WHEN 4 THEN 'Staff' END) AS MEM_TYPE_NAME,
+                    T1.FULL_NAME,
+                    T1.STUS
+                 FROM
+                     ORG0001D T1 LEFT JOIN SYS0005M T2 ON T2.BRNCH_ID = T1.BRNCH
+                  <if test=" null != nricArray and nricArray.length > 0">
+                    WHERE T1.NRIC IN
+                    <foreach collection="nricArray" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                  </if>
+    </select>
+
+<select id="selectCourseInfo" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectCourseInfo */
+SELECT EXTENT1.COURS_ID,
+       EXTENT1.COURS_TYPE_CODE_ID                 AS CODE_ID,
+       EXTENT3.CODE_NAME,
+       EXTENT1.COURS_CODE,
+       EXTENT1.COURS_NAME,
+       EXTENT1.COURS_LOC,
+       TO_CHAR(EXTENT1.COURS_START, 'DD/MM/YYYY') AS COURS_START,
+       TO_CHAR(EXTENT1.COURS_END, 'DD/MM/YYYY')   AS COURS_END,
+       EXTENT1.COURS_STUS_ID,
+       EXTENT1.COURS_LIMIT,
+       (SELECT Count(*)
+        FROM   MSC0009D
+        WHERE  COURS_ID = EXTENT1.COURS_ID
+               AND COURS_MEM_STUS_ID = 1)         AS TOTAL,
+       (SELECT Count(*)
+        FROM   MSC0009D
+        WHERE  COURS_ID = EXTENT1.COURS_ID
+               AND COURS_MEM_STUS_ID = 1
+               AND COURS_TEST_RESULT = 'P')       AS PASSED,
+       (SELECT Count(*)
+        FROM   MSC0009D
+        WHERE  COURS_ID = EXTENT1.COURS_ID
+               AND COURS_MEM_STUS_ID = 1
+               AND COURS_TEST_RESULT = 'F')       AS FAILED,
+       (SELECT Count(*)
+        FROM   MSC0009D
+        WHERE  COURS_ID = EXTENT1.COURS_ID
+               AND COURS_MEM_STUS_ID = 1
+               AND COURS_TEST_RESULT = 'AB')      AS ABSENT,
+       (SELECT Count(*)
+        FROM   MSC0009D
+        WHERE  COURS_ID = EXTENT1.COURS_ID
+               AND COURS_MEM_STUS_ID = 1
+               AND COURS_TEST_RESULT != 'P'
+               AND COURS_TEST_RESULT != 'F'
+               AND COURS_TEST_RESULT != 'AB')     AS OTHERS,
+        EXTENT1.COURS_MEM_YN_ID,
+        EXTENT1.COURS_MEM_TYPE_ID,
+        EXTENT1.COURS_ATTEND_OWNER
+FROM   MSC0008D EXTENT1
+       JOIN SYS0038M EXTENT2
+         ON EXTENT1.COURS_STUS_ID = EXTENT2.STUS_CODE_ID
+       JOIN SYS0013M EXTENT3
+         ON EXTENT1.COURS_TYPE_CODE_ID = EXTENT3.CODE_ID
+WHERE EXTENT1.COURS_ID = #{coursId}
+</select>
+
+<select id="selectLoginUserNric" parameterType="int" resultType="String">
+/* trainingMapper.selectLoginUserNric */
+SELECT USER_NRIC FROM SYS0047M WHERE USER_ID = #{userId}
+</select>
+
+<select id="selectLoginUserMemId" parameterType="int" resultType="int">
+/* trainingMapper.selectLoginUserMemId */
+SELECT B.MEM_ID
+FROM   SYS0047M A
+       LEFT JOIN ORG0001D B
+              ON A.USER_NRIC = B.NRIC
+WHERE  A.USER_ID = # {userId}
+</select>
+
+<select id="selectApplicantLog" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectApplicantLog */
+SELECT *
+FROM   (SELECT JOIN4.COURS_ITM_ID,
+               JOIN4.COURS_NAME,
+               JOIN4.COURS_CODE,
+               JOIN4.COURS_LOC,
+               JOIN4.COURS_START,
+               JOIN4.COURS_END,
+               JOIN4.COURS_ITM_MEM_IS_VEGE,
+               JOIN4.COURS_D_MEM_NAME,
+               JOIN4.NRIC,
+               JOIN4.MEM_CODE,
+               JOIN4.NAME,
+               JOIN4.COURS_MEM_ID,
+               JOIN4.COURS_MEM_SHIRT_SIZE,
+               JOIN4.COURS_TEST_RESULT,
+               JOIN4.COURS_D_UPD_DT,
+               JOIN4.COURS_D_UPD_USER_ID,
+               JOIN4.CODE_NAME
+        FROM   (SELECT EXTENT1.COURS_ITM_ID,
+                       EXTENT1.COURS_MEM_ID,
+                       EXTENT1.COURS_TEST_RESULT,
+                       EXTENT1.COURS_D_UPD_USER_ID,
+                       EXTENT1.COURS_D_UPD_DT,
+                       EXTENT1.COURS_MEM_SHIRT_SIZE,
+                       EXTENT1.COURS_ITM_MEM_IS_VEGE,
+                       EXTENT1.COURS_D_MEM_NAME,
+                       EXTENT2.COURS_CODE,
+                       EXTENT2.COURS_NAME,
+                       EXTENT2.COURS_LOC,
+                       EXTENT2.COURS_START,
+                       EXTENT2.COURS_END,
+                       EXTENT4.MEM_CODE,
+                       EXTENT4.NAME,
+                       EXTENT4.NRIC,
+                       EXTENT5.CODE_NAME,
+                       ROW_NUMBER()
+                         OVER (
+                           ORDER BY EXTENT1.COURS_ITM_ID ASC ) ROW_NUMBER
+                FROM   MSC0009D EXTENT1
+                       JOIN MSC0008D EXTENT2
+                         ON EXTENT1.COURS_ID = EXTENT2.COURS_ID
+                       JOIN SYS0013M EXTENT3
+                         ON
+               UTILS.CONVERT_TO_NUMBER(EXTENT2.COURS_TYPE_CODE_ID, 10, 0)
+               =
+               EXTENT3.CODE_ID
+                       LEFT JOIN ORG0001D EXTENT4
+                              ON EXTENT1.COURS_MEM_ID = EXTENT4.MEM_ID
+                       LEFT JOIN SYS0013M EXTENT5
+                              ON EXTENT1.COURS_ITM_MEM_PUP = EXTENT5.CODE_ID)
+               JOIN4
+        WHERE  JOIN4.ROW_NUMBER > 0
+        ORDER  BY JOIN4.COURS_ITM_ID ASC)
+WHERE  1 = 1
+<if test="memCode != null and memCode != ''">
+AND Join4.MEM_CODE = #{memCode}
+</if>
+<if test="memName != null and memName != ''">
+AND JOIN4.NAME = #{memName}
+</if>
+<if test="nric != null and nric != ''">
+AND JOIN4.NRIC = #{nric}
+</if>
+</select>
+
+<select id="courseNricDup" parameterType="Map" resultType="int">
+/* trainingMapper.courseNricDup */
+SELECT COUNT(0) FROM MSC0009D
+ WHERE COURS_ID = #{coursId}
+     AND COURS_D_MEM_NRIC= #{nric}
+</select>
+
+<select id="selectCourseRequestList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectCourseRequestList */
+SELECT A.COURS_CODE,
+               A.COURS_NAME,
+               D.CODE_NAME,
+               A.COURS_LOC,
+               A.COURS_LIMIT,
+               (SELECT COUNT(COURS_ID)  CNT
+                   FROM MSC0009D
+                  WHERE COURS_ID = A.COURS_ID
+                      AND COURS_MEM_STUS_ID = 1)  AS COURSE_JOIN_CNT ,
+               TO_CHAR(A.COURS_START,'dd/mm/yyyy') AS COURSE_FROM_DATE,
+               TO_CHAR(A.COURS_END, 'dd/mm/yyyy') AS COURSE_TO_DATE,
+               A.COURS_ID,
+               A.COURS_ATTEND_OWNER,
+               E.COURS_MEM_ID,
+               E.COURS_D_MEM_NAME,
+               E.COURS_MEM_STUS_ID,
+               (
+                    SELECT Count(*)
+                    FROM   MSC0009D
+                    WHERE  COURS_ID = A.COURS_ID
+                    AND    COURS_MEM_STUS_ID = 1) AS TOTAL
+      FROM MSC0008D A
+      INNER JOIN SYS0013M D ON  A.COURS_TYPE_CODE_ID = D.CODE_ID
+      JOIN MSC0009D E ON  E.COURS_ID = A.COURS_ID
+    WHERE A.COURS_STUS_ID = 1
+        AND A.COURS_MEM_YN_ID = 2318
+        <if test="coursStart != null and coursStart != ''">
+        AND A.COURS_START <![CDATA[ > ]]> TO_DATE(#{coursStart}, 'dd/mm/yyyy')
+        </if>
+        <if test="memberCode != null and memberCode != ''">
+        AND E.COURS_MEM_ID = #{memberId}
+        </if>
+</select>
+
+<select id="selectMemInfo" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectMemInfo */
+    SELECT MEM_ID
+	         , MEM_TYPE
+	         , NAME
+	         , NRIC
+	         , MEM_CODE
+      FROM ORG0001D
+    WHERE MEM_CODE = #{userId}
+</select>
+
+<select id="selectMyAttendeeList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectMyAttendeeList */
+SELECT Extent1.COURS_ITM_ID   ,
+	       Extent1.COURS_ID   ,
+	       Extent2.MEM_TYPE,
+	       (CASE Extent2.MEM_TYPE
+	       WHEN 1 THEN 'Health Planner'
+	       WHEN 2 THEN 'Cody'
+	       WHEN 3 THEN 'Coway Technician'
+	       WHEN 4 THEN 'Staff' END) AS MEM_TYPE_NAME,
+	       Extent1.COURS_MEM_ID  ,
+	       Extent2.MEM_CODE  ,
+	       Extent1.COURS_TEST_RESULT   ,
+	       Extent1.COURS_MEM_STUS_ID   ,
+	       Extent1.COURS_D_UPD_USER_ID   ,
+	       Extent1.COURS_D_UPD_DT   ,
+	       Extent1.COURS_MEM_SHIRT_SIZE   ,
+	       Extent1.COURS_ITM_MEM_IS_VEGE  ,
+	       Extent1.COURS_ITM_MEM_PUP   ,
+	       Extent1.COURS_D_MEM_NAME   ,
+	       Extent1.COURS_D_MEM_NRIC ,
+	       DECODE(Extent1.COURS_ATTEND_DAY, 0, 0, Extent1.COURS_ATTEND_DAY) COURS_ATTEND_DAY,
+	       Extent3.CODE
+	  FROM MSC0009D Extent1
+	  LEFT JOIN ORG0001D Extent2
+	  ON Extent1.COURS_MEM_ID = Extent2.MEM_ID
+	  LEFT JOIN SYS0005M Extent3
+	  ON Extent2.BRNCH = Extent3.BRNCH_ID
+	 WHERE ( Extent1.COURS_ID = #{coursId} )
+	     AND Extent1.COURS_MEM_ID = #{coursMemId}
+         AND ( 1 = Extent1.COURS_MEM_STUS_ID )
+</select>
+
+<update id="registerCourseReq" parameterType="Map">
+        MERGE
+         INTO MSC0009D
+        USING DUAL
+           ON (COURS_ID = #{coursId} AND COURS_MEM_ID = #{memId})
+         WHEN MATCHED THEN
+              UPDATE
+                 SET COURS_MEM_STUS_ID = 1
+         WHEN NOT MATCHED THEN
+              INSERT
+                   ( COURS_ITM_ID
+                   , COURS_ID
+                   , COURS_MEM_ID
+                   , COURS_MEM_STUS_ID
+                   , COURS_D_UPD_USER_ID
+                   , COURS_D_UPD_DT
+                   , COURS_D_MEM_NAME
+                   , COURS_D_MEM_NRIC
+                   )
+              VALUES
+                   ( MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL
+                   , #{coursId}
+                   , #{memId}
+                   , 1
+                   , #{userId}
+                   , SYSDATE
+                   , #{memName}
+                   , #{memNric}
+                   )
+    </update>
+
+    <update id="cancelCourseReq" parameterType="Map">
+        UPDATE MSC0009D
+           SET COURS_MEM_STUS_ID = 8
+             , COURS_D_UPD_USER_ID = #{userId}
+             , COURS_D_UPD_DT = SYSDATE
+         WHERE COURS_ID = #{coursId}
+           AND COURS_MEM_ID = #{memId}
+    </update>
+
+    <select id="getMemCodeForCourse" parameterType="Map" resultType="egovMap">
+    /* trainingMapper.getMemCodeForCourse */
+    SELECT MEM_ID
+             , MEM_TYPE
+             , NAME
+             , NRIC
+             , MEM_CODE
+      FROM ORG0001D
+    WHERE MEM_ID = #{memId}
+    </select>
+
+    <update id="updateRookie" parameterType="Map">
+        MERGE INTO ORG0001D T
+        USING (
+            SELECT B.COURS_MEM_ID MEM_ID
+            FROM MSC0008D A, MSC0009D B
+            WHERE A.COURS_ID = B.COURS_ID
+            AND A.COURS_ID = #{coursId}
+            AND A.COURS_STUS_ID = 4
+            AND B.COURS_TEST_RESULT = 'P'
+        ) S
+        ON (T.MEM_ID = S.MEM_ID)
+        WHEN MATCHED THEN UPDATE
+        SET ROOKIE = 1
+    </update>
+
+    <select id="selectCourseTypeById" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID, CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 22
+        <if test="courseTypeId != null and courseTypeId != ''">
+            AND CODE_ID = #{courseTypeId}
+        </if>
+    </select>
+
+</mapper>

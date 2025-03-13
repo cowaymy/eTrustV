@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.ResearchDevelopment.impl.AfterPEXTestResultListMapper">
+
+  <resultMap id="callasLogClobMap" type="egovMap">
+    <result property="callRem" column="CALL_REM" jdbcType="CLOB"
+      javaType="string" />
+  </resultMap>
+
+ <!-- SELECT START -->
+  <select id="searchPEXTestResultList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT
+
+        A.SO_EXCHG_ID AS SO_EXCHG_ID,
+        A.SO_ID AS SO_ID,
+        L.TEST_RESULT_STUS AS TEST_RESULT_STUS,
+        L.TEST_RESULT_ID AS TEST_RESULT_ID,
+        L.RCD_TMS AS RCD_TMS,
+        B.SALES_ORD_NO AS ORDER_NO,
+        N.CODE AS PEX_TEST_RESULT_STUS,
+        O.CODE_NAME AS PRODUCT_CATEGORY,
+        D.STK_CODE AS PRODUCT_CODE,
+        D.STK_DESC AS PRODUCT_NAME,
+        E.LAST_INSTALL_SERIAL_NO AS PROD_SERIAL_NO,
+        C.INSTALL_DT AS PEX_DATE,
+        NVL(FLOOR(MONTHS_BETWEEN(A.SO_EXCHG_CRT_DT, TO_DATE(E.FIRST_INSTALL_DT,'DD/MM/YYYY'))),'0') AS AS_AGING ,
+        E.LAST_INSTALL_CT_CODE AS CT_CODE,
+        E.LAST_INSTALL_CT_NAME AS CT_NAME,
+        E.DSC_CODE,
+        E.DSC_NAME,
+        G.DEFECT_DESC AS Problem_Symptom_Large ,
+        H.DEFECT_DESC AS Problem_Symptom_Small ,
+        I.DEFECT_DESC AS Defect_Part_Large ,
+        I.DEFECT_RMK AS Defect_Part_Small ,
+        J.CODE AS PEX_REASON_CODE,
+        J.RESN_DESC AS PEX_REASON_DESC,
+        K.SVC_NO AS RET_NO,
+        C.INSTALL_ENTRY_NO AS PEX_INS_NO,
+        L.TEST_RESULT_NO,
+        M.NAME AS CUST_NAME ,
+        L.TEST_RESULT_REM ,
+        L.TEST_SETTLE_DT,
+        L.AMP,
+        L.VOLTAGE,
+        E.INST_STATE,
+        E.INST_CITY,
+        E.INST_AREA,
+        L.PROD_GENUINE,
+        NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = L.CRT_USER_ID),L.CRT_USER_ID) CRT_USER_ID,
+        L.CRT_DT,
+        NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = L.UPD_USER_ID),L.UPD_USER_ID) UPD_USER_ID,
+        L.UPD_DT
+
+    FROM SAL0004D A
+    JOIN SAL0001D B ON B.SALES_ORD_ID = A.SO_ID
+    JOIN SAL0046D C ON C.INSTALL_ENTRY_ID = (SELECT MAX(INSTALL_ENTRY_ID) FROM SAL0046D WHERE SALES_ORD_ID = B.SALES_ORD_ID)
+    LEFT JOIN SYS0026M D ON D.STK_ID = C.INSTALL_STK_ID
+    LEFT JOIN SAL1010V E ON E.ORD_ID = A.SO_ID
+    LEFT JOIN SAL0265D F ON F.SO_EXCHG_ID = A.SO_EXCHG_ID
+    LEFT JOIN SYS0032M J ON J.RESN_ID = A.SO_EXCHG_RESN_ID
+    LEFT JOIN SVC0026T K ON K.SALES_ORD_ID = A.SO_ID
+    JOIN SVC0125D L ON L.SO_EXCHG_ID = A.SO_EXCHG_ID
+    LEFT JOIN SYS0100M G ON G.DEFECT_ID = L.PROB_LARGE_ID AND G.DEFECT_TYP = 'DD'
+    LEFT JOIN SYS0100M H ON H.DEFECT_ID = L.PROB_SMALL_ID AND H.DEFECT_TYP = 'DC'
+    LEFT JOIN SYS0100M I ON I.DEFECT_ID = L.DEF_LARGE_ID AND I.DEFECT_TYP = 'DP'
+    LEFT JOIN SAL0029D M ON M.CUST_ID = B.CUST_ID
+    LEFT JOIN SYS0038M N ON N.STUS_CODE_ID = L.TEST_RESULT_STUS
+    LEFT JOIN SYS0013M O ON O.CODE_ID = D.STK_CTGRY_ID AND O.CODE_MASTER_ID = 11
+    LEFT JOIN SYS0047M P ON P.USER_ID = L.CRT_USER_ID AND P.USER_ID = L.UPD_USER_ID
+
+        WHERE 1=1
+        AND L.TEST_RESULT_STUS != '8'
+        <if test="PEXTRStatus != null and PEXTRStatus != '' ">
+            AND L.TEST_RESULT_STUS IN
+            <foreach item="item" collection="PEXTRStatus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+            AND E.DSC_CODE IN
+            <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+       <if test="cmbCategoryList != null and cmbCategoryList != '' ">
+            AND D.STK_CTGRY_ID IN
+            <foreach item="item" collection="cmbCategoryList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+       </if>
+
+       <if test="ProductList != null and ProductList != '' ">
+            AND D.STK_ID IN
+            <foreach item="item" collection="ProductList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+       </if>
+
+       <if test=" settleDtFrm  != null  and settleDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(L.TEST_SETTLE_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{settleDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+       <if test="settleDtTo != null   and settleDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(L.TEST_SETTLE_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{settleDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+       <if test="orderNum != null and orderNum != '' ">
+            AND  B.SALES_ORD_NO = #{orderNum}
+       </if>
+       <if test="TestResultNo != null and TestResultNo != '' ">
+            AND  L.TEST_RESULT_NO = #{TestResultNo}
+       </if>
+
+       ORDER BY L.TEST_RESULT_NO
+  </select>
+
+  <select id="getPEXTestResultInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+    S.SO_EXCHG_ID SO_EXCHG_ID,
+    S.SO_ID SO_ID,
+    S.TEST_RESULT_STUS TEST_RESULT_STUS,
+    S.TEST_RESULT_ID TEST_RESULT_ID,
+    S.TEST_RESULT_NO TEST_RESULT_NO,
+    S.TEST_RESULT_REM TEST_RESULT_REM,
+    S.TEST_SETTLE_DT TEST_SETTLE_DT,
+    S.TEST_SETTLE_TIME TEST_SETTLE_TIME,
+    S.PEX_INS_ID PEX_INS_ID,
+    S.AMP AMP ,
+    S.VOLTAGE VOLTAGE,
+    S.PROD_GENUINE PROD_GENUINE,
+    S.TEST_RESULT_STUS TEST_RESULT_STUS,
+    S.CT_ID CT_ID,
+    S.CT_CODE CT_CODE,
+    S.CT_NAME CT_NAME,
+    S.DSC_ID,
+    S.DSC_CODE,
+    S.DSC_NAME,
+    S.CRT_USER_ID CRT_USER_ID,
+    S.CRT_DT CRT_DT,
+    S.UPD_USER_ID UPD_USER_ID,
+    S.UPD_DT UPD_DT,
+    S.PROB_LARGE_ID PROB_LARGE_ID,
+    S.PROB_LARGE_CODE PROB_LARGE_CODE,
+    S.Problem_Symptom_Large Problem_Symptom_Large ,
+    S.PROB_SMALL_ID PROB_SMALL_ID,
+    S.PROB_SMALL_CODE PROB_SMALL_CODE,
+    S.Problem_Symptom_Small Problem_Symptom_Small ,
+    S.DEF_LARGE_ID DEF_LARGE_ID,
+    S.DEF_LARGE_CODE DEF_LARGE_CODE,
+    S.Defect_Part_Large Defect_Part_Large ,
+    S.RCD_TMS,
+    S.PROD_CAT PROD_CAT,
+    S.PROD_CDE PROD_CDE
+
+    FROM ( SELECT
+
+        A.SO_EXCHG_ID SO_EXCHG_ID,
+        B.SO_ID SO_ID,
+        A.TEST_RESULT_STUS PEX_STUS_ID,
+        A.TEST_RESULT_ID TEST_RESULT_ID,
+        A.TEST_RESULT_NO TEST_RESULT_NO,
+        A.TEST_RESULT_REM TEST_RESULT_REM,
+        TO_CHAR(A.TEST_SETTLE_DT,'DD/MM/YYYY') AS TEST_SETTLE_DT,
+        A.TEST_SETTLE_TIME TEST_SETTLE_TIME,
+        A.PEX_INS_ID PEX_INS_ID,
+        A.AMP AMP ,
+        A.VOLTAGE VOLTAGE,
+        A.PROD_GENUINE AS PROD_GENUINE,
+        A.TEST_RESULT_STUS TEST_RESULT_STUS,
+        K.CT_ID CT_ID,
+        E.LAST_INSTALL_CT_CODE AS CT_CODE,
+        E.LAST_INSTALL_CT_NAME AS CT_NAME,
+        E.DSC_ID,
+        E.DSC_CODE,
+        E.DSC_NAME,
+        NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID),A.CRT_USER_ID) CRT_USER_ID,
+        TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+        NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.UPD_USER_ID),A.UPD_USER_ID) UPD_USER_ID,
+        TO_CHAR(A.UPD_DT,'DD/MM/YYYY') AS UPD_DT,
+        G.DEFECT_ID AS PROB_LARGE_ID,
+        G.DEFECT_CODE AS PROB_LARGE_CODE,
+        G.DEFECT_DESC AS Problem_Symptom_Large ,
+        H.DEFECT_ID AS PROB_SMALL_ID,
+        H.DEFECT_CODE AS PROB_SMALL_CODE,
+        H.DEFECT_DESC AS Problem_Symptom_Small ,
+        I.DEFECT_ID AS DEF_LARGE_ID,
+        I.DEFECT_CODE AS DEF_LARGE_CODE,
+        I.DEFECT_DESC AS Defect_Part_Large ,
+        A.RCD_TMS RCD_TMS,
+        M.CODE AS PROD_CAT,
+        L.STK_CODE AS PROD_CDE
+
+           FROM SVC0125D A
+           JOIN SAL0004D B ON B.SO_EXCHG_ID = A.SO_EXCHG_ID
+           JOIN SAL0001D D ON D.SALES_ORD_ID = B.SO_ID
+           LEFT JOIN SYS0038M C ON C.STUS_CODE_ID = A.TEST_RESULT_STUS
+           LEFT JOIN SAL1010V E ON E.ORD_ID = B.SO_ID
+           LEFT JOIN SAL0265D F ON F.SO_EXCHG_ID = B.SO_EXCHG_ID
+           LEFT JOIN SYS0100M G ON G.DEFECT_ID = A.PROB_LARGE_ID AND G.DEFECT_TYP = 'DD'
+           LEFT JOIN SYS0100M H ON H.DEFECT_ID = A.PROB_SMALL_ID AND H.DEFECT_TYP = 'DC'
+           LEFT JOIN SYS0100M I ON I.DEFECT_ID = A.DEF_LARGE_ID AND I.DEFECT_TYP = 'DP'
+           LEFT JOIN SYS0005M J ON J.BRNCH_ID = D.BRNCH_ID
+           JOIN SAL0046D K ON K.INSTALL_ENTRY_ID = B.INSTALL_ENTRY_ID
+           LEFT JOIN SYS0026M L ON L.STK_ID = K.INSTALL_STK_ID
+           LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID AND M.CODE_MASTER_ID = 11
+
+           WHERE
+           A.TEST_RESULT_ID = (SELECT TEST_RESULT_ID FROM SVC0125D WHERE TEST_RESULT_NO = #{TEST_RESULT_NO})
+           AND ROWNUM   <![CDATA[<= ]]> 1 ) S
+  </select>
+
+  <select id="getDTAIL_DEFECT_List" parameterType="Map" resultType="egovMap">
+    <![CDATA[ SELECT CODE AS  CODE_ID
+                   , CODE_DESC AS CODE_NAME
+              FROM SVC0060C
+    ]]>
+  </select>
+
+  <select id="getDEFECT_PART_List" parameterType="Map" resultType="egovMap">
+   <![CDATA[
+     SELECT CONDI_CODE AS CODE_ID
+          , DTL AS CODE_NAME
+     FROM SVC0059M
+    ]]>
+  </select>
+
+  <select id="getDEFECT_CODE_List" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT DEFECT_CODE AS CODE_ID
+           , DEFECT_DESC AS CODE_NAME
+      FROM SVC0058C
+    ]]>
+  </select>
+
+  <select id="selRcdTms" parameterType="Map" resultType="int">
+  SELECT COUNT(*) COUNT
+    FROM SVC0125D
+    WHERE TEST_RESULT_ID = #{testResultId}
+      AND TEST_RESULT_NO = #{testResultNo}
+      AND SO_EXCHG_ID = #{soExchgId}
+      AND RCD_TMS = #{rcdTms}
+  </select>
+
+  <update id="chkRcdTms" parameterType="Map">
+    UPDATE SVC0125D
+    SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE TEST_RESULT_ID = #{testResultId}
+      AND TEST_RESULT_NO = #{testResultNo}
+      AND RCD_TMS = #{rcdTms}
+  </update>
+
+    <select id="isPEXAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
+    <![CDATA[
+      SELECT COUNT(TEST_RESULT_ID)
+      FROM SVC0125D
+      WHERE  TEST_RESULT_NO =#{testResultNo} AND TEST_RESULT_STUS NOT IN ('1', '19')
+    ]]>
+  </select>
+
+    <update id="updatePEXTestResult" parameterType="Map">
+    UPDATE SVC0125D
+    SET TEST_RESULT_STUS = #{TEST_RESULT_STUS}
+     , TEST_SETTLE_DT = TO_DATE(#{TEST_SETTLE_DT}, 'DD/MM/YYYY')
+     , TEST_RESULT_REM = #{TEST_RESULT_REM}
+     , AMP = #{AMP}
+     , VOLTAGE = #{VOLTAGE}
+     , PROD_GENUINE = #{PROD_GENUINE}
+     , TEST_SETTLE_TIME = #{TEST_SETTLE_TIME}
+     , DEF_LARGE_ID = #{PEX_DEFECT_PART_ID}
+     , PROB_LARGE_ID = #{PEX_DEFECT_DTL_RESN_ID}
+     , PROB_SMALL_ID = #{PEX_DEFECT_ID}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updator}
+    WHERE TEST_RESULT_ID = #{TEST_RESULT_ID}
+  </update>
+
+  </mapper>

@@ -1,0 +1,2740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
+  <select id="StockMovementReqstChk" parameterType="Map" resultType="String">
+    SELECT REF_DOC_NO
+    FROM LOG0047M
+    WHERE REQST_NO = #{smoNo}
+      AND REQST_TYPE_DTL = 'OD01'
+  </select>
+
+  <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
+    SELECT DELVRY_NO,
+           DELVRY_DT,
+           DELVRY_GI_DT,
+           DELVRY_GR_DT,
+           NVL(DELVRY_CMPLT,'N') DEL_CMPLT,
+           NVL(DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT,
+           NVL(DELVRY_GR_CMPLT,'N') DEL_GR_CMPLT
+    FROM LOG0054M
+    WHERE DELVRY_NO=#{delNo}
+  </select>
+
+  <select id="getInventoryOnHandStockNoSerial" parameterType="Map" resultType="egovMap">
+    SELECT L56.LOC_ID,
+           L56.STK_CODE PARTS_CODE,
+           L56.STK_DESC PARTS_NAME,
+           L56.STK_TYPE_ID PARTS_TYPE,
+           L56.STK_CTGRY_ID,
+           L56.QTY STOCK_QTY,
+           WH_LOC_DESC,
+           QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
+           S26.STK_ID PARTS_ID,
+           ( SELECT WH_LOC_ID
+             FROM SYS0028M
+             WHERE WH_LOC_CODE = S28.rdc_code) rdc_code
+    FROM LOG0056M L56,
+         SYS0028M S28,
+         SYS0026m S26,
+         ( SELECT l75.loc_id,
+                  l75.itm_code,
+                  SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+           FROM LOG0075M l75
+           WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+             AND l75.reqst_no IN (SELECT reqst_no
+                                  FROM LOG0047M
+                                  WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+    GROUP BY l75.loc_id, l75.itm_code) L75
+    WHERE 1=1
+    AND L56.LOC_ID = S28.WH_LOC_ID
+    AND L56.STK_CODE = S26.STK_CODE
+    AND L56.STK_CODE = L75.ITM_CODE(+)
+    AND L56.LOC_ID = L75.LOC_ID(+)
+    <!-- AND L56.QTY > 0  -->
+    AND S28.WH_LOC_ID = (SELECT WH_LOC_ID
+                         FROM SYS0028M
+                         WHERE WH_LOC_CODE = #{userId})
+    ORDER BY L56.STK_CODE
+  </select>
+
+  <select id="getInventoryOnHandStock" parameterType="Map" resultType="egovMap">
+    SELECT /*+ leading(S28) use_nl(L56 L75) */
+           L56.LOC_ID,
+           L56.STK_CODE PARTS_CODE,
+           L56.STK_DESC PARTS_NAME,
+           L56.STK_TYPE_ID PARTS_TYPE,
+           L56.STK_CTGRY_ID,
+           <!-- QTY STOCK_QTY, -->
+           nvl((CASE WHEN L63.SERIAL_NO IS NOT NULL THEN 1 ELSE QTY END),0)STOCK_QTY,
+           WH_LOC_DESC,
+           L63.SERIAL_NO SERIAL_NO,
+           T1.REF_DOC_NO SERVICE_NO,
+           QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
+           S26.STK_ID PARTS_ID,
+           (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
+    FROM LOG0056M L56,
+         SYS0028M S28,
+         LOG0063D L63,
+         SYS0026m S26,
+         (SELECT L61.SERIAL_NO,
+                 L61.DELVRY_NO,
+                 L47.REQST_NO,
+                 L47.REF_DOC_NO
+          FROM LOG0061D L61, LOG0055D L55, LOG0047M L47
+          WHERE NVL (L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y' AND L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
+         ( SELECT l75.loc_id,
+                  l75.itm_code,
+                  SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+           FROM log0075m l75
+           WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+             AND l75.reqst_no IN (SELECT reqst_no
+                                  FROM log0047m
+                                  WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+           GROUP BY l75.loc_id, l75.itm_code) L75
+    WHERE 1 = 1
+      AND L63.SERIAL_NO = T1.SERIAL_NO(+)
+      AND L56.STK_CODE = L63.MATNR(+)
+      AND L56.LOC_ID = L63.LOC_ID(+)
+      AND L56.STK_CODE = L75.ITM_CODE(+)
+      AND L56.LOC_ID = L75.LOC_ID(+)
+      AND L56.STK_CODE =S26.STK_CODE
+      AND L56.LOC_ID = S28.WH_LOC_ID
+      <!-- AND L56.QTY > 0  -->
+      AND S28.WH_LOC_ID = (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = #{userId})
+
+    <if test="searchType == 1 ">
+      AND L56.STK_CODE = #{searchKeyword}
+    </if>
+    <if test="searchType == 2 ">
+      AND UPPER(L56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+    </if>
+    GROUP BY L56.LOC_ID,L56.STK_CODE,L56.STK_DESC,L56.STK_TYPE_ID, L56.STK_CTGRY_ID,QTY,WH_LOC_DESC,L63.SERIAL_NO,T1.REF_DOC_NO,QTY - NVL (L75.BOOKING_QTY, 0) ,S26.STK_ID,S28.rdc_code
+    ORDER BY L56.STK_CODE
+  </select>
+
+  <select id="getUserFilterList"  resultType="egovMap">
+    <if test="querytype eq 'sum'.toString() ">
+      SELECT NVL(SUM (tobe_Change_Qty),0) total_Tobe_Change_Qty,
+                 NVL(SUM (shortageQty),0) total_Shortage_Qty ,
+                 NVL(SUM (on_Hand_Stock_Qty),0) total_Qty
+      FROM (
+
+      </if>
+        SELECT FILTERID parts_Id,
+                   BS_RESULT_PART_ID,
+                   BOM_COMPNT parts_Code,
+                   FILTERNM parts_Name,
+                   COMPNT_QTY,
+                   BOM,
+                   SUM (BS_RESULT_PART_QTY) tobe_Change_Qty,
+                   SUM (QTY) on_Hand_Stock_Qty,
+                   CASE WHEN (SUM (QTY) - SUM (BS_RESULT_PART_QTY)) * -1 <![CDATA[>]]> 0 THEN 'Y'
+                                                                                                                                  ELSE 'N' END shortage_Y_N,
+                   ALTERNATIVEYN alternative_Y_N,
+                   WH_LOC_ID rdc_Code,
+                   CASE WHEN (SUM (QTY) - SUM (BS_RESULT_PART_QTY)) * -1 <![CDATA[>]]> 0 THEN (SUM (QTY) - SUM (BS_RESULT_PART_QTY)) * -1
+                                                                                                                                  ELSE 0 END shortageQty,
+                   NAME target_User_Name,
+                   MEM_CODE target_User_Id
+        FROM ( SELECT BOM.BOM,
+                              S01.SALES_ORD_ID,
+                              S01.SALES_ORD_NO,
+                              BOM.FILTERID,
+                              BOM.BOM_COMPNT,
+                              BOM.FILTERNM,
+                              COMPNT_QTY,
+                              RAN,
+                              CASE WHEN RAN <![CDATA[> ]]> 1 THEN 'Y' ELSE 'N' END ALTERNATIVEYN,
+                              SVC.BS_RESULT_PART_ID,
+                              SVC.BS_RESULT_PART_QTY,
+                              WH_LOC_ID,
+                              SVC.YEAR,
+                              SVC.MONTH,
+                              NVL (BAL.QTY, 0) QTY,
+                              SVC.NAME,
+                              SVC.MEM_CODE
+                   FROM ( SELECT S01.*
+                              FROM SAL0001D S01, SAL0071D S71
+                              WHERE S01.SALES_ORD_ID = S71.SALES_ORD_ID(+)
+                                  AND ( (S01.APP_TYPE_ID = '66'
+                                  AND S71.STUS_CODE_ID = 'REG')
+                                  OR (S01.APP_TYPE_ID <![CDATA[<> ]]> '66'))) S01,
+                            SAL0002D S02,
+                            SAL0090D S90,
+                            SAL0087D S87,
+                            ( SELECT L44.BOM,
+                                         S26.STK_ID,
+                                         S26.STK_CODE,
+                                         S26F.STK_ID FILTERID,
+                                         L44.BOM_COMPNT,
+                                         S26F.STK_DESC FILTERNM,
+                                         L44.COMPNT_QTY,
+                                         RANK () OVER (PARTITION BY L44.BOM, L44.ALTER_ITM_GRP
+                                                     ORDER BY L44.USE_PROBABILTIY) AS RAN
+                              FROM SYS0026M S26,
+                                       LOG0043M L43,
+                                       LOG0044D L44,
+                                       SYS0026M S26F
+                              WHERE 1 = 1
+                                  AND S26F.STK_CODE = L44.BOM_COMPNT
+                                  AND S26.STK_CODE = L43.MATRL_NO
+                                  AND L43.BOM = L44.BOM) BOM,
+                            ( SELECT S06.RESULT_ID,
+                                         S06.NO,
+                                         S06.SCHDUL_ID,
+                                         S06.SALES_ORD_ID,
+                                         S08.CODY_ID,
+                                         S07.BS_RESULT_PART_ID,
+                                         BS_RESULT_PART_DESC,
+                                         BS_RESULT_PART_QTY,
+                                         S08.YEAR,
+                                         S08.MONTH,
+                                         S26.STK_CODE,
+                                         S28.WH_LOC_CODE,
+                                         S28.WH_LOC_ID,
+                                         O01.NAME,
+                                         O01.MEM_CODE
+                              FROM SVC0006D S06,
+                                      SVC0007D S07,
+                                      SVC0008D S08,
+                                      SYS0026M S26,
+                                      ORG0001D O01,
+                                      SYS0047M S47,
+                                      SYS0028M S28
+                              WHERE 1 = 1
+                                  AND S08.SCHDUL_ID = S06.SCHDUL_ID
+                                  AND S07.BS_RESULT_ID = S06.RESULT_ID
+                                  AND S07.BS_RESULT_PART_ID = S26.STK_ID
+                                  AND S26.STK_TYPE_ID = 62
+                                  AND O01.MEM_ID = S08.CODY_ID
+                                  AND S28.WH_LOC_CODE = O01.MEM_CODE
+                                  AND S47.USER_NAME = S28.WH_LOC_CODE
+                                  AND S47.USER_NAME = #{userId}) SVC,
+                             LOG0056M BAL
+                             WHERE 1 = 1
+                                 AND SVC.STK_CODE = BAL.STK_CODE(+)
+                                 AND SVC.WH_LOC_ID = BAL.LOC_ID(+)
+                                 AND S87.SRV_FILTER_STK_ID = BOM.FILTERID
+                                 AND S87.SRV_FILTER_STK_ID = SVC.BS_RESULT_PART_ID
+                                 AND S02.ITM_STK_ID = BOM.STK_ID
+                                 AND S01.SALES_ORD_ID = SVC.SALES_ORD_ID
+                                 AND S01.SALES_ORD_ID = S02.SALES_ORD_ID
+                                 AND S01.SALES_ORD_ID = S90.SRV_SO_ID
+                                 AND S90.SRV_CONFIG_ID = S87.SRV_CONFIG_ID
+                                 AND S87.SRV_FILTER_STUS_ID = '1'
+
+                                <if test="partsCode != null and partsCode !=''">
+                                  AND BOM.BOM_COMPNT=#{partsCode}
+                                </if>
+
+                                <if test="partsId != null and partsId !=''">
+                                  AND BOM.FILTERID=#{partsId}
+                                </if>
+
+                                <if test="searchFromDate !=null and searchFromDate !=''">
+                                  AND TO_CHAR (ADD_MONTHS (S87.SRV_FILTER_PRV_CHG_DT, S87.SRV_FILTER_PRIOD), 'yyyymmdd') BETWEEN #{searchFromDate}
+                                </if>
+
+                                <if test="searchToDate !=null and searchToDate !=''">
+                                  AND #{searchToDate}
+                                </if>
+                            ) T GROUP BY BOM,
+                                                FILTERID,
+                                                BS_RESULT_PART_ID,
+                                                BOM_COMPNT,
+                                                FILTERNM,
+                                                COMPNT_QTY,
+                                                ALTERNATIVEYN,
+                                                WH_LOC_ID,
+                                                NAME,
+                                                MEM_CODE
+
+    <if test="querytype eq 'sum'.toString() ">
+      )
+    </if>
+  </select>
+
+  <select id="getFilterChangeList"  resultType="egovMap">
+    <if test="querytype eq 'sum'.toString() ">
+      select NVL(SUM(tobe_Change_Qty),0) total_Tobe_Change_Qty,NVL(SUM(totalShortageQty),0) total_Shortage_Qty  from (
+    </if>
+
+    SELECT <!-- SALES_ORD_ID , SALES_ORD_NO , FILTERID PARTSID ,BS_RESULT_PART_ID , BOM_COMPNT PARTSCD , FILTERNM PARTSNM , COMPNT_QTY TOBECHNAGEQTY , ALTERNATIVEYN, YEAR , MONTH,  BS_RESULT_PART_QTY , QTY -->
+               FILTERID parts_Id ,
+               BS_RESULT_PART_ID ,
+               BOM_COMPNT parts_Code ,
+               FILTERNM parts_Name ,
+               COMPNT_QTY,
+               BOM ,
+               SUM(BS_RESULT_PART_QTY) tobe_Change_Qty ,
+               SUM(QTY) on_Hand_Stock_Qty ,
+               CASE WHEN (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1 > 0 THEN 'Y'
+                                                                                                       ELSE 'N' END shortage_Y_N ,
+               ALTERNATIVEYN alternative_Y_N,
+               WH_LOC_ID  rdc_Code,
+               CASE WHEN (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1 > 0 THEN  (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1
+                                                                                                       ELSE 0 END totalShortageQty
+    FROM ( SELECT BOM.BOM ,
+                          S01.SALES_ORD_ID ,
+                          S01.SALES_ORD_NO ,
+                          BOM.FILTERID ,
+                          BOM.BOM_COMPNT ,
+                          BOM.FILTERNM ,
+                          COMPNT_QTY ,
+                          RAN ,
+                          CASE WHEN RAN > 1 THEN 'Y'
+                                  ELSE 'N' END ALTERNATIVEYN,
+                          SVC.BS_RESULT_PART_ID ,
+                          SVC.BS_RESULT_PART_QTY ,
+                          WH_LOC_ID, \
+                          SVC.YEAR ,
+                          SVC.MONTH,
+                          NVL(BAL.QTY , 0) QTY
+               FROM ( SELECT S01.*
+                          FROM SAL0001D S01,
+                                   SAL0071D S71
+                          WHERE S01.SALES_ORD_ID = S71.SALES_ORD_ID(+)
+                              AND ((S01.APP_TYPE_ID = '66' AND S71.STUS_CODE_ID = 'REG')
+                              OR (S01.APP_TYPE_ID <![CDATA[<>]]> '66'))) S01,
+                        SAL0002D S02,
+                        SAL0090D S90,
+                        SAL0087D S87,
+                        ( SELECT L44.BOM ,
+                                     S26.STK_ID,
+                                     S26.STK_CODE,
+                                     S26F.STK_ID FILTERID,
+                                     L44.BOM_COMPNT,
+                                     S26F.STK_DESC FILTERNM,
+                                     L44.COMPNT_QTY,
+                                     RANK () OVER (PARTITION BY L44.BOM,
+                                                                               L44.ALTER_ITM_GRP
+                                                          ORDER BY L44.USE_PROBABILTIY) AS RAN
+                          FROM SYS0026M S26,
+                                   LOG0043M L43,
+                                   LOG0044D L44,
+                                   SYS0026M S26F
+                          WHERE 1 = 1
+                              AND S26F.STK_CODE = L44.BOM_COMPNT
+                              AND S26.STK_CODE = L43.MATRL_NO
+                              AND L43.BOM = L44.BOM) BOM,
+                        ( SELECT S06.RESULT_ID ,
+                                     S06.NO ,
+                                     S06.SCHDUL_ID ,
+                                     S06.SALES_ORD_ID ,
+                                     S08.CODY_ID ,
+                                     S07.BS_RESULT_PART_ID ,
+                                     BS_RESULT_PART_DESC ,
+                                     BS_RESULT_PART_QTY ,
+                                     S08.YEAR ,
+                                     S08.MONTH ,
+                                     S26.STK_CODE,
+                                     S28.WH_LOC_CODE ,
+                                     S28.WH_LOC_ID
+                          FROM SVC0006D S06
+                                 , SVC0007D S07
+                                 , SVC0008D S08
+                                 , SYS0026M S26
+                                 , ORG0001D O01
+                                 , SYS0047M S47
+                                 , SYS0028M S28
+                          WHERE 1 = 1
+                              AND S08.SCHDUL_ID    = S06.SCHDUL_ID
+                              AND S07.BS_RESULT_ID = S06.RESULT_ID
+                              AND S07.BS_RESULT_PART_ID = S26.STK_ID
+                              AND S26.STK_TYPE_ID = 62
+                              <!-- AND S08.STUS_CODE_ID = '1' -->
+                              AND O01.MEM_ID = S08.CODY_ID
+                              AND S28.WH_LOC_CODE = O01.MEM_CODE
+                              AND S47.USER_NAME = S28.WH_LOC_CODE
+                              AND S47.USER_NAME = #{userId}
+                        ) SVC,
+                        LOG0056M BAL
+                        WHERE 1 = 1
+                            AND SVC.STK_CODE = BAL.STK_CODE (+)
+                            AND SVC.WH_LOC_ID         = BAL.LOC_ID (+)
+                            AND S87.SRV_FILTER_STK_ID = BOM.FILTERID
+                            AND S87.SRV_FILTER_STK_ID = SVC.BS_RESULT_PART_ID
+                            AND S02.ITM_STK_ID   = BOM.STK_ID
+                            AND S01.SALES_ORD_ID = SVC.SALES_ORD_ID
+                            AND S01.SALES_ORD_ID = S02.SALES_ORD_ID
+                            AND S01.SALES_ORD_ID = S90.SRV_SO_ID
+                            AND S90.SRV_CONFIG_ID = S87.SRV_CONFIG_ID
+                            AND S87.SRV_FILTER_STUS_ID = '1'
+
+                            <if test="searchFromDate !=null and searchFromDate !=''">
+                              AND TO_CHAR (ADD_MONTHS (S87.SRV_FILTER_PRV_CHG_DT, S87.SRV_FILTER_PRIOD), 'yyyymmdd') BETWEEN #{searchFromDate}
+                            </if>
+
+                            <if test="searchToDate !=null and searchToDate !=''">
+                              AND #{searchToDate}
+                            </if>
+    ) T GROUP BY BOM ,
+                        FILTERID ,
+                        BS_RESULT_PART_ID,
+                        BOM_COMPNT,
+                        FILTERNM,
+                        COMPNT_QTY,
+                        ALTERNATIVEYN,
+                        WH_LOC_ID
+
+    <if test="querytype eq 'sum'.toString() ">
+      )
+    </if>
+    <!-- WHERE ALTERNATIVEYN <> 'N' -->
+  </select>
+
+  <select id="getFilterNotChangeList"  resultType="egovMap">
+    SELECT
+
+               <if test="querytype eq 'sum'.toString() ">
+                 NVL(SUM (BS_RESULT_PART_QTY),0) total_Tobe_Change_Qty
+               </if>
+
+               <if test="querytype eq 'list'.toString() ">
+                  BS_RESULT_PART_ID parts_Id,
+                  STK_CODE parts_Code,
+                  STK_DESC parts_Name,
+                  to_char(BS_RESULT_CRT_DT,'YYYYMMDD') fail_Date,
+                  SALES_ORD_NO order_No,
+                  NAME cust_Name,
+                  MEM_CODE,
+                  RDC_CODE rdcCode,
+                  WH_LOC_ID rdc_Code
+               </if>
+
+    FROM ( SELECT S7.BS_RESULT_PART_ID ,
+                          S26.STK_CODE ,
+                          S26.STK_DESC ,
+                          S7.BS_RESULT_CRT_DT ,
+                          S1.SALES_ORD_NO ,
+                          S29.NAME ,
+                          O1.MEM_CODE,
+                          S28.RDC_CODE ,
+                          S7.BS_RESULT_PART_QTY,
+                          S28.WH_LOC_ID
+               FROM SVC0006D S6 ,
+                        SVC0007D S7 ,
+                        SVC0008D S8 ,
+                        SAL0001D S1 ,
+                        SAL0029D S29 ,
+                        SYS0026M S26 ,
+                        SYS0028M S28 ,
+                        ORG0001D O1
+               WHERE 1 = 1
+                   AND O1.MEM_CODE = S28.WH_LOC_CODE
+                   AND S8.CODY_ID = O1.MEM_ID
+                   AND S1.CUST_ID = S29.CUST_ID
+                   AND S6.SALES_ORD_ID = S1.SALES_ORD_ID
+                   AND S7.BS_RESULT_PART_ID = S26.STK_ID
+                   AND S8.SCHDUL_ID    = S6.SCHDUL_ID
+                   AND S7.BS_RESULT_ID = S6.RESULT_ID
+                   AND S26.STK_TYPE_ID = 62
+                   AND S8.STUS_CODE_ID = 21
+                   AND S7.BS_RESULT_PART_ID > 0
+                   AND O1.MEM_CODE = #{userId}
+
+                   <if test="searchFromDate !=null and searchFromDate !=''">
+                     AND S7.BS_RESULT_CRT_DT BETWEEN TO_DATE(#{searchFromDate}||'000000' , 'YYYYMMDDHH24MISS')
+                   </if>
+
+                   <if test="searchToDate !=null and searchToDate !=''">
+                     AND TO_DATE(#{searchToDate}||'235959' , 'YYYYMMDDHH24MISS')
+                   </if>
+                   <!-- AND S7.BS_RESULT_CRT_DT BETWEEN TO_DATE('20140411'||'000000' , 'YYYYMMDDHH24MISS') AND TO_DATE('20140417'||'235959' , 'YYYYMMDDHH24MISS') -->
+    )
+  </select>
+
+  <select id="getMiscPartList"  resultType="egovMap">
+     SELECT s26.stk_code parts_code,
+                s26.stk_id parts_id,
+                s26.stk_desc parts_name,
+                s26.stk_type_id part_type,
+                s16.AMT sales_price
+     FROM SYS0026M S26,
+              sal0016m s16
+     WHERE 1=1
+         AND S26.STK_ID = s16.STK_ID
+         AND S26.STK_TYPE_ID =64
+         AND S16.MEM_PAC_ID = 0
+         AND S16.APP_TYPE_ID = 69
+         AND S16.STUS_CODE_ID = 1
+  </select>
+
+  <select id="getUsedPartsList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+      SELECT ROW_NUMBER() OVER (PARTITION BY l82.SVC_ORD_ID, l82.STK_ID ORDER BY l82.SEQ DESC) AS RN,
+                 L82.SVC_ORD_ID SERVICE_NO,
+                 L82.STK_ID PARTS_ID,
+                 S26.STK_CODE PARTS_CODE,
+                 S26.STK_DESC PARTS_NAME,
+                 S29.NAME CUST_NAME,
+                 L82.QTY USED_QTY,
+                 S01.SALES_ORD_NO,
+                 ( SELECT CODE_NAME
+                   FROM SYS0013M
+                   WHERE CODE_ID=s26.UOM) CURRENCY,
+                 L82.OLD_SERIAL SERIAL_NO
+      FROM LOG0082M L82,
+               SVC0008D S08,
+               ORG0001D O01,
+               SYS0026M S26,
+               SAL0029D S29,
+               SAL0001d S01
+      WHERE 1 = 1
+          AND S08.CODY_ID = O01.MEM_ID
+          AND L82.STK_ID = S26.STK_ID
+          AND O01.MEM_CODE = #{userId}
+          AND L82.SVC_ORD_ID = S08.NO
+          AND L82.CUST_ID = S29.CUST_ID
+          AND S08.SALES_ORD_ID = S01.SALES_ORD_ID
+
+       <if test="searchType == 1 ">
+         AND NVL(L82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'N'
+       </if>
+
+        <if test="searchType == 2 ">
+          AND NVL(L82.CMPLT_YN , 'N') <![CDATA[<> ]]> 'Y'
+        </if>
+
+        <if test="search2Type == 1 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            AND S01.SALES_ORD_NO = #{search2Inp}
+          </if>
+        </if>
+
+        <if test="search2Type == 2 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            AND S26.STK_CODE = #{search2Inp}
+          </if>
+        </if>
+
+         <if test="search2Type == 3 ">
+          <if test="search2Inp !=null and search2Inp !=''">
+            AND L82.SVC_ORD_ID = #{search2Inp}
+          </if>
+        </if>
+
+        <if test="searchFromDate !=null and searchFromDate !=''">
+         AND TO_CHAR (SVC_DT, 'YYYYMMDD')  BETWEEN #{searchFromDate}
+        </if>
+
+        <if test="searchToDate !=null and searchToDate !=''">
+          AND #{searchToDate}
+        </if>
+
+        <if test="searchSerialNo !=null and searchSerialNo !=''">
+          AND l82.OLD_SERIAL = #{searchSerialNo}
+        </if>
+
+    ) WHERE RN = '1'
+      AND USED_QTY > 0
+      ORDER BY SALES_ORD_NO,
+                     SERVICE_NO,
+                     PARTS_CODE
+  </select>
+
+  <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
+    select <!-- L47.REQST_NO, -->
+             L54.DELVRY_GI_DT GI_DATE,
+             L54.DELVRY_GR_DT GR_DATE,
+             L54.DELVRY_NO SMO_NO,
+             S28r.WH_LOC_DESC GI_LOCATION_NAME,
+             S28r.WH_LOC_CODE GI_LOCATION_CODE,
+             <!-- S28Q.WH_LOC_CODE LOCATION_CODE, -->
+             <!-- S28Q.WH_LOC_DESC, -->
+             DECODE (l47.PRIDIC_FRQNCY,'A', 'Auto','M', 'Manual',l47.PRIDIC_FRQNCY) REQ_TYPE,
+             NVL (S47.USER_FULL_NAME, L54.CRT_USER_ID) GI_CUST_NAME,
+              (CASE WHEN l54.DELVRY_GI_CMPLT = 'Y' AND l54.DELVRY_GR_CMPLT = 'Y' THEN 'C'
+                                                                                                                      ELSE 'P' END) req_Status,
+             ( SELECT WH_LOC_ID
+               FROM sys0028m
+               WHERE WH_LOC_CODE = S28r.rdc_code) rdc_code,
+             s28q.SERIAL_REQUIRE_CHK_YN,
+             L47.rciv_CDC_RDC as FROM_LOC_ID,
+             L47.REQST_CDC_RDC as TO_LOC_ID
+    from log0054m l54
+         , log0047m l47
+         , sys0028m s28q
+         , sys0028m s28r
+         , sys0047m s47
+         , (select distinct l48.reqst_no ,
+                                l55.delvry_no
+            from log0048d l48 ,
+                   log0055d l55
+            where L48.REQST_NO = l55.reqst_no
+               and l48.itm_code= l55.itm_code
+              AND NVL (l55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+         ) rd
+     where 1 = 1
+        and l47.reqst_no =  rd.reqst_no
+        and l54.delvry_no = rd.delvry_no
+        AND L54.CRT_USER_ID = S47.user_id(+)
+        and L47.rciv_CDC_RDC = to_char(s28r.wh_loc_id)
+        and L47.REQST_CDC_RDC = to_char(s28q.wh_loc_id)
+        <!-- AND L54.DELVRY_DT >= TO_CHAR (TO_DATE ('20171130', 'YYYY/MM/DD'), 'yyyymmdd') -->
+        <!-- AND L54.DELVRY_DT <= TO_CHAR (TO_DATE ('20171202', 'YYYY/MM/DD'), 'yyyymmdd') -->
+        AND l47.trnsc_type = 'UM'
+        AND NVL (L54.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+        AND NVL (L54.DELVRY_GI_CMPLT, 'N') <![CDATA[ <>]]> 'N'
+        and s28q.wh_loc_code = #{userId}
+
+        <if test="searchType == 1 ">
+            and l47.pridic_frqncy = 'A'
+        </if>
+
+        <if test="searchType == 2 ">
+            and l47.pridic_frqncy = 'M'
+        </if>
+
+        <if test="searchStatus == 1 ">
+           and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y'
+        </if>
+
+        <if test="searchStatus == 2 ">
+           and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'N'
+        </if>
+
+        <if test="searchFromDate !=null and searchFromDate !=''">
+          AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYYMMDD'),'yyyymmdd')
+        </if>
+
+        <if test="searchToDate !=null and searchToDate !=''">
+          AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd')
+        </if>
+
+    GROUP BY L54.DELVRY_GI_DT,
+                   L54.DELVRY_GR_DT,
+                   L54.DELVRY_NO,
+                   S28R.WH_LOC_DESC,
+                   S28R.WH_LOC_CODE,
+                   L47.PRIDIC_FRQNCY,
+                   S47.USER_FULL_NAME,
+                   L54.CRT_USER_ID,
+                   L54.DELVRY_GI_CMPLT,
+                   L54.DELVRY_GR_CMPLT,
+                   S28R.RDC_CODE,
+                   S28Q.SERIAL_REQUIRE_CHK_YN,
+                   L47.RCIV_CDC_RDC,
+                   L47.REQST_CDC_RDC
+  </select>
+
+  <select id="getRDCStockList" parameterType="Map" resultType="egovMap">
+    SELECT WH_LOC_ID ,
+               WH_LOC_CODE LOCATION_CODE ,
+               WH_LOC_DESC LOCATION_NAME,
+               WH_LOC_GB ,
+               CODE_NAME LOCATION_TYPE,
+               T3.STK_CODE PARTS_CODE,
+               T3.STK_DESC ,
+               QTY TOT_QTY,
+               NVL(QTY - T5.bookqty,0) BOOKING_QTY,
+               MOV_QTY INTRANSIT_QTY,
+               T3.STK_TYPE_ID,S26.STK_ID PARTS_ID,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= T1.rdc_code) rdc_code
+    FROM SYS0028M T1,
+             LOG0056M T3 ,
+             SYS0026m S26,
+             ( SELECT CDC_CODE,
+                          RDC_CODE
+               FROM SYS0028M A
+               WHERE WH_LOC_CODE = #{userId}) T2,
+             ( SELECT *
+               FROM SYS0013M
+               WHERE CODE_MASTER_ID = '339') T4,
+             ( SELECT loc_id ,
+                          itm_code ,
+                          sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty
+               from log0075m
+               where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
+                  AND reqst_no IN ( SELECT reqst_no
+                                            FROM log0047m
+                                            WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+                                            group by loc_id , itm_code ) T5
+    WHERE T1.WH_LOC_GB = T4.CODE
+        AND T1.WH_LOC_ID = T3.LOC_ID
+        AND T3.STK_CODE = T5.itm_code(+)
+        AND T1.WH_LOC_CODE IN (T2.CDC_CODE, T2.RDC_CODE)
+        AND T3.STK_CODE =S26.STK_CODE
+        AND S26.STK_TYPE_ID IN ('62','64','63')
+        AND T3.STK_CODE = #{partsCode}
+        AND S26.STK_ID=#{partsId}
+  </select>
+
+  <select id="getInventoryStockByHolder" parameterType="Map" resultType="egovMap">
+    SELECT ROWNUM RNUM ,
+           T.* FROM ( SELECT L56.LOC_ID ,
+                             S28.WH_LOC_CODE ,
+                             O01.NAME CT_CODY_NAME,
+                             O01.MEM_CODE CT_CODY_ID,
+                             BOM.BOM_COMPNT PARTS_CODE ,
+                             BOM.STK_DESC PARTS_NAME,
+                             (CASE WHEN L63.SERIAL_NO is not null THEN 1 ELSE L56.QTY END) STOCK_QTY,
+                             L63.SERIAL_NO SERIAL_NO,
+                             BOM.STK_ID PARTS_ID,
+                             (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = S28.RDC_CODE) rdc_code
+                      FROM SYS0028M S28
+                         , LOG0056M L56
+                         , LOG0063D L63
+                         , (SELECT L44.BOM_COMPNT ,
+                                   S26.STK_ID ,
+                                   S26.STK_DESC
+                            FROM LOG0043M L43,
+                                 LOG0044D L44 ,
+                                 SYS0026M S26
+                            WHERE 1 = 1
+                              AND L44.BOM_COMPNT = S26.STK_CODE
+                              AND L43.BOM = L44.BOM
+                            GROUP BY L44.BOM_COMPNT ,
+                                     S26.STK_ID ,
+                                     S26.STK_DESC ) BOM
+                         , ORG0001D O01
+    WHERE 1 =1
+      AND S28.WH_LOC_CODE = O01.MEM_CODE
+      AND L56.STK_CODE = L63.MATNR(+)
+      AND L56.LOC_ID = L63.LOC_ID(+)
+      AND L56.STK_CODE = BOM.BOM_COMPNT
+      AND S28.WH_LOC_ID = L56.LOC_ID
+      AND L56.STK_TYPE_ID IN (62, 63)
+      AND S28.RDC_CODE = (SELECT RDC_CODE FROM SYS0028M WHERE WH_LOC_CODE = #{userId})
+
+    <if test="searchType == 1 ">
+      AND BOM.BOM_COMPNT= #{searchKeyword}
+    </if>
+    <if test="searchType == 2 ">
+      AND UPPER(BOM.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+    </if>
+
+    ORDER BY L56.LOC_ID
+    ) T
+  </select>
+
+  <select id="getStockbyHolderList" parameterType="Map" resultType="egovMap">
+    SELECT O01.NAME CT_CODY_NAME,
+               O01.MEM_CODE CT_CODY_ID,
+               S28.CDC_CODE,
+               <!-- S28.RDC_CODE, -->
+               S28.WH_LOC_CODE LOGIN_CODE,
+               L56.STK_CODE,
+               S26.STK_ID STK_ID,
+               L56.QTY STOCK_QTY,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= S28.rdc_code) rdc_code
+    FROM ORG0001D O01,
+             SYS0028M S28,
+             LOG0056M L56,
+             SYS0026m S26
+    WHERE 1 = 1
+        AND O01.MEM_CODE = S28.WH_LOC_CODE
+        AND S28.WH_LOC_ID = L56.LOC_ID
+        AND L56.STK_CODE = S26.STK_CODE
+        AND L56.STK_TYPE_ID = S26.STK_TYPE_ID
+        AND L56.STK_CTGRY_ID = S26.STK_CTGRY_ID
+        <!-- AND O01.BRNCH= (SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_CODE = #{userId}) -->
+        AND S28.RDC_CODE = ( SELECT RDC_CODE
+                                          FROM SYS0028M
+                                          WHERE WH_LOC_CODE = #{userId})
+        AND L56.STK_CODE= #{partsCode}
+        AND S26.STK_ID=#{partsId}
+  </select>
+
+  <select id="getCommonQty" parameterType="Map" resultType="egovMap">
+     WITH CRDC AS ( SELECT WH_LOC_CODE,
+                                        CDC_CODE,
+                                        RDC_CODE
+                             FROM SYS0028M S28
+                             WHERE 1 = 1
+                                 AND S28.WH_LOC_CODE =#{userId}),
+                             L75 AS ( SELECT LOC_ID,
+                                                    ITM_CODE,
+                                                    SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+                                          FROM LOG0075M
+                                          WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+                                              AND reqst_no IN ( SELECT reqst_no
+                                                                        FROM log0047m
+                                                                        WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+                                                                        GROUP BY LOC_ID, ITM_CODE)
+    SELECT STK_CODE,
+               STK_DESC,
+               S28.WH_LOC_CODE,
+               S28.WH_LOC_GB,
+               DECODE (S28.WH_LOC_GB,
+                             '01', 'CDC',
+                             '02', 'RDC',
+                             '03', 'CT',
+                             '04', 'CODY',
+                             '05', 'CDC' || chr(38) || 'RDC',
+                             '09', 'DT',
+                             S28.WH_LOC_GB) LOCATION_TYPE,
+               CASE WHEN S28.WH_LOC_GB = '05' THEN NVL (WH_LOC_ID, 0)
+                       ELSE CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
+                                                                                                  ELSE NVL (WH_LOC_ID, 0) END
+                       ELSE WH_LOC_ID END END RDC_CODE,
+               NVL (QTY, 0),
+               CASE WHEN S28.WH_LOC_GB = '05' THEN NVL (BOOKQTY, 0)
+                       ELSE CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
+                                                                                                                         ELSE NVL (BOOKQTY, 0) END
+                       ELSE NVL (BOOKQTY, 0) END END BOOKQTY,
+               CASE WHEN S28.WH_LOC_GB = '05' THEN NVL(QTY - NVL (BOOKQTY, 0), 0)
+                       ELSE CASE WHEN S28.WH_LOC_CODE = CRDC.CDC_CODE THEN CASE WHEN CRDC.CDC_CODE = CRDC.RDC_CODE THEN 0
+                                                                                                                        ELSE  NVL(QTY - NVL (BOOKQTY, 0), 0) END
+                      ELSE NVL(QTY - NVL (BOOKQTY, 0), 0) END END AVAIL_QTY,
+               NVL (L56.MOV_QTY, 0) INTRANSIT_QTY,
+               ( SELECT WH_LOC_ID
+                  FROM SYS0028M
+                  WHERE WH_LOC_CODE = S28.RDC_CODE) LOC_ID
+    FROM LOG0056M L56,
+             SYS0028M S28,
+             L75,
+             CRDC
+    WHERE 1 = 1
+         AND L56.LOC_ID = L75.LOC_ID(+)
+         AND L56.STK_CODE = L75.ITM_CODE(+)
+         AND S28.WH_LOC_ID = L56.LOC_ID(+)
+         AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE,
+                                                   CRDC.RDC_CODE,
+                                                   CRDC.CDC_CODE)
+         AND #{partsCode} = L56.STK_CODE(+)
+  </select>
+
+<!--      <select id="getCommonQty" parameterType="Map" resultType="egovMap"> -->
+<!--        WITH CRDC -->
+<!--         AS (SELECT WH_LOC_CODE , CDC_CODE , RDC_CODE -->
+<!--                       FROM SYS0028M S28 -->
+<!--                      WHERE 1 = 1 AND S28.WH_LOC_CODE = #{userId} -->
+<!--             ) -->
+<!--            SELECT STK_CODE, -->
+<!--                   STK_DESC, -->
+<!--                   S28.WH_LOC_CODE, -->
+<!--                   S28.WH_LOC_GB, -->
+<!--                   DECODE (S28.WH_LOC_GB, -->
+<!--                     '01', 'CDC', -->
+<!--                     '02', 'RDC', -->
+<!--                     '03', 'CT', -->
+<!--                     '04', 'CODY', -->
+<!--                     '05', 'CDC', -->
+<!--                     S28.WH_LOC_GB) LOCATION_TYPE, -->
+<!--                   WH_LOC_DESC, -->
+<!--                   WH_LOC_ID rdc_code, -->
+<!--                   NVL(QTY , 0), -->
+<!--                   NVL (BOOKQTY, 0) BOOKQTY, -->
+<!--                   QTY -NVL(BOOKQTY , 0) AVAIL_QTY, -->
+<!--                   L75.MOV_QTY INTRANSIT_QTY, -->
+<!--                   NVL(L56.MOV_QTY,0) INTRANSIT_QTY, -->
+<!--                   (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) loc_id -->
+<!--              FROM LOG0056M L56, -->
+<!--                   SYS0028M S28, -->
+<!--                   (  SELECT LOC_ID, -->
+<!--                             ITM_CODE, -->
+<!--                             SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY -->
+<!--                        FROM LOG0075M -->
+<!--                       WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y' -->
+<!--                    GROUP BY LOC_ID, ITM_CODE) L75 , -->
+<!--                    CRDC -->
+<!--             WHERE     1 = 1 -->
+<!--                   AND L56.LOC_ID = L75.LOC_ID(+) -->
+<!--                   AND L56.STK_CODE = L75.ITM_CODE(+) -->
+<!--                   AND S28.WH_LOC_ID = L56.LOC_ID(+) -->
+<!--                   AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE) -->
+<!--                   AND #{partsCode} = L56.STK_CODE(+) -->
+<!--                   AND S28.WH_LOC_GB <![CDATA[<>]]> '05' -->
+<!--      </select>  -->
+
+  <select id="getCt_CodyList" parameterType="Map" resultType="egovMap">
+    SELECT O01.MEM_CODE CT_CODY_ID ,
+               O01.NAME CT_CODY_NAME,
+               ( SELECT WH_LOC_ID
+                 FROM SYS0028M
+                 WHERE WH_LOC_CODE = S28.RDC_CODE) RDC_CODE
+     FROM SYS0028M S28 , ORG0001D O01
+     WHERE 1 = 1
+         AND S28.WH_LOC_CODE = O01.MEM_CODE
+         AND S28.RDC_CODE = ( SELECT RDC_CODE
+                                           FROM SYS0028M
+                                           WHERE WH_LOC_CODE = #{userId})
+  </select>
+
+  <select id="getInventoryOverallStock" parameterType="Map" resultType="egovMap">
+    SELECT L56M.STK_CODE parts_Code,
+               S26M.STK_ID parts_Id,
+               L56M.STK_DESC parts_Name,
+               L56M.QTY stock_Qty,
+               L63D.SERIAL_NO serial_No,
+               S28M.WH_LOC_ID rdc_Code
+    FROM LOG0056M L56M,
+             SYS0026M S26M,
+             LOG0063D L63D,
+             SYS0028M S28M
+    WHERE 1=1
+        AND L56M.STK_CODE=S26M.STK_CODE
+        AND L56M.STK_TYPE_ID = S26M.STK_TYPE_ID
+        AND L56M.STK_CTGRY_ID = S26M.STK_CTGRY_ID
+        AND L56M.LOC_ID=L63D.LOC_ID(+)
+        AND L56M.STK_CODE = L63D.MATNR(+)
+        AND L56M.LOC_ID=S28M.WH_LOC_ID
+        AND L56M.STK_TYPE_ID IN (62,63)
+        AND L56M.LOC_ID=S28M.WH_LOC_ID
+        AND L56M.qty > 0
+        AND S26M.STK_CTGRY_ID =#{productCategoryId}
+        AND S28M.WH_LOC_CODE= #{targetUserId}
+  </select>
+
+  <select id="getAllStockList" parameterType="Map" resultType="egovMap">
+    SELECT L43.MATRL_NO
+             , S26.STK_ID parts_Id
+             , S26.STK_DESC parts_Name
+             , S26.STK_CODE parts_Code
+             , (CASE WHEN BAL.serial_no IS NOT NULL THEN 1 ELSE BAL.QTY END) STOCK_QTY
+             , BAL.SERIAL_NO serial_No
+             , BAL.WH_LOC_CODE  location_Code
+             , BAL.WH_LOC_DESC location_Name
+             , BAL.WH_LOC_BRNCH_ID branch_Code
+             , NVL(BAL.LOC_ID , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_loc_CODE =#{userId})) RDC_CODE
+             , case when ( SELECT count(1)
+                                 FROM SYS0028M s28, log0056m l56
+                                 WHERE s28.WH_loc_code <![CDATA[<>]]> #{userId}
+                                      and s28.rdc_code = ( SELECT RDC_CODE
+                                                                    FROM SYS0028M
+                                                                    WHERE WH_loc_CODE = #{userId})
+                                      and s28.wh_loc_gb in ('03' , '04')
+                                      and s28.wh_loc_id = l56.loc_id
+                                      <!-- and l56.qty  >  0  -->
+                                      and L56.STK_CODE = S26.STK_CODE
+               ) > 0 then 'Y' else 'N' end  by_Holder_Y_N
+    FROM SYS0026M S26
+           , LOG0043M L43
+           , LOG0044D L44
+           , SYS0026M S26C
+           , ( select l56.loc_id ,
+                        l56.stk_code ,
+                        qty ,
+                        serial_no ,
+                        sergrad ,
+                        S28.WH_LOC_CODE ,
+                        S28.WH_LOC_DESC ,
+                        S28.WH_LOC_BRNCH_ID ,
+                        S28.RDC_CODE
+               from log0056m l56
+                    , log0063d l63
+                    , sys0028m s28
+               where 1 = 1
+                   and l56.loc_id = l63.loc_id(+)
+                   and l56.stk_code = l63.matnr(+)
+                   and l56.loc_id = s28.wh_loc_id
+                   <!-- AND L56.QTY  > 0 -->
+                   and S28.WH_loc_CODE = #{userId}
+           ) BAL
+    WHERE 1 = 1
+       AND S26.STK_CODE = BAL.STK_CODE(+)
+       AND S26.STK_CODE = L44.BOM_COMPNT
+       AND L43.BOM = L44.BOM
+       AND S26C.STK_CODE=L43.MATRL_NO
+       AND NVL(L44.DEL_INDICT , 'N') <![CDATA[<>]]> 'Y'
+
+      <if test="productCode != null and productCode !=''">
+        AND L43.MATRL_NO  = #{productCode}
+      </if>
+
+      <if test="searchType == 1 ">
+        AND S26.STK_CODE =#{searchKeyword}
+      </if>
+
+      <if test="searchType == 2 ">
+        <!-- AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%' -->
+        AND LTRIM(RTRIM(UPPER(S26.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%'
+      </if>
+
+      <if test="productId != null and productId !=''">
+        AND S26C.STK_ID =#{productId}
+      </if>
+  </select>
+
+<!--    <select id="getAllStockList" parameterType="Map" resultType="egovMap"> -->
+<!--        SELECT -->
+<!--        L43M.MATRL_NO,n26m.STK_ID parts_Id,L44D.BOM_COMPNT,n26m.STK_CODE parts_Code,n26m.STK_DESC parts_Name,(CASE   WHEN l56.serial_no is not null THEN 1  ELSE  L56.QTY  END) STOCK_QTY,l56.serial_no serial_No,s28m.WH_LOC_CODE location_Code,s28m.WH_LOC_DESC location_Name,s28m.WH_LOC_BRNCH_ID branch_Code, -->
+<!--        (select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code) -->
+<!--        rdc_code -->
+<!--        FROM LOG0043M L43M,LOG0044D L44D,sys0026m s26m,sys0026m n26m,sys0028m -->
+<!--        s28m, -->
+<!--        (SELECT log0056m.*, log0063d.serial_no -->
+<!--        FROM log0056m, log0063d -->
+<!--        WHERE 1 = 1 -->
+<!--        AND log0056m.stk_code = log0063d.MATNR(+) -->
+<!--        AND log0056m.loc_id = (select wh_loc_id from sys0028m where wh_loc_code = -->
+<!--        #{userId})) l56 -->
+<!--        WHERE 1=1 -->
+<!--        AND n26m.STK_CODE=l56.stk_code(+) -->
+<!--        AND l56.LOC_ID=s28m.WH_LOC_ID(+) -->
+<!--        AND L43M.BOM=L44D.BOM -->
+<!--        AND L43M.MATRL_NO=s26m.STK_CODE -->
+<!--        AND L44D.BOM_COMPNT=n26m.STK_CODE -->
+<!--        <if test="productCode != null and productCode !=''"> -->
+<!--        AND MATRL_NO=#{productCode} -->
+<!--        </if> -->
+<!--        <if test="searchType == 1 "> -->
+<!--             AND n26m.STK_CODE =#{searchKeyword} -->
+<!--         </if> -->
+<!--         <if test="searchType == 2 "> -->
+<!--              AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%' -->
+<!--             AND LTRIM(RTRIM(UPPER(n26m.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%' -->
+<!--         </if> -->
+<!--         <if test="productId != null and productId !=''"> -->
+<!--         AND s26m.STK_ID=#{productId} -->
+<!--         </if> -->
+<!--        group by -->
+<!--        L43M.MATRL_NO,n26m.STK_ID,L44D.BOM_COMPNT,n26m.STK_CODE,n26m.STK_DESC,l56.qty,l56.serial_no,s28m.rdc_code,s28m.WH_LOC_CODE,s28m.WH_LOC_DESC,s28m.WH_LOC_BRNCH_ID -->
+<!--    </select> -->
+
+  <select id="selectStockReceiveSerial" parameterType="Map" resultType="egovMap">
+    SELECT l55d.DELVRY_NO,
+               l55d.ITM_CODE PARTS_CODE,
+               l55d.ITM_NAME
+               PARTS_NAME,
+               l61d.SERIAL_NO SERIAL_NO,
+               l55d.DELVRY_QTY REQUEST_QTY,
+               l55d.DELVRY_NO_ITM SMO_NO_ITEM,
+               l61d.PDELVRY_NO_ITM,
+               <!-- l61d.DELVRY_NO DELVRY_NO2, l61d.PDELVRY_NO_ITM, l61d.TTYPE, TO_CHAR
+                     (l61d.CRT_DT, 'DD/MM/YYYY') CRT_DT, l61d.CRT_USER_ID -->
+               s26m.STK_ID PARTS_ID
+    FROM LOG0055D l55d, LOG0061D l61d,sys0026m s26m
+    WHERE l55d.DELVRY_NO = l61d.DELVRY_NO(+)
+        AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM(+)
+        AND l55d.ITM_CODE=s26m.STK_CODE
+        AND l55d.DELVRY_NO =  #{smoNo}
+        AND NVL (l55d.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+        <!-- AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750') -->
+    ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
+  </select>
+
+  <select id="selectStockReceiveSerialScan" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.selectStockReceiveSerialScan] 20191216 - KR MIN */
+    SELECT  l55d.DELVRY_NO,
+                l55d.ITM_CODE PARTS_CODE,
+                l55d.ITM_NAME
+                PARTS_NAME,
+                l100m.SERIAL_NO SERIAL_NO,
+                ( CASE WHEN l100m.SERIAL_NO is not null THEN 1
+                                                                            ELSE l55d.DELVRY_QTY END) REQUEST_QTY,
+                l55d.DELVRY_NO_ITM SMO_NO_ITEM,
+                l100m.LAST_DELVRY_NO_ITM AS PDELVRY_NO_ITM,
+                s26m.STK_ID PARTS_ID,
+                NVL(TRIM(s26m.SERIAL_CHK), 'N') AS SERIAL_CHK
+    FROM LOG0055D l55d, LOG0100M l100m,sys0026m s26m
+    WHERE l55d.DELVRY_NO = l100m.LAST_DELVRY_NO(+)
+        AND l55d.DELVRY_NO_ITM = l100m.LAST_DELVRY_NO_ITM(+)
+        AND l55d.ITM_CODE=s26m.STK_CODE
+        AND l55d.DELVRY_NO =  #{smoNo}
+        AND NVL (l55d.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+        <!-- AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750') -->
+    ORDER BY l55d.DELVRY_NO_ITM, l100m.SERIAL_NO
+  </select>
+
+  <select id="getSerialRequireChkYn" parameterType="Map" resultType="String">
+    SELECT SERIAL_REQUIRE_CHK_YN
+    FROM sys0028m
+    WHERE WH_LOC_CODE = #{userId}
+  </select>
+
+  <select id="getMyStockList" parameterType="Map" resultType="egovMap">
+    SELECT /*+ leading(S28) use_nl(L56 L75) */
+               L56.LOC_ID,
+               L56.STK_CODE PARTS_CODE,
+               L56.STK_DESC,
+               L56.STK_TYPE_ID PARTS_TYPE,
+               L56.STK_CTGRY_ID,
+               <!-- QTY STOCK_QTY, -->
+               ( case when L63.SERIAL_NO is not null then 1
+                                                                     else (QTY - NVL (L75.BOOKING_QTY, 0)) end) STOCK_QTY,
+               WH_LOC_DESC,
+               L63.SERIAL_NO PARTS_SERIAL_NO,
+               T1.REF_DOC_NO SERVICE_NO,
+               QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
+               S26.STK_ID PARTS_ID,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= S28.rdc_code) rdc_code
+    FROM LOG0056M L56,
+             SYS0028M S28,
+             LOG0063D L63,
+             SYS0026m S26,
+             ( SELECT L61.SERIAL_NO,
+                          L61.DELVRY_NO,
+                          L47.REQST_NO,
+                          L47.REF_DOC_NO
+               FROM LOG0061D L61,
+                        LOG0055D L55,
+                        LOG0047M L47
+               WHERE L61.DELVRY_NO = L55.DELVRY_NO
+                   AND L55.REQST_NO = L47.REQST_NO
+                   AND NVL (L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y') T1,
+             ( SELECT l75.loc_id,
+                          l75.itm_code,
+                          SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+               FROM log0075m l75
+               WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+                   AND l75.reqst_no IN ( SELECT reqst_no
+                                                  FROM log0047m
+                                                  WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+                                                  GROUP BY l75.loc_id,
+                                                                  l75.itm_code) L75
+    WHERE 1 = 1
+        AND L63.SERIAL_NO = T1.SERIAL_NO(+)
+        AND L56.STK_CODE = L63.MATNR(+)
+        AND L56.LOC_ID = L63.LOC_ID(+)
+        AND L56.STK_CODE = L75.ITM_CODE(+)
+        AND L56.LOC_ID = L75.LOC_ID(+)
+        AND L56.STK_CODE =S26.STK_CODE
+        AND L56.LOC_ID = S28.WH_LOC_ID
+        AND L56.QTY > 0
+        AND S28.WH_LOC_ID = ( SELECT WH_LOC_ID
+                                            FROM sys0028m
+                                            WHERE WH_LOC_CODE = #{userId})
+        GROUP BY L56.LOC_ID,
+                       L56.STK_CODE,
+                       L56.STK_DESC,
+                       L56.STK_TYPE_ID,
+                       L56.STK_CTGRY_ID,
+                       QTY,
+                       WH_LOC_DESC,
+                       L63.SERIAL_NO,
+                       T1.REF_DOC_NO,QTY - NVL (L75.BOOKING_QTY, 0) ,
+                       S26.STK_ID,
+                       S28.rdc_code
+  </select>
+
+  <select id="getMyStockListScan" parameterType="Map" resultType="egovMap">
+   /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.getMyStockListScan] 20191216 - KR MIN */
+   SELECT /*+ leading(S28) use_nl(L56 L75) */
+              L56.LOC_ID,
+              L56.STK_CODE PARTS_CODE,
+              L56.STK_DESC,
+              L56.STK_TYPE_ID PARTS_TYPE,
+              L56.STK_CTGRY_ID,
+              ( case when L100.SERIAL_NO is not null then 1
+                                                                     else (QTY - NVL (L75.BOOKING_QTY, 0)) end) STOCK_QTY,
+              WH_LOC_DESC,
+              L100.SERIAL_NO PARTS_SERIAL_NO,
+              T1.REF_DOC_NO SERVICE_NO,
+              QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
+              S26.STK_ID PARTS_ID,
+              ( select WH_LOC_ID
+                from sys0028m
+                where WH_LOC_CODE= S28.rdc_code) rdc_code
+    FROM LOG0056M L56,
+             SYS0028M S28,
+             LOG0100M L100,
+             SYS0026m S26,
+              (SELECT L100s.SERIAL_NO,
+                          L100s.LAST_DELVRY_NO AS DELVRY_NO,
+                          L47.REQST_NO,
+                          L47.REF_DOC_NO
+               FROM LOG0100M L100s,
+                        LOG0055D L55,
+                        LOG0047M L47
+               WHERE L100s.LAST_DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO AND NVL (L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y') T1,
+             ( SELECT l75.loc_id,
+                          l75.itm_code,
+                          SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+               FROM log0075m l75
+               WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+                   AND l75.reqst_no IN ( SELECT reqst_no
+                                                   FROM log0047m
+                                                   WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+               GROUP BY l75.loc_id, l75.itm_code) L75
+    WHERE 1 = 1
+        AND L100.SERIAL_NO = T1.SERIAL_NO(+)
+        AND L56.STK_CODE = L100.ITM_CODE(+)
+        AND L56.LOC_ID = L100.LAST_LOC_ID(+)
+        AND L56.STK_CODE = L75.ITM_CODE(+)
+        AND L56.LOC_ID = L75.LOC_ID(+)
+        AND L56.STK_CODE =S26.STK_CODE
+        AND L56.LOC_ID = S28.WH_LOC_ID
+        AND L56.QTY > 0
+        AND S28.WH_LOC_ID = ( SELECT WH_LOC_ID
+                                            FROM sys0028m
+                                            WHERE WH_LOC_CODE = #{userId})
+        GROUP BY L56.LOC_ID,
+                       L56.STK_CODE,
+                       L56.STK_DESC,
+                       L56.STK_TYPE_ID,
+                       L56.STK_CTGRY_ID,
+                       QTY,
+                       WH_LOC_DESC,
+                       L100.SERIAL_NO,
+                       T1.REF_DOC_NO,
+                       QTY - NVL (L75.BOOKING_QTY, 0) ,
+                       S26.STK_ID,
+                       S28.rdc_code
+  </select>
+
+  <select id="getReturnPartsSearch" parameterType="Map" resultType="egovMap">
+    SELECT s28m.WH_LOC_STK_GRAD STOCK_GRADE,
+               l56.STK_CODE PARTS_CODE,
+               l56.STK_DESC PARTS_NAME,
+               l56.STK_TYPE_ID,
+               l56.STK_CTGRY_ID,
+               <!-- l56.QTY STOCK_QTY, -->
+               ( case when L63.SERIAL_NO is not null then 1
+                                                                      else l56.QTY END) STOCK_QTY,
+               S26.STK_ID PARTS_ID,
+               L63.SERIAL_NO,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= s28m.rdc_code) rdc_code
+                 ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
+    FROM sys0028m s28m,
+            LOG0056M L56 ,
+            SYS0026M S26 ,
+            LOG0063D L63
+            ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
+    WHERE 1 =1
+        AND L56.STK_CODE = L63.MATNR(+)
+        AND L56.LOC_ID = L63.LOC_ID(+)
+        AND L56.STK_CODE = S26.STK_CODE
+        AND L56.STK_TYPE_ID in (62,63,64)
+        AND L56.QTY > 0
+        AND L56.LOC_ID=s28m.WH_LOC_ID
+        and s26.stk_ctgry_id = s13h.code_id(+)
+
+        <if test="searchType == 1 ">
+          AND l56.STK_CODE=#{searchKeyword}
+        </if>
+
+        <if test="searchType == 2 ">
+            AND UPPER(l56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+        </if>
+        AND s28m.WH_LOC_CODE= #{userId}
+  </select>
+
+  <select id="getReturnPartsSearchScan" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.getReturnPartsSearchScan] 20191216 - KR MIN */
+    SELECT s28m.WH_LOC_STK_GRAD STOCK_GRADE,
+               l56.STK_CODE PARTS_CODE,
+               l56.STK_DESC PARTS_NAME,
+               l56.STK_TYPE_ID,
+               l56.STK_CTGRY_ID,
+               <!-- l56.QTY STOCK_QTY, -->
+               ( case when LG100M.SERIAL_NO is not null then 1
+                                                                            else l56.QTY END) STOCK_QTY,
+               S26.STK_ID PARTS_ID,
+               LG100M.SERIAL_NO,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= s28m.rdc_code) rdc_code
+                 ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
+    FROM sys0028m s28m,
+             LOG0056M L56 ,
+             SYS0026M S26 ,
+             LOG0100M LG100M
+             ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
+    WHERE 1 =1
+        AND L56.STK_CODE = LG100M.ITM_CODE(+)
+        AND L56.LOC_ID = LG100M.LAST_LOC_ID(+)
+        AND L56.STK_CODE = S26.STK_CODE
+        AND L56.STK_TYPE_ID in (62,63,64)
+        AND L56.QTY > 0
+        AND L56.LOC_ID=s28m.WH_LOC_ID
+        and s26.stk_ctgry_id = s13h.code_id(+)
+        AND (LG100M.STUS_CODE(+) IS NULL OR LG100M.STUS_CODE(+) = 'I')
+
+        <if test="searchType == 1 ">
+          AND l56.STK_CODE=#{searchKeyword}
+        </if>
+
+        <if test="searchType == 2 ">
+          AND UPPER(l56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+        </if>
+        AND s28m.WH_LOC_CODE= #{userId}
+  </select>
+
+  <select id="getAlternativeFilterMList" parameterType="Map" resultType="egovMap">
+    with prdt as  (select *
+                       from sys0026m
+                       where stk_type_id = '61')
+    SELECT MATRL_NO PRODUCT_CODE,
+               S26.STK_ID filter_Parts_Id,
+               S26.STK_DESC FILTER_NAME,
+               BOM_COMPNT FILTER_CODE,
+               L44.ALTER_ITM_GRP FILTER_GROUP_CODE,
+               L44.USE_PROBABILTIY,
+               L44.ALTER_ITM_RANK_ORD,
+               L44.VALID_FROM_DT,
+               L44.VALID_TO_DT,
+               'Main' AS DIVISION_CODE,
+               prdt.stk_id product_Id,
+               prdt.stk_desc
+               <!-- (select STK_ID from sys0026m  where  stk_code = l43.MATRL_NO) -->
+    FROM LOG0043M L43,LOG0044D L44,SYS0026M S26 , prdt
+    WHERE 1=1
+        AND l43.MATRL_NO = prdt.stk_code(+)
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S26.STK_TYPE_ID in(62,63)
+        AND L44.ALTER_ITM_GRP IS NOT NULL
+        AND l44.use_probabiltiy = 100 and alter_itm_rank_ord = 1
+  </select>
+
+  <select id="getAlternativeFilterDList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT MATRL_NO PRODUCT_CODE,
+                             ( SELECT STK_ID
+                               FROM SYS0026M
+                               WHERE STK_CODE = L43.MATRL_NO) PRODUCT_ID,
+                             S26.STK_DESC FILTER_NAME,
+                             BOM_COMPNT FILTER_CODE,
+                             S26.STK_ID FILTER_PARTS_ID,
+                             L44.ALTER_ITM_GRP FILTER_GROUP_CODE,
+                             L44.USE_PROBABILTIY,
+                             L44.ALTER_ITM_RANK_ORD,
+                             L44.VALID_FROM_DT,
+                             L44.VALID_TO_DT,'Alternative' AS DIVISION_CODE,
+                             S26.STK_TYPE_ID PART_TYPE,
+                             NVL(S16.AMT, 0) AS SALES_PRICE,
+                             TO_CHAR(NVL(L44.COMPNT_QTY, 0)) AS QUANTITY
+    FROM LOG0043M L43,
+             LOG0044D L44,
+             SYS0026M S26,
+             SAL0016M S16
+    WHERE 1=1
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S26.STK_TYPE_ID IN(62,63)
+        AND S16.STK_ID = S26.STK_ID
+        AND L44.ALTER_ITM_GRP IS NOT NULL
+        AND L44.USE_PROBABILTIY != 100 AND ALTER_ITM_RANK_ORD != 1
+        AND L44.VALID_FROM_DT <![CDATA[<=]]> SYSDATE
+        AND L44.VALID_TO_DT <![CDATA[>=]]> SYSDATE
+
+    UNION ALL
+
+    SELECT DISTINCT MATRL_NO PRODUCT_CODE,
+                             ( SELECT STK_ID
+                               FROM SYS0026M
+                               WHERE STK_CODE = L43.MATRL_NO) PRODUCT_ID,
+                             S26.STK_DESC FILTER_NAME,
+                             BOM_COMPNT FILTER_CODE,
+                             S26.STK_ID FILTER_PARTS_ID,
+                             L44.ALTER_ITM_GRP FILTER_GROUP_CODE,
+                             L44.USE_PROBABILTIY,
+                             L44.ALTER_ITM_RANK_ORD,
+                             L44.VALID_FROM_DT,
+                             L44.VALID_TO_DT,
+                             'INST_PART' AS DIVISION_CODE,
+                             S26.STK_TYPE_ID PART_TYPE,
+                             NVL(S16.AMT, 0) AS SALES_PRICE,
+                             TO_CHAR(NVL(L44.COMPNT_QTY, 0)) AS QUANTITY
+    FROM LOG0043M L43,
+             LOG0044D L44,
+             SYS0026M S26,
+             SAL0016M S16
+    WHERE 1=1
+        AND L43.BOM=L44.BOM
+        AND L44.BOM_COMPNT = S26.STK_CODE
+        AND S16.STK_ID = S26.STK_ID
+        AND L44.ALTER_ITM_GRP IS NULL
+        AND S16.AMT IS NOT NULL
+        AND L44.USE_PROBABILTIY != 100 AND ALTER_ITM_RANK_ORD != 1
+        AND L44.VALID_FROM_DT <![CDATA[<=]]> SYSDATE
+        AND L44.VALID_TO_DT <![CDATA[>=]]> SYSDATE
+  </select>
+
+  <select id="getItemBankLocationList" parameterType="Map" resultType="egovMap">
+    WITH CRDC AS (SELECT WH_LOC_CODE ,
+                                      CDC_CODE ,
+                                      RDC_CODE
+                           FROM SYS0028M S28
+                           WHERE 1 = 1
+                               AND S28.WH_LOC_CODE =#{userId}
+    )
+    SELECT S28.WH_LOC_CODE LOCATION_CODE,
+               S28.WH_LOC_GB,
+               DECODE (S28.WH_LOC_GB,
+                             '01', 'CDC',
+                             '02', 'RDC',
+                             '03', 'CT',
+                             '04', 'CODY',
+                             '05', 'CDC/RDC',
+                             S28.WH_LOC_GB) LOCATION_TYPE,
+               S28.WH_LOC_DESC LOCATION_NAME,
+               S28.WH_LOC_ID,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= S28.rdc_code) rdc_code
+    FROM SYS0028M S28,CRDC
+    WHERE 1 = 1
+        AND S28.WH_LOC_CODE IN (CRDC.RDC_CODE)
+        <!-- AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE) -->
+  </select>
+
+  <select id="getItemBankItemList" resultType="egovMap">
+    SELECT CODE_ID ITEM_CODE,
+               CODE ,
+               CODE_NAME ITEM_NAME,
+               CODE_DESC DESCRIPTION
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 11
+        AND CODE_ID > 1000
+  </select>
+
+  <select id="getItemBankResultList" resultType="egovMap">
+    select L56.STK_CODE parts_Code,
+             L56.STK_DESC parts_Name,
+             L56.QTY qty,
+             S26.STK_ID parts_Id,
+             s.WH_LOC_DESC cust_Name,
+             s.WH_LOC_ID
+    from log0056m l56 ,
+           sys0028m s ,
+           sys0026m s26 ,
+           ( select *
+             from SYS0013M
+             where CODE_MASTER_ID = '11' ) type
+    where 1 = 1
+       and loc_id = s.wh_loc_id
+       and l56.stk_code = s26.stk_code
+       and s26.stk_ctgry_id = type.code_id
+       and s26.STK_TYPE_ID = '2687'
+
+      <if test="searchType == 1 ">
+        AND S26.STK_CODE= #{searchKeyword}
+      </if>
+
+      <if test="searchType == 2 ">
+        AND UPPER(S26.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%'
+      </if>
+
+      <if test="searchItem != null and searchItem !=''">
+        AND type.CODE_ID=#{searchItem}
+      </if>
+
+      and s.wh_loc_code =  ( select nvl(rdc_code , wh_loc_code)
+                                       from sys0028m s
+                                       where 1 = 1
+                                          and s.wh_loc_code = #{searchLocation}
+      )
+  </select>
+
+  <select id="getCommonReqHeader" parameterType="Map" resultType="egovMap">
+    SELECT LG47M.REQST_NO smo_No,
+               DECODE (LG47M.PRIDIC_FRQNCY,
+                            'A', 'Auto',
+                            'M', 'Manual',
+                            LG47M.PRIDIC_FRQNCY)
+               REQ_TYPE,
+               LG47M.REQST_STUS REQ_STATUS,
+               LG47M.REQST_CDC_RDC GI_LOCATION_CODE,
+               SY28M.WH_LOC_DESC gi_Location_Name,
+               LG54M.DELVRY_GI_DT GI_DATE,
+               LG54M.DELVRY_GR_DT GR_DATE,
+               SY28M.WH_LOC_DESC gi_Cust_Name,
+               SY28M_GR.WH_LOC_DESC gr_Cust_Name,
+               LG47M.REQST_CRT_DT,
+               LG47M.TRNSC_TYPE_DTL,
+               ( SELECT WH_LOC_ID
+                 FROM sys0028m
+                 WHERE WH_LOC_CODE = SY28M.rdc_code) rdc_code,
+               SY28M.SERIAL_REQUIRE_CHK_YN
+    FROM LOG0047M LG47M,
+             SYS0028M SY28M,
+             SYS0028M SY28M_GR,
+             ( SELECT DISTINCT L55.REQST_NO ,
+                                        L54.DELVRY_GI_DT ,
+                                        L54.DELVRY_GR_DT
+                FROM LOG0054M L54 ,
+                         LOG0055D L55
+                WHERE L54.DELVRY_NO = L55.DELVRY_NO
+                    AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) LG54M
+    WHERE 1 = 1
+        AND LG47M.REQST_NO = LG54M.REQST_NO(+)
+        AND LG47M.TRNSC_TYPE = 'UM'
+        AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
+
+        <if test="reqStatus eq 'MRRL'.toString() ">
+          AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
+          AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
+        </if>
+
+        <if test="reqStatus eq 'MROL'.toString() ">
+           AND LG47M.RCIV_CDC_RDC = TO_CHAR(SY28M.WH_LOC_ID)
+           AND LG47M.REQST_CDC_RDC = TO_CHAR(SY28M_GR.WH_LOC_ID)
+        </if>
+
+        AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
+
+        <if test="searchStatus == 1 ">
+          AND LG47M.REQST_STUS ='O'
+        </if>
+
+        <if test="searchStatus == 2 ">
+          AND LG47M.REQST_STUS='C'
+        </if>
+
+        <if test="searchType == 1 ">
+          and LG47M.PRIDIC_FRQNCY = 'A'
+        </if>
+
+        <if test="searchType == 2 ">
+          and LG47M.PRIDIC_FRQNCY = 'M'
+        </if>
+
+        <if test="reqStatus eq 'MRRL'.toString() ">
+           AND LG47M.TRNSC_TYPE_DTL ='UM03'
+        </if>
+
+        <if test="reqStatus eq 'MROL'.toString() ">
+           AND LG47M.TRNSC_TYPE_DTL ='UM93'
+        </if>
+
+        <if test="searchFromDate !=null and searchFromDate !=''">
+          AND LG47M.REQST_REQUIRE_DT BETWEEN TO_DATE(#{searchFromDate} || ' 00:00:00', 'YYYY/MM/DD HH24:MI:SS')
+            AND TO_DATE(#{searchToDate} || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS')
+        </if>
+  </select>
+
+  <select id="getCommonReqParts" parameterType="Map" resultType="egovMap">
+    SELECT LG48D.REQST_NO SMO_NO,
+               LG48D.REQST_NO_ITM SMO_NO_ITEM,
+               SY26M.STK_ID PARTS_ID,
+               LG48D.ITM_CODE PARTS_CODE,
+               LG48D.ITM_NAME PARTS_NAME,
+               LG48D.REQST_QTY REQUEST_QTY,
+               SY26M.SERIAL_CHK barcodeChk_Y_N,
+               LG55D.DELVRY_QTY SELECT_QTY,
+               LG61D.SERIAL_NO SERIAL_NO,
+               SY26M.STK_TYPE_ID parts_Type
+    FROM LOG0048D LG48D,
+            ( SELECT *
+              FROM LOG0055D
+              WHERE NVL(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) LG55D,
+            SYS0026M SY26M,
+            LOG0061D LG61D
+    WHERE 1=1
+        AND LG48D.REQST_NO = LG55D.REQST_NO (+)
+        AND LG55D.DELVRY_NO = LG61D.DELVRY_NO(+)
+        AND LG55D.DELVRY_NO_ITM = LG61D.PDELVRY_NO_ITM(+)
+        AND LG48D.ITM_CODE=LG55D.ITM_CODE(+)
+        AND NVL(LG48D.REQST_DEL , 'N') = 'N'
+        AND LG48D.ITM_CODE=SY26M.STK_CODE
+        AND LG48D.REQST_NO =#{smoNo}
+    GROUP BY LG48D.REQST_NO,
+                   LG48D.REQST_NO_ITM,
+                   SY26M.STK_ID ,
+                   LG48D.ITM_CODE,
+                   LG48D.ITM_NAME,
+                   LG48D.REQST_QTY,
+                   SY26M.SERIAL_CHK,
+                   LG55D.DELVRY_QTY,
+                   LG61D.SERIAL_NO,
+                   SY26M.STK_TYPE_ID
+  </select>
+
+  <select id="getCommonReqPartsScan" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.getCommonReqPartsScan] 20191216 - KR MIN */
+    SELECT LG48D.REQST_NO SMO_NO,
+               LG48D.REQST_NO_ITM SMO_NO_ITEM,
+               SY26M.STK_ID PARTS_ID,
+               LG48D.ITM_CODE PARTS_CODE,
+               LG48D.ITM_NAME PARTS_NAME,
+               LG48D.REQST_QTY REQUEST_QTY,
+               SY26M.SERIAL_CHK barcodeChk_Y_N,
+               LG55D.DELVRY_QTY SELECT_QTY,
+               LG100M.SERIAL_NO SERIAL_NO,
+               SY26M.STK_TYPE_ID parts_Type
+        FROM LOG0048D LG48D,
+                ( SELECT *
+                  FROM LOG0055D
+                  WHERE NVL(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) LG55D,
+                SYS0026M SY26M,
+                LOG0100M LG100M
+        WHERE 1=1
+            AND LG48D.REQST_NO = LG55D.REQST_NO (+)
+            AND LG55D.DELVRY_NO = LG100M.LAST_DELVRY_NO(+)
+            AND LG55D.DELVRY_NO_ITM = LG100M.LAST_DELVRY_NO_ITM(+)
+            AND LG48D.ITM_CODE=LG55D.ITM_CODE(+)
+            AND NVL(LG48D.REQST_DEL , 'N') = 'N'
+            AND LG48D.ITM_CODE=SY26M.STK_CODE
+            AND LG48D.REQST_NO =#{smoNo}
+        GROUP BY LG48D.REQST_NO,
+                       LG48D.REQST_NO_ITM,
+                       SY26M.STK_ID ,
+                       LG48D.ITM_CODE,
+                       LG48D.ITM_NAME,
+                       LG48D.REQST_QTY,
+                       SY26M.SERIAL_CHK,
+                       LG55D.DELVRY_QTY,
+                       LG100M.SERIAL_NO,
+                       SY26M.STK_TYPE_ID
+  </select>
+
+  <select id="getAuditStockResultDetail" parameterType="Map" resultType="egovMap">
+    SELECT LG71M.INVNTRY_NO inven_Adjust_No
+             , LG72M.SAVE_YN adjust_Y_N
+             , TO_CHAR (LG71M.CRT_DATE, 'YYYYMMDD') CRT_DATE
+             , LG71M.BASE_DT
+             , LG72M.LOC_ID
+             , SY28M.WH_LOC_CODE
+             , LG73D.SYS_QTY sys_Qty
+             , (LG73D.SYS_QTY - LG73D.CNT_QTY) DIFF_QTY
+             , LG73D.CNT_QTY counted_Qty
+             , LG73D.ITM_ID inven_Adjust_No_Item
+             , SY26M.STK_CODE parts_Code
+             , LG73D.ITM_NM parts_Name
+             , LG73D.SERIAL_CHK
+             , LG62M.SERIAL_NO serial_No
+             , SY26M.STK_ID parts_Id
+             , (select WH_LOC_ID from sys0028m where WH_LOC_CODE= SY28M.rdc_code) rdc_code
+    FROM LOG0071M LG71M,
+             LOG0072M LG72M,
+             LOG0073D LG73D,
+             SYS0026M SY26M,
+             LOG0062M LG62M,
+             SYS0028M SY28M
+    WHERE 1 = 1
+        AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
+        AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
+        AND LG73D.ITM_ID = SY26M.STK_ID
+        AND SY26M.STK_CODE = LG62M.MATNR
+        AND SY28M.WH_LOC_ID = LG72M.LOC_ID
+        AND SY28M.WH_LOC_CODE = #{userId}
+        AND LG71M.INVNTRY_NO = #{invenAdjustNo}
+        <!-- AND LG72M.LOC_ID = (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE -->
+        <!-- =#{userId}) -->
+        AND SUBSTR (LG71M.BASE_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseMonth}, 'YYYY/MM'), 'YYYYMM')
+  </select>
+
+  <select id="getStockTransferReqStatusMList" parameterType="Map" resultType="egovMap">
+    SELECT REQST_NO smo_No
+             , TRNSC_TYPE
+             ,TRNSC_TYPE_DTL
+             , REQST_REQUIRE_DT
+             , TO_CHAR(REQST_REQUIRE_DT , 'YYYYMMDD') req_Date
+             , REQST_STUS req_Status
+             , REQST_CDC_RDC
+             , (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID = L47.REQST_CDC_RDC) requestor_Name
+             , RCIV_CDC_RDC
+             , (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID = L47.RCIV_CDC_RDC) RCV_NM
+             , S28.RDC_CODE
+             , DECODE (L47.PRIDIC_FRQNCY,
+                             'A', 'Auto',
+                             'M', 'Manual',
+                             L47.PRIDIC_FRQNCY) REQ_TYPE
+             , S28.SERIAL_REQUIRE_CHK_YN
+             , RCIV_CDC_RDC AS FROM_LOC_ID
+             , REQST_CDC_RDC AS TO_LOC_ID
+    FROM LOG0047M L47 ,
+             SYS0028M S28
+    WHERE 1 = 1
+        <!-- AND L47.REQST_CRT_DT BETWEEN TO_DATE('20170928'||'000000' , 'YYYYMMDDHH24MISS') AND TO_DATE('20170928'||'235959' , 'YYYYMMDDHH24MISS')  -->
+        AND L47.RCIV_CDC_RDC = TO_CHAR(S28.WH_LOC_ID)
+        AND L47.TRNSC_TYPE = 'UM'
+        AND  NVL(L47.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
+        AND WH_LOC_CODE = #{userId}
+
+       <if test="searchStatus == 1 ">
+          AND L47.REQST_STUS='O'
+       </if>
+
+       <if test="searchStatus == 2 ">
+          AND L47.REQST_STUS='C'
+       </if>
+
+       <if test="searchFromDate !=null and searchFromDate !=''">
+          AND TO_CHAR( L47.REQST_CRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'YYYYMMDD'), 'YYYYMMDD')
+       </if>
+
+       <if test="searchToDate !=null and searchToDate !=''">
+          AND TO_CHAR(TO_DATE(#{searchToDate},'YYYYMMDD'), 'YYYYMMDD')
+       </if>
+  </select>
+
+  <select id="getStockTransferReqStatusDList" parameterType="Map" resultType="egovMap">
+    SELECT L48.REQST_NO REQ_NO ,
+               L48.REQST_NO_ITM smo_No_Item ,
+               L48.ITM_CODE parts_Code ,
+               L48.ITM_NAME parts_Name ,
+               S26.STK_ID parts_Id ,
+               S26.STK_TYPE_ID parts_Type
+
+              <if test="searchStatus == 1 ">
+                , L48.REQST_QTY request_Qty
+                , S26.SERIAL_CHK BARCODE_CHK_YN
+              </if>
+
+              <if test="searchStatus == 2 ">
+                , L55.DELVRY_QTY request_Qty
+                , L55.DELVRY_NO
+                , L55.SERIAL_NO serial_No
+              </if>
+    FROM LOG0048D L48,
+             SYS0026M S26
+
+    <if test="searchStatus == 2 ">
+       , ( SELECT L55.* ,
+                      L61.SERIAL_NO
+            FROM LOG0055D L55 ,
+                     LOG0061D L61
+            WHERE L55.DELVRY_NO = L61.DELVRY_NO(+)
+                AND L55.DELVRY_NO_ITM = L61.PDELVRY_NO_ITM(+)
+                AND NVL(L55.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) L55
+    </if>
+
+    WHERE 1 =1
+        AND L48.ITM_CODE  = S26.STK_CODE(+)
+
+        <if test="searchStatus == 2 ">
+          AND L48.ITM_CODE = L55.ITM_CODE
+          AND L48.REQST_NO = L55.REQST_NO
+        </if>
+
+        AND L48.REQST_NO =#{smoNo}
+  </select>
+
+  <select id="getNonBarcodeM" parameterType="Map" resultType="EgovMap">
+    SELECT l72.INVNTRY_LOC_ID inven_Adjust_Loc_Id,
+               l72.INVNTRY_NO inven_Adjust_No,
+               l72.SAVE_YN adjust_Status,
+               TO_CHAR (l71.CRT_DATE, 'YYYYMMDD') adjust_Create_Date,
+               l71.BASE_DT adjust_Base_Date,
+               l72.LOC_ID,
+               s28.WH_LOC_DESC adjust_Location,
+               ( select count(1)
+                 from log0073d
+                 where INVNTRY_LOC_ID = l72.INVNTRY_LOC_ID) adjust_Normal_Qty,
+               ( select count(1)
+                 from log0073d
+                 where nvl(CNT_QTY,0) > 0
+                    and INVNTRY_LOC_ID = l72.INVNTRY_LOC_ID) adjust_qty,
+               ( select sum(sys_qty)
+                 from log0073d
+                 where INVNTRY_LOC_ID = l72.INVNTRY_LOC_ID) sys_qty,
+               ( select sum(cnt_qty)
+                 from log0073d
+                 where INVNTRY_LOC_ID = l72.INVNTRY_LOC_ID) cnt_qty,
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where WH_LOC_CODE= s28.rdc_code) rdc_code
+     from log0072m l72,
+            log0071m l71,
+            sys0028m s28
+     where 1=1
+        AND l72.INVNTRY_NO=l71.INVNTRY_NO
+        AND l72.LOC_ID=s28.WH_LOC_ID
+        AND TO_DATE(l71.BASE_DT, 'YYYYMMDD')   BETWEEN ADD_MONTHS( TRUNC(sysdate,'MM'), -1 )  AND LAST_DAY(sysdate)
+        <!-- AND TO_DATE(l71.BASE_DT, 'YYYYMMDD')   BETWEEN  -->
+        <!-- LAST_DAY(ADD_MONTHS( TRUNC(sysdate,'MM'),  -2)) and  ADD_MONTHS( TRUNC(sysdate,'MM'),+1 )  -->
+        AND l72.loc_id = (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId})
+  </select>
+
+  <select id="getNonBarcodeDList" parameterType="String" resultType="EgovMap">
+    select INVNTRY_LOC_ID,
+             SEQ inven_Adjust_No_Item,
+             ITM_ID parts_Id,
+             ITM_NM parts_Name,
+             ITM_TYPE,
+             SERIAL_CHK,
+             SYS_QTY sys_Qty,
+             CNT_QTY counted_Qty,
+             CTGRY_TYPE,
+             ( select stk_code
+               from sys0026m
+               where stk_id = log0073d.itm_id) parts_Code
+    from log0073d
+    where invntry_loc_id = #{invntryLocId}
+  </select>
+
+  <select id="getBarcodeDList" parameterType="String" resultType="EgovMap">
+    select l72m.loc_id,
+             l73d.SEQ inven_Adjust_No_Item,
+             ITM_ID parts_Id,
+             ITM_NM parts_Name,
+             l63d.SERIAL_NO,
+             l73d.SYS_QTY,
+             ( select stk_code
+               from sys0026m
+               where stk_id = l73d.itm_id) parts_Code
+    From log0073d l73d,
+            log0072m l72m,
+            log0063d l63d,
+            sys0026m s26m
+    where 1=1
+      AND l73d.INVNTRY_LOC_ID= l72m.INVNTRY_LOC_ID
+      AND l73d.ITM_ID=s26m.STK_ID
+      AND l63d.MATNR=s26m.STK_CODE
+      AND l72m.loc_id=l63d.loc_id
+      AND l73d.invntry_loc_id = #{invntryLocId}
+  </select>
+
+  <select id="getBarcodeCList" parameterType="String" resultType="EgovMap">
+    SELECT l73d.ITM_ID parts_Id,
+               l74d.SERIAL serial_No,
+              ( select stk_code
+                from sys0026m
+                where stk_id = l73d.itm_id) parts_Code
+    from log0073d l73d,
+           log0074d l74d
+    where 1=1
+       AND l73d.INVNTRY_LOC_ID=l74d.INVNTRY_LOC_ID(+)
+       AND l73d.invntry_loc_id = #{invntryLocId}
+  </select>
+
+  <select id="getBarcodeList" parameterType="Map" resultType="EgovMap">
+    SELECT LG71M.INVNTRY_NO
+             , LG72M.SAVE_YN
+             , TO_CHAR (LG71M.CRT_DATE, 'DD/MM/YYYY') CRT_DATE
+             , LG71M.BASE_DT
+             , LG72M.LOC_ID
+             , SY28M.WH_LOC_CODE
+             , LG73D.SYS_QTY
+             , (LG73D.SYS_QTY - LG73D.CNT_QTY) DIFF_QTY
+             , LG73D.CNT_QTY
+             , LG73D.ITM_ID
+             , SY26M.STK_CODE
+             , LG73D.ITM_NM
+             , LG73D.SERIAL_CHK
+             , LG62M.SERIAL_NO
+             , (select WH_LOC_ID from sys0028m where WH_LOC_CODE= SY28M.rdc_code) rdc_code
+    FROM LOG0071M LG71M,
+             LOG0072M LG72M,
+             LOG0073D LG73D,
+             SYS0026M SY26M,
+             LOG0062M LG62M,
+             SYS0028M SY28M
+    WHERE 1 = 1
+        AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
+        AND LG72M.INVNTRY_LOC_ID = LG73D.INVNTRY_LOC_ID
+        AND LG73D.ITM_ID=SY26M.STK_ID
+        AND SY26M.STK_CODE = LG62M.MATNR
+        AND SY28M.WH_LOC_ID=LG72M.LOC_ID
+        AND LG73D.SERIAL_CHK = 'Y'
+        AND LG72M.LOC_ID = ( SELECT WH_LOC_ID
+                                          FROM SYS0028M
+                                          WHERE WH_LOC_CODE =#{userId})
+        AND SUBSTR (LG72M.DOC_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseDate}, 'DD/MM/YYYY'), 'YYYYMM')
+  </select>
+
+  <select id="getStockAuditResult" parameterType="Map" resultType="EgovMap">
+    SELECT LG71M.INVNTRY_NO inven_Adjust_No
+             , LG72M.SAVE_YN adjust_Status
+             , LG71M.BASE_DT adjust_Base_Date
+             , TO_CHAR (LG71M.CRT_DATE, 'YYYYMMDD') adjust_Create_Date
+             , LG72M.LOC_ID
+             , T10.WH_LOC_CODE adjust_Location
+             , LG71M.CNFM1
+             , LG71M.CNFM2
+             , LG71M.DEL_FLAG
+    FROM LOG0071M LG71M,
+             LOG0072M LG72M,
+             ( SELECT WH_LOC_ID,
+                          WH_LOC_CODE
+               FROM SYS0028M
+               WHERE WH_LOC_CODE =#{userId}) T10
+    WHERE 1 = 1
+        AND LG71M.INVNTRY_NO = LG72M.INVNTRY_NO
+        AND LG72M.LOC_ID = T10.WH_LOC_ID
+        AND SUBSTR (LG71M.BASE_DT, 0, 6) = TO_CHAR (TO_DATE (#{adjustBaseMonth}, 'YYYYMM'), 'YYYYMM')
+        AND LG71M.DEL_FLAG <![CDATA[<>]]> 'D'
+  </select>
+
+  <select id="getStockPriceList" parameterType="Map" resultType="egovMap">
+     select S26T.STK_ID parts_Id,
+              l44.BOM_COMPNT parts_Code,
+              S26T.STK_DESC parts_Name,
+              S26T.STK_CTGRY_ID,
+              S26T.STK_TYPE_ID,
+              1 price_Unit,
+              s16.AMT parts_Price,
+              ( select CODE_NAME
+                from sys0013m
+                where CODE_MASTER_ID ='94'
+                  AND CODE_ID='1150') currency
+    from log0043m l43,
+           log0044d l44,
+           SAL0016M s16 ,
+           SYS0026M s26t
+    where 1=1
+      AND S26T.STK_ID = s16.STK_ID
+      AND l44.BOM_COMPNT = S26T.stk_code(+)
+      AND l43.bom=l44.bom
+      AND l43.MATRL_NO=#{productCode}
+
+      <if test="searchKinds !=null and searchKinds !=''">
+        AND s26t.STK_TYPE_ID =#{searchKinds}
+      </if>
+
+       <if test="searchType == 1 ">
+         AND S26T.STK_CODE=#{searchKeyword}
+       </if>
+
+       <if test="searchType == 2 ">
+         <!--  AND s26.STK_DESC LIKE #{searchKeyword}||'%' -->
+         AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%'
+        </if>
+
+    group by S26T.STK_ID,
+                 l44.BOM_COMPNT,
+                 S26T.STK_DESC,
+                 S26T.STK_CTGRY_ID,
+                 S26T.STK_TYPE_ID,
+                 1,
+                 s16.AMT
+  </select>
+
+  <select id="selectStockMovementSeq" resultType="String">
+    <!-- SELECT -->
+    <!-- 'SMO'  -->
+    <!-- ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+    <!-- || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+    <!-- FROM LOG0047M -->
+    <!-- WHERE SUBSTR (REQST_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')  -->
+    SELECT  'SMO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SMO_SEQ.NEXTVAL, 5, '0')
+    FROM DUAL
+  </select>
+
+  <select id="selectDeliveryStockMovementSeq" resultType="String">
+<!-- SELECT -->
+<!-- 'DVR'  -->
+<!-- ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!-- || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO -->
+<!-- FROM LOG0054M -->
+<!-- WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD') -->
+    SELECT  'DVR'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(DVL_SEQ.NEXTVAL, 5, '0')
+    FROM  DUAL
+  </select>
+
+  <insert id="insStockMovementHead" parameterType="Map">
+    INSERT INTO LOG0047M ( REQST_NO,
+                                         TRNSC_TYPE,
+                                         TRNSC_TYPE_DTL,
+                                         PRIDIC_FRQNCY,
+                                         REQST_CRT_DT,
+                                         REQST_REQUIRE_DT,
+                                         DOC_HDER_TXT,
+                                         RCIV_CDC_RDC,
+                                         REQST_CDC_RDC,
+                                         REQST_STUS,
+                                         CRT_USER_ID,
+                                         CRT_DT,
+                                         REQST_TYPE,
+                                         REQST_TYPE_DTL
+    ) VALUES ( #{reqno}
+                   , 'UM'
+                   , #{smType}
+                   , 'M'
+                   , SYSDATE
+                   , SYSDATE
+                   , ' '
+                   , #{targetLocation}
+                   , ( select WH_LOC_ID
+                       from sys0028m
+                       where WH_LOC_CODE=#{userId})
+                   , 'O'
+                   , ( select NVL(MAX(USER_ID),99999999)
+                       from sys0047m
+                       where user_name=#{userId})
+                   , SYSDATE
+                   , 'UM'
+                   , #{smType}
+    )
+  </insert>
+
+  <insert id="insStockMovementDetail" parameterType="Map">
+    <selectKey keyProperty="reqstNoItm" resultType="int" order="BEFORE">
+      select decode(count(reqst_no_itm) ,
+               0 ,
+               1 ,
+               max(reqst_no_itm +1)) REQST_NO_ITM
+      from log0048d
+      where REQST_NO = #{reqno}
+    </selectKey>
+
+    INSERT INTO LOG0048D ( REQST_NO,
+                                         REQST_NO_ITM,
+                                         ITM_CODE,
+                                         ITM_NAME,
+                                         REQST_QTY,
+                                         UOM,
+                                         CRT_USER_ID,
+                                         CRT_DT
+    ) VALUES ( #{reqno}
+                   , #{reqstNoItm}
+                   , #{partsCode}
+                   , #{partsName}
+                   , #{requestQty}
+                   , ( select nvl(uom,72)
+                       from sys0026m
+                       where STK_ID=#{partsId})
+                   , (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId})
+                   , SYSDATE
+                 )
+  </insert>
+
+  <insert id="insertStockBooking" parameterType="Map">
+    INSERT INTO LOG0075M (REQST_NO,
+                                        SEQ, LOC_ID,
+                                        TRNSC_TYPE_DTL,
+                                        ITM_CODE, REQST_QTY,
+                                        REQST_CRT_DT,
+                                        CRT_DT)
+    SELECT L47.REQST_NO
+              , L48.REQST_NO_ITM
+              , L47.RCIV_CDC_RDC
+              , L47.TRNSC_TYPE_DTL
+              , L48.ITM_CODE
+              , L48.REQST_QTY
+              , REQST_CRT_DT
+              , SYSDATE
+    FROM LOG0047M L47 ,
+             LOG0048D L48
+    WHERE 1 = 1
+         AND L47.REQST_NO = L48.REQST_NO
+         AND L47.REQST_NO = #{reqno}
+  </insert>
+
+<!--         <insert id="insertDeliveryStockMovementDetail" parameterType="Map"> -->
+<!--            INSERT INTO LOG0055D -->
+<!--            ( DELVRY_NO, DELVRY_NO_ITM -->
+<!--            , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT) -->
+<!--            VALUES  -->
+<!--            ( #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , -->
+<!--            max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno}) -->
+<!--            , #{partsCode} , #{partsName}, #{requestQty} , #{smoNo} , (select nvl(USER_ID,9999999999) from sys0047m where user_name=#{userId}) , -->
+<!--            SYSDATE) -->
+<!--          </insert> -->
+
+        <insert id="insertDeliveryStockMovementDetail" parameterType="Map">
+              MERGE INTO LOG0055D A
+                 USING DUAL
+                   ON (DELVRY_NO = #{delno} and ITM_CODE = #{itmcd} and REQST_NO = #{reqstno})
+                   WHEN MATCHED THEN
+                         UPDATE SET
+                                    A.DELVRY_QTY  = #{requestQty}
+                                  , A.UPD_USER_ID = (select nvl(USER_ID,9999999999) from sys0047m where user_name=#{userId})
+                                  , A.UPD_DT      = SYSDATE
+                   WHEN NOT MATCHED THEN
+                         INSERT (  DELVRY_NO, DELVRY_NO_ITM
+                                 , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT, REQST_NO_ITM)
+                         VALUES (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno})
+                                 , #{itmcd} , #{itmname}, #{requestQty} , #{reqstno} , (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId}) , SYSDATE, #{reqstNoItm})
+         </insert>
+
+
+         <insert id="insertMovementSerial" parameterType="Map">
+         INSERT INTO LOG0061D (
+                 SERIAL_NO,
+                 DELVRY_NO,
+                 PDELVRY_NO_ITM,
+                 TTYPE,
+                 CRT_DT,
+                 CRT_USER_ID
+                 )
+            SELECT
+            #{serial},
+            #{delno},
+            DELVRY_NO_ITM,
+             (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
+             SYSDATE,
+             (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId})
+             FROM LOG0055D
+             WHERE 1=1
+                       AND DELVRY_NO= #{delno}
+                       AND ITM_CODE =#{itmcd}
+                       AND REQST_NO =#{reqstno}
+                       AND NVL(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
+
+     </insert>
+
+      <insert id="insertDeliveryStockMovement" parameterType="Map">
+        INSERT INTO LOG0054M
+                         (   DELVRY_NO
+                           , TRNSC_TYPE
+                           , TRNSC_TYPE_DTL
+                           , DELVRY_DT
+                           , CRT_USER_ID
+                           , CRT_DT
+                         ) VALUES(
+                             #{delno}
+                           , (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno})
+                           , (SELECT TRNSC_TYPE_DTL FROM LOG0047M WHERE REQST_NO= #{reqstno})
+                           , to_char(sysdate , 'yyyymmdd')
+                           , (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId})
+                           , SYSDATE
+                         )
+    </insert>
+      <update id="updateRequestMovement" parameterType="String">
+        UPDATE LOG0047M
+           SET REQST_STUS = 'P'
+         WHERE REQST_NO = #{reqstno}
+     </update>
+
+<!--       <select id="selectStockMovementSerial" parameterType="Map" resultType="Map"> -->
+<!--        SELECT NVL (MAX (YN), 'N') check62, NVL (MAX (NN), 'Y') check63 -->
+<!--          FROM (SELECT L63.SERIAL_NO, -->
+<!--                       DECODE (L63.SERIAL_NO, NULL, 'N', 'Y') YN, -->
+<!--                       (SELECT DELVRY_NO -->
+<!--                          FROM LOG0061D -->
+<!--                         WHERE SERIAL_NO = L63.SERIAL_NO) -->
+<!--                          NN -->
+<!--                  FROM LOG0063D L63, LOG0062M L62 -->
+<!--                 WHERE 1 = 1 AND L62.SERIAL_NO = L63.SERIAL_NO -->
+<!--                   AND L63.MATNR     =  #{partsCode} -->
+<!--                   AND L63.LOC_ID    =  (select WH_LOC_ID from sys0028m where WH_LOC_CODE=#{userId}) -->
+<!--                   AND L63.SERIAL_NO =  #{serialNo} -->
+<!--                ) -->
+<!--      </select> -->
+
+  <select id="selectStockMovementSerial" parameterType="Map" resultType="Map">
+    SELECT NVL (MAX (YN), 'N') check62,
+               NVL (MAX (NN), 'Y') check63
+    FROM ( SELECT L62.SERIAL_NO,
+                          DECODE (L62.SERIAL_NO, NULL, 'N', 'Y') YN,
+                          ( SELECT SERIAL_NO FROM LOG0061D
+                            WHERE SERIAL_NO = L62.SERIAL_NO) NN
+               FROM  LOG0062M L62
+               WHERE 1 = 1
+                    AND L62.MATNR =  #{partsCode}
+                    AND L62.SERIAL_NO = #{serialNo})
+   </select>
+
+  <resultMap id="APIMOVEDATA" type="egovMap" />
+    <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map">
+      { call SP_LOGISTIC_DELIVERY (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler},
+           #{gtype},
+           #{doctext},
+           #{gipfdate},
+           #{giptdate},
+           #{prgnm},
+           #{refdocno},
+           #{salesorder},
+           #{userId} ,
+           #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIMOVEDATA} )
+      }
+  </select>
+
+  <resultMap id="APIMOVEDATA_SERIAL" type="egovMap" />
+    <select id="StockMovementIssueScan"  statementType="CALLABLE" parameterType="Map">
+       /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.StockMovementIssueScan] 20191216 - KR MIN */
+       { call SP_LOGISTIC_DELIVERY_SERIAL (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler},
+                                                              #{gtype},
+                                                              #{doctext},
+                                                              #{gipfdate},
+                                                              #{giptdate},
+                                                              #{prgnm},
+                                                              #{refdocno},
+                                                              #{salesorder},
+                                                              #{userId} ,
+                     #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIMOVEDATA_SERIAL} )
+             }
+  </select>
+
+  <resultMap id="APIBARCODESAVEDATA" type="egovMap" />
+    <select id="LogisticBarcodeSave"  statementType="CALLABLE" parameterType="Map">
+       /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.LogisticBarcodeSave] 20191216 - KR MIN */
+       { call SP_LOGISTIC_BARCODE_SAVE ( TO_CHAR(SYSDATE,'DD/MM/YYYY'),
+                                                             #{reqstNo},
+                                                             #{delvryNo},
+                                                             'UM',
+                                                             #{ioType},
+                                                             #{userId} ,
+                                                             #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIBARCODESAVEDATA} ,
+                                                             #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIBARCODESAVEDATA}
+          )
+        }
+  </select>
+
+  <resultMap id="APIBARCODESCANDATA" type="egovMap" />
+    <select id="LogisticBarcodeScan"  statementType="CALLABLE" parameterType="Map">
+       /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.LogisticBarcodeScan] 20191216 - KR MIN */
+             { call SP_LOGISTIC_BARCODE_SCAN ( #{scanNo},
+                                                                   #{serial},
+                                                                   #{reqstNo},
+                                                                   #{delvryNo},
+                                                                   #{fromLocCode},
+                                                                   #{toLocCode},
+                                                                   'UM',
+                                                                   #{ioType},
+                                                                   #{userId} ,
+                                                                   #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIBARCODESCANDATA} ,
+                                                                   #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIBARCODESCANDATA} ,
+                                                                   #{outScanNo , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APIBARCODESCANDATA}
+                )
+            }
+   </select>
+
+  <resultMap id="APICANCLEDATA" type="egovMap" />
+    <select id="StockMovementIssueCancel"  statementType="CALLABLE" parameterType="Map">
+      { call SP_LOGISTIC_DELIVERY_CANCEL (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler},
+                                                              #{reqStatus}, '',
+                                                              #{requestDate},
+                                                              #{requestDate},
+                                                              'API CANCEL', #{refdocno},
+                                                               #{salesorder}, #{userId} ,
+                                                               #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=APICANCLEDATA} )
+        }
+  </select>
+
+  <update id="updateNonBarcodeQty" parameterType="Map">
+     UPDATE LOG0073D SET CNT_QTY=#{countedQty}
+     WHERE 1=1
+         AND SERIAL_CHK<![CDATA[<> ]]> 'Y'
+         AND INVNTRY_LOC_ID =(SELECT INVNTRY_LOC_ID
+                                                            FROM LOG0072M
+                                                            WHERE LOC_ID = (SELECT WH_LOC_BRNCH_ID
+                                                                                FROM SYS0028M
+                                                                                WHERE WH_LOC_CODE = #{userId})
+                                                              AND INVNTRY_NO = #{invenAdjustNo})
+                                                              AND SEQ =#{invenAdjustNoItem}
+  </update>
+
+  <update id="updateBarcodeQty" parameterType="Map">
+     UPDATE LOG0073D  SET CNT_QTY=#{countedQty}
+     WHERE  1=1
+          AND SERIAL_CHK = 'Y'
+          AND INVNTRY_LOC_ID = ( SELECT INVNTRY_LOC_ID
+                                               FROM LOG0072M
+                                               WHERE LOC_ID= ( SELECT WH_LOC_BRNCH_ID
+                                                                          FROM SYS0028M
+                                                                          WHERE WH_LOC_CODE = #{userId})
+                                                                              AND INVNTRY_NO = #{invenAdjustNo})
+                AND SEQ             = #{invenAdjustNoItem}
+  </update>
+
+  <insert id="insertBarcode" parameterType="Map">
+    INSERT INTO LOG0074D
+    SELECT L73.INVNTRY_LOC_ID,
+               L73.SEQ,
+               #{serialNo},
+               ( select WH_LOC_ID
+                 from sys0028m
+                 where wh_loc_code=#{userId}) ,
+               SYSDATE
+    FROM LOG0072M L72, LOG0073D L73
+     WHERE 1=1
+          AND L72.INVNTRY_LOC_ID=L73.INVNTRY_LOC_ID
+          AND L72.INVNTRY_NO = #{invenAdjustNo}
+          AND L73.SEQ = #{invenAdjustNoItem}
+  </insert>
+
+  <select id="StockMovementDelvryNo" parameterType="Map" resultType="String">
+    SELECT L54.DELVRY_NO DNO
+    FROM LOG0054M L54, LOG0055D L55
+    WHERE L54.DELVRY_NO = L55.DELVRY_NO
+        AND L55.REQST_NO = #{smoNo}
+        AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
+    GROUP BY L54.DELVRY_NO
+  </select>
+
+  <update id="StockMovementReqstCancel"  parameterType="Map">
+   UPDATE LOG0047M  SET REQST_DEL = 'Y'
+   WHERE REQST_NO = #{smoNo}
+  </update>
+
+  <select id="getDeliveryNo" parameterType="Map" resultType="String">
+    SELECT L54.DELVRY_NO DNO
+    FROM LOG0054M L54, LOG0055D L55
+    WHERE L54.DELVRY_NO = L55.DELVRY_NO
+        AND L55.REQST_NO = #{smoNo}
+        AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
+    GROUP BY L54.DELVRY_NO
+  </select>
+
+  <select id="getUserLocId" parameterType="Map" resultType="int">
+    SELECT WH_LOC_ID
+    FROM SYS0028M
+    WHERE WH_LOC_CODE=#{userId}
+  </select>
+
+  <insert id="insStockMovementHeads" parameterType="Map">
+    INSERT INTO LOG0047M  (REQST_NO,
+                                        TRNSC_TYPE,
+                                        TRNSC_TYPE_DTL,
+                                        PRIDIC_FRQNCY,
+                                        REQST_CRT_DT,
+                                        REQST_REQUIRE_DT,
+                                        DOC_HDER_TXT,
+                                        RCIV_CDC_RDC,
+                                        REQST_CDC_RDC,
+                                        REQST_STUS,
+                                        CRT_USER_ID,
+                                        CRT_DT,
+                                        REQST_TYPE,
+                                        REQST_TYPE_DTL
+    ) VALUES ( #{reqno}
+                  , 'UM'
+                  , #{smType}
+                  , 'M'
+                  , SYSDATE
+                  , SYSDATE
+                  , ' '
+                  ,  #{rcivCdcRdc}
+                  ,  #{targetLocation}
+                  , 'O'
+                  , (select NVL(MAX(USER_ID),99999999) from sys0047m where user_name=#{userId})
+                  , SYSDATE
+                  , 'UM'
+                  , #{smType}
+    )
+  </insert>
+
+  <select id="dateParsing" parameterType="String" resultType="String">
+    SELECT TO_CHAR(TO_DATE(#{param} , 'YYYYMMDD') , 'DD/MM/YYYY')
+    FROM DUAL
+  </select>
+
+  <select id="selectWhLocId" parameterType="String" resultType="String">
+    SELECT WH_LOC_ID
+    FROM SYS0028M
+    WHERE WH_LOC_CODE = #{userId}
+  </select>
+
+  <resultMap id="USUMAPIBARCODESCANDATA" type="egovMap" />
+  <select id="LogisticBarcodeScanUsum"  statementType="CALLABLE" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper.LogisticBarcodeScanUsum] 20191219 - KR_HAN */
+    { call SP_LOGISTIC_BARCODE_SCAN_USUM ( #{scanNo},
+                                                                   #{serial},
+                                                                   #{reqstNo},
+                                                                   #{delvryNo},
+                                                                   #{fromLocCode},
+                                                                   #{toLocCode},
+                                                                   'UM',
+                                                                   #{ioType},
+                                                                   #{userId} ,
+                                                                   #{errcode , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=USUMAPIBARCODESCANDATA} ,
+                                                                   #{errmsg , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=USUMAPIBARCODESCANDATA} ,
+                                                                   #{outScanNo , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=USUMAPIBARCODESCANDATA}
+       )
+    }
+  </select>
+
+  <select id="getStockHCPriceList" parameterType="Map" resultType="egovMap">
+    SELECT S26T.STK_ID parts_Id
+             , l44.BOM_COMPNT parts_Code
+             , S26T.STK_DESC parts_Name
+             , S26T.STK_CTGRY_ID
+             , S26T.STK_TYPE_ID
+             , 1 price_Unit
+             , s16.AMT parts_Price
+             , ( select CODE_NAME
+                 from sys0013m
+                 where CODE_MASTER_ID ='94'
+                    AND CODE_ID='1150') currency
+    FROM log0043m l43,
+             log0044d l44,
+             SAL0016M s16,
+             SYS0026M s26t
+    WHERE S26T.STK_ID = s16.STK_ID
+         AND l44.BOM_COMPNT = S26T.stk_code(+)
+         AND l43.bom = l44.bom
+         AND s26t.STK_CTGRY_ID IN ( SELECT A.CODE_ID
+                                                   FROM SYS0013M A,
+                                                            SYS0094M B
+                                                   WHERE A.CODE = B.CODE
+                                                       AND A.CODE_MASTER_ID = 11
+                                                       AND B.IND = 'HOMECARE')
+         AND l43.MATRL_NO=#{productCode}
+
+        <if test="searchType == 1 ">
+           AND S26T.STK_CODE = #{searchKeyword}
+        </if>
+
+        <if test="searchType == 2 ">
+           AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%'
+        </if>
+
+    group by S26T.STK_ID,
+                 l44.BOM_COMPNT,
+                 S26T.STK_DESC,
+                 S26T.STK_CTGRY_ID,
+                 S26T.STK_TYPE_ID,
+                 1,
+                 s16.AMT
+  </select>
+
+  <select id="getStockTransferReqStatusDListScan" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTransferReqStatusDListScan] 20200108 - KR HAN */
+               L48.REQST_NO REQ_NO ,
+               L48.REQST_NO_ITM smo_No_Item ,
+               L48.ITM_CODE parts_Code,
+               L48.ITM_NAME parts_Name ,
+               S26.STK_ID parts_Id ,
+               S26.STK_TYPE_ID parts_Type
+
+               <if test="searchStatus == 1 ">
+                 , L48.REQST_QTY request_Qty
+                 , S26.SERIAL_CHK BARCODE_CHK_YN
+               </if>
+
+               <if test="searchStatus == 2 ">
+                 , L55.DELVRY_QTY request_Qty
+                 , L55.DELVRY_NO
+                 , L55.SERIAL_NO serial_No
+               </if>
+
+    FROM LOG0048D L48,
+             SYS0026M S26
+
+    <if test="searchStatus == 2 ">
+       , ( SELECT L55.DELVRY_NO,
+                      L55.DELVRY_NO_ITM,
+                      L55.REQST_NO,
+                      L55.ITM_CODE,
+                      DECODE(L99.SERIAL_NO, NULL, L55.DELVRY_QTY, 1) AS DELVRY_QTY,
+                      L99.SERIAL_NO
+           FROM LOG0055D L55 ,
+                    LOG0099D L99
+           WHERE L55.REQST_NO = L99.REQST_NO(+)
+               AND L55.REQST_NO_ITM = L99.REQST_NO_ITM(+)
+               AND L55.REQST_NO = #{smoNo}
+               AND L99.SCAN_STUS_CODE(+) = 'C' AND L99.IO_TYPE(+) ='O'
+               AND NVL(L55.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) L55
+    </if>
+
+     WHERE 1 =1
+         AND L48.ITM_CODE  = S26.STK_CODE(+)
+
+     <if test="searchStatus == 2 ">
+       AND L48.ITM_CODE = L55.ITM_CODE
+       AND L48.REQST_NO = L55.REQST_NO
+     </if>
+         AND L48.REQST_NO =#{smoNo}
+  </select>
+
+  <select id="selectSerialInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectSerialInfo]  */
+    SELECT X.*
+    FROM ( SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
+                        , A.SERIAL_NO
+                        , A.SCAN_NO
+                        , A.ITM_CODE
+                        , A.SCAN_STUS_CODE
+                        , A.REQST_NO                   -- GR NO
+                        , A.REQST_NO_ITM               -- GR SEQ
+                        , NVL(A.DELVRY_NO,'') DELVRY_NO
+                        , A.DELVRY_NO_ITM
+                        , A.FROM_LOC_ID
+                        , A.TO_LOC_ID                  -- TO CDC
+                        , A.TRNSC_TYPE                 -- (HP)
+                        , A.IO_TYPE
+               FROM LOG0099D A WHERE (A.DELVRY_NO = #{reqstNo} or A.REQST_NO = #{reqstNo})
+               ) X
+    WHERE X.RN = 1
+        <if test="zIoType !=null and zIoType !=''">
+          and X.IO_TYPE = #{zIoType}
+        </if>
+  </select>
+
+<select id="selectSerialInfoMul" parameterType="Map" resultType="egovMap">
+    SELECT x.REQST_NO,
+               x.DELVRY_NO,
+               x.ITM_CODE,
+               x.IO_TYPE
+    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN,
+                          A.SERIAL_NO,
+                          A.SCAN_NO,
+                          A.ITM_CODE,
+                          A.SCAN_STUS_CODE,
+                          A.REQST_NO,
+                          A.REQST_NO_ITM,
+                          NVL(A.DELVRY_NO,'') DELVRY_NO,
+                          A.DELVRY_NO_ITM,
+                          A.FROM_LOC_ID,
+                          A.TO_LOC_ID,
+                          A.TRNSC_TYPE,
+                          A.IO_TYPE
+              FROM LOG0099D A
+              WHERE 1=1
+			AND A.DELVRY_NO = #{reqstNo} or A.REQST_NO = #{reqstNo}
+              <if test="zIoType !=null and zIoType !=''">
+                AND A.IO_TYPE = #{zIoType}
+              </if>
+    ) X WHERE X.RN = 1
+    GROUP BY x.ITM_CODE,
+                   x.REQST_NO,
+                   x.DELVRY_NO,
+                   x.IO_TYPE
+  </select>
+
+  <update id="updateDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrDetail]  */
+    update LOG0099D set scan_stus_code = 'C'
+    where Scan_no in ( select SCAN_NO from ( SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+                                                                          ,SCAN_NO
+                                                                FROM LOG0099D
+                                                                WHERE
+
+                                                                 <if test="delvryNo !=null and delvryNo !=''">
+                                                                   DELVRY_NO = #{delvryNo}
+                                                                 </if>
+
+                                                                 <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
+                                                                   REQST_NO = #{reqstNo}
+                                                                 </if>
+                                                                 AND scan_stus_code = 'D'
+                                                                 AND ITM_CODE = #{itmCode}
+                                                              ) x where x.rn =1
+
+    )AND scan_stus_code = 'D'
+  </update>
+
+  <update id="updateDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrMain]  */
+    update LOG0100m set stus_code = #{ioType}
+    WHERE
+
+      <if test="delvryNo !=null and delvryNo !=''">
+         last_DELVRY_NO = #{delvryNo}
+      </if>
+
+      <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+         LAST_REQST_NO = #{reqstNo}
+      </if>
+       AND ITM_CODE = #{itmCode}
+       AND SERIAL_NO IN (
+            SELECT SERIAL_NO FROM LOG0099D WHERE
+            <if test="delvryNo !=null and delvryNo !=''">
+                last_DELVRY_NO = #{delvryNo}
+            </if>
+            <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+                LAST_REQST_NO = #{reqstNo}
+            </if>
+            AND SCAN_STUS_CODE = 'C'
+        )
+  </update>
+
+  <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectDeliveryGrHist]  */
+    select * from ( SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+                                  ,SERIAL_NO
+                                  ,SEQ
+                         FROM LOG0101h
+                         WHERE
+
+                         <if test="delvryNo !=null and delvryNo !=''">
+                           last_DELVRY_NO = #{delvryNo}
+                         </if>
+
+                         <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+                           LAST_REQST_NO = #{reqstNo}
+                         </if>
+
+                         AND ITM_CODE = #{itmCode}
+    ) x where RN =1
+  </select>
+
+  <update id="updateDeliveryGrHist" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrHist]  */
+    merge into LOG0101H a
+        using (select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        ,'I' io_type
+        FROM LOG0101h
+        WHERE
+            last_DELVRY_NO = #{delvryNo}
+        AND ITM_CODE = #{itmCode}
+        )x where RN =1)
+        b on (b.SERIAL_NO = a.SERIAL_NO and b.seq = a.seq)
+        when matched then
+        UPDATE SET
+        a.stus_code = b.io_type
+  </update>
+
+  <select id="selectSMDitmExist" parameterType="Map" resultType="integer">
+    select count(*)
+    from LOG0048D
+    where reqst_no = #{reqno}
+       and itm_Code = #{partsCode}
+  </select>
+
+  <update id="updateRequestMovementQty" parameterType="String">
+    update LOG0048D set reqst_qty = reqst_qty + #{requestQty}
+    where reqst_no = #{reqno}
+       and itm_Code = #{partsCode}
+  </update>
+
+  <update id="updateDeliveryMovementQty" parameterType="String">
+    update LOG0055D set DELVRY_QTY = DELVRY_QTY + #{requestQty}
+    where delvry_no = #{delno}
+       and itm_Code = #{partsCode}
+  </update>
+
+  <select id="getHiCareInventory" parameterType="Map" resultType="egovMap">
+    select A.SERIAL_NO serial_no
+           , G.CODE_DESC model
+           , D.NAME status
+           , E.NAME condition
+           , A.FILTER_SN filter_Sn
+           , '12' filter_Chg_Period
+           , TO_CHAR(A.FILTER_CHG_DT, 'DD/MM/YYYY') filter_Chg_Dt
+           , TO_CHAR(A.FILTER_CHG_DT+365, 'DD/MM/YYYY') filter_Next_Chg_Period
+           , case when (FN_GET_FIRST_DAY_MONTH(A.FILTER_CHG_DT+365) <![CDATA[ <= ]]> FN_GET_FIRST_DAY_MONTH(SYSDATE)) then 'Y'
+                                                                                                                                                                                          else 'N' end red_Flag
+    from SVC0126M a
+    left join SYS0038M d on d.stus_code_id = a.STATUS
+    left join SYS0038M e on e.stus_code_id = a.CONDITION
+    left join SYS0013m g on g.code_id = A.model
+    where 1=1
+        and loc_id = #{userNm}
+  </select>
+
+  <select id="getSMOReceiveCntList" parameterType="Map" resultType="integer">
+    select count(1) cnt
+    from log0054m l54
+         , log0047m l47
+         , sys0028m s28q
+         , sys0047m s47
+         , ( select distinct l48.reqst_no ,
+                                 l55.delvry_no
+             from log0048d l48 ,
+                    log0055d l55
+             where L48.REQST_NO = l55.reqst_no
+                and l48.itm_code= l55.itm_code
+               AND NVL (l55.DEL_FLAG, 'N') <![CDATA[ <> ]]> 'Y'
+          ) rd
+     where 1 = 1
+         and l47.reqst_no   =  rd.reqst_no
+         and l54.delvry_no  = rd.delvry_no
+         AND L54.CRT_USER_ID = S47.user_id(+)
+         and L47.REQST_CDC_RDC = to_char(s28q.wh_loc_id)
+         AND l47.trnsc_type = 'UM'
+         AND NVL (L54.DEL_FLAG, 'N') <![CDATA[ <> ]]> 'Y'
+         AND NVL (L54.DELVRY_GI_CMPLT, 'N')  <![CDATA[ <> ]]> 'N'
+         and s28q.wh_loc_code = #{userId}
+         and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y'
+
+         <if test="searchFromDate !=null and searchFromDate !=''">
+            AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYYMMDD'),'yyyymmdd')
+         </if>
+
+          <if test="searchToDate !=null and searchToDate !=''">
+            AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd')
+          </if>
+  </select>
+
+  <select id="getSMOMoveOutCntList" parameterType="Map" resultType="integer">
+    SELECT count(1) cnt
+    FROM LOG0047M L47 , SYS0028M S28
+    WHERE 1 = 1
+         AND L47.RCIV_CDC_RDC = TO_CHAR(S28.WH_LOC_ID)
+         AND L47.TRNSC_TYPE = 'UM'
+         AND NVL(L47.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y'
+         AND WH_LOC_CODE = #{userId}
+         AND L47.REQST_STUS='O'
+
+         <if test="searchFromDate !=null and searchFromDate !=''">
+            AND TO_CHAR( L47.REQST_CRT_DT,'YYYYMMDD')
+            BETWEEN TO_CHAR(TO_DATE(#{searchFromDate},'YYYYMMDD'), 'YYYYMMDD')
+         </if>
+
+         <if test="searchToDate !=null and searchToDate !=''">
+            AND TO_CHAR(TO_DATE(#{searchToDate},'YYYYMMDD'), 'YYYYMMDD')
+         </if>
+  </select>
+
+  <select id="getOnHandStkSerialList" parameterType="Map" resultType="egovMap">
+    SELECT A.SERIAL_NO AS SERIAL_NO
+             , A.ITM_CODE AS PART_CODE
+             , B.STK_DESC AS PART_NAME
+             , TO_CHAR(TO_DATE(A.LAST_DELVRY_GR_DT, 'YYYYMMDD'), 'DD/MM/YYYY') AS GR_DATE
+    FROM LOG0100M A
+    LEFT OUTER JOIN SYS0026M B ON A.ITM_CODE = B.STK_CODE
+    LEFT OUTER JOIN SYS0013M C ON B.STK_TYPE_ID = C.CODE_ID
+    JOIN SYS0028M D ON A.LAST_LOC_ID = D.WH_LOC_ID
+    WHERE A.LAST_SALES_ORD_ID IS NULL
+        AND A.LAST_LOC_ID IN ( SELECT WH_LOC_ID
+                                            FROM SYS0028M
+                                            WHERE WH_LOC_CODE = #{userId} )
+        AND ( A.ITM_CODE = #{partsCode} OR B.STK_DESC = #{partsCode} )
+        AND A.STUS_CODE IN ( 'I' )
+
+        <if test="serialNo !=null and serialNo !=''">
+          AND A.SERIAL_NO = #{serialNo}
+       </if>
+
+       ORDER BY A.SERIAL_NO
+  </select>
+
+  <select id="getAllMember" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(A.MEM_ID) AS MEM_ID
+             , TO_CHAR(A.NAME) AS MEM_NAME
+             , TO_CHAR(A.MEM_CODE) AS MEM_CODE
+             , TO_CHAR(B.CODE_NAME) AS CODE_NAME
+             , TO_CHAR(D.MEM_ORG_DESC) AS MEM_ORG_DESC
+             , TO_CHAR(E.CODE) AS BRNCH_CODE
+             , TO_CHAR(E.NAME) AS BRNCH_NAME
+             , TO_CHAR(A.MEM_TYPE) AS MEM_TYPE
+      FROM  ORG0001D A
+      INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
+      <!-- INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
+                                        AND C.LAST_GRP_CODE = ( SELECT B.LAST_GRP_CODE
+                                                                        FROM ORG0001D A
+                                                                        JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+                                                                        WHERE A.MEM_CODE = #{userId})  -->
+      INNER JOIN ORG1001V C ON A.MEM_ID = C.MEM_ID
+                                        AND C.GRP_CODE = ( SELECT GRP_CODE FROM ORG1001V WHERE MEM_CODE = #{userId})
+      INNER JOIN ORG0012D D ON A.MEM_TYPE = D.MEM_TYPE_ID
+                                        AND C.MEM_LVL = D.MEM_ORG_LVL
+      INNER JOIN SYS0005M E ON  A.BRNCH = E.BRNCH_ID
+      WHERE C.MEM_LVL = '4' AND A.STUS = 1
+
+      <if test="txtSearch1 !=null and txtSearch1 !=''">
+        AND A.MEM_CODE = #{txtSearch1}
+      </if>
+
+      <!-- <if test="txtSearch1 == null and txtSearch1 ==''"> -->
+        AND A.MEM_CODE != #{userId}
+      <!-- </if> -->
+
+      AND A.STUS = 1
+      ORDER BY MEM_CODE
+  </select>
+
+  <select id="getCodyAvaFilterList" parameterType="Map" resultType="egovMap">
+    SELECT TO_CHAR(S26.STK_ID) AS STK_ID,
+               TO_CHAR(S26.STK_CODE) AS STK_CDE,
+               TO_CHAR(S26.STK_DESC) AS STK_NM,
+               TO_CHAR(S26.STK_TYPE_ID) AS ITEM_TYP_ID,
+               TO_CHAR(STYPE.CODE_NAME) AS ITEM_TYP_NM,
+               TO_CHAR(S28.WH_LOC_ID) AS WH_ID,
+               TO_CHAR(L56.QTY) AS QTY,
+               <!-- TO_CHAR(NVL(L56.MOV_QTY , 0)) MOV_QTY ,
+               TO_CHAR(NVL(L75.BOOKING_QTY , 0)) AS BOOKING_QTY, -->
+               TO_CHAR(QTY - NVL(L75.BOOKING_QTY , 0)) AS AVA_QTY
+    FROM LOG0056M L56
+    JOIN SYS0028M S28 ON S28.WH_LOC_ID = L56.LOC_ID
+    JOIN SYS0026M S26 ON S26.STK_CODE  = L56.STK_CODE
+    JOIN ( SELECT *
+              FROM SYS0013M
+              WHERE CODE_MASTER_ID = 15) STYPE ON STYPE.CODE_ID = L56.STK_TYPE_ID
+     LEFT JOIN ( SELECT l75.LOC_ID,
+                                 l75.ITM_CODE,
+                                 SUM (REQST_QTY) - SUM (NVL(MOV_QTY, 0)) AS BOOKING_QTY
+                      FROM LOG0075M l75
+                      WHERE NVL(l75.FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+                          AND l75.REQST_NO IN ( SELECT REQST_NO
+                                                            FROM LOG0047M
+                                                            WHERE NVL(REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+     GROUP BY l75.LOC_ID, l75.ITM_CODE) L75 ON L75.ITM_CODE = L56.STK_CODE
+                                                                AND L75.LOC_ID = L56.LOC_ID
+    WHERE 1 = 1
+        AND S28.WH_LOC_CODE = #{txtSearch1}
+        AND (QTY - NVL(L75.BOOKING_QTY , 0)) <![CDATA[ > ]]> 0
+
+        <if test="txtSearch3 !=null and txtSearch3 !=''">
+          <if test="txtSearch2 !=null and txtSearch2 !=''">
+            <if test="txtSearch2 == 1">
+              AND S26.STK_CODE = #{txtSearch3}
+            </if>
+
+            <if test="txtSearch2 == 2">
+              AND S26.STK_DESC = #{txtSearch3}
+            </if>
+          </if>
+         </if>
+
+    ORDER BY S26.STK_CODE
+  </select>
+
+</mapper>

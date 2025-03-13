@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.bookingstatus.impl.BookingStatusMapper">
+
+<!-- @author Adrian C. -->
+
+    <select id="searchBookingStatusList" parameterType="Map"  resultType="EgovMap">
+	    SELECT
+	          l75.reqst_no AS reqstno
+	        , l75.seq
+	        , trand.code_name AS stkactivity
+	        , TO_CHAR(l75.reqst_crt_dt, 'YYYY/MM/DD') AS reqstdate
+	        , S28C.WH_LOC_CODE AS frmloccode
+	        , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) AS frmloc
+	        , S28Q.WH_LOC_CODE AS toloccode
+	        , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) AS toloc
+	        , l48.itm_code AS itmcode
+	        , l48.itm_name AS itmname
+	        , NVL(l75.reqst_qty, 0) AS reqstqty
+	        , NVL(l75.final_cmplt, 'N') AS status
+		FROM LOG0075M l75
+		LEFT JOIN log0047m l47 ON l47.reqst_no = l75.reqst_no
+		LEFT JOIN log0048d l48 ON l75.reqst_no = l48.reqst_no AND l48.reqst_no_itm = l75.seq
+		LEFT JOIN sys0028m s28c ON l47.rciv_cdc_rdc = s28c.wh_loc_id
+		LEFT JOIN sys0028m s28q ON l47.reqst_cdc_rdc = s28q.wh_loc_id
+		, (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
+		WHERE 1=1
+		AND l75.trnsc_type_dtl = trand.code
+		AND l75.reqst_no IN (SELECT reqst_no
+                                          FROM log0047m
+                                         WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+        <if test="stkreqstno !=null and stkreqstno !=''">
+            AND l47.reqst_no = #{stkreqstno}
+        </if>
+
+	    <if test="itmCode !=null and itmCode !=''">
+	        AND l75.itm_code = #{itmCode}
+	    </if>
+
+	    <if test="smtype != null">
+	        AND l47.trnsc_type_dtl IN
+	        <foreach item="item" collection="smList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="srchcrtdtfrom !=null and srchcrtdtfrom !='' and srchcrtdtto !=null and srchcrtdtto !=''">
+	        AND TO_CHAR(l75.reqst_crt_dt, 'YYYYMMDD')
+	        BETWEEN TO_CHAR(TO_DATE(#{srchcrtdtfrom}, 'DD/MM/YYYY'), 'YYYYMMDD')
+	                 AND TO_CHAR(TO_DATE(#{srchcrtdtto}, 'DD/MM/YYYY'), 'YYYYMMDD')
+	    </if>
+
+	    <if test="status != null and status !=''">
+	        AND nvl(l75.final_cmplt , 'N') = #{status}
+	    </if>
+
+	    <if test="flocation !=null and flocation !=''">
+	        AND l47.rciv_cdc_rdc = #{flocation}
+	    </if>
+
+	    <if test="tlocation !=null and tlocation !=''">
+	        AND l47.reqst_cdc_rdc = #{tlocation}
+	    </if>
+
+	    ORDER BY l75.reqst_no
+
+    </select>
+
+</mapper>

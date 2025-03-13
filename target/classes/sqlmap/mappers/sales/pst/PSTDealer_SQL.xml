@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pst.impl.PSTDealerMapper">
+
+    <select id="pstDealerList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_ID DEALER_ID  ,
+			       Extent1.DEALER_NAME DEALER_NAME  ,
+			       Extent1.DEALER_STUS_ID DEALER_STUS_ID  ,
+			       Extent1.DEALER_TYPE  ,
+			       Extent3.CNT_NAME CNT_NAME  ,
+			       Extent3.TEL_M1 TEL_M1  ,
+			       Extent6.CODE CODE2
+		   FROM SAL0030D Extent1
+	         JOIN SAL0031D Extent2   ON ( Extent2.DEALER_ID = Extent1.DEALER_ID )
+	         AND 9 = Extent2.STUS_CODE_ID
+	         JOIN SAL0032D Extent3   ON ( Extent3.DEALER_ID = Extent1.DEALER_ID )
+	         AND 9 = Extent3.STUS_CODE_ID
+	         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.DEALER_STUS_ID
+          WHERE 1=1
+              <if test="pstDealerStusList != null and pstDealerStusList != ''">
+                   AND Extent1.DEALER_STUS_ID IN
+                  <foreach item="item" collection="pstDealerStusList" index="index" open="(" separator="," close=")">
+                      #{item}
+                  </foreach>
+              </if>
+              <if test="pstDealerTypeList != null and pstDealerTypeList != ''">
+                   AND Extent1.DEALER_TYPE IN
+                  <foreach item="item" collection="pstDealerTypeList" index="index" open="(" separator="," close=")">
+                      #{item}
+                  </foreach>
+              </if>
+              <if test="pstDealerId != null and pstDealerId != ''">
+                  AND Extent1.PST_DEALER_ID = #{pstDealerId}
+              </if>
+              <if test="pstDealerName != null and pstDealerName != ''">
+                  AND UPPER(Extent1.DEALER_NAME) LIKE '%'||UPPER(#{pstDealerName})||'%'
+              </if>
+              <if test="pstCntName != null and pstCntName != ''">
+                  AND UPPER(Extent3.CNT_NAME) LIKE '%'|| UPPER(#{pstCntName})||'%'
+              </if>
+       ORDER BY Extent1.DEALER_NAME ASC
+    </select>
+
+    <select id="dealerNricDupChk" parameterType="Map" resultType="egovMap">
+        SELECT count(0) CNT
+		  FROM SAL0030D
+		WHERE DEALER_NRIC = #{dealerNric}
+    </select>
+
+    <insert id="insertPstSAL0063D">
+        INSERT INTO SAL0063D (
+                      PST_ITM_ID,
+                      PST_SALES_ORD_ID,
+                      PST_ITM_STK_ID,
+                      PST_ITM_PRC,
+                      PST_ITM_REQ_QTY,
+                      PST_ITM_TOT_PRC,
+                      PST_ITM_DO_QTY,
+                      PST_ITM_CAN_QTY,
+                      PST_ITM_BAL_QTY,
+                      CRT_DT,
+                      CRT_USER_ID)
+          VALUES  ( #{pstItmId},
+                        #{pstSalesOrdId},
+                        #{pstItmStkId},
+                        #{pstItmPrc},
+                        #{pstItmReqQty},
+                        #{pstItmTotPrc},
+                        #{pstItmDoQty},
+                        #{pstItmCanQty},
+                        #{pstItmBalQty},
+                        SYSDATE,
+                        #{crtUserId})
+     </insert>
+
+     <select id="pstDealerDtBasicInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_NAME   ,
+			       Extent1.DEALER_NRIC   ,
+			       Extent1.DEALER_EMAIL   ,
+			       Extent1.DEALER_BRNCH_ID   ,
+			       Extent1.DEALER_TYPE,
+			       Extent1.SBO_CODE,
+			       Extent4.CODE_NAME ,
+			       Extent1.CRT_DT   ,
+			       Extent1.UPD_DT   ,
+			       Extent1.USER_ID   ,
+			       Extent2.USER_NAME CRT_USER_NAME  ,
+			       Extent3.USER_NAME UPD_USER_NAME
+		  FROM SAL0030D Extent1
+		          LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.CRT_USER_ID
+		          LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.UPD_USER_ID
+		          LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.DEALER_TYPE
+		 WHERE Extent1.DEALER_ID = #{paramDealerId}
+		     AND ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="pstDealerDtMainAddr" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.DEALER_ADD_ID   ,
+                   Extent1.DEALER_ID   ,
+                   Extent1.STUS_CODE_ID   ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent6.CODE STUS_CODE  ,
+                   Extent1.AREA_ID  ,
+                   Extent1.ADDR_DTL  ,
+                   Extent1.STREET  ,
+                   Extent1.REM ,
+                   NVL(Extent2.AREA, '') AREA,
+                   NVL(Extent2.POSTCODE, '') POSTCODE,
+                   NVL(Extent2.CITY, '') CITY,
+                   NVL(Extent2.STATE, '') STATE,
+                   NVL(Extent2.COUNTRY, '') COUNTRY,
+                   CASE WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '||
+                        NVL(Extent1.STREET, '') ||' '|| Extent2.AREA ||' '|| Extent2.POSTCODE ||' '|| Extent2.CITY ||' '|| Extent2.STATE ||' '|| Extent2.COUNTRY AS FULL_ADDR,
+                   CASE
+                        WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
+                   ELSE ' '
+                      END CRT_USER_NAME  ,
+                   CASE
+                        WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+                   ELSE ' '
+                      END UPD_USER_NAME
+          FROM SAL0031D Extent1
+                        JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                 LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
+                 LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.UPD_USER_ID
+                 LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
+        WHERE 8 <![CDATA[ <> ]]> Extent1.STUS_CODE_ID
+            AND Extent1.DEALER_ID = #{paramDealerId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="pstDealerDtUserInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.USER_ID   ,
+			       Extent1.USER_NAME   ,
+			       Extent1.USER_PASSWD   ,
+			       Extent1.USER_FULL_NAME   ,
+			       Extent1.USER_EMAIL   ,
+			       Extent1.USER_NRIC   ,
+			       Extent1.USER_TYPE_ID   ,
+			       Extent1.USER_SEC_QUES_ID   ,
+			       Extent1.USER_SEC_QUES_ANS   ,
+			       Extent1.USER_WORK_NO   ,
+			       Extent1.USER_MOBILE_NO   ,
+			       Extent1.USER_EXT_NO   ,
+			       Extent1.USER_IS_PART_TM   ,
+			       Extent1.USER_DEPT_ID   ,
+			       Extent1.USER_IS_EXTRNL   ,
+			       Extent2.CODE   ,
+			       Extent2.NAME   ,
+			       CASE
+			            WHEN ( Extent1.USER_BRNCH_ID IS NOT NULL ) THEN Extent1.USER_BRNCH_ID
+			       ELSE 0
+			          END C1  ,
+			       CASE
+			            WHEN ( Extent5.BRNCH_ID IS NOT NULL ) THEN Extent5.CODE
+			       ELSE ' '
+			          END C2  ,
+			       CASE
+			            WHEN ( Extent5.BRNCH_ID IS NOT NULL ) THEN Extent5.NAME
+			       ELSE ' '
+			          END C3  ,
+			       CASE
+			            WHEN ( Extent5.TYPE_ID IS NOT NULL ) THEN Extent5.TYPE_ID
+			       ELSE 0
+			          END C4  ,
+			       CASE
+			            WHEN ( Extent1.USER_DEPT_ID IS NOT NULL ) THEN Extent1.USER_DEPT_ID
+			       ELSE 0
+			          END C5  ,
+			       CASE
+			            WHEN ( Extent3.DEPT_ID IS NOT NULL ) THEN Extent3.DEPT_NAME
+			       ELSE ' '
+			          END C6  ,
+			       CASE
+			            WHEN ( Extent4.DEPT_ID IS NOT NULL ) THEN Extent4.DEPT_NAME
+			       ELSE ' '
+			          END C7  ,
+			       CASE
+			            WHEN ( Extent1.USER_DT_JOIN IS NOT NULL ) THEN Extent1.USER_DT_JOIN
+			       ELSE to_date('1900-01-01', 'yyyy-mm-dd')
+			          END USER_DT_JOIN,
+			       CASE
+			            WHEN ( Extent6.RESN_ID IS NOT NULL ) THEN Extent6.RESN_DESC
+			       ELSE ' '
+			          END C9  ,
+			       CASE
+			            WHEN ( Extent1.USER_STUS_ID IS NOT NULL ) THEN Extent1.USER_STUS_ID
+			       ELSE 0
+			          END C10  ,
+			       CASE
+			            WHEN ( Extent10.CODE_ID IS NOT NULL ) THEN Extent10.CODE_NAME
+			       ELSE ' '
+			          END C11  ,
+			       CASE
+			            WHEN ( Extent1.USER_UPD_DT IS NOT NULL ) THEN Extent1.USER_UPD_DT
+			       ELSE to_date('1900-01-01', 'yyyy-mm-dd')
+			          END C12  ,
+			       CASE
+			            WHEN ( Extent1.USER_UPD_USER_ID IS NOT NULL ) THEN Extent1.USER_UPD_USER_ID
+			       ELSE 0
+			          END C13  ,
+			       CASE
+			            WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
+			       ELSE ' '
+			          END C14  ,
+			       CASE
+			            WHEN ( Extent1.USER_VAL_ID_FROM IS NOT NULL ) THEN Extent1.USER_VAL_ID_FROM
+			       ELSE to_date('1900-01-01', 'yyyy-mm-dd')
+			          END C15  ,
+			       CASE
+			            WHEN ( Extent1.USER_VAL_ID_TO IS NOT NULL ) THEN Extent1.USER_VAL_ID_TO
+			       ELSE to_date('1900-01-01', 'yyyy-mm-dd')
+			          END C16  ,
+			       CASE
+			            WHEN ( Extent8.ROLE_ID IS NOT NULL ) THEN Extent8.ROLE_ID
+			       ELSE 0
+			          END C17  ,
+			       CASE
+			            WHEN ( Extent9.ROLE_ID IS NOT NULL ) THEN Extent9.ROLE_CODE
+			       ELSE ' '
+			          END C18
+			  FROM SYS0047M Extent1
+			         JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.USER_STUS_ID
+			         LEFT JOIN SYS0040M Extent3   ON Extent3.DEPT_ID = Extent1.USER_DEPT_ID
+			         LEFT JOIN SYS0040M Extent4   ON Extent4.DEPT_ID = Extent1.USER_DEPT_ID
+			         LEFT JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = Extent1.USER_BRNCH_ID
+			         LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.USER_SEC_QUES_ID
+			         LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.USER_UPD_USER_ID
+			         LEFT JOIN SYS0045M Extent8   ON ( Extent8.USER_ID = Extent1.USER_ID )
+			         AND ( 1 <![CDATA[ = ]]> Extent8.STUS_ID )
+			         LEFT JOIN SYS0044M Extent9   ON Extent9.ROLE_ID = Extent8.ROLE_ID
+			         LEFT JOIN SYS0013M Extent10   ON Extent10.CODE_ID = Extent1.USER_TYPE_ID
+			 WHERE  Extent1.USER_ID = #{dealerUserId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <select id="pstDealerAddrComboList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT
+
+        <if test=" null != colCountry and '' != colCountry">
+            COUNTRY AS CODE_ID,
+            COUNTRY AS CODE_NAME
+        </if>
+
+        <if test=" null != colState and '' != colState">
+            STATE AS CODE_ID,
+            STATE AS CODE_NAME
+        </if>
+
+        <if test=" null != colCity and '' != colCity">
+            CITY AS CODE_ID,
+            CITY AS CODE_NAME
+        </if>
+
+        <if test=" null != colPostCode and '' != colPostCode">
+            POSTCODE AS CODE_ID,
+            POSTCODE AS CODE_NAME
+        </if>
+
+        <if test=" null != colArea and '' != colArea">
+            AREA AS CODE_ID,
+            AREA AS CODE_NAME
+        </if>
+
+    FROM
+        SYS0064M
+    WHERE STATUS_ID = 1 <!-- state -->
+        AND AREA_ID NOT LIKE 'DM%'
+    <if test="null != country and '' != country"> <!-- city  -->
+        AND COUNTRY = #{country}
+    </if>
+    <if test="null != state and '' != state"> <!-- city  -->
+        AND STATE = #{state}
+    </if>
+    <if test="null != city and '' != city"> <!-- post code  -->
+        AND CITY = #{city}
+    </if>
+    <if test="null != postcode and '' != postcode"> <!-- area  -->
+        AND POSTCODE = #{postcode}
+    </if>
+
+    <!-- Sorting  -->
+    <if test=" null != colCounty and '' != colCounty">
+        ORDER BY COUNTRY
+    </if>
+
+    <if test=" null != colState and '' != colState">
+        ORDER BY STATE
+    </if>
+
+    <if test=" null != colCity and '' != colCity">
+        ORDER BY CITY
+    </if>
+
+    <if test=" null != colPostCode and '' != colPostCode">
+         ORDER BY POSTCODE
+    </if>
+
+    <if test=" null != colArea and '' != colArea">
+         ORDER BY AREA
+    </if>
+
+  </select>
+
+  <select id="getAreaId" parameterType="Map" resultType="egovMap">
+
+            SELECT
+                AREA_ID
+            FROM
+                SYS0064M
+            WHERE
+                COUNTRY =  #{countryValue}
+            AND
+                STATE = #{statValue}
+            AND
+                CITY = #{cityValue}
+            AND
+                POSTCODE = #{postCodeValue}
+            AND
+                AREA = #{areaValue}
+
+  </select>
+
+  <select id="crtSeqSAL0030D" resultType="Integer">
+        SELECT SAL0030D_DEALER_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertPstDealer">
+        INSERT INTO SAL0030D
+            (DEALER_ID,
+             DEALER_NAME,
+             DEALER_NRIC,
+             DEALER_EMAIL,
+             DEALER_STUS_ID,
+             DEALER_BRNCH_ID,
+             CRT_DT,
+             CRT_USER_ID,
+             UPD_DT,
+             UPD_USER_ID,
+             USER_ID,
+             CUST_ID,
+             SBO_CODE,
+             DEALER_TYPE)
+        VALUES
+            (#{dealerId},
+             #{dealerName},
+             #{dealerNric},
+             #{dealerEmail},
+             #{dealerStusId},
+             #{dealerBrnch},
+             SYSDATE,
+             #{userId},
+             SYSDATE,
+             #{userId},
+             #{getUserIdSeq},
+             #{custId},
+             #{dealerSboCode},
+             #{newDealerType})
+     </insert>
+
+    <select id="dealerBrnchList" parameterType="Map" resultType="egovMap">
+            SELECT
+                   Project1.BRNCH_ID  CODE_ID ,
+                   Project1.CODE   ,
+                   Project1.BRNCH_CODE_NAME CODE_NAME
+               FROM ( SELECT
+                                Extent1.BRNCH_ID   ,
+                                Extent1.CODE   ,
+                                Extent1.CODE || '-' || Extent1.NAME AS BRNCH_CODE_NAME
+	                       FROM SYS0005M Extent1
+	                     WHERE 1 = Extent1.STUS_ID
+                             AND Extent1.TYPE_ID = 1160 ) Project1
+               ORDER BY Project1.BRNCH_CODE_NAME ASC
+    </select>
+
+  <select id="getUserIdSeq" resultType="Integer">
+        SELECT SYS0047M_USER_ID_SEQ.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="insertUserSYS0047M" parameterType="Map">
+      INSERT INTO SYS0047M
+	        ( USER_ID
+	        , USER_NAME
+	        , USER_PASSWD
+	        , USER_FULL_NAME
+	        , USER_EMAIL
+	        , USER_STUS_ID
+	        , USER_BRNCH_ID
+	        , USER_DEPT_ID
+	        , USER_UPD_USER_ID
+	        , USER_UPD_DT
+	        , USER_SYNC_CHK
+	        , USER_NRIC
+	        , USER_DT_JOIN
+	        , USER_GSEC_SYN_CHK
+	        , USER_PASSWD_LAST_UPD_DT
+	        , USER_TYPE_ID
+	        , USER_DFLT_PASSWD
+	        , USER_VAL_ID_FROM
+	        , USER_VAL_ID_TO
+	        , USER_SEC_QUES_ID
+	        , USER_SEC_QUES_ANS
+	        , USER_WORK_NO
+	        , USER_MOBILE_NO
+	        , USER_EXT_NO
+	        , USER_IS_PART_TM
+	        , USER_DEPT_ID1
+	        , USER_IS_EXTRNL
+	         )
+         VALUES (
+	            #{getUserIdSeq}
+	          , #{userName}
+	          , #{userPw}
+	          , #{dealerName}
+	          , #{dealerEmail}
+	          , #{userStatusID}
+	          , #{dealerBranch}
+	          , #{userDeptID}
+	          , #{userId}
+	          , SYSDATE
+	          , #{userSyncCheck}
+	          , #{dealerNric}
+	          , SYSDATE
+	          , #{userGsecSynCheck}
+	          , SYSDATE
+	          , #{userTypeID}
+	          , #{userPw}
+	          , SYSDATE
+	          , TO_DATE(#{userValidTo},'dd/mm/yyyy')
+	          , #{userSecQuesID}
+	          , #{userSecQuesAns}
+	          , #{userWorkNo}
+	          , #{userMobileNo}
+	          , #{userExtNo}
+	          , #{userIsPartTime}
+	          , #{userDepartmentID}
+	          , #{userIsExternal}
+	          )
+    </insert>
+
+    <select id="dealerNricDup" parameterType="Map" resultType="Integer">
+            SELECT COUNT(0) cnt
+			   FROM SAL0030D Extent1
+			 WHERE Extent1.DEALER_NRIC = #{dealerNric}
+				 AND Extent1.DEALER_ID <![CDATA[<>]]> #{dealerId}
+				 AND ROWNUM <![CDATA[<=]]> 1
+  </select>
+
+    <update id="updDealerSAL0030D">
+        UPDATE SAL0030D
+			 SET DEALER_NAME = #{editDealerName},
+			       DEALER_EMAIL = #{editEmail},
+			       DEALER_NRIC = #{editNric},
+			       DEALER_BRNCH_ID = #{cmbDealerBranch},
+			       DEALER_TYPE = #{editDealerType},
+			       UPD_DT = SYSDATE,
+			       UPD_USER_ID = #{userId},
+			       SBO_CODE = #{editSboCode}
+		 WHERE DEALER_ID = #{editDealerId}
+    </update>
+
+    <update id="updDealerCntSAL0032D">
+        UPDATE SAL0032D
+             SET DEALER_INITIAL = #{cntcInitial},
+                   NRIC = #{cntcNric},
+                   CNT_NAME = #{cntcName},
+                   RACE_ID = #{cntcCmbRaceTypeId},
+                   GENDER = #{cntcGender},
+                   TEL_M1 = #{cntcTelm1},
+                   TEL_M2 = #{cntcTelm2},
+                   TEL_O = #{cntcTelo},
+                   TEL_R = #{cntcTelr},
+                   TELF = #{cntcTelf},
+                   UPD_DT = SYSDATE
+         WHERE DEALER_CNT_ID = #{dealerCntId}
+    </update>
+
+</mapper>

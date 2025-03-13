@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.login.impl.LoginMapper">
+
+    <select id="selectLoginInfo" parameterType="Map" resultType="loginVO">
+	<![CDATA[
+
+        SELECT
+            USR.USER_ID AS userId
+	       ,USR.USER_NAME AS userName
+	       ,USR.USER_FULL_NAME AS userFullName
+	       ,USR.USER_EMAIL AS userEmail
+	       ,USR.USER_STUS_ID AS userStatusId
+           , CASE WHEN USR.USER_TYPE_ID = 6672 THEN 5758
+                ELSE USR.USER_TYPE_ID END AS userTypeId
+	       ,USR.HR_CODE as userMemCode
+	       ,ROLET.ROLE_ID AS roleId
+	       , (SELECT A.MEM_LVL
+           FROM ORG0005D A, ORG0001D B
+          WHERE A.MEM_ID = B.MEM_ID
+            AND B.MEM_CODE = #{userId}
+            AND B.STUS NOT IN (8)) AS memberLevel
+           ,CASE
+              WHEN (ORG.BRNCH IS NOT NULL)
+                 THEN ORG.BRNCH
+              ELSE USR.USER_BRNCH_ID
+           END AS userBranchId
+           , NVL(ORG.MAIN_DEPT,'')AS userMainDeptId
+           ,CASE
+              WHEN (ORG.SUB_DEPT IS NOT NULL)
+                 THEN ORG.SUB_DEPT
+              ELSE ORG.MAIN_DEPT
+	       END AS userDeptId
+	       ,USR.USER_UPD_DT AS userUpdateAt
+	       ,USR.USER_PASSWD AS userPassWord
+	       ,USR.USER_PASSWD_LAST_UPD_DT AS userPasswdLastUpdateAt
+	       ,USR.USER_MOBILE_NO AS userMobileNo
+	       ,USR.USER_EXT_NO AS userExtNo
+	       ,USR.USER_IS_PART_TM AS userIsPartTime
+	       ,USR.USER_IS_EXTRNL AS userIsExternal
+	       ,STATUS.NAME AS statusName
+	       ,BRANCH.CODE
+	       ,BRANCH.NAME AS branchName
+	       ,BRANCH.ADDR1 ||' '|| BRANCH.ADDR2 ||' '|| BRANCH.ADDR3 ||' '|| BRANCH.ADDR4 AS branchAddr
+	       ,BRANCH.TEL1 AS branchTel1
+	       ,BRANCH.TEL2 AS branchTel2
+	       , NVL((SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '359' AND ORG.MAIN_DEPT = Z.CODE),'') AS mainDeptName
+           ,CASE WHEN ORG.SUB_DEPT IS NULL
+                 THEN (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '359' AND ORG.MAIN_DEPT = Z.CODE)
+                 ELSE (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '360' AND ORG.SUB_DEPT = Z.CODE) END AS deptName
+	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
+	       ,  CASE WHEN (SELECT COUNT (1) CNT
+                                      FROM (SELECT     A.ROLE_ID
+                                                      ,B.USER_ID
+                                                  FROM SYS0044M A
+                                                      , (SELECT B.ROLE_ID
+                                                               ,B.USER_ID
+                                                           FROM SYS0045M B, SYS0047M C
+                                                          WHERE B.USER_ID = C.USER_ID
+                                                            AND B.USER_ID = (SELECT USER_ID
+                                                                               FROM SYS0047M USR
+                                                                              WHERE USER_NAME = #{userId} /* userId => user_name 임.*/
+                                                                                AND ROWNUM = 1) ) B
+                                                 WHERE A.ROLE_ID = B.ROLE_ID(+)
+                                            START WITH A.ROLE_ID = B.ROLE_ID
+                                            CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) TBL
+                                          ,SYS0054M D
+                                     WHERE TBL.ROLE_ID = D.ROLE_ID
+                                       AND D.AUTH_CODE = 'MGR') > 0 THEN 'Y' ELSE 'N' END AS mgrYn
+             , NVL(ORG.MEM_ID, ORG1.MEM_ID) AS memId
+             , CASE WHEN ORG.SUB_DEPT IS NULL
+                    THEN (SELECT MIN(COST_CENTR) FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT)
+                    ELSE (SELECT COST_CENTR FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT AND SUB_DEPT_CODE = ORG.SUB_DEPT) END AS costCentr
+             , EREGIS.STUS_ID AS agrmtAppStat
+             , EREGIS.CNFM AS agrmt
+             , ORG.MOBILE_USE_YN AS mobileUseYn
+             , (SELECT SERIAL_REQUIRE_CHK_YN FROM SYS0028M WHERE WH_LOC_CODE = USR.USER_NAME AND ROWNUM=1 ) serialRequireChkYn
+             , ORG.RANK
+             , VAC.VACCINE_STATUS as vacStatus
+             , (TRUNC(TO_DATE(VAC.NEXT_POP_DT, 'YYYYMMDD'),'dd')) - TRUNC(SYSDATE,'dd') diffVacDay
+             ,  ORG1.BIZ_TYPE AS bizType
+             ,ORG.is_AC AS isAC
+             ,NVL(ORGV.DEPT_CODE ,'') deptCode
+                      ,NVL(ORGV.GRP_CODE,'') groupCode
+                      ,NVL(ORGV.ORG_CODE,'') orgCode
+             , NVL(USR.CHECK_MFA, 0) AS checkMfaFlag
+             , USR.MFA_KEY AS mfaKey
+	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+           LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
+           LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
+                              AND ROLET.STUS_ID = 1
+           LEFT OUTER JOIN ORG0001D ORG1 ON USR.USER_NAME = ORG1.MEM_CODE
+           LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = ORG.BRNCH OR BRNCH_ID = USR.USER_BRNCH_ID
+           LEFT JOIN ORG0003D EREGIS ON APLCTN_ID = ORG.APLICNT_ID
+           LEFT JOIN ORG0040D VAC ON VAC.MEM_ID = ORG1.MEM_ID
+           left join org1001V orgv on orgv.MEM_ID = ORG.mem_id
+	 WHERE 1 = 1
+	   AND USR.USER_NAME = #{userId} /* userId => user_name 임.*/
+	   AND USR.USER_PASSWD = #{password}
+	   AND USR.USER_STUS_ID = 1
+	   AND 'T' = CASE WHEN #{userMobileNo} IS NULL OR USR.USER_MOBILE_NO = #{userMobileNo} THEN 'T'
+	   							ELSE 'F'
+	   					END
+       AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+
+	   AND ROWNUM = 1
+
+        ]]>
+	</select>
+
+    <select id="selectLoginInfoById" parameterType="Map" resultType="loginVO">
+        <![CDATA[
+
+        SELECT
+            USR.USER_ID AS userId
+	       ,USR.USER_NAME AS userName
+	       ,USR.USER_FULL_NAME AS userFullName
+	       ,USR.USER_EMAIL AS userEmail
+	       ,USR.USER_STUS_ID AS userStatusId
+	       ,USR.USER_TYPE_ID AS userTypeId
+	       ,CASE
+	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
+	             THEN USR.USER_BRNCH_ID
+	          ELSE 0
+	       END AS userBranchId
+	       ,CASE
+	          WHEN (USR.USER_DEPT_ID IS NOT NULL)
+	             THEN USR.USER_DEPT_ID
+	          ELSE 0
+	       END AS userDeptId
+	       ,USR.USER_UPD_DT AS userUpdateAt
+	       ,USR.USER_PASSWD AS userPassWord
+	       ,USR.USER_PASSWD_LAST_UPD_DT AS userPasswdLastUpdateAt
+	       ,USR.USER_MOBILE_NO AS userMobileNo
+	       ,USR.USER_EXT_NO AS userExtNo
+	       ,USR.USER_IS_PART_TM AS userIsPartTime
+	       ,USR.USER_IS_EXTRNL AS userIsExternal
+	       ,STATUS.NAME AS statusName
+	       ,BRANCH.CODE
+	       ,BRANCH.NAME AS branchName
+	       ,BRANCH.ADDR1 ||' '|| BRANCH.ADDR2 ||' '|| BRANCH.ADDR3 ||' '|| BRANCH.ADDR4 AS branchAddr
+	       ,BRANCH.TEL1 AS branchTel1
+	       ,BRANCH.TEL2 AS branchTel2
+	       ,SUPDEPT.DEPT_NAME AS deptName
+	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
+	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
+	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
+	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
+	 WHERE 1 = 1
+	   AND USR.USER_NAME = #{_USER_ID}
+	   AND USR.USER_STUS_ID = 1
+       AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+	   AND ROWNUM = 1
+
+        ]]>
+    </select>
+
+    <select id="selectSubAuthInfo" parameterType="Map" resultType="loginSubAuthVO">
+        <![CDATA[
+        SELECT a.user_id
+                , a.auth_div_code
+                , (SELECT a.code_name
+                     FROM SYS0013M a
+                    WHERE a.code_master_id = 316
+                      AND a.code = a.auth_div_code) AS auth_div_name
+                , auth_code
+             FROM SYS0058M a
+            WHERE a.user_id = #{userId}
+              AND TO_CHAR(SYSDATE,'YYYYMMDDHH24') BETWEEN a.valid_dt_from|| '00' AND a.valid_dt_to || '23'
+        ]]>
+    </select>
+
+    <select id="selectLanguages" resultType="egovMap">
+    <![CDATA[
+
+        SELECT   LANGUAGE
+		    FROM SYS0052M
+		GROUP BY LANGUAGE
+
+        ]]>
+    </select>
+
+    <update id="updatePassWord" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{newPasswordConfirmTxt}
+        ,USER_PASSWD_LAST_UPD_DT = SYSDATE
+        <choose>
+            <when test=' newUserIdTxt != null and newUserIdTxt != "" '>
+                WHERE USER_ID = #{newUserIdTxt}
+            </when>
+            <otherwise>
+                WHERE USER_ID = #{searchLoginId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <select id="selectFindUserIdPop" parameterType="Map" resultType="loginVO">
+   SELECT
+          SYS47M.USER_NAME    userName
+         ,SYS47M.USER_ID      userId
+         --,SYS47M.USER_PASSWD  userPassWord
+         ,SYS47M.USER_SEC_QUES_ID  userSecQuesId
+         --,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
+         ,SYS32M.RESN_DESC         securityQuestion
+         ,SYS47M.USER_TYPE_ID   userTypeId
+         ,ORG01D.RANK           hpStus
+         ,ORG01D.STUS           memStus
+    FROM  SYS0047M SYS47M
+        , SYS0032M SYS32M
+        , ORG0001D ORG01D
+    WHERE ROWNUM = 1
+      AND (SYS32M.RESN_ID = SYS47M.USER_SEC_QUES_ID  OR SYS47M.USER_SEC_QUES_ID = 0  )
+      AND SYS47M.HR_CODE = ORG01D.MEM_CODE
+      AND SYS47M.USER_NAME = #{userIdFindPopTxt}
+  </select>
+
+    <insert id="insertLoginHistory" parameterType="loginHistory">
+        INSERT INTO SYS0077M
+        (
+            system_id
+           ,login_dtm
+           ,user_id
+           ,user_nm
+           ,login_type
+           ,ip_addr
+           ,os
+           ,browser
+        )
+        VALUES
+        (
+            #{systemId}
+            ,SYSDATE
+            ,#{userId}
+            ,#{userNm}
+            ,#{loginType}
+            ,#{ipAddr}
+            ,#{os}
+            ,#{browser}
+        )
+    </insert>
+
+    <update id="updateUserSetting" parameterType="Map">
+	    UPDATE SYS0047M
+	       SET USER_EMAIL  =  #{eMail}
+	          ,USER_UPD_DT =  SYSDATE
+	          ,USER_NRIC    = #{nricNo}
+	          ,USER_WORK_NO = #{userWorkNo}
+	          ,USER_MOBILE_NO = #{mobileNo}
+	          ,USER_EXT_NO =  #{exNo}
+	     WHERE USER_ID = #{updUserId}
+    </update>
+
+    <select id="selectSecureResnList" parameterType="Map" resultType="egovMap">
+	    SELECT RESN_ID
+	         , Code ||' - '||RESN_DESC SECURE_RESN
+	      FROM SYS0032M
+	     WHERE RESN_TYPE_ID = #{resnTypeId}
+	     ORDER BY Code
+    </select>
+
+    <select id="selectUserByUserName" parameterType="String" resultType="egovMap">
+        SELECT USER_ID, LOGIN_FAIL_ATTEMPT
+        FROM SYS0047M USR
+        WHERE USER_NAME = #{userName}
+        AND ROWNUM = 1
+    </select>
+
+    <select id="selectOrgUserByUserName" parameterType="String" resultType="egovMap">
+      SELECT MEM_ID
+      FROM ORG0001D ORG
+      WHERE MEM_CODE = #{userName}
+          AND ROWNUM = 1
+    </select>
+
+    <select id="checkByPass" parameterType="Map" resultType="egovMap">
+        select
+            BYPASS_AREA,
+            BYPASS_MAIN_DO,
+            BYPASS_DO_LIST
+        from SYS0088m
+        <choose>
+            <when test="mainDo != null and mainDo != '' ">
+                where BYPASS_MAIN_DO = #{mainDo}
+            </when>
+            <otherwise>
+                where BYPASS_MEM_TYPE = #{memTyp}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getAplcntInfo" parameterType="Map" resultType="loginVO">
+        SELECT
+            APLCTN_ID USERID,
+            APLICNT_CODE USERNAME,
+            APLICNT_FULL_NAME USERFULLNAME,
+            APLICNT_EMAIL USEREMAIL,
+            STUS_ID USERSTATUSID,
+            APLICNT_TEL_MOBILE USERMOBILENO,
+            '2803' AS USERTYPEID
+        FROM ORG0003D
+        WHERE
+            APLCTN_ID = #{MemberID}
+        AND
+            APLICNT_IDNTFC = #{Identification}
+    </select>
+
+    <select id="getDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.USER_TYPE_ID,
+            CASE WHEN D.CNTRCT_TYPE IS NULL THEN CAST(B.ROLE_ID AS VARCHAR(10)) ELSE D.CNTRCT_TYPE END ROLE_TYPE,
+            D.STUS_ID,
+            D.CNFM,
+            D.CNFM_DT,
+            C.JOIN_DT,
+            C.NAME,
+            C.NRIC,
+            E.NAME BANK_NAME,
+            C.BANK_ACC_NO,
+            F.MEM_LVL,
+            D.POP_ID,
+            D.APLCTN_ID
+        FROM SYS0047M A
+        INNER JOIN SYS0045M B
+            ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
+        LEFT JOIN ORG0001D C
+        <choose>
+            <when test=' loginUserType == "4" '>
+                ON A.HR_CODE = C.MEM_CODE
+            </when>
+            <otherwise>
+                ON A.USER_NAME = C.MEM_CODE
+            </otherwise>
+        </choose>
+        LEFT JOIN ORG0003D D
+            ON C.APLICNT_ID = D.APLCTN_ID
+        LEFT JOIN SYS0004M E
+            ON NVL(C.BANK, D.APLICNT_BANK_ID) = E.BANK_ID
+        LEFT JOIN ORG0005D F
+            ON C.MEM_ID = F.MEM_ID
+        WHERE A.USER_ID = #{userId}
+    </select>
+
+    <select id="getPopDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.POP_ID,
+            A.POP_NEW_FL_NM,
+            A.POP_FLG,
+            A.POP_TYPE,
+            A.POP_REJECT_FLG,
+            A.POP_ACK1,
+            A.POP_ACK2,
+            A.POP_ACK3,
+            A.CRT_DT,
+            NVL(B.POP_EXCEPTION_MEMROLE_CNT, 0) POP_EXCEPTION_MEMROLE_CNT,
+            NVL(C.POP_EXCEPTION_USER_CNT, 0) POP_EXCEPTION_USER_CNT
+        FROM SYS0091M A
+        LEFT JOIN (
+            SELECT
+                POP_ID,
+                COUNT(*) POP_EXCEPTION_MEMROLE_CNT
+            FROM SYS0091M
+            WHERE POP_EXCEPTION_MEMROLE LIKE '%' || #{roleType} || '%'
+            GROUP BY POP_ID
+        ) B
+            ON A.POP_ID = B.POP_ID
+        LEFT JOIN (
+            SELECT
+                POP_ID,
+                COUNT(*) POP_EXCEPTION_USER_CNT
+            FROM SYS0091M
+            WHERE POP_EXCEPTION_USER LIKE '%' || #{userId} || '%'
+            GROUP BY POP_ID
+        ) C
+            ON A.POP_ID = C.POP_ID
+        WHERE 1=1
+        <if test='popType != "N" and popType != "C" '>
+            AND SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
+            <if test='userTypeId != "0004" and (popType == "A" or popType == "B" ) '>
+                <if test='roleId != null and roleId != "" '>
+                    AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+                </if>
+            </if>
+            <if test='popType != null and popType != "" '>
+                AND POP_TYPE = #{popType}
+            </if>
+        </if>
+        <if test='popType == "N" or popType == "C" '>
+            AND POP_TYPE = #{popType}
+
+        </if>
+        <if test='popId > 0 '> <!-- Added by Hui Ding. 12/12/2024 -->
+            AND A.POP_ID = #{popId}
+        </if>
+      AND POP_FLG = 'A'
+      AND VALID_FR <![CDATA[<=]]> SYSDATE
+      AND VALID_TO <![CDATA[>=]]> SYSDATE
+    </select>
+
+    <select id="checkNotice" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM SYS0091M
+        WHERE POP_TYPE = 'N'
+        AND POP_FLG = 'A'
+        AND VALID_FR <![CDATA[<=]]> SYSDATE
+        AND VALID_TO <![CDATA[>=]]> SYSDATE
+    </select>
+
+    <select id="getCowayNoticePopDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            POP_NEW_FL_NM,
+            POP_ORI_FL_NM,
+            POP_TYPE
+        FROM SYS0091M
+		WHERE POP_MEM_TYPE = #{userTypeId}
+			AND POP_TYPE = 'N'
+			AND POP_FLG = 'A'
+			AND TO_CHAR(VALID_FR, 'YYYYMMDD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+			AND TO_CHAR(VALID_TO, 'YYYYMMDD') <![CDATA[>=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+			AND ROWNUM = 1
+		ORDER BY CRT_DT DESC
+    </select>
+
+    <select id="checkMobileNumber" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM SYS0047M A
+        JOIN ORG0001D B
+            ON A.HR_CODE = B.MEM_CODE
+        WHERE A.USER_NAME = #{userName}
+          AND B.TEL_MOBILE = #{mobileNo}
+    </select>
+
+    <select id="getConfig" parameterType="Map" resultType="egovMap">
+        SELECT
+            PARAM_CODE,
+            PARAM_VAL
+        FROM SYS0098M
+        WHERE MODULE = #{module}
+          AND SUB_MODULE = #{subModule}
+          AND PARAM_CODE = #{paramCode}
+          AND DISB = 0
+    </select>
+
+    <select id="getSmsReqCnt" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM ORG0033D
+        WHERE USER_ID = #{userId}
+          AND TO_DATE(TO_CHAR(REQUEST_DATE, 'YYYYMMDD'), 'YYYYMMDD')
+              BETWEEN TO_DATE(TO_CHAR((SYSDATE - #{dayCnt}), 'YYYYMMDD'), 'YYYYMMDD')
+                  AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD')
+    </select>
+
+    <select id="getReqId" parameterType="Map" resultType="int">
+        SELECT ORG0033D_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="logRequest" parameterType="Map">
+        INSERT INTO ORG0033D
+        (
+            REQ_ID,
+            USER_ID,
+            USER_NAME,
+            TEMP_PASSWD,
+            STATUS,
+            REQUEST_DATE
+        ) VALUES (
+            #{reqId},
+            #{userId},
+            #{userName},
+            #{tempPw},
+            1,
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updateSYS47M_req" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{tempPw},
+            USER_PASSWD_LAST_UPD_DT = TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -3), 'DD/MM/YYYY'), 'DD/MM/YYYY'),
+            LOGIN_FAIL_ATTEMPT = 0
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="updateRequest" parameterType="Map">
+        UPDATE ORG0033D
+        SET SMS_ID = #{smsId}
+        WHERE REQ_ID = #{reqId}
+    </update>
+
+    <select id="checkConsent" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM SYS0091M
+        WHERE POP_TYPE = 'C'
+        AND POP_FLG = 'A'
+        AND VALID_FR <![CDATA[<=]]> SYSDATE
+        AND VALID_TO <![CDATA[>=]]> SYSDATE
+    </select>
+
+    <select id="getConsentDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            USER_ID,
+            MEM_ID,
+            POP_ID,
+            ACTION_DT
+        FROM ORG0036D
+        WHERE USER_ID = #{userId}
+        AND POP_ID = (
+            SELECT POP_ID
+            FROM SYS0091M
+            WHERE POP_TYPE = 'C'
+            AND POP_FLG = 'A'
+            AND VALID_FR <![CDATA[<=]]> SYSDATE
+            AND VALID_TO <![CDATA[>=]]> SYSDATE
+        )
+    </select>
+
+    <!-- To pop COC consent. Hui Ding, 12/12/2024 -->
+    <select id="getConsentDtls2" parameterType="Map" resultType="egovMap">
+       SELECT
+            A.USER_ID,
+            B.MEM_ID,
+            D.POP_ID,
+            A.ACTION_DT,
+            C.APLCTN_ID
+        FROM ORG0036D A
+        LEFT JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+        JOIN ORG0003D C ON B.APLICNT_ID = C.APLCTN_ID AND A.POP_ID = C.POP_ID  AND C.CNFM = 0 AND C.STUS_ID = 44 AND TO_CHAR(C.CNFM_DT, 'YYYYMMDD') = '19000101'
+        LEFT JOIN SYS0091M D ON C.POP_ID = D.POP_ID AND D.POP_TYPE = 'C' AND D.POP_FLG = 'A' AND D.VALID_FR <![CDATA[<=]]> SYSDATE AND D.VALID_TO <![CDATA[>=]]> SYSDATE
+        WHERE USER_ID = #{userId}
+
+    </select>
+
+    <update id="loginPopAccept" parameterType="Map">
+        MERGE INTO ORG0036D T
+        USING (
+            SELECT
+                A.USER_ID,
+                B.MEM_ID,
+                <choose>
+                    <when test=' popId != null and popId != "" '>
+                        ${popId} POP_ID
+                    </when>
+                    <otherwise>
+                        (SELECT POP_ID
+                         FROM SYS0091M
+                         WHERE POP_TYPE = 'C'
+                         AND POP_FLG = 'A'
+                         AND VALID_FR <![CDATA[<=]]> SYSDATE
+                         AND VALID_TO <![CDATA[>=]]> SYSDATE
+
+                        ) POP_ID
+                    </otherwise>
+                </choose>
+            FROM SYS0047M A, ORG0001D B
+            WHERE A.HR_CODE = B.MEM_CODE
+            AND A.USER_ID = ${userId}
+        ) S
+        ON (T.USER_ID = S.USER_ID and T.MEM_ID = S.MEM_ID and T.POP_ID = S.POP_ID)
+        WHEN NOT MATCHED THEN
+        INSERT (T.SEQ, T.USER_ID, T.MEM_ID, T.POP_ID, T.ACTION_DT)
+        VALUES(ORG0036D_ID_SEQ.NEXTVAL, S.USER_ID, S.MEM_ID, S.POP_ID, SYSDATE)
+    </update>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <update id="insertVacInfo" parameterType="Map">
+        MERGE INTO ORG0040D D1  USING
+            (SELECT
+                #{memId} as MEM_ID, #{vaccineStatus} as VACCINE_STATUS, #{firstDoseChk} as FIRST_DOSE_CHK,
+                #{firstDoseDt} as FIRST_DOSE_DT, #{secondDoseChk} as SECOND_DOSE_CHK, #{secondDoseDt} as SECOND_DOSE_DT,
+                #{typeOfVaccine} as VACCINE_TYPE, #{reasonId} as REASON_ID, #{reasonDtl} as REASON_DTL, #{yesAtchGrpId} as YES_ATCH_FILE_GRP_ID,
+                #{noAtchGrpId} as NO_ATCH_FILE_GRP_ID, #{nextPopDt} as NEXT_POP_DT, #{otherVacType} as OTHER_VAC, #{declareChk} as DECLARE_CHK  from dual
+            ) Temp
+            on (D1.MEM_ID = Temp.MEM_ID)
+            when matched then
+            UPDATE SET D1.UPD_DT = SYSDATE
+            , UPD_USER_ID = #{userId}
+            <if test="vaccineStatus != null">
+                , D1.VACCINE_STATUS = #{vaccineStatus}
+            </if>
+            <if test="firstDoseChk != null">
+                , D1.FIRST_DOSE_CHK = #{firstDoseChk}
+            </if>
+            <if test="firstDoseDt != null">
+                , D1.FIRST_DOSE_DT = TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY')
+            </if>
+            <if test="secondDoseChk != null">
+                , D1.SECOND_DOSE_CHK = #{secondDoseChk}
+            </if>
+            <if test="secondDoseDt != null">
+                , D1.SECOND_DOSE_DT = TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY')
+            </if>
+            <if test="reasonId != null">
+                , D1.REASON_ID = #{reasonId}
+            </if>
+            <if test="reasonDtl != null">
+                , D1.REASON_DTL = #{reasonDtl}
+            </if>
+            <if test="yesAtchGrpId != null">
+                , D1.YES_ATCH_FILE_GRP_ID = #{yesAtchGrpId}
+            </if>
+            <if test="noAtchGrpId != null">
+                , D1.NO_ATCH_FILE_GRP_ID = #{noAtchGrpId}
+            </if>
+            <if test="nextPopDt != null">
+                , NEXT_POP_DT = #{nextPopDt}
+            </if>
+            when not matched then
+                INSERT
+                (MEM_ID, VACCINE_STATUS, FIRST_DOSE_CHK, FIRST_DOSE_DT,  SECOND_DOSE_CHK,
+                    SECOND_DOSE_DT,
+                VACCINE_TYPE, REASON_ID, REASON_DTL, YES_ATCH_FILE_GRP_ID, NO_ATCH_FILE_GRP_ID, NEXT_POP_DT, DECLARE_CHK, OTHER_VAC,
+                    CRT_DT, CRT_USER_ID)
+            values (
+                #{memId} , #{vaccineStatus} , #{firstDoseChk} , TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY'), #{secondDoseChk} ,
+                <if test="secondDoseDt != null and secondDoseDt != ''">
+                    TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY') ,
+                </if>
+
+                <if test="secondDoseDt == null or secondDoseDt == ''">
+                    NULL,
+                </if>
+
+                #{typeOfVaccine}, #{reasonId} , #{reasonDtl}, #{yesAtchGrpId}, #{noAtchGrpId}, #{nextPopDt}, #{declareChk}, #{otherVacType},
+                SYSDATE, #{userId}
+                )
+
+
+    </update>
+
+    <select id="getVaccineInfo" parameterType="Map"  resultType="egovMap">
+        SELECT MEM_ID ,
+                    VACCINE_STATUS ,
+                    NVL(FIRST_DOSE_CHK, 'N') FIRST_DOSE_CHK ,
+                    FIRST_DOSE_DT ,
+                    NVL(SECOND_DOSE_CHK, 'N') SECOND_DOSE_CHK ,
+                    SECOND_DOSE_DT ,
+                    VACCINE_TYPE ,
+                    REASON_ID ,
+                    REASON_DTL ,
+                    YES_ATCH_FILE_GRP_ID ,
+                    NO_ATCH_FILE_GRP_ID ,
+                    NEXT_POP_DT ,
+                    UPD_USER_ID ,
+                    UPD_DT ,
+                    CRT_USER_ID ,
+                    CRT_DT
+        FROM ORG0040D
+        WHERE 1 = 1
+        <if test="memId != null and memId != ''">
+            AND MEM_ID = #{memId}
+        </if>
+    </select>
+
+    <select id="getVaccineDeclarationAplcntInfo" parameterType="Map" resultType="loginVO">
+    select
+        a.mem_id USERID,
+        a.mem_code USERNAME,
+        a.full_name USERFULLNAME,
+        a.tel_mobile USERMOBILENO,
+        a.email USEREMAIL,
+        a.stus USERSTATUSID,
+        a.mem_type USERTYPEID
+        from ORG0001D a
+        join org0042d b on b.mem_id = a.mem_id
+        where
+        a.mem_Code = #{MemCode}
+        <if test="MemberID != null and MemberID != ''">
+            AND a.mem_id =#{MemberID}
+        </if>
+    </select>
+
+    <select id="checkUserAndPass" parameterType="Map" resultType="int">
+        select count(1) from sys0047M where user_name = #{username} and USER_PASSWD = #{password}
+    </select>
+
+    <update id="updateLoginFailAttempt" parameterType="Map">
+        update sys0047m set LOGIN_FAIL_ATTEMPT = LOGIN_FAIL_ATTEMPT +1 where USER_NAME = #{userId}
+    </update>
+
+    <update id="resetLoginFailAttempt" parameterType="int">
+        update sys0047m set LOGIN_FAIL_ATTEMPT = 0 where USER_ID = #{userId}
+    </update>
+
+    <select id="getLoginFailedMaxAttempt" resultType ="int">
+        select TO_NUMBER(code, 0) as ATTEMPT from SYS0094M where IND = 'LOGIN' and DISB <![CDATA[<>]]> 1
+    </select>
+
+    <select id="checkSecurityAnswer" parameterType="Map" resultType="int">
+        select count(1) from sys0047M where user_name = #{username} and USER_SEC_QUES_ANS = #{secAns}
+    </select>
+
+     <update id="updateCheckMfaFlag" parameterType="Map">
+        update sys0047m set CHECK_MFA = #{mfaFlag}, MFA_KEY = #{mfaKey} where USER_ID = #{userId}
+    </update>
+
+     <select id="checkResetMFAEmail" parameterType="Map" resultType="int">
+        select count(1) from sys0047M where user_id = #{userId} and UPPER(user_email) like '%' || #{cowayMail} || '%'
+    </select>
+
+     <update id="updateResetMFA" parameterType="Map">
+        update sys0047m set CHECK_MFA = 3, MFA_KEY = #{mfaKey} where USER_ID = #{userId}
+    </update>
+</mapper>

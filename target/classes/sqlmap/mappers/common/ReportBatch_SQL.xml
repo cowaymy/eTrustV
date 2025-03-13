@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.ReportBatchMapper">
+
+<insert id="insertLog" parameterType="Map">
+	  INSERT INTO SYS0102M (
+		    REP_LOG_ID
+		    , REP_NAME
+		    , REP_PROD_NAME
+		    , MSG
+		    , START_TIME
+		    , END_TIME
+		    , CRT_DT
+		    , CRT_USER_ID
+	    ) VALUES (
+		    SYS0102M_REP_LOG_ID_SEQ.nextval
+		    , #{reportFileName}
+		    , #{repProdName}
+		    , #{msg}
+		    , #{startTime}
+		    , #{endTime}
+		    , SYSDATE
+		    , #{userId}
+	   )
+</insert>
+
+</mapper>

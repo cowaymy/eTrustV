@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.LoyaltyHPStatusReportMapper">
+
+    <select id="selectOrgCode" parameterType="Map" resultType="egovMap">
+        SELECT
+            TABLEA.ORG_CODE AS CODE_ID, TABLEA.ORG_CODE AS CODE_NAME
+		FROM
+		  (SELECT DISTINCT  A.ORG_CODE ORG_CODE
+		FROM ORG1001V A
+		  JOIN org0001d B ON B.MEM_ID = A.MEM_ID
+		WHERE B.MEM_TYPE = 1
+			AND A.ORG_CODE IS NOT NULL
+			AND A.ORG_CODE != ' '
+			AND B.stus = 1) TABLEA
+    </select>
+
+</mapper>

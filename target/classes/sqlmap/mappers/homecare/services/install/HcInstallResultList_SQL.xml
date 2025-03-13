@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper">
+
+    <!-- Select Homecare Installation List -->
+	<select id="hcInstallationListSearch" parameterType="Map" resultType="egovMap">
+	   /* com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.hcInstallationListSearch */
+	        WITH HC_INS AS (
+                  SELECT
+                        DISTINCT INSTALL_ENTRY_NO
+                  FROM SAL0046D A
+                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                  WHERE B.BNDL_ID IS NOT NULL
+
+                  <if test="installNo != null and installNo != ''">
+                  AND A.INSTALL_ENTRY_NO = #{installNo}
+                 </if>
+
+                 <if test="orderNo != null and orderNo != ''">
+                  AND B.SALES_ORD_NO = #{orderNo}
+                 </if>
+
+                 <if test="orderRefNo != null and orderRefNo != ''">
+                  AND B.REF_NO = #{orderRefNo}
+                </if>
+
+                <if test="poNo != null and poNo != ''">
+                  AND B.CUST_PO_NO = #{poNo}
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate == '' ">
+                 <![CDATA[ AND A.INSTALL_DT  >= TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="installEndDate != '' and instalStrlDate == '' ">
+                    <![CDATA[ AND A.INSTALL_DT <=  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="instalStrlDate != '' and installEndDate != '' ">
+                    <![CDATA[ AND A.INSTALL_DT  between TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') and  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate == '' ">
+                    <![CDATA[ AND  A.APPNT_DT  >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="endDate != '' and startDate == '' ">
+                    <![CDATA[  AND A.APPNT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="startDate != '' and endDate != '' ">
+                    <![CDATA[  AND A.APPNT_DT between TO_DATE(#{startDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                </if>
+
+                <if test="orderDate != null and orderDate != ''">
+                    AND B.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
+                </if>
+
+          )
+		<![CDATA[
+		SELECT DISTINCT CD1.CODE
+		              , IE.INSTALL_ENTRY_NO
+		              , SOM.SALES_ORD_NO
+		              , IE.INSTALL_DT
+		              , MEM.MEM_CODE
+		              , DT.MEM_CODE AS DT_PAIR_CODE
+		              , NVL2(STK.STK_DESC, '['||STK.STK_CODE||'] '||STK.STK_DESC, STK.STK_CODE) AS STK_DESC
+		              , SOM.CUST_ID
+		              , CUST.NAME AS CUST_NAME
+		              , MEM.NAME
+		              , CD2.CODE as APP_TYPE
+		              , ST.CODE CODE1
+		              , IE.INSTALL_ENTRY_ID
+		              , CE.CALL_ENTRY_ID
+		              , CD1.CODE_ID CODEID1
+		              , CD1.CODE_NAME
+		              , SOM.SALES_ORD_ID SALES_ORD_ID
+		              , TO_CHAR (IE.INSTALL_DT, 'DD-MM-YYYY') C3
+		              , CE.DOC_ID C1
+		              , I.BRNCH_ID
+		              , BRANCH.CODE BRNCH_CODE
+		              , BRANCH2.BRNCH_ID BRNCH_ID2
+		              , BRANCH2.CODE BRNCH_CODE2
+		              , CASE WHEN ORG1.MEM_CODE IS NOT NULL
+		                       THEN ORG1.MEM_CODE
+		                       ELSE ORG2.USER_NAME END AS LST_UPD
+		              , IE.RCD_TMS
+		              , HMC.BNDL_NO
+                      , SOM.APP_TYPE_ID
+                      , CN.TEL_M1
+                      , CN.TEL_O
+                      , CN.TEL_R
+                      , CUSTADD.ADDR_DTL
+                      , CUSTADD.STREET
+                      , MA.AREA
+                      , MA.CITY
+                      , MA.POSTCODE
+                      , MA.STATE
+                      , I.INSTCT || DBMS_LOB.SUBSTR(CR.CALL_REM, DBMS_LOB.GETLENGTH(CR.CALL_REM), 1) AS REMARK
+                      , S28.SERIAL_REQUIRE_CHK_YN
+                      , CASE WHEN IR.ALLOW_COMM IS NOT NULL
+                           THEN IR.ALLOW_COMM
+                           ELSE 0 END AS ALLOW_COMMISION,
+	                  IR.ATCH_FILE_GRP_ID ,
+	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN 'DOWN' ELSE NULL END AS ATTCHMENT_DOWNLOAD,
+	                  CASE WHEN IR.ATCH_FILE_GRP_ID IS NOT NULL OR IR.ATCH_FILE_GRP_ID != 0 THEN AT2.FILE_SUB_PATH ELSE NULL END AS FILE_SUB_PATH,
+	                   HPDET.name HP_NAME
+                      ,HPDET.TEL_MOBILE HP_CONTACT
+                     ,exchg.SO_CUR_STUS_ID ord_stus_code_id
+                    ,NVL(delvrSts.DELVRY_GR_CMPLT,' ')delvry_gr
+                    ,NVL(returnSts.DELVRY_GR_CMPLT,' ')return_gr
+                    ,  CASE
+                            WHEN PREINS.STUS_CODE_ID = 4 THEN 'Pre-Com'
+                            WHEN PREINS.STUS_CODE_ID = 21 THEN 'Pre-Fail'
+                            ELSE ''
+                       END PREINS_IND
+                     , PREINS.REMARK PREINS_REMARK
+                     , MA.AREA_ID
+                     , TO_CHAR(CE.UPD_DT, 'DD-MM-YYYY') LAST_UPD_CALL_LOG_DT
+                     ,RANK()
+					    OVER(
+					        ORDER BY
+					            hmc.bndl_no DESC, som.sales_ord_no ASC, ie.install_entry_no ASC, ie.install_dt ASC
+					    ) rank_no
+		FROM SAL0001D som
+		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
+		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
+		LEFT JOIN SAL0046D IE ON IE.SALES_ORD_ID = som.SALES_ORD_ID and IE.CALL_ENTRY_ID <> 0 /*By KV - no need data which is call_entry_id = 0 */
+		LEFT JOIN SAL0047D IR ON IR.ENTRY_ID = IE.INSTALL_ENTRY_ID
+		LEFT JOIN SVC0136D PREINS ON PREINS.INSTALL_ENTRY_NO = IE.INSTALL_ENTRY_NO
+		LEFT JOIN CCR0006D CE ON CE.CALL_ENTRY_ID = IE.CALL_ENTRY_ID
+        LEFT JOIN CCR0007D CR ON CR.CALL_RESULT_ID = CE.RESULT_ID
+		JOIN SYS0026M STK ON STK.STK_ID =  ie.INSTALL_STK_ID /* SOD.ITM_STK_ID*/
+		LEFT JOIN SYS0013M CD1 ON CD1.CODE_ID = CE.TYPE_ID
+		LEFT JOIN SYS0013M CD2 ON CD2.CODE_ID = som.APP_TYPE_ID
+		LEFT JOIN SYS0038M ST ON ST.STUS_CODE_ID = IE.STUS_CODE_ID
+		LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = IE.CT_ID
+		LEFT JOIN ORG0001D DT ON DT.MEM_ID = IR.DT_PAIR_ID
+		JOIN SYS0005M BRANCH ON BRANCH.BRNCH_ID = I.BRNCH_ID
+		JOIN SAL0023D CUSTADD ON CUSTADD.CUST_ADD_ID = I.ADD_ID
+		JOIN SAL0029D CUST ON CUST.CUST_ID = CUSTADD.CUST_ID
+		LEFT JOIN org0001d ORG1 ON ORG1.MEM_ID = ir.CRT_USER_ID and ORG1.MEM_TYPE > 2
+		LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
+		LEFT JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = SOM.BNDL_ID
+		LEFT JOIN SYS0028M S28 ON S28.WH_LOC_CODE = MEM.MEM_CODE
+		LEFT JOIN SAL0027D CN ON CN.CUST_CNTC_ID = SOM.CUST_CNT_ID
+		LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
+		LEFT JOIN SYS0005M BRANCH2 ON BRANCH2.CODE = MA.CT_BRNCH_CODE AND BRANCH2.STUS_ID = 1 /** Added for HA and HC Branch merging, Hui Ding, 12/03/2024 **/
+        LEFT JOIN SYS0070M AT ON IR.ATCH_FILE_GRP_ID = AT.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D AT2 ON AT.ATCH_FILE_ID = AT2.ATCH_FILE_ID
+        LEFT JOIN ORG1001V V ON V.MEM_ID = MEM.MEM_ID
+        LEFT JOIN ORG0001D HPDET ON HPDET.MEM_ID = SOM.MEM_ID
+        LEFT JOIN SAL0004D exchg ON exchg.SO_EXCHG_ID = ce.DOC_ID
+                             AND ce.TYPE_ID = 258
+        LEFT JOIN (
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          FROM LOG0047M GI
+          JOIN HC_INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE AND (GRDTL.DEL_FLAG <> 'Y' OR GRDTL.DEL_FLAG IS NULL)
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO AND (GR.DEL_FLAG <> 'Y' OR GRDTL.DEL_FLAG IS NULL)
+          WHERE GI.TRNSC_TYPE_DTL = 'UM03' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) DELVRSTS ON DELVRSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
+      LEFT JOIN(
+          SELECT MAX(GI.REQST_NO),GI.REF_DOC_NO,GI.REQST_STUS,NVL(GR.DELVRY_GR_CMPLT,'N') DELVRY_GR_CMPLT
+          FROM LOG0047M GI
+          JOIN HC_INS B ON GI.REF_DOC_NO= B.INSTALL_ENTRY_NO
+          LEFT JOIN LOG0048D GIDTL ON GIDTL.REQST_NO = GI.REQST_NO
+          LEFT JOIN LOG0055D GRDTL ON GRDTL.REQST_NO = GIDTL.REQST_NO AND GRDTL.ITM_CODE = GIDTL.ITM_CODE AND (GRDTL.DEL_FLAG <> 'Y' OR GRDTL.DEL_FLAG IS NULL)
+          LEFT JOIN LOG0054M GR ON GR.DELVRY_NO = GRDTL.DELVRY_NO AND (GR.DEL_FLAG <> 'Y' OR GRDTL.DEL_FLAG IS NULL)
+          WHERE GI.TRNSC_TYPE_DTL = 'UM93' AND NVL(GI.REQST_DEL,'N') = 'N'
+          AND GR.DELVRY_NO IS NOT NULL
+          GROUP BY GI.REF_DOC_NO,GI.REQST_STUS,GR.DELVRY_GR_CMPLT
+      ) RETURNSTS ON RETURNSTS.REF_DOC_NO = IE.INSTALL_ENTRY_NO
+        WHERE GET_HOMECARE_FLAG_YN(stk.stk_ctgry_id) = 1
+          AND som.BNDL_ID IS NOT NULL
+		]]>
+		<if test="preinsChkList != null and preinsChkList != '' ">
+		    AND NVL(PREINS.STUS_CODE_ID,'0') IN
+		     <foreach item="item" collection="preinsChkList" index="index" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+        <if test="productList != null and productList != '' ">
+            AND STK.STK_ID IN
+            <foreach item="item" collection="productList" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+		<if test="productList != null and productList != '' ">
+			AND STK.STK_ID IN
+			<foreach item="item" collection="productList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
+		<if test="installStatusList != null and installStatusList != '' ">
+			AND ST.STUS_CODE_ID IN
+			<foreach item="item" collection="installStatusList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
+		<if test="typeList != null and typeList != '' ">
+			AND CD1.CODE_ID IN
+			<foreach item="item" collection="typeList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
+		<if test="appTypeList != null and appTypeList != '' ">
+			AND CD2.CODE_ID IN
+			<foreach item="item" collection="appTypeList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
+		<if test="installNo != null and installNo != ''">
+		    AND IE.INSTALL_ENTRY_NO = #{installNo}
+		</if>
+		<if test="orderNo != null and orderNo != ''">
+		    AND SOM.SALES_ORD_NO = #{orderNo}
+		</if>
+		<if test="orderRefNo != null and orderRefNo != ''">
+            AND SOM.REF_NO = #{orderRefNo}
+		</if>
+		<if test="poNo != null and poNo != ''">
+            AND SOM.CUST_PO_NO = #{poNo}
+		</if>
+		<if test="ctCode != null and ctCode != ''">
+            AND ((CASE WHEN (MEM.MEM_ID IS NOT NULL) THEN MEM.MEM_CODE ELSE '' END) = #{ctCode})
+		</if>
+		<if test="dscCodeList != null and dscCodeList != ''">
+			AND I.BRNCH_ID IN
+			<foreach item="item" collection="dscCodeList" index="index"
+			  open="(" separator="," close=")">
+			  #{item}
+			</foreach>
+		</if>
+		<if test="dscCodeList2 != null and dscCodeList2 != ''"> <!-- Added for HA and HC Branch merging, Hui Ding, 12/03/2024 -->
+            AND BRANCH2.BRNCH_ID IN
+            <foreach item="item" collection="dscCodeList2" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+		<if test="customerId != null and customerId != ''">
+            AND CUST.CUST_ID = #{customerId}
+		</if>
+		<if test="customerName != null and customerName != ''">
+            AND CUST.NAME = #{customerName}
+		</if>
+		<if test="customerIc != null and customerIc != ''">
+            AND CUST.NRIC = #{customerIc}
+		</if>
+		<if test="sirimNo != null and sirimNo != ''">
+            AND IR.SIRIM_NO = #{sirimNo}
+		</if>
+		<if test="serialNo != null and serialNo != ''">
+            AND IR.SERIAL_NO = #{serialNo}
+		</if>
+		<if test="instalStrlDate != '' and installEndDate == '' ">
+            <![CDATA[ AND  IE.INSTALL_DT  >= TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="installEndDate != '' and instalStrlDate == '' ">
+            <![CDATA[  AND IE.INSTALL_DT <=  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="instalStrlDate != '' and installEndDate != '' ">
+            <![CDATA[  AND IE.INSTALL_DT  between TO_DATE(#{instalStrlDate}, 'DD/MM/YYYY') and  TO_DATE(#{installEndDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="startDate != '' and endDate == '' ">
+            <![CDATA[ AND  IE.APPNT_DT  >= TO_DATE(#{startDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="endDate != '' and startDate == '' ">
+            <![CDATA[  AND IE.APPNT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="startDate != '' and endDate != '' ">
+            <![CDATA[  AND IE.APPNT_DT  between TO_DATE(#{startDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+        </if>
+        <if test="orderDate != null and orderDate != ''">
+            AND SOM.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
+		</if>
+        <if test="bndlNo != null and bndlNo != ''">
+            AND HMC.BNDL_NO = #{bndlNo}
+        </if>
+        <if test='deptCode != null and deptCode != " " and deptCode != ""'>
+           AND V.DEPT_CODE = #{deptCode}
+           </if>
+           <if test='grpCode != null and grpCode != " " and grpCode != ""'>
+           AND V.GRP_CODE = #{grpCode}
+           </if>
+           <if test='orgCode != null and orgCode != " "  and orgCode != ""'>
+           AND V.ORG_CODE = #{orgCode}
+           </if>
+         <if test="delvryGrList != null and delvryGrList != '' ">
+            AND NVL(delvrSts.DELVRY_GR_CMPLT,'B') IN
+            <foreach item="item" collection="delvryGrList" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+        <if test="returnGrList != null and returnGrList != '' ">
+            AND NVL(returnSts.DELVRY_GR_CMPLT,'B') IN
+            <foreach item="item" collection="returnGrList" index="index"
+              open="(" separator="," close=")">
+              #{item}
+            </foreach>
+        </if>
+        ORDER BY rank_no ASC
+	</select>
+
+    <select id="getAnotherInstallInfo" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.services.installation.impl.InstallationResultListMapper.getAnotherInstallInfo */
+        SELECT A.INSTALL_ENTRY_ID
+                 , A.INSTALL_ENTRY_NO
+                 , B.SALES_ORD_ID
+                 , B.SALES_ORD_NO
+                 , B.BNDL_ID
+                 , A.RCD_TMS
+
+         FROM SAL0046D A
+           JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+
+        WHERE B.BNDL_ID = (SELECT BB.BNDL_ID FROM SAL0046D AA
+                                         JOIN SAL0001D BB ON AA.SALES_ORD_ID = BB.SALES_ORD_ID
+                                      WHERE AA.INSTALL_ENTRY_ID = #{installEntryId})
+           AND A.INSTALL_ENTRY_ID NOT IN (#{installEntryId})
+           AND A.STUS_CODE_ID = '1'
+           AND B.SALES_ORD_NO = #{anoOrdNo}
+    </select>
+
+    <select id="assignCtOrderList" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.assignCtOrderList]*/
+        SELECT B.SALES_ORD_NO SALES_ORD_NO
+	         , A.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
+	         , C.NAME CUST_NAME
+	         , C.CUST_ID CUST_ID
+	         , A.CT_ID CT_ID
+	         , F.CT_SUB_GRP CUST_SUB_GRP
+	         , S.MEM_CODE
+	         , S.MEM_CODE CT_CODE
+	         , S26.STK_CODE
+	         , S26.STK_DESC
+	         , CASE WHEN S26.STK_TYPE_ID= 61 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	                   WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	                   WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
+	          ELSE 'N'
+	          END AS SERIAL_CHK
+	         ,S28.SERIAL_REQUIRE_CHK_YN
+	    FROM SAL0046D A ,
+	         SAL0001D B ,
+	         SAL0029D C ,
+	         SAL0045D D ,
+	         SAL0023D E ,
+	         SYS0064M F ,
+	         ORG0001D S ,
+	         SYS0026M S26 ,
+	         SYS0028M S28
+	    WHERE 1=1
+	    <if test="installNo != null and installNo != '' ">
+	      AND INSTALL_ENTRY_NO IN
+	      <foreach item="item" collection="installNo" index="index"
+	        open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+	    </if>
+	    AND A.SALES_ORD_ID = B.SALES_ORD_ID
+	    AND B.CUST_ID = C.CUST_ID
+	    AND B.SALES_ORD_ID = D.SALES_ORD_ID
+	    AND D.ADD_ID = E.CUST_ADD_ID
+	    AND E.AREA_ID = F.AREA_ID(+)
+	    AND A.CT_ID = S.MEM_ID
+	    AND A.INSTALL_STK_ID = S26.STK_ID
+	    AND S.MEM_CODE = S28.WH_LOC_CODE
+	    AND S.MEM_TYPE in (5758 ,3, 6672)              -- homecare/CT/LT
+    </select>
+
+    <select id="selectFrmOrdNo" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmOrdNo]*/
+        <!-- SELECT DECODE(#{salesOrdNo}, B.FRA_ORD_NO, B.MAT_ORD_NO, B.MAT_ORD_NO, B.FRA_ORD_NO) AS SALES_ORD_NO
+		  FROM SAL0001D a
+		     , HMC0011D B
+		 WHERE A.BNDL_ID IS NOT NULL
+		   AND A.BNDL_ID = B.ORD_SEQ_NO
+		   AND A.SALES_ORD_NO = #{salesOrdNo} -->
+
+	SELECT DISTINCT B.FRA_ORD_NO AS SALES_ORD_NO
+          FROM SAL0001D a
+             , HMC0011D B
+         WHERE A.BNDL_ID IS NOT NULL
+           AND A.BNDL_ID = B.ORD_SEQ_NO
+           AND b.mat_ord_no =#{salesOrdNo}
+    </select>
+
+    <select id="selectFrmInstNO" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmInstNO]*/
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+          FROM SAL0001D a
+             , SAL0046D b
+          WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+            AND A.SALES_ORD_NO = #{salesOrdNo}
+            AND B.STUS_CODE_ID = #{stusCodeId}
+    </select>
+
+    <select id="selectResultId" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectResultId]*/
+        SELECT RESULT_ID
+	      FROM SAL0047D
+	     WHERE ENTRY_ID = #{installEntryId}
+	       AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectFrmInstInfo" parameterType="Map" resultType="egovMap">
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+             , C.RESULT_ID
+          FROM SAL0001D a
+             , SAL0046D b
+             , SAL0047D c
+          WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+            AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+            AND A.SALES_ORD_NO = #{salesOrdNo}
+    </select>
+
+    <select id="selectFrmSerialInfo" parameterType="Map" resultType="egovMap">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmSerialInfo]*/
+        SELECT A.SALES_ORD_NO
+             , A.SALES_ORD_ID
+             , B.INSTALL_ENTRY_ID
+             , B.INSTALL_ENTRY_NO
+             , LOG.SERIAL_REQUIRE_CHK_YN
+             , LOG.WH_LOC_GB WH_LOC_GB
+             , LOG.WH_LOC_ID CT_WH_LOC_ID
+             , STK.STK_ID    STOCK_ID
+             , STK.STK_CODE  STOCK_CODE
+             , STK.STK_DESC  STOCK_DESC
+             , CASE WHEN STK.SERIAL_CHK = 'Y' AND '61' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_PD_CHK, 'N')
+                    WHEN STK.SERIAL_CHK = 'Y' AND '62' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_FT_CHK, 'N')
+                    WHEN STK.SERIAL_CHK = 'Y' AND '63' = STK.STK_TYPE_ID AND LOG.SERIAL_REQUIRE_CHK_YN = 'Y' THEN NVL(LOG.SERIAL_PT_CHK, 'N')
+                    ELSE 'N'
+                END AS SERIAL_CHK
+             , DECODE(stk.SERIAL_CHK, 'Y', 'Y', 'N') AS stk_SERIAL_CHK
+             , NVL(log.SERIAL_PD_CHK, 'N') AS SERIAL_PD_CHK  -- PRODUCT 61(15)
+             , NVL(log.SERIAL_FT_CHK, 'N') AS SERIAL_FT_CHK  -- FILTER  62(15)
+             , NVL(log.SERIAL_PT_CHK, 'N') AS SERIAL_PT_CHK  -- PARTS   63(15)
+             , NVL(log.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
+          FROM SAL0001D A
+         INNER JOIN SAL0046D B
+            ON A.SALES_ORD_ID = B.SALES_ORD_ID
+         INNER JOIN ORG0001D CTCODE
+            ON B.CT_ID = CTCODE.MEM_ID
+         INNER JOIN SAL0002D SOD
+            ON SOD.SALES_ORD_ID = A.SALES_ORD_ID
+         INNER JOIN SYS0026M STK
+            ON STK.STK_ID = SOD.ITM_STK_ID
+         LEFT outer JOIN SYS0028M LOG
+           ON CTCODE.MEM_CODE = LOG.WH_LOC_CODE
+        WHERE 1 = 1
+          AND A.SALES_ORD_NO = #{salesOrdNo}
+          AND B.STUS_CODE_ID = #{stusCodeId}
+          AND A.BNDL_ID IS NOT NULL
+          AND ROWNUM  <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectFrmSerial" parameterType="Map" resultType="String">
+    /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmSerial]*/
+	    SELECT NVL(MAX(A.SERIAL_NO), '') AS SERIAL_NO
+	      FROM (
+			    SELECT Extent3.SERIAL_NO SERIAL_NO
+				  FROM SAL0046D Extent1
+				 INNER JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
+				 WHERE Extent1.INSTALL_ENTRY_ID = TO_NUMBER(TRIM(#{installEntryId}))
+				   AND ROWNUM <![CDATA[<=]]> 1
+               ) A
+    </select>
+
+    <update id="updateInstallResultFail" parameterType="Map">
+    UPDATE SAL0047D SET REM = #{remark}
+                      , ALLOW_COMM = #{allowCom}
+                      , IS_TRADE_IN = #{istrade}
+                      , REQUIRE_SMS = #{isreqsms}
+                      , SIRIM_NO = UPPER(#{sirimNo})
+                      , SERIAL_NO = #{serialNo}
+                      , DOC_REF_NO1 = #{refNo1}
+                      , DOC_REF_NO2 = #{refNo1}
+                      , UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{user_id}
+                      , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
+                      ,FAIL_LOC = #{failLoc}
+                      ,FAIL_ID = #{failReason}
+                      , DISP_COMM = NVL(#{dispComm},0)
+    WHERE ( RESULT_ID = #{resultId} )
+  </update>
+
+  <update id="updateInstallEntryEdit" parameterType="Map">
+    UPDATE SAL0046D SET UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{user_id}
+                      , INSTALL_DT = TO_DATE(#{installdt},'DD-MM-YYYY')
+    WHERE ( INSTALL_ENTRY_ID = #{entryId} )
+  </update>
+
+  <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
+    SELECT T1.SALES_ORD_ID SALES_ORD_ID
+             , T1.DEPT_CODE DEPT_CODE
+             , T1.GRP_CODE GRP_CODE
+             , T1.ORG_CODE ORG_CODE
+             , T2.MEM_ID MEM_ID
+             , T2.MEM_CODE MEM_CODE
+             , T2.MEM_TYPE MEM_TYPE
+             , T2.NAME NAME
+             , T2.NRIC NRIC
+             , T2.TEL_OFFICE TEL_OFFICE
+             , T2.TEL_HUSE TEL_HUSE
+             , T2.TEL_MOBILE TEL_MOBILE
+             , T3.MEM_ID MEM_ID1
+             , T3.MEM_CODE MEM_CODE1
+             , T3.NAME NAME1
+             , T3.TEL_MOBILE TEL_MOBILE1
+             , T4.MEM_ID MEM_ID2
+             , T4.MEM_CODE MEM_CODE2
+             , T4.NAME NAME2
+             , T4.TEL_MOBILE TEL_MOBILE2
+             , T5.MEM_ID MEM_ID3
+             , T5.MEM_CODE MEM_CODE3
+             , T5.NAME NAME3
+             , T5.TEL_MOBILE TEL_MOBILE3
+    FROM SAL0001D T1
+    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
+    LEFT JOIN ORG0001D T3 ON T3.MEM_ID = T1.SALES_GM_ID
+    LEFT JOIN ORG0001D T4 ON T4.MEM_ID = T1.SALES_SM_ID
+    LEFT JOIN ORG0001D T5 ON T5.MEM_ID = T1.SALES_HM_ID
+    WHERE T1.SALES_ORD_ID = #{hidSalesOrderId}
+  </select>
+
+  <select id="selectFailReason" parameterType="Map" resultType="egovMap">
+    SELECT
+	    CODE RESN_CODE,
+	    RESN_DESC
+    FROM SYS0032M
+    WHERE RESN_ID = #{failReasonCode}
+  </select>
+
+  <select id="selectSubmitStatusOrd" parameterType="Map" resultType="egovMap">
+    select distinct so_cur_stus_id from sal0004d
+    where so_id =
+        (select sales_ord_id from sal0001d where sales_ord_no = #{salesOrdNo})
+    </select>
+
+       <select id="selectFailChild" parameterType="Map" resultType="egovMap">
+        SELECT
+                    EXTENT1.DEFECT_ID AS CODE_ID
+                 ,  EXTENT1.DEFECT_CODE || ' - ' || EXTENT1.DEFECT_DESC AS CODE_NAME
+        FROM SYS0100M EXTENT1
+        WHERE 1=1
+        AND DEFECT_STATUS =1
+         <choose>
+              <when test=' groupCode == 8000 '>
+                AND DEFECT_TYP = 'IFA'
+              </when>
+              <otherwise>
+                AND DEFECT_TYP = 'IFB'
+              </otherwise>
+        </choose>
+        ORDER BY DEFECT_CODE
+  </select>
+
+  <insert id="insertPreIns" parameterType="Map">
+    INSERT INTO SVC0136D VALUES (
+        #{insNo},
+        #{status},
+        #{failLoc},
+        #{failReason},
+        #{serial},
+        #{sirim},
+        #{attachment},
+        SYSDATE,
+        #{serial2},
+        #{remark},
+        null,
+        #{autoStusCodeId}
+    )
+  </insert>
+
+  <select id="selectInstallationInfo" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT
+                A.INSTALL_ENTRY_NO,
+                A.INSTALL_DT,
+                A.STUS_CODE_ID MAIN_STUS,
+                B.SALES_ORD_ID,
+                B.SALES_ORD_NO,
+                B.SALES_DT,
+                C.MEM_CODE,
+                D.SERIAL_NO,
+                D.SERIAL_NO2,
+                D.FAL_LOC,
+                D.FAL_RSN,
+                D.STUS_CODE_ID,
+                D.REMARK,
+                COUNT(D.INSTALL_ENTRY_NO) DUP_CHECK,
+                E.STK_CODE,
+                B.BNDL_ID
+        FROM SAL0046D A
+        JOIN SAL0001D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN ORG0001D C ON A.CT_ID = C.MEM_ID
+        LEFT JOIN SVC0136D D ON A.INSTALL_ENTRY_NO = D.INSTALL_ENTRY_NO
+        LEFT JOIN SYS0026M E ON E.STK_ID = A.INSTALL_STK_ID
+        WHERE A.INSTALL_ENTRY_NO = #{insNo}
+        GROUP BY A.INSTALL_ENTRY_NO,  A.INSTALL_DT, A.STUS_CODE_ID,B.SALES_ORD_ID, B.SALES_ORD_NO, B.SALES_DT, C.MEM_CODE, D.SERIAL_NO, D.SERIAL_NO2, D.FAL_LOC,
+        D.FAL_RSN, D.STUS_CODE_ID, D.REMARK, E.STK_CODE,B.BNDL_ID
+  </select>
+
+  <select id="getOutdoorAcStkCode" parameterType="Map" resultType="String">
+        SELECT E.STK_CODE
+        FROM HMC0011D HMC
+        JOIN SAL0001D B ON  HMC.ORD_SEQ_NO = B.BNDL_ID AND  HMC.FRA_ORD_NO = B.SALES_ORD_NO
+        LEFT JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+        LEFT JOIN SYS0026M E ON E.STK_ID = C.ITM_STK_ID
+        WHERE HMC.ORD_SEQ_NO = #{bndlId}
+  </select>
+
+  <select id="selectPreInstallationRecord"  parameterType="Map" resultType="egovMap">
+  		SELECT TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS CRT_DT,A.*,B.* FROM SVC0136D A
+		JOIN SAL0046D B
+		ON A.INSTALL_ENTRY_NO = B.INSTALL_ENTRY_NO
+		WHERE A.STUS_CODE_ID = #{preInstallStus}
+		AND A.AUTO_STUS_CODE_ID = 1
+		AND B.STUS_CODE_ID = 1
+  </select>
+
+<update id="updateSVC0136DAutoPreComStatus" parameterType="Map" >
+	UPDATE SVC0136D SET AUTO_STUS_CODE_ID = #{statusId}, ADD_REMARK = #{addRemark}
+	WHERE INSTALL_ENTRY_NO = #{installEntryNo}
+</update>
+</mapper>

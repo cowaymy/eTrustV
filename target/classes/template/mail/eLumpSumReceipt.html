@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Coway E-Temporary Receipt Email</title>
+</head>
+
+<body>
+    <div style="width:800px">
+        <div>
+            <img src="cid:coway_header" width="380" height="80">
+        </div>
+        <br><br>
+
+        <table style="width:800px;font-family:Calibri;font-size:14px">
+            <colgroup>
+                <col style="width:15%"/>
+                <col style="width:60%; padding-right: 50px"/>
+                <col style="width:10%"/>
+                <col style="width:15%; align:right"/>
+            </colgroup>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td colspan="2" style="text-align:center;color:white;background-color:black;font-weight:bold;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px">E-Temporary Receipt</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold">Received from </td>
+                <td>: ${custName}</td>
+                <td style="font-weight:bold">Receipt Date </td>
+                <td>: ${crtDt}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="font-weight:bold">E-TR No</td>
+                <td>: ${eTRNo}</td>
+            </tr>
+        </table>
+        <br><br>
+
+        <table style="width:800px;font-family:Calibri;font-size:14px;border-collapse:collapse">
+            <tr style="background-color:black;font-weight:bold;color:white">
+                <th scope="col" style="border:1px solid black;padding-left:10px;text-align:left">Order No.</th>
+                <th scope="col" style="border:1px solid black;padding-left:10px;text-align:left">Product Model</th>
+                <th scope="col" style="border:1px solid black;padding-left:10px;text-align:left">Pay Type</th>
+                <th scope="col" style="border:1px solid black;padding:0 10px 0 10px;text-align:center">Amount (RM)</th>
+            </tr>
+			${orderListTableInfo}
+            <tr>
+                <td colspan="2" style="border:1px solid;">&nbsp;</td>
+                <td style="border:1px solid;padding-right:10px;text-align:right;">Total Amount</td>
+                <td style="border:1px solid;text-align:center">${totPayAmt}</td>
+            </tr>
+        </table>
+        <div>
+        		<p><b>Collector Name:</b> ${crtUserFullName}</p>
+        		<p><b>Collector Code:</b> ${crtUserName}</p>
+                <p><b>Note:</b> Thank you for your payment. Your payment records shall be updated within 3 working days upon verification.</p>
+        </div>
+    </div>
+</body>
+</html>

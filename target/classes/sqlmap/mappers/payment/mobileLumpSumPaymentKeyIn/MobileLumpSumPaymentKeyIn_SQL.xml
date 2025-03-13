@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobileLumpSumPaymentKeyIn.service.impl.MobileLumpSumPaymentKeyInMapper">
+	<select  id="getCustomerInfoBySalesOrderNo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.CUST_ID,s0029d.NAME,
+		CASE WHEN s0029d.TYPE_ID = 964 THEN '********' || SUBSTR(NRIC, 9) ELSE s0029d.NRIC END AS NRIC,
+		s0029d.EMAIL,
+		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
+		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
+		FROM SAL0001D s0001d
+		JOIN SAL0029D s0029d
+		ON s0029d.CUST_ID = s0001d.CUST_ID
+		LEFT JOIN SYS0013M s0013m1
+		ON s0029d.TYPE_ID = s0013m1.CODE_ID
+		LEFT JOIN SYS0013M s0013m2
+		ON s0029d.CORP_TYPE_ID = s0013m2.CODE_ID
+		WHERE 1=1
+		<if test='salesOrdNo != null and salesOrdNo != ""'>
+		AND s0001d.SALES_ORD_NO = #{salesOrdNo}
+		</if>
+	</select>
+
+	<select  id="getCustomerBillingInfoByInvoiceNo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.NRIC,p0016d.ACC_BILL_CRT_DT,p0016d.ACC_BILL_GRP_ID
+		FROM PAY0016D p0016d
+		INNER JOIN SAL0001D s0001d
+		ON s0001d.SALES_ORD_ID = p0016d.ACC_BILL_ORD_ID
+		INNER JOIN SAL0029D s0029d
+		ON s0001d.CUST_ID = s0029d.CUST_ID
+		WHERE 1=1
+		AND p0016d.ACC_BILL_REM = #{custCi}
+		AND ROWNUM = 1
+	</select>
+
+	<select id="getCustomerInfo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.CUST_ID,s0029d.NAME,
+		CASE WHEN s0029d.TYPE_ID = 964 THEN '********' || SUBSTR(NRIC, 9) ELSE s0029d.NRIC END AS NRIC,
+		s0029d.EMAIL,
+		s0029d.TYPE_ID AS CUST_TYPE_ID, s0013m1.CODE AS CUST_TYPE_CODE, s0013m1.CODE_NAME AS CUST_TYPE_CODE_NAME,
+		s0029d.CORP_TYPE_ID AS CUST_CORP_TYPE_ID, s0013m2.CODE AS CUST_CORP_TYPE_CODE, s0013m2.CODE_NAME AS CUST_CORP_TYPE_CODE_NAME
+		FROM SAL0029D s0029d
+		LEFT JOIN SYS0013M s0013m1
+		ON s0029d.TYPE_ID = s0013m1.CODE_ID
+		LEFT JOIN SYS0013M s0013m2
+		ON s0029d.CORP_TYPE_ID = s0013m2.CODE_ID
+		WHERE 1=1
+		AND (s0029d.NRIC = #{nric}
+		<if test='custId != null and custId != ""'>
+		        OR s0029d.CUST_ID = #{custId}
+		</if>
+		)
+	</select>
+
+	<select id="getCustomerOutstandingOrder" parameterType="Map" resultType="egovMap">
+		SELECT * FROM (
+
+<!-- 		RENTAL MEMBERSHIP(TOTAL)
+		SELECT
+		    C.SALES_ORD_ID ORD_ID,
+		    C.SALES_ORD_NO ORD_NO,
+		    A.SRV_LDGR_TYPE_ID ORD_PAYMENT_TYPE_ID,
+		    F.CODE_NAME ORD_PAYMENT_TYPE_NAME,
+		    'RENTAL MEMBERSHIP' PAY_TYPE,
+		    ROUND(SUM(A.SRV_LDGR_AMT),2) OTSTND_AMT,
+		    C.CUST_ID,
+		    D.NRIC,
+		    E.CODE_ID AS ORD_TYPE_ID,
+		    E.CODE_NAME AS ORD_TYPE_NAME
+		FROM PAY0023D A
+		LEFT JOIN SAL0077D B ON B.SRV_CNTRCT_ID  = A.SRV_LDGR_CNTRCT_ID
+		LEFT JOIN SAL0001D C ON C.SALES_ORD_ID = B.SRV_CNTRCT_ORD_ID
+		LEFT JOIN SAL0029D D ON D.CUST_ID = C.CUST_ID
+		LEFT JOIN SYS0013M E ON E.CODE_ID = C.APP_TYPE_ID
+		LEFT JOIN SYS0013M F ON F.CODE_ID = A.SRV_LDGR_TYPE_ID
+		WHERE 1=1
+	        <if test='custId != null and custId != ""'>
+		    AND D.CUST_ID = #{custId}
+		    </if>
+ 			<if test='ordNoList != null and ordNoList != ""'>
+	             AND C.SALES_ORD_NO IN
+	             <foreach item="item" collection="ordNoList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+		GROUP BY
+		    A.SRV_LDGR_CNTRCT_ID,
+		    C.SALES_ORD_ID, C.SALES_ORD_NO,
+		    A.SRV_LDGR_CRT_DT,
+		    A.SRV_LDGR_TYPE_ID,'RENTAL MEMBERSHIP',0,
+		    C.CUST_ID, D.NRIC, E.CODE_ID, E.CODE_NAME, F.CODE_NAME
+		HAVING NVL(ROUND(SUM(A.SRV_LDGR_AMT),2), 0.00) > 0
+
+		UNION -->
+
+<!-- 		OUTRIGHT MEMBERSHIP(TOTAL)   -->
+		 SELECT
+		 	A.SRV_MEM_ID,
+		    B.SALES_ORD_ID ORD_ID,
+		    B.SALES_ORD_NO ORD_NO,
+		    0 ORD_PAYMENT_TYPE_ID,
+		    '' ORD_PAYMENT_TYPE_NAME,
+		    'OUTRIGHT MEMBERSHIP' PAY_TYPE,
+		    NVL (ROUND(SUM (D.SRV_MEM_AMT),2), 0.00) OTSTND_AMT,
+		    B.CUST_ID,
+		    C.NRIC,
+		    E.CODE_ID ORD_TYPE_ID,
+		    E.CODE_NAME ORD_TYPE_NAME
+		FROM SAL0095D A
+		JOIN SAL0001D B ON B.SALES_ORD_ID = A.SRV_SALES_ORD_ID
+		JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+		LEFT JOIN PAY0024D D ON D.SRV_MEM_ID = A.SRV_MEM_ID
+		LEFT JOIN SYS0013M E ON E.CODE_ID = B.APP_TYPE_ID
+		WHERE 1=1
+	        <if test='custId != null and custId != ""'>
+		        AND C.CUST_ID = #{custId}
+		    </if>
+		    <if test='ordNoList != null and ordNoList != ""'>
+	             AND B.SALES_ORD_NO IN
+	             <foreach item="item" collection="ordNoList" index="index"
+	               open="(" separator="," close=")">
+	               #{item}
+	             </foreach>
+	       </if>
+		GROUP BY
+		A.SRV_MEM_ID,
+		B.SALES_ORD_ID,
+		B.SALES_ORD_NO,
+		0,
+		'',
+		'OUTRIGHT MEMBERSHIP',
+		0,
+		B.CUST_ID,
+		C.NRIC,
+		E.CODE_ID,
+		E.CODE_NAME
+		HAVING NVL(ROUND(SUM (D.SRV_MEM_AMT), 0), 0.00) > 0
+
+		UNION
+
+<!-- 		RENTAL OUTSTANDING(TOTAL) -->
+		 SELECT
+		 	 0 SRV_MEM_ID,
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'RENTAL PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				 <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       		</if>
+		           AND A.APP_TYPE_ID IN (66)
+		)D
+		JOIN PAY0022D E ON D.ORD_ID = E.RENT_SO_ID
+		WHERE 1=1
+		GROUP BY
+			0,
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.RENT_AMT),2) , 0.00) > 0
+
+		UNION
+
+<!-- 		OUTRIGHT/OUTRIGHT PLUS OUTSTANDING(TOTAL) -->
+		SELECT
+		 	 0 SRV_MEM_ID,
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'OUTRIGHT PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				    <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		           AND A.APP_TYPE_ID IN (67)
+		)D
+		JOIN PAY0035D E ON D.ORD_ID = E.TRADE_SO_ID
+		WHERE 1=1
+		GROUP BY
+			0,
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.TRADE_AMT),2) , 0.00) > 0
+
+		UNION
+
+<!-- 		INSTALLMENT OUTSTANDING(TOTAL) -->
+		SELECT
+		 	 0 SRV_MEM_ID,
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'INSTALLMENT PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.INSTLMT_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM(
+		    SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				    <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		           AND A.APP_TYPE_ID IN (68)
+		)D
+		JOIN PAY0010D E ON D.ORD_ID = E.INSTLMT_SO_ID
+		WHERE  1=1
+		GROUP BY
+			0,
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.INSTLMT_AMT),2) , 0.00) > 0
+
+		UNION
+
+
+		<!-- 		AS PAYMENT -->
+		SELECT
+		 	 0 SRV_MEM_ID,
+		     D.ORD_ID ORD_ID,
+		     D.ORD_NO ORD_NO,
+		     0 ORD_PAYMENT_TYPE_ID,
+		     '' ORD_PAYMENT_TYPE_NAME,
+		     'AS PAYMENT' PAY_TYPE,
+		     NVL(ROUND(SUM(E.AS_LG_AMT),2) , 0.00) OTSTND_AMT,
+		     D.CUST_ID,
+		     D.NRIC,
+		     D.ORD_TYPE_ID,
+		     D.ORD_TYPE_NAME
+		FROM (
+		 SELECT
+		        A.SALES_ORD_ID ORD_ID,
+		        A.SALES_ORD_NO ORD_NO,
+		        A.APP_TYPE_ID TYPE_ID,
+		        A.CUST_ID,
+		        C.NRIC,
+		        F.CODE_ID ORD_TYPE_ID,
+		        F.CODE_NAME ORD_TYPE_NAME
+		    FROM SAL0001D A
+		    LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+		    WHERE 1=1
+		           <if test='custId != null and custId != ""'>
+				        AND C.CUST_ID = #{custId}
+				    </if>
+				   <if test='ordNoList != null and ordNoList != ""'>
+		             AND A.SALES_ORD_NO IN
+		             <foreach item="item" collection="ordNoList" index="index"
+		               open="(" separator="," close=")">
+		               #{item}
+		             </foreach>
+	       			</if>
+		) D
+		JOIN PAY0006D E ON D.ORD_NO =  E.AS_SO_NO
+		WHERE  1=1
+		GROUP BY
+			0,
+		    D.ORD_ID, D.ORD_NO,
+		    0,'','',0,
+		    D.CUST_ID, D.NRIC,
+		    D.ORD_TYPE_ID,
+		    D.ORD_TYPE_NAME
+		HAVING NVL(ROUND(SUM(E.AS_LG_AMT),2) , 0.00) > 0
+		)
+	</select>
+
+	<select id="selectNextMobPayId" resultType="int">
+        SELECT PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL id FROM DUAL
+    </select>
+
+    <select id="selectNextMobPayGroupId" resultType="int">
+        SELECT PAY0349M_MOB_PAY_GROUP_NO_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <select id="selectNextMatchingId" resultType="int">
+        SELECT PAY0349M_MATCHING_ID_SEQ.NEXTVAL id FROM DUAL
+    </select>
+
+    <select id="selectUser" parameterType="String" resultType="egovMap">
+       	SELECT s0047m.USER_ID, s0047m.USER_BRNCH_ID
+       	FROM SYS0047M s0047m
+       	WHERE USER_NAME = #{userName}
+    </select>
+
+    <insert id="insertPaymentMasterInfo" parameterType="Map">
+		INSERT INTO PAY0349M
+		(
+		MOB_PAY_ID,
+		MOB_PAY_GROUP_NO,
+		PAY_STUS_ID,
+		PAY_MODE,
+		TOT_PAY_AMT,
+		TOT_ORI_OUT_AMT,
+		CUST_ID,
+		SMS_1,
+		SMS_2,
+		EMAIL_1,
+		EMAIL_2,
+		SIGN_IMG,
+		CRT_DT,
+		CRT_BY,
+		CRT_USER_BRNCH,
+		SLIP_NO,
+		UPLOAD_IMG1,
+		UPLOAD_IMG2,
+		UPLOAD_IMG3,
+		UPLOAD_IMG4,
+		CHEQUE_DATE,
+		CHEQUE_NO,
+		ISSUE_BANK,
+		CARD_NO,
+		APPROVAL_NO,
+		CRC_NAME,
+		TRANSACTION_DATE,
+		EXPIRY_DATE,
+		CARD_MODE,
+		MERCHANT_BANK,
+		CARD_BRAND
+		)
+		VALUES
+		(
+		PAY0349M_MOB_PAY_ID_SEQ.NEXTVAL,
+		#{mobilePayGrpNo},
+		#{status},
+		#{paymentMethodId},
+		#{totalPayableAmount},
+		#{totalOriginalOutstandingAmount},
+		#{custId},
+		#{sms1},
+		#{sms2},
+		#{email1},
+		#{email2},
+		#{signData},
+		SYSDATE,
+		#{userId},
+		#{userBrnchId},
+		#{slipNo},
+		#{uploadImg1},
+		#{uploadImg2},
+		#{uploadImg3},
+		#{uploadImg4},
+		<if test='chequeDate != null and chequeDate != ""'>
+	        TO_DATE(#{chequeDate},'DD/MM/YYYY'),
+	    </if>
+	    <if test='chequeDate == null or chequeDate == ""'>
+	        null,
+	    </if>
+		#{chequeNo},
+		#{issueBank},
+		#{cardNo},
+		#{approvalNo},
+		#{crcName},
+		<if test='transactionDate != null and transactionDate != ""'>
+	        TO_DATE(#{transactionDate},'DD/MM/YYYY'),
+	    </if>
+	    <if test='transactionDate == null or transactionDate == ""'>
+	        null,
+	    </if>
+		#{expiryDate},
+		#{cardMode},
+		#{merchantBank},
+		#{cardBrand}
+		)
+	</insert>
+
+	 <insert id="insertPaymentDetailInfo" parameterType="Map">
+		INSERT INTO PAY0350D
+		(
+		MOB_PAY_DETAIL_ID,
+		MOB_PAY_GROUP_NO,
+		SALES_ORD_ID,
+		SALES_ORD_NO,
+		ORD_PAY_TYPE_ID,
+		PAY_TYPE,
+		PAY_AMT,
+		ORI_OUT_AMT,
+		SRV_MEM_ID
+		)
+		VALUES
+		(
+		PAY0350D_MOB_PAY_DETAIL_ID_SEQ.NEXTVAL,
+		#{mobilePayGrpNo},
+		#{ordId},
+		#{ordNo},
+		#{ordPaymentTypeId},
+		#{payType},
+		#{inputOtstndAmt},
+		#{otstndAmt},
+		#{srvMemId}
+		)
+	</insert>
+
+	<select id="getLumpSumEnrollmentList" parameterType="Map" resultType="egovMap">
+		SELECT CASE WHEN LENGTH(p0349m.MOB_PAY_GROUP_NO)  <![CDATA[ < ]]> 7 THEN 'LS' || TO_CHAR(p0349m.MOB_PAY_GROUP_NO, 'fm000000') ELSE 'LS' || p0349m.MOB_PAY_GROUP_NO END AS MOB_PAY_GROUP_NO,
+		TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS CRT_DT,p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME, p0349m.PAY_MODE, s0013m.CODE_NAME AS PAY_MODE_NAME,
+		p0349m.TOT_PAY_AMT,p0349m.TOT_ORI_OUT_AMT,p0349m.CRT_BY,s0047m1.USER_NAME AS CRT_USER_NAME,TO_CHAR(p0349m.UPD_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS UPD_DT,s0047m2.USER_NAME AS UPD_USER_NAME,
+		p0350d.SALES_ORD_ID,p0350d.SALES_ORD_NO,s0001d.PV_MONTH,s0001d.PV_YEAR,p0350d.ORD_PAY_TYPE_ID,p0350d.PAY_TYPE,p0350d.PAY_AMT,p0350d.ORI_OUT_AMT,s0029d.NAME AS CUST_NAME,
+		p0349m.SLIP_NO,p0350d.MOB_PAY_DETAIL_ID,
+
+        p0349m.UPLOAD_IMG1,
+        CASE WHEN p0349m.UPLOAD_IMG1 IS NOT NULL AND p0349m.UPLOAD_IMG1 > 0
+          THEN 'DOWN'
+          ELSE NULL END AS ATTCH_IMG_URL1,
+        U11.FILE_SUB_PATH AS FILE_SUB_PATH1,
+        U11.ATCH_FILE_NAME AS ATCH_FILE_NAME1,
+        U11.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME1,
+        U11.FILE_EXTSN AS FILE_EXTSN1,
+
+        p0349m.UPLOAD_IMG2,
+        CASE WHEN p0349m.UPLOAD_IMG2 IS NOT NULL AND p0349m.UPLOAD_IMG2 > 0
+          THEN 'DOWN'
+          ELSE NULL END AS ATTCH_IMG_URL2,
+        U22.FILE_SUB_PATH AS FILE_SUB_PATH2,
+        U22.ATCH_FILE_NAME AS ATCH_FILE_NAME2,
+        U22.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME2,
+        U22.FILE_EXTSN AS FILE_EXTSN2,
+
+        p0349m.UPLOAD_IMG3,
+        CASE WHEN p0349m.UPLOAD_IMG3 IS NOT NULL AND p0349m.UPLOAD_IMG3 > 0
+          THEN 'DOWN'
+          ELSE NULL END AS ATTCH_IMG_URL3,
+        U33.FILE_SUB_PATH AS FILE_SUB_PATH3,
+        U33.ATCH_FILE_NAME AS ATCH_FILE_NAME3,
+        U33.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME3,
+        U33.FILE_EXTSN AS FILE_EXTSN3,
+
+        p0349m.UPLOAD_IMG4,
+        CASE WHEN p0349m.UPLOAD_IMG4 IS NOT NULL AND p0349m.UPLOAD_IMG4 > 0
+          THEN 'DOWN'
+          ELSE NULL END AS ATTCH_IMG_URL4,
+        U44.FILE_SUB_PATH AS FILE_SUB_PATH4,
+        U44.ATCH_FILE_NAME AS ATCH_FILE_NAME4,
+        U44.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME4,
+        U44.FILE_EXTSN AS FILE_EXTSN4,
+
+        p0349m.ISSUE_BANK,
+        s0004m.NAME AS ISSUE_BANK_NAME,
+
+        p0349m.CHEQUE_NO,
+        TO_CHAR(p0349m.CHEQUE_DATE, 'DD/MM/YYYY') CHEQUE_DATE,
+        CASE WHEN p0349m.CARD_NO IS NULL THEN ''
+        ELSE SUBSTR(p0349m.CARD_NO, 1, 6) || '******'  || SUBSTR(p0349m.CARD_NO, 13, 4) END AS CARD_NO,
+        p0349m.APPROVAL_NO,
+        p0349m.CRC_NAME,
+        TO_CHAR(p0349m.TRANSACTION_DATE,'DD/MM/YYYY') AS TRANSACTION_DATE,
+        p0349m.EXPIRY_DATE,
+        p0349m.CARD_MODE,
+        s0013m1.CODE_NAME AS CARD_MODE_DESC,
+        p0349m.MERCHANT_BANK,
+        s0001m.ACC_CODE || '' ||  s0001m.ACC_DESC AS MERCHANT_BANK_DESC,
+        p0349m.CARD_BRAND,
+        s0013m1.CODE_NAME AS CARD_BRAND_DESC,
+
+		p0349m.SMS_1,
+		p0349m.SMS_2,
+		p0349m.EMAIL_1,
+		p0349m.EMAIL_2,
+		CASE WHEN p0349m.FAIL_RESN_ID > 0 THEN '['|| s0032m.CODE ||'-'|| s0032m.RESN_DESC || '] - ' || p0349m.REMARKS
+        	ELSE p0349m.REMARKS END REMARKS,
+		p0349m.CRT_USER_BRNCH,
+		s0005m1.CODE CRT_USER_BRNCH_CD,
+		s0005m1.NAME CRT_USER_BRNCH_NM
+
+		FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+		JOIN SYS0038M s0038m
+		ON p0349m.PAY_STUS_ID = STUS_CODE_ID
+		LEFT JOIN SYS0013M s0013m
+		ON  p0349m.PAY_MODE = s0013m.CODE_ID
+		JOIN SYS0047M s0047m1
+		ON p0349m.CRT_BY = s0047m1.USER_ID
+		LEFT JOIN SYS0047M s0047m2
+		on p0349m.UPD_BY = s0047m2.USER_ID
+		LEFT JOIN SAL0029D s0029d
+        on s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0005M s0005m
+		ON s0047m1.USER_BRNCH_ID = s0005m.BRNCH_ID
+        LEFT JOIN SYS0070M U1
+        ON p0349m.UPLOAD_IMG1 = U1.ATCH_FILE_GRP_ID AND p0349m.UPLOAD_IMG1 > 0
+        LEFT JOIN SYS0071D U11
+        ON U1.ATCH_FILE_ID = U11.ATCH_FILE_ID
+        LEFT JOIN SYS0070M U2
+        ON p0349m.UPLOAD_IMG2 = U2.ATCH_FILE_GRP_ID AND p0349m.UPLOAD_IMG2 > 0
+        LEFT JOIN SYS0071D U22
+        ON U2.ATCH_FILE_ID = U22.ATCH_FILE_ID
+        LEFT JOIN SYS0070M U3
+        ON p0349m.UPLOAD_IMG3 = U3.ATCH_FILE_GRP_ID AND p0349m.UPLOAD_IMG3 > 0
+        LEFT JOIN SYS0071D U33
+        ON U3.ATCH_FILE_ID = U33.ATCH_FILE_ID
+        LEFT JOIN SYS0070M U4
+        ON p0349m.UPLOAD_IMG4 = U4.ATCH_FILE_GRP_ID AND p0349m.UPLOAD_IMG4 > 0
+        LEFT JOIN SYS0071D U44
+        ON U4.ATCH_FILE_ID = U44.ATCH_FILE_ID
+
+        LEFT JOIN SYS0004M s0004m
+        ON s0004m.BANK_ID = p0349m.ISSUE_BANK
+
+        LEFT JOIN SYS0001M s0001m
+        ON s0001m.ACC_ID = p0349m.MERCHANT_BANK
+
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.CARD_BRAND AND s0013m1.CODE_MASTER_ID = '21'
+
+        LEFT JOIN SYS0013M s0013m2
+        ON s0013m2.CODE_ID = p0349m.CARD_MODE AND s0013m2.CODE_MASTER_ID = '130'
+
+        LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0349m.FAIL_RESN_ID
+        LEFT JOIN SYS0005M s0005m1 ON s0005m1.BRNCH_ID = p0349m.CRT_USER_BRNCH
+        LEFT JOIN SAL0001D s0001d ON s0001d.SALES_ORD_NO = p0350d.SALES_ORD_NO
+	    LEFT JOIN ORG0001D o0001d ON s0047m1.USER_NAME = o0001d.MEM_CODE
+	    LEFT JOIN ORG1001V o1001v ON o1001v.MEM_ID = o0001d.MEM_ID
+        WHERE 1=1
+        <if test='grpTicketNo != null and grpTicketNo != ""'>
+        	AND p0349m.MOB_PAY_GROUP_NO = TRIM(#{grpTicketNo})
+	    </if>
+	    <if test='requestStartDate != null and requestEndDate != null'>
+			<if test='requestStartDate != "" and requestEndDate != ""'>
+				AND p0349m.CRT_DT BETWEEN TO_DATE(#{requestStartDate},'DD/MM/YYYY') AND (TO_DATE(#{requestEndDate},'DD/MM/YYYY') + 1)
+			</if>
+		</if>
+        <if test='orderNo != null and orderNo != ""'>
+        	AND p0350d.SALES_ORD_NO = TRIM(#{orderNo})
+	    </if>
+	    <if test="statusIdList != null and statusIdList != ''">
+		      AND p0349m.PAY_STUS_ID in
+		      <foreach item="item" collection="statusIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+	    <if test="branchIdList != null and branchIdList != ''">
+		      AND s0005m.BRNCH_ID in
+		      <foreach item="item" collection="branchIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+		<if test="regionIdList != null and regionIdList != ''">
+		      AND s0005m.REGN_ID in
+		      <foreach item="item" collection="regionIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+        <if test="payModeIdList != null and payModeIdList != ''">
+		      AND p0349m.PAY_MODE in
+		      <foreach item="item" collection="payModeIdList" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		</if>
+        <if test="serialNo != null and serialNo != '' ">
+          AND ( p0349m.SLIP_NO = #{serialNo} OR p0349m.CHEQUE_NO = #{serialNo} )
+        </if>
+	    <if test='memberCode != null and memberCode != ""'>
+			AND s0047m1.USER_NAME = TRIM(#{memberCode})
+	    </if>
+	    <if test='apprvNo != null and apprvNo != ""'>
+			AND p0349m.APPROVAL_NO = #{apprvNo}
+	    </if>
+		<if test="cardNoA != null and cardNoA != '' ">
+          AND SUBSTR (p0349m.CARD_NO, 1, 6) = #{cardNoA}
+        </if>
+        <if test="cardNoB != null and cardNoB != '' ">
+          AND SUBSTR (p0349m.CARD_NO, 13, 4) = #{cardNoB}
+        </if>
+	    <if test='orgCode != null and orgCode != ""'>
+			AND o1001v.ORG_CODE = TRIM(#{orgCode})
+		</if>
+		<if test='grpCode != null and grpCode != ""'>
+			AND o1001v.GRP_CODE = TRIM(#{grpCode})
+		</if>
+		<if test='deptCode != null and deptCode != ""'>
+			AND o1001v.DEPT_CODE = TRIM(#{deptCode})
+		</if>
+		ORDER BY p0349m.CRT_DT DESC,p0349m.MOB_PAY_GROUP_NO DESC
+	</select>
+
+	<select id="mobileSelectCashMatchingPayGroupList" parameterType="Map" resultType="egovMap">
+		SELECT CASE WHEN LENGTH(p0349m.MOB_PAY_GROUP_NO)  <![CDATA[ < ]]> 7 THEN 'LS' || TO_CHAR(p0349m.MOB_PAY_GROUP_NO, 'fm000000') ELSE 'LS' || p0349m.MOB_PAY_GROUP_NO END AS MOB_PAY_GROUP_NO,
+		p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
+        p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,
+        TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+        s0029d.NAME,
+		CASE WHEN p0349m.FAIL_RESN_ID > 0 THEN '['|| s0032m.CODE ||'-'|| s0032m.RESN_DESC || '] - ' || p0349m.REMARKS
+                                 ELSE p0349m.REMARKS END REMARKS
+        FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.PAY_MODE
+        LEFT JOIN SYS0038M s0038m
+        ON s0038m.STUS_CODE_ID = p0349m.PAY_STUS_ID
+        LEFT JOIN SAL0029D s0029d
+        ON s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0032M s0032m ON s0032m.RESN_ID = p0349m.FAIL_RESN_ID
+        WHERE 1=1
+        AND (p0349m.PAY_MODE = 5698 OR p0349m.PAY_MODE = 5697)
+        AND PAY_STUS_ID IN (1,21)
+        <if test='userId != null and userId != ""'>
+			AND p0349m.CRT_BY = #{userId}
+		</if>
+		<if test='fromDate != null and fromDate != null'>
+			<if test='toDate != "" and toDate != ""'>
+				<![CDATA[
+					AND TO_DATE(TO_CHAR(p0349m.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY')
+					AND TO_DATE(p0349m.CRT_DT,'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
+				]]>
+			</if>
+		</if>
+		<if test='custCi != null and custCi != ""'>
+			<if test='custCiType == 1'>
+				AND p0350d.SALES_ORD_NO LIKE   '%' || #{custCi} || '%'
+			</if>
+			<if test='custCiType == 2'>
+				AND s0029d.NAME LIKE   '%' || UPPER(#{custCi}) || '%'
+			</if>
+			<if test='custCiType == 3'>
+				AND (s0029d.NRIC LIKE   '%' || UPPER(#{custCi}) || '%' OR s0029d.CUST_ID LIKE  '%' || UPPER(#{custCi}) || '%')
+			</if>
+		</if>
+        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME,
+        p0349m.FAIL_RESN_ID, s0032m.CODE, s0032m.RESN_DESC, p0349m.REMARKS
+        ORDER BY p0349m.CRT_DT DESC
+	</select>
+
+	<update id="mobileUpdateCashMatchingData" parameterType="Map">
+		<if test="mobPayGroupNo != null and mobPayGroupNo != ''">
+			UPDATE PAY0349M
+				SET
+				PAY_STUS_ID = #{status},
+				SLIP_NO = #{slipNo},
+				UPLOAD_IMG1 = #{uploadImg1},
+				UPLOAD_IMG2 = #{uploadImg2},
+				UPLOAD_IMG3 = #{uploadImg3},
+				MATCHING_ID = #{matchingId},
+				UPD_DT = SYSDATE,
+				UPD_BY = #{userId}
+				WHERE MOB_PAY_GROUP_NO IN
+	        <foreach item="item" collection="mobPayGroupNo" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+         </if>
+	</update>
+
+	<select id="selectLumpSumPaymentDetail" parameterType="Map" resultType="egovMap">
+		SELECT p0349m.MOB_PAY_GROUP_NO,
+		p0349m.TOT_PAY_AMT,p0349m.PAY_MODE,s0013m1.CODE_NAME AS PAY_MODE_NAME,
+        p0349m.PAY_STUS_ID,s0038m.NAME AS PAY_STUS_NAME , LISTAGG(p0350d.SALES_ORD_NO, ',') WITHIN GROUP (ORDER BY p0350d.SALES_ORD_NO) AS ORD_NO,TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
+        s0029d.NAME, s0047m.USER_NAME AS CRT_MEM_CODE,
+        p0349m.SLIP_NO,p0349m.CHEQUE_NO,NVL(p0349m.MATCHING_ID,0) AS MATCHING_ID
+        FROM PAY0349M p0349m
+		JOIN PAY0350D p0350d
+		ON p0349m.MOB_PAY_GROUP_NO = p0350d.MOB_PAY_GROUP_NO
+        LEFT JOIN SYS0013M s0013m1
+        ON s0013m1.CODE_ID = p0349m.PAY_MODE
+        LEFT JOIN SYS0038M s0038m
+        ON s0038m.STUS_CODE_ID = p0349m.PAY_STUS_ID
+        LEFT JOIN SAL0029D s0029d
+        ON s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0047M s0047m
+        ON p0349m.CRT_BY = s0047m.USER_ID
+        WHERE 1=1
+		AND p0349m.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+        GROUP BY p0349m.MOB_PAY_GROUP_NO, p0349m.TOT_PAY_AMT, p0349m.PAY_MODE, p0349m.PAY_STUS_ID, p0349m.CRT_DT,s0013m1.CODE_NAME,s0038m.NAME,s0029d.NAME,s0047m.USER_NAME,p0349m.SLIP_NO,p0349m.CHEQUE_NO,p0349m.MATCHING_ID
+        ORDER BY p0349m.CRT_DT DESC
+	</select>
+
+	  <select id="selectBankStatementInfo" parameterType="Map" resultType="egovMap">
+	    SELECT /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectBankStatementInfo] 20191021 - KR HAN */
+	               A.F_TRNSC_ID id,
+	               B.BANK_ID,
+	               C.NAME BANK,
+	               D.ACC_DESC BANK_ACC_NAME,
+	               E.ACC_ID AS BANK_ACC_ID,
+	               E.ACC_CODE BANK_ACC_CODE,
+	               E.ACC_DESC BANK_ACC_DESC,
+	               E.ACC_CODE || ' - ' ||  E.ACC_DESC AS CODE_NAME,
+	               TO_CHAR(A.F_TRNSC_DT, 'DD/MM/YYYY') TRNSC_DT,
+	               A.F_TRNSC_REF_CHQ_NO CHQ_NO,
+	               A.F_TRNSC_REF_VA_NO,
+	               A.F_TRNSC_REF3 REF3,
+	               A.F_TRNSC_REF1 REF1,
+	               A.F_TRNSC_REF4 REF4,
+	               A.F_TRNSC_REF2 REF2,
+	               A.F_TRNSC_REF6 REF6,
+	               A.F_TRNSC_REM TYPE,
+	               A.F_TRNSC_DEBT_AMT DEBT,
+	               A.F_TRNSC_CRDIT_AMT CRDIT,
+	               (CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+	               A.OTH_KEYIN_MAPPING_DT,
+	               A.F_TRNSC_TELLER_ID,
+	               A.F_TRNSC_NEW_CHQ_NO
+	    FROM PAY0081D A
+	    JOIN PAY0079D B on A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+	    LEFT JOIN SYS0004M C on B.BANK_ID = C.BANK_ID
+	    LEFT JOIN SYS0001M D on B.F_BANK_JRNL_ACC_ID = D.ACC_ID
+	    LEFT JOIN SYS0001M E ON D.ACC_DESC = E.ACC_DESC AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CASH = 1
+	    WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
+	    AND A.OTH_KEYIN_STUS_ID <![CDATA[ <> ]]> 4
+        AND A.F_TRNSC_ID = #{fTrnscId}
+  </select>
+
+  	<select id="selectLumpSumPaymentSubDetail" parameterType="Map" resultType="egovMap">
+		SELECT * FROM PAY0350D
+		WHERE MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	 <select id="selectOrderDetailInfo" parameterType="Map" resultType="egovMap">
+		SELECT * FROM SAL0001D
+		WHERE SALES_ORD_ID = #{salesOrdId}
+		AND ROWNUM = 1
+	</select>
+
+	<update id="updateApproveLumpSumPaymentInfo" parameterType="Map">
+		<if test="mobPayGroupNoArr != null and mobPayGroupNoArr != ''">
+		UPDATE PAY0349M SET
+		TRANSACTION_ID = #{transactionId},
+		PAY_STUS_ID = 5,
+		UPD_DT = SYSDATE,
+		UPD_BY = #{userId}
+		WHERE 1=1
+		AND MOB_PAY_GROUP_NO IN
+	 	<foreach item="item" collection="mobPayGroupNoArr" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+		</if>
+	</update>
+
+	<update  id="updateRejectLumpSumPayment" parameterType="Map">
+		<if test="mobPayGroupNo != null and mobPayGroupNo != ''">
+			UPDATE PAY0349M SET
+			PAY_STUS_ID = #{status},
+			FAIL_RESN_ID = #{failReasonId},
+			UPD_DT = SYSDATE,
+			UPD_BY = #{userId},
+			REMARKS = #{remark}
+			WHERE 1=1
+	        AND MOB_PAY_GROUP_NO IN
+	        <foreach item="item" collection="mobPayGroupNo" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+         </if>
+	</update>
+
+	<select id="getPay0024D" parameterType="Map" resultType="egovMap">
+	    SELECT
+	        A.*,
+	        A.PACKAGE_CHARGE - A.PACKAGE_PAID PACKAGE_AMT,
+	        A.FILTER_CHARGE - A.FILTER_PAID FILTER_AMT
+	    FROM (
+	        SELECT
+	            SRV_MEM_ID,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END))
+	            + SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 157 THEN SRV_MEM_AMT ELSE 0 END ))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 155 THEN SRV_MEM_AMT ELSE 0 END ))AS PACKAGE_CHARGE,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_CHARGE,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID <![CDATA[ <> ]]> 542 THEN SRV_MEM_AMT ELSE 0 END)) AS PACKAGE_PAID,
+	            SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END))
+	            - SUM(ABS(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END)) AS FILTER_PAID
+	        FROM PAY0024D
+	        WHERE SRV_MEM_ID = #{srvMemId}
+	        GROUP BY SRV_MEM_ID
+	    ) A
+  	</select>
+
+  	<select id="getServiceMembershipDetail" parameterType="Map" resultType="egovMap">
+	    SELECT * FROM SAL0095D A
+	    INNER JOIN SAL0001D B
+	    ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+	    INNER JOIN SAL0029D C
+	    ON B.CUST_ID = C.CUST_ID
+	    WHERE A.SRV_MEM_ID = #{srvMemId}
+  	</select>
+
+  	<select id="getMobileLumpSumHistory" parameterType="Map" resultType="egovMap">
+		SELECT CASE WHEN LENGTH(A.MOB_PAY_GROUP_NO)  <![CDATA[ < ]]> 7 THEN 'LS' || TO_CHAR(A.MOB_PAY_GROUP_NO, 'fm000000') ELSE 'LS' || A.MOB_PAY_GROUP_NO END AS MOB_PAY_GROUP_NO,
+		A.TOT_PAY_AMT,LISTAGG(B.SALES_ORD_NO,',') WITHIN GROUP (ORDER BY B.SALES_ORD_NO) AS ORD_NO,
+		C.NAME,D.NAME AS PAY_STUS_NAME,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH12:mm:ss AM') AS CRT_DT,
+		E.CODE_NAME AS PAY_MODE_NAME,
+		CASE WHEN A.FAIL_RESN_ID > 0 THEN '['|| F.CODE ||'-'|| F.RESN_DESC || '] - ' || A.REMARKS
+        	ELSE A.REMARKS END REMARKS,
+		CASE WHEN A.CHEQUE_NO IS NULL THEN A.SLIP_NO ELSE A.CHEQUE_NO END AS SERIAL_NO,
+		CASE WHEN (A.UPLOAD_IMG1 IS NOT NULL OR A.UPLOAD_IMG2 IS NOT NULL OR A.UPLOAD_IMG3 IS NOT NULL OR A.UPLOAD_IMG4 IS NOT NULL) THEN 1 ELSE 0 END ATCH_EXIST
+		FROM PAY0349M A
+		JOIN PAY0350D B
+		ON A.MOB_PAY_GROUP_NO = B.MOB_PAY_GROUP_NO
+		JOIN SAL0029D C
+		ON A.CUST_ID = C.CUST_ID
+		JOIN SYS0038M D
+		ON A.PAY_STUS_ID = D.STUS_CODE_ID
+		LEFT JOIN SYS0013M E
+        ON E.CODE_ID = A.PAY_MODE
+        LEFT JOIN SYS0032M F ON F.RESN_ID = A.FAIL_RESN_ID
+		WHERE 1=1
+		AND A.CRT_BY = #{userId}
+		<if test='fromDate != null and toDate != null'>
+			<if test='fromDate != "" and toDate != ""'>
+				<![CDATA[
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') >= TO_DATE(#{fromDate},'DD/MM/YYYY')
+					AND TO_DATE(TO_CHAR(A.CRT_DT, 'DD/MM/YYYY'),'DD/MM/YYYY') <= TO_DATE(#{toDate},'DD/MM/YYYY')
+				]]>
+			</if>
+		</if>
+		<if test='custCi != null and custCi != ""'>
+			<if test='custCiType == 1'>
+				AND B.SALES_ORD_NO LIKE   '%' || #{custCi} || '%'
+			</if>
+			<if test='custCiType == 2'>
+				AND C.NAME LIKE   '%' || UPPER(#{custCi}) || '%'
+			</if>
+			<if test='custCiType == 3'>
+				AND C.NRIC LIKE   '%' || UPPER(#{custCi}) || '%'
+			</if>
+		</if>
+		<if test='status != null and status != ""'>
+			AND A.PAY_STUS_ID = #{status}
+		</if>
+		GROUP BY A.MOB_PAY_GROUP_NO,A.TOT_PAY_AMT,C.NAME,D.NAME,A.CRT_DT,E.CODE_NAME,A.REMARKS,A.SLIP_NO,A.CHEQUE_NO,A.UPLOAD_IMG1,A.UPLOAD_IMG2,A.UPLOAD_IMG3,A.UPLOAD_IMG4,F.CODE,A.FAIL_RESN_ID,F.RESN_DESC
+		ORDER BY A.CRT_DT DESC
+	</select>
+
+	<select id="getAdditionalEmailDetailInfo" parameterType="Map" resultType="egovMap">
+		SELECT s0029d.NAME AS CUST_NAME, p0349m.TOT_PAY_AMT, p0349m.EMAIL_1 AS EMAIL,
+		s0047m.USER_ID AS CRT_USER_ID, s0047m.USER_NAME AS CRT_USER_NAME, s0047m.USER_FULL_NAME AS CRT_USER_FULL_NAME, TO_CHAR(p0349m.CRT_DT,'DD/MM/YYYY') AS CRT_DT
+		FROM PAY0349M p0349m
+		LEFT JOIN SAL0029D s0029d
+        ON s0029d.CUST_ID = p0349m.CUST_ID
+        LEFT JOIN SYS0047M s0047m
+        ON s0047m.USER_ID = p0349m.CRT_BY
+		WHERE p0349m.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	<select id="getAdditionalEmailDetailOrderInfo" parameterType="Map" resultType="egovMap">
+		SELECT p0350d.SALES_ORD_NO, p0350d.PAY_AMT, p0350d.PAY_TYPE, s0026m.STK_DESC
+		FROM PAY0350D p0350d
+		LEFT JOIN SAL0002D s0002d
+		ON p0350d.SALES_ORD_ID = s0002d.SALES_ORD_ID
+		LEFT JOIN SYS0026M s0026m
+		ON s0002d.ITM_STK_ID = s0026m.STK_ID
+		WHERE p0350d.MOB_PAY_GROUP_NO = #{mobPayGroupNo}
+	</select>
+
+	<select id="getSmsTemplate" parameterType="Map" resultType="String">
+        SELECT REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smsLumpSum'),'{1}', #{totPayAmt}), '{2}', #{tinyUrl})
+		FROM DUAL
+	</select>
+</mapper>

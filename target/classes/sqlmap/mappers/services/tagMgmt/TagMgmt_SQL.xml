@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.tagMgmt.impl.TagMgmtMapper">
+  <select id="selectTagStatus" parameterType="Map" resultType="egovMap">
+    SELECT Z.COUNSELING_NO,
+               Z.CUSTOMER_NO,
+               Z.CLASSIFY_MEM,
+               Z.CUSTOMER_NAME,
+               Z.MAIN_INQUIRY,
+               Z.SUB_INQUIRY,
+               Z.FEEDBACK_CODE,
+               Z.CMGROUP,
+               Z.MAIN_DEPT,
+               Z.SUB_DEPT,
+               Z.DEPT_CODE,
+               Z.SUB_DEPT_CDE,
+               Z.STATUS,
+               <!-- TO_CHAR(Z.REG_DATE, 'YYYY-MM-DD') REG_DATE, -->
+               TO_CHAR( TO_DATE(SUBSTR(REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD') REG_DATE,
+               Z.ORD_NO,Z.HC_MEM_ID,
+               Z.CNSL_LRGCLAS_CD,
+               Z.CNSL_MEDCLAS_CD,
+               --TO_CHAR(Z.UPD_DT, 'YYYY-MM-DD') UPD_DT,
+               Z.UPD_DT,
+               Z.LST_UPD_ID,
+               Z.TAG_SETTLE_DATE,
+               Z.TAG_SETTLE_BY,
+               Z.CALL_REM
+    FROM ( SELECT A.CUR_SEQNO COUNSELING_NO
+                        , A.CUST_NO AS CUSTOMER_NO
+                        , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS CLASSIFY_MEM
+                        , A.CUST_NM CUSTOMER_NAME
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS MAIN_INQUIRY
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS SUB_INQUIRY
+                        , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS FEEDBACK_CODE
+                        , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE)
+                        , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT
+                        , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE)
+                        , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
+                        , T4.DEPT_CODE AS CMGROUP
+                        , CASE WHEN B.MAIN_DEPT IS NULL
+                                  THEN A.DEPT_CODE
+                                  ELSE B.MAIN_DEPT END DEPT_CODE
+                        , CASE WHEN B.SUB_DEPT IS NULL
+                                  THEN A.SUB_DEPT_CDE
+                                  ELSE B.SUB_DEPT END SUB_DEPT_CDE
+                        , A.ORD_NO
+                        , DECODE(B.STUS_CODE_ID, '', 'ACTIVE', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) AS STATUS
+                        , DECODE(B.STUS_CODE_ID, NULL, 1, B.STUS_CODE_ID) STUS_CODE_ID
+                       <!-- , TO_DATE(SUBSTR(A.REG_DTM, 1, 8 ),'YYYY/MM/DD') REG_DATE -->
+                        , A.REG_DTM
+                        , NVL((SELECT TO_CHAR(LST_UPD_DTM,'YYYY/MM/DD')
+                                  FROM ( SELECT CUR_SEQNO
+                                                      , LST_UPD_DTM
+                                                      , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
+                                             FROM (  SELECT CUR_SEQNO
+                                                                  , TO_DATE(SUBSTR(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
+                                                         FROM CALLCENTERUSER.T_RMK_HIST D
+                                                         UNION
+                                                         SELECT A.CUR_SEQ_NO CUR_SEQNO
+                                                                  , CALL_CRT_DT LST_UPD_DTM
+                                                         FROM GBSLCVD.CCR0006D A
+                                                         JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+                                                         WHERE CUR_SEQ_NO IS NOT NULL
+                                             )
+                                  ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') UPD_DT
+                        , A.HC_MEM_ID
+                        , A.CNSL_LRGCLAS_CD
+                        , A.CNSL_MEDCLAS_CD
+                        , BRNCH_ID
+                        , A.LST_UPD_ID
+                        , CASE WHEN B.STUS_CODE_ID IN (34, 36)
+                              THEN TO_CHAR(B.UPD_DT,'YYYY/MM/DD')
+                           ELSE NULL END AS TAG_SETTLE_DATE
+                        , CASE WHEN B.STUS_CODE_ID IN (34, 36)
+                              THEN usr.USER_NAME
+                           ELSE NULL END AS TAG_SETTLE_BY
+                        , NVL((SELECT CALL_REM
+                                  FROM ( SELECT CUR_SEQNO
+                                                      , CALL_REM
+                                                      , ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ
+                                             FROM ( SELECT CUR_SEQNO
+                                                                 , MEMO CALL_REM
+                                                                 , TO_DATE(SUBSTR(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
+                                                        FROM CALLCENTERUSER.T_RMK_HIST D
+                                                        UNION
+                                                        SELECT A.CUR_SEQ_NO CUR_SEQNO
+                                                                 , CAST(SUBSTR(B.CALL_REM,0,2000) AS NVARCHAR2(2000)) CALL_REM
+                                                                 , CALL_CRT_DT LST_UPD_DTM
+                                                        FROM GBSLCVD.CCR0006D A
+                                                        JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+                                                        WHERE CUR_SEQ_NO IS NOT NULL
+                                             )
+                                  ) WHERE SEQ = 1 AND CUR_SEQNO = A.CUR_SEQNO),'  ') CALL_REM
+
+             FROM CALLCENTERUSER.T_CUR_HIST A
+             LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
+             LEFT JOIN GBSLCVD.SYS0047M USR ON B.UPD_USER_ID = USR.USER_ID
+             LEFT JOIN GBSLCVD.SYS0005M BRNCH ON USR.USER_BRNCH_ID = BRNCH.BRNCH_ID
+             -- ADDED CMGROUP BY HUI DING, 2020-12-17
+             LEFT JOIN SAL0090D C ON C.SRV_SO_ID = A.ORD_ID AND C.SRV_STUS_ID = 1
+             --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
+             LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                                       , V1.MEM_CODE MEM_CODE
+                                       , V1.MEM_LVL MEM_LVL
+                                       , V1.DEPT_CODE DEPT_CODE
+                                       , V1.GRP_CODE GRP_CODE
+                                       , V1.ORG_CODE ORG_CODE
+                                       , V1.TOP_ORG_CODE TOP_ORG_CODE
+                                       , V1.MEM_UP_ID MEM_UP_ID
+                                       , V1.LVL3_UP_ID LVL3_UP_ID
+                                       , V1.LVL2_UP_ID LVL2_UP_ID
+                                       , V1.LVL1_UP_ID LVL1_UP_ID
+                                       , V1.LVL0_UP_ID LVL0_UP_ID
+                              FROM ORG1001V V1
+
+                              <if test="isCD != null and isCD != '' ">
+                                JOIN ( SELECT DISTINCT DEPT_CODE
+                                          FROM ORG0005D A
+                                          JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+                                          START WITH B.MEM_CODE = #{isCD}
+                                          CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
+                                ) CD_FILTER ON V1.DEPT_CODE = CD_FILTER.DEPT_CODE
+                              </if>
+                              ) T4 ON T4.MEM_ID = C.SRV_CODY_ID
+
+             <if test="isCD != null and isCD != '' ">
+                JOIN ( SELECT DISTINCT DEPT_CODE
+                          FROM ORG0005D A
+                          JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+                          START WITH B.MEM_CODE = #{isCD}
+                          CONNECT BY PRIOR A.MEM_ID = A.MEM_UP_ID
+                ) CD_FILTER ON T4.DEPT_CODE = CD_FILTER.DEPT_CODE
+                                AND 'MD08' IN (A.DEPT_CODE, B.MAIN_DEPT)
+             </if>
+          WHERE A.TR_DVCD = 'T'
+    ) Z
+    WHERE 1=1
+
+    <if test="customer != null and customer != '' ">
+      AND Z.CUSTOMER_NAME = UPPER(#{customer})
+    </if>
+
+    <if test="main_inquiry != null and main_inquiry != '' ">
+      AND Z.CNSL_LRGCLAS_CD IN (#{main_inquiry})
+    </if>
+
+    <if test="sub_inquiry != null and sub_inquiry != '' ">
+      AND Z.CNSL_MEDCLAS_CD IN (#{sub_inquiry})
+    </if>
+
+    <if test="counseling_no != null and counseling_no != '' ">
+      AND LOWER(Z.COUNSELING_NO)= LOWER(#{counseling_no})
+    </if>
+
+    <if test="main_department != null and main_department != '' ">
+      AND Z.DEPT_CODE IN (#{main_department})
+    </if>
+
+    <if test="sub_department != null and sub_department != '' ">
+        AND Z.SUB_DEPT_CDE IN
+        <foreach item="item" collection="sub_department" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+
+    <if test="cmGroup != null and cmGroup !='' ">
+        AND Z.CMGROUP IN
+        <foreach item="item" collection="cmGroup" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+
+    <if test="feedback_code != null and feedback_code != '' ">
+      AND LOWER(Z.Feedback_code) = LOWER(#{feedback_code})
+    </if>
+
+    <if test="regStartDt != null and regStartDt != '' ">
+      <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ >= ]]> TO_CHAR(TO_DATE (#{regStartDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
+      AND Z.REG_DTM <![CDATA[ >= ]]> CONCAT(TO_CHAR(TO_DATE(#{regStartDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'000000')
+    </if>
+
+    <if test="regEndDt != null and regEndDt != '' ">
+      <!-- AND TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[ <= ]]> TO_CHAR(TO_DATE (#{regEndDt}, 'DD/MM/YYYY'),'YYYY-MM-DD') -->
+      AND Z.REG_DTM <![CDATA[ <= ]]> CONCAT(TO_CHAR(TO_DATE(#{regEndDt}, 'DD/MM/YYYY'),'YYYYMMDD'),'235959')
+    </if>
+
+    <if test="listStatus != null and listStatus != '' ">
+      <!-- AND Z.Status IN -->
+      AND Z.STUS_CODE_ID IN
+      <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")">
+        <!-- CALLCENTERUSER.FN_ERP_GET_STUS_NM( #{item} ) -->
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="orderNo != null and orderNo != '' ">
+       AND Z.ORD_NO = #{orderNo}
+    </if>
+    ORDER BY REG_DATE
+
+  </select>
+
+  <select id="selectDetailTagStatus" parameterType="Map" resultType="egovMap">
+    SELECT Z.Counseling_No,
+           Z.Customer_No,
+           Z.classify_mem,
+           Z.Customer_name,
+           Z.Main_inquiry,
+           Z.Sub_inquiry,
+           Z.Feedback_code,
+           Z.MAIN_DEPT,
+           Z.SUB_DEPT,
+           Z.DEPT_CODE,
+           Z.SUB_DEPT_CDE,
+           Z.Status,
+           TO_CHAR(Z.Reg_date, 'YYYY-MM-DD') Reg_date,
+           z.ord_no,
+           z.hc_mem_id,
+           z.ORD_ID,
+           z.hc_id,
+           z.LATEST_MAIN_DEPT,
+           LATEST_SUB_DEPT,
+           z.ATCH_FILE_GRP_ID
+    FROM ( SELECT A.CUR_SEQNO Counseling_No
+                , A.CUST_NO as Customer_No
+                , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS classify_mem
+                , A.CUST_NM Customer_name
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS Main_inquiry
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT
+                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE)
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS LATEST_MAIN_DEPT
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE)
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS LATEST_SUB_DEPT
+                , A.DEPT_CODE
+                , A.SUB_DEPT_CDE
+                , A.Ord_no
+                , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
+                , TO_DATE(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                , a.hc_mem_id
+                , a.ORD_ID
+                , a.hc_id
+                , a.ATCH_FILE_GRP_ID
+           FROM CALLCENTERUSER.T_CUR_HIST A
+           LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
+           WHERE A.TR_DVCD = 'T'
+    ) Z
+    WHERE 1=1
+    AND z.Counseling_No = #{counselingId}
+  </select>
+
+  <select id="getAttactHQ" parameterType="Map" resultType="egovMap">
+    SELECT T1.ATCH_FILE_GRP_ID
+    FROM SYS0070M T1
+    LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+    WHERE T1.ATCH_FILE_GRP_ID IN ( SELECT ATCH_FILE_GRP_ID FROM CCR0015D WHERE INQ_NO = #{counselingId} )
+    ORDER BY T1.ATCH_FILE_ID
+  </select>
+
+  <insert id="insertCcr0006d" parameterType="Map" >
+    INSERT INTO CCR0006D ( CALL_ENTRY_ID ,
+                           SALES_ORD_ID ,
+                           TYPE_ID ,
+                           STUS_CODE_ID,
+                           RESULT_ID ,
+                           DOC_ID ,
+                           CRT_USER_ID ,
+                           CRT_DT,
+                           CALL_DT,
+                           IS_WAIT_FOR_CANCL,
+                           HAPY_CALLER_ID,
+                           UPD_DT,
+                           UPD_USER_ID,
+                           ORI_CALL_DT,
+                           CUR_SEQ_NO,
+                           MAIN_DEPT,
+                           SUB_DEPT
+    ) VALUES ( CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL,
+               #{orderId},
+               260,
+               #{status},
+               0,
+               0,
+               #{userId},
+               SYSDATE,
+               TO_date(#{regDate},'YY/MM/DD'),
+               0,
+               #{hcId},
+               SYSDATE,
+               #{userId},
+               SYSDATE,
+               #{counselingNo}
+
+               <choose>
+                 <when test="inputMainDept != null and inputMainDept != ''">
+                   , #{inputMainDept}
+                 </when>
+                 <otherwise>
+                   , #{mainDept}
+                 </otherwise>
+               </choose>
+               <choose>
+                 <when test="inputSubDept != null and inputSubDept != ''">
+                   ,#{inputSubDept}
+                 </when>
+                 <otherwise>
+                   ,#{subDept}
+                 </otherwise>
+               </choose>
+    )
+  </insert>
+
+  <insert id="insertCcr0015d" parameterType="Map" >
+    INSERT INTO CCR0015D ( SEQ_ID ,
+                           INQ_NO ,
+                           ATCH_FILE_GRP_ID
+    ) VALUES ( CCR0015D_SEQ_ID.NEXTVAL,
+               #{counselingNo},
+               #{atchFileGrpId}
+    )
+  </insert>
+
+  <select id="selectCallEntryId" parameterType="Map" resultType="egovMap">
+    SELECT CALL_ENTRY_ID
+    FROM CCR0006D
+    WHERE CUR_SEQ_NO = #{counselingNo}
+
+    <![CDATA[ and ROWNUM < = 1 ]]>
+  </select>
+
+  <insert id="insertCcr0007d" parameterType="Map" >
+    INSERT INTO CCR0007D( CALL_RESULT_ID,
+                          CALL_ENTRY_ID,
+                          CALL_STUS_ID,
+                          CALL_DT,
+                          CALL_ACTN_DT,
+                          CALL_FDBCK_ID,
+                          CALL_CT_ID,
+                          CALL_REM,
+                          CALL_CRT_USER_ID,
+                          CALL_CRT_DT,
+                          CALL_CRT_USER_ID_DEPT,
+                          CALL_HC_ID,
+                          CALL_ROS_AMT,
+                          CALL_SMS,
+                          CALL_SMS_REM,
+                          MAIN_DEPT,
+                          SUB_DEPT,
+                          DEPT_CODE
+    ) VALUES ( CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL,
+               #{callEntryId},
+               #{status},
+               TO_date(#{regDate},'YY/MM/DD'),
+               SYSDATE,
+               0,
+               #{userId},
+               #{remark},
+               #{userId},
+               SYSDATE,
+               0,
+               #{hcId},
+               0,
+               0,
+               0
+               <choose>
+                 <when test="inputMainDept != null and inputMainDept != ''">
+                   , #{inputMainDept}
+                 </when>
+                 <otherwise>
+                   , #{mainDept}
+                 </otherwise>
+               </choose>
+               <choose>
+                 <when test="inputSubDept != null and inputSubDept != ''">
+                   ,#{inputSubDept}
+                 </when>
+                 <otherwise>
+                   ,#{subDept}
+                 </otherwise>
+               </choose>
+               <choose>
+                 <when test="inputcmGroup != null and inputcmGroup != ''">
+                   , #{inputcmGroup}
+                 </when>
+                 <otherwise>
+                   , ''
+                 </otherwise>
+               </choose>
+    )
+  </insert>
+
+  <update id="updateCcr0006d" parameterType="Map" >
+    UPDATE CCR0006D
+    SET UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE,
+        STUS_CODE_ID = #{status}
+
+    <choose>
+      <when test="inputMainDept != null and inputMainDept != ''">
+        , MAIN_DEPT = #{inputMainDept}
+      </when>
+    </choose>
+    <choose>
+      <when test="inputSubDept != null and inputSubDept != ''">
+        , SUB_DEPT = #{inputSubDept}
+      </when>
+    </choose>
+    WHERE CUR_SEQ_NO = #{counselingNo}
+  </update>
+
+  <select id="selectTagRemarks" parameterType="Map" resultType="egovMap">
+    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.DEPT_CODE) AS MAIN_DEPARTMENT
+         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT_CDE) AS SUB_DEPARTMENT
+         , TO_CHAR(T2.MEMO) AS REMARK_CONT
+         , TO_CHAR('Active') AS STATUS_NM
+         , TO_CHAR(TO_DATE(T2.REG_DTM, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS')  AS CRT_DATE
+         , TO_CHAR(T2.REG_NM) AS REG_NM
+    FROM CALLCENTERUSER.T_CUR_HIST T1
+    LEFT JOIN CALLCENTERUSER.T_RMK_HIST T2 ON T1.CUR_SEQNO = T2.CUR_SEQNO
+    WHERE T1.CUR_SEQNO = #{counselingNo}
+
+    UNION ALL
+
+    SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.MAIN_DEPT ) MAIN_DEPARTMENT
+         , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT) SUB_DEPARTMENT
+         , TO_CHAR( T1.CALL_REM ) REMARK_CONT
+         , TO_CHAR(CALLCENTERUSER.FN_ERP_GET_STUS_NM(T1.CALL_STUS_ID)) STATUS_NM
+         , TO_CHAR(T1.CALL_CRT_DT,'YYYY-MM-DD HH24:MI:SS')  AS CRT_DATE
+         , T2.USER_FULL_NAME AS REG_NM
+    FROM GBSLCVD.CCR0007D T1
+    LEFT OUTER JOIN GBSLCVD.SYS0047M T2 ON T1.CALL_CRT_USER_ID = T2.USER_ID
+    WHERE CALL_STUS_ID IN (1,10,34,35,36,44)
+      AND CALL_ENTRY_ID = #{callEntryId}
+  </select>
+
+  <select id="selectMainDept"  resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM GBSLCVD.SYS0013M
+    WHERE CODE_MASTER_ID = 359
+    ORDER BY CODE
+  </select>
+
+  <select id="selectSubDept"  parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM GBSLCVD.SYS0013M
+    WHERE CODE_MASTER_ID = 360
+
+    <if test = "groupCode != null and groupCode != '' ">
+      AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
+    </if>
+
+    ORDER BY CODE_NAME
+  </select>
+
+   <select id="selectSubDeptCodySupport"  parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT SYSD.CODE CODE_ID
+    ,SYSD.CODE_NAME CODE_NAME
+    FROM (
+    SELECT DISTINCT OD1.BRNCH
+    ,OD2.MEM_ID
+    ,OD2.MEM_LVL
+    ,OD2.ORG_CODE
+    ,OD2.GRP_CODE
+    ,OD2.DEPT_CODE
+    ,OD3.ORG_CODE MEMORG
+    ,OD3.GRP_CODE MEMGRP
+    ,OD3.DEPT_CODE MEMDEPT
+    FROM ORG0001D OD1
+    JOIN ORG1001V OD2 ON OD2.ORG_CODE  = (SELECT ORG_CODE FROM ORG1001V WHERE MEM_ID = #{memId}) AND OD1.MEM_ID = OD2.MEM_ID
+    JOIN ORG1001V OD3 ON OD3.MEM_ID = #{memId}
+    WHERE 1 = 1
+
+    <if test = "memLvl == 1">
+      AND OD2.ORG_CODE = OD3.ORG_CODE
+    </if>
+
+    <if test = "memLvl == 2">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+    </if>
+
+    <if test = "memLvl == 3">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+      AND OD2.DEPT_CODE = OD3.DEPT_CODE
+    </if>
+
+     <if test = "memLvl == 4">
+      AND OD2.ORG_CODE =  OD3.ORG_CODE
+      AND OD2.GRP_CODE =  OD3.GRP_CODE
+      AND OD2.DEPT_CODE = OD3.DEPT_CODE
+      AND OD2.MEM_ID = #{memId}
+    </if>
+
+    AND OD1.MEM_TYPE = '2'
+    AND OD1.STUS = '1'
+    ORDER BY OD2.MEM_LVL,OD2.MEM_ID
+    ) T
+    JOIN SYS0005M SYSC ON SYSC.BRNCH_ID = T.BRNCH
+    JOIN SYS0013M SYSD ON SYSD.CODE_NAME = SYSC.CODE ||'-'||SYSC.NAME AND SYSD.CODE_MASTER_ID = '360'
+      </select>
+
+  <select id="selectMainInquiryList"  resultType="egovMap">
+
+                        SELECT T1.CNSL_CD CODE_ID
+                     , T2.CD_NM CODE_NAME
+                  FROM CALLCENTERUSER.T_CNSL_CD T1
+                  LEFT OUTER JOIN CALLCENTERUSER.T_CNSL_CD_POLYGLOT T2
+                    ON T1.CNSL_CD = T2.CNSL_CD
+                 WHERE T2.LANG_CD = 'ms-MY'
+                   AND T1.USE_YN = 'Y'
+                   AND T1.CNSL_CD_LVL = '1'
+              GROUP BY T1.CNSL_CD
+                     , T2.CD_NM
+                     , T1.SEQ
+              ORDER BY T1.SEQ
+                    </select>
+
+  <select id="selectSubInquiryList" parameterType="Map"  resultType="egovMap">
+    SELECT T1.CNSL_CD CODE_ID
+         , T2.CD_NM CODE_NAME
+         , T1.HGRK_CNSL_CD
+         , T1.SEQ
+    FROM CALLCENTERUSER.T_CNSL_CD T1
+    LEFT OUTER JOIN CALLCENTERUSER.T_CNSL_CD_POLYGLOT T2 ON T1.CNSL_CD = T2.CNSL_CD
+    WHERE T2.LANG_CD = 'ms-MY'
+      AND T1.CNSL_CD_LVL = '2'
+      AND T1.USE_YN = 'Y'
+
+    <if test = "groupCode != null and groupCode != '' ">
+      AND T1.HGRK_CNSL_CD = #{groupCode}
+    </if>
+
+    ORDER BY T1.SEQ
+  </select>
+
+  <select id="getOrderInfo" parameterType="Map"  resultType="egovMap">
+    SELECT C.NAME
+         , C.NRIC
+         , D.STK_DESC
+         , F.CODE_DESC
+         , A.SALES_ORD_ID
+    FROM SAL0001D A,
+         SAL0002D B,
+         SAL0029D C,
+         SYS0026M D,
+         SYS0013M F
+    WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+      AND A.CUST_ID = C.CUST_ID
+      AND B.ITM_STK_ID = D.STK_ID
+      AND A.APP_TYPE_ID = F.CODE_ID
+      AND A.SALES_ORD_NO = #{ordNo}
+  </select>
+
+  <select id="getCallerInfo" parameterType="Map"  resultType="egovMap">
+    SELECT B.NAME
+         , B.NRIC
+         , B.TEL_M1
+         , B.TEL_R
+         , B.EMAIL
+    FROM SAL0001D A,
+          SAL0027D B
+    WHERE A.CUST_CNT_ID = B.CUST_CNTC_ID
+      AND A.SALES_ORD_NO = #{ordNo}
+  </select>
+
+  <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
+    SELECT T1.SALES_ORD_ID SALES_ORD_ID
+         , T1.DEPT_CODE DEPT_CODE
+         , T1.GRP_CODE GRP_CODE
+         , T1.ORG_CODE ORG_CODE
+         , T2.MEM_ID MEM_ID
+         , T2.MEM_CODE MEM_CODE
+         , T2.MEM_TYPE MEM_TYPE
+         , T2.NAME NAME
+         , T2.NRIC NRIC
+         , T2.TEL_OFFICE TEL_OFFICE
+         , T2.TEL_HUSE TEL_HUSE
+         , T2.TEL_MOBILE TEL_MOBILE
+         , T3.MEM_ID MEM_ID1
+         , T3.MEM_CODE MEM_CODE1
+         , T3.NAME NAME1
+         , T3.TEL_MOBILE TEL_MOBILE1
+         , T4.MEM_ID MEM_ID2
+         , T4.MEM_CODE MEM_CODE2
+         , T4.NAME NAME2
+         , T4.TEL_MOBILE TEL_MOBILE2
+         , T5.MEM_ID MEM_ID3
+         , T5.MEM_CODE MEM_CODE3
+         , T5.NAME NAME3
+         , T5.TEL_MOBILE TEL_MOBILE3
+    FROM SAL0001D T1
+    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
+    LEFT JOIN ORG0001D T3 ON T3.MEM_ID = T1.SALES_GM_ID
+    LEFT JOIN ORG0001D T4 ON T4.MEM_ID = T1.SALES_SM_ID
+    LEFT JOIN ORG0001D T5 ON T5.MEM_ID = T1.SALES_HM_ID
+    WHERE  T1.SALES_ORD_ID = #{salesOrdId}
+  </select>
+
+  <select id="selectOrderServiceMemberViewByOrderID" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T1.SALES_ORD_ID SALES_ORD_ID
+             , T3.MEM_CODE MEM_CODE
+             , T3.NAME NAME
+             , T3.NRIC NRIC
+             , T3.TEL_OFFICE TEL_OFFICE
+             , T3.TEL_HUSE TEL_HUSE
+             , T3.TEL_MOBILE TEL_MOBILE
+             , T4.DEPT_CODE DEPT_CODE
+             , T4.GRP_CODE GRP_CODE
+             , T4.ORG_CODE ORG_CODE
+             , T5.MEM_ID MEM_ID1
+             , T5.MEM_CODE MEM_CODE1
+             , T5.NAME NAME1
+             , T5.TEL_MOBILE TEL_MOBILE1
+             , T7.MEM_ID MEM_ID2
+             , T7.MEM_CODE MEM_CODE2
+             , T7.NAME NAME2
+             , T7.TEL_MOBILE TEL_MOBILE2
+             , T9.MEM_ID MEM_ID3
+             , T9.MEM_CODE MEM_CODE3
+             , T9.NAME NAME3
+             , T9.TEL_MOBILE TEL_MOBILE3
+          FROM SAL0001D T1
+          JOIN SAL0090D T2 ON T2.SRV_SO_ID = T1.SALES_ORD_ID
+                          AND 1 = T2.SRV_STUS_ID
+          JOIN ORG0001D T3 ON T3.MEM_ID = T2.SRV_CODY_ID
+          JOIN ( SELECT V1.MEM_ID MEM_ID
+                      , V1.MEM_CODE MEM_CODE
+                      , V1.MEM_LVL MEM_LVL
+                      , V1.DEPT_CODE DEPT_CODE
+                      , V1.GRP_CODE GRP_CODE
+                      , V1.ORG_CODE ORG_CODE
+                      , V1.TOP_ORG_CODE TOP_ORG_CODE
+                      , V1.MEM_UP_ID MEM_UP_ID
+                      , V1.LVL3_UP_ID LVL3_UP_ID
+                      , V1.LVL2_UP_ID LVL2_UP_ID
+                      , V1.LVL1_UP_ID LVL1_UP_ID
+                      , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T4 ON T4.MEM_ID = T3.MEM_ID
+          LEFT JOIN ORG0001D T5 ON T5.MEM_ID = T4.MEM_UP_ID
+          LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                           , V1.MEM_CODE MEM_CODE
+                           , V1.MEM_LVL MEM_LVL
+                           , V1.DEPT_CODE DEPT_CODE
+                           , V1.GRP_CODE GRP_CODE
+                           , V1.ORG_CODE ORG_CODE
+                           , V1.TOP_ORG_CODE TOP_ORG_CODE
+                           , V1.MEM_UP_ID MEM_UP_ID
+                           , V1.LVL3_UP_ID LVL3_UP_ID
+                           , V1.LVL2_UP_ID LVL2_UP_ID
+                           , V1.LVL1_UP_ID LVL1_UP_ID
+                           , V1.LVL0_UP_ID LVL0_UP_ID
+                      FROM ORG1001V V1 ) T6 ON T6.MEM_ID = T4.MEM_UP_ID
+          LEFT JOIN ORG0001D T7 ON T7.MEM_ID = T6.MEM_UP_ID
+          LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
+                           , V1.MEM_CODE MEM_CODE
+                           , V1.MEM_LVL MEM_LVL
+                           , V1.DEPT_CODE DEPT_CODE
+                           , V1.GRP_CODE GRP_CODE
+                           , V1.ORG_CODE ORG_CODE
+                           , V1.TOP_ORG_CODE TOP_ORG_CODE
+                           , V1.MEM_UP_ID MEM_UP_ID
+                           , V1.LVL3_UP_ID LVL3_UP_ID
+                           , V1.LVL2_UP_ID LVL2_UP_ID
+                           , V1.LVL1_UP_ID LVL1_UP_ID
+                           , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T8
+            ON T8.MEM_ID = T6.MEM_UP_ID
+          LEFT JOIN ORG0001D T9
+            ON T9.MEM_ID = T8.MEM_UP_ID
+         WHERE T1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1
+    ]]>
+  </select>
+
+  <select id="selectAttachList" parameterType="Map" resultType="egovMap">
+    SELECT T1.ATCH_FILE_GRP_ID
+         , T1.ATCH_FILE_ID
+         ,T2.ATCH_FILE_NAME
+         ,T2.FILE_SUB_PATH
+         ,T2.PHYSICL_FILE_NAME
+         ,T2.FILE_EXTSN
+         ,T2.FILE_SIZE
+    FROM SYS0070M T1
+    LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+    WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    ORDER BY T1.ATCH_FILE_ID
+  </select>
+
+  <select id="selectAttachList2" parameterType="Map" resultType="egovMap">
+    SELECT T1.ATCH_FILE_GRP_ID
+         , T1.ATCH_FILE_ID
+         ,T2.ATCH_FILE_NAME
+         ,T2.FILE_SUB_PATH
+         ,T2.PHYSICL_FILE_NAME
+         ,T2.FILE_EXTSN
+         ,T2.FILE_SIZE
+    FROM SYS0070M T1
+    LEFT JOIN SYS0071D T2 ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+    WHERE T1.ATCH_FILE_GRP_ID IN (SELECT ATCH_FILE_GRP_ID FROM CCR0015D WHERE INQ_NO = #{atchFileGrpId})
+    ORDER BY T1.ATCH_FILE_ID
+  </select>
+
+  <select id="getTagMgntStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'TMGNT_STAT'
+      AND DISB = 0
+    ORDER BY CODE
+  </select>
+
+  <select id="selectCmGroup" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT C.LAST_DEPT_CODE CODE, C.LAST_DEPT_CODE CODE_NAME FROM
+        (SELECT
+          REGEXP_substr(CODE_NAME, '([A-Z]{3}-\d+)', '1') BRANCH_CODE,
+          CODE
+          FROM SYS0013M
+          WHERE CODE_MASTER_ID = 360
+          AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{mainDept})
+        ) M
+    JOIN SYS0005M B ON M.BRANCH_CODE = B.CODE
+    JOIN ORG0005D C ON C.BRNCH_ID = B.BRNCH_ID
+    WHERE TRIM(' ' FROM C.LAST_DEPT_CODE) IS NOT NULL
+    AND M.CODE IN
+            <foreach item="item" collection="sub_dept" index="index"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    AND ORG_STUS_CODE_ID = 1
+    ORDER BY C.LAST_DEPT_CODE
+  </select>
+
+  <select id="selectCmGroupByUsername" parameterType="Map" resultType="egovMap">
+    SELECT M.MEM_ID, M.MEM_CODE, M.BRNCH, M1.LAST_DEPT_CODE
+    FROM ORG0001D M
+    LEFT JOIN
+    (SELECT * FROM SYS0047M WHERE HR_CODE IS NOT NULL) U1 ON M.MEM_CODE = U1.HR_CODE
+    LEFT JOIN
+    (SELECT * FROM SYS0047M WHERE HR_CODE IS NULL) U2 ON M.MEM_CODE = U2.USER_NAME
+    JOIN ORG0005D M1 ON M.MEM_ID = M1.MEM_ID
+    WHERE U1.USER_NAME = #{username} OR U2.USER_NAME = #{username}
+  </select>
+
+  <select id="getUpdInstllationStat" parameterType="Map" resultType="egovMap">
+        SELECT
+                CODE AS CODE,
+                CODE_NAME AS CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'UPDINSADDR'
+        AND DISB = 0
+        ORDER BY CODE
+  </select>
+
+  <select id="selectUpdateInstallationAddressRequest" parameterType="Map" resultType="egovMap">
+        SELECT
+                B.CUST_ID
+              , B.NAME
+              , D.SALES_ORD_ID
+              , A.ORDER_NO
+              , E.NAME AS STATUS
+              , A.ADDR_DTL || ' ' ||  A.STREET || ' ' || C.AREA || ' ' || C.POSTCODE || ' ' || C.CITY || ' ' || C.STATE || ' ' || C.COUNTRY AS ADDRESS
+              , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REG_DT
+              , A.REMARK
+              , A.CUST_ADD_ID REQUEST_ID
+              , F.USER_FULL_NAME UPDATOR
+              , TO_CHAR(A.UPD_DT,'DD/MM/YYYY') UPD_DT
+              , A.SOURCE
+        FROM SAL0339D A
+        JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+        JOIN SYS0064M C ON A.AREA_ID = C.AREA_ID
+        JOIN SAL0001D D ON A.ORDER_NO = D.SALES_ORD_NO
+        JOIN SYS0038M E ON A.STUS_CODE_ID = E.STUS_CODE_ID
+        LEFT JOIN SYS0047M F ON F.USER_ID = A.UPD_USER_ID
+        WHERE A.STUS_CODE_ID <![CDATA[ <> ]]> 8
+
+        <if test="orderNo != null and orderNo != '' ">
+        AND A.ORDER_NO = #{orderNo}
+        </if>
+
+        <if test="regStartDt != null and regStartDt != '' ">
+        AND A.CRT_DT <![CDATA[ >= ]]> to_date(#{regStartDt}|| '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+
+        <if test="regEndDt != null and regEndDt != '' ">
+        AND A.CRT_DT <![CDATA[ <= ]]> to_date(#{regEndDt}|| '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+
+        <if test="listStatus != null and listStatus != '' ">
+        AND A.STUS_CODE_ID IN
+      <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+        ORDER BY A.CRT_DT DESC
+  </select>
+
+  <insert id="insertInstallAddress" parameterType="Map" >
+      INSERT INTO SAL0023D
+           (CUST_ADD_ID , CUST_ID , STUS_CODE_ID, AREA_ID, ADDR_DTL, STREET, CRT_USER_ID, CRT_DT)
+      SELECT
+            SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL,
+            SRC.CUST_ID ,
+            1 ,
+            SRC.AREA_ID ,
+            SRC.ADDR_DTL ,
+            SRC.STREET ,
+            #{crtUserId},
+            SYSDATE
+    FROM SAL0339D SRC where CUST_ADD_ID = #{requestId}
+  </insert>
+
+
+  <update id="updateInstallInfo" parameterType="Map" >
+    UPDATE SAL0045D
+    SET ADD_ID = SAL0023D_CUST_ADD_ID_SEQ.CURRVAL
+        , UPD_DT = SYSDATE
+        , UPD_USER_ID = #{crtUserId}
+    WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+   <update id="updateRequestStatus" parameterType="Map" >
+    UPDATE SAL0339D
+    SET STUS_CODE_ID = 4
+        , UPD_DT = SYSDATE
+        , UPD_USER_ID = #{crtUserId}
+    WHERE CUST_ADD_ID = #{requestId}
+  </update>
+
+  <select id="getEmailDetails"  parameterType="Map" resultType="egovMap">
+            SELECT
+                      A.CUST_ID
+                    , C.NAME
+                    , C.NRIC
+                    , A.AREA_ID
+                    , A.PHONE_NO
+                    , A.ORDER_NO
+                    , A.ADDR_DTL
+                    , CASE WHEN A.STREET IS NULL THEN '0' ELSE  A.STREET END STREET
+                    , B.POSTCODE
+                    , B.CITY
+                    , B.AREA
+                    , B.STATE
+                    , B.COUNTRY
+                    , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') REQUEST_DT
+            FROM SAL0339D  A
+            JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
+            JOIN SAL0029D C ON A.CUST_ID =C.CUST_ID
+            WHERE A.CUST_ADD_ID = #{requestId}
+     </select>
+
+
+</mapper>

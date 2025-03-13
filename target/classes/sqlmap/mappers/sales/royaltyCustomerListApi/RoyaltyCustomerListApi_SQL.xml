@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.royaltyCustomerListApi.impl.RoyaltyCustomerListApiMapper">
+
+
+
+
+<select id="selectWsLoyaltyList" resultType="egovMap">
+<![CDATA[
+
+SELECT
+
+    LOYALTY_ID  ,
+    SALES_ORD_ID ,
+    SALES_ORD_NO ,
+    HP_CODE ,
+    CUST_ID ,
+    CUST_NAME,
+    TEL_M,
+    TEL_R,
+    TEL_O,
+    EMAIL,
+    INST_ADD_LINE1,
+    INST_ADD_LINE2,
+    INST_AREA,
+    INST_POSTCODE,
+    INST_CITY,
+    INST_STATE,
+
+
+    TOT_OUTST ,
+    TOT_ORDER_IN_USE ,
+    WP_IN_USE ,
+    WP_TOT_OUTST ,
+    AP_IN_USE ,
+    AP_TOT_OUTST ,
+    MATTRESS_IN_USE ,
+    MATTRESS_TOT_OUTST ,
+    POE_IN_USE ,
+    POE_TOT_OUTST ,
+    SOFTENER_IN_USE ,
+    SOFTENER_TOT_OUTST ,
+    BIDET_IN_USE ,
+    BIDET_TOT_OUTST ,
+
+    HP_CALL_REASON_CODE,
+    HP_CALL_REMARK,
+    STUS ,
+    REMARK,
+    CRT_USER_ID,
+    UPD_USER_ID
+
+FROM    SAL0271D
+
+WHERE   HP_CODE = #{regId}
+and SYSDATE >= HP_VIEW_START_DT
+and SYSDATE <= HP_VIEW_END_DT
+ORDER BY    CUST_NAME
+
+]]>
+</select>
+
+
+<update id="updateWsLoyaltyList" parameterType="Map">
+               update   SAL0271D
+                           SET HP_CALL_REASON_CODE = #{hpCallReasonCode}
+                                ,HP_CALL_REMARK = #{hpCallRemark}
+
+                                 ,STUS = #{stus}
+                                 ,UPD_USER_ID = #{updUserId}
+                                 ,UPD_DT = SYSDATE
+
+                         WHERE   LOYALTY_ID = #{loyaltyId}
+</update>
+
+
+
+<select id="waterPurifierResult" resultType="egovMap">
+<![CDATA[
+
+
+SELECT
+A.LOYALTY_ID,
+B.STK_DESC,
+B.STK_CTGRY_ID,
+case when B.STK_CTGRY_ID = '54' Then 'WP'
+when B.STK_CTGRY_ID = '55' Then 'AP'
+when B.STK_CTGRY_ID = '5706' Then 'MATTRESS'
+when B.STK_CTGRY_ID = '400' Then 'POE'
+when B.STK_CTGRY_ID = '57' Then 'SOFTENER'
+when B.STK_CTGRY_ID = '56' Then 'BIDET'
+else 'OTHERS' END AS CTGRY_DESC ,
+'1' as UNIT,
+B.OUTST,
+B.USAGE_MTH
+
+FROM    SAL0271D A JOIN SAL0284D B
+ON A.LOYALTY_ID = B.LOYALTY_ID
+
+WHERE   A.HP_CODE = #{regId}
+and A.LOYALTY_ID = #{loyaltyId}
+ORDER BY    CTGRY_DESC
+
+]]>
+</select>
+
+
+</mapper>

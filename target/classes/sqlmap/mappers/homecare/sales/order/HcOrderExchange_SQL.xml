@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcOrderExchangeMapper">
+
+    <!-- Homecare Order Exchange List 데이터조회 -->
+    <select id="hcOrderExchangeList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderExchangeMapper.hcOrderExchangeList */
+        SELECT Filter1.SO_EXCHG_ID ,
+                   Filter1.SO_ID ,
+                   Filter1.SO_EXCHG_TYPE_ID ,
+                   Filter1.SO_EXCHG_STUS_ID ,
+                   Filter1.SO_EXCHG_RESN_ID ,
+                   Filter1.SO_CUR_STUS_ID ,
+                   Filter1.INSTALL_ENTRY_ID ,
+                   Filter1.SO_EXCHG_OLD_APP_TYPE_ID ,
+                   Filter1.SO_EXCHG_NW_APP_TYPE_ID ,
+                   Filter1.SO_EXCHG_OLD_STK_ID ,
+                   Filter1.SO_EXCHG_NW_STK_ID ,
+                   Filter1.SO_EXCHG_OLD_PRC_ID ,
+                   Filter1.SO_EXCHG_NW_PRC_ID ,
+                   Filter1.SO_EXCHG_OLD_PRC ,
+                   Filter1.SO_EXCHG_NW_PRC ,
+                   Filter1.SO_EXCHG_OLD_PV ,
+                   Filter1.SO_EXCHG_NW_PV ,
+                   Filter1.SO_EXCHG_OLD_RENT_AMT ,
+                   Filter1.SO_EXCHG_NW_RENT_AMT ,
+                   Filter1.SO_EXCHG_OLD_PROMO_ID ,
+                   Filter1.SO_EXCHG_NW_PROMO_ID ,
+                   TO_CHAR(Filter1.SO_EXCHG_CRT_DT,'dd/MM/YYYY') SO_EXCHG_CRT_DT,
+                   Filter1.SO_EXCHG_CRT_USER_ID ,
+                   Filter1.SO_EXCHG_UPD_DT ,
+                   Filter1.SO_EXCHG_UPD_USER_ID ,
+                   Filter1.SO_EXCHG_OLD_SRV_CONFIG_ID ,
+                   Filter1.SO_EXCHG_NW_SRV_CONFIG_ID ,
+                   Filter1.SO_EXCHG_OLD_CALL_ENTRY_ID ,
+                   Filter1.SO_EXCHG_NW_CALL_ENTRY_ID ,
+                   Filter1.SO_EXCHG_STK_RET_MOV_ID ,
+                   Filter1.SO_EXCHG_OLD_DEF_RENT_AMT ,
+                   Filter1.SO_EXCHG_NW_DEF_RENT_AMT ,
+                   Filter1.SO_EXCHG_UNDER_FREE_AS_ID ,
+                   Filter1.SO_EXCHG_OLD_CUST_ID ,
+                   Filter1.SO_EXCHG_NW_CUST_ID ,
+                   Filter1.SALES_ORD_NO ,
+                   Filter1.APP_TYPE_ID ,
+                   Filter1.CUSTOMERID1 ,
+                   Filter1.NAME5 NAME  ,
+                   Filter1.NRIC1 ,
+                   Filter1.NAME6 NAME1  ,
+                   Filter1.CODE2 CODE  ,
+                   Filter1.NAME7 NAME2  ,
+                   Filter1.CODE3 CODE1  ,
+                   Filter1.CODENAME1 CODE_NAME  ,
+                   Filter1.NAME8 NAME3  ,
+                   Extent17.NAME NAME4  ,
+                   CASE WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
+                        ELSE '' END CRT_USER_NAME  ,
+                   CASE WHEN ( Filter1.RESN_ID IS NOT NULL ) THEN Filter1.CODE4
+                        ELSE '' END CODE4  ,
+                   CASE WHEN ( Filter1.RESN_ID IS NOT NULL ) THEN Filter1.RESN_DESC
+                        ELSE '' END RESN_DESC  ,
+                   CASE WHEN ( Filter1.CODEID1 IS NOT NULL ) THEN Filter1.CODENAME2
+                        ELSE '' END CODENAME2  ,
+                   CASE WHEN ( Filter1.STKID1 IS NOT NULL ) THEN Filter1.STKCODE1
+                        ELSE '' END STKCODE1  ,
+                   CASE WHEN ( Filter1.STKID1 IS NOT NULL ) THEN Filter1.STKDESC1
+                        ELSE '' END STKDESC1  ,
+                   CASE WHEN ( Filter1.PROMOID1 IS NOT NULL ) THEN Filter1.PROMOCODE1
+                        ELSE '' END PROMOCODE1  ,
+                   CASE WHEN ( Filter1.PROMOID1 IS NOT NULL ) THEN Filter1.PROMODESC1
+                        ELSE '' END PROMODESC1  ,
+                   CASE WHEN ( Filter1.CODEID2 IS NOT NULL ) THEN Filter1.CODENAME3
+                        ELSE '' END CODENAME3  ,
+                   CASE WHEN ( Filter1.STKID2 IS NOT NULL ) THEN Filter1.STKCODE2
+                        ELSE '' END STKCODE2  ,
+                   CASE WHEN ( Filter1.STKID2 IS NOT NULL ) THEN Filter1.STKDESC2
+                        ELSE '' END STKDESC2  ,
+                   CASE WHEN ( Filter1.PROMOID2 IS NOT NULL ) THEN Filter1.PROMOCODE2
+                        ELSE '' END PROMOCODE2  ,
+                   CASE WHEN ( Filter1.PROMOID2 IS NOT NULL ) THEN Filter1.PROMODESC2
+                        ELSE '' END PROMODESC2  ,
+                   Filter1.SALES_DT,
+                   CASE WHEN ( Filter1.SO_EXCHG_REM IS NOT NULL ) THEN Filter1.SO_EXCHG_REM
+                        ELSE '' END SO_EXCHG_REM  ,
+                   CASE WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
+                        ELSE '' END UPD_USER_NAME  ,
+                   CASE WHEN ( Filter1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Filter1.SO_EXCHG_FORM_NO
+                        ELSE '-' END SO_EXCHG_FORM_NO ,
+                   Filter1.STK_CTGRY_ID,
+                   Filter1.BNDL_NO,
+                   Filter1.ATCH_FILE_GRP_ID
+
+         FROM (
+            SELECT Extent1.SO_EXCHG_ID ,
+                       Extent1.SO_ID ,
+                       Extent1.SO_EXCHG_TYPE_ID ,
+                       Extent1.SO_EXCHG_STUS_ID ,
+                       Extent1.SO_EXCHG_RESN_ID ,
+                       Extent1.SO_CUR_STUS_ID ,
+                       Extent1.INSTALL_ENTRY_ID ,
+                       Extent1.SO_EXCHG_OLD_APP_TYPE_ID ,
+                       Extent1.SO_EXCHG_NW_APP_TYPE_ID ,
+                       Extent1.SO_EXCHG_OLD_STK_ID ,
+                       Extent1.SO_EXCHG_NW_STK_ID ,
+                       Extent1.SO_EXCHG_OLD_PRC_ID ,
+                       Extent1.SO_EXCHG_NW_PRC_ID ,
+                       Extent1.SO_EXCHG_OLD_PRC ,
+                       Extent1.SO_EXCHG_NW_PRC ,
+                       Extent1.SO_EXCHG_OLD_PV ,
+                       Extent1.SO_EXCHG_NW_PV ,
+                       Extent1.SO_EXCHG_OLD_RENT_AMT ,
+                       Extent1.SO_EXCHG_NW_RENT_AMT ,
+                       Extent1.SO_EXCHG_OLD_PROMO_ID ,
+                       Extent1.SO_EXCHG_NW_PROMO_ID ,
+                       Extent1.SO_EXCHG_CRT_DT ,
+                       Extent1.SO_EXCHG_CRT_USER_ID ,
+                       Extent1.SO_EXCHG_UPD_DT ,
+                       Extent1.SO_EXCHG_UPD_USER_ID ,
+                       Extent1.SO_EXCHG_OLD_SRV_CONFIG_ID ,
+                       Extent1.SO_EXCHG_NW_SRV_CONFIG_ID ,
+                       Extent1.SO_EXCHG_OLD_CALL_ENTRY_ID ,
+                       Extent1.SO_EXCHG_NW_CALL_ENTRY_ID ,
+                       Extent1.SO_EXCHG_STK_RET_MOV_ID ,
+                       Extent1.SO_EXCHG_REM ,
+                       Extent1.SO_EXCHG_OLD_DEF_RENT_AMT ,
+                       Extent1.SO_EXCHG_NW_DEF_RENT_AMT ,
+                       Extent1.SO_EXCHG_UNDER_FREE_AS_ID ,
+                       Extent1.SO_EXCHG_OLD_CUST_ID ,
+                       Extent1.SO_EXCHG_NW_CUST_ID ,
+                       Extent1.SO_EXCHG_FORM_NO ,
+                       Extent2.SALES_ORD_NO ,
+                       Extent2.SALES_DT ,
+                       Extent2.APP_TYPE_ID ,
+                       Extent3.CUST_ID CUSTOMERID1  ,
+                       Extent3.NAME NAME5 ,
+                       Extent3.NRIC NRIC1 ,
+                       Extent4.NAME NAME6 ,
+                       Extent5.CODE CODE2 ,
+                       Extent5.NAME NAME7 ,
+                       Extent6.CODE CODE3 ,
+                       Extent6.CODE_NAME CODENAME1 ,
+                       Extent7.RESN_ID ,
+                       Extent7.CODE CODE4 ,
+                       Extent7.RESN_DESC ,
+                       Extent8.USER_ID USERID1  ,
+                       Extent8.USER_NAME USERNAME1  ,
+                       Extent9.USER_ID USERID2  ,
+                       Extent9.USER_NAME USERNAME2  ,
+                       Extent10.CODE_ID CODEID1  ,
+                       Extent10.CODE_NAME CODENAME2  ,
+                       Extent11.STK_ID STKID1  ,
+                       Extent11.STK_CODE STKCODE1  ,
+                       Extent11.STK_DESC STKDESC1  ,
+                       Extent12.PROMO_ID PROMOID1  ,
+                       Extent12.PROMO_CODE PROMOCODE1  ,
+                       Extent12.PROMO_DESC PROMODESC1  ,
+                       Extent13.CODE_ID CODEID2  ,
+                       Extent13.CODE_NAME CODENAME3  ,
+                       Extent14.STK_ID STKID2  ,
+                       Extent14.STK_CODE STKCODE2  ,
+                       Extent14.STK_DESC STKDESC2  ,
+                       Extent15.PROMO_ID PROMOID2  ,
+                       Extent15.PROMO_CODE PROMOCODE2  ,
+                       Extent15.PROMO_DESC PROMODESC2  ,
+                       Extent16.NAME NAME8 ,
+                       Extent11.STK_CTGRY_ID,
+                       Extent17.BNDL_NO,
+                       Extent1.ATCH_FILE_GRP_ID
+
+              FROM SAL0004D Extent1
+                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
+                JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+                JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.SO_CUR_STUS_ID
+                JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SO_EXCHG_STUS_ID
+                JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.SO_EXCHG_TYPE_ID
+         LEFT JOIN SYS0032M Extent7   ON Extent7.RESN_ID = Extent1.SO_EXCHG_RESN_ID
+         LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.SO_EXCHG_CRT_USER_ID
+         LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.SO_EXCHG_UPD_USER_ID
+         LEFT JOIN SYS0013M Extent10  ON Extent10.CODE_ID = Extent1.SO_EXCHG_NW_APP_TYPE_ID
+         LEFT JOIN SYS0026M Extent11  ON Extent11.STK_ID = Extent1.SO_EXCHG_NW_STK_ID
+         LEFT JOIN SAL0017D Extent12  ON Extent12.PROMO_ID = Extent1.SO_EXCHG_NW_PROMO_ID
+         LEFT JOIN SYS0013M Extent13  ON Extent13.CODE_ID = Extent1.SO_EXCHG_OLD_APP_TYPE_ID
+         LEFT JOIN SYS0026M Extent14  ON Extent14.STK_ID = Extent1.SO_EXCHG_OLD_STK_ID
+         LEFT JOIN SAL0017D Extent15  ON Extent15.PROMO_ID = Extent1.SO_EXCHG_OLD_PROMO_ID
+         LEFT JOIN SAL0029D Extent16  ON Extent16.CUST_ID = Extent1.SO_EXCHG_OLD_CUST_ID
+         LEFT JOIN HMC0011D Extent17 ON Extent2.BNDL_ID = Extent17.ORD_SEQ_NO
+        <![CDATA[
+             WHERE 0 <> Extent1.SO_EXCHG_STUS_ID
+                AND 8 <> Extent1.SO_EXCHG_STUS_ID
+        ]]>
+               <if test="arrExcType != null and arrExcType != ''">
+                   AND Extent1.SO_EXCHG_TYPE_ID IN
+                   <foreach item="item" collection="arrExcType" index="index" open="(" separator="," close=")">
+                       #{item}
+                   </foreach>
+               </if>
+               <if test="arrExcStatus != null and arrExcStatus != ''">
+                   AND Extent1.SO_EXCHG_STUS_ID IN
+                   <foreach item="item" collection="arrExcStatus" index="index" open="(" separator="," close=")">
+                       #{item}
+                   </foreach>
+               </if>
+               <if test="arrAppType != null and arrAppType != ''">
+                   AND Extent2.APP_TYPE_ID IN
+                   <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+                       #{item}
+                   </foreach>
+               </if>
+            ) Filter1
+        LEFT JOIN SAL0029D Extent17   ON Extent17.CUST_ID = Filter1.SO_EXCHG_NW_CUST_ID
+            WHERE Filter1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') -- Mattress, Frame
+            <if test="startCrtDt != null and startCrtDt != ''">
+	            <![CDATA[
+	                AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	            ]]>
+            </if>
+            <if test="endCrtDt != null and endCrtDt != ''">
+	            <![CDATA[
+	                AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	            ]]>
+            </if>
+            <if test="salesOrdNo != null and salesOrdNo != ''">
+                AND Filter1.SALES_ORD_NO = #{salesOrdNo}
+            </if>
+            <if test="crtUserName != null and crtUserName != ''">
+                AND UPPER(Filter1.USERNAME1) = UPPER(#{crtUserName})
+            </if>
+            <if test="custIc != null and custIc != ''">
+                AND UPPER(Filter1.NRIC1) LIKE '%' || UPPER(#{custIc}) || '%'
+            </if>
+            <if test="custName != null and custName != ''">
+                AND UPPER(Filter1.NAME5) LIKE '%' || UPPER(#{custName}) || '%'
+            </if>
+            <if test='bndlNo != null and bndlNo != ""'>
+                 AND UPPER(Filter1.BNDL_NO) = UPPER(#{bndlNo})
+             </if>
+    </select>
+
+</mapper>

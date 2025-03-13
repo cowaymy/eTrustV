@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGISMOMapper">
+
+    <select id="selectSerialScanningGISMOList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGISMOMapper.selectSerialScanningGISMOList] 20191121 - KR OHK */
+    SELECT  /* SMO */
+                AA.*,
+                s1.SALES_ORD_NO ordno,
+                H11.BNDL_NO,
+                S26.STK_DESC AS itm_name,
+                TO_char(s46.APPNT_DT , 'yyyymmdd') AS APPNT_DT,
+                ROWNUM rnum
+    FROM  (
+			    SELECT
+						    /*l55.DELVRY_NO AS delno,*/
+						    l47.REQST_NO AS reqstno,
+						    l47.REQST_CRT_DT,
+						    TO_CHAR(l47.REQST_CRT_DT, 'dd/mm/yyyy') AS reqstdt,
+						    L47.REQST_TYPE as reqstType,
+						    l47.trnsc_type AS trnscType,   -- US : STO, UM and L47.REQST_TYPE = 'PO' : Inbound SMO, UM and L47.REQST_TYPE <![CDATA[<>]]> 'PO' : SMO
+						    l47.TRNSC_TYPE_DTL as trnsctypedtl,
+						    --DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
+						    '('||s28q.WH_LOC_CODE || ')' || DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
+						    l47.RCIV_CDC_RDC AS frmlocid,
+						    l47.REQST_CDC_RDC AS tolocid,
+						    NVL(TO_CHAR(TO_DATE(MAX(l55.DELVRY_DT), 'yyyymmdd'), 'dd/mm/yyyy'), '-') AS deldate,
+						    SUM(NVL(l48.reqst_qty,0)) AS reqstQty,
+						    SUM(NVL(l55.DELVRY_QTY,0)) AS delqty,
+						    (SUM(NVL(l48.reqst_qty,0)) - SUM(NVL(l55.DELVRY_QTY,0))) AS remainQty,
+						    l47.REF_DOC_NO,
+						    MIN(l48.itm_code) AS itm_code
+						    ,case when s13h.code_id is not null then 'HC' else 'HA' end stk_catgry
+						FROM log0047m l47,
+						    log0048d l48,
+						    (
+								     SELECT B.REQST_NO, B.REQST_NO_ITM, SUM(B.DELVRY_QTY) AS DELVRY_QTY, MAX(C.DELVRY_DT) AS DELVRY_DT
+							           FROM
+							                  log0047m M,
+							                  log0048D A,
+							                  LOG0055D B,
+							                  LOG0054M C,
+							                  sys0028m D
+							           WHERE  1=1
+							           AND    M.reqst_no = A.reqst_no
+							           AND    A.REQST_NO = B.REQST_NO
+							           AND    A.REQST_NO_ITM = B.REQST_NO_ITM
+							           AND    B.DELVRY_NO = C.DELVRY_NO
+							           AND    M.reqst_cdc_rdc = D.WH_LOC_ID(+)
+							           AND    NVL(B.del_flag,'N')   <![CDATA[<>]]>   'Y'
+							           AND    M.trnsc_type IN ('UM')
+							           AND    M.REQST_TYPE  <![CDATA[<>]]>   'PO'
+							           AND    M.REQST_CRT_DT  <![CDATA[>=]]>  to_date(#{searchDeliverySDate},'dd/mm/yyyy')   -- FROM
+			                           AND    M.REQST_CRT_DT <![CDATA[ <= ]]>  to_date(#{searchDeliveryEDate} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
+							           <if test="locCode != null">
+								             AND (1, M.RCIV_CDC_RDC) IN
+								                <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+								                  (1, #{item})
+								                </foreach>
+								       </if>
+								       <if test="toLocCode != null">
+                                             AND (1, M.REQST_CDC_RDC) IN
+                                                <foreach item="item" collection="toLocCode" index="index" open="(" separator="," close=")">
+                                                  (1, #{item})
+                                                </foreach>
+                                       </if>
+                                       <if test="searchRequestNo !=null and searchRequestNo != ''">
+								            AND (M.REQST_NO = #{searchRequestNo} or UPPER(D.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
+								       </if>
+								       GROUP BY B.REQST_NO, B.REQST_NO_ITM
+					          ) l55,
+						    sys0028m s28q,
+						    SYS0026M s26
+						    ,(SELECT * FROM sys0013m WHERE code IN (select CODE from SYS0094M where IND = 'HOMECARE')) s13h
+						WHERE 1 = 1
+						 AND l47.REQST_NO = l48.REQST_NO
+						 AND l48.REQST_NO = l55.REQST_NO(+)
+						 AND l48.REQST_NO_ITM = l55.REQST_NO_ITM(+)
+						 AND l47.REQST_CDC_RDC= s28q.WH_LOC_ID(+)
+
+						 AND l48.itm_code= s26.STK_CODE(+)
+						 and s26.stk_ctgry_id = s13h.code_id(+)
+
+
+						 AND l47.REQST_CRT_DT  <![CDATA[>=]]>  to_date(#{searchDeliverySDate},'dd/mm/yyyy')   -- FROM
+						 AND l47.REQST_CRT_DT <![CDATA[ <= ]]>  to_date(#{searchDeliveryEDate} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
+					 <if test="locCode != null">
+						 AND (1, l47.RCIV_CDC_RDC) IN
+			                <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+			                  (1, #{item})
+			                </foreach>
+			         </if>
+			         <if test="locCodeTo != null">
+                           AND (1, l47.REQST_CDC_RDC) IN
+                              <foreach item="item" collection="locCodeTo" index="index" open="(" separator="," close=")">
+                                (1, #{item})
+                              </foreach>
+                     </if>
+                     <if test="searchRequestNo !=null and searchRequestNo != ''">
+			            AND (l47.REQST_NO = #{searchRequestNo} or UPPER(s28q.WH_LOC_DESC) LIKE '%' || UPPER(#{searchRequestNo}) || '%')
+			         </if>
+			         <if test="searchItm !=null and searchItm != ''">
+                          AND (l48.itm_code = #{searchItm} or UPPER(l48.ITM_NAME) LIKE '%' || UPPER(#{searchItm}) || '%')
+                     </if>
+
+                     <if test="cmbCategory != null">
+	                     AND s26.STK_CTGRY_ID IN
+	                     <foreach item="item" collection="cmbCategory" index="index" open="(" separator="," close=")">
+	                     #{item}
+	                     </foreach>
+		             </if>
+
+		             <if test="cmbType != null">
+		                 AND s26.STK_TYPE_ID IN
+		                <foreach item="item" collection="cmbType" index="index" open="(" separator="," close=")">
+		                 #{item}
+		                </foreach>
+		             </if>
+
+			             AND l47.trnsc_type IN ('UM')
+						 AND L47.REQST_TYPE <![CDATA[<>]]>  'PO'
+						 AND NVL(l47.REQST_STUS, 'N') <![CDATA[<>]]> 'C'
+						 AND NVL(l47.REQST_DEL , 'N') = 'N'
+						 AND NVL(l48.REQST_DEL , 'N') = 'N'
+						 AND s28q.SERIAL_REQUIRE_CHK_YN = 'Y'
+
+						 GROUP BY /*l55.DELVRY_NO,*/ l47.REQST_NO, l47.REQST_CRT_DT, L47.REQST_TYPE, l47.trnsc_type,
+						          l47.TRNSC_TYPE_DTL, s28q.WH_LOC_CODE, s28q.WH_LOC_DESC, l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l47.REF_DOC_NO,s13h.code_id
+						 HAVING SUM(NVL(l48.reqst_qty,0)) > SUM(NVL(l55.DELVRY_QTY,0))
+					) AA,
+		            sal0046D s46,
+		            sal0001D s1,
+		            HMC0011D H11,
+		            SYS0026M S26
+           WHERE 1=1
+           AND AA.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
+           AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
+           AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
+           AND AA.itm_code = S26.STK_CODE
+           <if test="searchRequestNo2 !=null and searchRequestNo2 != ''">
+              AND (UPPER(AA.REF_DOC_NO) = UPPER(#{searchRequestNo2}) or UPPER(H11.BNDL_NO) = UPPER(#{searchRequestNo2}) or s1.SALES_ORD_NO = #{searchRequestNo2})
+           </if>
+           <if test="searchSAppntDt !=null and searchSAppntDt != '' and searchEAppntDt !=null and searchEAppntDt != ''">
+                AND s46.APPNT_DT  <![CDATA[>=]]>  to_date(#{searchSAppntDt},'dd/mm/yyyy')   -- FROM
+                AND s46.APPNT_DT <![CDATA[ <= ]]>  to_date(#{searchEAppntDt} || ' 23:59:59','dd/mm/yyyy HH24:MI:SS')   -- TO
+           </if>
+		   ORDER BY REQST_CRT_DT, reqstno
+    </select>
+</mapper>

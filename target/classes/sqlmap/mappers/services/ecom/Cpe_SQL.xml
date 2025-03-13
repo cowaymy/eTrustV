@@ -1,0 +1,1171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.ecom.impl.CpeMapper">
+
+  <select id="getCpeStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'CPE_STAT'
+      AND DISB = 0
+    ORDER BY CODE
+  </select>
+
+  <select id="selectMainDept"  resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 359 AND CODE <![CDATA[ <> ]]> 'MD11'
+    ORDER BY CODE
+  </select>
+
+  <select id="selectSubDept"  parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM GBSLCVD.SYS0013M
+    WHERE CODE_MASTER_ID = 360
+
+    <if test = "groupCode != null and groupCode != '' ">
+      AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
+    </if>
+    <if test = "groupCode != null and groupCode != '' and groupCode =='MD20'">
+    AND CODE != 'SD52'
+    </if>
+    ORDER BY CODE_NAME
+  </select>
+
+  <select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+                SELECT
+                    Distinct1.C1 C1 ,
+                    Distinct1.ORD_ID ,
+                    Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
+                    Distinct1.ORD_STUS_CODE ,
+                    Distinct1.CUST_NAME ,
+                    Distinct1.CUST_NRIC ,
+                    Distinct1.APP_TYPE_CODE ,
+                    Distinct1.STOCK_CODE ,
+                    Distinct1.STOCK_DESC,
+                    Distinct1.ORD_PV_MONTH,
+                    Distinct1.ORD_PV_YEAR,
+                    Distinct1.APP_TYPE_ID
+                FROM ( SELECT DISTINCT Extent1.ORD_ID ORD_ID ,
+                                       Extent1.ORD_NO ORD_NO ,
+                                       Extent1.ORD_STUS_CODE  ,
+                                       Extent1.APP_TYPE_CODE  ,
+                                       Extent1.STOCK_CODE  ,
+                                       Extent1.STOCK_DESC  ,
+                                       Extent1.CUST_NAME  ,
+                                       Extent1.CUST_NRIC  , 1 C1,
+                                       Extent1.ORD_DT,
+                                       Extent1.ORD_PV_MONTH,
+                                       Extent1.ORD_PV_YEAR,
+                                       Extent1.APP_TYPE_ID
+                                       FROM (
+                                            SELECT vOrderBasicInfo.ORD_ID  ,
+                                            vOrderBasicInfo.ORD_NO ORD_NO ,
+                                            vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                                            vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                                            vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                                            vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                                            vOrderBasicInfo.ORD_DT ORD_DT ,
+                                            vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                                            vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                                            vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                                            vOrderBasicInfo.ORD_PV ORD_PV ,
+                                            vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                                            vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                                            vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                                            vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                                            vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                                            vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                                            vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                                            vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                                            vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                                            vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                                            vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                                            vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                                            vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                                            vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                                            vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                                            vOrderBasicInfo.CUST_ID CUST_ID ,
+                                            vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                                            vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                                            vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                                            vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                                            vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                                            vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                                            vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                                            vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                                            vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                                            vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                                            vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                                            vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                                            vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                                            vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                                            vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                                            vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                                            vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                                            vOrderBasicInfo.ORD_REM ORD_REM ,
+                                            vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                                            vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                                            vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                                            vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                                            vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                                            vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                                            vOrderBasicInfo.UPD_DT UPD_DT ,
+                                            vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                                            vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                                            vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                                            vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                                            vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                                            vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                                            vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                                       FROM SAL1006V vOrderBasicInfo ) Extent1
+                          <![CDATA[
+                          WHERE  ( 'IACT' <> Extent1.ORD_STUS_CODE )
+                           ]]>
+                            AND NOT EXISTS (SELECT 1
+                                              FROM SAL0001D Z
+                                             WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                               AND Z.BNDL_ID IS NOT NULL
+                                            )             -- homecare Remove(except)
+                           <if test=" '' != searchOrdNo and null != searchOrdNo">
+                                AND ( Extent1.ORD_NO = #{searchOrdNo})
+                           </if>
+                           <if test=" '' != searchOrdDate and null != searchOrdDate">
+                                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
+                           </if>
+                           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
+                                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
+                           </if>
+                           <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+                                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NRIC), UPPER(#{searchOrdCustNric})),10,0)) > 0 )
+                           </if>
+                           <if test=" null != appType and appType.length > 0">
+                                AND Extent1.APP_TYPE_ID  IN
+                                <foreach collection="appType" item="item" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                           </if>
+
+                ) Distinct1
+     </select>
+
+     <select id="getOrderId" parameterType="Map" resultType="egovMap" >
+     <![CDATA[
+     SELECT T1.ORD_ID   ,
+                T1.ORD_NO   ,
+                T1.RENTAL_STUS   ,
+                T1.ORD_STUS_ID   ,
+                T1.ORD_STUS_CODE   ,
+                T1.ORD_STUS_NAME   ,
+                T1.ORD_DT   ,
+                T1.INSTLMT_PRIOD   ,
+                T1.ORD_AMT   ,
+                T1.ORD_MTH_RENTAL   ,
+                T1.ORD_PV   ,
+                T1.ORD_PV_MONTH   ,
+                T1.ORD_PV_YEAR   ,
+                T1.ORD_REF_NO   ,
+                T1.ORD_PO_NO   ,
+                T1.ORD_DEPT_CODE   ,
+                T1.ORD_GRP_CODE   ,
+                T1.ORD_ORG_CODE   ,
+                T1.ORD_CRT_USER_ID   ,
+                T1.ORD_CRT_DT   ,
+                T1.APP_TYPE_ID   ,
+                T1.APP_TYPE_CODE   ,
+                T1.APP_TYPE_DESC ,
+                T1.STOCK_ID   ,
+                T1.STOCK_CODE   ,
+                T1.STOCK_DESC   ,
+                T1.CUST_ID   ,
+                T1.CUST_TYPE   ,
+                T1.CUST_NAME   ,
+                T1.CUST_NRIC   ,
+                T1.CUST_DOB   ,
+                T1.CUST_NATION   ,
+                T1.CUST_GENDER   ,
+                T1.CUST_RACE   ,
+                T1.CUST_EMAIL   ,
+                T1.CUST_VA_NO   ,
+                T1.CUST_PASSPORT_EXPR   ,
+                T1.CUST_VISA_EXPR   ,
+                T1.ORD_PROMO_ID   ,
+                T1.ORD_PROMO_CODE   ,
+                T1.ORD_PROMO_DESC   ,
+                T1.ORD_MEM_ID   ,
+                T1.ORD_MEM_CODE   ,
+                T1.ORD_MEM_NAME   ,
+                T1.ORD_MEM_NRIC   ,
+                T1.ORD_MEM_TYPE_ID   ,
+                T1.ORD_MEM_TYPE_CODE   ,
+                T1.ORD_MEM_TYPE_NAME   ,
+                T1.COOL_OFF_PRIOD   ,
+                T1.KEYIN_BRNCH_ID   ,
+                T1.KEYIN_BRNCH_CODE   ,
+                T1.KEYIN_BRNCH_NAME   ,
+                T1.ORD_REM   ,
+                T1.RENT_CHK_ID   ,
+                T1.ORD_HM_ID   ,
+                T1.ORD_SM_ID   ,
+                T1.ORD_GM_ID   ,
+                T1.ORD_ADDR_ID   ,
+                T1.ORD_CNTC_ID   ,
+                T1.ORD_PROMO_RELATED_NO   ,
+                T1.UPD_DT   ,
+                T1.UPD_USER_ID   ,
+                T1.JOM_PAY_REF   ,
+                T1.STK_CTGRY_ID   ,
+                T1.STK_CTGRY_NAME   ,
+                T1.CUST_TYPE_ID   ,
+                T1.CUST_BILL_ID   ,
+                T1.OBLIGT_YEAR
+       FROM
+                SAL1006V T1
+       WHERE
+                T1.ORD_NO = #{salesOrderNo}  AND ROWNUM <= 1
+       ]]>
+
+     </select>
+
+     <select id="checkExistingCpeRequestStatusActive" parameterType="Map" resultType="int">
+     	SELECT COUNT(CPE_REQ_ID) FROM SVC0118M WHERE CPE_STUS_ID NOT IN (6,36) AND SALES_ORD_NO = #{salesOrderNo}
+     </select>
+
+     <select id="checkExistingEcpeRequestStatusActive" parameterType="Map" resultType="int">
+        SELECT COUNT(ECPE_REQ_ID) FROM SVC0148M WHERE ECPE_STUS_ID NOT IN (5,6) AND SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+     </select>
+
+     <select id="selectRequestType" resultType="egovMap">
+     SELECT CODE_MASTER_ID AS CODE_ID, CODE_MASTER_NAME AS CODE_NAME FROM SYS0012M
+                WHERE CODE_MASTER_ID IN (532, 533, 534) AND DISAB = 0
+     </select>
+
+     <select id="getSubRequestTypeList" parameterType="Map" resultType="egovMap">
+     SELECT CODE_ID, CODE_NAME FROM SYS0013M
+                WHERE CODE_MASTER_ID = #{groupCode}
+                AND DISAB = 0
+     </select>
+
+     <select id="selectNextCpeId" resultType="int">
+     SELECT NVL(MAX(CPE_REQ_ID) + 1, 1) AS CPE_REQ_ID FROM SVC0118M
+     </select>
+
+     <insert id="insertCpeReqst" parameterType="Map">
+     INSERT INTO SVC0118M
+        (
+             CPE_REQ_ID
+            ,CPE_TYPE
+            ,CPE_SUBTYPE
+            ,SALES_ORD_ID
+            ,SALES_ORD_NO
+            ,CUST_ID
+            ,REQ_STAGE_ID
+            ,REQ_MAIN_DEPT
+            ,REQ_SUB_DEPT
+            ,CPE_STUS_ID
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,REQUESTOR_BRANCH
+            ,ISSUE_TYPE_ID
+        )
+            values
+        (
+            #{cpeReqId}
+            ,#{inputReqTypeSelect}
+            ,#{inputSubReqTypeSelect}
+            ,#{salesOrdId}
+            ,#{salesOrdNo}
+            ,#{custId}
+            ,#{reqStageId}
+            ,#{mainDept}
+            ,#{subDept}
+            ,1
+            ,SYSDATE
+            ,#{userId}
+            ,#{requestorBranch}
+            ,#{inputIssueSelect}
+        )
+    </insert>
+
+    <select id="selectNextCpeAppvPrcssNo" resultType="String">
+        SELECT    TO_CHAR (SYSDATE, 'yyyy')
+            || NVL (TO_CHAR (MAX (SUBSTR (APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS APPV_PRCSS_NO
+        FROM SVC0119M
+        WHERE SUBSTR (APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
+    </select>
+
+    <insert id="insertCpeApproveManagement" parameterType="Map">
+    /* APPV_PRCSS_STUS : R - Request, P - Approve In Progress, A - Approved, J - Rejected */
+        INSERT INTO SVC0119M
+        (
+            APPV_PRCSS_NO
+            ,APPV_REQ_NO
+            ,REQST_DT
+            ,REQST_USER_ID
+            ,APPV_LINE_CNT
+            ,APPV_LINE_PRCSS_CNT
+            ,APPV_PRCSS_DESC
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+        )
+        values
+        (
+            #{appvPrcssNo}
+            ,#{cpeReqId}
+            ,SYSDATE
+            ,#{userName}
+            ,#{appvLineCnt}
+            ,0
+            ,#{appvPrcssDesc}
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+            )
+    </insert>
+
+    <insert id="insertCpeApproveLineDetail" parameterType="Map">
+    INSERT INTO SVC0120D
+        (
+            APPV_PRCSS_NO
+            ,APPV_LINE_SEQ
+            ,APPV_LINE_USER_ID
+            ,APPV_DT
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+         )
+        values
+        (
+            #{appvPrcssNo}
+            ,#{approveNo}
+            ,#{memCode}
+            ,#{appvDt}
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+        )
+    </insert>
+
+    <insert id="insertCpeRqstDetail" parameterType="Map">
+    INSERT INTO SVC0121D
+    (
+        REQ_DTL_ID
+       ,CPE_REQ_ID
+       ,MAIN_DEPT
+       ,SUB_DEPT
+       ,REMARK
+       ,STUS_CODE_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,ATCH_FILE_GRP_ID
+    )
+    values
+    (
+       SVC0121D_SEQ.NEXTVAL
+       ,#{cpeReqId}
+       ,#{mainDept}
+       ,#{subDept}
+       ,#{inputRemark}
+       ,#{status}
+       ,SYSDATE
+       ,#{userId}
+       ,#{atchFileGrpId}
+    )
+    </insert>
+
+    <update id="updateCpeRqstAppvPrcssNo" parameterType="Map">
+        UPDATE SVC0118M
+            SET APPV_PRCSS_NO = #{appvPrcssNo}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+            ,APPV_REQRD = 1
+        WHERE CPE_REQ_ID = #{cpeReqId}
+    </update>
+
+<!-- FRANGO CHECK -->
+    <select id="selectCpeRequestList" parameterType="Map" resultType="egovMap">
+<!--     TODO: Yong - Add query parameters for search fields based on CPE main page -->
+	SELECT * FROM (
+	       SELECT
+	      		T2.DEPT_CODE
+	            ,T2.ORG_CODE
+	            ,T2.GRP_CODE
+	            ,T1.SALES_ORD_NO
+	            ,T1.SALES_ORD_ID
+	            ,T1.CPE_REQ_ID
+	            ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+	            ,T1.CPE_SUBTYPE
+	            ,T1.AS_NO
+	            ,T3.NAME AS CUSTOMER_NAME
+	            ,T3.NRIC AS NRIC_COMPANY_NO
+	            ,T4.CODE_NAME AS MAIN_DEPT
+	            ,T5.CODE_NAME AS SUB_DEPT
+	            ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+	            ,T10.NAME AS REQUEST_STAGE
+	            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_BRANCH
+	            ,T9.NAME AS STATUS
+	        FROM SVC0118M T1
+	        LEFT JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+	        LEFT JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+	        LEFT JOIN SYS0013M T4 ON T4.CODE = T1.REQ_MAIN_DEPT
+	        LEFT JOIN SYS0013M T5 ON T5.CODE = T1.REQ_SUB_DEPT
+	        LEFT JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+	        LEFT JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
+	        LEFT JOIN SYS0038M T9 ON T9.STUS_CODE_ID = T1.CPE_STUS_ID
+	        LEFT JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T1.REQ_STAGE_ID
+	        LEFT JOIN SAL0045D T11 ON T11.SALES_ORD_ID = T1.SALES_ORD_ID
+	        LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T11.BRNCH_ID
+	        WHERE 1=1
+	    <if test="cpeReqId != null and cpeReqId != '' ">
+	        AND T1.CPE_REQ_ID = #{cpeReqId}
+	    </if>
+
+	    <if test="order_no != null and order_no != '' ">
+	      AND T1.SALES_ORD_NO = #{order_no}
+	    </if>
+
+	    <if test="asNo != null and asNo != '' ">
+	      AND T1.AS_NO = #{asNo}
+	    </if>
+
+	    <if test="customer_name != null and customer_name != '' ">
+	       AND UPPER(T3.NAME) LIKE '%'|| UPPER(#{customer_name}) ||'%'
+	    </if>
+
+	    <if test="arrReqStageId != null and arrReqStageId != ''">
+	      AND T1.REQ_STAGE_ID IN
+	      <foreach item="item" collection="arrReqStageId" index="index" open="(" separator="," close=")">
+	          #{item}
+	      </foreach>
+	    </if>
+
+	    <if test="nric_company_no != null and nric_company_no != '' ">
+	      AND UPPER(T3.NRIC) LIKE '%'||UPPER(#{nric_company_no})||'%'
+	    </if>
+
+	    <if test="reqStartDt != null and reqStartDt != '' ">
+	      AND T1.CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{reqStartDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+
+	    <if test="reqEndDt != null and reqEndDt != '' ">
+	      AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{reqEndDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+
+	    <if test="arrRequestorBranch != null and arrRequestorBranch != '' ">
+	      AND T1.REQUESTOR_BRANCH IN
+	      <foreach item="item" collection="arrRequestorBranch" index="index" open="(" separator="," close=")">
+	          #{item}
+	      </foreach>
+	    </if>
+
+	<!--  TO BE IGNORE -->
+	<!--     <if test="main_department != null and main_department != '' "> -->
+	<!--       AND T4.CODE = #{main_department} -->
+	<!--     </if> -->
+
+	<!--     <if test="sub_department != null and sub_department != '' "> -->
+	<!--       AND T5.CODE = #{sub_department} -->
+	<!--     </if> -->
+	<!-- END -->
+
+	    <if test='arrStatusList != null and arrStatusList != ""'>
+	      AND T1.CPE_STUS_ID IN
+	      <foreach item="item" collection="arrStatusList" index="index" open="(" separator="," close=")">
+	         #{item}
+	      </foreach>
+	    </if>
+
+	    <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+	       AND T11.BRNCH_ID IN
+	        <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+	         #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="arrReqType != null and arrReqType != '' ">
+	       AND T1.CPE_TYPE IN
+	        <foreach item="item" collection="arrReqType" index="index" open="(" separator="," close=")">
+	         #{item}
+	        </foreach>
+	    </if>
+
+	      ORDER BY T1.CRT_DT DESC
+	) A
+	WHERE 1=1
+    <if test='adminFlag == null or adminFlag == "" or adminFlag != "Y"'>
+      <if test="memLvl != null and memLvl != ''">
+			<if test="memLvl == 4 or memLvl == 3">
+			AND (A.DEPT_CODE = #{deptCode})
+			</if>
+			<if test="memLvl == 2">
+			AND (A.GRP_CODE = #{grpCode})
+			</if>
+			<if test="memLvl == 1">
+			AND (A.ORG_CODE = #{orgCode})
+			</if>
+		</if>
+    </if>
+    </select>
+
+   <select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
+      SELECT
+            T1.SALES_ORD_NO
+            ,T1.SALES_ORD_ID
+            ,T1.CPE_REQ_ID
+            ,T1.APPV_REQRD
+            ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+            ,T9.CODE_MASTER_NAME AS CPE_TYPE
+            ,T10.CODE_NAME AS CPE_SUBTYPE
+            ,T1.AS_NO
+            ,T3.NAME AS CUSTOMER_NAME
+            ,T3.NRIC AS NRIC_COMPANY_NO
+            ,T4.CODE_NAME AS MAIN_DEPT
+            ,T5.CODE_NAME AS SUB_DEPT
+            ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+            , DECODE(T2.STUS_CODE_ID, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
+            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_BRANCH
+            ,T7.USER_FULL_NAME AS CREATED_BY
+            ,T11.REMARK
+            ,T7.USER_EMAIL AS REQUESTOR_EMAIL
+        FROM SVC0118M T1
+        LEFT JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        LEFT JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+        LEFT JOIN SYS0013M T4 ON T4.CODE = T1.REQ_MAIN_DEPT
+        LEFT JOIN SYS0013M T5 ON T5.CODE = T1.REQ_SUB_DEPT
+        LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T2.BRNCH_ID
+        LEFT JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+        LEFT JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
+        LEFT JOIN SYS0012M T9 ON T9.CODE_MASTER_ID = T1.CPE_TYPE
+        LEFT JOIN SYS0013M T10 ON T10.CODE_ID = T1.CPE_SUBTYPE
+        LEFT JOIN
+        (SELECT * FROM SVC0121D WHERE REQ_DTL_ID =
+            (SELECT MIN(REQ_DTL_ID) FROM SVC0121D
+             WHERE CPE_REQ_ID = #{cpeReqId})
+        ) T11 ON T11.CPE_REQ_ID = T1.CPE_REQ_ID
+        WHERE
+        T1.CPE_REQ_ID =  #{cpeReqId}
+    </select>
+
+
+    <select id="selectCpeDetailList" parameterType="Map" resultType="egovMap">
+    SELECT
+         T1.CPE_REQ_ID
+         ,T1.REQ_DTL_ID
+         ,T4.CODE_NAME AS MAIN_DEPT
+         ,T5.CODE_NAME AS SUB_DEPT
+         ,T1.REMARK
+         ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') CRT_DT
+         ,T2.USER_FULL_NAME AS CREATED_BY
+         ,T3.NAME AS STATUS
+         ,T6.ATCH_FILE_GRP_ID
+         ,T7.ATCH_FILE_ID
+         ,T7.ATCH_FILE_NAME
+         ,T7.FILE_SUB_PATH
+         ,T7.PHYSICL_FILE_NAME
+    FROM SVC0121D T1
+    JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
+    JOIN SYS0038M T3 ON T3.STUS_CODE_ID = T1.STUS_CODE_ID
+    JOIN SYS0013M T4 ON T4.CODE = T1.MAIN_DEPT
+    JOIN SYS0013M T5 ON T5.CODE = T1.SUB_DEPT
+    LEFT JOIN SYS0070M T6 ON T6.ATCH_FILE_GRP_ID = T1.ATCH_FILE_GRP_ID
+    LEFT JOIN SYS0071D T7 ON T7.ATCH_FILE_ID = T6.ATCH_FILE_ID
+    WHERE T1.CPE_REQ_ID = #{cpeReqId}
+    ORDER BY T1.REQ_DTL_ID ASC
+    </select>
+
+    <update id="updateCpeStatusMain" parameterType="Map">
+        UPDATE SVC0118M
+            SET CPE_STUS_ID = #{status}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CPE_REQ_ID = #{cpeReqId}
+    </update>
+
+    <select id="getApproverList" parameterType="Map" resultType="egovMap">
+     select
+         T1.CPE_REQ_ID
+        ,T1.SALES_ORD_ID
+        ,T1.SALES_ORD_NO
+        ,T2.APPV_PRCSS_NO
+        ,T4.NAME AS APPV_LINE_USER_NAME
+        FROM SVC0118M T1
+            JOIN SVC0119M T2 ON T2.APPV_PRCSS_NO = T1.APPV_PRCSS_NO
+            JOIN SVC0120D T3 ON T3.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+            JOIN ORG0001D T4 ON T4.MEM_CODE = T3.APPV_LINE_USER_ID
+        WHERE T1.CPE_REQ_ID = #{cpeReqId}
+    </select>
+
+    <select id="getOrderDscCode"  parameterType="String" resultType="egovMap">
+        SELECT NVL(CODE, '') CODE
+        FROM SYS0013M
+        WHERE CODE_NAME LIKE '%' || #{orderDscCode} || '%'
+        AND CODE_MASTER_ID = 360
+        AND ROWNUM = 1
+  </select>
+
+  <select id="selectIssueTypeList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID,CODE_NAME
+        FROM SYS0013M
+        WHERE 1=1
+        AND CODE = #{groupCode}
+        AND CODE_MASTER_ID = 535 AND DISAB = 0
+        ORDER BY CODE DESC,CODE_ID
+  </select>
+
+    <select id="selectCpeHistoryDetailPop" parameterType="Map" resultType="egovMap">
+		SELECT
+		EXT1.CPE_REQ_ID
+		,EXT9.CODE_MASTER_NAME AS REQUEST_TYPE
+		,EXT10.CODE_NAME AS SUB_REQUEST
+		,EXT3.USER_FULL_NAME AS REQUESTOR
+		,TO_CHAR(EXT1.CRT_DT,'DD/MM/YYYY') AS REQUEST_DATE
+		,EXT5.USER_FULL_NAME AS APPROVAL
+		,EXT4.NAME AS STATUS
+		,TO_CHAR(EXT2.CRT_DT,'DD/MM/YYYY') AS APPROVED_DATE
+		FROM SVC0118M EXT1
+		JOIN SVC0121D EXT2 ON EXT1.CPE_REQ_ID = EXT2.CPE_REQ_ID
+		JOIN SYS0012M EXT9 ON EXT9.CODE_MASTER_ID = EXT1.CPE_TYPE
+		JOIN SYS0013M EXT10 ON EXT10.CODE_ID = EXT1.CPE_SUBTYPE
+		JOIN SYS0047M EXT3 ON EXT3.USER_ID = EXT1.CRT_USER_ID
+		JOIN SYS0047M EXT5 ON EXT5.USER_ID = EXT2.CRT_USER_ID
+		JOIN SYS0038M EXT4 ON EXT4.STUS_CODE_ID = EXT2.STUS_CODE_ID
+
+		WHERE 1 = 1
+
+		AND EXT1.SALES_ORD_NO = #{salesOrdNo}
+
+		ORDER BY EXT1.CPE_REQ_ID ASC
+  </select>
+
+  <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
+  		SELECT * FROM SYS0005M WHERE BRNCH_ID = #{userBranchId}
+  </select>
+
+    <select id="selectUserMemberLevel" parameterType="Map" resultType="egovMap">
+  		SELECT * FROM ORG1001V WHERE MEM_CODE = #{userName}
+  </select>
+
+  <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
+      SELECT
+        EXT3.PRGRS AS CCP_STATUS,
+        DECODE(EXT1.STUS_CODE_ID, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
+
+           FROM SAL0001D EXT1
+           LEFT JOIN SAL0009D EXT2
+           ON EXT2.LOG_ID = (
+               SELECT LOG_ID
+               FROM (
+                   SELECT LOG_ID
+                   FROM SAL0009D
+                   WHERE SALES_ORD_ID = EXT1.SALES_ORD_ID
+                   ORDER BY LOG_ID DESC
+               )
+               WHERE ROWNUM = 1
+           )
+           LEFT JOIN SAL0010M EXT3 ON EXT3.PRGRS_ID = EXT2.PRGRS_ID
+
+           WHERE 1 = 1
+
+           AND EXT1.SALES_ORD_NO =  #{salesOrderNo}
+    </select>
+
+    <select id="selectReason" resultType="egovMap">
+     SELECT CODE_ID , CODE_NAME FROM SYS0013M
+                WHERE CODE_MASTER_ID IN (535) AND CODE IN (7111) AND DISAB = 0
+     </select>
+
+      <select id="selectEcpeMainDept"  resultType="egovMap">
+       SELECT CODE CODE_ID
+            , CODE_DESC CODE_NAME
+       FROM SYS0013M
+       WHERE CODE_MASTER_ID = '604' AND CODE IN 'MD23'
+       ORDER BY CODE
+     </select>
+
+     <select id="selectNextEcpeId" resultType="int">
+     SELECT SVC0148M_ID_SEQ.NEXTVAL FROM DUAL
+     </select>
+
+     <insert id="insertEcpeReqst" parameterType="Map">
+     INSERT INTO SVC0148M
+        (
+             ECPE_REQ_ID
+            ,SALES_ORD_ID
+            ,CUST_ID
+            ,ECPE_REASON
+            ,MAIN_DEPT
+            ,BRNCH_ID
+            ,ATCH_FILE_GRP_ID
+            ,ECPE_STUS_ID
+            ,IS_MAILLING
+            ,AREA_ID
+            ,ADDR_DTL
+            ,STREET
+            ,TEL_M1
+            ,TEL_M2
+            ,TEL_O
+            ,TEL_R
+            ,TEL_F
+            ,EMAIL
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+        )
+            VALUES
+        (
+            #{cpeReqId}
+            ,#{salesOrdId}
+            ,#{custId}
+            ,#{inputReqTypeSelect}
+            ,#{mainDept}
+            ,#{subDept}
+            ,#{atchFileGrpId}
+            ,1
+            ,#{isMailing}
+            ,#{areaId}
+            ,#{addrDtl}
+            ,#{streetDtl}
+            ,#{cntcTelm}
+            ,NULL
+            ,#{cntcTelo}
+            ,#{cntcTelr}
+            ,#{cntcTelf}
+            ,#{cntcEmail}
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+        )
+    </insert>
+
+    <select id="selectEcpeRequestList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
+           SELECT TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+                ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+                ,T2.SALES_ORD_NO
+                ,T1.SALES_ORD_ID
+                ,T3.NAME AS CUSTOMER_NAME
+                ,T1.ADDR_DTL || ' ' || T1.STREET AS FULL_ADDRESS
+                ,T1.TEL_M1
+                ,T1.EMAIL
+                ,T9.NAME AS STATUS
+                ,T5.CODE_NAME AS REASON
+                ,T1.ECPE_REQ_ID
+                ,T12.MEM_CODE AS CREATE_USER_ID
+                ,T12.ORG_CODE
+                ,T12.GRP_CODE
+                ,T12.DEPT_CODE
+                ,CASE WHEN T1.ECPE_STUS_ID = 5 THEN 'T1.UPD_USER_ID' ELSE '' END AS APPROVED_BY
+                ,CASE WHEN  T1.ECPE_STUS_ID = 5 THEN TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD') ELSE '' END AS APPROVAL_DATE
+                ,T1.APPROVAL_REMARK
+
+            FROM SVC0148M T1
+            LEFT JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+            LEFT JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+            LEFT JOIN SYS0013M T4 ON T4.CODE = T1.MAIN_DEPT
+            LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T1.ECPE_REASON AND T5.CODE_MASTER_ID = '535'
+            LEFT JOIN SYS0038M T9 ON T9.STUS_CODE_ID = T1.ECPE_STUS_ID
+            LEFT JOIN SAL0045D T11 ON T11.SALES_ORD_ID = T1.SALES_ORD_ID
+            LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T1.BRNCH_ID
+            LEFT JOIN SYS0047M T13 ON T13.USER_ID = T1.CRT_USER_ID
+            LEFT JOIN ORG1001V T12 ON T12.MEM_CODE = T13.HR_CODE
+            WHERE 1=1
+        <if test="cpeReqId != null and cpeReqId != '' ">
+            AND T12.MEM_CODE = #{cpeReqId}
+        </if>
+
+        <if test="order_no != null and order_no != '' ">
+          AND T2.SALES_ORD_NO = #{order_no}
+        </if>
+
+        <if test="arrStatusList != null and arrStatusList != ''">
+            AND T1.ECPE_STUS_ID IN
+            <foreach item="item" collection="arrStatusList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="customer_name != null and customer_name != '' ">
+           AND UPPER(T3.NAME) LIKE '%'|| UPPER(#{customer_name}) ||'%'
+        </if>
+
+        <if test="arrDscBrnchId != null and arrDscBrnchId != ''">
+            AND T1.BRNCH_ID IN
+            <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="reqStartDt != null and reqStartDt != '' ">
+          AND T1.CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{reqStartDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+        </if>
+
+        <if test="reqEndDt != null and reqEndDt != '' ">
+          AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{reqEndDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        </if>
+
+          ORDER BY T1.CRT_DT DESC
+    ) A
+    WHERE 1=1
+    <if test='adminFlag == null or adminFlag == "" or adminFlag != "Y"'>
+      <if test="memLvl != null and memLvl != ''">
+            <if test="memLvl == 4 or memLvl == 3">
+            AND (A.DEPT_CODE = #{deptCode})
+            </if>
+            <if test="memLvl == 2">
+            AND (A.GRP_CODE = #{grpCode})
+            </if>
+            <if test="memLvl == 1">
+            AND (A.ORG_CODE = #{orgCode})
+            </if>
+        </if>
+    </if>
+    </select>
+
+    <select id="getEcpeHistoryList" parameterType="Map" resultType="egovMap">
+   SELECT
+            T1.REQ_ID
+            ,T1.ECPE_REQ_ID AS ECPE_REQ_ID
+            ,T2.USER_FULL_NAME AS CREATED_BY
+            ,T8.USER_FULL_NAME AS LAST_UPDATE_BY
+            ,TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD')  AS LAST_UPDATE_DATE
+            ,T4.ORG_CODE
+            ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+            ,CASE WHEN T1.ECPE_STUS_ID = 5 THEN 'T1.UPD_USER_ID' ELSE NULL END AS APPROVED_BY
+            ,T5.CODE || ' - ' || T5.NAME AS DSC_BRANCH
+            ,T9.CODE || ' - ' || T9.NAME AS OLD_DSC_BRANCH
+            ,T3.NAME AS STATUS
+            ,CASE WHEN T1.ECPE_STUS_ID IN (5,6) THEN TO_CHAR(T1.UPD_DT, 'YYYY-MM-DD')
+            ELSE NULL END AS APPROVAL_DATE
+            ,T1.APPROVAL_REMARK
+            ,T6.ATCH_FILE_GRP_ID
+            ,T7.ATCH_FILE_ID
+            ,T7.ATCH_FILE_NAME
+            ,T7.FILE_SUB_PATH
+            ,T7.PHYSICL_FILE_NAME
+       FROM SVC0149M T1
+       JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
+       JOIN SYS0038M T3 ON T3.STUS_CODE_ID = T1.ECPE_STUS_ID
+       LEFT JOIN ORG1001V T4 ON T4.MEM_CODE = T2.HR_CODE
+       LEFT JOIN SYS0005M T5 ON T5.BRNCH_ID = T1.BRNCH_ID
+       LEFT JOIN SYS0070M T6 ON T6.ATCH_FILE_GRP_ID = T1.ATCH_FILE_GRP_ID
+       LEFT JOIN SYS0071D T7 ON T7.ATCH_FILE_ID = T6.ATCH_FILE_ID
+       JOIN SYS0047M T8 ON T8.USER_ID = T1.UPD_USER_ID
+       LEFT JOIN SYS0005M T9 ON T9.BRNCH_ID = T1.OLD_BRNCH_ID
+    WHERE T1.SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SVC0148M WHERE ECPE_REQ_ID = #{cpeReqId})
+    ORDER BY T1.REQ_ID DESC
+    </select>
+
+   <select id="selectEcpeCurrentRequestInfo" parameterType="Map" resultType="egovMap">
+      SELECT
+            TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+            ,T1.SALES_ORD_ID
+            ,T1.ECPE_REQ_ID
+            ,T1.CUST_ID
+            ,T4.CODE_NAME AS MAIN_DEPT
+            ,T5.CODE_NAME AS REASON
+            ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+            ,T6.BRNCH_ID as BRNCH_ID
+            ,T7.HR_CODE AS CRT_USER_ID
+            ,T1.AREA_ID
+            ,T1.ADDR_DTL
+            ,T1.STREET
+            ,UPPER(CASE WHEN t1.ADDR_DTL IS NOT NULL
+            THEN (TO_CHAR(t1.ADDR_DTL) || ', ')
+            ELSE ('') END ||
+           CASE WHEN t1.STREET IS NOT NULL
+                THEN (TO_CHAR(t1.STREET) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.AREA IS NOT NULL
+                THEN (TO_CHAR(t9.AREA) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.POSTCODE IS NOT NULL
+                THEN (TO_CHAR(t9.POSTCODE) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.CITY IS NOT NULL
+                THEN (TO_CHAR(t9.CITY) || ', ')
+                ELSE ('') END ||
+           CASE WHEN t9.STATE IS NOT NULL
+                THEN (TO_CHAR(t9.STATE) || ', ')
+                ELSE ('') END ||
+            t9.COUNTRY) AS address
+            ,t1.is_mailling
+            ,t1.tel_m1
+            ,t1.tel_o
+            ,t1.tel_r
+            ,t1.tel_f
+            ,t1.email
+            ,T3.NAME AS CUSTOMER_NAME
+            ,T3.NRIC AS NRIC_COMPANY_NO
+            , DECODE(T2.STUS_CODE_ID, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
+            ,T7.USER_FULL_NAME AS CREATED_BY
+            ,T11.ATCH_FILE_ID
+            ,T11.ATCH_FILE_NAME
+            ,T11.FILE_SUB_PATH
+            ,T11.PHYSICL_FILE_NAME
+            ,T1.ATCH_FILE_GRP_ID
+        FROM SVC0148M T1
+        LEFT JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        LEFT JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+        LEFT JOIN SYS0013M T4 ON T4.CODE_MASTER_ID = '604' AND T4.CODE =  T1.MAIN_DEPT
+        LEFT JOIN SYS0013M T5 ON T5.CODE_ID = T1.ECPE_REASON AND T5.CODE_MASTER_ID = '535'
+        LEFT JOIN SYS0005M T6 ON T6.BRNCH_ID = T1.BRNCH_ID
+        LEFT JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+        LEFT JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
+        LEFT JOIN SYS0064M T9 ON T9.AREA_ID = T1.AREA_ID
+        LEFT JOIN SYS0070M T10 ON T10.ATCH_FILE_GRP_ID = T1.ATCH_FILE_GRP_ID
+        LEFT JOIN SYS0071D T11 ON T11.ATCH_FILE_ID = T10.ATCH_FILE_ID
+        WHERE
+        T1.ECPE_REQ_ID =  #{cpeReqId}
+    </select>
+
+    <update id="ecpeTransfer" parameterType="Map">
+        UPDATE SVC0148M
+            SET BRNCH_ID = #{dscBrnchId}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE ECPE_REQ_ID = #{cpeReqId}
+    </update>
+
+    <select id="selectDscBranch" parameterType="Map" resultType="egovMap">
+
+         SELECT  BRNCH_ID AS DSC_BRANCH_ID,
+                     CODE AS DSC_BRANCH,
+                     CODE || ' - ' || NAME AS DSC_BRANCH_TEXT
+         FROM SYS0005M
+         WHERE 1=1
+         <if test="dscBranch != null and dscBranch != ''">
+         AND UPPER(CODE) = UPPER(#{dscBranch})
+         </if>
+         <if test="dscBranchText != null and dscBranchText != ''">
+         AND UPPER(CODE || ' - ' || NAME ) LIKE '%' || UPPER(#{dscBranchText}) || '%'
+         </if>
+         AND TYPE_ID = '43' ORDER BY CODE ASC
+    </select>
+
+    <update id="ecpeApprove" parameterType="Map">
+        UPDATE SVC0148M
+            SET ECPE_STUS_ID = '5'
+            ,APPROVAL_REMARK = #{apprvResn}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE ECPE_REQ_ID = #{cpeReqId}
+     </update>
+
+     <update id="ecpeReject" parameterType="Map">
+        UPDATE SVC0148M
+            SET ECPE_STUS_ID = '6'
+            ,APPROVAL_REMARK = #{rejctResn}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE ECPE_REQ_ID = #{cpeReqId}
+     </update>
+
+       <insert id="insertAddNewAddress" parameterType="Map">
+       <selectKey keyProperty="custAddId" resultType="int" order="BEFORE">
+         SELECT SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL
+         FROM DUAL
+       </selectKey>
+
+       <![CDATA[
+       INSERT INTO SAL0023D ( CUST_ADD_ID
+                                         , CUST_ID
+                                         , NRIC
+                                         , TEL
+                                         , FAX
+                                         , STUS_CODE_ID
+                                         , REM
+                                         , UPD_USER_ID
+                                         , UPD_DT
+                                         , ID_OLD
+                                         , SO_ID
+                                         , IDCM
+                                         , CRT_USER_ID
+                                         , CRT_DT
+                                         , AREA_ID
+                                         , ADDR_DTL
+                                         , STREET
+                                         , ADD1
+                                         , ADD2
+                                         , ADD3
+                                         , ADD4
+                                         , POSTCODEID
+                                         , POSTCODE
+                                         , AREAID
+                                         , AREA
+                                         , STATEID
+                                         , COUNTRYID
+         ) VALUES ( #{custAddId}
+                       , #{custId}
+                       , #{custNric}
+                       , NULL
+                       , NULL
+                       , '9'
+                       , 'INSERT FROM CPE : ' || #{cpeReqId}
+                       , #{userId}
+                       , SYSDATE
+                       , NULL
+                       , NULL
+                       , NULL
+                       , #{userId}
+                       , SYSDATE
+                       , #{areaId}
+                       , #{addrDtl}
+                       , #{street}
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+                       , NULL
+         )
+       ]]>
+     </insert>
+
+     <insert id="insertCustContact" parameterType="Map">
+     <selectKey keyProperty="custCntcId" resultType="int" order="BEFORE">
+         SELECT SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
+         FROM DUAL
+      </selectKey>
+
+     <![CDATA[
+     INSERT INTO SAL0027D ( CUST_CNTC_ID                                                        -- ASIS_COLUMN : CustContactID
+                                       , CUST_ID                                                                 -- ASIS_COLUMN : CustID
+                                       , NAME                                                                     -- ASIS_COLUMN : Name
+                                       , CUST_INITIAL                                                          -- ASIS_COLUMN : Initial
+                                       , NRIC                                                                      -- ASIS_COLUMN : NRIC
+                                       , POS                                                                       -- ASIS_COLUMN : Pos
+                                       , TEL_M1                                                                  -- ASIS_COLUMN : TelM1
+                                       , TEL_M2                                                                  -- ASIS_COLUMN : TelM2
+                                       , TEL_O                                                                    -- ASIS_COLUMN : TelO
+                                       , TEL_R                                                                    -- ASIS_COLUMN : TelR
+                                       , TELF                                                                      -- ASIS_COLUMN : TelF
+                                       , DOB                                                                       -- ASIS_COLUMN : DOB
+                                       , GENDER                                                                  -- ASIS_COLUMN : Gender
+                                       , RACE_ID                                                                 -- ASIS_COLUMN : RaceID
+                                       , EMAIL                                                                     -- ASIS_COLUMN : Email
+                                       , STUS_CODE_ID                                                        -- ASIS_COLUMN : StatusCodeID
+                                       , UPD_DT                                                                  -- ASIS_COLUMN : Updated
+                                       , UPD_USER_ID                                                          -- ASIS_COLUMN : Updator
+                                       , ID_OLD                                                                   -- ASIS_COLUMN : IDOld
+                                       , DEPT                                                                      -- ASIS_COLUMN : Dept
+                                       , DCM                                                                       -- ASIS_COLUMN : Dcm
+                                       , CRT_DT                                                                  -- ASIS_COLUMN : Created
+                                       , CRT_USER_ID                                                          -- ASIS_COLUMN : Creator
+                                       , EXT                                                                        -- ASIS_COLUMN : Ext
+     ) VALUES ( #{custCntcId}
+                  , #{custId}
+                  , #{custName}
+                  , (SELECT CUST_INITIAL FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
+                  , TRIM(#{custNric})
+                  , NULL
+                  , TRIM(#{contactTelM1})
+                  , NULL
+                  , TRIM(#{contactTelO})
+                  , TRIM(#{contactTelR})
+                  , TRIM(#{contactTelf})
+                  , (SELECT DOB FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
+                  , (SELECT GENDER FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
+                  , (SELECT RACE_ID FROM SAL0027D WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId}))
+                  , TRIM(#{contactEmail})
+                  , 9
+                  , SYSDATE
+                  , #{userId}
+                  , 0
+                  , NULL
+                  , 0
+                  , SYSDATE
+                  , #{userId}
+                  , NULL
+     )
+     ]]>
+   </insert>
+
+    <update id="updateStatusAddId" parameterType="Map">
+        UPDATE SAL0023D
+            SET STUS_CODE_ID = '1'
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CUST_ADD_ID = (SELECT CUST_ADD_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId})
+    </update>
+
+    <update id="updateStatusCntcId" parameterType="Map">
+        UPDATE SAL0027D
+            SET STUS_CODE_ID = '1'
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CUST_CNTC_ID = (SELECT CUST_CNT_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId})
+    </update>
+
+    <update id="updateEcpeSal0001d" parameterType="Map">
+        UPDATE SAL0001D
+             SET CUST_CNT_ID = #{custCntcId}
+           <if test='isMailing != null and isMailing !=0'>
+             ,CUST_ADD_ID = #{custAddId}
+           </if>
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+    <update id="updateEcpeSal0045d" parameterType="Map">
+        UPDATE SAL0045D
+             SET  ADD_ID = #{custAddId}
+             ,CNT_ID = #{custCntcId}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+   <update id="updateCustBillMaster" parameterType="Map">
+        UPDATE SAL0024D
+           SET CUST_BILL_UPD_USER_ID = #{userId}
+             , CUST_BILL_UPD_DT      = SYSDATE
+           <if test='custAddId != null and custAddId !=0'>
+             , CUST_BILL_ADD_ID      = #{custAddId}
+           </if>
+           <if test='custCntcId != null and custCntcId !=0'>
+             , CUST_BILL_CNT_ID      = #{custCntcId}
+           </if>
+         WHERE CUST_BILL_ID = (SELECT CUST_BILL_ID FROM SAL0001D WHERE SALES_ORD_ID = #{salesOrdId})
+    </update>
+
+    <select id="getAreaId" parameterType="Map" resultType="egovMap">
+            SELECT
+                T.AREA_ID,
+                E.BRNCH_ID
+            FROM SYS0064M T
+            LEFT JOIN SYS0005M E ON E.CODE = T.CT_BRNCH_CODE AND E.TYPE_ID = 43
+            WHERE T.STATE = #{statValue}
+            AND T.CITY = #{cityValue}
+            AND T.POSTCODE = #{postCodeValue}
+            AND T.AREA = #{areaValue}
+    </select>
+
+        <select id="getDscbyDscCode" parameterType="Map" resultType="egovMap">
+            SELECT
+               BRNCH_ID FROM SYS0005M
+               WHERE CODE = #{dscCode} AND STUS_ID = 1
+    </select>
+</mapper>

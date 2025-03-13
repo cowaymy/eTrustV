@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.memorandum.impl.MemorandumMapper">
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="MEMOCNTNT" column="MEMOCNTNT" jdbcType="CLOB"  javaType="java.lang.String" />
+    </resultMap>
+
+    <select id="selectMemoRandumList" parameterType="Map" resultMap="clobMap">
+        <![CDATA[
+            SELECT M10.MEMO_ID MEMOID
+                 , M10.STUS_CODE_ID STUSID
+                 , S38.CODE STUSCODE
+                 , S38.NAME STUSNAME
+                 , M10.MEMO_TITLE MEMOTITLE
+                 , M10.MEMO_CNTNT MEMOCNTNT
+                 , M10.CRT_USER_ID CRTUSERID
+                 , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
+                 , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
+                 , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24:MI:SS') FCRTDT
+                 , M10.UPD_USER_ID UPDUSERID
+                 , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
+                 , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
+                 , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') FUPDDT
+                 , M10.IS_STAFF_MEMO STAFFMEMO
+                 , M10.IS_CODY_MEMO CODYMEMO
+                 , M10.IS_HP_MEMO HPMEMO
+                 , M10.IS_HT_MEMO HTMEMO
+                 , M10.CRT_DEPT_ID
+                 , CASE WHEN TO_CHAR(M10.CRT_DT,'YYYYMMDD') < '20211101' THEN
+                    TO_CHAR(CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) )
+                   ELSE FN_DEPT_CODE_TO_NM(M10.CRT_DEPT_ID)
+                    END
+                    as DEPARTMENT
+              FROM MSC0010D M10 , SYS0038M S38
+             WHERE 1 = 1
+               AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
+               AND M10.STUS_CODE_ID = 1
+        ]]>
+            <if test="stitle != null and stitle != ''">
+            AND UPPER(M10.MEMO_TITLE) like UPPER('%'||#{stitle}||'%')
+            </if>
+            <if test="screator !=null and screator != ''">
+           <!--  AND M10.CRT_USER_ID like '%'|| #{screator} || '%' -->
+           AND M10.CRT_USER_ID IN (SELECT USER_ID FROM SYS0047M WHERE USER_NAME LIKE '%'|| #{screator} || '%')
+            </if>
+            <if test="listDept != null and listDept != '' ">
+            AND M10.CRT_DEPT_ID = #{listDept}
+            </if>
+            <if test="crtsdt !=null and crtsdt != ''">
+            AND M10.CRT_DT BETWEEN TO_DATE(#{crtsdt}||'000000' , 'DD/MM/YYYYHH24MISS') AND TO_DATE(#{crtedt}||'235959' , 'DD/MM/YYYYHH24MISS')
+            </if>
+            <if test="userTypeId == 1">
+            AND M10.IS_HP_MEMO = 1
+            </if>
+            <if test="userTypeId == 2">
+            AND M10.IS_CODY_MEMO = 1
+            </if>
+            <if test="userTypeId == 7">
+            AND M10.IS_HT_MEMO = 1
+            </if>
+        ORDER BY MEMO_ID DESC
+    </select>
+
+    <select id="selectDeptSearchList" resultType="egovMap">
+        SELECT
+            NAME CODE_NAME,
+            MAIN_DEPT_CODE CODE_ID
+	    FROM SYS0105M
+	    WHERE SUB_DEPT_CODE = '-'
+	    ORDER BY ID
+    </select>
+
+        <select id="selectMemoType" resultType="egovMap">
+	        SELECT
+	            CODE_NAME CODE_NAME,
+	            CODE_ID CODE_ID
+	        FROM SYS0013M
+	        WHERE CODE_MASTER_ID  = '536'
+	        ORDER BY CODE_ID
+        </select>
+
+    <insert id="memoSave" parameterType="Map">
+         INSERT
+INTO    MSC0010D                                                                --
+(
+        MEMO_ID                                                                 -- ASIS_COLUMN : MemoID
+    ,   STUS_CODE_ID                                                            -- ASIS_COLUMN : StatusCodeID
+    ,   MEMO_TITLE                                                              -- ASIS_COLUMN : MemoTitle
+    ,   MEMO_CNTNT                                                              -- ASIS_COLUMN : MemoContent
+    ,   IS_STAFF_MEMO                                                           -- ASIS_COLUMN : IsStaffMemo
+    ,   IS_CODY_MEMO                                                            -- ASIS_COLUMN : IsCodyMemo
+    ,   IS_HP_MEMO                                                              -- ASIS_COLUMN : IsHPMemo
+    ,   IS_HT_MEMO                                                              --
+    ,   CRT_DEPT_ID                                                             --
+    ,   CRT_USER_ID                                                             -- ASIS_COLUMN : Creator
+    ,   CRT_DT                                                                  -- ASIS_COLUMN : Created
+    ,   UPD_USER_ID                                                             -- ASIS_COLUMN : Updator
+    ,   UPD_DT                                                                  -- ASIS_COLUMN : Updated
+)VALUES(
+        (SELECT DECODE(COUNT(1) , 0 , 1 , MAX(MEMO_ID)+1) FROM MSC0010D)        -- ASIS_COLUMN : MemoID
+    ,   1                                                                       -- ASIS_COLUMN : StatusCodeID
+    ,   #{etitle}                                                               -- ASIS_COLUMN : MemoTitle
+    ,   #{hedtor}                                                               -- ASIS_COLUMN : MemoContent
+    ,   DECODE(NVL(#{staffmemo} , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsStaffMemo
+    ,   DECODE(NVL(#{codymemo}  , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsCodyMemo
+    ,   DECODE(NVL(#{hpmemo}    , '0') , '0' , 0 , 1)                           -- ASIS_COLUMN : IsHPMemo
+    ,   DECODE(NVL(#{htmemo}    , '0') , '0' , 0 , 1)                           --
+    ,   #{userMainDeptId}                                                       --
+    ,   #{userid}                                                               -- ASIS_COLUMN : Creator
+    ,   SYSDATE                                                                 -- ASIS_COLUMN : Created
+    ,   #{userid}                                                               -- ASIS_COLUMN : Updator
+    ,   SYSDATE                                                                -- ASIS_COLUMN : Updated
+)
+
+    </insert>
+    <update id="memoUpdate" parameterType="Map">
+        UPDATE MSC0010D
+           SET MEMO_TITLE = #{etitle}
+             , MEMO_CNTNT = #{hedtor}
+             , IS_STAFF_MEMO = decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1)
+             , IS_CODY_MEMO  = decode(nvl(#{codymemo}  , '0') , '0' , 0 , 1)
+             , IS_HP_MEMO    = decode(nvl(#{hpmemo}    , '0') , '0' , 0 , 1)
+             , IS_HT_MEMO    = decode(nvl(#{htmemo}    , '0') , '0' , 0 , 1)
+             , UPD_USER_ID   = #{userid}
+             , UPD_DT        = SYSDATE
+         WHERE MEMO_ID = #{memoid}
+    </update>
+    <update id="memoDelete" parameterType="Map">
+        UPDATE MSC0010D
+           SET STUS_CODE_ID = 8
+         WHERE MEMO_ID = #{memoid}
+    </update>
+
+    <select id="selectMemoRandumData" parameterType="Map" resultMap="clobMap">
+        SELECT M10.MEMO_ID MEMOID
+             , M10.STUS_CODE_ID STUSID
+             , S38.CODE STUSCODE
+             , S38.NAME STUSNAME
+             , M10.MEMO_TITLE MEMOTITLE
+             , M10.MEMO_CNTNT MEMOCNTNT
+             , M10.CRT_USER_ID CRTUSERID
+             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
+             , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
+             , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24MISS') FCRTDT
+             , M10.UPD_USER_ID UPDUSERID
+             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
+             , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
+             , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24MISS') FUPDDT
+             , M10.IS_STAFF_MEMO STAFFMEMO
+             , M10.IS_CODY_MEMO CODYMEMO
+             , M10.IS_HP_MEMO HPMEMO
+             , M10.IS_HT_MEMO HTMEMO
+             , M10.CRT_DEPT_ID
+             , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',M10.CRT_DEPT_ID) as DEPARTMENT
+          FROM MSC0010D M10 , SYS0038M S38
+         WHERE 1 = 1
+           AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
+           AND M10.MEMO_ID = #{memoid}
+    </select>
+
+    <update id="updatePassWord" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{newPasswordConfirmTxt}
+        ,USER_PASSWD_LAST_UPD_DT = SYSDATE
+        <choose>
+            <when test=' newUserIdTxt != null and newUserIdTxt != "" '>
+                WHERE USER_ID = #{newUserIdTxt}
+            </when>
+            <otherwise>
+                WHERE USER_ID = #{searchLoginId}
+            </otherwise>
+        </choose>
+    </update>
+
+    <update id="updateMemoHistory" parameterType="Map">
+       UPDATE SYS0091M SET POP_FLG = 'D'
+
+       where POP_ID = (SELECT MAX(POP_ID) FROM SYS0091M WHERE POP_NEW_FL_NM = #{newFileName} AND POP_FLG = 'A')
+</update>
+
+    <insert id="insertMemoHistory" parameterType="Map">
+        insert into SYS0091M
+		select
+		(select MAX(POP_ID) + 1 from SYS0091M),
+		#{orgFileName},
+		POP_NEW_FL_NM,
+		POP_TYPE,
+		POP_MEM_TYPE,
+		POP_EXCEPTION_MEMROLE,
+		POP_EXCEPTION_USER,
+		'A' ,
+		POP_REJECT_FLG,
+		POP_ACK1,
+		POP_ACK2,
+		POP_ACK3,
+		SYSDATE,
+		#{userId},
+		SYSDATE,
+		#{userId},
+		TO_DATE(#{crtsdt},'DD/MM/YYYY'),
+		TO_DATE(#{crtedt},'DD/MM/YYYY')
+		from SYS0091M
+		where POP_ID = (SELECT MAX(POP_ID) FROM SYS0091M WHERE POP_NEW_FL_NM = #{newFileName} AND POP_FLG = 'D')
+    </insert>
+
+</mapper>

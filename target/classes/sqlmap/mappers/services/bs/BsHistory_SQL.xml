@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper
+     namespace="com.coway.trust.biz.services.bs.impl.BsHistoryMapper">
+
+
+    <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            WITH entry_info_max AS
+        (SELECT sales_ord_id, install_entry_id
+           FROM (SELECT sales_ord_id, install_entry_id,
+                        RANK () OVER (PARTITION BY sales_ord_id ORDER BY install_entry_id DESC)
+                                                                         RANK
+                   FROM sal0046d
+                  WHERE stus_code_id = 4)
+          WHERE RANK = 1),
+        entry_info_min AS
+        (SELECT sales_ord_id, install_entry_id
+           FROM (SELECT sales_ord_id, install_entry_id,
+                        RANK () OVER (PARTITION BY sales_ord_id ORDER BY install_entry_id ASC)
+                                                                         RANK
+                   FROM sal0046d
+                  WHERE stus_code_id = 4)
+          WHERE RANK = 1)
+SELECT
+                                 Distinct1.SCHDUL_ID SCHDUL_ID ,
+                                 Distinct1.NO BSNO ,
+                                 Distinct1.MONTH ||' - '||Distinct1.YEAR  as BS_DATE,
+                                 Distinct1.CODY_ID CODY_ID ,
+                                 Distinct1.STUS_CODE_ID STUS_CODE_ID ,
+                                 Distinct1.CODE CODE ,
+                                 Distinct1.SALES_ORD_ID SALES_ORD_ID ,
+                                 Distinct1.SALES_ORD_NO SALES_ORD_NO ,
+                                 Distinct1.NAME NAME ,
+                                 Distinct1.NRIC NRIC ,
+                                 Distinct1.CODE1 CODE1 ,
+                                 Distinct1.C1 C1 ,
+                                 Distinct1.C2 BSR_ID ,
+                                 Distinct1.C3 BSR_NO ,
+                                 Distinct1.C4 MEM_TYPE ,
+                                 Distinct1.C5 MEM_CODE ,
+                                 Distinct1.C6 MEM_STATUS ,
+                                 Distinct1.C7 INSTALL_DATE ,
+                                 Distinct1.CODY_CODE CODY_CODE,
+                                 Distinct1.SETL_DT SETL_DT,
+                                 Distinct1.FAIL_RESN FAIL_RESN,
+                                 Distinct1.COLL_RESN COLL_RESN,
+                                 vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                                 vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                                 vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                                 vOrderMailingInfo.ADDR_DTL||' '||vOrderMailingInfo.STREET||' '||vOrderMailingInfo.MAIL_POST_CODE||' '||vOrderMailingInfo.MAIL_AREA||' '||vOrderMailingInfo.MAIL_STATE||' '||vOrderMailingInfo.MAIL_CNTY AS CUSTOMER_ADDRESS,
+                                 Distinct1.INSTALL_ADDRESS ,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_M,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_R,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_O,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_F,
+                                 vOrderBasicInfo.CUST_VA_NO,
+                                 vOrderBasicInfo.JOM_PAY_REF,
+                                 vOrderBasicInfo.CUST_TYPE
+                        FROM
+                            (SELECT
+/*+ leading(Extent3) use_hash( vOrderMailingInfo,  vOrderBasicInfo, Extent6 , Extent3  )   */
+                             DISTINCT Extent1.SCHDUL_ID SCHDUL_ID ,
+                                 Extent1.NO NO ,
+                                 Extent1.MONTH MONTH ,
+                                 Extent1.YEAR YEAR ,
+                                 Extent1.CODY_ID CODY_ID ,
+                                 Extent1.STUS_CODE_ID STUS_CODE_ID ,
+                                 Extent2.CODE CODE ,
+                                 Extent3.SALES_ORD_ID SALES_ORD_ID ,
+                                 Extent3.SALES_ORD_NO SALES_ORD_NO ,
+                                 Extent4.NAME NAME ,
+                                 Extent4.NRIC NRIC ,
+                                 Extent5.CODE CODE1 ,
+                                 TO_CHAR (Extent10.SETL_DT, 'DD/MM/YYYY') SETL_DT ,
+                                 CASE WHEN EXTENT1.STUS_CODE_ID=10 THEN EXTENT1.REM ELSE EXTENT11.RESN_DESC END FAIL_RESN ,
+                                 Extent12.RESN_DESC COLL_RESN ,
+                                 1 C1 ,
+                                CASE
+                                WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                                Extent7.RESULT_ID
+                                ELSE 0
+                                END C2 ,
+                                CASE
+                                WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                                Extent7.NO
+                                ELSE ''
+                                END C3 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.MEM_TYPE
+                                ELSE 0
+                                END C4 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.MEM_CODE
+                                ELSE ''
+                                END C5 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.STUS
+                                ELSE 0
+                                END C6 ,
+                                DECODE (ir1.install_dt,
+                                  NULL, '01/01/1900',
+                                  TO_CHAR (ir1.install_dt, 'DD/MM/YYYY')
+                                 )  C7 ,
+                                CASE
+                                WHEN ( Extent9.MEM_ID IS NOT NULL ) THEN
+                                Extent9.MEM_CODE
+                                ELSE ''
+                                END CODY_CODE ,
+                                NVL (ca1.addr_dtl, ' ')||' '||NVL (ca1.street, ' ')||' '||NVL (ma1.postcode, ' ')||' '||NVL (ma1.state,' ')||' '||NVL (ma1.country, ' ') AS INSTALL_ADDRESS
+
+                            FROM SVC0008D Extent1
+                            JOIN SYS0038M Extent2
+                            ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                            JOIN SAL0001D Extent3
+                                ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+                            JOIN SAL0029D Extent4
+                                ON Extent4.CUST_ID = Extent3.CUST_ID
+                            JOIN SYS0013M Extent5
+                                ON Extent5.CODE_ID = Extent3.APP_TYPE_ID
+                            LEFT JOIN SVC0006D Extent10
+                                ON Extent10.SCHDUL_ID = Extent1.SCHDUL_ID
+                            JOIN SAL0002D  ON Extent3.sales_ord_id = sal0002d.sales_ord_id
+                            JOIN sys0026m vOrderBasicInfo
+                                    ON vOrderBasicInfo.STK_ID =  sal0002d.itm_stk_id
+                            LEFT JOIN SYS0032m Extent11
+                                ON Extent11.RESN_ID = Extent10.FAIL_RESN_ID
+                            LEFT JOIN SYS0032m Extent12
+                                ON Extent12.RESN_ID = Extent10.REN_COLCT_ID
+                            LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = Extent3.sales_ord_id
+                            LEFT JOIN sal0046d ie1  ON ie1.sales_ord_id = Extent3.sales_ord_id AND ie1.install_entry_id = eimin.install_entry_id
+                            LEFT JOIN sal0047d ir1  ON ir1.entry_id = eimin.install_entry_id AND ir1.stus_code_id = 4
+                            JOIN sal0045d i ON i.sales_ord_id = Extent3.sales_ord_id
+                            LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = i.add_id
+                            LEFT JOIN sys0064m ma1 ON ma1.area_id = ca1.area_id
+                            LEFT JOIN sal0027d cp1 ON cp1.cust_cntc_id = i.cnt_id
+                            LEFT JOIN SVC0006D Extent7
+                                ON ( Extent7.SCHDUL_ID = Extent1.SCHDUL_ID )
+                                    AND ( 306 = Extent7.TYPE_ID )
+                                    AND ( 1 = Extent7.RESULT_IS_CURR )
+                            LEFT JOIN ORG0001D Extent8
+                                ON Extent8.MEM_ID = Extent1.CODY_ID
+                            LEFT JOIN ORG0001D Extent9
+                                ON Extent9.MEM_ID = Extent7.CODY_ID
+
+                                WHERE 1=1
+                                             AND Extent3.Sales_Ord_No = #{orderNumber}
+                                                 ) Distinct1
+                              JOIN SAL1011V vOrderMailingInfo
+                             ON      Distinct1.SALES_ORD_ID =  vOrderMailingInfo.ORD_ID
+                             JOIN SAL1006V vOrderBasicInfo
+                            ON      Distinct1.SALES_ORD_ID =  vOrderBasicInfo.ORD_ID
+                  ORDER BY Distinct1.SCHDUL_ID ASC
+                  ]]>
+        </select>
+
+        <select id="selectFilterCnt" parameterType="Map" resultType="int">
+        select count(*) cnt
+		  from SVC0007D a
+		      ,SYS0026M b
+		 where a.BS_RESULT_PART_ID = b.STK_ID
+		   and a.BS_RESULT_PART_QTY>0
+		   and a.BS_RESULT_PART_ID !=0
+		   and a.BS_RESULT_ID = #{bsrId}
+        </select>
+
+        <select id="filterInfo" parameterType="Map" resultType="egovMap">
+            select srv_filter_id,srv_filter_stk_id,stk_code,stk_desc,SRV_FILTER_UPD_DT,user_name,srv_filter_stus_id
+		      ,to_char(SRV_FILTER_PRV_CHG_DT,'YYYY-MM-DD') SRV_FILTER_PRV_CHG_DT
+		      ,to_char(SRV_FILTER_PRV_NEXT_DT,'YYYY-MM-DD') SRV_FILTER_PRV_NEXT_DT
+		      from (
+		 select rownum no, b.srv_filter_id
+		                ,b.srv_filter_stk_id
+		                ,c.stk_code
+		                ,c.stk_desc
+		                ,b.SRV_FILTER_UPD_DT
+		                ,d.user_name
+		                ,b.srv_filter_stus_id
+		                ,b.SRV_FILTER_PRV_CHG_DT
+		                ,case when b.SRV_FILTER_PRV_CHG_DT is not null then add_months(b.SRV_FILTER_PRV_CHG_DT,  SRV_FILTER_PRIOD) else null end SRV_FILTER_PRV_NEXT_DT
+		          from SAL0090D a
+		              ,SAL0087D b
+		              ,SYS0026M c
+		              ,SYS0047M d
+		          where 1=1
+		            and SRV_SO_ID = #{orderId}
+		            and SRV_STUS_ID = 1
+		            and a.SRV_CONFIG_ID = b.SRV_CONFIG_ID
+		            and b.SRV_FILTER_STK_ID = C.STK_ID
+		            and d.USER_ID = b.SRV_FILTER_UPD_USER_ID
+		            )
+        </select>
+
+        <select id="filterTree" parameterType="Map" resultType="egovMap">
+            select srv_filter_id,srv_filter_stk_id,stk_code,stk_desc,SRV_FILTER_UPD_DT,user_name,srv_filter_stus_id
+              ,to_char(SRV_FILTER_PRV_CHG_DT,'YYYY-MM-DD') SRV_FILTER_PRV_CHG_DT
+              ,to_char(SRV_FILTER_PRV_NEXT_DT,'YYYY-MM-DD') SRV_FILTER_PRV_NEXT_DT
+              ,BS_RESULT_PART_QTY
+              from (
+         select rownum no, b.srv_filter_id
+                        ,b.srv_filter_stk_id
+                        ,c.stk_code
+                        ,c.stk_desc
+                        ,b.SRV_FILTER_UPD_DT
+                        ,d.user_name
+                        ,b.srv_filter_stus_id
+                        ,b.SRV_FILTER_PRV_CHG_DT
+                        ,case when b.SRV_FILTER_PRV_CHG_DT is not null then add_months(b.SRV_FILTER_PRV_CHG_DT,  SRV_FILTER_PRIOD) else null end SRV_FILTER_PRV_NEXT_DT
+                        ,e.BS_RESULT_PART_QTY
+                  from SAL0090D a
+                      ,SAL0087D b
+                      ,SYS0026M c
+                      ,SYS0047M d
+                      ,svc0007d e
+                  where 1=1
+                    and SRV_SO_ID = #{orderId}
+                    and SRV_STUS_ID = 1
+                    and a.SRV_CONFIG_ID = b.SRV_CONFIG_ID
+                    and b.SRV_FILTER_STK_ID = C.STK_ID
+                    and d.USER_ID = b.SRV_FILTER_UPD_USER_ID
+                    and b.SRV_FILTER_STK_ID = e.BS_RESULT_PART_ID
+                    and e.BS_RESULT_PART_QTY>0
+                    and e.BS_RESULT_PART_ID !=0
+                    and e.BS_RESULT_ID = #{bsrId}
+                    )
+        </select>
+    </mapper>

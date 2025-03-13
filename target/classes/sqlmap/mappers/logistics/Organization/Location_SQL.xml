@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.organization.impl.LocationMapper">
+<!--     <resultMap id="locationClobMap" type="EgovMap">
+        <result property="locdesc" column="locdesc" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr1" column="locaddr1" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr2" column="locaddr2" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="locaddr3" column="locaddr3" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="descr" column="descr" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap> -->
+
+	<select id="selectLocationList" parameterType="Map"  resultType="egovMap">
+        <![CDATA[
+		  SELECT WH_LOC_ID locid,
+		         WH_LOC_CODE loccd,
+		         WH_LOC_DESC locdesc,
+		         ADDR_DTL    locdtl ,
+		         s28m.AREA_ID areaid,
+		         s28m.STREET street,
+		         WH_LOC_TEL1 loctel1,
+		         WH_LOC_TEL2 loctel2,
+		         WH_LOC_BRNCH_ID locbranch1,
+		         WH_LOC_BRNCH_ID2 locbranch2,
+		         WH_LOC_BRNCH_ID3 locbranch3,
+		         WH_LOC_BRNCH_ID4 locbranch4,
+		         WH_LOC_BRNCH_ID5 locbranch5,
+		         WH_LOC_TYPE_ID loctype,
+		         WH_LOC_STK_GRAD locgrad,
+		         WH_LOC_STUS_ID locstus,
+		         WH_LOC_UPD_USER_ID locuserid,
+		         WH_LOC_UPD_DT locupddt,
+		         CODE2 code2,
+		         DESC2 desc2,
+		         s64m.area areanm,
+		         s64m.city locdt2,
+		         s64m.postcode postcd,
+		         s64m.state,
+		         s64m.country countrynm,
+		         s05m.code branchcd,
+		         s05m.name branchnm,
+		         s05m.dcode,
+		         s05m.descr,
+		         s28m.WH_LOC_GB whlocgb,
+                 crdc.CODE_NAME whlocgbnm,
+		         s28m.SERIAL_FT_CHK serialftchk,
+		         s28m.SERIAL_PT_CHK serialptchk,
+		         s28m.SERIAL_PD_CHK serialpdchk,
+		         s28m.CDC_CODE cdccode,
+		         s28m.RDC_CODE rdccode,
+		         s28m.PLANT plant,
+		         s28m.SL_PLANT slplant,
+		         s28m.WH_LOC_LANE whloclane,
+		         (SELECT code_name
+		            FROM SYS0013M
+		           WHERE code_id = s28m.WH_LOC_TYPE_ID)
+		            codenm,
+		         s38m.name statnm,
+		         s47m.user_name,
+		         s28m.REM,
+		         s28m.SERIAL_REQUIRE_CHK_YN,
+		         s28m.HA_CHK,
+		         s28m.HC_CHK,
+		         s28m.DOC_NO
+		    FROM SYS0028M s28m,
+		         SYS0064M s64m,
+		         (SELECT s05m.brnch_id,
+		                 s05m.code,
+		                 s05m.name,
+		                 s13m.code dcode,
+		                 s13m.CODE_DESC descr
+		            FROM SYS0005M s05m, SYS0013M s13m
+		           WHERE s05m.type_id = s13m.code_id(+)) s05m,
+		         SYS0038M s38m,
+		         SYS0047M s47m,
+		         (SELECT *
+		            FROM SYS0013M
+		           WHERE code_master_id = 339) crdc
+		         ]]>
+		   WHERE     s28m.AREA_ID        = s64m.AREA_ID(+)
+		         AND s28m.WH_LOC_BRNCH_ID = s05m.BRNCH_ID(+)
+		         AND s28m.WH_LOC_STUS_ID = s38m.STUS_CODE_ID(+)
+		         AND s28m.WH_LOC_UPD_USER_ID = s47m.USER_ID(+)
+		         AND s28m.WH_LOC_GB = crdc.code(+)
+		         <if test="loccd != null and loccd !=''">
+		              AND (s28m.WH_LOC_CODE like #{loccd}||'%' or s28m.WH_LOC_DESC like '%'||#{loccd}||'%')
+		         </if>
+		         <if test="locdesc != null and locdesc !=''">
+                      AND s28m.WH_LOC_DESC like '%'||#{locdesc}||'%'
+                 </if>
+		         <if test="branch != null and branch != ''">
+                    AND s28m.WH_LOC_BRNCH_ID  = #{branch}
+                </if>
+                <if test="status != null and status != ''">
+                    AND s28m.WH_LOC_STUS_ID  = #{status}
+                </if>
+                <if test="warelocid != null and warelocid != ''">
+                    AND s28m.WH_LOC_ID  = #{warelocid}
+                </if>
+                <if test="loctype != null and loctype != ''">
+                    AND WH_LOC_GB IN
+                    <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                </if>
+                <if test="locgrad != null and locgrad != ''">
+                    AND s28m.WH_LOC_STK_GRAD  = #{locgrad}
+                </if>
+		ORDER BY WH_LOC_CODE
+	</select>
+	<select id="selectLocationStockList" parameterType="Map" resultType="egovMap">
+	    SELECT T1.QTY qty,
+		       T1.STK_ID stkid,
+		       T1.STK_CODE stkcd,
+		       T1.STK_DESC stkdesc,
+		       T1.STK_CTGRY_ID stkcateid,
+		       T1.STK_TYPE_ID typeid,
+		       T1.STUS_CODE_ID statuscd,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_CTGRY_ID)
+		          catename,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = T1.STK_TYPE_ID)
+		          typename,
+		       (SELECT NAME
+		          FROM SYS0038M
+		         WHERE STUS_CODE_ID = T1.STUS_CODE_ID)
+		          statname,
+		       '0' as unclamed
+		  FROM (SELECT *
+		          FROM (  SELECT STOCK_ID STOCKID, SUM (QTY) QTY
+		                    FROM LOG0014D
+		                   WHERE LOC_ID = #{warelocid}
+		                GROUP BY STOCK_ID) T1,
+		               SYS0026M T2
+		         WHERE T1.STOCKID = T2.STK_ID AND QTY > 0) T1
+	</select>
+
+	<update id="updateLocationInfo" parameterType="Map">
+	   UPDATE SYS0028M
+          SET WH_LOC_CODE           = #{loccd}
+            , WH_LOC_DESC           = #{locdesc}
+            , WH_LOC_TEL1           = #{loctel1}
+            , WH_LOC_TEL2           = #{loctel2}
+            , AREA_ID               = #{areaid}
+            , STREET                = #{street}
+            , ADDR_DTL              = #{locdtl}
+            , SERIAL_PD_CHK         = #{serialpdchk}
+            , SERIAL_FT_CHK         = #{serialftchk}
+            , SERIAL_PT_CHK         = #{serialptchk}
+            , WH_LOC_GB             = #{whlocgb}
+            , WH_LOC_BRNCH_ID       = #{locbranch1}
+            , WH_LOC_BRNCH_ID2      = #{locbranch2}
+            , WH_LOC_BRNCH_ID3      = #{locbranch3}
+            , WH_LOC_BRNCH_ID4      = #{locbranch4}
+            , WH_LOC_BRNCH_ID5      = #{locbranch5}
+            , WH_LOC_STK_GRAD       = #{locgrad}
+            , WH_LOC_UPD_DT         = SYSDATE
+            , WH_LOC_IS_SYNC        = #{up_sync}
+            , CDC_CODE              = #{cdccode}
+            , RDC_CODE              = #{rdccode}
+            , WH_LOC_MOBILE         = #{up_mobile}
+            , PLANT                 = #{plant}
+            , REM                   = #{rem}
+            , SERIAL_REQUIRE_CHK_YN = #{serialRequireChkYn}
+            , WH_LOC_UPD_USER_ID    = #{up_user_id}
+            , HA_CHK                = #{haChk}
+            , HC_CHK                = #{hcChk}
+             <choose>
+            <when test="whlocgb eq '03'.toString() or whlocgb eq '04'.toString() or whlocgb eq '09'.toString()">
+                , SL_PLANT              = #{rdccode}
+             </when>
+              <when test="whlocgb eq '01'.toString() or whlocgb eq '05'.toString() ">
+                , SL_PLANT              = #{slplant}
+             </when>
+             <otherwise>
+                , SL_PLANT              = #{loccd}
+               </otherwise>
+      </choose>
+            , WH_LOC_STUS_ID  = #{locstus}
+            , WH_LOC_LANE = #{loclane}
+        WHERE WH_LOC_ID = #{locid}
+	</update>
+
+
+    <insert id="insertLocationInfo" parameterType="Map">
+	     INSERT INTO SYS0028M(
+	       WH_LOC_ID, WH_LOC_CODE, WH_LOC_DESC, WH_LOC_TEL1, WH_LOC_TEL2    , CDC_CODE, RDC_CODE, WH_LOC_BRNCH_ID, WH_LOC_TYPE_ID, WH_LOC_STK_GRAD, WH_LOC_STUS_ID, WH_LOC_UPD_USER_ID, WH_LOC_UPD_DT, CODE2, DESC2, WH_LOC_IS_SYNC, WH_LOC_MOBILE, AREA_ID, ADDR_DTL, STREET, WH_LOC_BRNCH_ID2, WH_LOC_BRNCH_ID3, WH_LOC_GB, SERIAL_PD_CHK, SERIAL_FT_CHK, SERIAL_PT_CHK , PLANT , SL_PLANT, REM, SERIAL_REQUIRE_CHK_YN,
+	       HA_CHK, HC_CHK, DOC_NO , WH_LOC_BRNCH_ID4 , WH_LOC_BRNCH_ID5
+	     )
+	    VALUES (
+	     #{inlocid} ,#{inwarecd} ,#{inwarenm},#{incontact1},#{incontact2} ,#{cdccode},#{rdccode}, #{branch1},#{intype_id}  , #{ingrad}      , #{instus_id}  , #{inup_user_id}   , SYSDATE      ,#{incode2} , #{indesc2},#{inis_sync}  , #{inmobile}  , #{areaid}, #{addrdtl} , #{street} , #{branch2},#{branch3},#{locationtype} , #{pdchk} , #{ftchk}, #{ptchk} , #{plant} , #{slplant}, #{rem}, #{serialRequireChkYn}, #{haChk}, #{hcChk}
+	     ,#{docNo}, #{branch4},#{branch5}
+	    )
+    </insert>
+    <delete id="deleteLocationInfo" parameterType="Map">
+	    DELETE FROM SYS0028M
+	    WHERE WH_LOC_ID = #{locid}
+    </delete>
+
+    <select id="locCreateSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(WH_LOC_ID),0) + 1 from SYS0028M
+    </select>
+
+    <select id="selectLocationCodeList" parameterType="Map"  resultType="egovMap">
+     <![CDATA[
+          SELECT WH_LOC_ID locid,
+                 WH_LOC_CODE loccd,
+                 WH_LOC_DESC locdesc,
+                 WH_LOC_TEL1 loctel1,
+                 WH_LOC_TEL2 loctel2,
+                 WH_LOC_BRNCH_ID loc_branch,
+                 WH_LOC_TYPE_ID loctype,
+                 WH_LOC_STK_GRAD locgrad,
+                 WH_LOC_STUS_ID locstus,
+                 WH_LOC_UPD_USER_ID locuserid,
+                 WH_LOC_UPD_DT locupddt,
+                 CODE2 code2,
+                 DESC2 desc2,
+                 WH_LOC_GB locgb,
+                 s05m.code branchcd,
+                 s05m.name branchnm,
+                 s05m.dcode,
+                 s05m.descr,
+                 (SELECT code_name
+                    FROM SYS0013M
+                   WHERE code_id = s28m.WH_LOC_TYPE_ID)
+                    codenm,
+                 s38m.name statnm,
+                 s13m.code_name locgbnm,
+                 s28m.doc_no docNo
+            FROM SYS0028M s28m,
+                 (SELECT s05m.brnch_id,
+                         s05m.code,
+                         s05m.name,
+                         s13m.code dcode,
+                         s13m.CODE_DESC descr
+                    FROM SYS0005M s05m, SYS0013M s13m
+                   WHERE s05m.type_id = s13m.code_id(+)) s05m,
+                 SYS0038M s38m,
+                 SYS0013M s13m
+           WHERE     s28m.WH_LOC_BRNCH_ID    = s05m.BRNCH_ID(+)
+             AND     s28m.WH_LOC_STUS_ID     = s38m.STUS_CODE_ID(+)
+             AND     s28m.WH_LOC_GB     = s13m.CODE(+)
+             AND  s13m.CODE_MASTER_ID = 339
+             ]]>
+                 <if test="scode != null and scode !=''">
+                      AND (UPPER(s28m.WH_LOC_CODE)  like UPPER(#{scode})||'%'
+                      or UPPER(s28m.WH_LOC_DESC)  like '%'||UPPER(#{scode})||'%'
+                      )
+                 </if>
+                 <if test="sname != null and sname !=''">
+                      AND (UPPER(s28m.WH_LOC_CODE)  like UPPER(#{sname})||'%'
+                      or UPPER(s28m.WH_LOC_DESC)  like '%'||UPPER(#{sname})||'%'
+                      )
+                 </if>
+                 <if test="locgb != null and locgb != ''">
+		            AND s28m.WH_LOC_GB in
+		            <foreach item="item" collection="locgb" index="index" open="(" separator="," close=")">
+		            #{item}
+		            </foreach>
+		       </if>
+        ORDER BY WH_LOC_CODE
+    </select>
+
+    <select id="selectLocationChk" parameterType="String"  resultType="integer">
+        select count(*) cnt from sys0028m where WH_LOC_CODE=#{loccode}
+    </select>
+
+    <select id="selectLocStatusList" parameterType="Map" resultType="egovMap">
+            SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M where STUS_CODE_ID in('1','3','8','10','51')
+    </select>
+
+    <select id="selectBranchByWhLocId" parameterType="Map" resultType="egovMap">
+        SELECT WH_LOC_BRNCH_ID BRANCH_ID FROM SYS0028M WHERE WH_LOC_CODE = #{whLocCd}
+    </select>
+
+    <update id="updateBranchLoc" parameterType="Map">
+	    MERGE INTO SYS0028M M1 USING
+		    (SELECT M.WH_LOC_CODE, D.MEM_CODE, M.CDC_CODE, M.RDC_CODE, M.WH_LOC_BRNCH_ID, M.SL_PLANT, B.WH_LOC_BRNCH_ID AS NEW_BRANCH, B.WH_LOC_CODE B_LOC_CODE, B.CDC_CODE B_CDC_CODE, B.RDC_CODE B_RDC_CODE, B.SL_PLANT B_SL_PLANT
+		        FROM SYS0028M M
+		        , ORG0001D D
+		        , (select * from SYS0028M WHERE WH_LOC_BRNCH_ID = #{selectBranchUpd} and WH_LOC_GB = '02' AND WH_LOC_STK_GRAD = 'A' and wh_loc_stus_id = 1) B
+                WHERE M.WH_LOC_CODE = D.MEM_CODE
+		        AND D.MEM_CODE = TRIM(' ' FROM #{memberCodeUpd})
+		        AND D.STUS = 1) BRANCH
+		ON (M1.WH_LOC_CODE = BRANCH.WH_LOC_CODE)
+		WHEN MATCHED THEN
+		    UPDATE SET M1.CDC_CODE = BRANCH.B_CDC_CODE,
+		                M1.RDC_CODE = BRANCH.B_RDC_CODE,
+		                M1.SL_PLANT = BRANCH.B_SL_PLANT,
+		                M1.WH_LOC_BRNCH_ID = BRANCH.NEW_BRANCH
+    </update>
+
+</mapper>

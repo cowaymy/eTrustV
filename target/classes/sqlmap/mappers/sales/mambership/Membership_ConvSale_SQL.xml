@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper">
+
+
+      <insert id="SAL0095D_insert" parameterType="Map"  >
+           INSERT INTO SAL0095D (
+										   SRV_MEM_ID, SRV_MEM_QUOT_ID, SRV_SALES_ORD_ID,
+										   SRV_MEM_NO, SRV_MEM_BILL_NO, SRV_MEM_PAC_ID,
+										   SRV_MEM_PAC_AMT, SRV_MEM_BS_AMT, SRV_MEM_PV,
+										   SRV_FREQ, SRV_START_DT, SRV_EXPR_DT,
+										   SRV_DUR, SRV_STUS_CODE_ID, SRV_REM,
+										   SRV_CRT_DT, SRV_CRT_USER_ID, SRV_UPD_DT,
+										   SRV_UPD_USER_ID, SRV_MEM_BS12_AMT, SRV_MEM_IS_SYNCH,
+										   SRV_MEM_SALES_MEM_ID, SRV_MEM_CUST_CNT_ID, SRV_MEM_QTY,
+										   SRV_BS_QTY, SRV_MEM_PROMO_ID, SRV_MEM_PV_MONTH,
+										   SRV_MEM_PV_YEAR, SRV_MEM_IS_MNL, SRV_MEM_BRNCH_ID,
+										   SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO, REF_NO)
+										VALUES (
+													  #{srvMemId},
+													   #{srvMemQuotId},
+													   #{srvSalesOrdId},
+													   #{srvMemNo},
+													   #{srvMemBillNo},
+													   #{srvMemPacId},
+													   #{srvMemPacAmt},
+													   #{srvMemBsAmt},
+													   #{srvMemPv},
+													   #{srvFreq},
+													   to_date(#{srvStartDt},'dd/mm/yyyy'),
+													   to_date(#{srvExprDt},'dd/mm/yyyy'),
+													   #{srvDur},
+													   #{srvStusCodeId},
+													   #{srvRem},
+													   sysdate,
+													   #{userId},
+													   sysdate,
+													   #{userId},
+													   #{srvMemBs12Amt},
+													   #{srvMemIsSynch},
+													   #{srvMemSalesMemId},
+													   #{srvMemCustCntId},
+													   #{srvMemQty},
+													   #{srvBsQty},
+													   #{srvMemPromoId},
+													   #{srvMemPvMonth},
+													   #{srvMemPvYear},
+													   #{srvMemIsMnl},
+													   #{srvMemBrnchId},
+													   #{srvMemPacPromoId},
+													   #{srvMemFormNo},
+													   #{refNo}
+										   )
+     </insert>
+
+
+
+    <select id="getSAL0095D_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL
+                 ]]>
+    </select>
+
+
+    <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+                 <![CDATA[
+                        SELECT FN_GET_DOCNO(#{DOCNO})  docno  FROM DUAL
+                    ]]>
+    </select>
+
+
+
+    <select id="getHasBill" parameterType="Map" resultType="egovMap">
+			 SELECT
+			       P.SRV_MEM_LG_ID,
+			       P.SRV_MEM_ID,
+			       P.SRV_MEM_DOC_NO,
+			       P.SRV_MEM_DOC_TYPE_ID,
+			       P.SRV_MEM_DT_TM,
+			       P.SRV_MEM_AMT,
+			       P.SRV_MEM_INST_NO,
+			       P.SRV_MEM_BATCH_NO,
+			       P.SRV_MEM_UPD_USER_ID,
+			       P.SRV_MEM_UPD_DT,
+			       P.SRV_MEM_ORD_ID,
+			       P.SRV_MEM_QOTAT_ID,
+			       P.R01,
+			       S.SRV_MEM_QUOT_ID,
+			       S.SRV_SALES_ORD_ID,
+			       S.SRV_MEM_QUOT_NO,
+			       S.SRV_MEM_PAC_ID,
+			       S.SRV_MEM_PAC_NET_AMT,
+			       S.SRV_MEM_PAC_TXS,
+			       S.SRV_MEM_PAC_AMT,
+			       S.SRV_MEM_BS_NET_AMT,
+			       S.SRV_MEM_BS_TXS,
+			       S.SRV_MEM_BS_AMT,
+			       S.SRV_MEM_PV,
+			       S.SRV_DUR,
+			       S.SRV_REM,
+			       S.SRV_QUOT_VAL_ID,
+			       S.SRV_CRT_DT,
+			       S.SRV_CRT_USER_ID,
+			       S.SRV_QUOT_STUS_ID,
+			       S.SRV_UPD_USER_ID,
+			       S.SRV_UPD_DT,
+			       S.SRV_MEM_BS12_AMT,
+			       S.SRV_QUOT_CUST_CNT_ID,
+			       S.SRV_MEM_QTY,
+			       S.SRV_PROMO_ID,
+			       S.SRV_SALES_MEM_ID,
+			       S.SRV_MEM_ID,
+			       S.SRV_ORD_STK_ID,
+			       S.SRV_FREQ,
+			       S.SRV_PAC_PROMO_ID,
+			       S.EMP_CHK
+			   FROM PAY0024D P , SAL0093D S
+			    WHERE 1=1
+			     AND P.SRV_MEM_QOTAT_ID = S.SRV_MEM_QUOT_ID
+			     AND S.SRV_MEM_QUOT_ID =#{srvMemQuotId}
+			     AND  rownum =1
+    </select>
+
+     <select id="getSAL0093D_Data" parameterType="Map" resultType="egovMap">
+		    SELECT
+					   S.SRV_MEM_QUOT_ID, S.SRV_SALES_ORD_ID, S.SRV_MEM_QUOT_NO,
+					   S.SRV_MEM_PAC_ID, S.SRV_MEM_PAC_NET_AMT, S.SRV_MEM_PAC_TXS,
+					   S.SRV_MEM_PAC_AMT, S.SRV_MEM_BS_NET_AMT, S.SRV_MEM_BS_TXS,
+					   S.SRV_MEM_BS_AMT, S.SRV_MEM_PV, S.SRV_DUR,
+					   S.SRV_REM, S.SRV_QUOT_VAL_ID, S.SRV_CRT_DT,
+					   S.SRV_CRT_USER_ID, S.SRV_QUOT_STUS_ID, S.SRV_UPD_USER_ID,
+					   S.SRV_UPD_DT, S.SRV_MEM_BS12_AMT, S.SRV_QUOT_CUST_CNT_ID,
+					   S.SRV_MEM_QTY, S.SRV_PROMO_ID, S.SRV_SALES_MEM_ID,
+					   S.SRV_MEM_ID, S.SRV_ORD_STK_ID, S.SRV_FREQ,
+					   S.SRV_PAC_PROMO_ID, S.EMP_CHK
+		FROM SAL0093D S
+		  WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
+     </select>
+
+
+    <select id="getSAL0001D_Data" parameterType="Map" resultType="egovMap">
+
+			SELECT
+			   S.SALES_ORD_ID, S.SALES_ORD_NO, S.REF_NO,
+			   S.SALES_DT, S.CUST_ID, S.CUST_CNT_ID,
+			   S.CUST_ADD_ID, S.MEM_ID, S.BRNCH_ID,
+			   S.APP_TYPE_ID, S.TOT_AMT, S.PROMO_ID,
+			   S.BINDING_NO, S.CC_PROMO_ID, S.TOT_PV,
+			   S.REM, S.PV_MONTH, S.PV_YEAR,
+			   S.STUS_CODE_ID, S.UPD_DT, S.UPD_USER_ID,
+			   S.SYNC_CHK, S.CUST_PO_NO, S.REN_CHK_ID,
+			   S.INST_PRIOD, S.DO_NO, S.DEPT_CODE,
+			   S.GRP_CODE, S.ORG_CODE, S.SALES_ORD_ID_OLD,
+			   S.EDIT_TYPE_ID, S.CUST_BILL_ID, S.MTH_RENT_AMT,
+			   S.LOK, S.AEON_STUS_ID, S.COMM_DT,
+			   S.CRT_USER_ID, S.CRT_DT, S.PAY_COM_DT,
+			   S.DEF_RENT_AMT, S.REF_DOC_ID, S.SALES_HM_ID,
+			   S.SALES_SM_ID, S.SALES_GM_ID, S.ADV_BILL,
+			   S.CNVR_SCHEME_ID, S.CUST_CARE_CNT_ID, S.EMP_CHK,
+			   S.EX_TRADE, S.ECASH, S.PROMO_DISC_PERIOD_TP,
+			   S.PROMO_DISC_PERIOD, S.NOR_AMT, S.NOR_RNT_FEE,
+			   S.DISC_RNT_FEE, S.GST_CHK, S.SRV_PAC_ID,
+			   S.SALES_RESUBMIT, S.SALES_TRADE_IN_MODEL, S.SALES_TRADE_IN_USE_YEAR
+			FROM  SAL0001D S
+			 WHERE SALES_ORD_ID =#{srvSalesOrdId}
+    </select>
+
+     <select id="getSAL0090D_Data" parameterType="Map" resultType="egovMap">
+			 SELECT
+			   S.SRV_CONFIG_ID, S.SRV_SO_ID, S.SRV_CODY_ID,
+			   S.SRV_PREV_DT, S.SRV_REM, S.SRV_BS_GEN,
+			   S.SRV_CRT_DT, S.SRV_CRT_USER_ID, S.SRV_UPD_DT,
+			   S.SRV_UPD_USER_ID, S.SRV_STUS_ID, S.SRV_BS_WEEK
+			FROM SAL0090D S
+			 WHERE  SRV_SO_ID =#{srvSalesOrdId}
+			   AND SRV_STUS_ID =1
+     </select>
+
+      <insert id="update_SAL0090D_Stus" parameterType="Map" >
+            UPDATE SAL0090D
+                   SET  SRV_BS_GEN  = 1,
+                          SRV_UPD_DT  = SYSDATE,
+                          SRV_UPD_USER_ID = #{userId}
+             WHERE  SRV_SO_ID =#{srvSalesOrdId}
+               AND SRV_STUS_ID =1
+     </insert>
+
+
+     <insert id="update_SAL0093D_Stus" parameterType="Map" >
+            UPDATE SAL0093D
+                   SET  SRV_QUOT_STUS_ID  = 4,
+                          SRV_UPD_DT  = SYSDATE,
+                          SRV_UPD_USER_ID = #{userId},
+                          SRV_MEM_ID =#{srvMemId}
+             WHERE  SRV_MEM_QUOT_ID   =#{srvMemQuotID}
+     </insert>
+
+
+
+
+     <insert id="SAL0088D_insert" parameterType="Map"  >
+		INSERT INTO SAL0088D (
+		   SRV_PRD_ID, SRV_CONFIG_ID, SRV_MBRSH_ID,
+		   SRV_PRD_START_DT, SRV_PRD_EXPR_DT, SRV_PRD_DUR,
+		   SRV_PRD_STUS_ID, SRV_PRD_REM, SRV_PRD_CRT_DT,
+		   SRV_PRD_CRT_USER_ID, SRV_PRD_UPD_DT, SRV_PRD_UPD_USER_ID,
+		   SRV_PRD_CNTRCT_ID)
+		VALUES (
+		       SAL0088D_SRV_PRD_ID_SEQ.NEXTVAL,
+		       #{srvConfigId},
+		       #{srvMbrshId},
+		       to_date(#{srvPrdStartDt},'dd/mm/yyyy'),
+		       to_date(#{srvPrdExprDt},'dd/mm/yyyy'),
+		       #{srvPrdDur},
+		       #{srvPrdStusId},
+		       #{srvPrdRem},
+		       sysdate,
+		       #{srvPrdCrtUserId},
+		       sysdate,
+		       #{srvPrdCrtUserId},
+		       #{srvPrdCrtUserId}
+		   )
+     </insert>
+
+
+
+
+
+       <insert id="PAY0007D_insert" parameterType="Map" >
+                        INSERT INTO PAY0007D (
+                           BILL_ID, BILL_TYPE_ID, BILL_SO_ID,
+                           BILL_MEM_ID, BILL_AS_ID, BILL_PAY_TYPE_ID,
+                           BILL_NO, BILL_MEM_SHIP_NO, BILL_DT,
+                           BILL_AMT, BILL_REM, BILL_IS_PAID,
+                           BILL_IS_COMM, UPD_USER_ID, UPD_DT,
+                           SYNC_CHK, COURS_ID, STUS_ID)
+                        VALUES (
+                           PAY0007D_SEQ.NEXTVAL,
+                           #{billTypeId},
+                           #{billSoId},
+                           #{billMemId},
+                           #{billAsId},
+                           #{billPayTypeId},
+                           #{billNo},
+                           #{billMemShipNo},
+                           #{billDt},
+                           #{billAmt},
+                           #{billRem},
+                           #{billIsPaid},
+                           #{billIsComm},
+                           #{updUserId},
+                           #{updDt},
+                           #{syncChk},
+                           #{coursId},
+                           #{stusId})
+     </insert>
+
+
+       <insert id="PAY0024D_insert" parameterType="Map" >
+
+			 INSERT INTO PAY0024D (
+			   SRV_MEM_LG_ID, SRV_MEM_ID, SRV_MEM_DOC_NO,
+			   SRV_MEM_DOC_TYPE_ID, SRV_MEM_DT_TM, SRV_MEM_AMT,
+			   SRV_MEM_INST_NO, SRV_MEM_BATCH_NO, SRV_MEM_UPD_USER_ID,
+			   SRV_MEM_UPD_DT, SRV_MEM_ORD_ID, SRV_MEM_QOTAT_ID,
+			   R01)
+			VALUES (
+					   PAY0024D_SEQ.NEXTVAL,
+					   #{srvMemId},
+					   #{srvMemDocNo},
+					   #{srvMemDocTypeId},
+					   #{srvMemDtTm},
+					   #{srvMemAmt},
+					   #{srvMemInstNo},
+					   #{srvMemBatchNo},
+					   #{srvMemUpdUserId},
+					   #{srvMemUpdDt},
+					   #{srvMemOrdId},
+					   #{srvMemQotatId},
+					   #{r01}
+			   )
+       </insert>
+
+
+       <insert id="PAY0016D_insert" parameterType="Map" >
+
+                INSERT INTO PAY0016D (
+                   ACC_BILL_ID, ACC_BILL_TASK_ID, ACC_BILL_REF_DT,
+                   ACC_BILL_REF_NO, ACC_BILL_ORD_ID, ACC_BILL_ORD_NO,
+                   ACC_BILL_TYPE_ID, ACC_BILL_MODE_ID, ACC_BILL_SCHDUL_ID,
+                   ACC_BILL_SCHDUL_PRIOD, ACC_BILL_ADJ_ID, ACC_BILL_SCHDUL_AMT,
+                   ACC_BILL_ADJ_AMT, ACC_BILL_TXS_AMT, ACC_BILL_NET_AMT,
+                   ACC_BILL_STUS, ACC_BILL_REM, ACC_BILL_CRT_DT,
+                   ACC_BILL_CRT_USER_ID, ACC_BILL_GRP_ID, ACC_BILL_TAX_CODE_ID,
+                   ACC_BILL_TAX_RATE, ACC_BILL_ACCT_CNVR, ACC_BILL_CNTRCT_ID)
+                VALUES (
+                           PAY0016D_SEQ.NEXTVAL,
+                           #{accBillTaskId},
+                           #{accBillRefDt},
+                           #{accBillRefNo},
+                           #{accBillOrdId},
+                            (SELECT SALES_ORD_NO  FROM SAL0001D WHERE  SALES_ORD_ID =#{accBillOrdId} ) ,
+                           #{accBillTypeId},
+                           #{accBillModeId},
+                           #{accBillSchdulId},
+                           #{accBillSchdulPriod},
+                           #{accBillAdjId},
+                           #{accBillSchdulAmt},
+                           #{accBillAdjAmt},
+                           #{accBillTxsAmt},
+                           #{accBillNetAmt},
+                           #{accBillStus},
+                           #{accBillRem},
+                           #{accBillCrtDt},
+                           #{accBillCrtUserId},
+                           #{accBillGrpId},
+                           #{accBillTaxCodeId},
+                           #{accBillTaxRate},
+                           #{accBillAcctCnvr},
+                           #{accBillCntrctId}
+                       )
+       </insert>
+
+       <select id="getTaxRate" parameterType="Map" resultType="java.lang.Integer">
+		       SELECT  DECODE (C.GST_CHK,'1','0','6' ) tax_Rate
+		            FROM SAL0045D A, SAL0023D B , SYS0064M C
+		        WHERE 1=1
+		          AND   A.ADD_ID =  B.CUST_ADD_ID
+		          AND   B.AREA_ID = C.AREA_ID
+		          AND  A.SALES_ORD_ID =  nvl(#{srvSalesOrderId}, #{srvSalesOrdId} )
+       </select>
+
+
+
+
+      <insert id="PAY0031D_insert" parameterType="Map">
+          INSERT INTO  PAY0031D (
+               TAX_INVC_ID, TAX_INVC_REF_NO, TAX_INVC_REF_DT,
+               TAX_INVC_SVC_NO, TAX_INVC_TYPE, TAX_INVC_CUST_NAME,
+               TAX_INVC_CNTC_PERSON, TAX_INVC_ADDR1, TAX_INVC_ADDR2,
+               TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE,
+               TAX_INVC_STATE_NAME, TAX_INVC_CNTY, TAX_INVC_TASK_ID,
+               TAX_INVC_REM, TAX_INVC_CHRG, TAX_INVC_TXS,
+               TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID,
+               AREA_ID,ADDR_DTL,STREET)
+            VALUES (
+               #{taxInvcId},
+               #{taxInvcRefNo},
+               #{taxInvcRefDt},
+               #{taxInvcSvcNo},
+               #{taxInvcType},
+               #{taxInvcCustName},
+               #{taxInvcCntcPerson},
+               #{taxInvcAddr1},
+               #{taxInvcAddr2},
+               #{taxInvcAddr3},
+               #{taxInvcAddr4},
+               #{taxInvcPostCode},
+               #{taxInvcStateName},
+               #{taxInvcCnty},
+               #{taxInvcTaskId},
+               #{taxInvcRem},
+               #{taxInvcChrg},
+               #{taxInvcTxs},
+               #{taxInvcAmtDue},
+               #{taxInvcCrtDt},
+               #{taxInvcCrtUserId},
+               #{areaId},
+               #{addrDtl},
+               #{street}
+             )
+
+          </insert>
+
+
+           <insert id="PAY0032D_insert" parameterType="Map" >
+
+                INSERT INTO PAY0032D (
+                   INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE,
+                   INVC_ITM_ORD_NO, INVC_ITM_PO_NO, INVC_ITM_CODE,
+                   INVC_ITM_DESC1, INVC_ITM_DESC2, INVC_ITM_SERIAL_NO,
+                   INVC_ITM_QTY, INVC_ITM_UNIT_PRC, INVC_ITM_GST_RATE,
+                   INVC_ITM_GST_TXS, INVC_ITM_CHRG, INVC_ITM_AMT_DUE,
+                   INVC_ITM_ADD1, INVC_ITM_ADD2, INVC_ITM_ADD3,
+                   INVC_ITM_ADD4, INVC_ITM_POST_CODE, INVC_ITM_AREA_NAME,
+                   INVC_ITM_STATE_NAME, INVC_ITM_CNTY, INVC_ITM_INSTALL_DT,
+                   INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO,
+                   AREA_ID,ADDR_DTL,STREET)
+                VALUES (
+                           PAY0032D_SEQ.NEXTVAL,
+                           #{taxInvcId},
+                           #{invcItmType},
+                           #{invcItmOrdNo},
+                           #{invcItmPoNo},
+                           #{invcItmCode},
+                           #{invcItmDesc1},
+                           #{invcItmDesc2},
+                           #{invcItmSerialNo},
+                           #{invcItmQty},
+                           #{invcItmUnitPrc},
+                           #{invcItmGstRate},
+                           #{invcItmGstTxs},
+                           #{invcItmChrg},
+                           #{invcItmAmtDue},
+                           #{invcItmAdd1},
+                           #{invcItmAdd2},
+                           #{invcItmAdd3},
+                           #{invcItmAdd4},
+                           #{invcItmPostCode},
+                           #{invcItmAreaName},
+                           #{invcItmStateName},
+                           #{invcItmCnty},
+                           #{invcItmInstallDt},
+                           #{invcItmRetnDt},
+                           #{invcItmBillRefNo},
+			               #{areaId},
+			               #{addrDtl},
+			               #{street}
+                        )
+      </insert>
+
+      <select id="getFilterListData" parameterType="Map" resultType="egovMap">
+                             SELECT
+                                          #{taxInvcId}           AS TAX_INVC_ID,
+                                          '1265'                     AS INVC_ITM_TYPE,
+                                          #{srvSalesOrdNo}     AS INVC_ITM_ORD_NO ,
+                                          sList.STK_CODE        AS INVC_ITM_CODE ,
+                                          sList.STK_DESC        AS INVC_ITM_DESC1,
+                                          '1'                          AS INVC_ITM_QTY,
+                                          #{taxRate}            AS INVC_ITM_GST_RATE,
+                                      '0' AS INVC_ITM_GST_TXS  ,
+                                       STK_CHRG_PRC AS INVC_ITM_CHRG,
+
+                                          STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
+                              FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
+                                            Extent1.STK_ID   ,
+                                            Extent1.STK_PRIOD   ,
+                                            Extent1.STK_LAST_CHNG_DT   ,
+                                            Extent1.STK_FILTER_PRC   ,
+                                            Extent1.STK_CHRG_PRC   ,
+                                            Extent2.STK_CODE   ,
+                                            Extent2.STK_DESC
+                                     FROM SAL0094D Extent1
+                                            JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
+                                      WHERE 1=1
+                                        AND  Extent1.SRV_MEM_QUOT_ID = #{srvMemQuotId}
+                                       ) sList
+                              ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
+      </select>
+
+
+        <insert id="PAY0031D_INVC_ITM_UPDATE" parameterType="Map" >
+          UPDATE PAY0031D
+              SET (
+                    TAX_INVC_CHRG,
+                    TAX_INVC_TXS,
+                    TAX_INVC_AMT_DUE
+                 ) = (
+                         SELECT TO_NUMBER (NVL(INVC_ITM_CHRG,0) +   round(#{V_INVC_ITM_CHRG},2)       )      TAX_INVC_CHRG ,
+                                    TO_NUMBER (NVL(INVC_ITM_GST_TXS,0) + round(#{V_INVC_ITM_GST_TXS} ,2) ) TAX_INVC_TXS ,
+                                    TO_NUMBER (NVL(INVC_ITM_AMT_DUE,0) +round(#{V_INVC_ITM_AMT_DUE} ,2)  ) TAX_INVC_AMT_DUE
+                           FROM(
+                                 SELECT    sum(INVC_ITM_GST_TXS)    AS INVC_ITM_GST_TXS  ,
+                                               sum(INVC_ITM_CHRG)         AS INVC_ITM_CHRG,
+                                               sum(INVC_ITM_AMT_DUE)    AS INVC_ITM_AMT_DUE
+                                 FROM(
+                                     SELECT
+                                       '0' AS INVC_ITM_GST_TXS  ,
+                                       STK_CHRG_PRC AS INVC_ITM_CHRG,
+                                       STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
+                                      FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
+                                                    Extent1.STK_ID   ,
+                                                    Extent1.STK_PRIOD   ,
+                                                    Extent1.STK_LAST_CHNG_DT   ,
+                                                    Extent1.STK_FILTER_PRC   ,
+                                                    Extent1.STK_CHRG_PRC   ,
+                                                    Extent2.STK_CODE   ,
+                                                    Extent2.STK_DESC
+                                             FROM SAL0094D Extent1
+                                                    JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
+                                              WHERE 1=1
+                                                AND  Extent1.SRV_MEM_QUOT_ID =  #{srvMemQuotId}
+                                      ) sList
+                                      ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
+                                 )
+                              )
+                            )
+               WHERE      TAX_INVC_ID =   #{taxInvcId}
+           </insert>
+      <insert id="PAY0032DFilter_insert" parameterType="Map" >
+
+             INSERT INTO  PAY0032D(
+                                INVC_ITM_ID,
+                                TAX_INVC_ID,
+                                INVC_ITM_TYPE,
+                                INVC_ITM_ORD_NO,
+                                INVC_ITM_CODE,
+                                INVC_ITM_DESC1,
+                                INVC_ITM_QTY,
+                                INVC_ITM_GST_RATE,
+                                INVC_ITM_GST_TXS,
+                                INVC_ITM_CHRG,
+                                INVC_ITM_AMT_DUE
+             )VALUES(
+                           PAY0032D_SEQ.NEXTVAL,
+			                #{taxInvcId},
+			                #{invcItmType},
+			                #{invcItmOrdNo},
+			                #{invcItmCode},
+			                #{invcItmDesc1},
+			                #{invcItmQty},
+			                #{invcItmGstRate},
+			                #{invcItmGstTxs},
+			                #{invcItmChrg},
+			                #{invcItmAmtDue}
+             )
+
+      </insert>
+
+    <select id="getNewAddr" parameterType="Map" resultType="egovMap">
+	    SELECT D.AREA_ID
+		           ,C.STREET
+		           ,C.ADDR_DTL
+		             ,CUST.NAME CUST_NAME
+                   ,CUST1.NAME CNTC_NAME
+		  FROM SAL0001D A LEFT JOIN SAL0024D B ON A.CUST_BILL_ID = B.CUST_BILL_ID
+		  LEFT JOIN SAL0029D CUST ON CUST.CUST_ID = A.CUST_ID
+          LEFT JOIN SAL0027D CUST1 ON A.CUST_CNT_ID = CUST1.CUST_CNTC_ID
+		    JOIN SAL0023D C ON C.CUST_ADD_ID = (CASE WHEN A.CUST_BILL_ID = 0 THEN  A.CUST_ADD_ID
+		                                                                               WHEN A.CUST_BILL_ID IS NULL THEN A.CUST_ADD_ID
+		                                                                               ELSE B.CUST_BILL_ADD_ID END)
+		    JOIN SYS0064M D ON  C.AREA_ID = D.AREA_ID
+		WHERE A.SALES_ORD_ID = #{srvSalesOrdId}
+    </select>
+
+    <select id="getMembershipByRefNo" parameterType="Map" resultType="egovMap">
+        SELECT SRV_MEM_ID
+        FROM SAL0095D
+        WHERE REF_NO = #{refNo}
+    </select>
+
+    <select id="updateEligibleEVoucher" parameterType="Map" >
+            update SAL0289T set IS_CLOSE = '1',close_dt = SYSDATE
+where SALES_ORD_id = #{srvSalesOrdId} and ev_type = '6426' and is_close = '0' and ROWNUM = 1
+     </select>
+</mapper>

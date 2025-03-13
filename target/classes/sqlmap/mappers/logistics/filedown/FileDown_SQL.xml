@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.filedown.impl.FileDownloadMapper">
+
+
+<select id="fileDownloadList" parameterType="Map" resultType="egovMap">
+SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+       <!-- Project1.CRT_DT CRT_DT  , -->
+       TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+       Project1.CRT_USER_ID CRT_USER_ID  ,
+       Project1.C1 C1  ,
+       Project1.FILE_ET FILE_ET  ,
+       Project1.FILE_NAME FILE_NAME  ,
+       Project1.FILE_URL FILE_URL  ,
+       Project1.IS_CODY IS_CODY  ,
+       Project1.IS_HP IS_HP  ,
+       Project1.IS_HT IS_HT  ,
+       Project1.IS_STAFF IS_STAFF  ,
+       Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+       Project1.STUS_CODE_ID STUS_CODE_ID  ,
+       Project1.FILE_TYPE_ID FILE_TYPE_ID  ,
+       Project1.CODE_NAME CODE_NAME  ,
+       Project1.UPD_DT UPD_DT  ,
+       Project1.UPD_USER_ID UPD_USER_ID  ,
+       Project1.C2 C2
+       ,Project1.SUBPATH SUBPATH
+       ,Project1.FILENAME FILENAME
+  FROM ( SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+                Project1.FILE_TYPE_ID FILE_TYPE_ID  ,
+                Project1.FILE_NAME FILE_NAME  ,
+                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+                Project1.FILE_URL FILE_URL  ,
+                Project1.CRT_DT CRT_DT  ,
+                Project1.CRT_USER_ID CRT_USER_ID  ,
+                Project1.UPD_DT UPD_DT  ,
+                Project1.UPD_USER_ID UPD_USER_ID  ,
+                Project1.IS_HP IS_HP  ,
+                Project1.IS_CODY IS_CODY  ,
+                Project1.IS_HT IS_HT  ,
+                Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                Project1.IS_STAFF IS_STAFF  ,
+                Project1.FILE_ET FILE_ET  ,
+                Project1.CODE_NAME CODE_NAME  ,
+                Project1.C1 C1  ,
+                Project1.C2 C2  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.FILE_NAME ASC  ) ROW_NUMBER
+                ,Project1.SUBPATH SUBPATH
+                ,Project1.FILENAME FILENAME
+         FROM ( SELECT Extent1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+                       Extent1.FILE_TYPE_ID FILE_TYPE_ID  ,
+                       Extent1.FILE_NAME FILE_NAME  ,
+                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                       Extent1.FILE_URL FILE_URL  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.CRT_USER_ID CRT_USER_ID  ,
+                       Extent1.UPD_DT UPD_DT  ,
+                       Extent1.UPD_USER_ID UPD_USER_ID  ,
+                       Extent1.IS_HP IS_HP  ,
+                       Extent1.IS_CODY IS_CODY  ,
+                       Extent1.IS_HT IS_HT  ,
+                       Extent1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                       Extent1.IS_STAFF IS_STAFF  ,
+                       Extent1.FILE_ET FILE_ET  ,
+                       Extent2.CODE_NAME CODE_NAME  ,
+                       CASE
+                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                       ELSE ''
+                          END C1  ,
+                       CASE
+                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
+                       ELSE ''
+                          END C2
+                        ,S71.FILE_SUB_PATH SUBPATH
+                        ,S71.PHYSICL_FILE_NAME FILENAME
+                FROM PAY0061D Extent1
+                       JOIN SYS0013M Extent2  ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
+                       LEFT JOIN SYS0070M S70 ON S70.ATCH_FILE_GRP_ID = (CASE WHEN REGEXP_LIKE(extent1.file_url,'^[[:digit:]]+$') THEN extent1.file_url END)
+                       LEFT JOIN SYS0071D S71 ON S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
+                       LEFT JOIN SYS0047M Extent3 ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                       LEFT JOIN SYS0047M Extent4 ON Extent4.USER_ID = Extent1.UPD_USER_ID
+                 WHERE  ( 1 = Extent1.STUS_CODE_ID )
+                     <if test="searchTypeLabel != null and searchTypeLabel !=''">
+				        AND UPPER(Extent1.FILE_TYPE_LBL) LIKE UPPER('%' || #{searchTypeLabel} || '%')
+				     </if>
+				     <if test="searchFilename != null and searchFilename !=''">
+				        AND UPPER(Extent1.FILE_NAME) LIKE UPPER('%' || #{searchFilename} || '%')
+				     </if>
+                     <if test="searchFileType != null and searchFileType !=''">
+				        AND Extent1.FILE_TYPE_ID IN
+				        <foreach item="item" collection="searchFileType" index="index" open="(" separator="," close=")">
+				         #{item}
+				        </foreach>
+				     </if>
+                          AND Extent1.IS_STAFF = 1 ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.FILE_UPLOAD_ID DESC
+</select>
+
+
+<select id="rawDataList" parameterType="Map" resultType="egovMap">
+SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+       <!-- Project1.CRT_DT CRT_DT  , -->
+       TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+       Project1.CRT_USER_ID CRT_USER_ID  ,
+       Project1.C1 C1  ,
+       Project1.FILE_ET FILE_ET  ,
+       Project1.FILE_NAME FILE_NAME  ,
+       Project1.FILE_NAME  || Project1.FILE_ET  orignlfilenm,
+       Project1.FILE_URL FILE_URL  ,
+       Project1.IS_CODY IS_CODY  ,
+       Project1.IS_HP IS_HP  ,
+       Project1.IS_HT IS_HT  ,
+       Project1.IS_STAFF IS_STAFF  ,
+       Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+       Project1.STUS_CODE_ID STUS_CODE_ID  ,
+       Project1.FILE_TYPE_ID FILE_TYPE_ID  ,
+       Project1.CODE_NAME CODE_NAME  ,
+       <!-- Project1.UPD_DT UPD_DT  , -->
+       TO_CHAR (PROJECT1.UPD_DT,'DD/MM/YYYY HH24:MI:SS AM') UPD_DT,
+       Project1.UPD_USER_ID UPD_USER_ID  ,
+       Project1.C2 C2
+       ,Project1.SUBPATH SUBPATH
+       ,Project1.FILENAME FILENAME
+       ,Project1.FILESIZE FILESIZE
+  FROM ( SELECT Project1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+                Project1.FILE_TYPE_ID FILE_TYPE_ID  ,
+                Project1.FILE_NAME FILE_NAME  ,
+                Project1.STUS_CODE_ID STUS_CODE_ID  ,
+                Project1.FILE_URL FILE_URL  ,
+                Project1.CRT_DT CRT_DT  ,
+                Project1.CRT_USER_ID CRT_USER_ID  ,
+                Project1.UPD_DT UPD_DT  ,
+                Project1.UPD_USER_ID UPD_USER_ID  ,
+                Project1.IS_HP IS_HP  ,
+                Project1.IS_CODY IS_CODY  ,
+                Project1.IS_HT IS_HT
+                Project1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                Project1.IS_STAFF IS_STAFF  ,
+                Project1.FILE_ET FILE_ET  ,
+                Project1.CODE_NAME CODE_NAME  ,
+                Project1.C1 C1  ,
+                Project1.C2 C2  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.FILE_NAME ASC  ) ROW_NUMBER
+                ,Project1.SUBPATH SUBPATH
+                ,Project1.FILENAME FILENAME
+                ,Project1.FILESIZE FILESIZE
+         FROM ( SELECT Extent1.FILE_UPLOAD_ID FILE_UPLOAD_ID  ,
+                       Extent1.FILE_TYPE_ID FILE_TYPE_ID  ,
+                       Extent1.FILE_NAME FILE_NAME  ,
+                       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                       Extent1.FILE_URL FILE_URL  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.CRT_USER_ID CRT_USER_ID  ,
+                       Extent1.UPD_DT UPD_DT  ,
+                       Extent1.UPD_USER_ID UPD_USER_ID  ,
+                       Extent1.IS_HP IS_HP  ,
+                       Extent1.IS_CODY IS_CODY  ,
+                       Extent1.IS_HT IS_HT  ,
+                       Extent1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                       Extent1.IS_STAFF IS_STAFF  ,
+                       Extent1.FILE_ET FILE_ET  ,
+                       Extent2.CODE_NAME CODE_NAME  ,
+                       CASE
+                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                       ELSE ''
+                          END C1  ,
+                       CASE
+                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
+                       ELSE ''
+                          END C2
+                        ,EXTENT5.FILE_SUB_PATH SUBPATH
+                        ,EXTENT5.PHYSICL_FILE_NAME FILENAME
+                        ,EXTENT5.FILE_SIZE FILESIZE
+                FROM PAY0061D Extent1
+                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.FILE_TYPE_ID
+                        LEFT JOIN (SELECT *
+                                          FROM SYS0070M  S70
+                                           JOIN SYS0071D S71
+                                             ON S70.ATCH_FILE_ID = S71.ATCH_FILE_ID
+                                       ) EXTENT5
+                               ON TO_CHAR(EXTENT5.ATCH_FILE_GRP_ID) = EXTENT1.FILE_URL
+                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                       LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+                 WHERE  ( 1 = Extent1.STUS_CODE_ID )
+                        AND Extent1.FILE_TYPE_ID = #{type}
+                          AND Extent1.IS_STAFF = 1 ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.FILE_UPLOAD_ID DESC
+</select>
+
+
+<select id="selectLabelList" parameterType="Map" resultType="EgovMap">
+       SELECT Project2.C1 CODE_ID  ,
+            Project2.FILE_TYPE_LBL CODE_NAME
+        FROM ( SELECT Distinct1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                Distinct1.C1 C1
+         FROM ( SELECT DISTINCT Extent1.FILE_TYPE_LBL FILE_TYPE_LBL  ,
+                                1 C1
+                FROM PAY0061D Extent1
+                 WHERE  ( Extent1.FILE_TYPE_ID = #{groupCode} )
+                          AND ( 1 = Extent1.STUS_CODE_ID ) ) Distinct1 ) Project2
+  ORDER BY Project2.FILE_TYPE_LBL ASC
+</select>
+
+<insert id="insertFileSpace" parameterType="Map">
+        MERGE INTO PAY0061D S
+             USING DUAL ON (S.FILE_UPLOAD_ID=#{fileUploadId})
+         WHEN MATCHED THEN
+                   UPDATE SET
+				             FILE_TYPE_ID = #{insType},
+				             FILE_NAME     =#{insFileNm},
+				             UPD_DT          = SYSDATE,
+				             UPD_USER_ID  =#{upd_user_id},
+				             IS_HP             =#{insHP} ,
+				             IS_CODY         =#{insCody} ,
+				             IS_HT             =#{insHT} ,
+				             FILE_TYPE_LBL  =#{TypeLabel} ,
+				             IS_STAFF         =#{insStaff}
+        WHEN NOT MATCHED THEN
+         INSERT (
+             FILE_UPLOAD_ID,
+             FILE_TYPE_ID,
+             FILE_NAME,
+             STUS_CODE_ID,
+             FILE_URL,
+             CRT_DT,
+             CRT_USER_ID,
+             UPD_DT,
+             UPD_USER_ID,
+             IS_HP,
+             IS_CODY,
+             FILE_TYPE_LBL,
+             IS_STAFF,
+             FILE_ET,
+             IS_HT
+         )
+        VALUES (
+         #{FileUpId}
+        ,#{insType}
+        ,#{insFileNm}
+        ,#{StatusCodeID}
+        ,#{FileURL}
+        ,SYSDATE
+        ,#{crt_user_id}
+        ,SYSDATE
+        ,#{upd_user_id}
+        ,#{insHP}
+        ,#{insCody}
+        ,#{TypeLabel}
+        ,#{insStaff}
+        ,#{FileExtension}
+        ,#{insHT}
+        )
+    </insert>
+
+    <select id="fileUpCreateSeq"  resultType="Integer">
+        SELECT NVL(MAX(FILE_UPLOAD_ID),0) + 1 from PAY0061D
+    </select>
+    <update id="updateFileGroupKey" parameterType="Map">
+    UPDATE PAY0061D
+        SET FILE_URL = #{fileGroupKey}
+        WHERE FILE_UPLOAD_ID =#{upId}
+    </update>
+    <update id="deleteFileSpace" parameterType="Map">
+    UPDATE PAY0061D
+        SET STUS_CODE_ID = 8,
+        UPD_USER_ID=#{upd_user_id},
+        UPD_DT       = SYSDATE
+        WHERE FILE_UPLOAD_ID =#{fileUploadId}
+    </update>
+
+    <select id="existFileCheck" parameterType="Map" resultType="Integer">
+      SELECT COUNT(1) from PAY0061D
+      WHERE 1=1
+      AND     FILE_TYPE_ID      =  #{insType}
+      AND     FILE_TYPE_LBL   = #{insNewLabel}
+      AND     FILE_NAME         = #{insFileNm}
+    </select>
+
+</mapper>

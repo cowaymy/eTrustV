@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper">
+
+    <select id="getStockAuditNo" resultType="String">
+         SELECT  'AD'||LPAD(LOG0094M_STOCK_AUDIT_NO_SEQ.NEXTVAL, 8, '0') FROM  DUAL
+    </select>
+
+    <select id="selectLocCodeList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectLocCodeList] 20191017 - KR OHK */
+         SELECT T.WH_LOC_ID CODE_ID
+                   ,'[' || T.WH_LOC_CODE ||']' || T.WH_LOC_DESC CODE_NAME
+            FROM (SELECT B.WH_LOC_ID
+                                ,C.WH_LOC_CODE
+                                ,C.WH_LOC_DESC
+                         FROM LOG0094M A
+                          LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+                          LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+                       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+                    ) T
+        ORDER BY CODE_ID
+    </select>
+
+    <select id="selectStockAuditListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListCnt] 20191007 - KR OHK*/
+        SELECT COUNT(1) AS CNT
+          FROM (
+                    <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+                  )
+    </select>
+
+    <select id="selectStockAuditList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditList] 20191007 - KR OHK*/
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+                  FROM (
+                             <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+                                ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "stockAuditNo"'>A.STOCK_AUDIT_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStusName"'>D.CODE_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docStartDt"'>A.DOC_START_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "docEndDt"'>A.DOC_END_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locStkGrad"'>A.LOC_STK_GRAD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "locTypeNm"'>LOC_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "ctgryTypeNm"'>A.CTGRY_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "itmTypeNm"'>A.ITM_TYPE_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "serialChkYn"'>A.SERIAL_CHK_YN <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.STOCK_AUDIT_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.STOCK_AUDIT_NO DESC
+                        </otherwise>
+                    </choose>
+                    ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectStockAuditListExcel" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListExcel] 20191007 - KR OHK*/
+        <include refid="com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditListMain"></include>
+        ORDER BY A.STOCK_AUDIT_NO DESC
+    </select>
+
+    <sql id="selectStockAuditListMain">
+    SELECT  DISTINCT A.STOCK_AUDIT_NO
+               ,A.DOC_START_DT
+               ,A.DOC_END_DT
+               ,A.DOC_STUS_CODE_ID
+               ,D.CODE_NAME DOC_STUS_NAME
+               ,A.REUPLOAD_YN
+               ,A.APPV_3_REQST_USER_ID
+               ,G.USER_NAME APPV_3_REQST_USER_NM
+               ,A.APPV_3_REQST_DT
+               ,A.APPV_3_REQST_OPINION
+               ,A.APPV_ATCH_FILE_GRP_ID
+               ,A.APPV_3_USER_ID
+               ,F.USER_NAME APPV_3_USER_NM
+               ,A.APPV_3_DT
+               ,A.APPV_3_OPINION
+               ,A.STOCK_AUDIT_REASON
+               ,A.LOC_TYPE
+               ,A.LOC_TYPE_NM
+               ,A.LOC_STK_GRAD
+               ,A.CTGRY_TYPE
+               ,A.CTGRY_TYPE_NM
+               ,A.ITM_TYPE
+               ,A.ITM_TYPE_NM
+               ,A.REM
+               ,A.USE_YN
+               ,A.SERIAL_CHK_YN
+               ,A.CRT_USER_ID
+               ,C.USER_NAME CRT_USER_NM
+               ,A.CRT_DT
+               ,A.UPD_USER_ID
+               ,A.UPD_DT
+               ,(SELECT COUNT(1) FROM LOG0095M WHERE STOCK_AUDIT_NO = A.STOCK_AUDIT_NO) LOC_COUNT
+      FROM LOG0094M A
+       LEFT OUTER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+       LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.CRT_USER_ID
+       LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
+       LEFT OUTER JOIN SYS0028M E ON E.WH_LOC_ID = B.WH_LOC_ID
+       LEFT OUTER JOIN SYS0047M F ON F.USER_ID = A.APPV_3_USER_ID
+       LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.APPV_3_REQST_USER_ID
+    WHERE 1 = 1
+    <if test='stockAuditNo != null and stockAuditNo != ""'>
+       AND A.STOCK_AUDIT_NO = #{stockAuditNo}
+    </if>
+    <if test='stockAuditNo == null or stockAuditNo == ""'>
+        <if test='docStartDt != null and docStartDt != "" and docEndDt != null and docEndDt != ""'>
+            AND (A.DOC_START_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD') OR
+                   A.DOC_END_DT  BETWEEN TO_CHAR(TO_DATE(#{docStartDt} , 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{docEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD'))
+        </if>
+        <if test="listLocType != null">
+                           AND E.WH_LOC_GB IN
+                             <foreach item="item" collection="listLocType" index="index" open="(" separator="," close=")">
+                               #{item}
+                             </foreach>
+                       </if>
+        <if test="locCode != null">
+            AND (1, E.WH_LOC_CODE) IN
+              <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                (1, #{item})
+              </foreach>
+        </if>
+        <if test='docStatus != null and docStatus != ""'>
+            AND A.DOC_STUS_CODE_ID = #{docStatus}
+        </if>
+    </if>
+    </sql>
+
+    <select id="selectStockAuditLocDetail" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditLocDetail] 20191008 - KR OHK */
+        SELECT A.STOCK_AUDIT_NO
+	              ,A.WH_LOC_ID
+	              ,E.CODE_NAME  LOC_TYPE
+                  ,B.WH_LOC_CODE LOC_CODE
+	              ,B.WH_LOC_DESC LOC_DESC
+	              ,A.LOC_STUS_CODE_ID
+	              ,D.CODE_NAME LOC_STUS_NAME
+	              ,A.ATCH_FILE_GRP_ID
+	              ,A.APPV_1_REQST_USER_ID
+	              ,F.USER_NAME APPV_1_REQST_USER_NM
+	              ,A.APPV_1_REQST_DT
+	              ,A.APPV_1_USER_ID
+	              ,G.USER_NAME APPV_1_USER_NM
+	              ,A.APPV_1_DT
+	              ,A.APPV_1_OPINION
+	              ,A.APPV_2_USER_ID
+	              ,H.USER_NAME APPV_2_USER_NM
+	              ,A.APPV_2_DT
+	              ,A.APPV_2_OPINION
+	              ,A.CRT_USER_ID
+	              ,C.USER_NAME UPD_USER_NM
+	              ,A.CRT_DT
+	              ,A.UPD_USER_ID
+	              ,A.UPD_DT
+          FROM LOG0095M A
+          LEFT OUTER JOIN SYS0028M B ON B.WH_LOC_ID = A.WH_LOC_ID
+          LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
+          LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.LOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '437'
+          LEFT OUTER JOIN SYS0013M E ON E.CODE = B.WH_LOC_GB AND E.CODE_MASTER_ID = '339'
+          LEFT OUTER JOIN SYS0047M F ON F.USER_ID = A.APPV_1_REQST_USER_ID
+          LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.APPV_1_USER_ID
+          LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.APPV_2_USER_ID
+        WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+        ORDER BY E.CODE_NAME, B.WH_LOC_CODE
+    </select>
+
+    <select id="selectLocationList" parameterType="Map" resultType="EgovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectLocationList] 20191008 - KR OHK */
+        SELECT T.*
+          FROM (SELECT ROWNUM rnum,
+				              A.WH_LOC_ID,
+				              A.WH_LOC_CODE,
+				              A.WH_LOC_DESC,
+				              A.WH_LOC_TYPE_ID,
+				              A.WH_LOC_STK_GRAD,
+				              A.WH_LOC_STUS_ID,
+				              A.CODE2,
+				              A.DESC2,
+				              A.WH_LOC_IS_SYNC,
+				              A.WH_LOC_MOBILE,
+				              A.WH_LOC_GB,
+				              B.CODE_ID,
+				              B.CODE_NAME,
+				              A.SERIAL_REQUIRE_CHK_YN
+			          FROM SYS0028M A
+			         LEFT OUTER JOIN SYS0013M B ON B.CODE = A.WH_LOC_GB AND B.CODE_MASTER_ID = '339'
+
+			         WHERE 1 = 1
+				         AND A.WH_LOC_STUS_ID = '1'
+				      <if test="locType != null">
+				          AND B.CODE_ID IN
+				       <foreach item="item" collection="locType" index="index" open="(" separator="," close=")">
+				         #{item}
+				       </foreach>
+				      </if>
+				      <if test="locGrade != null">
+				          AND A.WH_LOC_STK_GRAD IN
+				       <foreach item="item" collection="locGrade" index="index" open="(" separator="," close=")">
+				         #{item}
+				       </foreach>
+				      </if>
+                  ) T
+        ORDER BY WH_LOC_CODE
+     </select>
+
+     <select id="selectItemList" parameterType="Map" resultType="EgovMap">
+     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectItemList] 20191008 - KR OHK */
+       SELECT ROWNUM rnum
+                 ,A.STK_ID
+                 ,A.STK_CODE
+                 ,A.STK_DESC
+                 ,A.STK_CTGRY_ID
+                 ,B.CODE_NAME STK_CTGRY_TYPE
+                 ,A.STK_TYPE_ID
+                 ,C.CODE_NAME STK_TYPE
+                 ,A.STK_GRAD
+        FROM SYS0026M A
+         LEFT OUTER JOIN SYS0013M B ON B.CODE_ID = A.STK_CTGRY_ID AND B.CODE_MASTER_ID = '11'
+         LEFT OUTER JOIN SYS0013M C ON C.CODE_ID = A.STK_TYPE_ID AND C.CODE_MASTER_ID = '15'
+      WHERE 1=1
+          AND IS_STOCK_AUDIT = 'Y'
+          AND STUS_CODE_ID = '1'
+          AND STK_TYPE_ID NOT IN (64,1370)
+      <if test="itemType != null">
+          AND STK_TYPE_ID IN
+       <foreach item="item" collection="itemType" index="index" open="(" separator="," close=")">
+         #{item}
+       </foreach>
+      </if>
+      <if test="catagoryType != null">
+          AND STK_CTGRY_ID IN
+       <foreach item="item" collection="catagoryType" index="index" open="(" separator="," close=")">
+         #{item}
+       </foreach>
+      </if>
+       ORDER BY STK_CODE
+     </select>
+
+    <select id="selectStockAuditDocInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditDocInfo] 20191014 - KR OHK */
+         SELECT  A.STOCK_AUDIT_NO
+                    ,TO_CHAR(TO_DATE(A.DOC_START_DT, 'YYYYMMDD'), 'DD/MM/YYYY') DOC_START_DT
+                    ,TO_CHAR(TO_DATE(A.DOC_END_DT, 'YYYYMMDD'), 'DD/MM/YYYY') DOC_END_DT
+                    ,A.DOC_STUS_CODE_ID
+                    ,D.CODE_NAME DOC_STUS_NM
+                    ,A.REUPLOAD_YN
+                    ,A.STOCK_AUDIT_REASON
+                    ,A.LOC_TYPE
+                    ,REPLACE(A.LOC_TYPE, ',', '|!|') M_LOC_TYPE
+                    ,A.LOC_STK_GRAD
+                    ,REPLACE(A.LOC_STK_GRAD, ',', '|!|') M_LOC_STK_GRAD
+                    ,A.CTGRY_TYPE
+                    ,REPLACE(A.CTGRY_TYPE, ',', '|!|') M_CTGRY_TYPE
+                    ,A.ITM_TYPE
+                    ,REPLACE(A.ITM_TYPE, ',', '|!|') M_ITM_TYPE
+                    ,A.REM
+                    ,A.USE_YN
+                    ,A.SERIAL_CHK_YN
+                    ,A.CRT_USER_ID
+                    ,B.USER_NAME CRT_USER_NM
+                    ,TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH24:MI') CRT_DT
+                    ,A.UPD_USER_ID
+                    ,C.USER_NAME UPD_USER_NM
+                    ,TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI') UPD_DT
+                    ,REUPLOAD_YN
+                    ,A.APPV_3_REQST_USER_ID
+                    ,E.USER_NAME APPV_3_REQST_USER_NM
+                    ,A.APPV_3_REQST_DT
+                    ,A.APPV_3_REQST_OPINION
+                    ,A.APPV_ATCH_FILE_GRP_ID ATCH_FILE_GRP_ID
+                    ,A.APPV_3_USER_ID
+                    ,F.USER_NAME APPV_3_USER_NM
+                    ,A.APPV_3_DT
+                    ,A.APPV_3_OPINION
+                    ,TO_CHAR(A.UPD_DT, 'YYYYMMDDHH24MISS') UPD_DT_TIME
+         FROM LOG0094M A
+          LEFT OUTER JOIN SYS0047M B ON B.USER_ID = A.CRT_USER_ID
+          LEFT OUTER JOIN SYS0047M C ON C.USER_ID = A.UPD_USER_ID
+          LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = A.DOC_STUS_CODE_ID AND D.CODE_MASTER_ID = '436'
+          LEFT OUTER JOIN SYS0047M E ON E.USER_ID = A.APPV_3_REQST_USER_ID
+          LEFT OUTER JOIN SYS0047M F ON F.USER_ID = A.APPV_3_USER_ID
+       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+    </select>
+
+    <select id="selectStockAuditSelectedLocList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditSelectedLocList] 20191014 - KR OHK */
+         SELECT  B.STOCK_AUDIT_NO
+                    ,B.WH_LOC_ID
+                    ,ROWNUM ADJRNUM
+                    ,B.WH_LOC_ID ADJWH_LOC_ID
+                    ,C.WH_LOC_CODE ADJWH_LOC_CODE
+                    ,C.WH_LOC_DESC ADJWH_LOC_DESC
+                    ,D.CODE_NAME ADJCODE_NAME
+                    ,B.LOC_STUS_CODE_ID
+                    ,E.CODE_NAME LOC_STUS_CODE_NM
+                    ,B.APPV_2_OPINION
+         FROM LOG0095M B
+          LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+          LEFT OUTER JOIN SYS0013M D ON D.CODE = C.WH_LOC_GB AND D.CODE_MASTER_ID = '339'
+          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = B.LOC_STUS_CODE_ID AND E.CODE_MASTER_ID = '437'
+       WHERE B.STOCK_AUDIT_NO = #{stockAuditNo}
+        ORDER BY C.WH_LOC_CODE
+    </select>
+
+    <select id="selectStockAuditSelectedItemList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditSelectedItemList] 20191014 - KR OHK */
+         SELECT ROWNUM ADJRNUM, T.*
+           FROM (SELECT DISTINCT B.STOCK_AUDIT_NO
+			                   ,D.STK_ID ADJSTK_ID
+			                   ,D.STK_GRAD ADJSTK_GRAD
+			                   ,E.CODE_NAME ADJSTK_CTGRY_TYPE
+			                   ,F.CODE_NAME ADJSTK_TYPE
+			                   ,D.STK_CODE ADJSTK_CODE
+			                   ,D.STK_DESC ADJSTK_DESC
+			         FROM LOG0095M B
+			          JOIN LOG0096D C ON C.STOCK_AUDIT_NO = B.STOCK_AUDIT_NO AND C.WH_LOC_ID = B.WH_LOC_ID
+			          LEFT OUTER JOIN SYS0026M D ON D.STK_ID = C.ITM_ID
+			          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = D.STK_CTGRY_ID AND E.CODE_MASTER_ID = '11'
+			          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = D.STK_TYPE_ID AND F.CODE_MASTER_ID = '15'
+			       WHERE B.STOCK_AUDIT_NO = #{stockAuditNo}
+			       ) T
+		ORDER BY ADJSTK_CODE
+    </select>
+
+    <select id="selectLocInHisList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectLocInHisList] 20191014 - KR OHK */
+         SELECT T1.*, T2.USER_NAME LAST_APPROVER_NM
+		   FROM (SELECT 'N' HISTORY_YN
+			                    ,A.STOCK_AUDIT_NO
+			                    ,'' SEQ
+			                    ,B.WH_LOC_ID
+			                    ,C.WH_LOC_CODE
+			                    ,C.WH_LOC_DESC
+			                    ,D.CODE_NAME
+			                    ,B.LOC_STUS_CODE_ID
+			                    ,E.CODE_NAME LOC_STUS_CODE_NM
+			                    ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_USER_ID
+                                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_USER_ID
+                                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_USER_ID
+                                 ELSE NULL
+                                 END LAST_APPROVER
+                                ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_DT
+                                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_DT
+                                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_DT
+                                 ELSE NULL
+                                 END LAST_APPROVE_DATE
+                                ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_OPINION
+                                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_OPINION
+                                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_OPINION
+                                 ELSE NULL
+                                END LAST_APPROVER_OPINION
+				       FROM LOG0094M A
+				        JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+				        LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+				        LEFT OUTER JOIN SYS0013M D ON D.CODE = C.WH_LOC_GB AND D.CODE_MASTER_ID = '339'
+				        LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = B.LOC_STUS_CODE_ID AND E.CODE_MASTER_ID = '437'
+				     WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+				      UNION ALL
+				     SELECT  'Y' HISTORY_YN
+				                ,A.STOCK_AUDIT_NO
+				                ,'' || B.SEQ || '' SEQ
+				                ,B.WH_LOC_ID
+				                ,C.WH_LOC_CODE
+				                ,C.WH_LOC_DESC
+				                ,D.CODE_NAME
+				                ,B.LOC_STUS_CODE_ID
+				                ,E.CODE_NAME LOC_STUS_CODE_NM
+				                ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_USER_ID
+				                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_USER_ID
+				                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_USER_ID
+				                 ELSE NULL
+				                 END LAST_APPROVER
+				                ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_DT
+                                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_DT
+                                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_DT
+                                 ELSE NULL
+                                 END LAST_APPROVE_DATE
+                                ,CASE WHEN B.LOC_STUS_CODE_ID IN (5688, 5689) THEN B.APPV_1_OPINION
+                                         WHEN B.LOC_STUS_CODE_ID IN (5690, 5691) THEN B.APPV_2_OPINION
+                                         WHEN B.LOC_STUS_CODE_ID IN (5712, 5713) THEN A.APPV_3_OPINION
+                                 ELSE NULL
+                                END LAST_APPROVER_OPINION
+				        FROM LOG0094M A
+				         JOIN LOG0097H B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+				         LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+				         LEFT OUTER JOIN SYS0013M D ON D.CODE = C.WH_LOC_GB AND D.CODE_MASTER_ID = '339'
+				         LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = B.LOC_STUS_CODE_ID AND E.CODE_MASTER_ID = '437'
+				      WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+				   ) T1
+				   LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.LAST_APPROVER
+		 ORDER BY T1.STOCK_AUDIT_NO, T1.WH_LOC_ID, T1.SEQ DESC
+    </select>
+
+    <select id="selectItemInHisList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditItemHisList] 20191014 - KR OHK */
+         SELECT T1.*
+           FROM (SELECT  'N' HISTORY_YN
+						        ,A.STOCK_AUDIT_NO
+						        ,'' SEQ
+			                    ,A.WH_LOC_ID
+			                    ,A.ITM_ID
+			                    ,A.WH_LOC_STK_GRAD
+			                    ,A.SYS_QTY
+			                    ,A.CNT_QTY
+			                    ,A.DIFF_QTY
+			                    ,A.DED_QTY
+			                    ,A.OTHER_QTY
+			                    ,A.DED_REASON
+                                ,A.OTHER_REASON
+			                    ,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
+			                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
+			                     END REM
+			                    ,A.OTHER_REQST_NO
+			                    ,A.OTHER_REQST_REQUIRE_DT
+			                    ,A.OTHER_TRNSC_TYPE
+			                    ,A.OTHER_TRNSC_TYPE_DTL
+			                    ,A.OTHER_REM
+			                    ,A.CRT_USER_ID
+			                    ,A.CRT_DT
+			                    ,A.UPD_USER_ID
+			                    ,A.UPD_DT
+			                    ,C.STK_CODE
+			                    ,C.STK_DESC
+			                    ,C.STK_GRAD
+			                    ,C.STK_TYPE_ID
+			                    ,F.CODE_NAME STK_TYPE
+			                    ,C.STK_CTGRY_ID
+			                    ,E.CODE_NAME STK_CTGRY_TYPE
+			                    ,D.WH_LOC_CODE WH_LOC_CODE
+			                    ,D.WH_LOC_DESC WH_LOC_DESC
+			                    ,G.CODE_NAME LOC_TYPE
+			         FROM LOG0096D A
+			          JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+			          LEFT OUTER JOIN SYS0026M C ON C.STK_ID = A.ITM_ID
+			          LEFT OUTER JOIN SYS0028M D ON D.WH_LOC_ID = B.WH_LOC_ID
+			          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = C.STK_CTGRY_ID AND E.CODE_MASTER_ID = '11'
+			          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = C.STK_TYPE_ID AND F.CODE_MASTER_ID = '15'
+			          LEFT OUTER JOIN SYS0013M G ON G.CODE = D.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
+			       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+			       UNION ALL
+			         SELECT 'Y' HISTORY_YN
+				                ,A.STOCK_AUDIT_NO
+				                ,'' || A.SEQ || '' SEQ
+			                    ,A.WH_LOC_ID
+			                    ,A.ITM_ID
+			                    ,A.WH_LOC_STK_GRAD
+			                    ,A.SYS_QTY
+			                    ,A.CNT_QTY
+			                    ,A.DIFF_QTY
+			                    ,A.DED_QTY
+			                    ,A.OTHER_QTY
+			                    ,A.DED_REASON
+                                ,A.OTHER_REASON
+                                ,REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ') REM
+			                    ,A.OTHER_REQST_NO
+			                    ,A.OTHER_REQST_REQUIRE_DT
+			                    ,A.OTHER_TRNSC_TYPE
+			                    ,A.OTHER_TRNSC_TYPE_DTL
+			                    ,A.OTHER_REM
+			                    ,A.CRT_USER_ID
+			                    ,A.CRT_DT
+			                    ,A.UPD_USER_ID
+			                    ,A.UPD_DT
+			                    ,C.STK_CODE
+			                    ,C.STK_DESC
+			                    ,C.STK_GRAD
+			                    ,C.STK_TYPE_ID
+			                    ,F.CODE_NAME STK_TYPE
+			                    ,C.STK_CTGRY_ID
+			                    ,E.CODE_NAME STK_CTGRY_TYPE
+			                    ,D.WH_LOC_CODE WH_LOC_CODE
+			                    ,D.WH_LOC_DESC WH_LOC_DESC
+			                    ,G.CODE_NAME LOC_TYPE
+			         FROM LOG0098H A
+			          JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+			          LEFT OUTER JOIN SYS0026M C ON C.STK_ID = A.ITM_ID
+			          LEFT OUTER JOIN SYS0028M D ON D.WH_LOC_ID = B.WH_LOC_ID
+			          LEFT OUTER JOIN SYS0013M E ON E.CODE_ID = C.STK_CTGRY_ID AND E.CODE_MASTER_ID = '11'
+			          LEFT OUTER JOIN SYS0013M F ON F.CODE_ID = C.STK_TYPE_ID AND F.CODE_MASTER_ID = '15'
+			          LEFT OUTER JOIN SYS0013M G ON G.CODE = D.WH_LOC_GB AND G.CODE_MASTER_ID = '339'
+			       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+			     )   T1
+        ORDER BY T1.WH_LOC_ID, T1.ITM_ID, T1.SEQ DESC
+    </select>
+
+    <select id="getMovQty" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.getMovQty] 20191018 - KR OHK */
+    /* Edited by Hui Ding 2020-03-09 - bug solving. To return distincted wh_loc_desc list eg: CJ JB_A, SDS KL_A...*/
+        SELECT NVL(LISTAGG(WH_LOC_DESC, ',') WITHIN GROUP (ORDER BY WH_LOC_DESC), '') MOV_LOC
+        FROM (SELECT C.WH_LOC_DESC WH_LOC_DESC
+           FROM LOG0096D A
+            LEFT OUTER JOIN (SELECT A.LOC_ID
+                                                ,A.STK_CODE
+                                                ,A.MOV_QTY
+                                                ,B.STK_ID
+                                                ,B.STK_DESC
+                                        FROM LOG0056M A
+                                         LEFT OUTER JOIN SYS0026M B ON B.STK_CODE = A.STK_CODE
+                                    ) B ON B.LOC_ID = A.WH_LOC_ID AND B.STK_ID = A.ITM_ID
+              LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = A.WH_LOC_ID
+           WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+               AND NVL(B.MOV_QTY,0) > 0
+               GROUP BY WH_LOC_DESC)
+    </select>
+
+    <select id="selectOtherGIGRItemList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectOtherGIGRItemList] 20191021 - KR OHK */
+         SELECT  A.STOCK_AUDIT_NO
+                    ,A.WH_LOC_ID
+                    ,A.ITM_ID
+                    ,A.WH_LOC_STK_GRAD
+                    ,A.SYS_QTY
+                    ,A.CNT_QTY
+                    ,A.DIFF_QTY
+                    ,A.DED_QTY
+                    ,A.OTHER_QTY
+                    ,CASE WHEN B.LOC_STUS_CODE_ID IN (5689, 5691, 5713) THEN NULL
+                     ELSE REPLACE(REPLACE(A.REM, CHR(10),' '), CHR(13), ' ')
+                     END REM
+                    ,A.OTHER_REQST_NO
+                    ,TO_CHAR(A.OTHER_REQST_REQUIRE_DT, 'DD/MM/YYYY') OTHER_REQST_REQUIRE_DT
+                    ,A.OTHER_TRNSC_TYPE
+                    ,A.OTHER_TRNSC_TYPE_DTL
+                    ,A.OTHER_REM
+                    ,A.CRT_USER_ID
+                    ,A.CRT_DT
+                    ,A.UPD_USER_ID
+                    ,A.UPD_DT
+                    ,C.STK_GRAD
+                    ,C.STK_CODE
+                    ,C.STK_DESC
+                    ,F.CODE_NAME LOC_TYPE
+                    ,D.WH_LOC_CODE
+                    ,D.WH_LOC_DESC
+                    ,NVL(E.QTY, 0) QTY
+                    ,G.CODE_NAME UOM
+                    ,NVL(H.CODE_NAME, '-') OTHER_TRNSC_TYPE_NM
+                    ,NVL(I.CODE_NAME, '-') OTHER_TRNSC_TYPE_DTL_NM
+         FROM LOG0096D A
+          JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+          LEFT OUTER JOIN SYS0026M C ON C.STK_ID = A.ITM_ID
+          LEFT OUTER JOIN SYS0028M D ON D.WH_LOC_ID = B.WH_LOC_ID
+          LEFT OUTER JOIN LOG0056M E ON E.LOC_ID = B.WH_LOC_ID AND E.STK_CODE = C.STK_CODE
+          LEFT OUTER JOIN SYS0013M F ON F.CODE = D.WH_LOC_GB AND F.CODE_MASTER_ID = '339'
+          LEFT OUTER JOIN SYS0013M G ON G.CODE_ID = C.UOM AND G.CODE_MASTER_ID = '42'
+          LEFT OUTER JOIN SYS0013M H ON H.CODE = A.OTHER_TRNSC_TYPE AND H.CODE_MASTER_ID = '306'
+          LEFT OUTER JOIN SYS0013M I ON I.CODE = A.OTHER_TRNSC_TYPE_DTL AND I.CODE_MASTER_ID = '308'
+       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+       ORDER BY A.WH_LOC_ID, A.ITM_ID
+    </select>
+
+    <insert id="insertStockAuditDoc_bak" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditDoc] 20191008 - KR OHK */
+        INSERT INTO LOG0094M(
+                 STOCK_AUDIT_NO
+				,DOC_START_DT
+				,DOC_END_DT
+				,DOC_STUS_CODE_ID
+				,REUPLOAD_YN
+				,APPV_3_REQST_USER_ID
+				,APPV_3_REQST_DT
+				,APPV_3_REQST_OPINION
+				,APPV_ATCH_FILE_GRP_ID
+				,APPV_3_USER_ID
+				,APPV_3_DT
+				,APPV_3_OPINION
+				,STOCK_AUDIT_REASON
+				,LOC_TYPE
+				,LOC_TYPE_NM
+				,LOC_STK_GRAD
+				,CTGRY_TYPE
+				,CTGRY_TYPE_NM
+				,ITM_TYPE
+				,ITM_TYPE_NM
+				,REM
+				,USE_YN
+				,CRT_USER_ID
+				,CRT_DT
+				,UPD_USER_ID
+				,UPD_DT
+              )
+        VALUES
+            (
+                 #{stockAuditNo}
+				,TO_CHAR(TO_DATE(#{insDocStartDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+				,TO_CHAR(TO_DATE(#{insDocEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+				,#{docStusCodeId}
+				,'N'
+				,#{appv3ReqstUserId}
+				,#{appv3ReqstDt}
+				,#{appv3ReqstOpinion}
+				,#{appvAtchFileGrpId}
+				,#{appv3UserId}
+				,#{appv3Dt}
+				,#{appv3Opinion}
+				,#{stockAuditReason}
+				,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '339'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="locType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+				,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '339'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="locType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+                 ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '383'
+                     AND CODE IN
+                   <foreach item="item" collection="locStkGrad" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+                 ,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '11'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="ctgryType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+				,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '11'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="ctgryType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+                ,(SELECT LISTAGG(CODE_ID, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '15'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="itmType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+                ,(SELECT LISTAGG(CODE_NAME, ',') WITHIN GROUP (ORDER BY CODE_NAME)
+                    FROM SYS0013M
+                  WHERE CODE_MASTER_ID = '15'
+                     AND CODE_ID IN
+                   <foreach item="item" collection="itmType" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                    )
+				,#{rem}
+				,#{useYn}
+                ,#{userId}
+                ,SYSDATE
+                ,#{userId}
+                ,SYSDATE
+            )
+    </insert>
+
+    <insert id="insertStockAuditDoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditDoc] 20191008 - KR OHK */
+        MERGE INTO LOG0094M A
+        USING (SELECT #{stockAuditNo} STOCK_AUDIT_NO
+	                        ,TO_CHAR(TO_DATE(#{insDocStartDt}, 'DD/MM/YYYY'), 'YYYYMMDD') DOC_START_DT
+	                        ,TO_CHAR(TO_DATE(#{insDocEndDt}, 'DD/MM/YYYY'), 'YYYYMMDD') DOC_END_DT
+	                        ,#{docStusCodeId} DOC_STUS_CODE_ID
+	                        ,'N' REUPLOAD_YN
+	                        ,#{stockAuditReason} STOCK_AUDIT_REASON
+	                        ,' ' LOC_TYPE
+	                        ,' ' LOC_TYPE_NM
+	                        ,' ' LOC_STK_GRAD
+	                        ,' ' CTGRY_TYPE
+	                        ,' ' CTGRY_TYPE_NM
+	                        ,' ' ITM_TYPE
+	                        ,' ' ITM_TYPE_NM
+	                        ,#{rem} REM
+	                        ,#{useYn} USE_YN
+	                        ,#{serialChkYn} SERIAL_CHK_YN
+	                        ,#{userId} USER_ID
+	                 FROM DUAL
+                 ) B
+            ON (A.STOCK_AUDIT_NO =  B.STOCK_AUDIT_NO)
+        WHEN MATCHED THEN
+            UPDATE SET A.DOC_START_DT = B.DOC_START_DT
+                            ,A.DOC_END_DT = B.DOC_END_DT
+                            ,A.STOCK_AUDIT_REASON = B.STOCK_AUDIT_REASON
+                            ,A.LOC_TYPE = B.LOC_TYPE
+	                        ,A.LOC_TYPE_NM = B.LOC_TYPE_NM
+	                        ,A.LOC_STK_GRAD = B.LOC_STK_GRAD
+	                        ,A.CTGRY_TYPE = B.CTGRY_TYPE
+	                        ,A.CTGRY_TYPE_NM = B.CTGRY_TYPE_NM
+	                        ,A.ITM_TYPE = B.ITM_TYPE
+	                        ,A.ITM_TYPE_NM = B.ITM_TYPE_NM
+	                        ,A.REM = B.REM
+	                        ,A.USE_YN = B.USE_YN
+	                        ,A.SERIAL_CHK_YN = B.SERIAL_CHK_YN
+	                        ,A.UPD_USER_ID = B.USER_ID
+	                        ,A.UPD_DT = SYSDATE
+        WHEN NOT MATCHED THEN
+            INSERT ( STOCK_AUDIT_NO
+		                ,DOC_START_DT
+		                ,DOC_END_DT
+		                ,DOC_STUS_CODE_ID
+		                ,REUPLOAD_YN
+		                ,STOCK_AUDIT_REASON
+		                ,LOC_TYPE
+                        ,LOC_TYPE_NM
+                        ,LOC_STK_GRAD
+                        ,CTGRY_TYPE
+                        ,CTGRY_TYPE_NM
+                        ,ITM_TYPE
+                        ,ITM_TYPE_NM
+                        ,REM
+		                ,USE_YN
+                        ,SERIAL_CHK_YN
+		                ,CRT_USER_ID
+		                ,CRT_DT
+		                ,UPD_USER_ID
+		                ,UPD_DT)
+           VALUES (B.STOCK_AUDIT_NO
+                        ,B.DOC_START_DT
+                        ,B.DOC_END_DT
+                        ,B.DOC_STUS_CODE_ID
+                        ,B.REUPLOAD_YN
+                        ,B.STOCK_AUDIT_REASON
+                        ,B.LOC_TYPE
+                        ,B.LOC_TYPE_NM
+                        ,B.LOC_STK_GRAD
+                        ,B.CTGRY_TYPE
+                        ,B.CTGRY_TYPE_NM
+                        ,B.ITM_TYPE
+                        ,B.ITM_TYPE_NM
+                        ,B.REM
+                        ,B.USE_YN
+                        ,B.SERIAL_CHK_YN
+                        ,B.USER_ID
+                        ,SYSDATE
+                        ,B.USER_ID
+                        ,SYSDATE)
+    </insert>
+
+    <update id="deleteStockAuditLoc" parameterType="Map">
+     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.deleteStockAuditLoc] 20191008 - KR OHK */
+        DELETE FROM LOG0095M
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND (WH_LOC_ID,1) NOT IN
+		       <foreach item="item" collection="adjwhLocId" index="index" open="(" separator="," close=")">
+		         (#{item},1)
+		       </foreach>
+    </update>
+
+    <update id="deleteStockAuditItem" parameterType="Map">
+     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.deleteStockAuditItem] 20191008 - KR OHK */
+        DELETE FROM LOG0096D
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+            AND (((ITM_ID,1) NOT IN
+				       <foreach item="item" collection="adjstkId" index="index" open="(" separator="," close=")">
+				         (#{item},1)
+				       </foreach>
+                    ) OR
+                    ((WH_LOC_ID,1) NOT IN
+		               <foreach item="item" collection="adjwhLocId" index="index" open="(" separator="," close=")">
+		                 (#{item},1)
+		               </foreach>
+                    )
+                  )
+    </update>
+
+    <insert id="insertStockAuditLoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditLoc] 20191008 - KR OHK */
+       MERGE INTO LOG0095M A
+        USING (SELECT #{stockAuditNo} STOCK_AUDIT_NO, WH_LOC_ID
+		            FROM SYS0028M
+		          WHERE 1 = 1
+		              AND (WH_LOC_ID,1) IN
+			           <foreach item="item" collection="adjwhLocId" index="index" open="(" separator="," close=")">
+				         (#{item},1)
+				       </foreach>
+		         ) B
+		    ON (A.STOCK_AUDIT_NO =  B.STOCK_AUDIT_NO AND A.WH_LOC_ID = B.WH_LOC_ID)
+	    WHEN NOT MATCHED THEN
+		    INSERT (A.STOCK_AUDIT_NO, A.WH_LOC_ID, A.LOC_STUS_CODE_ID, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
+		   VALUES (#{stockAuditNo}, B.WH_LOC_ID, #{locStusCodeId}, #{userId}, SYSDATE, #{userId}, SYSDATE)
+    </insert>
+
+    <insert id="insertStockAuditItem" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditItem] 20191008 - KR OHK */
+        MERGE INTO LOG0096D A
+	    USING (SELECT A.STOCK_AUDIT_NO, A.WH_LOC_ID, B.STK_ID, B.STK_GRAD, 0 SYS_QTY
+		             FROM LOG0095M A, SYS0026M B
+		           WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+		               AND (1, B.STK_ID) IN
+		               <foreach item="item" collection="adjstkId" index="index" open="(" separator="," close=")">
+                         (1, #{item})
+                       </foreach>
+		         ) B
+		    ON (B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID AND B.STK_ID = A.ITM_ID )
+		WHEN NOT MATCHED THEN
+		    INSERT (A.STOCK_AUDIT_NO, A.WH_LOC_ID, A.ITM_ID, A.WH_LOC_STK_GRAD, A.SYS_QTY, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
+		   VALUES (B.STOCK_AUDIT_NO, B.WH_LOC_ID, B.STK_ID, B.STK_GRAD, B.SYS_QTY, #{userId}, SYSDATE, #{userId}, SYSDATE)
+    </insert>
+
+    <insert id="updateStockAuditDoc" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertStockAuditDoc] 20191008 - KR OHK */
+        MERGE INTO LOG0094M A
+        USING (SELECT #{stockAuditNo} STOCK_AUDIT_NO,  A.LOC_TYPE, A.LOC_TYPE_NM, B.CTGRY_TYPE, B.CTGRY_TYPE_NM, C.ITM_TYPE, C.ITM_TYPE_NM, D.LOC_STK_GRAD
+				     FROM (SELECT LISTAGG(D.CODE_NAME, ',') WITHIN GROUP (ORDER BY D.CODE_NAME) LOC_TYPE_NM
+				                         ,LISTAGG(D.CODE_ID, ',') WITHIN GROUP (ORDER BY D.CODE_NAME) LOC_TYPE
+						         FROM LOG0094M A
+						        INNER JOIN LOG0095M B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+						        INNER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+						         LEFT OUTER JOIN SYS0013M D ON D.CODE = C.WH_LOC_GB AND D.CODE_MASTER_ID = '339'
+						       WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						     ) A,
+						     (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) CTGRY_TYPE_NM
+						                ,LISTAGG(T.CODE_ID, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) CTGRY_TYPE
+						        FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+						                    FROM LOG0094M A
+						                    INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+						                     LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+						                     LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = C.STK_CTGRY_ID AND D.CODE_MASTER_ID = '11'
+						                  WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						                ) T
+						     ) B,
+						     (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) ITM_TYPE_NM
+						                ,LISTAGG(T.CODE_ID, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) ITM_TYPE
+						         FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+							                 FROM LOG0094M A
+							                 INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+							                  LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+							                  LEFT OUTER JOIN SYS0013M D ON D.CODE_ID = C.STK_TYPE_ID AND D.CODE_MASTER_ID = '15'
+							               WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+						                 ) T
+							 ) C,
+							 (SELECT LISTAGG(T.CODE_NAME, ',') WITHIN GROUP (ORDER BY T.CODE_NAME) LOC_STK_GRAD
+							    FROM (SELECT DISTINCT D.CODE_ID ,D.CODE_NAME
+							                FROM LOG0094M A
+							                INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+							                 LEFT OUTER JOIN SYS0026M C ON C.STK_ID = B.ITM_ID
+							                 LEFT OUTER JOIN SYS0013M D ON D.CODE = C.STK_GRAD AND D.CODE_MASTER_ID = '383'
+							              WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+							            ) T
+				             ) D
+                 ) B
+            ON (A.STOCK_AUDIT_NO =  B.STOCK_AUDIT_NO)
+        WHEN MATCHED THEN
+             UPDATE SET A.LOC_TYPE = B.LOC_TYPE
+                             ,A.LOC_TYPE_NM = B.LOC_TYPE_NM
+                             ,A.LOC_STK_GRAD = B.LOC_STK_GRAD
+                             ,A.CTGRY_TYPE = B.CTGRY_TYPE
+                             ,A.CTGRY_TYPE_NM = B.CTGRY_TYPE_NM
+                             ,A.ITM_TYPE = B.ITM_TYPE
+                             ,A.ITM_TYPE_NM = B.ITM_TYPE_NM
+    </insert>
+
+
+    <update id="updateDocStusCode" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateDocStusCode] 20191014 - KR OHK */
+        UPDATE LOG0094M
+             SET DOC_STUS_CODE_ID = #{docStusCodeId}
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </update>
+
+    <update id="updateLocStusCode" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateLocStusCode] 20191014 - KR OHK */
+        UPDATE LOG0095M
+             SET LOC_STUS_CODE_ID = #{locStusCodeId}
+                  ,UPD_USER_ID  = #{userId}
+                  ,UPD_DT = SYSDATE
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </update>
+
+    <update id="saveDocAppvInfo" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.saveDocAppvInfo] 20191014 - KR OHK */
+        UPDATE LOG0094M
+             SET UPD_USER_ID = #{userId}
+                  ,UPD_DT = SYSDATE
+             <if test="appvType eq 'aprv2'.toString() or appvType eq 'rejt2'.toString() ">
+                  ,REUPLOAD_YN = #{reuploadYn}
+                  ,APPV_ATCH_FILE_GRP_ID = #{atchFileGrpId}
+             </if>
+             <if test="appvType eq '3ReqAprv'.toString()">
+                  ,DOC_STUS_CODE_ID = #{docStusCodeId}
+                  ,REUPLOAD_YN = #{reuploadYn}
+                  ,APPV_3_REQST_USER_ID = #{userId}
+				  ,APPV_3_REQST_DT = SYSDATE
+				  ,APPV_3_REQST_OPINION = #{appv3ReqstOpinion}
+				  ,APPV_ATCH_FILE_GRP_ID = #{atchFileGrpId}
+             </if>
+             <if test="appvType eq 'aprv3'.toString() or appvType eq 'rejt3'.toString() ">
+                  ,DOC_STUS_CODE_ID = #{docStusCodeId}
+                  ,APPV_3_USER_ID= #{userId}
+				  ,APPV_3_DT = SYSDATE
+				  ,APPV_3_OPINION = #{appv3Opinion}
+             </if>
+             <if test="appvType eq 'other'.toString()">
+                  ,DOC_STUS_CODE_ID = #{docStusCodeId}
+             </if>
+             <if test=" appvType eq 'comp'.toString()">
+                  ,DOC_STUS_CODE_ID = #{docStusCodeId}
+                  ,APPV_ATCH_FILE_GRP_ID = #{atchFileGrpId}
+             </if>
+        WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </update>
+
+    <update id="updateSysQty" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateSysQty] 20191018 - KR OHK */
+    MERGE INTO LOG0096D A
+         USING (SELECT A.STOCK_AUDIT_NO
+	                          ,A.WH_LOC_ID
+	                          ,A.ITM_ID
+	                          ,NVL(B.QTY,0) QTY
+	                          ,B.STK_CODE
+                  FROM LOG0096D A
+                   LEFT OUTER JOIN (SELECT  A.LOC_ID
+                                                        ,A.STK_CODE
+                                                        ,A.QTY
+                                                        ,A.MOV_QTY
+                                                        ,B.STK_ID
+                                               FROM LOG0056M A
+                                                LEFT OUTER JOIN SYS0026M B ON B.STK_CODE = A.STK_CODE
+					                       ) B ON B.LOC_ID = A.WH_LOC_ID AND B.STK_ID = A.ITM_ID
+				WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+                 ) B
+            ON (B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID AND B.ITM_ID = A.ITM_ID )
+        WHEN MATCHED THEN
+            UPDATE SET A.SYS_QTY = NVL(B.QTY,0)
+    </update>
+
+    <update id="updateOtherTrnscType" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateOtherTrnscType] 20191022 - KR OHK */
+	    UPDATE LOG0096D A
+		     SET A.OTHER_TRNSC_TYPE = (CASE WHEN A.OTHER_TRNSC_TYPE IS NULL AND A.OTHER_QTY > 0 THEN 'OG'
+							                                   WHEN A.OTHER_TRNSC_TYPE IS NULL AND A.OTHER_QTY <![CDATA[<]]> 0 THEN 'OI'
+							                                   WHEN A.OTHER_TRNSC_TYPE IS NULL AND A.OTHER_QTY = 0 THEN NULL
+							                            END)
+			      ,A.OTHER_TRNSC_TYPE_DTL = (CASE WHEN A.OTHER_TRNSC_TYPE_DTL IS NULL AND A.OTHER_QTY > 0 THEN 'OG53'
+							                                  WHEN A.OTHER_TRNSC_TYPE_DTL IS NULL AND A.OTHER_QTY <![CDATA[<]]> 0 THEN 'OI71'
+							                                  WHEN A.OTHER_TRNSC_TYPE_DTL IS NULL AND A.OTHER_QTY = 0 THEN NULL
+							                            END)
+		 WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+    </update>
+
+    <select id="getOtherGiGrReqstNo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.getOtherGiGrReqstNo] 20191022 - KR OHK */
+        SELECT T.STOCK_AUDIT_NO
+			      ,T.WH_LOC_ID
+			      ,T.OTHER_TRNSC_TYPE
+			      ,T.WH_LOC_STK_GRAD
+			      ,T.OTHER_REASON
+			      ,('SOH' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD(SOH_SEQ.NEXTVAL, 5, '0')) OTHER_REQST_NO
+		  FROM (SELECT STOCK_AUDIT_NO, WH_LOC_ID, OTHER_TRNSC_TYPE, WH_LOC_STK_GRAD, OTHER_REASON
+			          FROM LOG0096D
+			         WHERE STOCK_AUDIT_NO =  #{stockAuditNo}
+			             AND OTHER_TRNSC_TYPE IS NOT NULL
+			         GROUP BY STOCK_AUDIT_NO, WH_LOC_ID, OTHER_TRNSC_TYPE, WH_LOC_STK_GRAD, OTHER_REASON
+                  )T
+    </select>
+
+    <select id="getOtherTargetReqstNo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.getOtherGiGrReqstNo] 20191022 - KR OHK */
+		SELECT (LISTAGG(OTHER_REQST_NO, '∈') WITHIN GROUP (ORDER BY OTHER_REQST_NO))  OTHER_REQST_NO
+		          ,MAX(OTHER_TRNSC_TYPE) OTHER_TRNSC_TYPE
+          FROM  (SELECT OTHER_REQST_NO, OTHER_TRNSC_TYPE
+			           FROM LOG0096D
+			         WHERE STOCK_AUDIT_NO =   #{stockAuditNo}
+			            AND OTHER_TRNSC_TYPE IS NOT NULL
+			         GROUP BY OTHER_REQST_NO, OTHER_TRNSC_TYPE
+                   )
+    </select>
+
+    <update id="updateOtherGiGrReqstInfo" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.updateOtherGiGrReqstNo] 20191022 - KR OHK */
+	    UPDATE LOG0096D
+	         SET OTHER_REQST_NO = #{otherReqstNo}
+	             , OTHER_REM = #{otherRem}
+	             , OTHER_REQST_REQUIRE_DT =  TO_DATE(#{reqstDt}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+	             , UPD_USER_ID = #{userId}
+                 , UPD_DT = SYSDATE
+	     WHERE STOCK_AUDIT_NO =  #{stockAuditNo}
+	         AND WH_LOC_ID = #{whLocId}
+	         AND OTHER_TRNSC_TYPE = #{otherTrnscType}
+	         AND WH_LOC_STK_GRAD = #{whLocStkGrad}
+	         AND OTHER_REASON = #{otherReason}
+    </update>
+
+    <update id="insertLOG0047M" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertLOG0047M] 20191022 - KR OHK */
+	    INSERT INTO LOG0047M( REQST_NO,
+	                      TRNSC_TYPE,
+	                      TRNSC_TYPE_DTL,
+	                      REQST_CRT_DT,
+	                      REQST_REQUIRE_DT,
+	                      REQST_REM_,
+	                      REQST_CDC_RDC,
+	                      REQST_STUS,
+	                      CRT_USER_ID,
+	                      CRT_DT,
+	                      REQST_TYPE,
+	                      REQST_TYPE_DTL,
+	                      DOC_HDER_TXT,
+	                      ADJ_RSN,
+	                      REF_DOC_NO)
+			SELECT DISTINCT A.OTHER_REQST_NO
+				      ,A.OTHER_TRNSC_TYPE
+				      ,A.OTHER_TRNSC_TYPE_DTL
+				      ,SYSDATE
+				      ,A.OTHER_REQST_REQUIRE_DT
+				      ,A.OTHER_REM AS REM
+				      ,A.WH_LOC_ID
+				      ,'O'
+				      ,#{userId}
+				      ,SYSDATE
+				      ,A.OTHER_TRNSC_TYPE
+	                  ,A.OTHER_TRNSC_TYPE_DTL
+	                  ,#{otherRem}
+	                  ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID IN (433, 434) AND CODE = A.OTHER_REASON)
+	                  ,A.STOCK_AUDIT_NO
+				  FROM LOG0096D A
+				WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+				    AND A.OTHER_REQST_NO IS NOT NULL
+				 GROUP BY A.OTHER_REQST_NO, A.OTHER_TRNSC_TYPE, A.OTHER_TRNSC_TYPE_DTL, A.OTHER_REQST_REQUIRE_DT, A.OTHER_REM, A.WH_LOC_ID, A.OTHER_REASON, A.STOCK_AUDIT_NO
+    </update>
+
+    <update id="insertLOG0048D" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.insertLOG0048D] 20191022 - KR OHK */
+	    INSERT INTO LOG0048D( REQST_NO,
+	                          REQST_NO_ITM,
+	                          ITM_CODE,
+	                          ITM_NAME,
+	                          REQST_QTY,
+	                          UOM,
+	                          CRT_USER_ID,
+	                          CRT_DT)
+				SELECT A.OTHER_REQST_NO
+				          ,RANK() OVER (PARTITION BY A.OTHER_REQST_NO ORDER BY B.STK_CODE) REQST_NO_ITM
+				          ,B.STK_CODE
+					      ,B.STK_DESC
+					      ,ABS(A.OTHER_QTY)
+					      ,B.UOM
+					      ,#{userId}
+				          ,SYSDATE
+				  FROM LOG0096D A
+				   LEFT OUTER JOIN SYS0026M B ON B.STK_ID = A.ITM_ID
+				WHERE A.STOCK_AUDIT_NO = #{stockAuditNo}
+				    AND A.OTHER_REQST_NO IS NOT NULL
+    </update>
+
+    <select id="selectStockAuditDocStatus" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditDocStatus] 20191118 - KR OHK */
+        SELECT A.DOC_STUS_CODE_ID
+                  ,B.CODE_NAME DOC_STUS_CODE_NAME
+          FROM LOG0094M A
+           LEFT OUTER JOIN SYS0013M B ON B.CODE_ID = A.DOC_STUS_CODE_ID AND B.CODE_MASTER_ID = 436
+        WHERE STOCK_AUDIT_NO =  #{stockAuditNo}
+    </select>
+
+    <select id="selectStockAuditAprvCnt" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditAprvCnt] 20191118 - KR OHK */
+        SELECT COUNT(*) ALL_CNT
+			      ,NVL(SUM(CASE WHEN LOC_STUS_CODE_ID = 5690 THEN 1 ELSE NULL END),0) APRV2_CNT
+		  FROM LOG0095M
+		WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </select>
+
+    <select id="selectStockAuditDocDtTime" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditDocDtTime] 20191120 - KR OHK*/
+         SELECT TO_CHAR(UPD_DT, 'YYYYMMDDHH24MISS') UPD_DT_TIME
+           FROM LOG0094M
+         WHERE STOCK_AUDIT_NO = #{stockAuditNo}
+    </select>
+
+    <select id="selectStockAuditProcInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.selectStockAuditProcInfo] 20191121 - KR OHK*/
+    SELECT '(' || C.WH_LOC_CODE || ')'|| C.WH_LOC_DESC LOC_INFO
+               ,COUNT(1) PROC_CNT
+	  FROM LOG0095M A
+	 INNER JOIN LOG0096D B ON B.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO AND B.WH_LOC_ID = A.WH_LOC_ID
+	 INNER JOIN LOG0094M M ON M.STOCK_AUDIT_NO = A.STOCK_AUDIT_NO
+	   LEFT OUTER JOIN SYS0028M C ON C.WH_LOC_ID = B.WH_LOC_ID
+    WHERE B.WH_LOC_ID = #{whLocId}
+	    AND (1, B.ITM_ID) IN
+        <foreach item="item" collection="adjstkId" index="index" open="(" separator="," close=")">
+          (1, #{item})
+        </foreach>
+	    AND A.LOC_STUS_CODE_ID IN (5685, 5686, 5687, 5688, 5690, 5712)
+	    AND M.USE_YN = 'Y'
+	 GROUP BY C.WH_LOC_CODE, C.WH_LOC_DESC
+    </select>
+
+    <resultMap id="SERIALADDATA" type="egovMap" />
+    <select id="SP_LOGISTIC_DELIVERY_SERIAL"  statementType="CALLABLE" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.SP_LOGISTIC_DELIVERY_SERIAL] 20191228 - KR OHK*/
+       { call SP_LOGISTIC_DELIVERY_SERIAL
+               (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId}
+               ,#{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=SERIALADDATA} )
+       }
+    </select>
+
+    <select id="SP_LOGISTIC_BARCODE_SAVE_AD"  parameterType="Map"  statementType="CALLABLE" >
+    /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_LOGISTIC_BARCODE_SAVE_AD] 20191228 - KR OHK*/
+      {
+          call  SP_LOGISTIC_BARCODE_SAVE_AD(#{delvryGrDt}, #{reqstNo}, #{delvryNo}, #{trnscType}, #{ioType}, #{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
+      }
+     </select>
+</mapper>

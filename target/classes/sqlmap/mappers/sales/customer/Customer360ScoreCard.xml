@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.sales.customer.impl.Customer360ScoreCardMapper">
+
+    <select id="customer360ScoreCardList" parameterType="Map" resultType="egovMap">
+    SELECT
+          CUSTMAS.CUST_ID
+          , CUSTMAS.NAME
+          , CUSTMAS.NRIC
+	    FROM SAL0029D CUSTMAS                               <!-- customer master -->
+        INNER JOIN SAL0001D s0001d                             <!-- sales order master -->
+        ON s0001d.CUST_ID = CUSTMAS.CUST_ID
+        INNER JOIN SAL0002D s0002d                                 <!--sales order details-->
+        ON s0002d.SALES_ORD_ID = s0001d.SALES_ORD_ID
+        INNER JOIN SAL1006V s1006v                                              <!-- CYSTOMER LOYALTY -->
+        ON CUSTMAS.CUST_ID = s1006v.CUST_ID
+        INNER JOIN SAL0045D s0045d
+        ON  s0001d.SALES_ORD_ID = s0045d.SALES_ORD_ID
+        INNER JOIN SAL0023D s0023d
+		ON s0023d.cust_add_id = s0045d.add_id
+		INNER JOIN SYS0064M s0064m
+		ON s0023d.AREA_ID = s0064m.AREA_ID                           <!-- CYSTOMER INSTALL AREA -->
+	    WHERE 1=1
+	    AND CUSTMAS.NATION = 1 <!-- Malaysian -->
+        AND CUSTMAS.TYPE_ID = 964 <!-- Individual -->
+		<if test="custId != null and custId != ''">
+			AND UPPER(s0001d.CUST_ID) = UPPER(#{custId})
+		</if>
+		<if test="custIc != null and custIc != ''">
+			AND UPPER(CUSTMAS.NRIC) = UPPER(#{custIc})
+		</if>
+        <if test="mLoyalty != null and mLoyalty != ''">
+            <if test="mLoyalty == 'fresh' ">
+                AND s1006v.CRT_DUR BETWEEN 1 AND 6
+            </if>
+            <if test="mLoyalty == 'new' ">
+                AND s1006v.CRT_DUR = 0
+            </if>
+            <if test="mLoyalty == 'existing' ">
+                AND s1006v.CRT_DUR BETWEEN 7 AND 59
+            </if>
+            <if test="mLoyalty == 'loyal' ">
+                AND s1006v.CRT_DUR >= 60
+            </if>
+        </if>
+        <if test="mState != null and mState != ''">
+            AND UPPER(s0064m.STATE) = UPPER(#{mState})
+        </if>
+        GROUP BY CUSTMAS.CUST_ID, CUSTMAS.NAME, CUSTMAS.NRIC
+	</select>
+</mapper>

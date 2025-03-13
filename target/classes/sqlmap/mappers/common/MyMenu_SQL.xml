@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.MyMenuMapper">
+
+<select id="selectMyMenuList" parameterType="Map" resultType="egovMap">
+	SELECT a.user_id
+	         , a.mymenu_code
+	         , a.mymenu_name
+	         , a.mymenu_order
+	         , a.use_yn
+	         , a.user_id||a.mymenu_code as row_id /* PK, AUIGrid key row setting */
+	   FROM SYS0059M a
+	 WHERE a.user_id = #{userId}
+	     <if test="useYn != null and useYn !=''">
+	     AND a.use_yn = #{useYn}
+	     </if>
+	     <if test="mymenuCode != null and mymenuCode !=''">
+	     AND (UPPER(a.mymenu_code) LIKE  UPPER(#{mymenuCode}) || '%' OR
+	             UPPER(a.mymenu_name) LIKE '%' || UPPER(#{mymenuCode}) || '%')
+	     </if>
+</select>
+
+<insert id="insertMyMenu" parameterType="Map">
+	INSERT INTO sys0059m
+	(
+	    user_id,
+	    mymenu_code,
+	    mymenu_name,
+	    mymenu_order,
+	    use_yn,
+	    crt_user_id,
+	    crt_dt,
+	    upd_user_id,
+	    upd_dt
+	)
+	VALUES
+	(
+	    #{userId},
+	    #{mymenuCode},
+	    #{mymenuName},
+	    #{mymenuOrder},
+	    #{useYn},
+	    #{userId},
+	    SYSDATE,
+	    #{userId},
+	    SYSDATE
+	)
+</insert>
+
+<update id="updateMyMenu" parameterType="Map">
+	UPDATE SYS0059M a
+	     SET a.mymenu_name = #{mymenuName}
+	         , a.mymenu_order = #{mymenuOrder}
+	         , a.use_yn = #{useYn}
+	         , a.upd_user_id = #{userId}
+	         , a.upd_dt = SYSDATE
+	 WHERE a.user_id = #{userId}
+	     AND a.mymenu_code = #{mymenuCode}
+</update>
+
+<delete id="deleteMyMenu" parameterType="Map">
+	DELETE
+	  FROM SYS0059M a
+	WHERE a.user_id = #{userId}
+	    AND a.mymenu_code = #{mymenuCode}
+</delete>
+
+<select id="selectMyMenuProgrmList" parameterType="Map" resultType="egovMap">
+	SELECT a.user_id
+	         , a.mymenu_code
+	         , d.mymenu_name
+	         , a.menu_code
+	         , b.menu_name
+	         , a.pgm_ord
+	         , b.pgm_code
+	         , c.pgm_name
+	         , a.user_id||a.mymenu_code||a.menu_code as row_id /* PK, AUIGrid key row setting */
+	 FROM SYS0060D a
+             , SYS0051M b
+             , SYS0050M c
+             , SYS0059M d
+   WHERE a.menu_code = b.menu_code
+       AND a.user_id = d.user_id
+       AND b.pgm_code = c.pgm_code
+       AND a.mymenu_code = d.mymenu_code
+       AND a.user_id = #{userId}
+       <if test="mymenuCode != null and mymenuCode !=''">
+	   AND a.mymenu_code = #{mymenuCode}
+	   </if>
+	   <if test="menuCode != null and menuCode !=''">
+       AND a.menu_code = #{menuCode}
+       </if>
+</select>
+
+<insert id="insertMyMenuProgrm" parameterType="Map">
+	INSERT INTO SYS0060D
+	(
+	   user_id
+	   ,mymenu_code
+	   ,menu_code
+	   ,pgm_ord
+	   ,crt_user_id
+	   ,crt_dt
+	   ,upd_user_id
+	   ,upd_dt
+	)
+	VALUES
+	(
+	   #{userId}
+	   ,#{mymenuCode}
+	   ,#{menuCode}
+	   ,#{pgmOrd}
+	   ,#{userId}
+	   ,SYSDATE
+	   ,#{userId}
+	   ,SYSDATE
+	)
+</insert>
+
+<update id="updateMyMenuProgrm" parameterType="Map">
+	UPDATE SYS0060D a
+	     SET a.pgm_ord = #{pgmOrd}
+	         , a.upd_user_id = #{userId}
+	         , a.upd_dt = SYSDATE
+	 WHERE a.user_id = #{userId}
+	     AND a.mymenu_code = #{mymenuCode}
+	     AND a.menu_code = #{menuCode}
+</update>
+
+<delete id="deleteMyMenuProgrm" parameterType="Map">
+	DELETE
+	  FROM SYS0060D a
+	 WHERE 1=1
+	     AND a.user_id = #{userId}
+	     <if test="mymenuCode != null and mymenuCode !=''">
+	     AND a.mymenu_code = #{mymenuCode}
+	     </if>
+	     AND a.menu_code = #{menuCode}
+</delete>
+
+<select id="selectMenuPop" parameterType="Map" resultType="egovMap">
+	SELECT a.menu_code
+	         , a.menu_name
+	         , b.pgm_code
+	         , b.pgm_name
+	  FROM SYS0051M a
+	         , SYS0050M b
+	 WHERE a.pgm_code = b.pgm_code
+	     AND a.menu_code IN
+	     (
+	           SELECT DISTINCT H.MENU_CODE
+                 FROM (
+	                          /* 선택한 권한*/
+	                          SELECT NULL AS AUTH_CODE
+	                                ,G.MENU_CODE
+	                                ,G.PGM_TRN_CODE
+	                                ,G.VALID_DT_FROM
+	                                ,G.VALID_DT_TO
+	                                ,G.FUNC_YN
+	                                ,'N' AS EXIST_YN
+	                            FROM SYS0057M G
+	                           WHERE G.USER_ID = 44004
+	                           AND G.FUNC_YN = 'Y'
+	                           AND SYSDATE BETWEEN TO_DATE (NVL (G.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+	                                                           AND TO_DATE (NVL (G.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+	                          UNION
+	                          /* 선택한 권한의 매핑된 Role의 상위 권한 */
+	                          SELECT E.AUTH_CODE
+	                                ,E.MENU_CODE
+	                                ,E.PGM_TRN_CODE
+	                                ,NULL AS VALID_DT_FROM
+	                                ,NULL AS VALID_DT_TO
+	                                ,E.FUNC_YN
+	                                ,CASE
+	                                    WHEN F.OWN_USER_ID IS NULL
+	                                    AND E.FUNC_YN = 'Y'
+	                                       THEN 'Y'
+	                                    ELSE 'N'
+	                                 END AS EXIST_YN
+	                            FROM SYS0056M E
+	                                , (SELECT D.ROLE_ID
+	                                         ,D.AUTH_CODE
+	                                         ,C.USER_ID AS OWN_USER_ID
+	                                     FROM (SELECT     B.USER_ID
+	                                                     ,A.ROLE_ID
+	                                                 FROM SYS0044M A, SYS0045M B
+	                                                WHERE A.ROLE_ID = B.ROLE_ID(+)
+	                                                  AND B.USER_ID(+) = 44004
+	                                           START WITH A.ROLE_ID = B.ROLE_ID
+	                                           CONNECT BY A.ROLE_ID = PRIOR A.PARENT_ROLE) C
+	                                         ,SYS0054M D
+	                                    WHERE C.ROLE_ID = D.ROLE_ID) F
+	                           WHERE E.AUTH_CODE = F.AUTH_CODE
+	                           AND E.FUNC_YN = 'Y'
+	                          UNION
+	                          /* 예외적으로 부여받은 개인권한 */
+	                          SELECT A.AUTH_CODE
+	                                ,A.MENU_CODE
+	                                ,A.PGM_TRN_CODE
+	                                ,B.VALID_DT_FROM
+	                                ,B.VALID_DT_TO
+	                                ,A.FUNC_YN
+	                                ,CASE
+	                                    WHEN A.FUNC_YN = 'Y'
+	                                       THEN 'Y'
+	                                    ELSE 'N'
+	                                 END AS EXIST_YN
+	                            FROM SYS0056M A, SYS0055M B
+	                           WHERE A.AUTH_CODE = B.AUTH_CODE
+	                             AND B.USER_ID = 44004
+	                             AND A.FUNC_YN = 'Y'
+	                             AND SYSDATE BETWEEN TO_DATE (NVL (B.VALID_DT_FROM, '19001231') || '00', 'YYYYMMDDHH24')
+	                                                             AND TO_DATE (NVL (B.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
+                          ) H
+         )
+	     <if test="popMenuCode != null and popMenuCode !=''">
+	     AND (UPPER(a.menu_code) LIKE  UPPER(#{popMenuCode}) || '%'  OR
+                UPPER(a.menu_name) LIKE '%' || UPPER(#{popMenuCode}) || '%')
+	     </if>
+	     ORDER BY a.menu_name
+</select>
+
+</mapper>

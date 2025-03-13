@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.roommanage.impl.RoomManagementMapper">
+    
+    <select id="roomManagementList"  parameterType="Map" resultType="EgovMap">
+    <!-- RoomMaster 생성 요청함 2017-10-26 -->
+    SELECT RUM_ID, RUM_CODE, RUM_NAME, STUS_ID, BRNCH_ID, 
+           ADV_OPTN_ID, ADV_TM_IN_MIN, CRT_USER_ID, CRT_DT, 
+           UPD_USER_ID, UPD_DT, HAS_IMG, IMG_URL, CPCTY, RUM_DESC
+      FROM LOG0079M
+      WHERE 1=1
+      <if test="searchroomId !=null and searchroomId !=''">
+      AND RUM_ID =#{searchroomId}
+      </if>
+      <if test="searchroomCd !=null and searchroomCd !=''">
+      AND RUM_ID LIKE #{searchroomCd}||'%'
+      </if>
+      <if test="searchroomNm !=null and searchroomNm !=''">
+      AND RUM_NAME LIKE #{searchroomNm}||'%'
+      </if>
+      <if test="searchstatus !=null and searchstatus !=''">
+      AND STUS_ID =#{searchstatus}
+      </if>
+      <if test="searchbranchid !=null and searchbranchid !=''">
+      AND BRNCH_ID =#{searchbranchid}
+      </if>
+      <if test="searchmin !=null and searchmin !='' and searchmax !=null and searchmax !=''">
+      AND CPCTY BETWEEN #{searchmin} AND #{searchmax}
+      </if>
+      ORDER BY RUM_ID
+    </select>
+    <select id="roomBookingList"  parameterType="Map" resultType="EgovMap">
+    <!-- RoomMaster 생성 요청함 2017-10-26 -->
+    SELECT RUM_BOOK_ID, RUM_ID, STUS_ID, 
+           TO_CHAR(BOOK_DT_FROM , 'YYYY-MM-DD') BOOKFROM , TO_CHAR(BOOK_DT_TO , 'YYYY-MM-DD') BOOKTO , REM, 
+           CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT, BOOK_TITLE , TO_CHAR(ADD_MONTHS(SYSDATE , ${addmonth}) , 'YYYY-MM-DD') NOWDATE
+      FROM LOG0080D
+     WHERE RUM_ID = #{roomid}
+    </select>
+    <select id="selectEditData"  parameterType="Map" resultType="EgovMap">
+    <![CDATA[SELECT LIMIT1.RUM_ID RUM_ID
+						      ,LIMIT1.ADV_OPTN_ID ADV_OPTN_ID
+						      ,LIMIT1.C1 C1
+						      ,LIMIT1.ADV_TM_IN_MIN ADV_TM_IN_MIN
+						      ,LIMIT1.BRNCH_ID BRNCH_ID
+						      ,LIMIT1.C2 C2
+						      ,LIMIT1.C3 C3
+						      ,LIMIT1.CPCTY CPCTY
+						      ,LIMIT1.CRT_DT CRT_DT
+						      ,LIMIT1.CRT_USER_ID CRT_USER_ID
+						      ,LIMIT1.RUM_DESC RUM_DESC
+						      ,LIMIT1.HAS_IMG HAS_IMG
+						      ,LIMIT1.IMG_URL IMG_URL
+						      ,LIMIT1.RUM_CODE RUM_CODE
+						      ,LIMIT1.RUM_NAME RUM_NAME
+						      ,LIMIT1.STUS_ID STUS_ID
+						      ,LIMIT1.CODE CODE
+						      ,LIMIT1.NAME NAME
+						      ,LIMIT1.UPD_USER_ID UPD_USER_ID
+						      ,LIMIT1.UPD_DT UPD_DT
+						  FROM (SELECT EXTENT1.RUM_ID RUM_ID
+						              ,EXTENT1.RUM_CODE RUM_CODE
+						              ,EXTENT1.RUM_NAME RUM_NAME
+						              ,EXTENT1.STUS_ID STUS_ID
+						              ,EXTENT1.BRNCH_ID BRNCH_ID
+						              ,EXTENT1.ADV_OPTN_ID ADV_OPTN_ID
+						              ,EXTENT1.ADV_TM_IN_MIN ADV_TM_IN_MIN
+						              ,EXTENT1.CRT_USER_ID CRT_USER_ID
+						              ,EXTENT1.CRT_DT CRT_DT
+						              ,EXTENT1.UPD_USER_ID UPD_USER_ID
+						              ,EXTENT1.UPD_DT UPD_DT
+						              ,EXTENT1.HAS_IMG HAS_IMG
+						              ,EXTENT1.IMG_URL IMG_URL
+						              ,EXTENT1.CPCTY CPCTY
+						              ,EXTENT1.RUM_DESC RUM_DESC
+						              ,EXTENT2.CODE CODE
+						              ,EXTENT2.NAME NAME
+						              ,CASE
+						                  WHEN (EXTENT3.CODE_ID IS NOT NULL)
+						                     THEN EXTENT3.CODE_NAME
+						                  ELSE   ''
+						               END C1
+						              ,CASE
+						                  WHEN (EXTENT4.BRNCH_ID IS NOT NULL)
+						                     THEN EXTENT4.CODE
+						                  ELSE  ''
+						               END C2
+						              ,CASE
+						                  WHEN (EXTENT4.BRNCH_ID IS NOT NULL)
+						                     THEN EXTENT4.NAME
+						                  ELSE  ''
+						               END C3
+						          FROM LOG0079M EXTENT1 JOIN SYS0038M EXTENT2 ON EXTENT2.STUS_CODE_ID = EXTENT1.STUS_ID
+						               LEFT JOIN SYS0013M EXTENT3 ON EXTENT3.CODE_ID = EXTENT1.ADV_OPTN_ID
+						               LEFT JOIN SYS0005M EXTENT4 ON EXTENT4.BRNCH_ID = EXTENT1.BRNCH_ID
+						         WHERE EXTENT1.RUM_ID =  #{rumId}
+						           AND ROWNUM <= 1) LIMIT1 ]]>
+    </select>
+    <select id="maxRoomId"  parameterType="Map" resultType="int">
+    SELECT MAX(RUM_ID)+1 FROM LOG0079M
+    </select>
+    <insert id="saveNewEditData" parameterType="Map">
+       MERGE INTO LOG0079M
+            USING DUAL
+                ON (RUM_ID=#{roomId})
+            WHEN MATCHED THEN
+                UPDATE
+                    SET RUM_CODE =#{newRoomCd},
+					      RUM_NAME =#{newRoomNm},
+					      BRNCH_ID =#{newbranchid},
+					      ADV_OPTN_ID =#{newOption},
+					      ADV_TM_IN_MIN =#{newAdvTimeInMinute},
+					      UPD_USER_ID =#{userId},
+					      UPD_DT = SYSDATE,
+					      CPCTY =#{newCapacity},
+					      RUM_DESC =#{description}
+             WHEN NOT MATCHED THEN      
+                 INSERT
+                 (
+                   RUM_ID
+			      ,RUM_CODE
+			      ,RUM_NAME
+			      ,STUS_ID
+			      ,BRNCH_ID
+			      ,ADV_OPTN_ID
+			      ,ADV_TM_IN_MIN
+			      ,CRT_USER_ID
+			      ,CRT_DT
+			      ,UPD_USER_ID
+			      ,UPD_DT
+			      ,CPCTY
+			      ,RUM_DESC
+                 )
+                 VALUES
+                 (
+                   #{maxRoomId},
+                   #{newRoomCd},
+                   #{newRoomNm},
+                   1,
+                   #{newbranchid},
+                   #{newOption},
+                   #{newAdvTimeInMinute},
+                   #{userId},
+                   SYSDATE,
+                   #{userId},
+                   SYSDATE,
+                   #{newCapacity},
+                   #{description}
+                 ) 
+    </insert>
+    <update id="updateDeActive" parameterType="Map">
+        UPDATE LOG0079M
+                   <choose>
+                    <when test="RoomStatus eq 'ACT'.toString()">
+	                     SET STUS_ID        =  8,
+                    </when>
+                    <otherwise>
+                         SET STUS_ID        = 1,
+                    </otherwise>
+                   </choose>
+                      UPD_USER_ID  = #{userId},
+                      UPD_DT          =  SYSDATE
+                WHERE RUM_ID = #{roomId}
+    </update>
+</mapper>

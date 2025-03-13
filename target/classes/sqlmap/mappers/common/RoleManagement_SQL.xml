@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.RoleManagementMapper">
+
+    <select id="selectRolesByParentRole" parameterType="int" resultType="egovMap">
+        SELECT
+            ROLE_ID
+            ,ROLE_CODE
+            ,ROLE_DESC
+            ,PARENT_ROLE
+            ,STUS
+            ,ROLE_LEV
+        FROM SYS0044M SROLE
+        WHERE SROLE.PARENT_ROLE = #{parentRole}
+        ORDER BY SROLE.ROLE_CODE, SROLE.ROLE_ID
+    </select>
+
+    <select id="selectRoleManagementList" parameterType="Map" resultType="egovMap">
+        SELECT
+                T.ROLE_ID
+                ,T.ROLE_CODE
+                ,T.PARENT_ROLE
+                ,T.STUS
+                ,STATUS.NAME AS STATUS_NAME
+                ,T.LVL
+                ,T.ROLE_LEV
+                ,T.ROLE_DESC
+                ,T.PATH_ROLE_CODE
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_CODE, '[^|!|]+', 1, 1, 'i') ) AS LVL1
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_CODE, '[^|!|]+', 1, 2, 'i') ) AS LVL2
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_CODE, '[^|!|]+', 1, 3, 'i') ) AS LVL3
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_ID, '[^|!|]+', 1, 1, 'i') ) AS LVL_CODE1
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_ID, '[^|!|]+', 1, 2, 'i') ) AS LVL_CODE2
+                ,TRIM (REGEXP_SUBSTR (T.PATH_ROLE_ID, '[^|!|]+', 1, 3, 'i') ) AS LVL_CODE3
+                FROM (SELECT LEVEL LVL
+                ,ROLE_ID
+                ,ROLE_CODE
+                ,PARENT_ROLE
+                ,STUS
+                ,ROLE_LEV
+                ,ROLE_DESC
+                ,SYS_CONNECT_BY_PATH (SROLE.ROLE_CODE, '|!|') AS PATH_ROLE_CODE
+                ,SYS_CONNECT_BY_PATH (SROLE.ROLE_ID, '|!|') AS PATH_ROLE_ID
+        FROM (SELECT *
+                        FROM SYS0044M
+                        WHERE 1=1
+                        <if test="status != null and status != ''">
+                            AND STUS IN
+                            <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+                    ) SROLE
+        START WITH SROLE.PARENT_ROLE = 0
+        CONNECT BY PRIOR SROLE.ROLE_ID = SROLE.PARENT_ROLE
+        ORDER SIBLINGS BY SROLE.ROLE_CODE, SROLE.ROLE_ID
+        ) T,  SYS0038M STATUS
+        WHERE T.STUS = STATUS.STUS_CODE_ID
+        AND 'T' = CASE WHEN #{keyword} IS NULL OR T.PATH_ROLE_CODE LIKE '%'||#{keyword}||'%'
+                                        THEN 'T'
+                                      ELSE 'F'
+                            END
+        AND 'T' = CASE WHEN #{roleId} IS NULL OR T.ROLE_ID = #{roleId}
+                                    THEN 'T'
+                                    ELSE 'F'
+                        END
+        AND 'T' = CASE WHEN #{role1} IS NULL OR T.PATH_ROLE_ID LIKE '%|!|' || #{role1} || '%'
+                                    THEN 'T'
+                                    ELSE 'F'
+                        END
+        AND 'T' = CASE WHEN #{role2} IS NULL OR T.PATH_ROLE_ID LIKE '%|!|' || #{role2} || '%'
+                                    THEN 'T'
+                                    ELSE 'F'
+                        END
+        AND 'T' = CASE WHEN #{role3} IS NULL OR T.PATH_ROLE_ID LIKE '%|!|' || #{role3} || '%'
+                                    THEN 'T'
+                                    ELSE 'F'
+                        END
+        <if test="level != null and level != ''">
+            AND T.ROLE_LEV IN
+            <foreach item="item" collection="level" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectUsersByRoleId" parameterType="Map" resultType="egovMap">
+        SELECT
+            USR.USER_ID
+            ,USR.USER_NAME
+            ,USR.USER_FULL_NAME
+            ,BRANCH.NAME
+        FROM SYS0045M SROLE, SYS0047M USR, SYS0005M BRANCH
+        WHERE SROLE.ROLE_ID = #{roleId}
+        AND SROLE.USER_ID = USR.USER_ID
+        AND USR.USER_BRNCH_ID = BRANCH.BRNCH_ID(+)
+        AND 'T' = CASE WHEN #{userId} IS NULL OR SROLE.USER_ID = #{userId}
+                                    THEN 'T'
+                                  ELSE 'F'
+                        END
+        AND 'T' = CASE WHEN #{keyword} IS NULL OR BRANCH.NAME LIKE '%' || #{keyword} || '%' OR USR.USER_FULL_NAME LIKE '%' || #{keyword} || '%'  OR USR.USER_NAME LIKE '%' || #{keyword} || '%'
+                                    THEN 'T'
+                                  ELSE 'F'
+                        END
+    </select>
+
+    <insert id="insertRole" parameterType="Map">
+      INSERT INTO SYS0044M
+      (
+       ROLE_ID
+       , ROLE_CODE
+       , ROLE_DESC
+       , PARENT_ROLE
+       , STUS
+       , CRT_DT
+       , CRT_USER_ID
+       , UPD_DT
+       , UPD_USER_ID
+       , ROLE_LEV
+      ) VALUES (
+        SYS0044M_ROLE_ID_SEQ.NEXTVAL
+       , #{roleDesc}
+       , #{roleDesc}
+       , #{parentRole}
+       , 1
+       , SYSDATE
+       , #{userId}
+       , SYSDATE
+       , #{userId}
+       , #{roleLev}
+      )
+    </insert>
+
+    <update id="updateDeactivateRole" parameterType="int">
+        UPDATE SYS0044M SET STUS = 8, UPD_USER_ID =  #{userId}, UPD_DT = SYSDATE  WHERE ROLE_ID = #{roleId}
+    </update>
+
+    <update id="updateActivateRole" parameterType="int">
+        UPDATE SYS0044M SET STUS = 1, UPD_USER_ID =  #{userId}, UPD_DT = SYSDATE WHERE ROLE_ID = #{roleId}
+    </update>
+
+    <update id="updateRole" parameterType="Map">
+        UPDATE SYS0044M SET
+            PARENT_ROLE = #{parentRole}
+            , ROLE_CODE = #{roleDesc}
+            , ROLE_DESC = #{roleDesc}
+            , UPD_USER_ID =  #{userId}
+            , UPD_DT = SYSDATE
+        WHERE ROLE_ID = #{roleId}
+    </update>
+
+</mapper>

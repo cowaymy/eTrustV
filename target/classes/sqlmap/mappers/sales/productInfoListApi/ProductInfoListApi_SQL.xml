@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.productInfoListApi.impl.ProductInfoListApiMapper">
+
+
+
+
+
+
+<select id="selectCodeList" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.productInfoListApi.impl.ProductInfoListApiMapper.selectCodeList] 20191113 - KR JAEMAJEM */
+SELECT  CODE_MASTER_ID
+    ,   CODE_ID
+    ,   CODE
+    ,   CODE_NAME
+    ,   CODE_DESC
+FROM    SYS0013M
+WHERE   CODE_MASTER_ID = 11
+AND     DISAB = 0
+ORDER BY    CODE_DESC ASC
+]]>
+</select>
+
+
+
+<select id="selectProductInfoList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.productInfoListApi.impl.ProductInfoListApiMapper.selectProductInfoList] 20191113 - KR JAEMAJEM */
+SELECT  A.STK_CODE                                                              AS STK_CODE
+    ,   A.STK_DESC                                                              AS STK_DESC
+    ,   A.STK_CTGRY_ID                                                          AS STK_CTGRY_ID
+    ,   B.CODE_NAME                                                             AS STK_CTGRY_ID_NAME
+    ,   CASE WHEN A.STK_COMM_AS  IS NOT NULL    THEN A.STK_COMM_AS
+                                                ELSE CAST(0 AS FLOAT (53))
+                                                END                             AS STK_COMM_AS
+    ,   CASE WHEN A.STK_COMM_BS  IS NOT NULL    THEN A.STK_COMM_BS
+                                                ELSE CAST(0 AS FLOAT (53))
+                                                END                             AS STK_COMM_BS
+    ,   CASE WHEN A.STK_COMM_INS IS NOT NULL    THEN A.STK_COMM_INS
+                                                ELSE CAST(0 AS FLOAT (53))
+                                                END                             AS STK_COMM_INS
+    ,   A.STK_TYPE_ID                                                           AS STK_TYPE_ID
+    ,   NVL(C.AMT, 0)                                                           AS MONTHLY_RENTAL
+    ,   NVL(C.PRC_RPF, 0)                                                       AS PRC_RPF
+    ,   NVL(D.AMT, 0)                                                           AS NORMAL_PRICE
+    ,   NVL(D.PRC_PV, 0)                                                        AS POINT_OF_VALUE
+    ,   E.IMG_URL                                                               AS IMG_URL
+FROM    SYS0026M A                                                              -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : InvStock
+        INNER JOIN SYS0013M B
+            ON  A.STK_CTGRY_ID = B.CODE_ID
+        LEFT OUTER JOIN SAL0016M C
+            ON  C.APP_TYPE_ID = 66
+            AND C.MEM_PAC_ID  = 2
+            AND A.STK_ID = C.STK_ID
+        LEFT OUTER JOIN SAL0016M D
+            ON  D.APP_TYPE_ID = 67
+            AND D.MEM_PAC_ID  = 0
+            AND A.STK_ID = D.STK_ID
+        LEFT OUTER JOIN SYS0027M E
+            ON  A.STK_ID = E.STK_ID
+            AND E.STUS_CODE_ID = 1
+WHERE   A.STK_TYPE_ID = 61                                                      -- SYS0013M(61-Stock)
+AND     A.STUS_CODE_ID = 1                                                      -- SYS0038M(1-Active)
+]]>
+<if test="stkCtgryId > 0">
+AND     A.STK_CTGRY_ID = #{stkCtgryId}
+</if>
+ORDER BY    A.STK_DESC ASC
+</select>
+</mapper>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper">
+
+  <select id="selectMobilePaymentKeyInList" parameterType="Map" resultType="egovMap">
+    SELECT A.*,
+               (SELECT SUM(RENT_AMT) AS S FROM PAY0022D WHERE RENT_SO_ID =  A.ORD_ID GROUP BY RENT_SO_ID) AS CRNT_LDG
+    FROM ( SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectMobilePaymentKeyInList] 20191021 - KR HAN */
+                            Extent5.MOB_TICKET_NO MOB_TICKET_NO,
+                            Extent1.MOB_PAY_NO MOB_PAY_NO,
+                            TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+                            Extent1.PAY_STUS_ID PAY_STUS_ID,
+                            Extent4.NAME PAY_STUS_NM,
+                            Extent1.PAY_MODE PAY_MODE,
+                            Extent6.CODE_NAME PAY_MODE_NM,
+                            Extent1.SALES_ORD_NO SALES_ORD_NO,
+                            Extent3.NAME NAME,
+                            Extent1.ADV_MONTH ADV_MONTH,
+                            TO_CHAR(Extent1.ADV_AMT, 'FM9990.00' ) ADV_AMT,
+                            TO_CHAR(Extent1.OTSTND_AMT, 'FM9990.00' ) OTSTND_AMT,
+                            TO_CHAR(Extent1.PAY_AMT, 'FM9990.00' ) PAY_AMT,
+                            Extent1.SLIP_NO SLIP_NO,
+                            Extent1.CHEQUE_NO CHEQUE_NO,
+                            Extent1.ISSU_BANK_ID ISSU_BANK_ID,
+                            Extent6.NAME BANK_NM,
+                            CASE
+                                    WHEN REGEXP_LIKE(extent1.cheque_dt, '\d{2}\d{2}\d{4}')
+                                    THEN
+                                        TO_CHAR(TO_DATE(extent1.cheque_dt, 'DD/MM/YYYY'),
+                                        'DD/MM/YYYY'
+                                    )
+                                    ELSE
+                                        NULL
+                            END AS cheque_dt ,
+                            <!-- TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT, -->
+                            Extent1.UPLOAD_IMG UPLOAD_IMG,
+                            CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL,
+                            CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
+                              THEN F.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH,
+
+                            Extent1.UPLOAD_IMG2 UPLOAD_IMG2,
+                            CASE WHEN Extent1.UPLOAD_IMG2 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL2,
+                            CASE WHEN Extent1.UPLOAD_IMG2 IS NOT NULL
+                              THEN H.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH2,
+
+                            Extent1.UPLOAD_IMG3 UPLOAD_IMG3,
+                            CASE WHEN Extent1.UPLOAD_IMG3 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL3,
+                            CASE WHEN Extent1.UPLOAD_IMG3 IS NOT NULL
+                              THEN J.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH3,
+
+                            Extent1.UPLOAD_IMG4 UPLOAD_IMG4,
+                            CASE WHEN Extent1.UPLOAD_IMG4 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL4,
+                            CASE WHEN Extent1.UPLOAD_IMG4 IS NOT NULL
+                              THEN L.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH4,
+
+                            Extent1.EMAIL_1 EMAIL_1,
+                            Extent1.EMAIL_2 EMAIL_2,
+                            Extent1.SMS_1 SMS_1,
+                            Extent1.SMS_2 SMS_2,
+                            CASE WHEN Extent1.FAIL_RESN_ID > 0 THEN '['|| T6.CODE ||'-'|| T6.RESN_DESC || '] - ' || Extent1.PAY_REM
+                                 ELSE Extent1.PAY_REM END PAY_REM,
+                            Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
+                            T4.CODE CRT_USER_BRNCH_CD,
+                            T4.NAME CRT_USER_BRNCH_NM,
+                            Extent1.CRT_USER_ID CRT_USER_ID,
+                            T10.USER_NAME CRT_USER_NM,
+                            Extent1.UPD_USER_ID UPD_USER_ID,
+                            T11.USER_NAME UPD_USER_NM,
+                            TO_CHAR(Extent1.UPD_DT , 'DD-MM-YYYY HH24:MI:SS') UPD_DT,
+                            Extent7.CUST_BILL_ID CUST_BILL_ID,
+                            Extent2.SALES_ORD_ID  ORD_ID,
+                            Extent7.CUST_BILL_GRP_NO BILL_NO,
+                            <!--   Extent8.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
+                            Extent9.CODE_NAME BILL_TYPE_NM,
+                            Extent8.RENT_INST_NO INSTALLMENT,
+                            Extent8.RENT_DT_TM , -->
+                            Extent11.CNTRCT_RENTAL_STUS BILL_STATUS,
+                            F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+                            F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+                            H.ATCH_FILE_NAME AS ATCH_FILE_NAME2,
+                            H.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME2,
+                            J.ATCH_FILE_NAME AS ATCH_FILE_NAME3,
+                            J.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME3,
+                            L.ATCH_FILE_NAME AS ATCH_FILE_NAME4,
+                            L.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME4,
+                            Extent2.PV_MONTH as PV_MTH,
+                            Extent2.PV_YEAR as PV_YEAR,
+                            T5.CODE AS APPTYP,
+
+                            CASE WHEN Extent1.CARD_NO is null then ''
+                            ELSE SUBSTR (Extent1.CARD_NO, 1, 6) || '******'  || SUBSTR (Extent1.CARD_NO, 13, 4)
+                            END AS CARD_NO,
+                            Extent1.APPROVAL_NO AS APPROVAL_NO,
+                            Extent1.CRC_NAME AS CRC_NAME,
+                            TO_CHAR( TO_DATE( Extent1.TRANSACTION_DATE, 'DD/MM/YYYY' ), 'DD/MM/YYYY') TRANSACTION_DATE,
+                            TO_CHAR( TO_DATE( Extent1.EXPIRY_DATE, 'MM/YY' ), 'MM/YY') EXPIRY_DATE,
+                            T9.CODE_NAME AS CARD_MODE,
+                            T7.ACC_CODE || '' ||  T7.ACC_DESC AS MERCHANT_BANK,
+                            T8.CODE_NAME AS CARD_BRAND,
+
+                            Extent1.CARD_NO AS CARD_NO_RAW,
+                            Extent1.CARD_MODE AS CARD_MODE_RAW,
+                            Extent1.MERCHANT_BANK AS MERCHANT_BANK_RAW,
+                            Extent1.CARD_BRAND AS CARD_BRAND_RAW,
+                            Extent1.TRANSACTION_DATE AS TRANSACTION_DATE_RAW,
+                            Extent1.EXPIRY_DATE AS EXPIRY_DATE_RAW
+
+
+
+               FROM PAY0297D Extent1
+               LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
+               LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
+               LEFT JOIN SYS0038M Extent4 ON Extent1.PAY_STUS_ID = Extent4.STUS_CODE_ID
+               JOIN MOB0001D Extent5 ON Extent1.MOB_TICKET_NO = Extent5.MOB_TICKET_NO
+                                                AND Extent1.SALES_ORD_NO = Extent5.SALES_ORD_NO
+               LEFT JOIN SYS0004M Extent6 ON Extent1.ISSU_BANK_ID = Extent6.BANK_ID
+                                                       AND Extent6.STUS_CODE_ID = '1'
+               JOIN SYS0013M Extent6 ON Extent1.PAY_MODE = Extent6.CODE_ID
+                                                          AND Extent6.CODE_MASTER_ID = 439
+               JOIN SAL0024D Extent7 ON Extent2.CUST_BILL_ID = Extent7.CUST_BILL_ID
+               <!-- LEFT JOIN PAY0022D Extent8 ON Extent2.SALES_ORD_ID = Extent8.RENT_SO_ID
+                      JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent8.RENT_DOC_TYPE_ID -->
+               LEFT JOIN SAL0077D Extent10 ON Extent2.SALES_ORD_ID = Extent10.SRV_CNTRCT_ORD_ID
+               LEFT JOIN SAL0078D Extent11 ON Extent11.SRV_CNTRCT_ID = Extent10.SRV_CNTRCT_ID
+               LEFT OUTER JOIN SYS0070M E ON  E.CHENAL_TYPE = 'M'
+                                                AND E.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG
+
+               LEFT OUTER JOIN SYS0070M G ON  G.CHENAL_TYPE = 'M'
+                                                AND G.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG2
+               LEFT OUTER JOIN SYS0071D H ON  H.ATCH_FILE_ID = G.ATCH_FILE_ID
+
+               LEFT OUTER JOIN SYS0070M I ON  I.CHENAL_TYPE = 'M'
+                                                AND I.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG3
+               LEFT OUTER JOIN SYS0071D J ON  J.ATCH_FILE_ID = I.ATCH_FILE_ID
+
+               LEFT OUTER JOIN SYS0070M K ON  K.CHENAL_TYPE = 'M'
+                                                AND K.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG4
+               LEFT OUTER JOIN SYS0071D L ON  L.ATCH_FILE_ID = K.ATCH_FILE_ID
+
+
+               LEFT OUTER JOIN SYS0071D F ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+               LEFT JOIN SYS0047M T10 ON T10.USER_ID = Extent1.CRT_USER_ID
+               LEFT JOIN SYS0047M T11 ON T11.USER_ID = Extent1.UPD_USER_ID
+               LEFT JOIN SYS0005M T4 ON T4.BRNCH_ID = T10.USER_BRNCH_ID
+               LEFT JOIN SYS0013M T5 ON T5.CODE_ID = Extent2.APP_TYPE_ID AND T5.CODE_MASTER_ID = '10'
+               LEFT JOIN SYS0032M T6 ON T6.RESN_ID = Extent1.FAIL_RESN_ID
+               LEFT JOIN SYS0001M T7 ON T7.ACC_ID = Extent1.MERCHANT_BANK
+               LEFT JOIN SYS0013M T8 ON T8.CODE_ID = Extent1.CARD_BRAND AND T8.CODE_MASTER_ID = '21'
+               LEFT JOIN SYS0013M T9 ON T9.CODE_ID = Extent1.CARD_MODE AND T9.CODE_MASTER_ID = '130'
+
+               <where>
+                 <if test="_reqstStartDt != null and _reqstStartDt != '' ">
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                 </if>
+                 <if test="_reqstEndDt != null and _reqstEndDt != '' ">
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                 </if>
+                 <if test="ticketNo != null and ticketNo != '' ">
+                   AND Extent5.MOB_TICKET_NO = #{ticketNo}
+                 </if>
+                 <if test="orderNo != null and orderNo != '' ">
+                   AND Extent1.SALES_ORD_NO = #{orderNo}
+                 </if>
+                 <!-- <if test="ticketStatus != null and ticketStatus != '' ">
+                   AND Extent1.PAY_STUS_ID = #{ticketStatus}
+                 </if> -->
+                 <if test="ticketStatus != null and ticketStatus != '' ">
+                    AND Extent1.PAY_STUS_ID IN
+                    <foreach item="item" collection="ticketStatus" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
+                 </if>
+                 <if test="branchCode != null and branchCode != '' ">
+                    AND T4.BRNCH_ID IN
+                    <foreach item="item" collection="branchCode" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
+                 </if>
+                 <if test="payStusId != null and payStusId != '' ">
+                   AND Extent1.PAY_STUS_ID = #{payStusId}
+                 </if>
+                 <if test="memberCode != null and memberCode != '' ">
+                   AND T10.USER_NAME = #{memberCode}
+                 </if>
+                 <if test="serialNo != null and serialNo != '' ">
+                   AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
+                 </if>
+                 <if test="payMode != null and payMode != '' ">
+                   AND Extent1.PAY_MODE = #{payMode}
+                 </if>
+                 <if test="cmbRegion != null and cmbRegion != '' ">
+                    AND T4.REGN_ID IN
+                    <foreach item="item" collection="cmbRegion" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
+                 </if>
+
+
+                 <if test="cardNoA != null and cardNoA != '' ">
+                   AND SUBSTR (Extent1.CARD_NO, 1, 6) = #{cardNoA}
+                 </if>
+
+                 <if test="cardNoB != null and cardNoB != '' ">
+                   AND SUBSTR (Extent1.CARD_NO, 13, 4) = #{cardNoB}
+                 </if>
+
+                 <if test="apprvNo != null and apprvNo != '' ">
+                   AND Extent1.APPROVAL_NO = #{apprvNo}
+                 </if>
+
+               </where>
+    ) A
+    <if test="(hidOrgCode != null and hidOrgCode != '' ) or (hidGrpCode != null and hidGrpCode != '' ) or (hidDeptCode != null and hidDeptCode != '' )">
+    LEFT JOIN ORG0001D C ON A.CRT_USER_NM = C.MEM_CODE
+    LEFT JOIN ORG1001V D ON C.MEM_ID = D.MEM_ID
+      <where>
+        <if test="hidOrgCode != null and hidOrgCode != '' ">
+          AND D.ORG_CODE = #{hidOrgCode}
+        </if>
+        <if test="hidGrpCode != null and hidGrpCode != '' ">
+          AND D.GRP_CODE = #{hidGrpCode}
+        </if>
+        <if test="hidDeptCode != null and hidDeptCode != '' ">
+          AND D.DEPT_CODE = #{hidDeptCode}
+        </if>
+     </where>
+    </if>
+    ORDER BY TO_NUMBER(A.MOB_TICKET_NO) DESC
+  </select>
+
+  <update id="updateMobilePaymentKeyInReject" parameterType="Map">
+    UPDATE  /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.updateMobilePaymentKeyInReject] 20191021 - KR HAN */
+    PAY0297D SET PAY_STUS_ID = #{stus}
+                       , PAY_REM = #{etc}
+                       , UPD_DT = SYSDATE
+                       , UPD_USER_ID = #{userId}
+                       , FAIL_RESN_ID = #{resnId}
+    WHERE MOB_PAY_NO =  #{mobPayNo}
+   </update>
+
+  <update id="updateMobilePaymentKeyInUpdate" parameterType="Map">
+    UPDATE  /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.updateMobilePaymentKeyInUpdate] 20191021 - KR HAN */
+    PAY0297D SET PAY_STUS_ID = 5
+                       , UPD_DT = SYSDATE
+                       , UPD_USER_ID = #{userId}
+    WHERE MOB_PAY_NO =  #{mobPayNo}
+   </update>
+
+  <select id="selectBankStatementInfo" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectBankStatementInfo] 20191021 - KR HAN */
+               A.F_TRNSC_ID id,
+               B.BANK_ID,
+               C.NAME BANK,
+               D.ACC_DESC BANK_ACC_NAME,
+               E.ACC_ID AS BANK_ACC_ID,
+               E.ACC_CODE BANK_ACC_CODE,
+               E.ACC_DESC BANK_ACC_DESC,
+               E.ACC_CODE || ' - ' ||  E.ACC_DESC AS CODE_NAME,
+               TO_CHAR(A.F_TRNSC_DT, 'DD/MM/YYYY') TRNSC_DT,
+               A.F_TRNSC_REF_CHQ_NO CHQ_NO,
+               A.F_TRNSC_REF_VA_NO,
+               A.F_TRNSC_REF3 REF3,
+               A.F_TRNSC_REF1 REF1,
+               A.F_TRNSC_REF4 REF4,
+               A.F_TRNSC_REF2 REF2,
+               A.F_TRNSC_REF6 REF6,
+               A.F_TRNSC_REM TYPE,
+               A.F_TRNSC_DEBT_AMT DEBT,
+               A.F_TRNSC_CRDIT_AMT CRDIT,
+               (CASE WHEN A.OTH_KEYIN_STUS_ID = 4 THEN 'Mapped' ELSE 'UnMapped' END) STUS,
+               A.OTH_KEYIN_MAPPING_DT,
+               A.F_TRNSC_TELLER_ID,
+               A.F_TRNSC_NEW_CHQ_NO
+    FROM PAY0081D A
+    JOIN PAY0079D B on A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+    LEFT JOIN SYS0004M C on B.BANK_ID = C.BANK_ID
+    LEFT JOIN SYS0001M D on B.F_BANK_JRNL_ACC_ID = D.ACC_ID
+    LEFT JOIN SYS0001M E ON D.ACC_DESC = E.ACC_DESC AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CASH = 1
+    WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
+     AND A.OTH_KEYIN_STUS_ID <![CDATA[ <> ]]> 4
+        AND A.F_TRNSC_ID = #{fTrnscId}
+  </select>
+
+  <select id="selectMemDetails" parameterType="Map" resultType="egovMap">
+    SELECT NVL(TRIM(LAST_ORG_CODE),'') AS ORGCDE,
+               NVL(TRIM(LAST_GRP_CODE),'') AS GRPCDE,
+               NVL(TRIM(LAST_DEPT_CODE),'') AS DEPTCDE
+    FROM ORG0005D
+    WHERE MEM_ID = (SELECT MEM_ID
+                               FROM ORG0001D
+                               WHERE MEM_CODE = #{userId})
+  </select>
+
+
+</mapper>

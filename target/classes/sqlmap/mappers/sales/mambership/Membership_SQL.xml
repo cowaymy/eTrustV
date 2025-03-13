@@ -1,0 +1,1707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipMapper">
+
+    <select id="selectMembershipList" parameterType="Map" resultType="egovMap">
+        SELECT A.MBRSH_ID  ,
+                   A.MBRSH_NO  ,
+                   A.ORD_ID  ,
+                   A.ORD_NO  ,
+                   CASE WHEN ( A.MBRSH_STUS_ID IS NOT NULL ) THEN A.MBRSH_STUS_ID ELSE 0 END MBRSH_STUS_ID,
+                   A.MBRSH_STUS_CODE  ,
+                   A.MBRSH_CRT_USER_ID  ,
+                   A.MBRSH_CRT_DT  ,
+                   --CASE WHEN ( A.MBRSH_START_DT IS NOT NULL )  THEN TO_DATE(A.MBRSH_START_DT, 'DD/MM/YYYY') ELSE ''END MBRSH_START_DT  ,
+                   --CASE WHEN ( A.MBRSH_EXPR_DT IS NOT NULL ) THEN TO_DATE(A.MBRSH_EXPR_DT, 'DD/MM/YYYY') ELSE '' END MBRSH_EXPR_DT  ,
+                   NVL(A.MBRSH_START_DT, '') MBRSH_START_DT,
+                   NVL(A.MBRSH_EXPR_DT, '') MBRSH_EXPR_DT,
+                   A.PAC_NAME  ,
+                   A.MBRSH_DUR  ,
+                   TO_CHAR(A.MBRSH_OTSTND , 'FM9,990.00')  MBRSH_OTSTND,
+                   A.CUST_NAME  ,
+                   A.CUST_IC,
+                   A.REF_NO
+           FROM SAL1004V A
+           LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.ORD_ID
+           <if test='userTypeId =="1" or userTypeId == "2" '>
+                   JOIN ORG1001V C ON A.SRV_MEM_SALES_MEM_ID = C.MEM_ID
+                   <if test="memCode != null and memCode != '' ">
+                   AND C.MEM_CODE = #{memCode}
+                   </if>
+                   <if test="orgCode != null and orgCode != '' ">
+                   AND C.ORG_CODE = #{orgCode}
+                   </if>
+                   <if test="grpCode != null and grpCode != '' ">
+                   AND C.GRP_CODE = #{grpCode}
+                   </if>
+                   <if test="deptCode != null and deptCode != '' ">
+                   AND C.DEPT_CODE = #{deptCode}
+                   </if>
+            </if>
+           <if test="userBranchId != null and userBranchId != '' ">
+            JOIN SAL1002V D ON D.MBRSH_ID = A.MBRSH_ID
+        </if>
+        WHERE  1=1
+        <choose>
+            <when test='isHc == "1"'>
+                AND B.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND B.BNDL_ID IS NULL
+            </otherwise>
+        </choose>
+        <if test="userBranchId != null and userBranchId != '' ">
+            AND D.BRNCH_ID = #{userBranchId}
+        </if>
+        <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
+            AND A.MBRSH_STUS_ID IN
+            <foreach item="item" collection="MBRSH_STUS_ID" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="MBRSH_NO != null and MBRSH_NO != ''">
+            AND A.MBRSH_NO = UPPER(#{MBRSH_NO})
+        </if>
+
+        <if test="ORD_ID != null and ORD_ID != ''">
+            AND A.ORD_ID = #{ORD_ID}
+        </if>
+
+      <if test="ORD_NO != null and ORD_NO != ''">
+          AND A.ORD_NO = #{ORD_NO}
+      </if>
+
+        <if test="MBRSH_CRT_USER_ID != null and MBRSH_CRT_USER_ID != ''">
+            AND A.MBRSH_CRT_USER_ID = #{MBRSH_CRT_USER_ID}
+        </if>
+
+        <if test="MBRSH_OTSTND  ==1 ">
+            AND (A.MBRSH_OTSTND <![CDATA[ > ]]>   0)
+        </if>
+
+        <if test="MBRSH_OTSTND  == 2 ">
+            AND (A.MBRSH_OTSTND = 0)
+        </if>
+
+        <if test="MBRSH_OTSTND  ==3 ">
+            AND (A.MBRSH_OTSTND <![CDATA[ <  ]]> 0 )
+        </if>
+
+        <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
+            AND to_char(A.MBRSH_CRT_DT,'yyyymmdd')  BETWEEN  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd') AND   to_char(to_date (#{MBRSH_END_DT} ,'DD/MM/YYYY'),'yyyymmdd')
+        </if>
+
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND B.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+
+        <if test="REF_NO != null and REF_NO != ''">
+           AND A.REF_NO = #{REF_NO}
+        </if>
+        ORDER BY  A.ORD_NO, A.MBRSH_NO  ASC
+
+    </select>
+<!--     <select id="selectMembershipList" parameterType="Map" resultType="egovMap">
+               SELECT
+                  MBRSH_ID  ,
+                  MBRSH_NO  ,
+                  ORD_ID  ,
+                  ORD_NO  ,
+                  MBRSH_STUS_ID  ,
+                  MBRSH_STUS_CODE  ,
+                  MBRSH_CRT_USER_ID  ,
+                  MBRSH_CRT_DT  ,
+                  MBRSH_START_DT  ,
+                  MBRSH_EXPR_DT  ,
+                  PAC_NAME  ,
+                  MBRSH_DUR  ,
+                  MBRSH_OTSTND  ,
+                  CUST_NAME  ,
+                  CUST_IC
+              FROM ( SELECT
+                               SAL1004V.MBRSH_ID            MBRSH_ID,
+                               SAL1004V.MBRSH_NO            MBRSH_NO,
+                               SAL1004V.ORD_ID              ORD_ID,
+                               SAL1004V.ORD_NO              ORD_NO,
+                               SAL1004V.MBRSH_STUS_CODE     MBRSH_STUS_CODE,
+                               SAL1004V.MBRSH_CRT_USER_ID   MBRSH_CRT_USER_ID,
+                               SAL1004V. MBRSH_CRT_DT       MBRSH_CRT_DT,
+                               SAL1004V.PAC_NAME            PAC_NAME,
+                               SAL1004V.MBRSH_DUR           MBRSH_DUR,
+                               SAL1004V.MBRSH_OTSTND        MBRSH_OTSTND,
+                               SAL1004V.CUST_NAME           CUST_NAME,
+                               SAL1004V.CUST_IC             CUST_IC,
+                               CASE WHEN ( SAL1004V.MBRSH_STUS_ID IS NOT NULL ) THEN SAL1004V.MBRSH_STUS_ID ELSE 0 END MBRSH_STUS_ID  ,
+                               CASE WHEN ( SAL1004V.MBRSH_START_DT IS NOT NULL )  THEN SAL1004V.MBRSH_START_DT ELSE ''END MBRSH_START_DT  ,
+                               CASE WHEN ( SAL1004V.MBRSH_EXPR_DT IS NOT NULL ) THEN SAL1004V.MBRSH_EXPR_DT ELSE ''  END MBRSH_EXPR_DT
+                     FROM (
+                         SELECT    SAL1004V.MBRSH_ID            MBRSH_ID  ,
+                                   SAL1004V.MBRSH_NO            MBRSH_NO  ,
+                                   SAL1004V.ORD_ID              ORD_ID  ,
+                                   SAL1004V.ORD_NO              ORD_NO  ,
+                                   SAL1004V.MBRSH_STUS_ID       MBRSH_STUS_ID  ,
+                                   SAL1004V.MBRSH_STUS_CODE     MBRSH_STUS_CODE  ,
+                                   SAL1004V.MBRSH_CRT_USER_ID   MBRSH_CRT_USER_ID  ,
+                                   SAL1004V.MBRSH_CRT_DT        MBRSH_CRT_DT  ,
+                                   SAL1004V.MBRSH_START_DT      MBRSH_START_DT  ,
+                                   SAL1004V.MBRSH_EXPR_DT       MBRSH_EXPR_DT  ,
+                                   SAL1004V.PAC_NAME            PAC_NAME  ,
+                                   SAL1004V.MBRSH_DUR           MBRSH_DUR  ,
+                                   SAL1004V.MBRSH_OTSTND        MBRSH_OTSTND  ,
+                                   SAL1004V.CUST_NAME           CUST_NAME  ,
+                                   SAL1004V.CUST_IC             CUST_IC
+                            FROM SAL1004V SAL1004V ) SAL1004V
+                      WHERE  1=1
+
+                          <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
+                            AND SAL1004V.MBRSH_STUS_ID IN
+                          <foreach item="item" collection="MBRSH_STUS_ID" index="index" open="(" separator="," close=")">
+                            #{item}
+                          </foreach>
+                        </if>
+
+                         <if test="MBRSH_NO != null and MBRSH_NO != ''">
+                            AND SAL1004V.MBRSH_NO = #{MBRSH_NO}
+                        </if>
+
+                         <if test="ORD_NO != null and ORD_NO != ''">
+                            AND SAL1004V.ORD_NO = #{ORD_NO}
+                        </if>
+
+                        <if test="MBRSH_CRT_USER_ID != null and MBRSH_CRT_USER_ID != ''">
+                            AND SAL1004V.MBRSH_CRT_USER_ID = #{MBRSH_CRT_USER_ID}
+                        </if>
+
+                        <if test="MBRSH_OTSTND  ==1 ">
+                            AND (SAL1004V.MBRSH_OTSTND <![CDATA[ > ]]>   0)
+                        </if>
+
+                        <if test="MBRSH_OTSTND  == 2 ">
+                            AND (SAL1004V.MBRSH_OTSTND = 0)
+                        </if>
+
+                        <if test="MBRSH_OTSTND  ==3 ">
+                            AND (SAL1004V.MBRSH_OTSTND <![CDATA[ <  ]]> 0 )
+                        </if>
+
+                       <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
+                                 AND to_char(SAL1004V.MBRSH_CRT_DT,'yyyymmdd') =  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd')
+                       </if>
+
+                ) PJ
+              ORDER BY ORD_ID  ASC
+
+
+    </select> -->
+
+
+
+    <select id="selectMembershipInfoTab" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+                SELECT stb.mbrsh_id , stb.mbrsh_no ,
+                       stb.mbrsh_bill_no , stb.ord_id ,
+                       stb.ord_no , stb.mbrsh_pac_amt ,
+                       stb.mbrsh_filter_amt ,
+                       stb.mbrsh_tot_amt , TO_CHAR(stb.mbrsh_otstnd ,'FM9,990.00') mbrsh_otstnd,
+                       CASE WHEN ( stb.mbrsh_freq IS NOT NULL ) THEN stb.mbrsh_freq||' month(s)'  ELSE  stb.mbrsh_freq||'' END  mbrsh_freq,
+                       CASE WHEN ( stb.mbrsh_dur IS NOT NULL ) THEN stb.mbrsh_dur||' month(s)'  ELSE  stb.mbrsh_dur||'' END  mbrsh_dur  ,
+                       to_char(stb.mbrsh_start_dt,'dd-mm-yyyy' )   mbrsh_start_dt ,
+                       to_char(stb.mbrsh_expr_dt,'dd-mm-yyyy' )    mbrsh_expr_dt ,
+                       stb.mbrsh_rem ,
+                       stb.mbrsh_stus_id ,
+                       stb.mbrsh_stus_code ,
+                       stb.mbrsh_stus_name ,
+                       to_char(stb.mbrsh_crt_dt,'dd-mm-yyyy' )  mbrsh_crt_dt ,
+                       stb.mbrsh_crt_user_id mbrsh_crt_user_id,
+                       stb.mbrsh_upd_dt ,
+                       stb.mbrsh_upd_user_id ,
+                       stb.mbrsh_sales_mem_id ,
+                       stb.mbrsh_sales_mem_code ,
+                       stb.mbrsh_sales_mem_name ,
+                       stb.cnt_name , stb.cnt_nric ,
+                       stb.cnt_gender , stb.cnt_race ,
+                       stb.cnt_tel_m , stb.cnt_tel_o ,
+                       stb.cnt_tel_r , stb.cnt_tel_f ,
+                       stb.cnt_email ,
+                       stb.mbrsh_pac_promo_id ,
+                       stb.mbrsh_pac_promo_code ,
+                       stb.mbrsh_pac_promo_name ,
+                       stb.mbrsh_promo_id ,
+                       stb.mbrsh_promo_code ,
+                       stb.mbrsh_promo_name , stb.pv_month ,
+                       stb.pv_year , stb.brnch_id ,
+                       stb.brnch_code , stb.brnch_name ,
+                       stb.pac_id , stb.pac_code ,
+                       stb.pac_name , stb.quot_id ,
+                       stb.quot_no , stb.bill_id_pckg ,
+                       stb.bill_id_filter , stb.cust_name ,
+                       stb.cust_ic,
+                       stb.ref_no,
+                       stb.psm_no,
+                       stb.po_no
+                  FROM (SELECT mfo.mbrsh_id mbrsh_id,
+                               mfo.mbrsh_no mbrsh_no,
+                               mfo.mbrsh_bill_no mbrsh_bill_no,
+                               mfo.ord_id ord_id, mfo.ord_no ord_no,
+                               mfo.mbrsh_pac_amt mbrsh_pac_amt,
+                               mfo.mbrsh_filter_amt mbrsh_filter_amt,
+                               mfo.mbrsh_tot_amt mbrsh_tot_amt,
+                               mfo.mbrsh_otstnd mbrsh_otstnd,
+                               mfo.mbrsh_freq mbrsh_freq,
+                               mfo.mbrsh_dur mbrsh_dur,
+                               mfo.mbrsh_start_dt mbrsh_start_dt,
+                               mfo.mbrsh_expr_dt mbrsh_expr_dt,
+                               mfo.mbrsh_rem mbrsh_rem,
+                               mfo.mbrsh_stus_id mbrsh_stus_id,
+                               mfo.mbrsh_stus_code mbrsh_stus_code,
+                               mfo.mbrsh_stus_name mbrsh_stus_name,
+                               mfo.mbrsh_crt_dt mbrsh_crt_dt,
+                               mfo.mbrsh_crt_user_id mbrsh_crt_user_id,
+                               mfo.mbrsh_upd_dt mbrsh_upd_dt,
+                               mfo.mbrsh_upd_user_id mbrsh_upd_user_id,
+                               mfo.mbrsh_sales_mem_id mbrsh_sales_mem_id,
+                               mfo.mbrsh_sales_mem_code mbrsh_sales_mem_code,
+                               mfo.mbrsh_sales_mem_name mbrsh_sales_mem_name,
+                               mfo.cnt_name cnt_name,
+                               mfo.cnt_nric cnt_nric,
+                               mfo.cnt_gender cnt_gender,
+                               mfo.cnt_race cnt_race,
+                               mfo.cnt_tel_m cnt_tel_m,
+                               mfo.cnt_tel_o cnt_tel_o,
+                               mfo.cnt_tel_r cnt_tel_r,
+                               mfo.cnt_tel_f cnt_tel_f,
+                               mfo.cnt_email cnt_email,
+                               mfo.mbrsh_pac_promo_id mbrsh_pac_promo_id,
+                               mfo.mbrsh_pac_promo_code mbrsh_pac_promo_code,
+                               mfo.mbrsh_pac_promo_name mbrsh_pac_promo_name,
+                               mfo.mbrsh_promo_id mbrsh_promo_id,
+                               mfo.mbrsh_promo_code mbrsh_promo_code,
+                               mfo.mbrsh_promo_name mbrsh_promo_name,
+                               mfo.pv_month pv_month,
+                               mfo.pv_year pv_year,
+                               mfo.brnch_id brnch_id,
+                               mfo.brnch_code brnch_code,
+                               mfo.brnch_name brnch_name,
+                               mfo.pac_id pac_id,
+                               mfo.pac_code pac_code,
+                               mfo.pac_name pac_name,
+                               mfo.quot_id quot_id,
+                               mfo.quot_no quot_no,
+                               mfo.bill_id_pckg bill_id_pckg,
+                               mfo.bill_id_filter bill_id_filter,
+                               mfo.cust_name cust_name,
+                               mfo.cust_ic cust_ic,
+                               mfo.ref_no ref_no,
+                               mfo.psm_no,
+                               mfo.po_no
+                          FROM sal1002v mfo) stb
+                 WHERE stb.mbrsh_id = #{MBRSH_ID} AND ROWNUM <= 1
+        ]]>
+
+    </select>
+
+    <select id="selectOderInfoTab" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+            SELECT sList.ORD_ID ORD_ID  ,
+                       sList.ORD_NO ORD_NO  ,
+                       to_char(sList.ORD_DT ,'dd-mm-yyyy')  ORD_DT  ,
+                       sList.CODE_NAME CODE_NAME  ,
+                       sList.STOCK_CODE STOCK_CODE  ,
+                       sList.STOCK_DESC STOCK_DESC  ,
+                       sList.CUST_ID CUST_ID  ,
+                       sList.CUST_NRIC CUST_NRIC  ,
+                       sList.CUST_NAME CUST_NAME  ,
+                       sList.ORD_STUS_NAME ORD_STUS_NAME  ,
+                       sList.APP_TYPE_CODE APP_TYPE_CODE  ,
+                       sList.STK_CTGRY_NAME
+                  FROM ( SELECT stb.ORD_ID ORD_ID  ,
+                                stb.ORD_NO ORD_NO  ,
+                                stb.ORD_STUS_NAME ORD_STUS_NAME  ,
+                                stb.ORD_DT ORD_DT  ,
+                                stb.APP_TYPE_CODE APP_TYPE_CODE  ,
+                                stb.STOCK_CODE STOCK_CODE  ,
+                                stb.STOCK_DESC STOCK_DESC  ,
+                                stb.CUST_ID CUST_ID  ,
+                                stb.CUST_NAME CUST_NAME  ,
+                                stb.CUST_NRIC CUST_NRIC  ,
+                                stb3.CODE_NAME CODE_NAME  ,
+                                stb.STK_CTGRY_NAME
+                         FROM ( SELECT oinfo.ORD_ID ORD_ID  ,
+                                       oinfo.ORD_NO ORD_NO  ,
+                                       oinfo.RENTAL_STUS RENTAL_STUS  ,
+                                       oinfo.ORD_STUS_ID ORD_STUS_ID  ,
+                                       oinfo.ORD_STUS_CODE ORD_STUS_CODE  ,
+                                       oinfo.ORD_STUS_NAME ORD_STUS_NAME  ,
+                                       oinfo.ORD_DT ORD_DT  ,
+                                       oinfo.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+                                       oinfo.ORD_AMT ORD_AMT  ,
+                                       oinfo.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+                                       oinfo.ORD_PV ORD_PV  ,
+                                       oinfo.ORD_PV_MONTH ORD_PV_MONTH  ,
+                                       oinfo.ORD_PV_YEAR ORD_PV_YEAR  ,
+                                       oinfo.ORD_REF_NO ORD_REF_NO  ,
+                                       oinfo.ORD_PO_NO ORD_PO_NO  ,
+                                       oinfo.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+                                       oinfo.ORD_GRP_CODE ORD_GRP_CODE  ,
+                                       oinfo.ORD_ORG_CODE ORD_ORG_CODE  ,
+                                       oinfo.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+                                       oinfo.ORD_CRT_DT ORD_CRT_DT  ,
+                                       oinfo.APP_TYPE_ID APP_TYPE_ID  ,
+                                       oinfo.APP_TYPE_CODE APP_TYPE_CODE  ,
+                                       oinfo.APP_TYPE_DESC APP_TYPE_DESC  ,
+                                       oinfo.STOCK_ID STOCK_ID  ,
+                                       oinfo.STOCK_CODE STOCK_CODE  ,
+                                       oinfo.STOCK_DESC STOCK_DESC  ,
+                                       oinfo.CUST_ID CUST_ID  ,
+                                       oinfo.CUST_TYPE CUST_TYPE  ,
+                                       oinfo.CUST_NAME CUST_NAME  ,
+                                       oinfo.CUST_NRIC CUST_NRIC  ,
+                                       oinfo.CUST_DOB CUST_DOB  ,
+                                       oinfo.CUST_NATION CUST_NATION  ,
+                                       oinfo.CUST_GENDER CUST_GENDER  ,
+                                       oinfo.CUST_RACE CUST_RACE  ,
+                                       oinfo.CUST_EMAIL CUST_EMAIL  ,
+                                       oinfo.CUST_VA_NO CUST_VA_NO  ,
+                                       oinfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+                                       oinfo.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+                                       oinfo.ORD_PROMO_ID ORD_PROMO_ID  ,
+                                       oinfo.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+                                       oinfo.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+                                       oinfo.ORD_MEM_ID ORD_MEM_ID  ,
+                                       oinfo.ORD_MEM_CODE ORD_MEM_CODE  ,
+                                       oinfo.ORD_MEM_NAME ORD_MEM_NAME  ,
+                                       oinfo.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+                                       oinfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+                                       oinfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+                                       oinfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+                                       oinfo.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+                                       oinfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                                       oinfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                                       oinfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                                       oinfo.ORD_REM ORD_REM  ,
+                                       oinfo.RENT_CHK_ID RENT_CHK_ID  ,
+                                       oinfo.ORD_HM_ID ORD_HM_ID  ,
+                                       oinfo.ORD_SM_ID ORD_SM_ID  ,
+                                       oinfo.ORD_GM_ID ORD_GM_ID  ,
+                                       oinfo.ORD_ADDR_ID ORD_ADDR_ID  ,
+                                       oinfo.ORD_CNTC_ID ORD_CNTC_ID  ,
+                                       oinfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+                                       oinfo.UPD_DT UPD_DT  ,
+                                       oinfo.UPD_USER_ID UPD_USER_ID  ,
+                                       oinfo.JOM_PAY_REF JOM_PAY_REF  ,
+                                       oinfo.STK_CTGRY_ID STK_CTGRY_ID  ,
+                                       oinfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+                                       oinfo.CUST_TYPE_ID CUST_TYPE_ID  ,
+                                       oinfo.CUST_BILL_ID CUST_BILL_ID  ,
+                                       oinfo.OBLIGT_YEAR OBLIGT_YEAR
+                                FROM SAL1006V oinfo ) stb
+                                JOIN SYS0026M stb2   ON ( stb.STOCK_CODE = stb2.STK_CODE )  OR ( ( stb.STOCK_CODE IS NULL ) AND ( stb2.STK_CODE IS NULL ) )
+                                JOIN SYS0013M stb3   ON stb2.STK_CTGRY_ID = stb3.CODE_ID
+                          WHERE  stb.ORD_ID = #{ORD_ID}
+                                AND ROWNUM <= 1
+                   ) sList
+          ]]>
+    </select>
+
+    <select id="selectInstallAddr" parameterType="Map" resultType="egovMap">
+      <![CDATA[
+                    SELECT sList.ORD_ID ORD_ID  ,
+                               sList.INST_ADDR_DTL   ,
+                               sList.INST_STREET   ,
+                               sList.INST_COUNTRY   ,
+                               sList.INST_STATE   ,
+                               sList.INST_AREA   ,
+                               sList.INST_POSTCODE   ,
+                               sList.INST_CITY ,
+                               sList.FULL_ADDR
+                          FROM ( SELECT insinfo.ORD_ID ORD_ID  ,
+                                                insInfo.INST_ADDR_DTL,
+                                                insInfo.INST_STREET ,
+                                                insInfo.INST_COUNTRY,
+                                                insInfo.INST_STATE ,
+                                                insInfo.INST_AREA,
+                                                insInfo.INST_POSTCODE,
+                                                insInfo.INST_CITY ,
+                          (UPPER(insInfo.INST_ADDR_DTL) || ' ' || UPPER(insInfo.INST_STREET) || ' ' || UPPER(insInfo.INST_AREA)  || ' ' || UPPER(insInfo.INST_CITY) || ' ' || UPPER(insInfo.INST_STATE) || ' ' ||
+                   insInfo.INST_POSTCODE || ' ' || UPPER(insInfo.INST_COUNTRY) ) AS FULL_ADDR
+                                 FROM SAL1010V insinfo ) sList
+                         WHERE  sList.ORD_ID = #{ORD_ID}
+                              AND ROWNUM <= 1
+          ]]>
+    </select>
+
+    <select id="selectQuotInfo" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+                    SELECT sList.QUOT_ID   ,
+                               sList.QTY_FILTER_CHRG   ,
+                               sList.QUOT_NO   ,
+                               sList.PAC_ID   ,
+                               sList.PAC_CODE   ,
+                               sList.PAC_DESC   ,
+                               sList.ORD_ID   ,
+                               sList.ORD_NO   ,
+                               sList.PAC_AMT   ,
+                               sList.FILTER_AMT   ,
+                               sList.TOT_AMT   ,
+                               sList.DUR DUR  ,
+                               sList.REM REM  ,
+                               to_char (sList.VALID_DT ,'dd-mm-yyyy' )  VALID_DT,
+                              to_char (sList.CRT_DT ,'dd-mm-yyyy' )  CRT_DT ,
+                               sList.CRT_USER_ID   ,
+                               sList.QUOT_STUS_ID   ,
+                               sList.QUOT_STUS_CODE   ,
+                               sList.UPD_DT UPD_DT  ,
+                               sList.UPD_USER_ID   ,
+                               sList.CNT_ID CNT_ID  ,
+                               sList.CNT_NAME   ,
+                               sList.CNT_NRIC   ,
+                               sList.CNT_TEL_MOB   ,
+                               sList.CNT_TEL_OFF   ,
+                               sList.CNT_TEL_FAX   ,
+                               sList.CNT_TEL_RES   ,
+                               sList.CNT_EMAIL   ,
+                               sList.CNT_GENDER   ,
+                               sList.CNT_RACE   ,
+                               sList.PAC_PROMO_ID   ,
+                               sList.PAC_PROMO_CODE   ,
+                               sList.PAC_PROMO_DESC   ,
+                               sList.PROMO_ID   ,
+                               sList.PROMO_CODE   ,
+                               sList.PROMO_DESC   ,
+                               sList.BS_FREQ   ,
+                               sList.MEM_ID   ,
+                               sList.MEM_CODE   ,
+                               sList.MEM_NAME   ,
+                               sList.VALID_STUS   ,
+                               sList.VALID_STUS_ID   ,
+                               sList.CNVR_MEM_ID   ,
+                               sList.CNVR_MEM_NO   ,
+                               sList.STK_ID   ,
+                               sList.STK_CODE   ,
+                               sList.STK_DESC   ,
+                               sList.CUST_NAME   ,
+                               sList.CUST_IC   ,
+                               sList.TOT_CNT   ,
+                               sList.REF_NO
+                          FROM ( SELECT qutinfo.QUOT_ID   ,
+                                        qutinfo.QTY_FILTER_CHRG   ,
+                                        qutinfo.QUOT_NO   ,
+                                        qutinfo.PAC_ID   ,
+                                        qutinfo.PAC_CODE   ,
+                                        qutinfo.PAC_DESC   ,
+                                        qutinfo.ORD_ID   ,
+                                        qutinfo.ORD_NO   ,
+                                        qutinfo.PAC_AMT   ,
+                                        qutinfo.FILTER_AMT   ,
+                                        qutinfo.TOT_AMT   ,
+                                        qutinfo.DUR DUR  ,
+                                        qutinfo.REM REM  ,
+                                        qutinfo.VALID_DT   ,
+                                        qutinfo.CRT_DT   ,
+                                        qutinfo.CRT_USER_ID   ,
+                                        qutinfo.QUOT_STUS_ID   ,
+                                        qutinfo.QUOT_STUS_CODE   ,
+                                        qutinfo.UPD_DT   ,
+                                        qutinfo.UPD_USER_ID   ,
+                                        qutinfo.CNT_ID   ,
+                                        qutinfo.CNT_NAME   ,
+                                        qutinfo.CNT_NRIC   ,
+                                        qutinfo.CNT_TEL_MOB   ,
+                                        qutinfo.CNT_TEL_OFF   ,
+                                        qutinfo.CNT_TEL_FAX   ,
+                                        qutinfo.CNT_TEL_RES   ,
+                                        qutinfo.CNT_EMAIL   ,
+                                        qutinfo.CNT_GENDER   ,
+                                        qutinfo.CNT_RACE   ,
+                                        qutinfo.PAC_PROMO_ID   ,
+                                        qutinfo.PAC_PROMO_CODE   ,
+                                        qutinfo.PAC_PROMO_DESC   ,
+                                        qutinfo.PROMO_ID   ,
+                                        qutinfo.PROMO_CODE   ,
+                                        qutinfo.PROMO_DESC   ,
+                                        qutinfo.BS_FREQ   ,
+                                        qutinfo.MEM_ID   ,
+                                        qutinfo.MEM_CODE   ,
+                                        qutinfo.MEM_NAME   ,
+                                        qutinfo.VALID_STUS   ,
+                                        qutinfo.VALID_STUS_ID   ,
+                                        qutinfo.CNVR_MEM_ID   ,
+                                        qutinfo.CNVR_MEM_NO   ,
+                                        qutinfo.STK_ID   ,
+                                        qutinfo.STK_CODE   ,
+                                        qutinfo.STK_DESC   ,
+                                        qutinfo.CUST_NAME   ,
+                                        qutinfo.CUST_IC   ,
+                                        qutinfo.TOT_CNT   ,
+                                        qutinfo.REF_NO
+                                 FROM SAL1005V qutinfo ) sList
+                         WHERE  sList.QUOT_ID = #{QUOT_ID}   AND ROWNUM <= 1
+          ]]>
+    </select>
+
+    <select id="selectMembershipQuotInfo" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+                    SELECT sList.QUOT_ID   ,
+                               sList.QTY_FILTER_CHRG   ,
+                               sList.QUOT_NO   ,
+                               sList.PAC_ID   ,
+                               sList.PAC_CODE   ,
+                               sList.PAC_DESC   ,
+                               sList.ORD_ID   ,
+                               sList.ORD_NO   ,
+                               sList.PAC_AMT   ,
+                               sList.FILTER_AMT   ,
+                               sList.TOT_AMT   ,
+                               sList.DUR DUR  ,
+                               sList.REM REM  ,
+                               to_char (sList.VALID_DT ,'dd-mm-yyyy' )  VALID_DT,
+                               to_char (sList.CRT_DT ,'dd-mm-yyyy' )  CRT_DT ,
+                               sList.CRT_USER_ID   ,
+                               sList.QUOT_STUS_ID   ,
+                               sList.QUOT_STUS_CODE   ,
+                               sList.UPD_DT UPD_DT  ,
+                               sList.UPD_USER_ID   ,
+                               sList.CNT_ID CNT_ID  ,
+                               sList.CNT_NAME   ,
+                               sList.CNT_NRIC   ,
+                               sList.CNT_TEL_MOB   ,
+                               sList.CNT_TEL_OFF   ,
+                               sList.CNT_TEL_FAX   ,
+                               sList.CNT_TEL_RES   ,
+                               sList.CNT_EMAIL   ,
+                               sList.CNT_GENDER   ,
+                               sList.CNT_RACE   ,
+                               sList.PAC_PROMO_ID   ,
+                               sList.PAC_PROMO_CODE   ,
+                               sList.PAC_PROMO_DESC   ,
+                               sList.PROMO_ID   ,
+                               sList.PROMO_CODE   ,
+                               sList.PROMO_DESC   ,
+                               sList.BS_FREQ   ,
+                               sList.MEM_ID   ,
+                               sList.MEM_CODE   ,
+                               sList.MEM_NAME   ,
+                               sList.VALID_STUS   ,
+                               sList.VALID_STUS_ID   ,
+                               sList.CNVR_MEM_ID   ,
+                               sList.CNVR_MEM_NO   ,
+                               sList.STK_ID   ,
+                               sList.STK_CODE   ,
+                               sList.STK_DESC   ,
+                               sList.CUST_NAME   ,
+                               sList.CUST_IC   ,
+                               sList.TOT_CNT   ,
+                               sList.REF_NO
+                          FROM ( SELECT qutinfo.QUOT_ID   ,
+                                        qutinfo.QTY_FILTER_CHRG   ,
+                                        qutinfo.QUOT_NO   ,
+                                        qutinfo.PAC_ID   ,
+                                        qutinfo.PAC_CODE   ,
+                                        qutinfo.PAC_DESC   ,
+                                        qutinfo.ORD_ID   ,
+                                        qutinfo.ORD_NO   ,
+                                        qutinfo.PAC_AMT   ,
+                                        qutinfo.FILTER_AMT   ,
+                                        qutinfo.TOT_AMT   ,
+                                        qutinfo.DUR DUR  ,
+                                        qutinfo.REM REM  ,
+                                        qutinfo.VALID_DT   ,
+                                        qutinfo.CRT_DT   ,
+                                        qutinfo.CRT_USER_ID   ,
+                                        qutinfo.QUOT_STUS_ID   ,
+                                        qutinfo.QUOT_STUS_CODE   ,
+                                        qutinfo.UPD_DT   ,
+                                        qutinfo.UPD_USER_ID   ,
+                                        qutinfo.CNT_ID   ,
+                                        qutinfo.CNT_NAME   ,
+                                        qutinfo.CNT_NRIC   ,
+                                        qutinfo.CNT_TEL_MOB   ,
+                                        qutinfo.CNT_TEL_OFF   ,
+                                        qutinfo.CNT_TEL_FAX   ,
+                                        qutinfo.CNT_TEL_RES   ,
+                                        qutinfo.CNT_EMAIL   ,
+                                        qutinfo.CNT_GENDER   ,
+                                        qutinfo.CNT_RACE   ,
+                                        qutinfo.PAC_PROMO_ID   ,
+                                        qutinfo.PAC_PROMO_CODE   ,
+                                        qutinfo.PAC_PROMO_DESC   ,
+                                        qutinfo.PROMO_ID   ,
+                                        qutinfo.PROMO_CODE   ,
+                                        qutinfo.PROMO_DESC   ,
+                                        qutinfo.BS_FREQ   ,
+                                        qutinfo.MEM_ID   ,
+                                        qutinfo.MEM_CODE   ,
+                                        qutinfo.MEM_NAME   ,
+                                        qutinfo.VALID_STUS   ,
+                                        qutinfo.VALID_STUS_ID   ,
+                                        qutinfo.CNVR_MEM_ID   ,
+                                        qutinfo.CNVR_MEM_NO   ,
+                                        qutinfo.STK_ID   ,
+                                        qutinfo.STK_CODE   ,
+                                        qutinfo.STK_DESC   ,
+                                        qutinfo.CUST_NAME   ,
+                                        qutinfo.CUST_IC   ,
+                                        qutinfo.TOT_CNT   ,
+                                        qutinfo.REF_NO
+                                 FROM SAL1005V qutinfo ) sList
+                         WHERE  sList.QUOT_ID = #{QUOT_ID}   AND ROWNUM <= 1
+          ]]>
+    </select>
+
+    <select id="selectMembershipQuotFilter" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+                    SELECT sList.SRV_MEM_QUOT_FILTER_ID   ,
+                               sList.STK_ID   ,
+                               sList.STK_CODE   ,
+                               sList.STK_DESC   ,
+                               sList.STK_PRIOD   ,
+                               sList.STK_FILTER_PRC   ,
+                               sList.STK_CHRG_PRC   ,
+                               sList.STK_LAST_CHNG_DT STK_LAST_CHNG_DT
+                          FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
+                                        Extent1.STK_ID   ,
+                                        Extent1.STK_PRIOD   ,
+                                        Extent1.STK_LAST_CHNG_DT   ,
+                                        Extent1.STK_FILTER_PRC   ,
+                                        Extent1.STK_CHRG_PRC   ,
+                                        Extent2.STK_CODE   ,
+                                        Extent2.STK_DESC
+                                 FROM SAL0094D Extent1
+                                        JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
+                                  WHERE  Extent1.SRV_MEM_QUOT_ID =#{QUOT_ID} ) sList
+                          ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
+           ]]>
+    </select>
+
+
+    <select id="selectMembershipViewLeader" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+            SELECT  sL03.C1   ,
+                               sL03.C2   ,
+                               sL03.SRV_MEM_LG_ID   ,
+                               sL03.SRV_MEM_DOC_TYPE_ID   ,
+                               sL03.CODE_DESC   ,
+                               CASE WHEN TO_CHAR(sL03.C3, 'dd/mm/yyyy') = '01/01/1900' THEN null ELSE TO_CHAR(sL03.C3, 'dd/mm/yyyy') END C3,
+                               sL03.C4   ,
+                               sL03.C5   ,
+                               sL03.C6   ,
+                               CASE    WHEN ( (C4-C5)  > 0 ) THEN  (C4-C5)   ELSE 0   END C7
+                          FROM ( SELECT dSt.SRV_MEM_LG_ID ,
+                                        dSt.SRV_MEM_DOC_TYPE_ID ,
+                                        dSt.CODE_DESC   ,
+                                        dSt.C1   ,
+                                        dSt.C2   ,
+                                        dSt.C3   ,
+                                        dSt.C4   ,
+                                        dSt.C5   ,
+                                        dSt.C6
+                                 FROM ( SELECT DISTINCT sL01.SRV_MEM_LG_ID   ,
+                                                        sL01.SRV_MEM_DOC_TYPE_ID   ,
+                                                        s13m.CODE_DESC   ,
+                                                        1 C1  ,
+                                                        UTILS.CONVERT_TO_FLOAT(0,53) C2  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_DT_TM IS NOT NULL ) THEN  sL01.SRV_MEM_DT_TM   ELSE  TO_DATE('1900-01-01 00:00:00' ,'yyyy-mm-dd hh24:mi:ss')  END C3  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) ) THEN sL01.SRV_MEM_AMT  ELSE UTILS.CONVERT_TO_FLOAT(0,53)  END C4  ,
+                                                        CASE    WHEN ( sL01.SRV_MEM_AMT < UTILS.CONVERT_TO_FLOAT(0,53) ) THEN UTILS.CONVERT_TO_FLOAT(-1,53) * sL01.SRV_MEM_AMT ELSE UTILS.CONVERT_TO_FLOAT(0,53) END C5  ,
+                                                        CASE    WHEN ( pay31d.TAX_INVC_REF_NO is not null ) THEN pay31d.TAX_INVC_REF_NO  ELSE sL01.SRV_MEM_DOC_NO  END C6
+                                        FROM ( SELECT 1 X
+                                                 FROM DUAL  ) SingleRowTable1
+                                               LEFT JOIN ( SELECT pay24d.SRV_MEM_LG_ID   ,
+                                                                          pay24d.SRV_MEM_ID   ,
+                                                                          pay24d.SRV_MEM_DOC_NO   ,
+                                                                          pay24d.SRV_MEM_DOC_TYPE_ID   ,
+                                                                          pay24d.SRV_MEM_DT_TM   ,
+                                                                          pay24d.SRV_MEM_AMT   ,
+                                                                          pay24d.SRV_MEM_BATCH_NO,
+                                                                          pay24d.SRV_MEM_QOTAT_ID
+                                                                FROM PAY0024D pay24d
+                                                                     WHERE  pay24d.SRV_MEM_ID = #{MBRSH_ID}
+                                                              ) sL01   ON 1 = 1
+                                               JOIN SYS0013M s13m   ON s13m.CODE_ID = sL01.SRV_MEM_DOC_TYPE_ID
+                                               LEFT JOIN SAL0093D s93d ON s93d.SRV_MEM_QUOT_ID = sL01.SRV_MEM_QOTAT_ID
+                                               LEFT JOIN PAY0032D pay32d ON s93d.SRV_MEM_QUOT_NO = pay32d.INVC_ITM_DESC2
+                                               LEFT JOIN PAY0031D pay31d ON pay31d.TAX_INVC_ID = pay32d.TAX_INVC_ID
+                                               ) dSt ) sL03
+                          ORDER BY sL03.SRV_MEM_LG_ID ASC
+           ]]>
+    </select>
+
+              <!--    <![CDATA[
+   SELECT S.ORD_ID   ,
+                   S.ORD_NO
+              FROM ( SELECT V.ORD_ID   ,
+                            V.ORD_NO  ,
+                            V.ORD_STUS_CODE
+                     FROM SAL1006V V ) S
+             WHERE  ( S.ORD_NO = #{ORD_NO} )
+                      AND ( 'COM' = S.ORD_STUS_CODE ) AND ROWNUM <= 1
+     ]]> -->
+    <select id="selectMembershipFreeConF" parameterType="Map" resultType="egovMap">
+         select a.sales_ord_id ord_id,
+                  a.sales_ord_no ord_no,
+                  b.itm_stk_id stk_id,
+                  a.APP_TYPE_ID
+           from sal0001d a
+           left join sal0002d b on b.sales_ord_id = a.sales_ord_id
+         where a.stus_code_id in('1', '4')
+            and a.sales_ord_no = #{ORD_NO}
+        <if test='pdpaMonth != null and pdpaMonth != 0'>
+            AND a.SALES_DT >= ADD_MONTHS(TRUNC(SYSDATE) + 1, -#{pdpaMonth})
+        </if>
+        <choose>
+            <when test='isHc == "1"'>
+                AND A.BNDL_ID IS NOT NULL
+            </when>
+            <otherwise>
+                AND A.BNDL_ID IS NULL
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">
+              <![CDATA[
+                     SELECT sList.ORD_ID   ,
+                                   sList.CONFIG_ID   ,
+                                   sList.CONFIG_SETT_INS   ,
+                                   sList.CONFIG_SETT_BS   ,
+                                   sList.CONFIG_SETT_AS   ,
+                                   sList.CONFIG_BS_GEN   ,
+                                   sList.CONFIG_BS_MEM_ID   ,
+                                   sList.CONFIG_BS_WEEK   ,
+                                   sList.CONFIG_BS_REM   ,
+                                   sList.SRV_MEM_ID   ,
+                                   sList.SRV_MEM_NO   ,
+                                   sList.SRV_MEM_BILL_NO   ,
+                                   sList.SRV_MEM_PAC_ID   ,
+                                   sList.SRV_MEM_PAC_CODE   ,
+                                   sList.SRV_MEM_PAC_NAME   ,
+                                   sList.SRV_MEM_START_DT   ,
+                                   sList.SRV_MEM_EXPR_DT   ,
+                                   sList.SRV_MEM_FREQ   ,
+                                   sList.SRV_MEM_DUR   ,
+                                   sList.SRV_MEM_SALESMAN_CODE   ,
+                                   sList.SRV_MEM_SALESMAN_NAME   ,
+                                   sList.LAST_SRV_MEM_ID   ,
+                                   sList.LAST_SRV_MEM_START_DATE   ,
+                                   to_char (sList.LAST_SRV_MEM_EXPR_DATE ,'yyyymmdd' )   CVT_LAST_SRV_MEM_EXPR_DATE,
+                                   to_char (sList.LAST_SRV_MEM_EXPR_DATE ,'dd-mm-yyyy' )  LAST_SRV_MEM_EXPR_DATE,
+                                   CASE  WHEN (  sList.LAST_SRV_MEM_EXPR_DATE   >= sysdate ) THEN   to_char(sList.LAST_SRV_MEM_EXPR_DATE,'dd-mm-yyyy')        ELSE  'Expired'  END EXPRTEXT,
+                                   to_char(add_months(sysdate ,12),'yyyymm' )  add12Todate,
+                                   to_char (sysdate ,'yyyymmdd' )   CVT_NOW_DATE,
+                                   to_char(add_months(sList.LAST_SRV_MEM_EXPR_DATE ,12),'yyyymm' ) add12ExpireDate
+                              FROM ( SELECT cinfo.ORD_ID   ,
+                                            cinfo.CONFIG_ID   ,
+                                            cinfo.CONFIG_SETT_INS   ,
+                                            cinfo.CONFIG_SETT_BS   ,
+                                            cinfo.CONFIG_SETT_AS   ,
+                                            cinfo.CONFIG_BS_GEN   ,
+                                            cinfo.CONFIG_BS_MEM_ID   ,
+                                            cinfo.CONFIG_BS_WEEK   ,
+                                            cinfo.CONFIG_BS_REM   ,
+                                            cinfo.SRV_MEM_NO   ,
+                                            cinfo.SRV_MEM_BILL_NO   ,
+                                            cinfo.SRV_MEM_PAC_ID   ,
+                                            cinfo.SRV_MEM_PAC_CODE   ,
+                                            cinfo.SRV_MEM_PAC_NAME   ,
+                                            cinfo.SRV_MEM_START_DT   ,
+                                            cinfo.SRV_MEM_EXPR_DT   ,
+                                            cinfo.SRV_MEM_FREQ   ,
+                                            cinfo.SRV_MEM_ID   ,
+                                            cinfo.SRV_MEM_DUR   ,
+                                            cinfo.SRV_MEM_SALESMAN_CODE   ,
+                                            cinfo.SRV_MEM_SALESMAN_NAME   ,
+                                            cinfo.LAST_SRV_MEM_ID   ,
+                                            cinfo.LAST_SRV_MEM_START_DATE   ,
+                                            cinfo.LAST_SRV_MEM_EXPR_DATE
+                                     FROM SAL1014V cinfo ) sList
+                             WHERE  sList.ORD_ID =#{ORD_ID} AND ROWNUM <= 1
+                  ]]>
+         </select>
+
+         <select id="selectMembershipFree_Basic" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                        SELECT sList.ORD_ID   ,
+                                   sList.ORD_NO   ,
+                                   sList.RENTAL_STUS   ,
+                                   sList.ORD_STUS_ID   ,
+                                   sList.ORD_STUS_CODE   ,
+                                   sList.ORD_STUS_NAME   ,
+                                   to_char (sList.ORD_DT ,'yyyymmdd')  ORG_ORD_DT   ,
+                                   to_char (sList.ORD_DT ,'dd-mm-yyyy')  ORD_DT   ,
+                                   sList.INSTLMT_PRIOD   ,
+                                   sList.ORD_AMT ORD_AMT  ,
+                                   sList.ORD_MTH_RENTAL   ,
+                                   sList.ORD_PV ORD_PV  ,
+                                   sList.ORD_PV_MONTH   ,
+                                   sList.ORD_PV_YEAR   ,
+                                   sList.ORD_REF_NO   ,
+                                   sList.ORD_PO_NO   ,
+                                   sList.ORD_DEPT_CODE   ,
+                                   sList.ORD_GRP_CODE   ,
+                                   sList.ORD_ORG_CODE   ,
+                                   sList.ORD_CRT_USER_ID   ,
+                                   sList.ORD_CRT_DT   ,
+                                   sList.APP_TYPE_ID   ,
+                                   sList.APP_TYPE_CODE   ,
+                                   sList.APP_TYPE_DESC   ,
+                                   sList.STOCK_ID   ,
+                                   sList.STOCK_CODE   ,
+                                   sList.STOCK_DESC   ,
+                                   sList.CUST_ID   ,
+                                   sList.CUST_TYPE   ,
+                                   sList.CUST_NAME   ,
+                                   sList.CUST_NRIC   ,
+                                   sList.CUST_DOB   ,
+                                   sList.CUST_NATION   ,
+                                   sList.CUST_GENDER   ,
+                                   sList.CUST_RACE   ,
+                                   sList.CUST_EMAIL   ,
+                                   sList.CUST_VA_NO   ,
+                                   sList.CUST_PASSPORT_EXPR   ,
+                                   sList.CUST_VISA_EXPR   ,
+                                   sList.ORD_PROMO_ID   ,
+                                   sList.ORD_PROMO_CODE   ,
+                                   sList.ORD_PROMO_DESC   ,
+                                   sList.ORD_MEM_ID   ,
+                                   sList.ORD_MEM_CODE   ,
+                                   sList.ORD_MEM_NAME   ,
+                                   sList.ORD_MEM_NRIC   ,
+                                   sList.ORD_MEM_TYPE_ID   ,
+                                   sList.ORD_MEM_TYPE_CODE   ,
+                                   sList.ORD_MEM_TYPE_NAME   ,
+                                   sList.COOL_OFF_PRIOD   ,
+                                   sList.KEYIN_BRNCH_ID   ,
+                                   sList.KEYIN_BRNCH_CODE   ,
+                                   sList.KEYIN_BRNCH_NAME   ,
+                                   sList.ORD_REM   ,
+                                   sList.RENT_CHK_ID   ,
+                                   sList.ORD_HM_ID   ,
+                                   sList.ORD_SM_ID   ,
+                                   sList.ORD_GM_ID   ,
+                                   sList.ORD_ADDR_ID   ,
+                                   sList.ORD_CNTC_ID   ,
+                                   sList.ORD_PROMO_RELATED_NO   ,
+                                   sList.UPD_DT UPD_DT  ,
+                                   sList.UPD_USER_ID   ,
+                                   sList.JOM_PAY_REF   ,
+                                   sList.STK_CTGRY_ID   ,
+                                   sList.STK_CTGRY_NAME   ,
+                                   sList.CUST_TYPE_ID   ,
+                                   sList.CUST_BILL_ID   ,
+                                   sList.OBLIGT_YEAR
+                              FROM ( SELECT oinfo.ORD_ID   ,
+                                            oinfo.ORD_NO   ,
+                                            oinfo.RENTAL_STUS   ,
+                                            oinfo.ORD_STUS_ID   ,
+                                            oinfo.ORD_STUS_CODE   ,
+                                            oinfo.ORD_STUS_NAME   ,
+                                            oinfo.ORD_DT ORD_DT  ,
+                                            oinfo.INSTLMT_PRIOD   ,
+                                            oinfo.ORD_AMT ORD_AMT  ,
+                                            oinfo.ORD_MTH_RENTAL   ,
+                                            oinfo.ORD_PV ORD_PV  ,
+                                            oinfo.ORD_PV_MONTH   ,
+                                            oinfo.ORD_PV_YEAR   ,
+                                            oinfo.ORD_REF_NO   ,
+                                            oinfo.ORD_PO_NO   ,
+                                            oinfo.ORD_DEPT_CODE   ,
+                                            oinfo.ORD_GRP_CODE   ,
+                                            oinfo.ORD_ORG_CODE   ,
+                                            oinfo.ORD_CRT_USER_ID   ,
+                                            oinfo.ORD_CRT_DT   ,
+                                            oinfo.APP_TYPE_ID   ,
+                                            oinfo.APP_TYPE_CODE   ,
+                                            oinfo.APP_TYPE_DESC   ,
+                                            oinfo.STOCK_ID   ,
+                                            oinfo.STOCK_CODE   ,
+                                            oinfo.STOCK_DESC   ,
+                                            oinfo.CUST_ID CUST_ID  ,
+                                            oinfo.CUST_TYPE   ,
+                                            oinfo.CUST_NAME   ,
+                                            oinfo.CUST_NRIC   ,
+                                            oinfo.CUST_DOB   ,
+                                            oinfo.CUST_NATION   ,
+                                            oinfo.CUST_GENDER   ,
+                                            oinfo.CUST_RACE   ,
+                                            oinfo.CUST_EMAIL   ,
+                                            oinfo.CUST_VA_NO   ,
+                                            oinfo.CUST_PASSPORT_EXPR   ,
+                                            oinfo.CUST_VISA_EXPR   ,
+                                            oinfo.ORD_PROMO_ID   ,
+                                            oinfo.ORD_PROMO_CODE   ,
+                                            oinfo.ORD_PROMO_DESC   ,
+                                            oinfo.ORD_MEM_ID   ,
+                                            oinfo.ORD_MEM_CODE   ,
+                                            oinfo.ORD_MEM_NAME   ,
+                                            oinfo.ORD_MEM_NRIC   ,
+                                            oinfo.ORD_MEM_TYPE_ID   ,
+                                            oinfo.ORD_MEM_TYPE_CODE   ,
+                                            oinfo.ORD_MEM_TYPE_NAME   ,
+                                            oinfo.COOL_OFF_PRIOD   ,
+                                            oinfo.KEYIN_BRNCH_ID   ,
+                                            oinfo.KEYIN_BRNCH_CODE   ,
+                                            oinfo.KEYIN_BRNCH_NAME   ,
+                                            oinfo.ORD_REM   ,
+                                            oinfo.RENT_CHK_ID   ,
+                                            oinfo.ORD_HM_ID   ,
+                                            oinfo.ORD_SM_ID   ,
+                                            oinfo.ORD_GM_ID   ,
+                                            oinfo.ORD_ADDR_ID   ,
+                                            oinfo.ORD_CNTC_ID   ,
+                                            oinfo.ORD_PROMO_RELATED_NO   ,
+                                            oinfo.UPD_DT   ,
+                                            oinfo.UPD_USER_ID   ,
+                                            oinfo.JOM_PAY_REF   ,
+                                            oinfo.STK_CTGRY_ID   ,
+                                            oinfo.STK_CTGRY_NAME   ,
+                                            oinfo.CUST_TYPE_ID   ,
+                                            oinfo.CUST_BILL_ID   ,
+                                            oinfo.OBLIGT_YEAR
+                                     FROM SAL1006V oinfo ) sList
+                             WHERE  sList.ORD_ID = #{ORD_ID} AND ROWNUM <= 1
+            ]]>
+      </select>
+
+       <select id="selectMembershipFree_installation" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+
+                              SELECT   sList.ORD_ID   ,
+                                           sList.INST_ADDR_DTL,
+                                           sList.INST_STREET ,
+                                           sList.INST_COUNTRY,
+                                           sList.INST_STATE ,
+                                           sList.INST_AREA,
+                                           sList.INST_POSTCODE,
+                                           sList.INST_CITY ,
+                                           sList.INST_CNT_NAME   ,
+                                           sList.INST_CNT_NRIC   ,
+                                           sList.INST_CNT_EMAIL   ,
+                                           sList.INST_CNT_TEL_M   ,
+                                           sList.INST_CNT_TEL_O   ,
+                                           sList.INST_CNT_TEL_R   ,
+                                           sList.INST_CNT_TEL_F   ,
+                                           sList.INST_CNT_GENDER   ,
+                                           sList.FIRST_INSTALL_NO   ,
+                                           sList.FIRST_INSTALL_CT_CODE   ,
+                                           sList.FIRST_INSTALL_CT_NAME   ,
+                                           sList.FIRST_INSTALL_DT  ,
+                                           sList.FIRST_INSTALL_REM   ,
+                                           sList.FIRST_INSTALL_SIRIM_NO   ,
+                                           sList.FIRST_INSTALL_SERIAL_NO   ,
+                                           sList.LAST_INSTALL_NO   ,
+                                           sList.LAST_INSTALL_CT_CODE   ,
+                                           sList.LAST_INSTALL_CT_NAME   ,
+                                           sList.LAST_INSTALL_DT,
+                                           sList.LAST_INSTALL_REM   ,
+                                           sList.LAST_INSTALL_SIRIM_NO   ,
+                                           sList.LAST_INSTALL_SERIAL_NO   ,
+                                           sList.DSC_ID   ,
+                                           sList.DSC_CODE   ,
+                                           sList.DSC_NAME   ,
+                                           sList.INSTCT   ,
+                                           sList.PREFER_INST_DT ,
+                                           sList.PREFER_INST_TM   ,
+                                           sList.INSTALL_ADDR_ID   ,
+                                           sList.INSTALL_CNTC_ID   ,
+                                           sList.INST_CNT_DEPT   ,
+                                           sList.INST_CNT_POST   ,
+                                           sList.VRIFY_REM,
+                                           sList.AREA_ID
+                          FROM ( SELECT insInfo.ORD_ID   ,
+                                                insInfo.INST_ADDR_DTL,
+                                                insInfo.INST_STREET ,
+                                                insInfo.INST_COUNTRY,
+                                                insInfo.INST_STATE ,
+                                                insInfo.INST_AREA,
+                                                insInfo.INST_POSTCODE,
+                                                insInfo.INST_CITY ,
+                                                insInfo.INST_CNT_NAME   ,
+                                                insInfo.INST_CNT_NRIC   ,
+                                                insInfo.INST_CNT_EMAIL   ,
+                                                insInfo.INST_CNT_TEL_M   ,
+                                                insInfo.INST_CNT_TEL_O   ,
+                                                insInfo.INST_CNT_TEL_R   ,
+                                                insInfo.INST_CNT_TEL_F   ,
+                                                insInfo.INST_CNT_GENDER   ,
+                                                insInfo.FIRST_INSTALL_NO   ,
+                                                insInfo.FIRST_INSTALL_CT_CODE   ,
+                                                insInfo.FIRST_INSTALL_CT_NAME   ,
+                                                insInfo.FIRST_INSTALL_DT   ,
+                                                insInfo.FIRST_INSTALL_REM   ,
+                                                insInfo.FIRST_INSTALL_SIRIM_NO   ,
+                                                insInfo.FIRST_INSTALL_SERIAL_NO   ,
+                                                insInfo.LAST_INSTALL_NO   ,
+                                                insInfo.LAST_INSTALL_CT_CODE   ,
+                                                insInfo.LAST_INSTALL_CT_NAME   ,
+                                                insInfo.LAST_INSTALL_DT   ,
+                                                insInfo.LAST_INSTALL_REM   ,
+                                                insInfo.LAST_INSTALL_SIRIM_NO   ,
+                                                insInfo.LAST_INSTALL_SERIAL_NO   ,
+                                                insInfo.DSC_ID   ,
+                                                insInfo.DSC_CODE   ,
+                                                insInfo.DSC_NAME   ,
+                                                insInfo.INSTCT   ,
+                                                insInfo.PREFER_INST_DT   ,
+                                                insInfo.PREFER_INST_TM   ,
+                                                insInfo.INSTALL_ADDR_ID   ,
+                                                insInfo.INSTALL_CNTC_ID   ,
+                                                insInfo.INST_CNT_DEPT   ,
+                                                insInfo.INST_CNT_POST   ,
+                                                insInfo.VRIFY_REM,
+                                                insInfo.AREA_ID
+                                         FROM SAL1010V insInfo ) sList
+                         WHERE  sList.ORD_ID =#{ORD_ID}  AND ROWNUM <= 1
+                ]]>
+      </select>
+
+
+      <select id="selectMembershipFree_bs" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                 SELECT        sList.MONTH||'-'||sList.YEAR     MONTH,
+                                   sList.NO   ,
+                                   sList.YEAR   ,
+                                   sList.CODE   ,
+                                   sList.CODE1   ,
+                                   sList.NO1   ,
+                                   to_char( sList.C1,'dd-mm-yyyy hh24:mi:ss')  c1   ,
+                                   sList.CODE2   ,
+                                   sList.CODE3   ,
+                                   sList.MEM_CODE
+                              FROM ( SELECT svc08.NO NO  ,
+                                            svc08.MONTH MONTH  ,
+                                            svc08.YEAR YEAR  ,
+                                            sys13.CODE CODE  ,
+                                            sys38.CODE CODE1  ,
+                                            org01.MEM_CODE MEM_CODE  ,
+                                            svc06.SETL_DT C1  ,
+                                            svc06.NO NO1  ,
+                                            sys32.CODE CODE2  ,
+                                            sys32_sub.CODE CODE3
+                                     FROM SVC0008D svc08
+                                            JOIN SYS0013M sys13   ON svc08.TYPE_ID = sys13.CODE_ID
+                                            JOIN SYS0038M sys38   ON svc08.STUS_CODE_ID = sys38.STUS_CODE_ID
+                                            JOIN ORG0001D org01   ON svc08.CODY_ID = org01.MEM_ID
+                                            LEFT JOIN SVC0006D svc06   ON ( svc08.SCHDUL_ID = svc06.SCHDUL_ID )
+                                            AND ( 1 = svc06.RESULT_IS_CURR )
+                                            LEFT JOIN SYS0032M sys32   ON svc06.REN_COLCT_ID = sys32.RESN_ID
+                                            LEFT JOIN SYS0032M sys32_sub   ON svc06.FAIL_RESN_ID = sys32_sub.RESN_ID
+                                      WHERE  svc08.SALES_ORD_ID = #{ORD_ID} ) sList
+                              ORDER BY  sList.NO  DESC
+                   ]]>
+      </select>
+
+       <select id="selectMembershipFree_oList" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+
+                            SELECT sList.C1   ,
+                                       sList.SRV_FILTER_ID   ,
+                                       sList.SRV_FILTER_STK_ID   ,
+                                       sList.STK_CODE   ,
+                                       sList.STK_DESC   ,
+                                       sList.SRV_FILTER_UPD_DT   ,
+                                       sList.USER_NAME   ,
+                                       sList.SRV_FILTER_STUS_ID   ,
+                                       to_char (sList.SRV_FILTER_PRV_CHG_DT,'dd-mm-yyyy')  SRV_FILTER_PRV_CHG_DT ,
+                                       sList.SRV_FILTER_PRIOD   ,
+                                       sList.CODE  ,
+                                       sList.C5 C5  ,
+                                       sList.C6 C6
+                                  FROM ( SELECT DISTINCT sal87.SRV_FILTER_ID   ,
+                                                         sal87.SRV_FILTER_STK_ID   ,
+                                                         sal87.SRV_FILTER_PRIOD   ,
+                                                         sal87.SRV_FILTER_PRV_CHG_DT   ,
+                                                         sal87.SRV_FILTER_STUS_ID   ,
+                                                         sys26.STK_CODE   ,
+                                                         sys26.STK_DESC   ,
+                                                         1 C1  ,
+                                                         CASE   WHEN ( sal87.SRV_FILTER_UPD_DT IS NOT NULL ) THEN sal87.SRV_FILTER_UPD_DT   END SRV_FILTER_UPD_DT  ,
+                                                         CASE   WHEN ( sys47.USER_NAME IS NOT NULL ) THEN sys47.USER_NAME  ELSE  '- '  END USER_NAME  ,
+                                                         CASE   WHEN ( sys13.CODE IS NOT NULL ) THEN sys13.CODE ELSE ' - '  END CODE  ,
+                                                         UTILS.CONVERT_TO_NUMBER(0,1,0) C5  ,
+                                                         0 C6
+                                         FROM SAL0090D sal90
+                                                JOIN SAL0002D sal02         ON sal90.SRV_SO_ID = sal02.SALES_ORD_ID
+                                                JOIN SAL0087D sal87         ON sal90.SRV_CONFIG_ID = sal87.SRV_CONFIG_ID
+                                                JOIN SYS0026M sys26         ON sal87.SRV_FILTER_STK_ID = sys26.STK_ID
+                                                LEFT JOIN SYS0047M  sys47   ON sal87.SRV_FILTER_UPD_USER_ID = sys47.USER_ID
+                                                LEFT JOIN LOG0001M log01    ON( sal87.SRV_FILTER_STK_ID = log01.BOM_PART_ID )
+                                                AND ( ( sal02.ITM_STK_ID = log01.BOM_STK_ID ) OR ( ( sal02.ITM_STK_ID IS NULL )
+                                                AND ( log01.BOM_STK_ID IS NULL ) ) )
+                                                LEFT JOIN SYS0013M sys13   ON log01.BOM_PART_TYPE_ID = sys13.CODE_ID
+                                          WHERE  ( 1 = sal90.SRV_STUS_ID )
+                                                   AND ( 1 = sal87.SRV_FILTER_STUS_ID )
+                                                   AND ( sal90.SRV_SO_ID = #{ORD_ID}  )
+                                    ) sList
+                   ]]>
+      </select>
+
+       <select id="selectMembershipFree_cPerson" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                         SELECT sList.CUST_CNTC_ID   ,
+                                           sList.CUST_INITIAL  ,
+                                           sList.CODE_NAME   ,
+                                           sList.NAME NAME  ,
+                                           sList.DOB DOB  ,
+                                           sList.GENDER   ,
+                                           sList.RACE_ID   ,
+                                           sList.CODENAME1   ,
+                                           sList.TEL_M1   ,
+                                           sList.TEL_M2   ,
+                                           sList.TEL_O   ,
+                                           sList.TEL_R   ,
+                                           sList.TELF   ,
+                                           sList.NRIC   ,
+                                           sList.POS   ,
+                                           sList.EMAIL   ,
+                                           sList.DEPT   ,
+                                           sList.STUS_CODE_ID   ,
+                                           sList.UPD_USER_ID   ,
+                                           sList.UPD_DT   ,
+                                           sList.ID_OLD   ,
+                                           sList.DCM   ,
+                                           sList.CRT_USER_ID   ,
+                                           sList.CRT_DT
+                                      FROM ( SELECT suL.CUST_CNTC_ID   ,
+                                                    suL.NAME NAME  ,
+                                                    suL.CUST_INITIAL ,
+                                                    suL.NRIC NRIC  ,
+                                                    suL.POS POS  ,
+                                                    suL.TEL_M1 TEL_M1  ,
+                                                    suL.TEL_M2 TEL_M2  ,
+                                                    suL.TEL_O TEL_O  ,
+                                                    suL.TEL_R TEL_R  ,
+                                                    suL.TELF TELF  ,
+                                                    suL.DOB DOB  ,
+                                                    suL.GENDER GENDER  ,
+                                                    suL.RACE_ID RACE_ID  ,
+                                                    suL.EMAIL EMAIL  ,
+                                                    suL.STUS_CODE_ID STUS_CODE_ID  ,
+                                                    suL.UPDATED1 UPD_DT  ,
+                                                    suL.UPDATOR1 UPD_USER_ID  ,
+                                                    suL.ID_OLD ID_OLD  ,
+                                                    suL.DEPT DEPT  ,
+                                                    suL.DCM DCM  ,
+                                                    suL.CREATED1 CRT_DT  ,
+                                                    suL.CREATOR1 CRT_USER_ID  ,
+                                                    suL.CODE_NAME CODE_NAME  ,
+                                                    sys13.CODE_NAME CODENAME1
+                                             FROM ( SELECT sal27.CUST_CNTC_ID CUST_CNTC_ID  ,
+                                                           sal27.CUST_ID CUST_ID  ,
+                                                           sal27.NAME NAME  ,
+                                                           sal27.CUST_INITIAL   ,
+                                                           sal27.NRIC NRIC  ,
+                                                           sal27.POS POS  ,
+                                                           sal27.TEL_M1 TEL_M1  ,
+                                                           sal27.TEL_M2 TEL_M2  ,
+                                                           sal27.TEL_O TEL_O  ,
+                                                           sal27.TEL_R TEL_R  ,
+                                                           sal27.TELF TELF  ,
+                                                           sal27.DOB DOB  ,
+                                                           sal27.GENDER GENDER  ,
+                                                           sal27.RACE_ID RACE_ID  ,
+                                                           sal27.EMAIL EMAIL  ,
+                                                           sal27.STUS_CODE_ID STUS_CODE_ID  ,
+                                                           sal27.UPD_DT UPDATED1  ,
+                                                           sal27.UPD_USER_ID UPDATOR1  ,
+                                                           sal27.ID_OLD ID_OLD  ,
+                                                           sal27.DEPT DEPT  ,
+                                                           sal27.DCM DCM  ,
+                                                           sal27.CRT_DT CREATED1  ,
+                                                           sal27.CRT_USER_ID CREATOR1  ,
+                                                           sys13.CODE_NAME CODE_NAME
+                                                    FROM SAL0027D sal27
+                                                           LEFT JOIN SYS0013M  sys13   ON sal27.CUST_INITIAL = sys13.CODE_ID
+                                                     WHERE  ( 9 = UTILS.CONVERT_TO_NUMBER(sal27.STUS_CODE_ID,10,0) )
+                                                              OR ( 1 = UTILS.CONVERT_TO_NUMBER(sal27.STUS_CODE_ID,10,0) ) ) suL
+                                                    LEFT JOIN SYS0013M sys13   ON UTILS.CONVERT_TO_NUMBER(suL.RACE_ID,10,0) = sys13.CODE_ID
+                                              WHERE  suL.CUST_ID = #{CUST_ID} ) sList
+                                      ORDER BY sList.STUS_CODE_ID DESC
+                   ]]>
+      </select>
+
+    <resultMap id="outOutsMap" type="egovMap" >
+       <result property="ordId" column="ordId" />
+       <result property="ordOtstnd" column="ordOtstnd" />
+       <result property="asOtstnd" column="asOtstnd" />
+    </resultMap>
+
+    <select id="callOutOutsProcedure" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[
+            {
+                  call SP_TRACE_ORD_OTSTND( #{ORD_ID},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outOutsMap})
+            }
+         ]]>
+      </select>
+      <select id="selectMembershipFree_Packg" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+
+                             SELECT
+                                           sal91.SRV_MEM_PAC_ID    code_Id,
+                                           sal91.SRV_MEM_DESC      code_Name
+                              FROM SAL0091M sal91
+                             WHERE  ( 1 = sal91.SRV_MEM_STUS_ID )
+                                AND PAC_TYPE = 0
+                                AND FREE_MEM_USE = 1
+                              ORDER BY sal91.SRV_MEM_CODE ASC
+           ]]>
+    </select>
+
+
+
+    <select id="selectMembershipFree_PChange" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+
+
+                    SELECT sList.SRV_MEM_PAC_ID   ,
+                               sList.SRV_MEM_ITM_STK_ID   ,
+                               sList.SRV_MEM_ITM_PRIOD   ,
+                               CASE   WHEN ( sList.SRV_MEM_DUR IS NOT NULL ) THEN sList.SRV_MEM_DUR   ELSE 0  END C1  ,
+                               sList.SRV_MEM_ITM_PRC   ,
+                               sList.SRV_MEM_ITM_PV ,
+                               to_char(sysdate, 'yyyymm') TOYYMM
+                          FROM ( SELECT sal91.SRV_MEM_PAC_ID SRV_MEM_PAC_ID  ,
+                                        sal91.SRV_MEM_DUR SRV_MEM_DUR  ,
+                                        sal92.SRV_MEM_ITM_STK_ID SRV_MEM_ITM_STK_ID  ,
+                                        sal92.SRV_MEM_ITM_PRC SRV_MEM_ITM_PRC  ,
+                                        sal92.SRV_MEM_ITM_PV SRV_MEM_ITM_PV  ,
+                                        sal92.SRV_MEM_ITM_PRIOD SRV_MEM_ITM_PRIOD
+                                 FROM SAL0091M sal91
+                                        JOIN SAL0092M sal92   ON ( sal91.SRV_MEM_PAC_ID = sal92.SRV_MEM_PAC_ID )
+                                        AND ( 1= sal92.SRV_MEM_ITM_STUS_ID )
+                                        AND ( #{STOCK_ID} = sal92.SRV_MEM_ITM_STK_ID )
+                                  WHERE  sal91.SRV_MEM_PAC_ID = #{PAC_ID}  AND ROWNUM <= 1 ) sList
+           ]]>
+    </select>
+
+
+    <select id="getSAL0095d_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL
+                 ]]>
+    </select>
+
+
+    <insert id="membershipFree_save" parameterType="Map"   >
+
+                    INSERT INTO sal0095d
+                                    (   srv_mem_id , srv_mem_quot_id, srv_sales_ord_id, srv_mem_no, srv_mem_bill_no,
+                                        srv_mem_pac_id, srv_mem_pac_amt, srv_mem_bs_amt, srv_mem_pv,
+                                        srv_freq, srv_start_dt, srv_expr_dt, srv_dur, srv_stus_code_id,
+                                        srv_rem, srv_crt_dt, srv_crt_user_id, srv_upd_dt,
+                                        srv_upd_user_id, srv_mem_bs12_amt, srv_mem_is_synch,
+                                        srv_mem_sales_mem_id, srv_mem_cust_cnt_id, srv_mem_qty,
+                                        srv_bs_qty, srv_mem_promo_id, srv_mem_pv_month, srv_mem_pv_year,
+                                        srv_mem_is_mnl, srv_mem_brnch_id, srv_mem_pac_promo_id,
+                                        srv_mem_form_no
+                                    )
+                    VALUES (  #{SAVE_SR_MEM_ID} ,
+                                    0,
+                                    #{SAVE_ORD_ID},
+                                    FN_GET_DOCNO(12) ,
+                                    '',
+                                    #{SAVE_PAC_ID},
+                                    0,
+                                    0,
+                                    0,
+                                    #{SAVE_BS_FREQ},
+                                    to_date(#{SAVE_START_DATE}||'01 00:00:00'  ,'yyyy-mm-dd hh24:mi:ss') ,
+                                    <!-- add_months(add_months( to_date(#{SAVE_START_DATE} ||'01' ,'yyyy-mm-dd hh24:mi:ss'),#{SAVE_DURATION} ),-1), -->
+                                    ADD_MONTHS(TO_DATE(#{SAVE_START_DATE},'YYYY-MM'),#{SAVE_DURATION}) -1,
+                                    #{SAVE_DURATION},
+                                    4,
+                                    #{remark},
+                                    SYSDATE,
+                                    #{user_id},
+                                    SYSDATE,
+                                    #{user_id},
+                                    0,
+                                    0,
+                                    0,
+                                    #{SAVE_CUST_CNTC_ID},
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    #{branch_id},
+                                    0,
+                                    NULL
+                    )
+
+
+
+    </insert>
+
+    <insert id="srvConfigPeriod" parameterType="Map" >
+        INSERT INTO sal0088d
+                (srv_prd_id,srv_config_id, srv_mbrsh_id, srv_prd_start_dt, srv_prd_expr_dt,
+                 srv_prd_dur, srv_prd_stus_id, srv_prd_rem, srv_prd_crt_dt,
+                 srv_prd_crt_user_id, srv_prd_upd_dt, srv_prd_upd_user_id,
+                 srv_prd_cntrct_id
+                )
+         VALUES (   SAL0088D_SRV_PRD_ID_SEQ.NEXTVAL,
+                        #{SAVE_SRV_CONFIG_ID} ,
+                        #{SAVE_SR_MEM_ID},
+                         to_date(#{SAVE_START_DATE}||'01 00:00:00'  ,'yyyy-mm-dd hh24:mi:ss') ,
+                         add_months(add_months( to_date(#{SAVE_START_DATE} ||'01' ,'yyyy-mm-dd hh24:mi:ss'),#{SAVE_DURATION} ),-1),
+                         #{SAVE_DURATION}, 1, #{remark}, sysdate,
+                         #{user_id}, sysdate, #{user_id},
+                         0
+                )
+   </insert>
+
+    <select id="selectMembershipContatList" parameterType="Map" resultType="egovMap">
+
+                          SELECT P1.CUST_CNTC_ID   ,
+                                       P1.CUST_INITIAL  ,
+                                       P1.CODE_NAME   ,
+                                       P1.NAME NAME  ,
+                                       P1.DOB   ,
+                                       P1.GENDER   ,
+                                       P1.RACE_ID   ,
+                                       P1.CODENAME1   ,
+                                       P1.TEL_M1   ,
+                                       P1.TEL_M2   ,
+                                       P1.TEL_O   ,
+                                       P1.TEL_R   ,
+                                       P1.TELF   ,
+                                       P1.NRIC   ,
+                                       P1.POS   ,
+                                       P1.EMAIL   ,
+                                       P1.DEPT   ,
+                                       P1.STUS_CODE_ID   ,
+                                       P1.NAME1   ,
+                                       P1.UPD_USER_ID   ,
+                                       P1.UPD_DT   ,
+                                       P1.ID_OLD   ,
+                                       P1.DCM   ,
+                                       P1.CRT_USER_ID   ,
+                                       P1.CRT_DT
+                                  FROM ( SELECT CASE
+                                                     WHEN ( 9 = UTILS.CONVERT_TO_NUMBER(F1.STUS_CODE_ID,10,0) ) THEN UTILS.CONVERT_TO_NUMBER(0,5,0)
+                                                ELSE F1.STUS_CODE_ID
+                                                   END C1  ,
+                                                F1.CUST_CNTC_ID CUST_CNTC_ID  ,
+                                                F1.NAME NAME  ,
+                                                F1.CUST_INITIAL CUST_INITIAL  ,
+                                                F1.NRIC NRIC  ,
+                                                F1.POS POS  ,
+                                                F1.TEL_M1 TEL_M1  ,
+                                                F1.TEL_M2 TEL_M2  ,
+                                                F1.TEL_O TEL_O  ,
+                                                F1.TEL_R TEL_R  ,
+                                                F1.TELF TELF  ,
+                                                F1.DOB DOB  ,
+                                                F1.GENDER GENDER  ,
+                                                F1.RACE_ID RACE_ID  ,
+                                                F1.EMAIL EMAIL  ,
+                                                F1.STUS_CODE_ID STUS_CODE_ID  ,
+                                                F1.UPDATED1 UPD_DT  ,
+                                                F1.UPDATOR1 UPD_USER_ID  ,
+                                                F1.ID_OLD ID_OLD  ,
+                                                F1.DEPT DEPT  ,
+                                                F1.DCM DCM  ,
+                                                F1.CREATED1 CRT_DT  ,
+                                                F1.CREATOR1 CRT_USER_ID  ,
+                                                F1.CODENAME1 CODE_NAME  ,
+                                                F1.CODENAME2 CODENAME1  ,
+                                                E4.NAME NAME1
+                                         FROM ( SELECT E1.CUST_CNTC_ID CUST_CNTC_ID  ,
+                                                       E1.CUST_ID CUST_ID  ,
+                                                       E1.NAME NAME  ,
+                                                       E1.CUST_INITIAL CUST_INITIAL  ,
+                                                       E1.NRIC NRIC  ,
+                                                       E1.POS POS  ,
+                                                       E1.TEL_M1 TEL_M1  ,
+                                                       E1.TEL_M2 TEL_M2  ,
+                                                       E1.TEL_O TEL_O  ,
+                                                       E1.TEL_R TEL_R  ,
+                                                       E1.TELF TELF  ,
+                                                       E1.DOB DOB  ,
+                                                       E1.GENDER GENDER  ,
+                                                       E1.RACE_ID RACE_ID  ,
+                                                       E1.EMAIL EMAIL  ,
+                                                       E1.STUS_CODE_ID STUS_CODE_ID  ,
+                                                       E1.UPD_DT UPDATED1  ,
+                                                       E1.UPD_USER_ID UPDATOR1  ,
+                                                       E1.ID_OLD ID_OLD  ,
+                                                       E1.DEPT DEPT  ,
+                                                       E1.DCM DCM  ,
+                                                       E1.CRT_DT CREATED1  ,
+                                                       E1.CRT_USER_ID CREATOR1  ,
+                                                       E2.CODE_NAME CODENAME1  ,
+                                                       E3.CODE_NAME CODENAME2
+                                                FROM SAL0027D E1
+                                                       LEFT JOIN SYS0013M E2   ON E1.CUST_INITIAL = E2.CODE_ID
+                                                       LEFT JOIN SYS0013M E3   ON UTILS.CONVERT_TO_NUMBER(E1.RACE_ID,10,0) = E3.CODE_ID
+                                                 WHERE  8 <![CDATA[<>]]>UTILS.CONVERT_TO_NUMBER(E1.STUS_CODE_ID,10,0)
+                                                ) F1
+                                                LEFT JOIN SYS0038M E4   ON UTILS.CONVERT_TO_NUMBER(F1.STUS_CODE_ID,10,0) = E4.STUS_CODE_ID
+                                          WHERE  1=1
+
+                                                   <if test="CUST_ID != null and CUST_ID != ''">
+                                                      AND (F1.CUST_ID =#{CUST_ID})
+                                                   </if>
+                                                   <if test="NAME != null and NAME != ''">
+                                                      AND (F1.NAME LIKE '%'||#{NAME}||'%')
+                                                   </if>
+                                                   <if test="NRIC != null and NRIC != ''">
+                                                       AND (F1.NRIC LIKE '%'||#{NRIC}||'%')
+                                                   </if>
+
+                                                    <if test="CONTACT_NO != null and CONTACT_NO != ''">
+                                                          AND (   (F1.TelF LIKE '%'||#{CONTACT_NO}||'%' )  OR (F1.TEL_M1 LIKE '%'||#{CONTACT_NO}||'%' ) OR (F1.TEL_O LIKE  '%'||#{CONTACT_NO}||'%' ) OR (F1.TEL_R LIKE '%'||#{CONTACT_NO}||'%')   )
+                                                   </if>
+                                          ) P1
+                                  ORDER BY P1.C1 ASC
+
+    </select>
+
+
+   <insert id="membershipNewContatSave" parameterType="Map" >
+
+            INSERT INTO sal0027d (cust_cntc_id
+                             ,cust_id
+                             ,NAME
+                             ,CUST_INITIAL
+                             ,nric
+                             ,pos
+                             ,tel_m1
+                             ,tel_o
+                             ,tel_r
+                             ,telf
+                             ,dob
+                             ,gender
+                             ,race_id
+                             ,email
+                             ,stus_code_id
+                             ,upd_dt
+                             ,upd_user_id
+                             ,id_old
+                             ,dept
+                             ,dcm
+                             ,crt_dt
+                             ,crt_user_id,
+                         ext ) VALUES ( SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL
+                                         ,    #{NEW_CUST_ID}
+                                         ,    #{NEW_NAME}
+                                         ,    #{NEW_INITIALl}
+                                         ,    #{NEW_NRIC}
+                                         ,    #{NEW_POST}
+                                         ,    #{NEW_TELM1}
+                                         ,    #{NEW_TELO}
+                                         ,    #{NEW_TELR}
+                                         ,    #{NEW_TELF}
+                                         ,    to_date (#{NEW_DOB},'dd-mm-yyyy hh24miss')
+                                         ,    #{NEW_GENDER}
+                                         ,    #{NEW_RACE}
+                                         ,    #{NEW_EMAIL}
+                                         ,    decode(#{NEW_MAIN_SET} ,'on' ,9, 1)
+                                         ,    sysdate
+                                         ,    #{user_id}
+                                         ,    0
+                                         ,    #{NEW_DEPT}
+                                         ,    0
+                                         ,    sysdate
+                                         ,    #{user_id}
+                                         ,    NULL
+                                         )
+
+
+   </insert>
+
+
+   <insert id="membershipNewContatUpdate" parameterType="Map" >
+            UPDATE SAL0027D
+               SET STUS_CODE_ID = 1,
+                   UPD_DT = SYSDATE,
+                   UPD_USER_ID = #{user_id}
+             WHERE  CUST_ID = #{NEW_CUST_ID}
+   </insert>
+
+
+   <select id="getOGDCodeList" parameterType="Map" resultType="egovMap">
+        SELECT member.MEM_ID CODE_ID,
+            <choose>
+                  <when test="memLvl == 4">
+                      member.MEM_CODE || ' - ' || member.NAME CODE_NAME
+                  </when>
+                  <otherwise>
+                      department.DEPT_CODE || ' - ' || member.NAME CODE_NAME
+                  </otherwise>
+            </choose>
+        FROM ORG0005D department
+                JOIN ORG0001D member
+                ON department.MEM_ID = member.MEM_ID
+        WHERE ( department.DEPT_CODE IS NOT NULL )
+                  AND ( '''' != department.DEPT_CODE )
+                  AND ( 1 = member.STUS )
+                  AND ( member.MEM_TYPE = #{memType} )
+                  AND ( department.MEM_LVL  = #{memLvl} )
+                  <choose>
+                      <when test="parentID != null">
+                          AND department.MEM_UP_ID = #{parentID}
+                          AND ( member.STUS IN ( 1,8 ) )
+                      </when>
+                      <otherwise>
+                          AND ( member.STUS = 1 )
+                      </otherwise>
+                  </choose>
+                  <if test="deptID != 0">
+                       AND department.MEM_ID = #{deptID}
+                  </if>
+        ORDER BY department.DEPT_CODE ASC
+   </select>
+
+    <!--Report  -->
+    <select id="getBrnchCodeListByBrnchId" parameterType="Map" resultType="egovMap">
+                SELECT
+                    BRNCH_ID,
+                    CODE
+                FROM
+                    SYS0005M
+                WHERE
+                    1 = 1
+                    <if test="brnchList != null and brnchList.length > 0">
+                       AND BRNCH_ID IN
+                        <foreach collection="brnchList" item="item" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                ORDER BY CODE ASC
+    </select>
+
+    <insert id="updateMembershipById" parameterType="Map">
+        UPDATE SAL0095D SET REF_NO = #{refNo} WHERE SRV_MEM_ID = #{membershipId}
+    </insert>
+
+        <select id="selectTraceOrders" parameterType="Map" resultType="egovMap">
+        WITH VALID_MEMBERSHIP AS
+        (
+        SELECT SRV_SALES_ORD_ID,MIN(SRV_START_DT)SRV_START_DT, MAX(SRV_EXPR_DT) AS SRV_EXPR_DT
+        FROM SAL0095D
+        WHERE 1 = 1
+        AND SRV_STUS_CODE_ID = 4
+        AND SYSDATE BETWEEN SRV_START_DT AND SRV_EXPR_DT
+        GROUP BY SRV_SALES_ORD_ID
+        )
+        SELECT
+        EXT2.CUST_CRC_TOKEN CUST_TOKEN_ID
+        ,EXT3.SALES_ORD_NO ORDER_NO
+        ,EXT4.NAME CUSTOMER_NAME
+        ,EXT7.AREA AREA
+        ,EXT3.MTH_RENT_AMT RENTAL_FEE
+        ,CASE WHEN EXT1.IS_3RD_PARTY = 1 THEN 'YES' WHEN EXT1.IS_3RD_PARTY = 0 THEN 'NO' END THIRD_PARTY
+        FROM SAL0074D EXT1
+        JOIN SAL0028D EXT2 ON EXT1.CUST_CRC_ID = EXT2.CUST_CRC_ID
+        JOIN SAL0001D EXT3 ON EXT1.SALES_ORD_ID = EXT3.SALES_ORD_ID
+        JOIN SAL0029D EXT4 ON EXT3.CUST_ID = EXT4.CUST_ID
+        JOIN SAL0045D EXT5 ON EXT3.SALES_ORD_ID = EXT5.SALES_ORD_ID
+        JOIN SAL0023D EXT6 ON EXT5.ADD_ID = EXT6.CUST_ADD_ID
+        LEFT JOIN SYS0064M EXT7 ON EXT6.AREA_ID = EXT7.AREA_ID
+        JOIN VALID_MEMBERSHIP EXT9 ON EXT9.SRV_SALES_ORD_ID = EXT3.SALES_ORD_ID
+
+        WHERE 1 = 1
+        AND EXT2.CUST_CRC_TOKEN = #{tokenId}
+        AND EXT1.MODE_ID = 131
+        AND EXT3.APP_TYPE_ID = 66
+        AND EXT3.STUS_CODE_ID = 4
+
+        ORDER BY EXT3.SALES_ORD_NO ASC
+    </select>
+
+    <select id="selectSalesPerson" parameterType="Map" resultType="egovMap">
+    	SELECT T1.MEM_ID
+    		,T1.MEM_CODE
+    		,T1.NAME
+    		,T1.NRIC
+    		,T1.MEM_TYPE
+    		,T2.CODE_NAME
+
+    	FROM ORG0001D T1
+    	LEFT JOIN SYS0013M T2
+    	ON T1.MEM_TYPE = T2.CODE_ID
+    	WHERE 1=1
+    	<if test='memId != null and memId !=""'>
+			AND T1.MEM_ID = #{memId}
+    	</if>
+    	<if test='memCode != null and memCode !=""'>
+			AND T1.MEM_CODE = #{memCode}
+
+    	</if>
+    	<if test='memType != null and !memType.isEmpty()'>
+			AND T1.MEM_TYPE IN
+			<foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+				#{item.paramVal, jdbcType=INTEGER}
+            </foreach>
+    	</if>
+    </select>
+
+    <select id="selectConfigurationSalesPerson" parameterType="Map" resultType="egovMap">
+       SELECT T2.MEM_ID
+             , T2.MEM_CODE
+             , T2.NAME
+             , T2.NRIC
+             , T2.MEM_TYPE
+             , T3.CODE_NAME
+             , T5.SALES_ORD_ID
+             , T5.SALES_ORD_NO
+             , MAX(T4.SRV_EXPR_DT) SRV_EXPR_DT
+      FROM SAL0090D T1
+      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
+      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
+      LEFT JOIN SAL0095D T4 ON T1.SRV_SO_ID = T4.SRV_SALES_ORD_ID
+      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
+      WHERE
+      T1.SRV_STUS_ID = 1
+      AND T4.SRV_STUS_CODE_ID = 4
+      <if test='salesOrdId != null and salesOrdId !=0'>
+                AND T5.SALES_ORD_ID = #{salesOrdId}
+      </if>
+      <if test='salesOrdNo != null and salesOrdNo !=""'>
+                AND T5.SALES_ORD_NO = #{salesOrdNo}
+      </if>
+      <if test='memId != null and memId !=0'>
+                AND T2.MEM_ID = #{memId}
+      </if>
+      <if test='memCode != null and memCode !=""'>
+                AND T2.MEM_CODE = #{memCode}
+      </if>
+      <if test='memType != null and !memType.isEmpty()'>
+      			AND T2.MEM_TYPE IN
+      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+                #{item.paramVal, jdbcType=INTEGER}
+      </foreach>
+      </if>
+       GROUP BY T2.MEM_ID, T2.MEM_CODE, T2.NAME, T2.NRIC, T2.MEM_TYPE,
+		T3.CODE_NAME, T5.SALES_ORD_ID, T5.SALES_ORD_NO
+    </select>
+
+    <select id="selectSvcExpire" parameterType="Map" resultType="egovMap">
+		    SELECT T.SRV_PRD_START_DT
+		             , T.SRV_PRD_START_DT_MMYY
+		             , T.SRV_PRD_START_DT_MMYY_ADD
+		             , T.SRV_PRD_EXPR_DT
+		             , T.SRV_PRD_EXPR_DT_MMYY
+		             , T.SRV_PRD_EXPR_DT_MMYY_ADD
+		             , T.EXTRADE_ALLOW_FLG
+		             , T.MONTH_EXPIRED
+		    FROM ( SELECT T1.SRV_START_DT SRV_PRD_START_DT
+		                        , TO_CHAR(T1.SRV_START_DT, 'MM/YY') SRV_PRD_START_DT_MMYY
+		                        , TO_CHAR(ADD_MONTHS(T1.SRV_START_DT, 1),'MM/YY') SRV_PRD_START_DT_MMYY_ADD
+		                        , T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
+		                        , TO_CHAR(T1.SRV_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
+		                        , TO_CHAR(ADD_MONTHS(T1.SRV_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
+		                        , CASE WHEN (TO_CHAR(SYSDATE, 'YYYYMM') >= TO_CHAR(ADD_MONTHS(SRV_EXPR_DT, 1), 'YYYYMM')) THEN 'Y' ELSE 'N' END EXTRADE_ALLOW_FLG
+		                        , MONTHS_BETWEEN(TO_DATE(LAST_DAY(SYSDATE)),TO_DATE(LAST_DAY(T1.SRV_EXPR_DT))) AS MONTH_EXPIRED
+		               FROM SAL0095D T1
+		               WHERE T1.SRV_SALES_ORD_ID = #{ORD_ID}
+		                  AND 4 = T1.SRV_STUS_CODE_ID
+		                  AND SRV_EXPR_DT IS NOT NULL
+		               ORDER BY T1.SRV_EXPR_DT DESC
+		    ) T WHERE ROWNUM &lt;= 1
+  	</select>
+
+</mapper>

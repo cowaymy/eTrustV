@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccp.impl.PreCcpRegisterMapper">
+
+  <insert id="insertPreCcpSubmission" parameterType="java.util.Map">
+    INSERT INTO SAL0343D ( PRECCP_SEQ
+                                      , CUST_NAME
+                                      , CUST_IC
+                                      , CUST_MOBILENO
+                                      , CUST_EMAIL
+                                      , CRT_DT
+                                      , CRT_ID
+                                      , CUST_ID
+                                      , CHS_STATUS
+                                      , CHS_RSN
+                                      , DISAB
+                                      , TYPE_ID
+                                      , UPD_DT
+                                      , UPD_ID
+                                      , TAC_NO
+                                      , DEPT_CODE
+                                      , GRP_CODE
+                                      , ORG_CODE
+    ) VALUES ( SAL0343D_PRECCP_SEQ.NEXTVAL
+                  , #{customerName}
+                  , #{customerNric}
+                  , #{customerMobileNo}
+                   , #{customerEmailAddr}
+                  , SYSDATE
+                  , #{userId}
+                  , #{custId}
+                  , #{chsStatus}
+                  , #{chsRsn}
+                  , 0
+                  , #{customerType}
+                  , SYSDATE
+                  , #{userId}
+                  , #{tacNo}
+                  , #{deptCode}
+                  , #{grpCode}
+                  , #{orgCode}
+    )
+  </insert>
+
+  <select id="getSeqSAL0343D" resultType="java.lang.Integer">
+    SELECT SAL0343D_PRECCP_SEQ.CURRVAL FROM DUAL
+  </select>
+
+  <select id="getExistCustomer" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
+	SELECT * FROM (
+		SELECT * FROM (
+		    SELECT
+		          A.CUST_ID
+		          , B.NAME
+		          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN 'EXISTING'
+		                 ELSE 'NEW'
+		            END CUST_TYPE
+		          , CASE
+		                WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN DBMS_LOB.SUBSTR(F.CCP_REM,4000)
+		                 ELSE E.CCP_REM
+		             END CCP_REM
+		           , B.NRIC
+	        FROM SAL0262D A
+	        LEFT JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+		    LEFT JOIN (
+		         SELECT * FROM (
+		            SELECT
+		                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
+		                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
+		                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
+		                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
+		                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
+		                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
+		                        ELSE 0
+		                END SCORE,
+		                B.CUST_ID
+		            FROM SAL0102D A
+		            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
+		            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+		            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
+		            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+		            WHERE B.APP_TYPE_ID = 66
+		            <if test="customerId != null and customerId != '' ">
+		                 AND B.CUST_ID = #{customerId}
+		            </if>
+		            <if test="customerNric != null and customerNric != '' ">
+		                 AND C.NRIC = #{customerNric}
+		             </if>
+		            ORDER BY A.CCP_ID DESC
+		        )WHERE ROWNUM = 1
+		    ) C ON C.CUST_ID = A.CUST_ID
+		    LEFT JOIN (
+		        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP
+		        FROM SAL0425D A
+		        WHERE A.STUS = 1
+		    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
+		                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
+		    LEFT JOIN (
+		          SELECT DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM, A.CUST_CREDIT
+		              FROM SAL0428D A
+		              WHERE A.STUS = 1
+		    ) E ON E.CUST_CREDIT = D.SCORE_GRP <!-- NEW CUSTOMER -->
+		    LEFT JOIN SAL0428D F ON F.CHS_STUS = A.CHS_STUS AND F.STUS = 1 <!-- EXISTING CUSTOMER -->
+		    WHERE 1=1
+	           <if test="customerNric != null and customerNric != '' ">
+		         AND B.NRIC = #{customerNric}
+		    </if>
+		    <if test="customerId != null and customerId != '' ">
+		          AND A.CUST_ID = #{customerId}
+		    </if>
+		    ORDER BY A.CHS_ID DESC
+		  ) WHERE ROWNUM = 1
+
+	    <if test="customerNric != null and customerNric != '' ">
+		    UNION
+
+		    SELECT
+		        A.CUST_ID
+		        , A.CUST_NAME
+		        , 'NEW' CUST_TYPE
+		        , E.CCP_REM CCP_REM
+		        , A.CUST_IC NRIC
+		    FROM (
+		        SELECT * FROM (
+		            SELECT *
+		            FROM SAL0402D A
+		            WHERE 1=1
+	                    AND A.CUST_IC = #{customerNric}
+		                AND TO_CHAR(CCRIS_DT,'YYYY') = TO_CHAR(SYSDATE, 'YYYY') AND TO_CHAR(CCRIS_DT,'MM') = TO_CHAR(SYSDATE, 'MM')
+		            ORDER BY A.CCRIS_ID DESC
+		        )WHERE ROWNUM = 1
+		    )A
+		    LEFT JOIN (
+		        SELECT * FROM SAL0425D
+		        WHERE STUS = 1
+		        AND SCORE_PROV = 'CTOS'
+		    )B ON A.CREDIT_SCRE BETWEEN B.START_SCORE AND B.END_SCORE AND B.STUS = 1
+		            AND  B.HOME_CAT = 'HA'
+		    LEFT JOIN (
+		        SELECT DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM , B.CODE
+		        FROM SAL0428D A
+		        LEFT JOIN SYS0013M B ON B.CODE = A.CUST_CREDIT AND B.CODE_MASTER_ID = 607
+		        WHERE A.STUS = 1
+		    ) E ON E.CODE = B.SCORE_GRP
+	     </if>
+	)WHERE ROWNUM = 1
+  </select>
+
+  <select id="searchOrderSummaryList" parameterType="Map"
+    resultType="egovMap">
+    WITH RENTAL AS (
+    SELECT SUM(RENT_AMT) RENT_AMT, MAX(RENT_INST_NO) RENT_INST_NO, RENT_SO_ID
+    FROM PAY0022D GROUP BY RENT_SO_ID
+    ),
+    OUTRIGHT AS (
+    SELECT SUM(TRADE_AMT) TRADE_AMT, TRADE_SO_ID FROM PAY0035D GROUP BY
+    TRADE_SO_ID
+    ),
+    CURR_RENT AS(
+    SELECT * FROM (
+    SELECT RENT_INST_DT, RENT_INST_NO, RENT_INST_AMT, SALES_ORD_ID, ROW_NUMBER()
+    OVER(PARTITION BY SALES_ORD_ID ORDER BY RENT_INST_DT DESC) RN FROM
+    SAL0070D WHERE RENT_INST_DT = TRUNC(SYSDATE,'MM')
+    ) WHERE RN = 1
+    ),
+    CURR_INST_NO AS (
+      SELECT RENT_SO_ID, MAX(RENT_INST_NO) MAX_RENT_INST_NO
+      FROM PAY0022D
+      GROUP BY RENT_SO_ID
+    ),
+        WOF_CURR_INST_NO AS (
+        SELECT RC.SALES_ORD_ID, NVL(MAX(i.RENT_INST_NO) , 0) WOF_INST_NO
+        FROM SAL0070D i
+        JOIN SAL0071D RC ON RC.SALES_ORD_ID = i .SALES_ORD_ID AND RC.STUS_CODE_ID = 'WOF'
+        WHERE  1=1 AND utils.month_(i.RENT_INST_DT) = utils.month_(RC.REN_SCH_DT)
+        AND utils.year_(i.RENT_INST_DT) = utils.year_(RC.REN_SCH_DT) --AND RC.sales_ord_id = 1745697
+        GROUP BY RC.SALES_ORD_ID
+        )
+    SELECT
+      C.SALES_ORD_ID
+    , C.SALES_ORD_NO
+    , C.APP_TYPE_ID
+    , G.CODE PAYMENT_MODE
+    , E.STUS_CODE_ID RENT_STUS
+    , CASE WHEN C.APP_TYPE_ID = 66 THEN A.RENT_AMT ELSE D.TRADE_AMT END OUTSTANDING_AMT
+    , CASE
+        WHEN C.APP_TYPE_ID = 66 THEN
+                CASE
+                    WHEN E.STUS_CODE_ID IN ('WOF_1', 'TER', 'CAN', 'INV', 'ACT') THEN
+                        (NVL(H.MAX_RENT_INST_NO, 60) - NVL(A.RENT_INST_NO, 0)) * (C.MTH_RENT_AMT - NVL(T1.REBATE_AMT_PER_INSTLMT, 0))
+                    WHEN E.STUS_CODE_ID IN ('WOF') THEN
+                        (NVL(J.WOF_INST_NO, 60) - NVL(A.RENT_INST_NO, 0)) * (C.MTH_RENT_AMT - NVL(T1.REBATE_AMT_PER_INSTLMT, 0))
+                    ELSE
+                        (NVL(B.RENT_INST_NO, 60) -NVL( A.RENT_INST_NO, 0)) * (C.MTH_RENT_AMT - NVL(T1.REBATE_AMT_PER_INSTLMT, 0)- NVL(q.DC_AMT_PER_INSTLMT, 0))
+                END
+        END UNBILL_AMT
+    FROM SAL0001D C
+    LEFT JOIN RENTAL A ON C.SALES_ORD_ID = A.RENT_SO_ID
+    LEFT JOIN OUTRIGHT D ON C.SALES_ORD_ID = D.TRADE_SO_ID
+    LEFT JOIN CURR_RENT B ON B.SALES_ORD_ID = C.SALES_ORD_ID
+    LEFT JOIN CURR_INST_NO H ON H.RENT_SO_ID = C.SALES_ORD_ID
+    LEFT JOIN WOF_CURR_INST_NO J ON J.SALES_ORD_ID = C.SALES_ORD_ID
+    LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = C.SALES_ORD_ID
+    LEFT JOIN SAL0074D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+    LEFT JOIN SYS0013M G ON G.CODE_ID = F.MODE_ID
+    LEFT JOIN PAY0286D T1 ON C.SALES_ORD_ID = T1.ORD_ID
+    LEFT JOIN PAY0054D q   ON C.SALES_ORD_ID = q.ORD_ID and q.DC_STUS_ID = 1
+    WHERE C.CUST_ID = #{custId}
+  </select>
+
+  <resultMap id="custMap" type="egovMap"></resultMap>
+  <select id="insertNewCustomerInfo" parameterType="Map"
+    statementType="CALLABLE">
+    {
+    call SP_PRECCP_INST_CCRIS_DATA(#{customerName}, #{customerNric}, #{userId}, #{b2bData, mode=OUT, jdbcType=CURSOR, javaType=Resultset,
+    resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT,
+    jdbcType=VARCHAR, javaType=String, resultMap=custMap})
+    }
+  </select>
+
+
+  <resultMap id="ccrisMap" type="egovMap"></resultMap>
+  <select id="updateCcrisScre" parameterType="Map" statementType="CALLABLE">
+    {
+    call SP_PRECCP_UPD_CCRIS_SCRE(#{seq}, #{ccrisId}, #{custIc}, #{ficoScore},#{resultRaw}, #{ctosDate}, #{bankRupt}, #{confirmEntity},
+    #{statusCode, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=ccrisMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR,
+    javaType=String, resultMap=ccrisMap})
+    }
+  </select>
+
+  <update id="updateCcrisId" parameterType="Map">
+    UPDATE SAL0343D SET CCRIS_ID = #{ccrisId} WHERE PRECCP_SEQ = #{seq}
+  </update>
+
+  <select id="insertNewCustomerDetails" parameterType="Map"
+    statementType="CALLABLE">
+    {
+    call SP_PRECCP_INST_DATA(#{customerName}, #{customerNric}, #{customerMobileNo} , #{customerEmailAddr}, #{userId}, #{customerType}
+    , #{preccpData, mode=OUT, jdbcType=CURSOR, javaType=Resultset, resultMap=custMap},#{statusCode, mode=OUT, jdbcType=INTEGER,
+    javaType=int, resultMap=custMap}, #{resultMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=custMap})
+    }
+  </select>
+
+
+  <select id="getPreccpResult" parameterType="Map" resultType="egovMap">
+    SELECT
+          A.CUST_NAME
+      , '-' CUST_ID
+      , B.CREDIT_SCRE
+      , B.CREDIT_BANKRUPT
+      , CASE WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 1 THEN 'Advanced Payment'
+        WHEN B.CREDIT_SCRE IN (0,9999) AND B.CREDIT_BANKRUPT = 0 THEN 'Entitle 1'
+        WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 1'
+        WHEN B.CREDIT_SCRE BETWEEN 300 AND 599 THEN 'Entitle 2'
+        ELSE '' END RESULT
+    FROM SAL0343D A
+    JOIN SAL0402D B ON A.CCRIS_ID = B.CCRIS_ID
+    WHERE A.PRECCP_SEQ = #{seq}
+  </select>
+
+
+  <resultMap type="egovMap" id="getPreccpResultMap">
+    <result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB" javaType="java.lang.String" />
+  </resultMap>
+
+  <select id="getPreCcpRemark" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
+    SELECT
+      A.REMARK_ID
+    , A.CHS_STUS
+    , A.CHS_RSN
+    , A.APPV_REQ
+    FROM SAL0344D A
+    WHERE A.STUS = 1
+    <if test="remarkId != null and remarkId != ''">
+      AND A.REMARK_ID = #{remarkId}
+    </if>
+    ORDER BY A.CHS_STUS, A.CHS_RSN
+  </select>
+
+  <select id="getCustCredibility" parameterType="Map" resultType="egovMap">
+    SELECT
+      A.REMARK_ID
+    , B.CODE_NAME CUST_CREDIT
+    , A.CUST_CREDIT CUST_CREDIT_CODE
+    , A.CUST_TYPE
+    , DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM
+    FROM SAL0428D A
+    LEFT JOIN SYS0013M B ON B.CODE = A.CUST_CREDIT AND B.CODE_MASTER_ID = 607
+    WHERE A.CUST_TYPE = 'NEW' AND A.STUS = 1
+  </select>
+
+  <select id="getExistCustChs" parameterType="Map" resultType="egovMap">
+    SELECT
+      A.REMARK_ID
+    , A.CHS_STUS
+    , A.CUST_TYPE
+    , DBMS_LOB.SUBSTR(A.CCP_REM,4000) CCP_REM
+    FROM SAL0428D A
+    WHERE A.CUST_TYPE = 'EXISTING' AND A.STUS = 1
+  </select>
+
+  <update id="editRemarkRequest" parameterType="java.util.Map">
+    UPDATE SAL0344D
+    SET APPV_REQ = #{editorArea}
+    , UPD_ID = #{userId}
+    , UPD_DT = SYSDATE
+    WHERE REMARK_ID = #{editorId}
+  </update>
+
+  <update id="editCCPRemark" parameterType="java.util.Map">
+        UPDATE SAL0428D
+        SET END_DT = #{oldEndDate}
+        , STUS = 8
+        , UPD_USER_ID = #{userId}
+        , UPD_DT = SYSDATE
+        WHERE REMARK_ID = #{remarkId}
+    </update>
+
+  <insert id="insertCCPRemark" parameterType="java.util.Map">
+        INSERT INTO SAL0428D   (
+          REMARK_ID,
+          CUST_CREDIT,
+          CUST_TYPE,
+          CHS_STUS,
+          CCP_REM,
+          STUS,
+          START_DT,
+          END_DT,
+          CRT_DT,
+          CRT_USER_ID,
+          UPD_DT,
+          UPD_USER_ID
+       ) VALUES (
+          SAL0428D_REMARK_ID_SEQ.NEXTVAL,
+          #{custCreditCode},
+          #{custType},
+          #{chsStus},
+          #{ccpRem},
+          1,
+          #{newStartDate},
+          #{newEndDate},
+          SYSDATE,
+          #{userId},
+          SYSDATE,
+          #{userId}
+      )
+    </insert>
+
+    <select id="getCustCreditInfo" parameterType="Map" resultType="egovMap">
+		SELECT * FROM (
+			SELECT * FROM (
+			    SELECT
+			          A.CUST_ID
+			          , B.NAME
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN 'EXISTING'
+			                 ELSE 'NEW'
+			            END CUST_TYPE
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN A.CHS_STUS
+			                 ELSE '-'
+			            END CHS_STUS
+			          , CASE WHEN A.CHS_RSN IS NOT NULL AND A.CHS_RSN != '-' THEN A.CHS_RSN
+			                 ELSE '-'
+			            END CHS_RSN
+			          , A.CUST_CAT
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN '-'
+	                         ELSE D.SCORE_GRP
+	                    END SCORE_GRP
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.UNIT_ENTITLE
+                             ELSE G.UNIT_ENTITLE
+                        END UNIT_ENTITLE
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.PROD_ENTITLE_NAME
+                             ELSE G.PROD_ENTITLE_NAME
+                        END PROD_ENTITLE
+                      , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN H.RENT_FEE_LIMIT
+                             ELSE G.RENT_FEE_LIMIT
+                        END RENT_FEE_LIMIT
+			          , CASE WHEN A.CHS_STUS IS NOT NULL AND A.CHS_STUS != '-' THEN A.CHS_STUS
+	                         ELSE D.SCORE_GRP
+	                    END MBSCORE_GRP_CDE
+	            FROM SAL0262D A
+	            LEFT JOIN SAL0029D B ON B.CUST_ID = A.CUST_ID
+			    LEFT JOIN (
+			         SELECT * FROM (
+			            SELECT
+			                CASE WHEN (A.CCP_FICO IS NULL) THEN 0 ELSE A.CCP_FICO END CCP_FICO,
+			                CASE WHEN (A.CCP_EXPERIANR IS NULL) THEN 0 ELSE A.CCP_EXPERIANR END CCP_EXPERIANR,
+			                CASE WHEN GET_HOMECARE_FLAG_YN(E.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END HOME_CAT,
+			                CASE WHEN A.CCP_EXPERIANR > 0 THEN 'EXPERIAN' ELSE 'CTOS' END SCORE_PROV,
+			                CASE WHEN A.CCP_EXPERIANR > 0 THEN A.CCP_EXPERIANR
+			                     WHEN A.CCP_FICO > 0 THEN A.CCP_FICO
+			                        ELSE 0
+			                END SCORE,
+			                B.CUST_ID
+			            FROM SAL0102D A
+			            LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.CCP_SALES_ORD_ID
+			            LEFT JOIN SAL0029D C ON C.CUST_ID = B.CUST_ID
+			            LEFT JOIN SAL0002D D ON D.SALES_ORD_ID = B.SALES_ORD_ID
+			            LEFT JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+			            WHERE B.APP_TYPE_ID = 66
+			            <if test="custId != null and custId != '' ">
+			                 AND B.CUST_ID = #{custId}
+						</if>
+						<if test="nric != null and nric != '' ">
+			                 AND C.NRIC = #{nric}
+		                 </if>
+			            ORDER BY A.CCP_ID DESC
+			        )WHERE ROWNUM = 1
+			      ) C ON C.CUST_ID = A.CUST_ID
+			    LEFT JOIN (
+			        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP SCORE_GRP_NAME, B.CODE_NAME SCORE_GRP
+			        FROM SAL0425D A
+			        LEFT JOIN SYS0013M B ON B.CODE = A.SCORE_GRP AND B.CODE_MASTER_ID = 607
+			        WHERE A.STUS = 1
+			    ) D ON D.SCORE_PROV = C.SCORE_PROV AND C.SCORE BETWEEN D.START_SCORE AND D.END_SCORE
+			                        AND D.HOME_CAT = C.HOME_CAT AND D.STUS = 1
+			     LEFT JOIN (
+		            -- GET UNIT ENTITLEMENT AND PROD ENTITLEMENT FOR NEW CUSTOMER
+		            SELECT A.*, B.CODE_NAME PROD_ENTITLE_NAME FROM SAL0426D A
+                    LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
+                    WHERE A.STUS = 1
+		        )G ON (G.SCORE_GRP = D.SCORE_GRP) AND
+		                (G.CUST_CAT = A.CUST_CAT OR (G.CUST_CAT IS NULL AND A.CUST_CAT IS NULL))
+		        LEFT JOIN (
+		            -- GET UNIT ENTITLEMENT AND PROD ENTITLEMENT FOR EXISTING CUSTOMER
+		            SELECT A.*, B.CODE_NAME PROD_ENTITLE_NAME FROM SAL0426D A
+                    LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
+                    WHERE A.STUS = 1
+		        )H ON (H.CHS_STUS = A.CHS_STUS) AND
+		                (H.CUST_CAT = A.CUST_CAT OR (H.CUST_CAT IS NULL AND A.CUST_CAT IS NULL))
+			    WHERE 1=1
+			    <if test="nric != null and nric != '' ">
+			          AND B.NRIC = #{nric}
+			    </if>
+			    <if test="custId != null and custId != '' ">
+			          AND A.CUST_ID = #{custId}
+			    </if>
+			    ORDER BY A.CHS_ID DESC
+		    ) WHERE ROWNUM = 1
+
+		    <if test="nric != null and nric != '' ">
+			    UNION
+
+			    SELECT
+			        A.CUST_ID
+			        , A.CUST_NAME
+			        , 'NEW' CUST_TYPE
+			        , '-' CHS_STUS
+			        , '-' CHS_RSN
+			        , '-' CUST_CAT
+			        , B.SCORE_GRP
+			        , F.UNIT_ENTITLE
+			        , F.PROD_ENTITLE
+			        , F.RENT_FEE_LIMIT
+			        , NVL(B.SCORE_GRP_NAME,'-') AS MBSCORE_GRP_CDE
+			    FROM (
+			        SELECT * FROM (
+			            SELECT *
+			            FROM SAL0402D A
+			            WHERE A.CUST_IC = #{nric}
+			            AND TO_CHAR(CCRIS_DT,'YYYY') = TO_CHAR(SYSDATE, 'YYYY') AND TO_CHAR(CCRIS_DT,'MM') = TO_CHAR(SYSDATE, 'MM')
+			            ORDER BY A.CCRIS_ID DESC
+			        )WHERE ROWNUM = 1
+			    )A
+			    LEFT JOIN (
+			        SELECT A.SCORE_PROV, A.HOME_CAT, A.START_SCORE, A.END_SCORE, A.STUS, A.SCORE_GRP SCORE_GRP_NAME, B.CODE_NAME SCORE_GRP
+			        FROM SAL0425D A
+			        LEFT JOIN SYS0013M B ON B.CODE = A.SCORE_GRP AND B.CODE_MASTER_ID = 607
+			        WHERE STUS = 1 AND SCORE_PROV = 'CTOS'
+			    )B ON A.CREDIT_SCRE BETWEEN B.START_SCORE AND B.END_SCORE AND B.STUS = 1
+			            AND B.HOME_CAT = 'HA'
+			    LEFT JOIN (
+			        SELECT * FROM SAL0426D A
+			        LEFT JOIN SYS0013M B ON B.CODE = A.PROD_ENTITLE AND B.CODE_MASTER_ID = 605
+			        WHERE A.STUS = 1
+			    ) F ON F.SCORE_GRP = B.SCORE_GRP AND F.CUST_CAT IS NULL
+		    </if>
+		)WHERE ROWNUM = 1
+    </select>
+
+    <select id="getExistUnitHist" parameterType="Map" resultType="egovMap">
+        SELECT
+        A.SALES_ORD_NO
+        , A.SALES_ORD_ID ORD_ID
+        , CASE WHEN GET_HOMECARE_FLAG_YN(C.STK_CTGRY_ID) = 0 THEN 'HA' ELSE 'HC' END PROD_CAT
+        , D.CODE ORD_STUS
+        , E.STUS_CODE_ID RENT_STUS
+        , H.CODE_NAME CARD_TYPE
+    FROM SAL0001D A
+    JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    JOIN SYS0026M C ON C.STK_ID = B.ITM_STK_ID
+    JOIN SYS0038M D ON D.STUS_CODE_ID = A.STUS_CODE_ID
+    LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0074D F ON F.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0028D G ON G.CUST_CRC_ID = F.CUST_CRC_ID AND F.CUST_CRC_ID <![CDATA[<>]]> 0
+    LEFT JOIN SYS0013M H ON H.CODE_ID = G.CARD_TYPE_ID
+    WHERE A.CUST_ID = #{custId} AND A.APP_TYPE_ID != 5764
+    </select>
+
+    <select id="getNewProdElig" parameterType="Map" resultType="egovMap">
+		SELECT
+		    A.PROD_CAT , A.PROD_CAT_CODE,
+		    B.SCORE_TYPE_CODE,
+		    C.RECOMMEND
+		FROM (
+		    SELECT T2.CODE_NAME PROD_CAT, T2.CODE PROD_CAT_CODE, T2.CODE_ID
+		    FROM SYS0026M T1
+		    JOIN SYS0013M T2 ON T2.CODE_ID = T1.STK_CTGRY_ID
+		    WHERE
+		        T1.STUS_CODE_ID = 1
+		        AND T1.STK_TYPE_ID = 61
+		        AND T1.STK_CTGRY_ID NOT IN (59,924)
+		        AND T1.ALLOW_SALES = 1
+		    GROUP BY T2.CODE_NAME, T2.CODE, T2.CODE_ID
+		    ORDER BY T2.CODE_ID
+		) A CROSS JOIN (
+		    SELECT CODE SCORE_TYPE_CODE FROM SYS0013M WHERE CODE_MASTER_ID = 607
+		    UNION ALL
+		    SELECT 'GREEN' AS SCORE_TYPE_CODE FROM DUAL
+		    UNION ALL
+		    SELECT 'YELLOW' AS SCORE_TYPE_CODE FROM DUAL
+		) B
+		LEFT JOIN SAL0427D C ON A.PROD_CAT_CODE = C.PROD_CAT AND B.SCORE_TYPE_CODE = C.SCORE_TYPE AND C.STUS = 1
+		WHERE B.SCORE_TYPE_CODE = #{custScore}
+    </select>
+
+  <insert id="insertRemarkRequest" parameterType="java.util.Map">
+    MERGE INTO SAL0344D A
+    USING (
+    SELECT DISTINCT
+    CHS_STUS
+    , CHS_RSN
+    FROM SAL0262D
+    WHERE CHS_STUS = 'YELLOW' AND CHS_RSN IS NOT NULL
+    ) SRC ON (A.CHS_STUS = SRC.CHS_STUS AND A.CHS_RSN = SRC.CHS_RSN)
+    WHEN NOT MATCHED THEN
+    INSERT (REMARK_ID, CHS_STUS, CHS_RSN, STUS, CRT_ID, CRT_DT)
+    VALUES (
+    SAL0344D_REMARK_ID.nextval,
+    SRC.CHS_STUS,
+    SRC.CHS_RSN,
+    1,
+    349,
+    SYSDATE
+    )
+  </insert>
+
+
+  <select id="chkDuplicated" parameterType="Map" resultType="egovMap">
+    SELECT
+          COUNT(*) AS chk_Duplicated
+    FROM SAL0343D
+    WHERE (CUST_MOBILENO = #{customerMobileNo} OR CUST_EMAIL = #{customerEmailAddr})
+  </select>
+
+  <select id="getRegisteredCust" parameterType="Map" resultType="egovMap">
+    SELECT *
+    FROM SAL0343D
+    WHERE CUST_IC= #{customerNric}
+    AND ROWNUM=1
+  </select>
+
+  <select id="selectSmsConsentHistory" resultType="egovMap">
+    SELECT
+        A.PRECCP_SEQ
+      , A.TAC_NO || A.PRECCP_SEQ PRECCP_ID
+      , A.CUST_NAME
+      , A.SMS_COUNT
+      , CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'Yes'
+        ELSE 'No'
+        END SMS_CONSENT
+      , TO_CHAR(A.CRT_DT,'YYYY/MM/DD') CRT_DT
+      , CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN TO_CHAR(A.UPD_DT,'YYYY/MM/DD HH24:MI:SS') ELSE '' END UPD_DT
+      , CASE WHEN F.MEM_ID IS NULL THEN D.MEM_CODE ELSE F.MEM_CODE END MEM_CODE
+      , CASE WHEN F.MEM_ID IS NULL THEN E.DEPT_CODE ELSE F.DEPT_CODE END DEPT_CODE
+      , CASE WHEN F.MEM_ID IS NULL THEN E.GRP_CODE ELSE F.GRP_CODE END GRP_CODE
+      , CASE WHEN F.MEM_ID IS NULL THEN E.ORG_CODE ELSE F.ORG_CODE END ORG_CODE
+    FROM SAL0343D A
+    JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
+    JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
+    JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
+    LEFT JOIN ORG1002V F ON D.MEM_ID = F.MEM_ID AND HIST_YEAR = TO_CHAR(A.CRT_DT, 'YYYY') AND HIST_MONTH = TO_CHAR(A.CRT_DT, 'MM')
+    WHERE A.TYPE_ID = 7290
+    AND NVL(A.DISAB,0) = 0
+    AND A.CRT_ID = #{userId}
+    ORDER BY 1 DESC
+  </select>
+
+  <update id="updateSmsCount" parameterType="Map">
+    UPDATE
+    SAL0343D
+    SET
+        SMS_COUNT = NVL(SMS_COUNT,0) +1
+      , UPD_ID = #{userId}
+      , UPD_DT = SYSDATE
+    WHERE PRECCP_SEQ = #{preccpSeq}
+  </update>
+
+  <select id="chkSendSmsValidTime" parameterType="Map" resultType="egovMap">
+    SELECT
+          ROUND((SYSDATE - UPD_DT)* 1440) AS chk_Time
+    FROM SAL0343D
+    WHERE PRECCP_SEQ = #{preccpSeq}
+  </select>
+
+  <update id="resetSmsConsent">
+    UPDATE
+          SAL0343D
+    SET
+        SMS_COUNT = 0
+      , UPD_DT = SYSDATE
+    WHERE
+    TYPE_ID = 7290
+    AND NVL(SMS_CONSENT,0) = 0
+    AND TRUNC(SYSDATE) > TRUNC(UPD_DT)
+  </update>
+
+
+  <select id="chkSmsResetFlag" resultType="egovMap">
+    SELECT
+          CODE RESET_FLAG
+        , CASE WHEN TRUNC(SYSDATE) > TRUNC(UPD_DT) THEN 1 ELSE 0 END CHK_DATE
+    FROM SYS0094M
+    WHERE IND ='PRECCP_IND'
+  </select>
+
+  <update id="updateResetFlag">
+    UPDATE
+          SYS0094M
+    SET
+          CODE = #{flag}
+        , UPD_DT = SYSDATE
+    WHERE IND ='PRECCP_IND'
+  </update>
+
+  <select id="getCustInfo" resultType="egovMap">
+    SELECT
+      NVL(A.SMS_COUNT,0) SMS_COUNT,
+      NVL(A.SMS_CONSENT,0) SMS_CONSENT,
+      A.*
+    FROM SAL0343D A
+    WHERE PRECCP_SEQ = #{preccpSeq}
+  </select>
+
+  <insert id="insertSmsHistory">
+    INSERT INTO SAL0353D (
+    ID
+    , SMS_ID
+    , PRECCP_SEQ
+    , STATUS
+    , FAIL_REASON
+    , CRT_USER_ID
+    , CRT_DT
+    )
+    VALUES(
+    SAL0353D_ID_SEQ.NEXTVAL,
+    #{smsId},
+    #{preccpSeq},
+    #{statusId},
+    #{failRsn},
+    #{userId},
+    SYSDATE
+    )
+  </insert>
+
+  <update id="submitConsent" parameterType="Map">
+    UPDATE
+          SAL0343D
+    SET
+          SMS_CONSENT =1
+    WHERE
+    TAC_NO || PRECCP_SEQ = #{id}
+    AND DISAB = 0
+    AND TYPE_ID = 7290
+  </update>
+
+  <update id="updateCustomerScore" parameterType="Map">
+         MERGE INTO SAL0029D A
+       USING(
+                SELECT DISTINCT
+                    B.CUST_ID, C.CREDIT_SCRE, C.CCRIS_DT
+                FROM SAL0343D A
+                JOIN SAL0029D B ON A.CUST_IC = B.NRIC
+                JOIN SAL0402D C ON A.CCRIS_ID = C.CCRIS_ID
+                WHERE A.TYPE_ID = 7290
+                AND NVL(A.CCRIS_ID,0) <![CDATA[<>]]> 0
+                AND C.STUS_CODE_ID = 4
+                AND NVL(A.DISAB,0) = 0
+                AND A.TAC_NO || A.PRECCP_SEQ = #{id}
+        )SRC ON (A.CUST_ID = SRC.CUST_ID)
+        WHEN MATCHED THEN
+        UPDATE SET
+            A.FICO_SCRE = SRC.CREDIT_SCRE,
+            A.CTOS_DT = SRC.CCRIS_DT
+  </update>
+
+  <select id="checkStatus" resultType="egovMap">
+    SELECT
+          NVL(SMS_CONSENT,0) CHK_STATUS
+    FROM SAL0343D
+    WHERE TAC_NO || PRECCP_SEQ = #{id}
+  </select>
+
+  <select id="selectPreCcpResult" resultType="egovMap">
+    SELECT * FROM
+    (
+    WITH SALES AS (
+        SELECT * FROM
+        (
+        SELECT
+        BB.NRIC,
+        AA.SALES_DT,
+        AA.MEM_ID,
+        ROW_NUMBER() OVER(PARTITION BY AA.CUST_ID ORDER BY AA.SALES_ORD_ID ASC) rowNo
+        FROM SAL0001D AA
+        JOIN SAL0029D BB ON AA.CUST_ID = BB.CUST_ID
+        JOIN SAL0343D CC ON BB.NRIC = CC.CUST_IC AND NVL(CC.DISAB,0) = 0
+        AND CC.TYPE_ID = 7290 AND NVL(CC.CCRIS_ID,0)!= 0
+        AND NVL(CC.SMS_CONSENT,0) = 1
+        ) WHERE rowNo=1
+    )
+    SELECT
+      A.PRECCP_SEQ
+    , A.CUST_NAME
+    , D.MEM_CODE || ' ' || D.FULL_NAME SEARCH_BY
+    , TO_CHAR(A.CRT_DT,'YYYY/MM/DD HH:MI:SS') PRECCP_DATE
+    , G.CODE PRECCP_RESULT
+    , D.MEM_CODE
+    , A.DEPT_CODE
+    , A.GRP_CODE
+    , A.ORG_CODE
+    , TO_CHAR(H.SALES_DT,'YYYY/MM/DD HH:MI:SS')  AS SALES_KEYIN_DATE
+    , CASE WHEN H.MEM_ID IS NULL THEN '-'
+    WHEN D.MEM_ID = H.MEM_ID THEN 'YES'
+    ELSE 'NO' END OWN_SALES
+    FROM SAL0343D A
+    JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
+    JOIN ORG0001D D ON C.HR_CODE = D.MEM_CODE
+    JOIN ORG1001V E ON D.MEM_ID = E.MEM_ID
+    LEFT JOIN SYS0013M G ON G.CODE_ID = A.SCORE_IND AND G.CODE_MASTER_ID = 559
+    LEFT JOIN SALES H on H.NRIC = A.CUST_IC
+    WHERE A.TYPE_ID = 7290
+    <if test="memberCode !=null and memberCode !=''">
+      AND D.MEM_CODE = #{memberCode}
+    </if>
+    <if test="customerNric !=null and customerNric !=''">
+      AND A.CUST_IC = #{customerNric}
+    </if>
+    <if test="start !=null and start !=''">
+      AND A.CRT_DT <![CDATA[ >= ]]>
+      to_date(#{start} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    <if test="end !=null and end !=''">
+      AND A.CRT_DT <![CDATA[ <= ]]>
+      to_date(#{end} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    )
+    WHERE 1=1
+    <if test="orgCode !=null and orgCode !=''">
+      AND ORG_CODE = #{orgCode}
+    </if>
+    <if test="grpCode !=null and grpCode !=''">
+      AND GRP_CODE = #{grpCode}
+    </if>
+    <if test="deptCode !=null and deptCode !=''">
+      AND DEPT_CODE = #{deptCode}
+    </if>
+  </select>
+
+  <select id="selectViewHistory" resultType="egovMap">
+    SELECT
+    COUNT(DISTINCT A.PRECCP_SEQ) NO_OF_SEARCH
+    , COUNT(DISTINCT I.CUST_ID) NO_OF_SALESKEYIN
+    , NVL(SUM(QUOTA) - COUNT(DISTINCT A.PRECCP_SEQ),0) BALANCE
+    , A.DEPT_CODE
+    , A.GRP_CODE
+    , A.ORG_CODE
+    , EXTRACT(YEAR FROM A.CRT_DT) YEAR
+    , EXTRACT(MONTH FROM A.CRT_DT) MONTH
+    FROM SAL0343D A
+    JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
+    LEFT JOIN SYS0013M G ON G.CODE_ID = A.SCORE_IND AND G.CODE_MASTER_ID = 559
+    LEFT JOIN SAL0029D H ON A.CUST_IC = H.NRIC
+    LEFT JOIN SAL0001D I ON H.CUST_ID =I.CUST_ID AND A.ORG_CODE = I.ORG_CODE
+    AND A.GRP_CODE= I.GRP_CODE AND A.DEPT_CODE = I.DEPT_CODE
+    LEFT JOIN SAL0355M J ON EXTRACT(YEAR FROM A.CRT_DT) = J.YEAR AND
+    EXTRACT(MONTH FROM A.CRT_DT) = J.MONTH AND J.STUS_CODE_ID = 4
+    LEFT JOIN SAL0356D K ON J.YEAR = K.YEAR AND J.MONTH = K.MONTH AND
+    A.ORG_CODE = K.ORG_CODE AND A.GRP_CODE = K.MANAGER_CODE
+    WHERE A.TYPE_ID = 7290
+    AND NVL(CCRIS_ID,0)  <![CDATA[ <> ]]>
+    0
+    AND NVL(SMS_CONSENT,0) = 1
+    <if test="orgCode !=null and orgCode !=''">
+      AND A.ORG_CODE = #{orgCode}
+    </if>
+    <if test="grpCode !=null and grpCode !=''">
+      AND A.GRP_CODE = #{grpCode}
+    </if>
+    <if test="deptCode !=null and deptCode !=''">
+      AND A.DEPT_CODE = #{deptCode}
+    </if>
+    <if test="year !=null and year !=''">
+      AND EXTRACT(YEAR FROM A.CRT_DT) = #{year}
+    </if>
+    <if test="month !=null and month !=''">
+      AND EXTRACT(MONTH FROM A.CRT_DT) = #{month}
+    </if>
+    GROUP BY A.DEPT_CODE, A.GRP_CODE, A.ORG_CODE, EXTRACT(YEAR FROM
+    A.CRT_DT), EXTRACT(MONTH FROM A.CRT_DT)
+  </select>
+
+
+  <insert id="insertQuotaMaster">
+    INSERT INTO SAL0355M
+    VALUES(
+    SAL0355M_BATCH_ID.NEXTVAL,
+    1,
+    #{userId},
+    SYSDATE,
+    #{userId},
+    SYSDATE,
+    NULL,
+    NULL,
+    NULL
+    )
+  </insert>
+
+  <select id="getCurrVal" parameterType="Map" resultType="Integer">
+    SELECT SAL0355M_BATCH_ID.CURRVAL BATCH_ID FROM DUAL
+  </select>
+
+  <insert id="insertQuotaDetails">
+    INSERT INTO SAL0356D
+    SELECT
+    SAL0356D_ID.NEXTVAL,
+    SAL0355M_BATCH_ID.CURRVAL,
+    7371,
+    #{managerCode},
+    #{year},
+    #{month},
+    #{quota},
+    0,
+    #{userId},
+    SYSDATE,
+    NULL
+    FROM DUAL
+  </insert>
+
+  <update id="updateQuotaMaster" parameterType="Map">
+    UPDATE SAL0355M SET STUS_CODE_ID = 4 , YEAR = #{year}, MONTH = #{month}
+    WHERE BATCH_ID = #{id}
+  </update>
+
+  <update id="updateCurrentOrgCode" parameterType="Map">
+    MERGE INTO SAL0356D A
+    USING(
+      SELECT
+      DISTINCT A.MANAGER_CODE, B.ORG_CODE
+      FROM SAL0356D A
+      LEFT JOIN ORG1001V B ON A.MANAGER_CODE = B.GRP_CODE AND B.MEM_LVL = 2
+      WHERE A.TYPE_ID = 7371 AND A.BATCH_ID = #{id}
+    ) SRC ON (A.BATCH_ID = #{id} AND A.TYPE_ID = 7371 AND A.MANAGER_CODE = SRC.MANAGER_CODE)
+    WHEN MATCHED THEN UPDATE SET A.ORG_CODE = SRC.ORG_CODE
+  </update>
+
+  <select id="selectQuota" resultType="egovMap">
+    SELECT
+        A.BATCH_ID BATCH_NO
+      , B.NAME AS BATCH_STATUS
+      , A.YEAR
+      , TO_CHAR(TO_DATE(A.MONTH,'MM'),'MM') MONTH
+      , (SELECT SUM(QUOTA) FROM SAL0356D WHERE SAL0356D.BATCH_ID = A.BATCH_ID AND TYPE_ID = 7371) TOTAL
+      , TO_CHAR(A.CRT_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPLOAD_DATE
+      , C.USER_NAME CREATOR
+      , TO_CHAR(A.UPD_DT,'YYYY/MM/DD HH:MI:SS') BATCH_UPDATE_DATE
+      , D.USER_NAME UPDATOR
+      , A.REMARK
+    FROM SAL0355M A
+    LEFT JOIN SYS0038M B ON A.STUS_CODE_ID = B.STUS_CODE_ID
+    LEFT JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+    LEFT JOIN SYS0047M D ON A.UPD_USER_ID = D.USER_ID
+    WHERE 1=1
+    <if test="batchNo !=null and batchNo !=''">
+      AND A.BATCH_ID = #{batchNo}
+    </if>
+    <if test="start !=null and start !=''">
+      AND A.CRT_DT <![CDATA[ >= ]]>
+      to_date(#{start} || '00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    <if test="end !=null and end !=''">
+      AND A.CRT_DT <![CDATA[ <= ]]>
+      to_date(#{end} || '23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+    <if test="creator !=null and creator !=''">
+      AND C.USER_NAME = #{creator}
+    </if>
+    <if test="quotaStus !=null and quotaStus !=''">
+      AND A.STUS_CODE_ID = #{quotaStus}
+    </if>
+    ORDER BY 1 DESC
+  </select>
+
+
+  <select id="selectQuotaDetails" resultType="egovMap">
+    SELECT
+        A.*
+      , (SELECT COUNT(*) FROM SAL0356D WHERE BATCH_ID = #{batchId}) TOTAL
+      , B.USER_NAME UPDATOR
+      , C.CODE_DESC TYPE
+    FROM SAL0356D A
+    LEFT JOIN SYS0047M B ON A.UPD_USER_ID = B.USER_ID
+    LEFT JOIN SYS0013M C ON C.CODE_MASTER_ID = 560 AND C.CODE_ID = A.TYPE_ID
+    WHERE A.BATCH_ID = #{batchId}
+    ORDER BY A.ID
+  </select>
+
+  <insert id="confirmForfeit">
+    <selectKey keyProperty="detailId" resultType="int" order="BEFORE">
+      SELECT SAL0356D_ID.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO SAL0356D
+    SELECT
+    #{detailId},
+    #{batchId},
+    7372,
+    MANAGER_CODE,
+    YEAR,
+    MONTH,
+    -SUM(C),
+    0,
+    #{userId},
+    SYSDATE,
+    ORG_CODE
+    FROM (
+    SELECT
+    SUM(QUOTA) C, A.MANAGER_CODE, A.ORG_CODE, A.YEAR, A.MONTH
+    FROM SAL0356D A
+    JOIN SAL0355M B ON A.YEAR = B.YEAR AND A.MONTH = B.MONTH AND B.BATCH_ID =
+    #{batchId}
+    GROUP BY A.MANAGER_CODE, A.ORG_CODE, A.YEAR, A.MONTH
+    UNION ALL
+    SELECT
+    -(COUNT(PRECCP_SEQ)) C, A.GRP_CODE, A.ORG_CODE, B.YEAR, B.MONTH
+    FROM SAL0343D A
+    JOIN SAL0355M B ON TO_CHAR(A.CRT_DT, 'YYYYMM') = (B.YEAR || RPAD('0', 2,
+    B.MONTH)) AND B.BATCH_ID = #{batchId} AND A.TYPE_ID = 7290 AND
+    NVL(A.DISAB,0) = 0
+    JOIN SYS0047M C ON A.CRT_ID = C.USER_ID
+    JOIN ORG1001V D ON C.HR_CODE = D.MEM_CODE
+    GROUP BY A.GRP_CODE, A.ORG_CODE, B.YEAR, B.MONTH
+    )
+    GROUP BY MANAGER_CODE, ORG_CODE, YEAR, MONTH
+  </insert>
+
+  <update id="updateRemark">
+    UPDATE SAL0355M SET REMARK = #{forfeitRsn}, STUS_CODE_ID = 114 WHERE
+    BATCH_ID = #{batchId}
+  </update>
+
+  <select id="chkUpload" resultType="egovMap">
+    SELECT
+          BATCH_ID
+    FROM SAL0355M
+    WHERE 1=1
+    AND YEAR = #{year}
+    AND MONTH = #{month}
+    AND STUS_CODE_ID = 4
+  </select>
+
+  <select id="chkPastMonth" resultType="egovMap">
+    SELECT
+          CASE WHEN TO_CHAR(SYSDATE,'YYYYMM') >= TO_CHAR(TO_DATE(#{year}||#{month},'YYYYMM'),'YYYYMM') THEN 0 ELSE 1 END CHK_PAST
+    FROM DUAL
+  </select>
+
+  <select id="chkQuota" resultType="egovMap">
+    SELECT
+      MANAGER_CODE,
+      YEAR,
+      MONTH,
+      CASE WHEN SUM(C) > 0 THEN 1 ELSE 0 END CHK_QUOTA
+    FROM
+    (
+      SELECT
+           SUM(QUOTA) C, MANAGER_CODE, YEAR, MONTH
+      FROM SAL0356D
+      WHERE YEAR = EXTRACT(YEAR FROM SYSDATE)
+      AND MONTH = EXTRACT(MONTH FROM SYSDATE)
+      AND MANAGER_CODE = #{grpCode}
+      GROUP BY MANAGER_CODE, YEAR, MONTH
+
+      UNION ALL
+
+      SELECT
+           -(COUNT(PRECCP_SEQ)) C, GRP_CODE, EXTRACT(YEAR FROM SYSDATE) , EXTRACT(MONTH FROM SYSDATE)
+      FROM SAL0343D
+      WHERE TO_CHAR(CRT_DT, 'YYYYMM') = TO_CHAR(SYSDATE,'YYYYMM')
+      AND TYPE_ID = 7290
+      AND NVL(DISAB,0) = 0
+      AND GRP_CODE = #{grpCode}
+      GROUP BY GRP_CODE, EXTRACT(YEAR FROM SYSDATE), EXTRACT(MONTH FROM SYSDATE)
+    )
+    GROUP BY MANAGER_CODE, YEAR, MONTH
+  </select>
+
+  <select id="selectYearList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT (TO_CHAR(SYSDATE,'RRRR')-5) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'RRRR')-5) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 10
+      ]]>
+  </select>
+
+  <select id="selectMonthList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT LEVEL CODE_ID, LEVEL CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= 12
+      ]]>
+  </select>
+
+  <select id="selectViewQuotaDetails" parameterType="Map" resultType="egovMap">
+    SELECT
+      DEPT_CODE,
+      GRP_CODE,
+      ORG_CODE,
+      YEAR,
+      TO_CHAR(TO_DATE(MONTH,'MM'),'MM') MONTH,
+      NVL(NEW_QUOTA,0) NEW_QUOTA,
+      NVL(-FORFEIT_QUOTA,0) FORFEIT_QUOTA,
+      NVL(USAGE_QUOTA,0) USAGE_QUOTA,
+      CASE
+      WHEN NVL(DEPT_CODE,'0')  <![CDATA[ <> ]]>
+      '0' THEN 0
+      ELSE (NVL(NEW_QUOTA,0) + NVL(FORFEIT_QUOTA,0) - NVL(USAGE_QUOTA,0))
+      END BALANCE_QUOTA
+    FROM
+    (
+      SELECT
+        '' DEPT_CODE,
+        A.MANAGER_CODE GRP_CODE,
+        A.ORG_CODE,
+        A.YEAR,
+        A.MONTH,
+        SUM(CASE WHEN TYPE_ID IN (7371,7373) THEN QUOTA ELSE 0 END) AS NEW_QUOTA,
+        SUM(CASE WHEN TYPE_ID = 7372 THEN QUOTA ELSE 0 END) AS FORFEIT_QUOTA,
+        (
+        SELECT
+            COUNT(PRECCP_SEQ)
+        FROM SAL0343D TBL1
+        WHERE A.MANAGER_CODE = TBL1.GRP_CODE
+        AND A.ORG_CODE = TBL1.ORG_CODE
+        AND A.YEAR = EXTRACT(YEAR FROM TBL1.CRT_DT)
+        AND A.MONTH = EXTRACT(MONTH FROM TBL1.CRT_DT)
+        ) AS USAGE_QUOTA
+      FROM SAL0356D A
+      WHERE 1=1
+      <if test="grpCode !=null and grpCode !=''">
+        AND A.MANAGER_CODE = #{grpCode}
+      </if>
+      <if test="orgCode !=null and orgCode !=''">
+        AND A.ORG_CODE = #{orgCode}
+      </if>
+      <if test="year !=null and year !=''">
+        AND A.YEAR = #{year}
+      </if>
+      <if test="month !=null and month !=''">
+        AND A.MONTH = #{month}
+      </if>
+      GROUP BY A.YEAR, A.MONTH, A.MANAGER_CODE , A.ORG_CODE
+
+      UNION
+
+      SELECT
+        DEPT_CODE,
+        GRP_CODE,
+        ORG_CODE,
+        EXTRACT(YEAR FROM TBL1.CRT_DT),
+        EXTRACT(MONTH FROM TBL1.CRT_DT),
+        0,
+        0,
+        COUNT(PRECCP_SEQ)
+        FROM SAL0343D TBL1
+      WHERE 1=1
+      <if test="deptCode !=null and deptCode !=''">
+        AND TBL1.DEPT_CODE = #{deptCode}
+      </if>
+      <if test="grpCode !=null and grpCode !=''">
+        AND TBL1.GRP_CODE = #{grpCode}
+      </if>
+      <if test="orgCode !=null and orgCode !=''">
+        AND TBL1.ORG_CODE = #{orgCode}
+      </if>
+      <if test="year !=null and year !=''">
+        AND EXTRACT(YEAR FROM TBL1.CRT_DT) = #{year}
+      </if>
+      <if test="month !=null and month !=''">
+        AND EXTRACT(MONTH FROM TBL1.CRT_DT) = #{month}
+      </if>
+      GROUP BY EXTRACT(YEAR FROM TBL1.CRT_DT) , EXTRACT(MONTH FROM
+      TBL1.CRT_DT), TBL1.DEPT_CODE, TBL1.GRP_CODE, TBL1.ORG_CODE
+    )
+  </select>
+
+  <select id="selectOrganizationLevel" parameterType="Map"
+    resultType="egovMap">
+    SELECT
+          DISTINCT ORG_CODE , GRP_CODE, B.FULL_NAME NAME
+    FROM ORG1001V A
+    JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID
+    WHERE 1=1
+    AND A.MEM_LVL = 2
+    AND B.STUS = 1
+    AND A.ORG_CODE = #{orgCode}
+    AND A.GRP_CODE NOT IN (#{grpCode})
+  </select>
+
+  <select id="getSeqSAL0356D" resultType="java.lang.Integer">
+    SELECT SAL0356D_LINK_ID.NEXTVAL FROM DUAL
+  </select>
+
+  <insert id="confirmTransfer">
+    INSERT INTO SAL0356D
+    SELECT
+    SAL0356D_ID.NEXTVAL,
+    0,
+    7373,
+    #{grpCode},
+    #{year},
+    #{month},
+    #{transferQuota},
+    #{linkId},
+    #{userId},
+    SYSDATE,
+    #{orgCode}
+    FROM DUAL
+  </insert>
+
+  <select id="currentUser" resultType="egovMap">
+    SELECT * FROM SYS0047M WHERE USER_NAME = #{regId}
+  </select>
+
+  <select id="chkSmsResult" resultType="egovMap">
+    SELECT
+        A.CUST_NAME,
+        A.PRECCP_SEQ,
+        NVL(A.SMS_COUNT,0) SMS_COUNT,
+        CASE WHEN NVL(A.SMS_CONSENT,0) = 1 THEN 'YES' ELSE 'NO' END SMS_CONSENT
+    FROM SAL0343D A
+    JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+    WHERE TYPE_ID = 7290
+    AND NVL(A.DISAB,0) = 0
+    AND A.CUST_IC = #{selectKeyword}
+    AND B.USER_NAME = #{regId}
+    AND ROWNUM = 1
+  </select>
+
+  <select id="checkNewCustomerResult" resultType="egovMap">
+    SELECT
+        A.CUST_NAME,
+        NVL(C.CODE,'-') STATUS,
+        CASE WHEN NVL(A.SMS_CONSENT,0) = 0 THEN 'Pending Customer Response' ELSE NVL(C.CODE_DESC,'-') END REASON
+    FROM SAL0343D A
+    JOIN SYS0047M B ON A.CRT_ID = B.USER_ID
+    LEFT JOIN SYS0013M C ON A.SCORE_IND = C.CODE_ID AND C.CODE_MASTER_ID = 559
+    WHERE A.TYPE_ID = 7290
+    AND NVL(A.DISAB,0) = 0
+    AND A.CUST_IC = #{selectKeyword}
+    AND B.USER_NAME = #{regId}
+    AND ROWNUM = 1
+  </select>
+
+  <select id="chkAvailableQuota" resultType="egovMap">
+    SELECT CASE WHEN NVL(SUM(Q),0) - #{chkQuota} >= 0 THEN 1 ELSE 0 END BALANCE, MANAGER_CODE, ORG_CODE FROM (
+            SELECT
+            SUM(QUOTA) q
+                , K.MANAGER_CODE
+                , K.ORG_CODE
+            FROM SAL0355M J
+            JOIN SAL0356D K ON K.YEAR = J.YEAR AND K.MONTH = J.MONTH
+            WHERE J.YEAR = #{year}
+            AND J.MONTH = #{month}
+            AND J.STUS_CODE_ID = 4
+            AND K.MANAGER_CODE = #{grpCode}
+            AND K.ORG_CODE = #{orgCode}
+            GROUP BY K.MANAGER_CODE, K.ORG_CODE, J.YEAR, J.MONTH
+                UNION
+            SELECT -COUNT(*), A.GRP_CODE, A.ORG_CODE FROM
+            SAL0343D A WHERE A.TYPE_ID = 7290 AND EXTRACT (YEAR FROM A.CRT_DT)= #{year} AND EXTRACT (MONTH FROM A.CRT_DT) = #{month}
+            AND A.GRP_CODE = #{grpCode}
+            AND A.ORG_CODE = #{orgCode}
+            AND NVL(A.DISAB,0) = 0
+            GROUP BY A.GRP_CODE, A.ORG_CODE, EXTRACT (YEAR FROM A.CRT_DT), EXTRACT (MONTH FROM A.CRT_DT)
+        ) GROUP BY MANAGER_CODE, ORG_CODE
+  </select>
+
+  <select id="getCustId" resultType="String">
+    SELECT CUST_ID
+    FROM SAL0029D
+    WHERE 1 = 1
+
+      <choose>
+        <when test="options == 1">
+          <if test="keywords !=null and keywords !=''">
+            AND TO_CHAR(NRIC) = #{keywords}
+          </if>
+        </when>
+        <otherwise>
+          <if test="keywords !=null and keywords !=''">
+            AND TO_CHAR(CUST_ID) = #{keywords}
+          </if>
+        </otherwise>
+      </choose>
+      AND STUS_CODE_ID = 1
+  </select>
+
+</mapper>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper">
+
+	<!-- Select DT SubGroup List -->
+	<select id="selectDtSubGroupList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDtSubGroupList */
+        WITH TEMP AS (
+		    SELECT A.CODE
+		             , B.NAME
+		             , D.MEM_CODE || ' - ' || D.NAME MEM_CODE
+		             , D.MEM_ID
+		             , C.CT_SUB_GRP
+		             , C.LAST_GRP_CODE
+		             , D.MEM_CODE MEMCODE
+		             , D.MEM_TYPE
+		     FROM SYS0005M A
+		     INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
+		     INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL IN ('3', '4')
+		     INNER JOIN ORG0001D D ON D.MEM_ID = C.MEM_ID AND D.STUS = '1'
+		    WHERE A.TYPE_ID = #{branchTypeId}
+		    union
+            SELECT A.CODE
+                     , B.NAME
+                     , D.MEM_CODE || ' - ' || D.NAME MEM_CODE
+                     , D.MEM_ID
+                     , C.CT_SUB_GRP
+                     , C.LAST_GRP_CODE
+                     , D.MEM_CODE MEMCODE
+                     , D.MEM_TYPE
+             FROM SYS0005M A
+             INNER JOIN ORG0001D B ON B.BRNCH = A.BRNCH_ID
+             INNER JOIN ORG0005D C ON C.MEM_ID = B.MEM_ID AND C.MEM_LVL IN ('3', '4')
+             INNER JOIN ORG0001D D ON D.MEM_ID = C.MEM_ID AND D.STUS = '1'
+             inner join sys0047m e on e.USER_NAME = B.MEM_CODE
+             inner join sys0045m f on f.USER_ID = e.USER_ID
+            WHERE A.TYPE_ID = '43'
+            and f.ROLE_ID IN (SELECT TO_NUMBER(CODE) FROM SYS0094M C WHERE C.IND = 'ACI_ROLE')
+        ),
+        TEMP2 AS (
+			SELECT *
+			FROM SVC0054M
+			WHERE MAJOR_GRP = 1
+        )
+        SELECT T1.CODE
+                 , T1.NAME
+                 , T1.MEM_CODE
+                 , T1.MEM_ID
+                 , CASE WHEN T1.MEM_TYPE = 5758 THEN T2.CT_SUB_GRP END AS CT_SUB_GRP
+                 , CASE WHEN T1.MEM_TYPE = 6672 THEN T2.CT_SUB_GRP END AS LT_SUB_GRP
+                 , CASE WHEN T1.MEM_TYPE = 3 THEN T2.CT_SUB_GRP END AS AC_SUB_GRP
+                 , T1.LAST_GRP_CODE
+		 FROM TEMP T1, TEMP2 T2
+
+	    WHERE T1.MEM_ID = T2.MEM_ID(+)
+        <if test="dscCode != null and dscCode != ''">
+            AND LOWER(T1.CODE) = LOWER(#{dscCode})
+        </if>
+        <if test="memCode != null and memCode != ''">
+            AND  LOWER(T1.MEM_CODE) = LOWER(#{memCode})
+        </if>
+        <if test="CTMemId != null and CTMemId != ''">
+            AND LOWER(T1.MEM_CODE)  = LOWER(#{DTMemId})
+        </if>
+        <if test="dtSubGrp != null and dtSubGrp != ''">
+            AND LOWER(T2.CT_SUB_GRP)  = LOWER(#{dtSubGrp})
+        </if>
+        <if test="orgType != null and orgType != ''">
+            AND T1.MEM_TYPE  = #{orgType}
+        </if>
+        ORDER BY T1.CODE
+	</select>
+
+	<!-- Select DT SubGroup(Area) List -->
+	<select id="selectDTSubAreaGroupList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubAreaGroupList */
+        SELECT A.AREA_ID,
+                  B.DT_BRNCH_CODE,
+                  B.LT_BRNCH_CODE,
+                  B.AREA,
+                  B.CITY,
+                  B.POSTCODE,
+                  B.STATE,
+                  A.REQST_NO,
+                  TO_CHAR(A.PRIOD_FROM,'YYYY-MM-DD') PRIOD_FROM,
+                  TO_CHAR(A.PRIOD_TO,'YYYY-MM-DD') PRIOD_TO,
+                  CASE WHEN (A.LOC_TYPE='L') THEN 'Local'
+                          WHEN (A.LOC_TYPE='O') THEN 'OutStation'
+                   ELSE ''
+                   END LOC_TYPE,
+                  A.SVC_WEEK,
+                  A.DT_SUB_GRP AS CT_SUB_GRP,
+                  A.LT_SUB_GRP AS LT_SUB_GRP,
+                  A.AC_SUB_GRP AS AC_SUB_GRP,
+                  CASE
+					WHEN (A.AC_SUB_GRP IS NOT NULL) THEN (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 7321)
+					ELSE (SELECT COUNT(AREA_ID) FROM ORG0028M WHERE AREA_ID = A.AREA_ID AND TYPE = 6666)
+					END NO_SVC_CNT
+				,A.BRNCH_TYPE
+
+         FROM (SELECT AA.* FROM ORG0019M AA
+            JOIN (SELECT AREA_ID,BRNCH_TYPE,MAX(REQST_NO)REQST_NO FROM ORG0019M WHERE AVAIL_FLAG = 'Y'
+            GROUP BY AREA_ID,BRNCH_TYPE) BB
+            ON BB.AREA_ID = AA.AREA_ID AND BB.BRNCH_TYPE = AA.BRNCH_TYPE AND BB.REQST_NO = AA.REQST_NO)  A
+         INNER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID AND A.AVAIL_FLAG = 'Y'
+        WHERE A.BRNCH_TYPE in ('5754','43')
+        <if test="dscCode != null and dscCode != ''">
+            AND  (B.DT_BRNCH_CODE = #{dscCode} OR B.AC_BRNCH_CODE = #{dscCode})
+            AND  (A.DT_BRNCH_CODE = #{dscCode} OR A.AC_BRNCH_CODE = #{dscCode})
+		</if>
+		<if test="areaId != null and areaId != ''">
+            AND  B.AREA_ID = #{areaId}
+		</if>
+		<if test="area != null and area != ''">
+            AND  B.AREA like '%' || #{area} || '%'
+		</if>
+		<if test="city != null and city != ''">
+            AND  B.CITY = #{city}
+		</if>
+		<if test="postCode != null and postCode != ''">
+            AND  B.POSTCODE = #{postCode}
+		</if>
+		<if test="state != null and state != ''">
+            AND  B.STATE = #{state}
+		</if>
+		<if test="dtSubGrp != null and dtSubGrp != ''">
+            AND  B.DT_SUB_GRP = #{dtSubGrp}
+		</if>
+		ORDER BY CT_SUB_GRP, LT_SUB_GRP
+    </select>
+
+    <!-- Select DTM By DSC -->
+    <select id="selectDTMByDSC" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTMByDSC */
+        SELECT A.MEM_CODE  CODE_ID
+                 , A.MEM_CODE || '-' || A.NAME CODE_NAME
+         FROM ORG0001D A, ORG0005D B, SYS0005M C
+        WHERE A.MEM_ID = B.MEM_ID
+           AND A.BRNCH  =  C.BRNCH_ID
+           AND B.MEM_LVL = '2'
+           AND A.STUS = '1'
+        <if test="groupCode != null and groupCode !='' ">
+            AND C.CODE = #{groupCode}
+        </if>
+    </select>
+
+    <!-- DT Sub Group DSC List -->
+    <select id="selectDTSubGroupDscList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubGroupDscList */
+        SELECT DISTINCT
+                   DT_SUB_GRP CODE_ID
+                 , DT_SUB_GRP CODE_NAME
+
+         FROM SYS0064M
+        WHERE DT_BRNCH_CODE = #{branchCode}
+           AND DT_SUB_GRP IS NOT NULL
+        ORDER BY DT_SUB_GRP ASC
+    </select>
+
+    <select id="selectLTSubGroupDscList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubGroupDscList */
+        SELECT DISTINCT
+                   LT_SUB_GRP CODE_ID
+                 , LT_SUB_GRP CODE_NAME
+
+         FROM SYS0064M
+        WHERE LT_BRNCH_CODE = #{branchCode}
+           AND LT_SUB_GRP IS NOT NULL
+        ORDER BY LT_SUB_GRP ASC
+    </select>
+
+    <!-- Select DT Sub Group -->
+    <select id="selectDTSubGrp" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectDTSubGrp */
+        SELECT DISTINCT NVL(AC_SUB_GRP,DT_SUB_GRP) CODE_ID
+                 , NVL(AC_SUB_GRP,DT_SUB_GRP)  CODE_NAME
+         FROM SYS0064M
+        WHERE DT_SUB_GRP IS NOT NULL
+        <if test="groupCode != null and groupCode !='' ">
+            AND (DT_BRNCH_CODE = #{groupCode}
+            or AC_BRNCH_CODE = #{groupCode}
+            )
+        </if>
+        ORDER BY NVL(AC_SUB_GRP,DT_SUB_GRP)
+    </select>
+
+    <!-- DT Sub Group Assign List -->
+    <select id="selectAssignDTSubGroup" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.services.plan.impl.HcDTSubGroupListMapper.selectAssignDTSubGroup */
+        SELECT B.DT_SUB_GRP AS CT_SUB_GRP
+                 , A.ASIGN_FLAG
+                 , A.MAJOR_GRP
+	     FROM
+                 (SELECT *
+	               FROM SVC0054M
+                  WHERE MEM_ID = REPLACE(#{memId},' ','')
+                 ) A
+	           , (SELECT DISTINCT DT_SUB_GRP
+	               FROM SYS0064M
+	             WHERE DT_SUB_GRP IS NOT NULL
+	                AND DT_BRNCH_CODE = #{branch}
+
+	                union
+
+	                SELECT DISTINCT AC_SUB_GRP
+                   FROM SYS0064M
+                 WHERE AC_SUB_GRP IS NOT NULL
+                    AND AC_BRNCH_CODE = #{branch}
+                 ) B
+	  WHERE A.CT_SUB_GRP(+) = B.DT_SUB_GRP
+	  ORDER BY A.CT_SUB_GRP ASC
+	</select>
+
+</mapper>

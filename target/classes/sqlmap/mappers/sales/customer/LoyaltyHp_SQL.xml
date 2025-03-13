@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.LoyaltyHpMapper">
+
+    <select id="selectLoyaltyHpMstList" parameterType="Map" resultType="egovMap">
+    SELECT  A.LOYALTY_HP_BATCH_ID
+  ,A.LOYALTY_HP_BATCH_DT
+  ,A.LOYALTY_HP_STUS_ID
+  ,A.LOYALTY_HP_REM
+  ,A.LOYALTY_HP_TOT_ITM
+  ,A.LOYALTY_HP_TOT_SUCCES
+  ,A.LOYALTY_HP_TOT_FAIL
+  ,A.CRT_USER_ID
+  ,A.CRT_DT
+  ,A.UPD_USER_ID
+  ,A.UPD_DT
+  ,B.USER_NAME
+  ,C.NAME STUS_CODE
+  FROM
+  SAL0272D A
+  LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+  LEFT JOIN SYS0038M C ON A.LOYALTY_HP_STUS_ID = C.STUS_CODE_ID
+  WHERE
+  1=1
+   <if test="loyaltyHpBatchId != null and loyaltyHpBatchId != ''">
+  AND A.LOYALTY_HP_BATCH_ID = #{loyaltyHpBatchId}
+  </if>
+
+   <if test="crtUserName != null and crtUserName != ''">
+  AND B.USER_NAME LIKE '%'||#{crtUserName}||'%'
+  </if>
+
+    <if test=" '' != loyaltyHpCreateStDate and null != loyaltyHpCreateStDate">
+                             AND  A.CRT_DT >= TO_DATE(#{loyaltyHpCreateStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+                          </if>
+
+                          <if test=" '' != loyaltyHpCreateEnDate and null != loyaltyHpCreateEnDate">
+                             <![CDATA[
+                             AND  A.CRT_DT <= TO_DATE(#{loyaltyHpCreateEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                             ]]>
+                          </if>
+
+ORDER BY A.LOYALTY_HP_BATCH_DT DESC
+    </select>
+
+
+        <select id="selectNextBatchId" resultType="int">
+    SELECT NVL(MAX(LOYALTY_HP_BATCH_ID) + 1, 1) AS BATCH_ID FROM SAL0272D
+    </select>
+
+        <select id="selectNextDetId" resultType="int">
+    SELECT NVL(MAX(LOYALTY_HP_DTL_ID) + 1, 1) AS DET_ID FROM SAL0273D
+    </select>
+
+  <insert id="insertLoyaltyHpMst" parameterType="Map">
+  INSERT INTO SAL0272D (
+  LOYALTY_HP_BATCH_ID
+  ,LOYALTY_HP_BATCH_DT
+  ,LOYALTY_HP_STUS_ID
+  ,LOYALTY_HP_REM
+  ,LOYALTY_HP_TOT_ITM
+  ,LOYALTY_HP_TOT_SUCCES
+  ,LOYALTY_HP_TOT_FAIL
+  ,CRT_USER_ID
+  ,CRT_DT
+  ,UPD_USER_ID
+  ,UPD_DT
+   ) VALUES (
+   #{loyaltyHpBatchId}
+   ,SYSDATE
+   ,1
+   ,#{loyaltyHpRem}
+   ,#{loyaltyHpTotItm}
+   ,#{loyaltyHpTotSuccess}
+   ,#{loyaltyHpTotFail}
+   ,#{crtUserId}
+   ,SYSDATE
+   ,#{crtUserId}
+   ,SYSDATE
+  )
+
+  </insert>
+
+       <insert id="insertLoyaltyHpDtl" parameterType="Map">
+        INSERT INTO SAL0273D(
+        LOYALTY_HP_DTL_ID
+        ,LOYALTY_HP_BATCH_ID
+        ,SALES_ORD_NO
+        ,HP_CODE
+        ,HP_VIEW_START_DT
+        ,HP_VIEW_END_DT
+        ,CRT_USER_ID
+        ,CRT_DT
+        ,UPD_USER_ID
+        ,UPD_DT
+        )
+
+SELECT SAL0273D_SEQ.NEXTVAL , loyaltyHpBatchId , salesOrdNo , hpCode , startDate, endDate, crtUserId , crtDt , updUserId , updDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+
+            #{loyaltyHpBatchId} loyaltyHpBatchId
+            ,#{item.salesOrdNo} salesOrdNo
+            ,#{item.hpCode} hpCode
+            ,TO_DATE(#{item.startDate},'DD/MM/YYYY') startDate
+            ,TO_DATE(#{item.endDate}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') endDate
+            ,#{item.crtUserId} crtUserId
+            ,SYSDATE crtDt
+            ,#{item.updUserId} updUserId
+            ,SYSDATE updDt
+            FROM DUAL
+        </foreach>
+)
+    </insert>
+
+    <select id="selectLoyaltyHpDetailInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+    A.LOYALTY_HP_BATCH_ID,
+    A.LOYALTY_HP_STUS_ID ,
+    A.LOYALTY_HP_TOT_ITM ,
+    B.SALES_ORD_NO ,
+    TO_CHAR(B.HP_VIEW_START_DT, 'DD/MM/YYYY') HP_VIEW_START_DT,
+    TO_CHAR(B.HP_VIEW_END_DT, 'DD/MM/YYYY') HP_VIEW_END_DT,
+    B.HP_CODE ,
+    C.NAME STUS_NAME
+  FROM
+  SAL0272D A
+  JOIN SAL0273D B ON A.LOYALTY_HP_BATCH_ID = B.LOYALTY_HP_BATCH_ID
+  LEFT JOIN SYS0038M C ON A.LOYALTY_HP_STUS_ID = C.STUS_CODE_ID
+  WHERE
+  A.LOYALTY_HP_BATCH_ID = #{loyaltyHpBatchId}
+  <![CDATA[
+AND ROWNUM <= 20000
+ ]]>
+    </select>
+
+       <select id="selectLoyaltyHpMasterInfo" parameterType="Map" resultType="egovMap">
+    SELECT  A.LOYALTY_HP_BATCH_ID
+  ,A.LOYALTY_HP_BATCH_DT
+  ,A.LOYALTY_HP_STUS_ID
+  ,A.LOYALTY_HP_REM
+  ,A.LOYALTY_HP_TOT_ITM
+  ,A.LOYALTY_HP_TOT_SUCCES
+  ,A.LOYALTY_HP_TOT_FAIL
+  ,A.CRT_USER_ID
+  ,A.CRT_DT
+  ,A.UPD_USER_ID
+  ,A.UPD_DT
+  ,B.USER_NAME
+  ,C.NAME STUS_NAME
+  FROM
+  SAL0272D A
+  LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+  LEFT JOIN SYS0038M C ON A.LOYALTY_HP_STUS_ID = C.STUS_CODE_ID
+  WHERE
+  1=1 AND
+  A.LOYALTY_HP_BATCH_ID = #{loyaltyHpBatchId}
+
+  </select>
+
+ <update id="callBatchLoyaltyHpUpd" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_LOYALTY_HP_UPD(#{loyaltyHpBatchId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})}
+    </update>
+
+   <update id = "updateLoyaltyHpMasterStus" parameterType="Map">
+    UPDATE SAL0272D
+        SET LOYALTY_HP_STUS_ID = 8
+              ,UPD_USER_ID = #{loginId}
+              ,UPD_DT = SYSDATE
+         WHERE LOYALTY_HP_BATCH_ID = #{loyaltyHpBatchId}
+   </update>
+
+
+</mapper>

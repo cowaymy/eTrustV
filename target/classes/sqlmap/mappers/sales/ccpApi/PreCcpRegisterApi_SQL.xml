@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.ccpApi.impl.PreCcpRegisterApiMapper">
+
+<resultMap type="egovMap" id="getPreccpResultMap">
+    <result property="APPV_REQ" column="APPV_REQ" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+
+<select id="checkPreCcpResult" parameterType="Map" resultType="egovMap" resultMap="getPreccpResultMap">
+        SELECT
+                A.CUST_ID
+             ,  NVL(B.CHS_STUS,'-') CHS_STATUS
+             ,  CASE WHEN B.CHS_RSN IS NULL OR B.CHS_STUS = 'GREEN' THEN '-' ELSE B.CHS_RSN END CHS_RSN
+             ,  A.NAME  CUST_NAME
+             ,  CASE WHEN B.CHS_STUS = 'GREEN' THEN D.APPV_REQ ELSE C.APPV_REQ END APPV_REQ
+             , TRUNC(MONTHS_BETWEEN(SYSDATE, A.CRT_DT)) AS CUST_MONTH
+             , D.USER_ID
+             , '1' SUCCESS
+        FROM SAL0029D A
+        LEFT JOIN SAL0262D B ON A.CUST_ID = B.CUST_ID AND CHS_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND CHS_MONTH = TO_CHAR(SYSDATE, 'MM')
+        LEFT JOIN SAL0344D C ON B.CHS_STUS = C.CHS_STUS AND B.CHS_RSN = C.CHS_RSN
+        LEFT JOIN SAL0344D D ON B.CHS_STUS = D.CHS_STUS AND D.CHS_STUS = 'GREEN'
+        LEFT JOIN SYS0047M D ON D.USER_NAME = #{regId}
+        WHERE 1=1
+        <if test="selectType != null and selectType != '' ">
+            <choose>
+                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+                    AND A.NRIC = #{selectKeyword}
+                </when>
+            </choose>
+        </if>
+        AND ROWNUM = 1
+
+</select>
+
+<select id="searchOrderSummaryList" parameterType="Map" resultType="egovMap">
+              WITH RENTAL AS (
+                  SELECT SUM(RENT_AMT) RENT_AMT, MAX(RENT_INST_NO) RENT_INST_NO, RENT_SO_ID FROM PAY0022D GROUP BY RENT_SO_ID
+              ),
+              OUTRIGHT AS (
+                  SELECT SUM(TRADE_AMT) TRADE_AMT, TRADE_SO_ID FROM PAY0035D GROUP BY TRADE_SO_ID
+              ),
+              CURR_RENT AS(
+                  SELECT * FROM (
+                      SELECT RENT_INST_DT, RENT_INST_NO, RENT_INST_AMT, SALES_ORD_ID, ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY RENT_INST_DT DESC) RN FROM SAL0070D WHERE RENT_INST_DT = TRUNC(SYSDATE,'MM')
+                  ) WHERE RN = 1
+              )
+              SELECT
+                    C.SALES_ORD_ID
+                  , C.SALES_ORD_NO
+                  , C.APP_TYPE_ID
+                  , G.CODE PAYMENT_MODE
+                  , E.STUS_CODE_ID RENT_STUS
+                  , CASE WHEN C.APP_TYPE_ID = 66  THEN TO_CHAR(A.RENT_AMT) ELSE  TO_CHAR(D.TRADE_AMT) END OUTSTANDING_AMT
+                  , CASE WHEN C.APP_TYPE_ID = 66 THEN TO_CHAR((NVL(B.RENT_INST_NO,60) - A.RENT_INST_NO) * (C.MTH_RENT_AMT- T1.REBATE_AMT_PER_INSTLMT)) END UNBILL_AMT
+              FROM SAL0001D C
+              LEFT JOIN RENTAL A ON C.SALES_ORD_ID = A.RENT_SO_ID
+              LEFT JOIN OUTRIGHT D ON C.SALES_ORD_ID = D.TRADE_SO_ID
+              LEFT JOIN CURR_RENT B ON B.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0071D E ON E.SALES_ORD_ID = C.SALES_ORD_ID
+              LEFT JOIN SAL0074D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+              LEFT JOIN SYS0013M G ON G.CODE_ID = F.MODE_ID
+              LEFT JOIN PAY0286D T1 ON C.SALES_ORD_ID = T1.ORD_ID
+              WHERE C.CUST_ID = #{custId}
+</select>
+</mapper>

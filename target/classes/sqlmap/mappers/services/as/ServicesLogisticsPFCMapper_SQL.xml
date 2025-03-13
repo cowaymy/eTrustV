@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper">
+
+
+    <resultMap id="rtnCode" type="egovMap" />
+
+    <select id="install_Active_SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
+
+
+<resultMap id="rtnCode1" type="egovMap" />
+      <select id="SP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode1} )
+      }
+     </select>
+
+
+
+      <select id="SP_SVC_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_SVC_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}  )
+      }
+        </select>
+
+      <select id="getFN_GET_SVC_AVAILABLE_INVENTORY" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+                select FN_GET_SVC_AVAILABLE_INVENTORY(#{CT_CODE}, #{STK_CODE})  AVAIL_QTY from dual
+        ]]>
+     </select>
+
+
+      <select id="SP_LOGISTIC_REQUEST_REVERSE" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_REVERSE( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
+
+     <select id="SP_LOGISTIC_REQUEST_TRANS" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_TRANS( #{SVONO}, #{F_CT},#{T_CT},#{P_PRGNM},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
+
+<resultMap id="rtnCode2" type="egovMap" />
+     <select id="SP_LOGISTIC_REQUEST_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL] 20191216 - KR OHK*/
+      {
+          call SP_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode2} )
+      }
+     </select>
+
+     <select id="SP_SVC_LOGISTIC_REQUEST_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL] 20191216 - KR OHK*/
+      {
+          call SP_SVC_LOGISTIC_REQUEST_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR} )
+      }
+     </select>
+
+     <select id="SP_LOGISTIC_REQUEST_REVERSE_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+     /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL] 20191216 - KR OHK*/
+     {
+         call SP_LOGISTIC_REQUEST_REV_SERIAL( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+     }
+     </select>
+
+     <select id="SP_LOGISTIC_REQUEST_TRANS_SERIAL" parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS_SERIAL] 20191216 - KR OHK*/
+      {
+            call SP_LOGISTIC_REQUEST_TRA_SERIAL( #{SVONO}, #{F_CT},#{T_CT},#{P_PRGNM},#{P_SERIAL_NO},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
+
+     <select id="SP_SVC_BARCODE_SAVE"  parameterType="Map"  statementType="CALLABLE" >
+      /* [com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE] 20191216 - KR OHK*/
+      {
+          call  SP_SVC_BARCODE_SAVE(#{serialNo}, #{beforeSerialNo}, #{salesOrdId}, #{reqstNo}, #{delvryNo}, #{callGbn}, #{mobileYn}, #{userId}
+          , #{ pErrcode,mode=OUT,javaType=String,jdbcType=VARCHAR}
+          , #{ pErrmsg,mode=OUT,javaType=String,jdbcType=VARCHAR})
+      }
+     </select>
+
+     <select id="SP_LOGISTIC_REQUEST_STO" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_STO( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode1} )
+      }
+     </select>
+
+</mapper>

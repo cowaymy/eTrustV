@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper">
+
+    <!-- Homecare Product 정보 조회 -->
+    <select id="selectHcProductCodeList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectHcProductCodeList */
+        SELECT STK_ID
+                 , C1
+                 , CODE_NAME
+         FROM
+         (
+            <choose>
+                <when test='stkType != null and stkType == "1"'>
+                    SELECT DISTINCT T1.STK_ID
+                             , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                             , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
+                               ELSE T3.CODE_NAME
+                               END CODE_NAME
+                             , T2.DISCONTINUE
+
+                     FROM SYS0026M T1          /* InvStock */
+                             , SAL0082D T2          /* ServiceContractPackage_Product */
+                             , SYS0013M T3         /* CodeDetail */
+                             , SYS0013M T5         /* CodeDetail */
+                    WHERE T1.STK_ID = T2.SRV_PAC_ITM_PRODUCT_ID
+                       AND T1.STK_CTGRY_ID = T3.CODE_ID
+                       AND 1 = T2.SRV_PAC_ITM_STUS_ID
+                       AND 61 = T1.STK_TYPE_ID
+                       AND T2.SRV_CNTRCT_PAC_ID = #{srvPacId}
+                       AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
+                       AND T5.CODE_MASTER_ID = '381'
+<!--                         FOR Homecare MAIN/AUX unit handling    -->
+                        <if test='productType != null and productType != ""'>
+                             <if test='productType == "1"'>
+                                AND T3.CODE != 'FRM' AND T3.CODE != 'ACO'
+                             </if>
+                             <if test='productType == "2"'>
+                                AND (T3.CODE = 'FRM' OR T3.CODE = 'ACO')
+                             </if>
+                        </if>
+                </when>
+                <otherwise>
+                    SELECT DISTINCT T1.STK_ID
+                             , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                             , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
+                               ELSE T3.CODE_NAME
+                               END CODE_NAME
+                             , T2.DISCONTINUE
+
+                     FROM SYS0026M T1          /* InvStock */
+                             , SAL0092M T2         /* SrvMembershipPacD */
+                             , SYS0013M T3         /* CodeDetail */
+                             , SAL0016M T4         /* SalesPrice */
+                             , SYS0013M T5         /* CodeDetail */
+
+                    WHERE T1.STK_ID = T2.SRV_MEM_ITM_STK_ID
+                        AND T1.STK_CTGRY_ID = T3.CODE_ID
+                        AND 1 = T2.SRV_MEM_ITM_STUS_ID
+                        AND 61 = T1.STK_TYPE_ID
+                        AND T2.SRV_MEM_PAC_ID = #{srvPacId}
+                        AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
+                        AND T5.CODE_MASTER_ID = '381'
+<!--                         FOR Homecare MAIN/AUX unit handling    -->
+                       <if test='productType != null and productType != ""'>
+                             <if test='productType == "1"'>
+                                AND T3.CODE != 'FRM' AND T3.CODE != 'ACO'
+                             </if>
+                             <if test='productType == "2"'>
+                                AND (T3.CODE = 'FRM' OR T3.CODE = 'ACO')
+                             </if>
+                        </if>
+                </otherwise>
+            </choose>
+        ) A
+        <if test="postcode != null and postcode != ''">
+            LEFT JOIN SYS0098M POSTCODE_BLOCK
+                ON POSTCODE_BLOCK.PARAM_VAL = #{postcode}
+                AND POSTCODE_BLOCK.MODULE = 'SALES'
+                AND POSTCODE_BLOCK.SUB_MODULE = 'KEYIN_BLOCK'
+                AND POSTCODE_BLOCK.PARAM_CODE = 'POSTCODE'
+            LEFT JOIN SYS0098M STK_ID_BLOCK
+                ON STK_ID_BLOCK.PARAM_VAL = TO_CHAR(A.STK_ID)
+                AND STK_ID_BLOCK.MODULE = 'SALES'
+                AND STK_ID_BLOCK.SUB_MODULE = 'KEYIN_BLOCK'
+                AND STK_ID_BLOCK.PARAM_CODE = 'STK_ID'
+            WHERE POSTCODE_BLOCK.SEQ IS NULL
+            OR STK_ID_BLOCK.SEQ IS NULL
+        </if>
+        ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
+    </select>
+
+    <!-- get Order Seq No -->
+    <select id="getOrdSeqNo" resultType="int">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getOrdSeqNo */
+        SELECT HMC0011D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <!-- get Order Seq No -->
+    <select id="getBndlNo" parameterType="int" resultType="string">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getBndlNo */
+        SELECT 'SB' || LPAD(#{ordSeqNo}, 8, '0') FROM DUAL
+    </select>
+
+    <!-- Homecare Mapping Table Insert -->
+    <insert id="insertHcRegisterOrder" parameterType="com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.insertHcRegisterOrder */
+        INSERT INTO HMC0011D (
+               ORD_SEQ_NO
+             , CUST_ID
+             , SALES_DT
+             , MAT_ORD_NO
+             , FRA_ORD_NO
+             , CRT_DT
+             , CRT_USER_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , MAT_PRE_ORD_ID      /* eKeyin Mat ord_id */
+             , FRA_PRE_ORD_ID       /* eKeyin Fra Ord_id */
+             , STUS_ID
+             , BNDL_NO
+             , SRV_ORD_ID
+
+        ) VALUES (
+               #{ordSeqNo}
+             , #{custId}
+             , SYSDATE
+             , #{matOrdNo}
+             , #{fraOrdNo}
+             , SYSDATE
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , #{matPreOrdId}
+             , #{fraPreOrdId}
+             , #{stusId}
+             , #{bndlNo}
+             , #{srvOrdId}
+        )
+    </insert>
+
+    <!-- Homecare Mapping Table update -->
+    <update id="updateHcPreOrder" parameterType="com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.updateHcPreOrder */
+        UPDATE HMC0011D SET
+                      UPD_DT                  = SYSDATE
+                    , UPD_USER_ID           = #{updUserId}
+                <if test='custId != null and custId != ""'>
+                    , CUST_ID                  = #{custId}
+                </if>
+                <if test='matOrdNo != null and matOrdNo != ""'>
+                    , MAT_ORD_NO          = #{matOrdNo}       /* Mat ord_no */
+                </if>
+                <if test='fraOrdNo != null and fraOrdNo != ""'>
+                    , FRA_ORD_NO           = #{fraOrdNo}         /* Fra Ord_no */
+                </if>
+                <if test='matPreOrdId != null and matPreOrdId != ""'>
+                    , MAT_PRE_ORD_ID     = #{matPreOrdId}    /* eKeyin Mat ord_id */
+                </if>
+                <if test='fraPreOrdId != null and fraPreOrdId != ""'>
+                    , FRA_PRE_ORD_ID      = #{fraPreOrdId}      /* eKeyin Fra Ord_id */
+                </if>
+                <if test='stusId != null and stusId != ""'>
+                    , STUS_ID                  = #{stusId}
+                </if>
+                <if test='srvOrdId != null and srvOrdId != ""'>
+                    , SRV_ORD_ID            = #{srvOrdId}
+                </if>
+           WHERE ORD_SEQ_NO          = #{ordSeqNo}
+    </update>
+
+    <!-- Get Product Size -->
+    <select id="getProductSize" parameterType="string" resultType="string">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductSize */
+        SELECT STK_SIZE FROM SYS0026M WHERE STK_ID = #{product}
+    </select>
+
+    <!-- Select Promotion By Frame -->
+    <select id="selectPromotionByFrame" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
+        SELECT DISTINCT T2.PROMO_ID CODE
+                 , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
+         FROM SAL0018D T1
+           JOIN SAL0017D T2 ON T2.PROMO_ID = T1.PROMO_ID
+        WHERE T2.PROMO_ID = 31723
+    </select>
+
+    <select id="getCountHcPreOrder" parameterType="int" resultType="int">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getCountHcPreOrder */
+        SELECT COUNT(ORD_SEQ_NO) FROM HMC0011D WHERE ORD_SEQ_NO = #{ordSeqNo}
+    </select>
+
+    <select id="getCountExistBndlId" parameterType="String" resultType="int">
+        SELECT COUNT(BNDL_ID) FROM API0005D WHERE BNDL_ID = #{bndlId}
+    </select>
+
+    <select id="getPrevOrdSeq" parameterType="String" resultType="int">
+        SELECT A.ORD_SEQ_NO
+        FROM HMC0011D A
+        JOIN SAL0001D B ON A.ORD_SEQ_NO = B.BNDL_ID
+        JOIN API0005D C ON C.ECOMM_ORD_ID = B.ECOMM_ORD_ID AND B.SALES_ORD_ID = C.SALES_ORD_ID
+        WHERE C.BNDL_ID = #{bndlId}
+    </select>
+
+    <select id="getPrevOrdId" parameterType="Map" resultType="int">
+        SELECT SALES_ORD_ID FROM API0005D WHERE BNDL_ID = #{ecommBndlId} AND ECOMM_ORD_ID != #{ecommOrdId}
+    </select>
+
+    <!-- Get Product Category -->
+    <select id="getProductCategory" parameterType="string" resultType="string">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductCategory */
+        SELECT STK_CTGRY_ID FROM SYS0026M WHERE STK_ID = #{product}
+    </select>
+
+    <select id="chkPromoCboCan" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM (
+      SELECT PROMO_CAN_ID
+      FROM SAL0252M
+      WHERE DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+
+      UNION
+
+      SELECT PROMO_CAN_ID
+      FROM SAL0253D
+      WHERE DISB = 0
+        AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+    ) WHERE PROMO_CAN_ID = #{promoNo}
+  </select>
+
+  <select id="chkPromoCboMst" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0252M
+    WHERE PROD_CDE = #{prod}
+      AND PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkPromoCboSub" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0253D
+    WHERE SUB_PROD_ID = #{prod}
+      AND SUB_PROMO_ID = #{promoNo}
+      AND DISB = 0
+      AND SYSDATE BETWEEN EFF_DT AND EXP_DT
+  </select>
+
+  <select id="chkCanMapCnt" parameterType="Map" resultType="int">
+  SELECT COUNT(*)
+  FROM SAL0349D A
+  LEFT JOIN (
+               SELECT SALES_ORD_ID,
+                      PCKAGE_BINDING_NO,
+                      CUST_ID,
+                      PROMO_ID,
+                      STUS_CODE_ID
+                FROM SAL0001D
+                WHERE
+                PCKAGE_BINDING_NO IS NOT NULL
+                AND PROMO_ID IN (
+                                             SELECT PROMO_ID
+                                             FROM SAL0252M
+                                             WHERE CONF_ID IN (
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0252M
+                                                                                WHERE DISB = 0
+                                                                                AND PROD_CDE = #{prod}
+                                                                                AND PROMO_ID = #{promoNo}
+
+                                                                                UNION
+
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0253D
+                                                                                WHERE DISB = 0
+                                                                                AND SUB_PROD_ID = #{prod}
+                                                                                AND SUB_PROMO_ID = #{promoNo}
+                                                                           )
+                                          )
+          ) B ON B.SALES_ORD_ID = A.MAIN_ORD_ID AND B.CUST_ID = #{custId}
+   WHERE B.CUST_ID = #{custId}
+   AND B.STUS_CODE_ID IN (1, 4)
+  </select>
+
+  <select id="selectHcAcComboOrderJsonList" parameterType="Map" resultType="egovMap">
+  SELECT DISTINCT B.ORD_NO,
+            B.ORD_ID,
+            B.REF_NO,
+            B.ORD_DT,
+            B.APP_TYPE,
+            B.PROD,
+            B.PROMO_CDE,
+            B.CUST_ID
+  FROM SAL0349D A
+  LEFT JOIN (
+               SELECT Z.SALES_ORD_NO AS ORD_NO,
+                      Z.SALES_ORD_ID AS ORD_ID,
+                      Z.PCKAGE_BINDING_NO,
+                      F.NAME AS CUST_ID,
+                      F.CUST_ID AS CID,
+                      Z.PROMO_ID,
+                      Z.STUS_CODE_ID,
+                      Z.REF_NO,
+                      TO_CHAR(Z.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                      G.CODE AS APP_TYPE,
+                      D.STK_DESC AS PROD,
+                      E.PROMO_CODE AS PROMO_CDE
+                FROM SAL0001D Z
+                JOIN SAL0002D C ON Z.SALES_ORD_ID = C.SALES_ORD_ID
+                JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+                JOIN SAL0017D E ON Z.PROMO_ID = E.PROMO_ID
+                JOIN SAL0029D F ON Z.CUST_ID = F.CUST_ID
+                JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND Z.APP_TYPE_ID = G.CODE_ID
+                WHERE
+                Z.PCKAGE_BINDING_NO IS NOT NULL
+                AND Z.PROMO_ID IN (
+                                             SELECT PROMO_ID
+                                             FROM SAL0252M
+                                             WHERE CONF_ID IN (
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0252M
+                                                                                WHERE DISB = 0
+                                                                                AND PROD_CDE = #{prod}
+                                                                                AND PROMO_ID =  #{promoNo}
+
+                                                                                UNION
+
+                                                                                SELECT CONF_ID
+                                                                                FROM SAL0253D
+                                                                                WHERE DISB = 0
+                                                                                AND SUB_PROD_ID = #{prod}
+                                                                                AND SUB_PROMO_ID =  #{promoNo}
+                                                                           )
+                                          )
+          ) B ON B.ORD_ID = A.MAIN_ORD_ID AND B.CID = #{custId}
+   WHERE B.CID = #{custId}
+   AND B.STUS_CODE_ID IN (1, 4)
+  </select>
+
+  <select id="selectHcAcComboOrderJsonList_2" parameterType="Map" resultType="egovMap">
+   SELECT *
+   FROM (
+             SELECT DISTINCT Y.ORD_NO,
+                             Z.MAIN_ORD_ID,
+                             Y.REF_NO,
+                             Y.ORD_DT,
+                             Y.APP_TYPE,
+                             Y.PROD,
+                             Y.PROMO_CDE,
+                             Y.CUST_ID,
+                             Y.SO_REQ_ID,
+                             Y.SO_REQ_STUS_ID
+              FROM SAL0349D Z
+              LEFT JOIN (
+                  SELECT DISTINCT A.SALES_ORD_NO AS ORD_NO,
+                                    A.SALES_ORD_ID AS ORD_ID,
+                                    A.REF_NO AS REF_NO,
+                                    TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                                    G.CODE AS APP_TYPE,
+                                    D.STK_DESC AS PROD,
+                                    E.PROMO_CODE AS PROMO_CDE,
+                                    F.NAME AS CUST_ID,
+                                    C.SO_REQ_ID,
+                                    C.SO_REQ_STUS_ID
+                    FROM SAL0001D A
+                    JOIN (
+                           SELECT PROD_CDE,
+                                      PROMO_ID
+                           FROM SAL0252M
+                           WHERE CONF_ID IN (
+                                              SELECT CONF_ID
+                                              FROM SAL0253D
+                                              WHERE SUB_PROMO_ID IN (
+                                                                      SELECT PROMO_ID
+                                                                      FROM SAL0001D
+                                                                      WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                      AND CUST_ID = #{custId}
+                                                                    )
+                                            )
+                          ) B ON A.PROMO_ID = B.PROMO_ID AND A.CUST_ID = #{custId} AND STUS_CODE_ID <![CDATA[<>]]> 10
+                    LEFT JOIN SAL0020D C ON C.SO_REQ_SO_ID = A.SALES_ORD_ID AND C.SO_REQ_ID = FN_GET_SAL0020D_MAX_ID(A.SALES_ORD_ID, '1')
+                    JOIN SAL0002D H ON A.SALES_ORD_ID = H.SALES_ORD_ID
+                    JOIN SYS0026M D ON H.ITM_STK_ID = D.STK_ID
+                    JOIN SAL0017D E ON A.PROMO_ID = E.PROMO_ID
+                    JOIN SAL0029D F ON A.CUST_ID = F.CUST_ID
+                    JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND A.APP_TYPE_ID = G.CODE_ID
+                    WHERE A.SALES_ORD_ID NOT IN (
+                                                  SELECT A.SALES_ORD_ID
+                                                  FROM SAL0001D A
+                                                  JOIN SAL0001D B ON A.SALES_ORD_ID = B.PCKAGE_BINDING_NO
+                                                  WHERE A.CUST_ID = #{custId}
+                                                  AND A.STUS_CODE_ID <![CDATA[<>]]> 10
+                                                  AND A.PROMO_ID IN (
+                                                                        SELECT PROMO_ID
+                                                                        FROM SAL0252M
+                                                                        WHERE CONF_ID IN (
+                                                                                            SELECT CONF_ID
+                                                                                            FROM SAL0253D
+                                                                                            WHERE SUB_PROMO_ID IN (
+                                                                                                                    SELECT PROMO_ID
+                                                                                                                    FROM SAL0001D
+                                                                                                                    WHERE PCKAGE_BINDING_NO = #{ordIdPop_1}
+                                                                                                                    AND CUST_ID = 31
+                                                                                                                  )
+                                                                                          )
+                                                                       )
+                                               )
+            )Y ON Y.ORD_ID = Z.MAIN_ORD_ID
+   ) WHERE (SO_REQ_ID IS NULL OR (SO_REQ_ID IS NOT NULL AND SO_REQ_STUS_ID = 31))
+  </select>
+
+  <select id="chkCmbGrpMaxQty" parameterType="Map" resultType="int">
+    SELECT * FROM (
+          SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK
+                     THEN 1
+                     ELSE 0 END AS MAX_QTY
+          FROM SAL0252M
+          WHERE DISB = 0
+          AND PROD_CDE = #{prod}
+          AND PROMO_ID = #{promoNo}
+          AND PROD_CAT =  'ACI'
+
+          UNION
+
+          SELECT MAX_QTY
+          FROM SAL0253D
+          WHERE SUB_PROMO_ID = #{promoNo}
+          AND SUB_PROD_ID = #{prod}
+          AND SUB_PROD_CAT = 'ACI'
+          AND DISB = 0
+    )
+  </select>
+
+  <select id="chkQtyHcAcCmbByGroup" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+    FROM SAL0349D A
+    LEFT JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+    LEFT JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+    WHERE A.COMBO_GRP IN (
+                                            SELECT * FROM (
+                                                   SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK THEN 1
+                                                   ELSE 0 END AS COMBO_GRP
+                                                   FROM SAL0252M
+                                                   WHERE DISB = 0
+                                                   AND PROD_CAT =  'ACI'
+                                                   AND PROD_CDE = #{prod}
+                                                   AND PROMO_ID = #{promoNo}
+
+                                                   UNION
+
+                                                  SELECT COMBO_GRP
+                                                  FROM SAL0253D
+                                                  WHERE SUB_PROMO_ID = #{promoNo}
+                                                  AND SUB_PROD_ID = #{prod}
+                                                  AND SUB_PROD_CAT = 'ACI'
+                                                  AND DISB = 0
+                                            )
+                                         )
+         AND DISB = 0
+     <if test = 'ordId != null and ordId !=0'>
+        AND A.MAIN_ORD_ID = #{ordId}
+     </if>
+  </select>
+
+  <select id="chkQtyCmbOrd" parameterType="Map" resultType="int">
+      SELECT COUNT(*)
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      WHERE A.MAIN_ORD_ID = #{ordId}
+      AND A.DISB = 0
+      GROUP BY A.MAIN_ORD_ID
+  </select>
+
+  <select id="selectHcAcCmbOrderDtlList" parameterType="Map" resultType="egovMap">
+     SELECT A.SUB_ORD_ID AS ORD_ID,
+                B.SALES_ORD_NO AS ORD_NO,
+                A.COMBO_GRP,
+                G.CODE AS APP_TYPE,
+                D.STK_DESC AS PROD,
+                E.PROMO_CODE AS PROMO_CDE,
+                TO_CHAR(B.SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+                H.CODE AS ORDER_STATUS,
+                B.NOR_RNT_FEE AS ORIGINAL_NOR_RNT_FEE
+      FROM SAL0349D A
+      JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID AND B.CUST_ID = #{custId}
+      JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+      JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+      JOIN SAL0017D E ON B.PROMO_ID = E.PROMO_ID
+      JOIN SAL0029D F ON B.CUST_ID = F.CUST_ID
+      JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND B.APP_TYPE_ID = G.CODE_ID
+      JOIN SYS0038M H ON H.STUS_CODE_ID = B.STUS_CODE_ID
+      WHERE A.MAIN_ORD_ID = #{ordId}
+      AND A.DISB = 0
+      <if test='subOrdId != null and subOrdId !=""'>
+        AND A.SUB_ORD_ID = #{subOrdId}
+      </if>
+  </select>
+
+      <select id="selectPwpOrderNoList" parameterType="Map" resultType="egovMap">
+            SELECT
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.REF_NO REF_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME APP_TYPE,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME STATUS,
+                 TO_CHAR(MAX(F.SRV_START_DT), 'DD/MM/YYYY') SRV_START_DT,
+                 TO_CHAR(MAX(F.SRV_EXPR_DT), 'DD/MM/YYYY') SRV_EXPR_DT
+            FROM SAL0001D A
+            LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+            LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+            LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
+            LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+            LEFT JOIN SAL0095D F ON F.SRV_SALES_ORD_ID = A.SALES_ORD_ID AND F.SRV_STUS_CODE_ID = 4
+            WHERE 1=1
+            AND A.STUS_CODE_ID = 4
+            AND A.CUST_ID = #{custId}
+            <if test='salesOrdNo != null and salesOrdNo !=""'>
+                  AND A.SALES_ORD_NO = #{salesOrdNo}
+              </if>
+            GROUP BY
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME,
+                 A.REF_NO
+      </select>
+
+      <select id="selectSeda4PromoList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.selectPromotionByFrame */
+        SELECT DISTINCT T2.PROMO_ID CODE
+                 , T2.PROMO_CODE || '-' || T2.PROMO_DESC CODE_NAME
+
+         FROM SAL0018D T1
+           JOIN SAL0017D T2
+             ON T2.PROMO_ID = T1.PROMO_ID
+
+        WHERE T2.PROMO_ID in (select code from sys0013m where code_master_id = 587 ) <!-- DEV = 602 -->
+    </select>
+
+    <select id="getLastHcAcComboOrdId" parameterType="Map" resultType="string">
+        SELECT MAX(SUB_ORD_ID) AS ORDER_ID
+        FROM SAL0349D
+        WHERE
+         DISB = 0
+        <if test = 'ordId != null and ordId !=0'>
+            AND MAIN_ORD_ID = #{ordId}
+        </if>
+           GROUP BY MAIN_ORD_ID
+     </select>
+
+     <select id="chkHcAcCmbOrdStus" parameterType="Map" resultType="int">
+         SELECT COUNT(*)
+         FROM(
+                    SELECT A.SUB_ORD_ID AS SUB_ORD_ID,
+                                   B.SALES_ORD_NO,
+                                   B.NOR_RNT_FEE AS ORIGINAL_FEE,
+                                   B.STUS_CODE_ID
+                    FROM SAL0349D A
+                    JOIN SAL0001D B ON B.SALES_ORD_ID = A.SUB_ORD_ID
+                    JOIN SAL0002D C ON C.SALES_ORD_ID = B.SALES_ORD_ID
+                    WHERE A.MAIN_ORD_ID = #{ordId}
+                    AND A.DISB = 0
+                    AND B.STUS_CODE_ID = '4'
+                     AND A.CHG_SEQ >= 1
+                    AND B.CUST_ID = #{custId}
+          )
+     </select>
+
+     <select id="chkNextHcAcComboOrdGrp" parameterType="Map" resultType="int">
+           SELECT CASE WHEN MAX(COMBO_GRP) <![CDATA[<= 2]]>
+                               THEN MAX(COMBO_GRP) + 1
+                               ELSE MAX(COMBO_GRP) END AS NEXT_COMBO_GRP
+            FROM SAL0349D
+            WHERE DISB = 0
+            <if test = 'ordId != null and ordId !=0'>
+                AND MAIN_ORD_ID = #{ordId}
+            </if>
+            GROUP BY MAIN_ORD_ID
+     </select>
+
+     <select id ="chkCmbGrpByPromoIdProd" parameterType="Map" resultType="int">
+        SELECT COMBO_GRP
+        FROM (
+                       SELECT CASE WHEN (SELECT SUM(MAX_QTY) FROM SAL0253D WHERE SUB_PROD_ID = #{prod}) = PROD_MAX_LINK THEN 1
+                       ELSE 0 END AS COMBO_GRP
+                       FROM SAL0252M
+                       WHERE DISB = 0
+                       AND PROD_CAT =  'ACI'
+                       AND PROD_CDE = #{prod}
+                       AND PROMO_ID = #{promoNo}
+
+                      UNION
+
+                      SELECT COMBO_GRP
+                      FROM SAL0253D
+                      WHERE SUB_PROMO_ID = #{promoNo}
+                      AND SUB_PROD_ID = #{prod}
+                      AND SUB_PROD_CAT = 'ACI'
+        )
+     </select>
+
+     <select id="selectRebateOrderNoList" parameterType="Map" resultType="egovMap">
+            SELECT
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.REF_NO REF_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME APP_TYPE,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME STATUS,
+                 F.STUS_ID COMBO_STUS
+            FROM SAL0001D A
+            LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+            LEFT JOIN SYS0013M C ON C.CODE_ID = A.APP_TYPE_ID
+            LEFT JOIN SYS0026M D ON D.STK_ID = B.ITM_STK_ID
+            LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+            <!-- LEFT JOIN SAL0424D F ON F.SALES_ORD_ID = A.SALES_ORD_ID -->
+            LEFT JOIN (SELECT SALES_ORD_ID, STUS_ID, MAX(COMBO_ID) COMBO_ID FROM SAL0424D WHERE 1=1 GROUP BY SALES_ORD_ID, STUS_ID) F ON F.SALES_ORD_ID = A.SALES_ORD_ID
+            WHERE A.CUST_ID = #{custId}
+            AND A.STUS_CODE_ID = 1
+            AND A.APP_TYPE_ID IN ('66')
+            AND (F.SALES_ORD_ID IS NOT NULL AND F.STUS_ID NOT IN (1,30) OR (F.SALES_ORD_ID IS NULL)) <!-- AND F.STUS_ID NOT IN (1,30)) -->
+            <if test='salesOrdNo != null and salesOrdNo !=""'>
+                  AND A.SALES_ORD_NO = #{salesOrdNo}
+              </if>
+            GROUP BY
+                 A.SALES_ORD_ID,
+                 A.SALES_ORD_NO,
+                 A.APP_TYPE_ID,
+                 C.CODE_NAME,
+                 D.STK_CODE,
+                 D.STK_DESC,
+                 A.STUS_CODE_ID,
+                 E.NAME,
+                 A.REF_NO,
+                 F.STUS_ID
+      </select>
+</mapper>

@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.PreASManagementListMapper">
+
+    <select id="selectPreASManagementList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT DISTINCT
+                      Extent1.SALES_ORDER_NO
+                    , Extent2.SALES_ORD_ID
+                    , NVL(Extent1.AS_NO,'-') AS AS_NO
+                    , Extent10.AS_ID
+                    , Extent1.REMARK
+                    , Extent1.APPV_REMARK
+                    , Extent4.NAME CUST_NAME
+                    , NVL(Extent14.CODE, '-') INS_BRNCH_CODE
+                    , NVL(Extent11.CODE, '-') AS_BRNCH_CODE
+                    , Extent21.STK_CODE || ' - ' || Extent21.STK_DESC AS PRODUCT
+                    , NVL(Extent18.TEL_M1, ' ') CONTACT_NO
+                    , TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY') AS REG_DT
+                    , TO_CHAR(Extent1.CRT_DT,'HH:MI:SS PM') AS REG_TIME
+                    , Extent6.NAME AS STUS
+                    , Extent1.STUS AS STUS_ID
+                    , Extent1.DEFECT_CODE
+                    , Extent7.DEFECT_TYPE_CODE_DESC AS DEFECT_DESC
+                    , Extent1.REG_ID AS CREATOR
+                    , TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY') AS UPD_DT
+                    , TO_CHAR(Extent1.UPD_DT,'HH:MI:SS PM') AS UPD_TIME
+                    , NVL (Extent16.AREA, ' ') AS INST_AREA
+                    , NVL (Extent16.POSTCODE, ' ') AS INST_POSTCODE
+                    , NVL (Extent16.CITY, ' ') AS INST_CITY
+                    , Extent1.REG_ID AS REQUESTOR
+                    , NVL(TO_CHAR(Extent1.RECALL_DT,'DD/MM/YYYY'),'-') RECALL_DT
+                    , Extent3.CODE AS CDB_BRNCH_CODE
+                    , Extent1.AS_CD_SEQ
+                    , Extent22.CODE PROD_CAT
+                    , CASE WHEN Extent1.STUS = '5' AND Extent1.DEFECT_CODE <> Extent10.AS_MALFUNC_ID THEN Extent24.DEFECT_TYPE_CODE_DESC ELSE Extent23.DEFECT_TYPE_CODE_DESC END AS AMENDED_DESC
+                    , CASE WHEN Extent1.STUS = '5' AND Extent1.DEFECT_CODE <> Extent10.AS_MALFUNC_ID THEN Extent24.DEFECT_DTL_CODE_DESC ELSE '-' END AS AMENDED_DTL_DESC
+            FROM SVC0130D Extent1
+            JOIN SAL0001D Extent2 ON Extent1.SALES_ORDER_NO = Extent2.SALES_ORD_NO
+            LEFT JOIN ORG0001D Extent9 ON Extent9.MEM_CODE =Extent1.REG_ID
+            LEFT JOIN SYS0005M Extent3 ON Extent3.BRNCH_ID = Extent9.BRNCH
+            LEFT JOIN SAL0029D Extent4 ON Extent2.CUST_ID = Extent4.CUST_ID
+            LEFT JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.STUS
+            LEFT JOIN SVC0056M Extent7 ON Extent7.DEFECT_TYPE_CODE = Extent1.DEFECT_CODE
+            LEFT JOIN SVC0001D Extent10 ON Extent1.AS_NO = Extent10.AS_NO
+            LEFT JOIN SYS0005M Extent11 ON Extent10.AS_BRNCH_ID = Extent11.BRNCH_ID
+            LEFT JOIN SAL0045D Extent12 ON Extent12.SALES_ORD_ID = Extent2.SALES_ORD_ID
+            LEFT JOIN SAL0046D Extent13 ON Extent13.SALES_ORD_ID = Extent2.SALES_ORD_ID AND Extent13.STUS_CODE_ID =4
+            LEFT JOIN SYS0005M Extent14 ON Extent14.BRNCH_ID = Extent12.BRNCH_ID
+            LEFT JOIN SAL0023D Extent15 ON Extent15.CUST_ADD_ID = Extent12.ADD_ID
+            LEFT JOIN SYS0064M Extent16 ON Extent16.AREA_ID = Extent15.AREA_ID
+            LEFT JOIN SAL0024D Extent17 ON Extent17.CUST_BILL_ID = Extent2.CUST_BILL_ID AND Extent2.APP_TYPE_ID = 66
+            LEFT JOIN SAL0027D Extent18 ON Extent18.CUST_CNTC_ID = Extent12.CNT_ID
+            LEFT JOIN SAL0002D Extent20 ON Extent20.SALES_ORD_ID = Extent2.SALES_ORD_ID
+            JOIN SYS0026M Extent21 ON Extent21.STK_ID = Extent20.ITM_STK_ID
+            JOIN SYS0013M Extent22 ON Extent21.STK_CTGRY_ID = Extent22.CODE_ID
+            LEFT JOIN SVC0056M Extent23 ON Extent23.DEFECT_TYPE_CODE = Extent1.AMENDED_DEFECT_CODE
+            LEFT JOIN SVC0056M Extent24 ON Extent24.DEFECT_TYPE_CODE = Extent10.AS_MALFUNC_ID AND Extent24.DEFECT_DTL_CODE = Extent10.AS_MALFUNC_RESN_ID AND Extent24.STUS_CODE_ID = 1
+
+            WHERE 1=1
+        ]]>
+
+        <if test="orderType != null and orderType != '' ">
+              <if test="orderType == 'HA'">
+              AND Extent21.STK_CTGRY_ID NOT IN (5706,5707,7241,7177,7237)
+              </if>
+              <if test="orderType == 'HC'">
+              AND Extent21.STK_CTGRY_ID IN (5706,5707,7241,7177,7237)
+              </if>
+        </if>
+        <if test="asStatusList != null and asStatusList != '' ">
+            AND Extent1.STUS IN
+           <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+       </if>
+
+        <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+            AND Extent11.CODE IN
+            <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+             #{item}
+            </foreach>
+       </if>
+
+       <if test="cmbInsBranchIdList != null and cmbInsBranchIdList != '' ">
+            AND Extent14.CODE IN
+            <foreach item="item" collection="cmbInsBranchIdList" index="index" open="(" separator="," close=")">
+             #{item}
+            </foreach>
+       </if>
+
+       <if test="asProductList != null and asProductList != '' ">
+             AND Extent8.STK_ID IN
+             <foreach item="item" collection="asProductList" index="index" open="(" separator="," close=")">
+             #{item}
+              </foreach>
+       </if>
+
+       <if test=" registerDtFrm  != null  and registerDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{registerDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+
+       <if test="registerDtTo != null   and registerDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.CRT_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{registerDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+
+       <if test="custName != null and custName != '' ">
+             AND ( Extent1.CUST_NAME LIKE '%'||#{custName}||'%')
+       </if>
+
+       <if test="orderNum != null and orderNum != '' ">
+             AND Extent1.SALES_ORDER_NO = #{orderNum}
+        </if>
+
+        <if test="ordCity != null and ordCity != '' ">
+             AND Extent16.CITY =#{ordCity}
+        </if>
+
+        <if test="areaList != null and areaList != '' ">
+             AND Extent16.AREA IN
+             <foreach item="item" collection="areaList" index="index" open="(" separator="," close=")">
+             #{item}
+              </foreach>
+        </if>
+
+        <if test=" recallDtFrm  != null  and recallDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.RECALL_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{recallDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="recallDtTo != null   and recallDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(Extent1.RECALL_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{recallDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+        </if>
+
+        <if test="requestor != null and requestor != '' ">
+             AND Extent1.REG_ID = #{requestor}
+        </if>
+
+        <if test="cmdBranchCode != null and cmdBranchCode != ''">
+              AND ( Extent3.BRNCH_ID = #{cmdBranchCode})
+        </if>
+
+        <if test="preAsSeq != null and preAsSeq != ''">
+              AND  Extent1.AS_CD_SEQ = #{preAsSeq}
+        </if>
+
+    </select>
+
+     <select id="selectPreAsStat"  parameterType="Map" resultType="egovMap">
+        SELECT CODE AS CODE_ID,
+               CODE_NAME AS CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'PREAS_STAT'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+  </select>
+
+
+   <select id="selectPreAsUpd"  parameterType="Map" resultType="egovMap">
+        SELECT CODE AS CODE_ID,
+               CODE_NAME AS CODE_NAME
+        FROM SYS0094M
+        WHERE IND = 'PREAS_UPD'
+          AND DISB = 0
+        ORDER BY LPAD(CODE,4)
+  </select>
+
+  <update id="updatePreAsStatus" parameterType="java.util.Map">
+    UPDATE SVC0130D SET STUS = #{stus}
+                      , UPD_USER_ID = #{userId}
+                      , UPD_DT = SYSDATE
+                      , APPV_REMARK = #{remark}
+                      , FAIL_REASON = #{reason}
+                      <if test="recallDt != null and recallDt != '' ">
+                      , RECALL_DT  = TO_DATE(#{recallDt},'DD/MM/RRRR')
+                      </if>
+                      <if test="amendedErrorCode != null and amendedErrorCode != '' ">
+                      , AMENDED_DEFECT_CODE  = #{amendedErrorCode}
+                      </if>
+    WHERE SALES_ORDER_NO = #{orderNo} AND STUS in (1,44)
+  </update>
+
+    <select id="getCityList" parameterType="Map" resultType="egovMap">
+    SELECT TRIM(CITY) AS CODE_ID,
+           INITCAP(TRIM(CITY)) as CODE_NAME
+    FROM SYS0064M
+    WHERE UPPER(STATE) = UPPER(#{groupCode})
+    AND CITY IS NOT NULL
+    GROUP BY CITY
+    ORDER BY CITY
+  </select>
+
+    <select id="getAreaList" parameterType="Map" resultType="egovMap">
+    SELECT TRIM(AREA) AS CODE_ID,
+           INITCAP(TRIM(AREA)) as CODE_NAME
+    FROM SYS0064M
+    WHERE UPPER(STATE) = UPPER(#{stateCode})
+    AND CITY IS NOT NULL
+
+    <if test="cityCode != null and cityCode != '' ">
+     AND UPPER(CITY) = UPPER(#{cityCode})
+    </if>
+
+    GROUP BY AREA
+    ORDER BY AREA
+  </select>
+
+
+  <select id="checkOrder"  parameterType="Map" resultType="egovMap">
+	    SELECT
+	           A.SALES_ORD_NO, A.SALES_ORD_ID, C.STK_CTGRY_ID, A.STUS_CODE_ID, D.CODE PROD_CAT
+	    FROM SAL0001D A
+	    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+	    JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
+	    JOIN SYS0013M D ON C.STK_CTGRY_ID = D.CODE_ID
+	    WHERE A.MEM_ID = #{memId}
+	    AND A.SALES_ORD_NO = #{registerOrderNum}
+  </select>
+
+   <select id="checkSubmissionRecords" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT DISTINCT
+             CASE WHEN C.STUS_CODE_ID <> 4     THEN  C.SALES_ORD_NO
+                     WHEN A.STUS IN ( '1','44' )         THEN A.SALES_ORDER_NO
+                     WHEN B.AS_STUS_ID = 1           THEN A.SALES_ORDER_NO
+             END SALES_ORDER_NO
+        FROM SVC0130D A
+        LEFT JOIN SVC0001D B ON A.AS_NO = B.AS_NO
+        LEFT JOIN SAL0001D C ON A.SALES_ORDER_NO = C.SALES_ORD_NO
+        WHERE A.SALES_ORDER_NO = #{registerOrderNum}
+
+    ]]>
+    </select>
+
+    <select id="selectOrderInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT
+             SALES_ORDER_NO
+            , PROD_CAT
+            , APP_TYPE
+            , MAIL_ADDRESS
+            , RESULTIC_MOBILE_NO
+            , customer_Type
+            , CORP_TYPE_ID
+            , customer_Id
+            , cust_Name
+            , product_Code
+            , product_Name
+            , TO_CHAR (Membership_Contract_Expiry, 'YYYYMMDD') AS Membership_Contract_Expiry
+            , outstanding
+            , CASE WHEN Membership_Expiry > 0 THEN  0 ELSE 1 END Membership_Expiry
+        FROM
+        ( SELECT DISTINCT A.SALES_ORD_NO AS SALES_ORDER_NO
+                            ,G.CODE AS PROD_CAT
+                            ,A.APP_TYPE_ID AS APP_TYPE
+                            ,C.EMAIL AS MAIL_ADDRESS
+                            ,C.NRIC AS RESULTIC_MOBILE_NO
+                            ,D.TYPE_ID AS customer_Type
+                            ,D.CORP_TYPE_ID AS CORP_TYPE_ID
+                            ,D.cust_id AS customer_Id
+                            ,D.NAME AS cust_Name
+                            ,F.STK_CODE AS product_Code
+                            ,F.STK_DESC AS product_Name
+                            ,E.SRV_EXPR_DT  AS Membership_Contract_Expiry
+                            ,TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
+                           ,MONTHS_BETWEEN(TRUNC(E.SRV_EXPR_DT, 'MM'), TRUNC(SYSDATE, 'MM'))
+                            AS Membership_Expiry
+                    FROM SAL0001D A
+                    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                    LEFT JOIN SAL0027D C ON C.CUST_ID = A.CUST_ID
+                    LEFT JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+                    LEFT JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+                    LEFT JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
+                    LEFT JOIN SYS0013M G ON G.CODE_ID = F.STK_CTGRY_ID
+                    LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+
+                  WHERE A.SALES_ORD_NO = #{registerOrderNum}
+                  order by Membership_Contract_Expiry desc
+        )
+        where ROWNUM < 2
+     ]]>
+    </select>
+
+  <select id="getErrorCodeList" parameterType="Map" resultType="egovMap">
+    SELECT ERR_TYPE_CODE CODE_ID
+             , ERR_TYPE_CODE || '_' || ERR_TYPE_NAME CODE_NAME
+    FROM SYS1021V
+    WHERE STUS_CODE_ID = 1
+        AND ERR_TYPE_CODE NOT IN ('9001200','1002500','1002700','1002600','9001800')
+
+    <if test="prodCat != null and prodCat != '' ">
+       AND UPPER(PROD_CAT) = UPPER(#{prodCat})
+    </if>
+
+    <if test="errorType != null and errorType != '' ">
+      <if test="errorType == 'HA'">
+        AND PROD_CAT NOT IN ('MAT','FRM')
+      </if>
+
+      <if test="errorType == 'HC'">
+        AND PROD_CAT IN ('MAT','FRM')
+      </if>
+    </if>
+  </select>
+
+	<insert id="submitPreAsSubmission" parameterType="java.util.Map">
+	<![CDATA[
+     INSERT INTO SVC0130D
+               (
+                    AS_CD_SEQ
+                  , SALES_ORDER_NO
+                  , STUS
+                  , CUST_NAME
+                  , PRODUCT_CODE
+                  , PRODUCT_NAME
+                  , APP_TYPE
+                  , OUTSTANDING
+                  , MEMBERSHIP_CONTRACT_EXPIRY
+                  , PROD_CAT
+                  , REG_ID
+                  , DEFECT_CODE
+                  , DEFECT_DESC
+                  , CRT_USER_ID
+                  , CRT_DT
+                  , UPD_USER_ID
+                  , UPD_DT
+                  , REMARK
+             )
+             SELECT
+	              SVC0130D_ID_SEQ.NEXTVAL
+	            , SALES_ORDER_NO
+	            , 1
+	            , cust_Name
+	            , product_Code
+	            , product_Name
+	            , APP_TYPE
+	            , outstanding
+	            , TO_CHAR (Membership_Contract_Expiry, 'DD/MM/YYYY')
+	            , PROD_CAT
+	            , #{regId}
+	            , #{defectCode}
+	            , defectDesc
+	            , #{userId}
+	            , SYSDATE
+	            , #{userId}
+	            , SYSDATE
+	            , #{remark}
+            FROM
+                (   SELECT DISTINCT
+                              A.SALES_ORD_NO AS SALES_ORDER_NO
+                            , G.CODE AS PROD_CAT
+                            , A.APP_TYPE_ID AS APP_TYPE
+                            , C.EMAIL AS MAIL_ADDRESS
+                            , C.NRIC AS RESULTIC_MOBILE_NO
+                            , D.TYPE_ID AS customer_Type
+                            , D.CORP_TYPE_ID AS CORP_TYPE_ID
+                            , D.cust_id AS customer_Id
+                            , D.NAME AS cust_Name
+                            , F.STK_CODE AS product_Code
+                            , F.STK_DESC AS product_Name
+                            , E.SRV_EXPR_DT  AS Membership_Contract_Expiry
+                            , TO_CHAR (NVL(S.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding
+                            , t.ERR_TYPE_NAME defectDesc
+                    FROM SAL0001D A
+                    LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                    LEFT JOIN SAL0027D C ON C.CUST_ID = A.CUST_ID
+                    LEFT JOIN SAL0029D D ON D.CUST_ID = A.CUST_ID
+                    LEFT JOIN SAL0095D E ON E.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+                    LEFT JOIN SYS0026M F ON B.ITM_STK_ID = F.STK_ID
+                    LEFT JOIN SYS0013M G ON G.CODE_ID = F.STK_CTGRY_ID
+                    LEFT JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+                    LEFT JOIN SYS1021V T ON T.PROD_CAT = G.CODE AND T.STUS_CODE_ID =1 AND ERR_TYPE_CODE = #{defectCode}
+                    WHERE A.SALES_ORD_NO = #{registerOrderNum} AND ROWNUM < 2
+                    ORDER BY Membership_Contract_Expiry DESC
+                  )
+       ]]>
+	  </insert>
+
+	 <select id="searchPreAsSubmissionList" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+		    SELECT
+			      A.SALES_ORDER_NO
+			    , B.NAME STATUS
+			    , A.DEFECT_CODE
+			    , A.DEFECT_DESC
+			    , A.REMARK
+			    , TO_CHAR(A.CRT_DT,'DD/MM/YYYY') AS REG_DT
+			FROM SVC0130D A
+			JOIN SYS0038M B ON A.STUS = B.STUS_CODE_ID
+			JOIN ORG1001V C ON A.REG_ID = C.MEM_CODE
+			JOIN SAL0001D D ON A.SALES_ORDER_NO = D.SALES_ORD_NO
+            JOIN SAL0002D E ON D.SALES_ORD_ID = E.SALES_ORD_ID
+            JOIN SYS0026M F ON E.ITM_STK_ID = F.STK_ID
+			WHERE 1=1
+       ]]>
+
+       <if test="orderType != null and orderType != '' ">
+              <if test="orderType == 'HA'">
+              AND F.STK_CTGRY_ID NOT IN (5706,5707)
+              </if>
+              <if test="orderType == 'HC'">
+              AND F.STK_CTGRY_ID IN (5706,5707)
+              </if>
+       </if>
+
+       <if test="statusList != null and statusList != '' ">
+            AND A.STUS IN
+           <foreach item="item" collection="statusList" index="index" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+       </if>
+
+       <if test="errorCodeList != null and errorCodeList != '' ">
+            AND A.DEFECT_CODE IN
+           <foreach item="item" collection="errorCodeList" index="index" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+       </if>
+
+       <if test=" preAsRegDtFrom  != null  and preAsRegDtFrom !=''  ">
+            <![CDATA[ AND ( TO_CHAR(A.CRT_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{preAsRegDtFrom},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+
+       <if test="preAsRegDtTo != null   and preAsRegDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(A.CRT_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{preAsRegDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+
+       <if test="preAsRemark != null and preAsRemark != '' ">
+             AND (A.REMARK LIKE '%'||#{preAsRemark}||'%')
+       </if>
+
+       <if test="preAsOrdNo != null and preAsOrdNo != '' ">
+             AND A.SALES_ORDER_NO = #{preAsOrdNo}
+       </if>
+
+         <if test="preAsOrgCode != null and preAsOrgCode != '' ">
+             AND C.ORG_CODE = #{preAsOrgCode}
+       </if>
+
+         <if test="preAsGrpCode != null and preAsGrpCode != '' ">
+             AND C.GRP_CODE = #{preAsGrpCode}
+       </if>
+
+         <if test="preAsDeptCode != null and preAsDeptCode != '' ">
+             AND C.DEPT_CODE = #{preAsDeptCode}
+       </if>
+
+    </select>
+
+    <select id="asProd"  parameterType="Map" resultType="egovMap">
+	    SELECT STK_ID AS STK_ID,
+	           STK_CODE || ' - ' || STK_DESC AS STK_DESC
+	    FROM SYS0026M
+	    WHERE STK_TYPE_ID = '61'
+	      AND STUS_CODE_ID NOT IN (8, 7)
+	     <if test="orderType != null and orderType != '' ">
+              <if test="orderType == 'HA'">
+              AND STK_CTGRY_ID NOT IN (5706,5707)
+              </if>
+              <if test="orderType == 'HC'">
+              AND STK_CTGRY_ID IN (5706,5707)
+              </if>
+        </if>
+	    ORDER BY STK_CODE
+  </select>
+
+    <select id="searchBranchList"  parameterType="Map" resultType="egovMap">
+       SELECT DISTINCT CODE CODE_ID,
+                    CODE || '-' || NAME  CODE_NAME
+        FROM SYS0005M
+        WHERE 1=1 AND STUS_ID = 1
+        <if test="orderType != null and orderType != '' ">
+              <if test="orderType == 'HA'">
+               AND TYPE_ID= 42
+              </if>
+              <if test="orderType == 'HC'">
+              AND TYPE_ID= 5754
+              </if>
+        </if>
+       ORDER BY CODE
+  </select>
+
+</mapper>

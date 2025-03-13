@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.coway.trust.biz.payment.autodebit.service.impl.EnrollH2HMapper">
+
+	<!--EnrollmentH2HList(Master Grid) 리스트 조회 -->
+	<select id="selectEnrollmentH2H" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+SELECT * FROM (
+    SELECT a.ENRL_ID as ENROLLMENT_ID,
+            a.BANK_ID,
+            c.CODE as BANK_CODE,
+            c.NAME as BANK_NAME,
+            TO_CHAR(a.DEBT_DT_FROM, 'DD/MM/YYYY') as DEBT_DT,
+            a.CRT_USER_ID,
+            d.USER_NAME as CRT_NAME,
+            TO_CHAR(a.CRT_DT, 'DD/MM/YYYY') as CRT_DT ,
+            a.UPD_USER_ID,
+            e.USER_NAME as UPD_NAME,
+            TO_CHAR(a.UPD_DT, 'DD/MM/YYYY') as UPD_DT,
+            b.STUS_CODE_ID,
+            b.CODE as STUS_CODE,
+            b.NAME as STUS_NAME,
+            COUNT(*) AS TOT_REC
+             FROM PAY0056D a
+                LEFT JOIN SYS0038M b ON b.STUS_CODE_ID = a.STUS_CODE_ID
+                LEFT JOIN SYS0004M c ON c.BANK_ID = a.BANK_ID
+                LEFT JOIN SYS0047M d ON d.USER_ID = a.CRT_USER_ID
+                LEFT JOIN SYS0047M e ON e.USER_ID = a.UPD_USER_ID
+                LEFT JOIN PAY0057D f ON f.ENRL_ID = a.ENRL_ID
+                     WHERE  1=1
+        ]]>
+		<if test="enrollmentId != '' and enrollmentId != null ">
+			AND a.ENRL_ID = #{enrollmentId}
+
+		</if>
+		<if test="status != '' and status != null ">
+			AND b.STUS_CODE_ID = #{status}
+
+		</if>
+		<if test="creator != '' and creator != null ">
+			AND ( (CASE
+			WHEN ( d.USER_NAME IS NOT NULL ) THEN
+			d.USER_NAME
+			ELSE 'N'
+			END) = #{creator} )
+		</if>
+		<if test="issueBank != '' and issueBank != null ">
+			AND a.BANK_ID = #{issueBank}
+		</if>
+		<if
+			test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
+			AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   >= ]]>
+			TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') ||
+			'000000','yyyymmddhh24miss')
+			AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   <   ]]>
+			TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') ||
+			'000000','yyyymmddhh24miss') + 1
+		</if>
+		<if
+			test="debitDt1 != null and debitDt2 != null and debitDt1 != '' and debitDt2 != '' ">
+			AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   >= ]]>
+			TO_DATE(TO_CHAR(TO_DATE(#{debitDt1},'DD/MM/YYYY'),'YYYYMMDD') ||
+			'000000','yyyymmddhh24miss')
+			AND Extent1.FILE_BATCH_CRT_DT <![CDATA[   <   ]]>
+			TO_DATE(TO_CHAR(TO_DATE(#{debitDt2},'DD/MM/YYYY'),'YYYYMMDD') ||
+			'000000','yyyymmddhh24miss') + 1
+		</if>
+		GROUP BY
+		a.ENRL_ID,a.BANK_ID,c.CODE,c.NAME,a.DEBT_DT_FROM,a.CRT_USER_ID,d.USER_NAME,a.CRT_DT,a.UPD_USER_ID,e.USER_NAME,a.UPD_DT,b.STUS_CODE_ID,b.CODE,b.NAME
+		ORDER BY
+		a.ENRL_ID ASC ) A
+	</select>
+
+	<select id="selectEnrollmentH2HById" parameterType="Map"
+		resultType="egovMap">
+
+		SELECT a.ENRL_ID as ENROLLMENT_ID,
+		a.BANK_ID,
+		c.CODE as
+		BANK_CODE,
+		c.NAME as BANK_NAME,
+		TO_CHAR(a.DEBT_DT_FROM, 'DD/MM/YYYY') as
+		DEBT_DT,
+		a.CRT_USER_ID,
+		d.USER_NAME as CRT_NAME,
+		TO_CHAR(a.CRT_DT,
+		'DD/MM/YYYY') as CRT_DT ,
+		a.UPD_USER_ID,
+		e.USER_NAME as UPD_NAME,
+		TO_CHAR(a.UPD_DT, 'DD/MM/YYYY') as UPD_DT,
+		b.STUS_CODE_ID,
+		b.CODE as
+		STUS_CODE,
+		b.NAME as STUS_NAME
+		FROM PAY0056D a
+		LEFT JOIN SYS0038M b ON
+		b.STUS_CODE_ID = a.STUS_CODE_ID
+		LEFT JOIN SYS0004M c ON c.BANK_ID =
+		a.BANK_ID
+		LEFT JOIN SYS0047M d ON d.USER_ID = a.CRT_USER_ID
+		LEFT JOIN
+		SYS0047M e ON e.USER_ID = a.UPD_USER_ID
+		WHERE 1 = 1
+		AND a.ENRL_ID =
+		#{enrollId}
+
+	</select>
+
+	<select id="selectEnrollmentH2HListById" parameterType="Map"
+		resultType="egovMap">
+		SELECT
+		Extent1.ENRL_ITM_ID,
+		Extent1.ENRL_ID,
+		Extent1.SALES_ORD_ID,
+		Extent1.ACC_NO,
+		Extent1.ACC_NAME,
+		Extent1.ACC_NRIC,
+		Extent1.LIMIT_AMT,
+		Extent1.BILL_AMT,
+		Extent1.CLM_AMT,
+		TO_CHAR(Extent1.APPV_DT, 'DD/MM/YYYY') as DEBT_DT,
+		Extent1.SVC_CNTRCT_ID,
+		Extent2.SALES_ORD_NO,
+		Extent4.NAME as STUS_NAME,
+		Extent1.CRT_USER_ID,
+		Extent5.USER_NAME as CRT_NAME,
+		TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') as CRT_DT ,
+		Extent1.UPD_USER_ID,
+		Extent6.USER_NAME as UPD_NAME,
+		TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY') as UPD_DT,
+		(CASE WHEN Extent3.SRV_CNTRCT_ID IS NOT NULL THEN Extent3.SRV_CNTRCT_REF_NO
+		ELSE 'N' END) AS SRV_CNTRCT_ID,
+		(CASE
+		WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
+		(CASE
+		WHEN LENGTH(Extent2.SALES_ORD_NO) <![CDATA[   < ]]>
+		7 THEN
+		SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent2.SALES_ORD_NO)
+		ELSE
+		SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent2.SALES_ORD_NO)
+		END)
+		ELSE
+		(CASE
+		WHEN LENGTH(Extent2.SALES_ORD_NO) = 7 AND SUBSTR(Extent2.SALES_ORD_NO,0,1)
+		= '0' THEN
+		TRIM(SUBSTR(Extent2.SALES_ORD_NO,2,LENGTH(Extent2.SALES_ORD_NO)))
+		ELSE
+		TRIM(Extent2.SALES_ORD_NO)
+		END)
+		END) AS CNTRCT_N_ORD_NO
+		FROM
+		PAY0057D Extent1
+		JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
+		LEFT JOIN SAL0077D Extent3 ON Extent3.SRV_CNTRCT_ID =
+		Extent1.SVC_CNTRCT_ID
+		LEFT JOIN SYS0038M Extent4 ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+		LEFT JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		LEFT JOIN SYS0047M Extent6 ON Extent6.USER_ID = Extent1.UPD_USER_ID
+		WHERE 1 = 1
+		AND Extent1.ENRL_ID = #{enrollmentId}
+		ORDER BY
+		Extent1.ACC_NO ASC
+	</select>
+
+	<select id="selectH2HEnrollmentSubListById" parameterType="Map"
+		resultType="egovMap">
+		SELECT
+		Extent1.ENRL_ITM_ID,
+		Extent1.ENRL_ID,
+		Extent1.SALES_ORD_ID,
+		Extent1.ACC_NO,
+		Extent1.ACC_NAME,
+		Extent1.ACC_NRIC,
+		Extent1.LIMIT_AMT,
+		Extent1.BILL_AMT,
+		Extent1.CLM_AMT,
+		TO_CHAR(Extent1.APPV_DT,
+		'DD/MM/YYYY') as DEBT_DT,
+		Extent1.SVC_CNTRCT_ID,
+		Extent2.SALES_ORD_NO,
+		Extent4.NAME as STUS_NAME,
+		Extent1.CRT_USER_ID,
+		Extent5.USER_NAME as
+		CRT_NAME,
+		TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') as CRT_DT ,
+		Extent1.UPD_USER_ID,
+		Extent6.USER_NAME as UPD_NAME,
+		TO_CHAR(Extent1.UPD_DT, 'DD/MM/YYYY') as UPD_DT,
+		(CASE WHEN
+		Extent3.SRV_CNTRCT_ID IS NOT NULL THEN Extent3.SRV_CNTRCT_REF_NO
+		ELSE
+		'N' END) AS SRV_CNTRCT_ID,
+		(CASE
+		WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0
+		THEN
+		(CASE
+		WHEN LENGTH(Extent2.SALES_ORD_NO) > 7 THEN
+		SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) || '0' ||
+		TRIM(Extent2.SALES_ORD_NO)
+		ELSE
+		SUBSTR(TRIM(Extent3.SRV_CNTRCT_REF_NO),5,7) ||
+		TRIM(Extent2.SALES_ORD_NO)
+		END)
+		ELSE
+		(CASE
+		WHEN
+		LENGTH(Extent2.SALES_ORD_NO) = 7 AND SUBSTR(Extent2.SALES_ORD_NO,0,1)
+		= '0' THEN
+		TRIM(SUBSTR(Extent2.SALES_ORD_NO,2,LENGTH(Extent2.SALES_ORD_NO)))
+		ELSE
+		TRIM(Extent2.SALES_ORD_NO)
+		END)
+		END) AS CNTRCT_N_ORD_NO
+		FROM
+		PAY0057D
+		Extent1
+		JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID =
+		Extent1.SALES_ORD_ID
+		LEFT JOIN SAL0077D Extent3 ON
+		Extent3.SRV_CNTRCT_ID =
+		Extent1.SVC_CNTRCT_ID
+		LEFT JOIN SYS0038M Extent4
+		ON Extent4.STUS_CODE_ID = Extent1.STUS_CODE_ID
+		LEFT JOIN SYS0047M
+		Extent5 ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		LEFT JOIN SYS0047M
+		Extent6 ON Extent6.USER_ID = Extent1.UPD_USER_ID
+
+		WHERE 1 = 1
+		<if test="enrollmentId != null and enrollmentId != ''">
+			AND Extent1.ENRL_ID = #{enrollmentId}
+		</if>
+		<if test="status != null and status != ''">
+			AND Extent1.STUS_CODE_ID = #{status}
+		</if>
+		ORDER BY
+		Extent1.ACC_NO ASC
+	</select>
+
+	<resultMap id="h2hMap" type="egovMap" />
+	<select id="generateNewEEnrollment" statementType="CALLABLE"
+		parameterType="Map">
+		{
+		call
+		SP_INST_GEN_EENRL(#{issueBank},#{debitDt1},#{userId},#{p1,
+		mode=OUT,
+		jdbcType=CURSOR, javaType=ResultSet, resultMap=h2hMap})
+
+		}
+
+	</select>
+
+	<select id="deactivateEEnrollmentStatus" statementType="CALLABLE"
+		parameterType="Map">
+		{
+		call
+		SP_UPD_DEACT_EENRL(#{enrollId},#{userId})
+		}
+
+	</select>
+
+
+
+
+
+</mapper>

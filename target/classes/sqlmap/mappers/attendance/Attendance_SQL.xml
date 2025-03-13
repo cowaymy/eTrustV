@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.attendance.impl.AttendanceMapper">
+
+    <insert id="saveBatchCalMst" parameterType="Map">
+        INSERT INTO ATD0001M
+        (
+              BATCH_ID
+            , BATCH_MTH_YEAR
+            , BATCH_STUS_ID
+            , CRT_USER_ID
+            , CRT_DT
+        ) VALUES (
+	          ATD0001M_BATCH_ID_SEQ.NEXTVAL
+	        , #{batchMthYear}
+	        , '1'
+	        , #{crtUserId}
+	        , SYSDATE
+        )
+    </insert>
+
+    <insert id="saveBatchCalDetailList" parameterType="java.util.List">
+        INSERT INTO ATD0002D
+        (
+              ATD_ID
+            , BATCH_ID
+            , ATD_TYPE
+            , MEM_CODE
+            , MANAGER_CODE
+            , DT_FROM
+            , DT_TO
+            , TIME
+            , DISAB
+            , CRT_USER_ID
+            , CRT_DT
+        )
+        SELECT ATD0002D_ATD_ID_SEQ.nextval, #{batchId}, atdType, memCode, managerCode, dateFrom, dateTo, time ,disab, crtUserId, crtDt FROM (
+	        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+	         SELECT
+	              #{item.atdType} atdType
+	            , #{item.memCode} memCode
+	            , #{item.managerCode} managerCode
+	            , TO_DATE(#{item.dateFrom}, 'DD/MM/RRRR') dateFrom
+	            , TO_DATE(#{item.dateTo}, 'DD/MM/RRRR') dateTo
+	            , TO_DATE(#{item.time}, 'HH:MI.SS PM') time
+	            , '0' disab
+	            , #{item.crtUserId} crtUserId
+	            , SYSDATE crtDt
+	         FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="updateBatchCalMst" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                  BATCH_STUS_ID = 4
+           WHERE BATCH_ID = #{batchId}
+           AND BATCH_STUS_ID =1
+    </update>
+
+     <update id="updateMemberInfo" parameterType="Map">
+        MERGE INTO ATD0002D A
+        USING (
+	              SELECT DISTINCT
+	                    A.BATCH_ID
+	                  , A.MEM_CODE
+	                  , C.MEM_ID
+	                  , C.MEM_LVL
+	                  , C.DEPT_CODE
+	                  , C.GRP_CODE
+	                  , C.ORG_CODE
+	              FROM ATD0002D A
+	              JOIN ATD0001M B ON A.BATCH_ID = B.BATCH_ID
+	              JOIN ORG1002V C ON A.MEM_CODE = C.MEM_CODE AND TO_CHAR (TO_DATE(C.HIST_MONTH||HIST_YEAR,'MM/YYYY'), 'MM/YYYY') = B.BATCH_MTH_YEAR
+        )SRC ON ( A.MEM_CODE = SRC.MEM_CODE AND A.BATCH_ID =SRC.BATCH_ID )
+        WHEN MATCHED THEN UPDATE
+        SET A.MEM_ID = SRC.MEM_ID
+             ,A.MEM_LVL = SRC.MEM_LVL
+             ,A.DEPT_CODE = SRC.DEPT_CODE
+             ,A.GRP_CODE = SRC.GRP_CODE
+             ,A.ORG_CODE = SRC.ORG_CODE
+    </update>
+
+    <select id="selectCurrentBatchId" resultType="int">
+            SELECT NVL(MAX(BATCH_ID), 1) AS BATCH_ID FROM ATD0001M
+    </select>
+
+
+    <select id="searchAtdUploadList" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+			SELECT
+			      A.BATCH_ID
+			    , FN_GET_STUS_DESC(A.BATCH_STUS_ID,1) AS STUS
+			    , A.BATCH_MTH_YEAR
+			    , CRT_DT
+			    , B.USER_NAME
+			FROM ATD0001M A
+			LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+			WHERE 1=1
+			AND A.BATCH_STUS_ID <> 8
+        ]]>
+        <if test="calMonthYear != null and calMonthYear != '' ">
+            AND ( A.BATCH_MTH_YEAR = #{calMonthYear} )
+        </if>
+
+         ORDER BY 1 DESC
+
+    </select>
+
+     <select id="checkDup" parameterType="Map" resultType="int">
+      <![CDATA[
+            SELECT
+                    COUNT(*)
+            FROM ATD0001M
+            WHERE BATCH_MTH_YEAR = #{batchMthYear}
+            AND BATCH_STUS_ID  <> 8
+      ]]>
+     </select>
+
+      <update id="disableBatchCalMst" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 8
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_MTH_YEAR = #{batchMthYear}
+    </update>
+
+     <update id="deleteUploadBatch" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 8
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <update id="disableBatchCalDtl" parameterType="Map">
+           UPDATE ATD0002D
+           SET
+                    DISAB = 1
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <update id="disableBatchAtdRate" parameterType="Map">
+         MERGE INTO ATD0004D A
+              USING(
+	                  SELECT DISTINCT B.YEAR , B.MONTH
+	                  FROM ATD0001M  A
+	                  JOIN ATD0004D  B ON B.YEAR=EXTRACT (YEAR FROM TO_DATE(A.BATCH_MTH_YEAR,'MM/YYYY')) AND B.MONTH=EXTRACT (MONTH FROM TO_DATE(A.BATCH_MTH_YEAR,'MM/YYYY'))
+	                  WHERE BATCH_ID= #{batchId}
+          )SRC ON ( A.YEAR = SRC.YEAR AND A.MONTH = SRC.MONTH )
+          WHEN MATCHED THEN
+                UPDATE SET A.UPD_DT = SYSDATE
+                DELETE WHERE A.YEAR=SRC.YEAR AND A.MONTH=SRC.MONTH
+    </update>
+
+    <update id="approveUploadBatch" parameterType="Map">
+           UPDATE ATD0001M
+           SET
+                    BATCH_STUS_ID = 4
+                  , UPD_USER_ID = #{crtUserId}
+                  , UPD_DT =SYSDATE
+          WHERE BATCH_ID = #{batchId}
+    </update>
+
+    <select id="getTransferData" parameterType="Map" resultType="egovMap">
+        SELECT
+            BATCH_ID,
+            TO_CHAR(DT_FROM, 'DD/MM/YYYY') DT_FROM,
+            TO_CHAR(DT_TO + 1, 'DD/MM/YYYY') DT_TO,
+            TO_CHAR(TIME, 'HH24:MI:SS') TIME,
+            MEM_CODE,
+            ATD_TYPE
+        FROM ATD0002D
+        WHERE BATCH_ID = #{batchId}
+        AND ATD_TYPE NOT IN ('A0001', 'A0002')
+    </select>
+
+     <select id="selectManagerCode" parameterType="Map" resultType="egovMap">
+		   SELECT  DISTINCT
+	                    A.MANAGER_CODE AS CODE_ID
+	                  , A.MANAGER_CODE AS CODE_NAME
+			FROM ATD0005D A
+			WHERE NVL(A.DISAB,0) = 0
+			<if test="memLvl != null and memLvl != '' ">
+	            <choose>
+	                  <when test="memLvl == 1">
+	                        AND A.RANK = 6988
+	                   </when>
+	                   <when test="memLvl == 2">
+	                        AND A.RANK = 6989
+	                   </when>
+	                    <when test="memLvl == 3">
+	                        AND A.RANK = 6990
+	                   </when>
+	             </choose>
+	        </if>
+			ORDER BY 2
+	</select>
+
+	<select id="checkIfHp" parameterType="Map" resultType="int">
+	   SELECT COUNT(*) FROM ORG0001D WHERE MEM_CODE = #{memCode} AND MEM_TYPE = 1 AND STUS = 1
+	</select>
+
+	<select id="searchAtdManagementList" parameterType="Map" resultType="egovMap">
+	   SELECT
+                  ATD_DATE, ATD_DAY, TYPE, YEAR, MONTH, MANAGER_CODE
+                , NVL(INFO_TECH,0) INFO_TECH, NVL(E_LEAVE,0) E_LEAVE, NVL(PUBLIC_HOLIDAY,0) PUBLIC_HOLIDAY, NVL(TRAINING,0) TRAINING
+                , CASE WHEN INFO_TECH = 1 AND (TO_CHAR(TIME, 'HH24MI') <![CDATA[ > ]]> '0901'  OR TO_CHAR(TIME, 'HH24MI') <![CDATA[ < ]]> '0500')
+                       THEN 'LATE'
+                       WHEN  INFO_TECH = 1 AND TO_CHAR(TIME, 'HH24MI')    <![CDATA[ < ]]>  '0901'  THEN  TO_CHAR(TIME, 'HH24:MI:SS')
+                  ELSE '-' END AS TIME
+                , CASE WHEN INFO_TECH = 1 AND (TO_CHAR(TIME, 'HH24MI') <![CDATA[ > ]]> '0901' OR TO_CHAR(TIME, 'HH24MI') <![CDATA[ < ]]> '0500') THEN 0
+                       WHEN TRIM(ATD_DAY) IN ('SATURDAY','SUNDAY') THEN 0
+                       WHEN TYPE IS NULL THEN 0
+                  ELSE 1 END AS ATTENDANCE
+            FROM (
+            SELECT * FROM (
+            SELECT * FROM (
+                     WITH DAY_LIST AS
+                       (
+                            SELECT
+                                TO_CHAR(TO_DATE(ATD_DATE,'DD/MM/YYYY'),'YYYY/MM/DD') AS ATD_DATE ,   #{managerCode} MANAGER_CODE
+                            FROM
+                            (
+                                SELECT
+                                    TO_CHAR(LEVEL) || '/' || TO_CHAR(#{calMonthYear})  AS ATD_DATE
+                                FROM DUAL CONNECT BY LEVEL  <![CDATA[ <=  ]]> TO_CHAR(LAST_DAY(TO_DATE(#{calMonthYear}, 'MM/YYYY')),'DD')
+                            )
+
+                        ),
+                            ATD_LIST AS (
+			                            SELECT
+			                                  A.BATCH_ID
+			                                , B.TIME
+			                                , EXTRACT (YEAR FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) YEAR
+			                                , EXTRACT (MONTH FROM TO_DATE(BATCH_MTH_YEAR,'MM/YYYY')) MONTH
+			                                , B.MEM_CODE
+			                                , B.ATD_TYPE
+			                                , B.MANAGER_CODE
+			                                , B.DT_FROM
+			                                , B.DT_TO
+			                            FROM ATD0001M A
+			                            JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
+			                            WHERE 1=1
+			                            AND A.BATCH_STUS_ID = 4
+			                            AND NVL(B.DISAB,0) = 0
+			                            AND BATCH_MTH_YEAR = #{calMonthYear}
+			                            AND MANAGER_CODE =   #{managerCode}
+                        )
+                        SELECT
+                               A.ATD_DATE
+                             , TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY') AS ATD_DAY
+                             , A.MANAGER_CODE
+                             , b.ATD_TYPE
+                             , b.ATD_TYPE TYPE
+                             , B.TIME
+                             , B.YEAR
+                             , B.MONTH
+                             , 1 ATD_CHECK
+                             , ROW_NUMBER() OVER(PARTITION BY A.ATD_DATE ORDER BY B.TIME ASC) ROW_NUM
+                        FROM DAY_LIST A
+                        LEFT JOIN ATD_LIST B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM,'YYYY/MM/DD') AND TO_CHAR(B.DT_TO,'YYYY/MM/DD')
+                        GROUP BY A.ATD_DATE, TO_CHAR(TO_DATE(A.ATD_DATE,'YYYY/MM/DD'), 'DAY'), B.ATD_TYPE, B.TIME, B.YEAR, B.MONTH, A.MANAGER_CODE
+                     ) WHERE ROW_NUM = 1 ) PIVOT (SUM(ATD_CHECK) FOR ATD_TYPE IN ('A0001' AS Info_Tech, 'A0002' AS E_Leave,'A0003' AS Public_Holiday,'A0004' AS Training ))
+        )
+        ORDER BY 1
+	</select>
+
+
+	<resultMap id="atdRate" type="egovMap" />
+
+    <select id="atdRateCalculation" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_ATD_RATE_CALCULATION(#{batchId},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=atdRate})
+      }
+     </select>
+
+     <select id="selectYearList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+           SELECT (TO_CHAR(SYSDATE,'YYYY')) + (LEVEL-1) CODE_ID, (TO_CHAR(SYSDATE,'YYYY')) + (LEVEL-1) CODE_NAME  FROM DUAL
+           CONNECT BY LEVEL <= (TO_CHAR(SYSDATE,'RRRR') - (TO_CHAR(SYSDATE,'YYYY') - 5) + 1 )
+      ]]>
+    </select>
+
+
+    <update id="updateManagerCode" parameterType="Map">
+          MERGE INTO ATD0002D A
+		  USING (
+			    SELECT DISTINCT A.BATCH_ID,A.MEM_CODE , C.DEPT_CODE,C.GRP_CODE, C.ORG_CODE
+			    FROM ATD0002D A
+			    JOIN ORG0001D B ON A.MEM_CODE = B.MEM_CODE
+			    JOIN ORG1002V C ON C.MEM_ID = B.MEM_ID
+			    WHERE C.HIST_MONTH =EXTRACT(MONTH FROM TO_DATE(#{batchMthYear},'MM/YYYY'))
+			          AND C.HIST_YEAR =EXTRACT(YEAR FROM TO_DATE(#{batchMthYear},'MM/YYYY'))
+			          AND A.BATCH_ID = #{batchId}
+		  )SRC ON (A.BATCH_ID = SRC.BATCH_ID AND A.MEM_CODE=SRC.MEM_CODE AND NVL(DISAB,0)=0)
+		  WHEN MATCHED THEN
+		  UPDATE SET A.DEPT_CODE = SRC.DEPT_CODE,A.GRP_CODE = SRC.GRP_CODE,A.ORG_CODE = SRC.ORG_CODE, UPD_USER_ID =#{crtUserId}, UPD_DT =SYSDATE
+    </update>
+
+    <select id="getDownline" parameterType="Map" resultType="egovMap">
+        SELECT
+		    A.MANAGER_CODE CODE
+		FROM ATD0005D A
+		JOIN ORG0005D B ON A.MANAGER_CODE = B.DEPT_CODE AND MEM_LVL <![CDATA[ < ]]> 4 AND MEM_LVL <![CDATA[ <> ]]> 0
+		<choose>
+		  <when test="managerCode != null and managerCode != ''">
+		      WHERE LEVEL = 2
+		      START WITH MANAGER_CODE = #{managerCode}
+		  </when>
+		  <otherwise>
+		      WHERE LEVEL = 1
+              START WITH RANK = 6988
+		  </otherwise>
+		</choose>
+		CONNECT BY PRIOR MEM_ID = MEM_UP_ID
+    </select>
+
+    <select id="getDownlineHP" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_CODE || ' - ' || B.NAME CODE
+        FROM ORG0005D A
+        JOIN ORG0001D B ON A.MEM_ID = B.MEM_ID AND A.MEM_LVL = 4
+        LEFT JOIN ORG0011D C ON B.MEM_CODE = C.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+        WHERE A.DEPT_CODE = #{managerCode}
+        <if test="isNeo != null and isNeo != ''">
+            <choose>
+	          <when test="isNeo eq 'Y'.toString()">
+	              AND C.HP_CODE IS NOT NULL
+	          </when>
+	          <when test="isNeo eq 'N'.toString()">
+	              AND C.HP_CODE IS NULL
+	          </when>
+	        </choose>
+        </if>
+    </select>
+
+    <select id="getMemberInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ORG_CODE,
+            A.GRP_CODE,
+            A.DEPT_CODE,
+            A.MEM_CODE,
+            NVL(HP_TYPE, ' ') HP_TYPE,
+            A.MEM_LVL
+        FROM ORG1001V A
+        LEFT JOIN ORG0011D B ON A.MEM_CODE = B.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE, 'MM') AND NVL(IS_NW,0)=0
+        JOIN ORG0001D C ON A.MEM_ID = C.MEM_ID
+            AND (
+                TRUNC(TRM_DT, 'MM') <![CDATA[ >= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+                OR TRUNC(RESIGN_DT, 'MM') <![CDATA[ >= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+                OR C.STUS = 1
+            )
+            AND TRUNC(C.JOIN_DT, 'MM') <![CDATA[ <= ]]> TO_DATE(#{calMonthYear}||'01', 'YYYYMMDD')
+        WHERE 1=1
+        AND C.MEM_TYPE = 1
+        <choose>
+            <when test="memCode == 'ALL'">
+                <foreach item="item" collection="members" open="AND A.MEM_CODE IN (" separator="," close=")">
+			          #{item}
+			    </foreach>
+            </when>
+            <otherwise>
+		        <if test="orgCode != null and orgCode != ''">
+		            AND A.ORG_CODE = #{orgCode}
+		        </if>
+		        <if test="grpCode != null and grpCode != ''">
+		            AND A.GRP_CODE = #{grpCode}
+		        </if>
+		        <if test="deptCode != null and deptCode != ''">
+		            AND A.DEPT_CODE = #{deptCode}
+		        </if>
+		        <if test="memCode != null and memCode != ''">
+		            AND A.MEM_CODE = #{memCode}
+		        </if>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectExcelAttd" parameterType="Map" resultType="egovMap">
+        SELECT
+		    ( ATD_DATE
+		      || ' '
+		      || TO_CHAR(TIME, 'HH24:MI:SS') ) AS "START",
+		    TYPE ATTEND_TYPE_CODE,
+		    MEM_CODE,
+		    ORG_CODE,
+		    GRP_CODE,
+		    DEPT_CODE,
+		    MEM_LVL,
+		    HP_TYPE
+		FROM
+		    (
+		        WITH DAY_LIST AS (
+		            SELECT
+		                TO_CHAR(TO_DATE(ATD_DATE, 'DD/MM/YYYY'), 'YYYY/MM/DD') AS ATD_DATE
+		            FROM
+		                (
+		                    SELECT
+		                        TO_CHAR(LEVEL)
+		                        || '/'
+		                        || TO_CHAR(#{d}) AS ATD_DATE
+		                    FROM
+		                        DUAL
+		                    CONNECT BY
+		                        LEVEL <![CDATA[ <= ]]> TO_CHAR(LAST_DAY(TO_DATE(#{d}, 'MM/YYYY')), 'DD')
+		                )
+		        ), ATD_LIST AS (
+		            SELECT
+		                A.BATCH_ID,
+		                B.TIME,
+		                EXTRACT(YEAR FROM TO_DATE(BATCH_MTH_YEAR, 'MM/YYYY')) YEAR,
+		                EXTRACT(MONTH FROM TO_DATE(BATCH_MTH_YEAR, 'MM/YYYY')) MONTH,
+		                B.MEM_CODE,
+		                B.ATD_TYPE,
+		                B.MANAGER_CODE,
+		                B.DT_FROM,
+		                B.DT_TO
+		            FROM
+		                     ATD0001M A
+		                JOIN ATD0002D B ON A.BATCH_ID = B.BATCH_ID
+		            WHERE
+		                    1 = 1
+		                AND A.BATCH_STUS_ID = 4
+		                AND NVL(B.DISAB, 0) = 0
+		                AND BATCH_MTH_YEAR = #{d}
+		        )
+		        SELECT
+		            A.ATD_DATE,
+		            B.MEM_CODE,
+		            B.ATD_TYPE TYPE,
+		            B.TIME,
+		            C.ORG_CODE,
+		            C.GRP_CODE,
+		            C.DEPT_CODE,
+		            C.MEM_LVL,
+		            NVL(HP_TYPE, ' ') HP_TYPE,
+		            ROW_NUMBER() OVER(PARTITION BY A.ATD_DATE
+		                ORDER BY
+		                    B.TIME ASC
+		            ) ROW_NUM
+		        FROM
+		                 DAY_LIST A
+		            JOIN ATD_LIST  B ON A.ATD_DATE BETWEEN TO_CHAR(B.DT_FROM, 'YYYY/MM/DD') AND TO_CHAR(B.DT_TO, 'YYYY/MM/DD')
+		            JOIN ORG1001V  C ON C.MEM_CODE = B.MEM_CODE
+		                               <if test="orgCode != null and orgCode != ''">
+								            AND C.ORG_CODE = #{orgCode}
+								        </if>
+								        <if test="grpCode != null and grpCode != ''">
+								            AND C.GRP_CODE = #{grpCode}
+								        </if>
+								        <if test="deptCode != null and deptCode != ''">
+								            AND C.DEPT_CODE = #{deptCode}
+								        </if>
+								        <if test="memCode != null and memCode != ''">
+								            AND C.MEM_CODE = #{memCode}
+								        </if>
+		            LEFT JOIN ORG0011D  D ON C.MEM_CODE = D.HP_CODE
+		                                    AND PV_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+		                                    AND PV_MONTH = TO_CHAR(SYSDATE, 'MM')
+		                                    AND NVL(IS_NW, 0) = 0
+		        GROUP BY
+		            A.ATD_DATE,
+		            B.ATD_TYPE,
+		            B.TIME,
+		            B.MEM_CODE,
+		            C.DEPT_CODE,
+		            C.GRP_CODE,
+		            C.ORG_CODE,
+		            C.MEM_LVL,
+		            HP_TYPE
+		    )
+		WHERE
+		    ROW_NUM = 1
+		ORDER BY
+		    MEM_CODE,
+		    ATD_DATE
+    </select>
+
+    <select id="getMemCode" parameterType="Map" resultType="String">
+        SELECT MEM_CODE FROM ORG0001D A JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+        WHERE B.DEPT_CODE = #{managerCode} AND MEM_LVL <![CDATA[ <> ]]> 4
+    </select>
+
+    <select id="selectHPReporting" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.MEM_LVL RANK,
+            A.MEM_CODE,
+            A.NAME,
+            B.DEPT_CODE,
+            B.GRP_CODE,
+            B.ORG_CODE
+        FROM ORG0001D A
+        JOIN ORG1001V B ON A.MEM_ID = B.MEM_ID
+        WHERE 1=1
+        <if test="memCode != '' and memCode != null">
+	        AND A.MEM_CODE = #{memCode}
+        </if>
+        <if test="orgCode != '' and orgCode != null">
+            AND B.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != '' and grpCode != null">
+            AND B.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != '' and deptCode != null">
+            AND B.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memLvl != '' and memLvl != null">
+            AND B.MEM_LVL = #{memLvl}
+        </if>
+    </select>
+
+    <select id="getReportingBranch" resultType="egovMap">
+        SELECT MEET_POINT_ID, MEET_POINT_CODE || '_' || MEET_POINT_DESC NAME FROM SYS0089M WHERE MEET_POINT_CODE LIKE 'ABC%' OR MEET_POINT_CODE LIKE 'CBC%' ORDER BY MEET_POINT_DESC
+    </select>
+
+    <select id="atdMigrateMonth" resultType="String">
+        SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = 558 AND ROWNUM = 1 ORDER BY CODE_ID
+    </select>
+  </mapper>

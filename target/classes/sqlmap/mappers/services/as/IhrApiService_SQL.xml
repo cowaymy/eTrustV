@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.as.impl.IhrApiServiceMapper">
+
+  <select id="selectSyncIhr" parameterType="Map" resultType="egovMap">
+
+   select distinct B.SALES_ORD_NO,
+   TO_CHAR (A.AS_SETL_DT, 'YYYYMMDD') AS AS_SETL_DT,
+   A.AS_DEFECT_PART_ID,
+   C.DEFECT_CODE AS DEFECT_CODE_DP,
+   C.DEFECT_DESC AS DEFECT_DESC_DP,
+   A.AS_DEFECT_DTL_RESN_ID,
+   D.DEFECT_CODE AS DEFECT_CODE_DD,
+   D.DEFECT_DESC AS DEFECT_DESC_DD,
+   A.AS_DEFECT_ID ,
+   E.DEFECT_CODE AS DEFECT_CODE_DC,
+   E.DEFECT_DESC AS DEFECT_DESC_DC,
+
+   (select Defect_ID from SYS0100M where DEFECT_TYP = 'DT' and DEFECT_CODE = '0800') AS AS_DEFECT_TYPE_ID,
+   (select DEFECT_CODE from SYS0100M where DEFECT_TYP = 'DT' and DEFECT_CODE = '0800') AS DEFECT_CODE_DT,
+   (select DEFECT_DESC from SYS0100M where DEFECT_TYP = 'DT' and DEFECT_CODE = '0800') AS DEFECT_DESC_DT,
+
+   (select Defect_ID from SYS0100M where DEFECT_TYP = 'SC' and DEFECT_CODE = '0816') AS AS_SLUTN_RESN_ID,
+   (select DEFECT_CODE from SYS0100M where DEFECT_TYP = 'SC' and DEFECT_CODE = '0816') AS DEFECT_CODE_SC,
+   (select DEFECT_DESC from SYS0100M where DEFECT_TYP = 'SC' and DEFECT_CODE = '0816') AS DEFECT_DESC_SC
+
+   FROM SVC0109D A, SAL0001D B, SYS0100M C, SYS0100M D , SYS0100M E
+   WHERE A.AS_SO_ID = B.SALES_ORD_ID
+   AND A.AS_DEFECT_PART_ID = C.DEFECT_ID
+   AND A.AS_DEFECT_DTL_RESN_ID = D.DEFECT_ID
+   AND A.AS_DEFECT_ID = E.DEFECT_ID
+   AND (EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) -1 FROM dual)
+   OR EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual))
+<!-- AND EXTRACT(YEAR FROM A.AS_SETL_DT) IN (SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual)  -->
+   AND A.AS_RESULT_STUS_ID = '4'
+<!--    AND B.SALES_ORD_NO = '3253370' -->
+
+    AND B.SALES_ORD_NO = #{salesOrderNo}
+
+   </select>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.purchase.impl.PurchasePriceMapper">
+    <select id="purchasePriceList" parameterType="map" resultType="EgovMap">
+        SELECT 
+                LG78M.SEQ_NO,
+                LG78M.INFO_RCORD_NO,
+                LG78M.VENDOR,
+                LG78M.MATRL_MST,
+                LG78M.PURCHS_INFO_RCORD_CTGRY,
+                LG78M.PURCHS_ORG,
+                LG78M.PURCHS_ORG_TXT,
+                LG78M.VENDOR_TXT,
+                LG78M.MATRL_TXT,
+                LG78M.PURCHS_GRP,
+                LG78M.PURCHS_GRP_TXT,
+                LG78M.MARK_DEL,
+                LG78M.PLAN_DELVRY_TM_DAY,
+                LG78M.TAX_CODE,
+                LG78M.TAX_CODE_TXT,
+                TO_CHAR(TO_DATE(LG78M.VALID_START_DT,'YYYYMMDD'),'DD/MM/YYYY') VALID_START_DT,
+                TO_CHAR(TO_DATE(LG78M.VALID_END_DT,'YYYYMMDD'),'DD/MM/YYYY') VALID_END_DT,
+                LG78M.PURCHS_PRC,
+                LG78M.CUR,
+                (SELECT CODE FROM SYS0013M WHERE CODE_ID=LG78M.CUR) CURNAME,
+                LG78M.CONDI_PRC_UNIT,
+                LG78M.CONDI_UNIT,
+                LG78M.PRC_DTERMIN_DT_CNTRL,
+                SY26M.STK_ID,
+                SY26M.STK_CODE,
+                SY26M.STK_DESC,
+                SY26M.STK_CTGRY_ID,
+                SY26M.STK_TYPE_ID,
+                (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=SY26M.STK_TYPE_ID) TYPE,
+                SY26M.STUS_CODE_ID,
+                SY26M.IS_SIRIM,
+                SY26M.IS_NCV,
+                SY26M.QTY_PER_CARTON,
+                SY26M.UPD_USER_ID,
+                SY26M.UPD_DT,
+                SY26M.IS_SYNCH,
+                SY26M.NET_WT,
+                SY26M.GROS_WT,
+                SY26M.MEASURE_CBM,
+                SY26M.MASTER_STK_ID,
+                SY26M.STK_GRAD,
+                SY26M.STK_IMG,
+                SY26M.BS_POINT,
+                SY26M.UNIT_VALU,
+                SY26M.STK_COMM_OS_AS,
+                SY26M.STK_COMM_AS,
+                SY26M.STK_COMM_OS_BS,
+                SY26M.STK_COMM_BS,
+                SY26M.STK_COMM_OS_INS,
+                SY26M.STK_COMM_INS,
+                SY26M.STK_ALLOW_SALES,
+                SY26M.IS_SVC_STK,
+                SY26M.SERIAL_CHK,
+                SY26M.UOM
+        FROM LOG0078M LG78M, SYS0026M SY26M
+              WHERE LG78M.MATRL_MST = SY26M.STK_CODE
+              <if test="vendercd !=null and vendercd !=''">
+               AND LG78M.VENDOR LIKE #{vendercd}||'%'
+              </if>
+              <if test="mstcd !=null and mstcd !=''">
+               AND LG78M.MATRL_MST LIKE #{mstcd}||'%'
+              </if>
+<!--               <if test="msttype !=null and msttype !=''"> -->
+<!--                AND SY26M.STK_TYPE_ID    = #{msttype} -->
+<!--               </if> -->
+              <if test="msttype != null and msttype !=''">
+		        AND SY26M.STK_TYPE_ID IN
+		        <foreach item="item" collection="msttype" index="index" open="(" separator="," close=")">
+		         #{item}
+		        </foreach>
+             </if>  
+              <if test="purchasorg !=null and purchasorg !=''">
+               AND LG78M.PURCHS_ORG = #{purchasorg}
+              </if>
+              <if test="excludedelete eq 'Y'.toString()">
+               AND LG78M.MARK_DEL IS NULL
+               AND TO_CHAR(SYSDATE,'YYYYMMDD')  BETWEEN LG78M.VALID_START_DT AND LG78M.VALID_END_DT
+              </if>
+               ORDER BY  LG78M.SEQ_NO
+    
+    </select>
+    
+</mapper>

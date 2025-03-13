@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.batchtokenize.service.impl.BatchTokenizeMapper">
+    <delete id="delSAL0323T" >
+        DELETE FROM SAL0323T
+    </delete>
+
+      <insert id="insertSAL0323T" parameterType="Map">
+              INSERT INTO SAL0323T (FAIL_RESN_ID,CUST_ID,NRIC,ORDER_NO,CARD_HOLDER,CARD_NO,CARD_EXP,CARD_TYPE,BANKNAME,CRC_TYPE)
+              select
+                  case
+                        when b.cust_id is null then 3488
+                        when b1.cust_id is null then 3490
+                        when b2.cust_id is null then 3489
+                        when length(replace(a.CardNumber,'-','')) <![CDATA[ <>]]> 16 then 3491
+                        when c1.bank_id is null then 3492
+                        when d1.code_id is null then 3493
+                  else 0
+                  end as fail_resn,
+                  a.CowayCustId,
+                  regexp_replace(a.NricOrPassport, '(\d+)\.(\d+)(\d)(.+)', '\1\2'),
+                  a.OrderNo,
+                  a.FullName,
+                  replace(a.CardNumber,'-',''),
+                  TO_CHAR(TO_DATE(a.CardEXP,'Mon-YY'),'MMYY'),
+                  case
+                    when a.CardType = 'Credit Card' then 1241
+                    when a.CardType = 'Debit Card' then 1240
+                  end as Card_Type,
+                  c1.bank_id,
+                  a.crc_type
+                  FROM (
+                        <foreach collection="list" item="item" index="index" separator= "union">
+                        select
+                          #{item.0} CowayCustId,
+                          #{item.1} NricOrPassport,
+                          #{item.2} Status,
+                          #{item.3} DocumentPath,
+                          #{item.4} DateCreated,
+                          #{item.5} OrderNo,
+                          #{item.6} FullName,
+                          #{item.7} AccHolderName,
+                          #{item.8} CardNumber,
+                          #{item.9} CardEXP,
+                          #{item.10} CardType,
+                          #{item.11} BankName,
+                          CASE WHEN substr(#{item.8},0,1) = 4 THEN 112
+                               WHEN substr(#{item.8},0,1) = 5 THEN 111 ELSE 0 END crc_type
+                        FROM DUAL
+                         </foreach>
+                  ) a
+                  left join sal0029d b on b.cust_id = a.CowayCustId
+                  left join sal0029d b1 on b1.cust_id = a.CowayCustId and  b1.nric like '%'||regexp_replace(a.NricOrPassport, '(\d+)\.(\d+)(\d)(.+)', '\1\2')||'%'
+                  left join sal0029d b2 on UPPER(trim(b2.name)) =  a.FullName and b2.cust_id = a.CowayCustId
+                  left join sys0109m c on SELFCARE_BANK_NAME = A.BankName
+                  left join sys0004m c1 on c1.code = c.etrust_bank_name
+                  left join sys0013m d1 on a.crc_type = d1.code_id
+    </insert>
+
+
+    <select id="displayRecord" resultType="egovMap">
+        select A.CUST_ID,A.ORDER_NO,A.CARD_HOLDER,C.NAME,CASE WHEN A.FAIL_RESN_ID = 0 THEN NULL ELSE B.RESN_DESC END AS FAIL_REASON   from SAL0323T A
+            LEFT JOIN SYS0032M B on A.FAIL_RESN_ID = B.RESN_ID
+            LEFT JOIN SYS0038M C ON A.CONVERT_STATUS = C.STUS_CODE_ID
+        </select>
+
+    <select id="selectdataForCSV" parameterType="Map"  resultType="egovMap">
+        select * from(select   LPAD(NRIC, 12, '0') || LPAD(CUST_ID, 12, '0') || LPAD(SUBSTR(CARD_NO,0,6), 12, '0') refno,
+            CARD_NO custCrcNo,
+            CARD_EXP custCrcExpr
+        from SAL0320D
+        where  1=1
+        AND BATCH_TOKENIZE_ID = #{batchid}
+        AND CONVERT_STATUS = 1)
+        group by refno,CUSTCRCNO,CUSTCRCEXPR
+        </select>
+
+    <update id="maskCrcNO" parameterType="Map">
+        update SAL0320D SET card_no = substr(card_no,0,6)||'******'||substr(card_no,-4,16) WHERE BATCH_TOKEN_ID = #{batchId}
+    </update>
+
+    <select id="selectBatchID" resultType="egovMap">
+        SELECT GBSLCVD.SAL0319M_ID_SEQ.nextval as batchID FROM DUAL
+    </select>
+
+    <select id="selectBatchTokenizeRecord" resultType="egovMap">
+        SELECT A.BATCH_TOKENIZE_NO Batch_NO, COUNT(B.BATCH_TOKENIZE_ID) AS Total_Item ,A.BATCH_TOKENIZE_ID Batch_ID,
+            D.NAME Batch_Status,A.CRT_DT Crt_Dt, C.USER_Name as Crt_User
+        FROM SAL0319M A
+        JOIN SAL0320D B ON A.BATCH_TOKENIZE_ID = B.BATCH_TOKENIZE_ID
+        JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+        JOIN SYS0038M D ON A.STATUS = D.STUS_CODE_ID
+        WHERE 1=1
+        <if test="batchNo != null and batchNo != ''">
+            AND A.BATCH_TOKENIZE_NO = #{batchNo}
+        </if>
+        <if test="createStDate != null and createStDate != ''">
+            <![CDATA[ AND A.CRT_DT >= TO_DATE(#{createStDate}, 'DD/MM/YYYY') ]]>
+        </if>
+        <if test="createEnDate != null and createEnDate != ''">
+            <![CDATA[ AND A.CRT_DT <= TO_DATE(#{createEnDate}, 'DD/MM/YYYY') +1 ]]>
+        </if>
+        <if test="crtUserName != null and crtUserName != ''">
+            AND C.USER_Name = #{crtUserName}
+        </if>
+        GROUP BY A.BATCH_TOKENIZE_NO,D.NAME,A.CRT_DT,C.USER_Name,A.BATCH_TOKENIZE_ID
+        ORDER BY A.BATCH_TOKENIZE_ID DESC
+    </select>
+
+    <select id="batchTokenizeDetail" resultType="egovMap">
+        SELECT A.BATCH_TOKENIZE_NO Batch_NO, COUNT(B.BATCH_TOKENIZE_ID) AS Total_Item ,A.BATCH_TOKENIZE_ID Batch_ID,
+            D.NAME Batch_Status,A.CRT_DT Crt_Dt, C.USER_Name as Crt_User
+        FROM SAL0319M A
+        JOIN SAL0320D B ON A.BATCH_TOKENIZE_ID = B.BATCH_TOKENIZE_ID
+        JOIN SYS0047M C ON A.CRT_USER_ID = C.USER_ID
+        JOIN SYS0038M D ON A.STATUS = D.STUS_CODE_ID
+        WHERE A.BATCH_TOKENIZE_ID = #{batchId}
+        GROUP BY A.BATCH_TOKENIZE_NO,D.NAME,A.CRT_DT,C.USER_Name,A.BATCH_TOKENIZE_ID
+    </select>
+
+    <select id="batchTokenizeViewItmJsonList" resultType="egovMap">
+        SELECT B.ORDER_NO, B.CUST_ID ,B.CARD_NO,D.NAME Status,C.RESN_DESC,B.UDP_DT UDP_Dt
+	        FROM SAL0320D B
+	        LEFT JOIN SYS0032M C ON C.RESN_ID = B.FAIL_RESN_ID
+	        JOIN SYS0038M D ON B.CONVERT_STATUS = D.STUS_CODE_ID
+	        WHERE B.BATCH_TOKENIZE_ID = #{batchId}
+        ORDER BY B.CUST_ID
+    </select>
+
+    <insert id="insertSAL0319M" parameterType="Map">
+        INSERT INTO SAL0319M values(
+	        #{batchid},
+	        'BPC'||LPAD(#{batchid}, 7, '0'),
+	        1,
+	        NULL,
+	        #{userId},
+	        sysdate,
+	        #{userId},
+	        sysdate
+        )
+    </insert>
+
+    <update id="maskCRCNO" parameterType="Map">
+        UPDATE SAL0320D
+            SET CARD_No = substr(Card_No,0,6)||'******'||substr(Card_No,-4,4)
+            WHERE   BATCH_TOKENIZE_ID = #{batchid}
+    </update>
+
+    <insert id="insertSAL0320D" parameterType="Map">
+        <![CDATA[
+        INSERT into sal0320D (
+            select #{batchid},order_no,
+            CASE WHEN b.sales_ord_no = NULL THEN 21
+                     WHEN c.mode_id = 135 THEN 21
+            ELSE status END
+            ,A.CUST_ID
+            ,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,sysdate,#{userId},sysdate,#{userId},crc_type,
+                CASE WHEN c.mode_id = 135 THEN 3496
+                        ELSE a.fail_resn_id END
+                , null
+                FROM (select 112 batch_id, regexp_substr(order_no, '[^\s **]+', 1, level) order_no,
+                CASE WHEN fail_resn_id <> 0 THEN 21 ELSE 1 END AS status,
+                CUST_ID,nric,CARD_NO,CARD_EXP,CARD_TYPE,card_holder,BANKNAME,crc_type,
+                fail_resn_id, null
+                    from sal0323T
+                    connect by regexp_substr(order_no, '[^\s **]+', 1, level) is not null AND PRIOR cust_id = cust_id
+                    AND PRIOR SYS_GUID() IS NOT NULL) a
+         LEFT JOIN sal0001d b on b.sales_ord_no = a.order_no
+         LEFT JOIN sal0074d c on b.sales_ord_id = c.sales_ord_id)
+            ]]>
+    </insert>
+
+</mapper>

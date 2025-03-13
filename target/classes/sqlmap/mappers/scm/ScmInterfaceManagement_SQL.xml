@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmInterfaceManagementMapper">
+
+<!-- SCM Interface -->
+<!-- Search & etc -->
+<select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
+SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
+     , SUBSTR(A.IF_TIME, 1, 2) || ':' || SUBSTR(A.IF_TIME, 3, 2) || ':' || SUBSTR(IF_TIME, 5, 2) AS IF_TIME
+     , A.IF_SEQ
+     , A.IF_TYPE
+     , B.CODE_NAME AS IF_TYPE_NAME
+     , A.IF_STATUS
+     , C.CODE_NAME AS IF_STATUS_NAME
+     , A.IF_CYCLE
+     , D.CODE_NAME AS IF_CYCLE_NAME
+     , A.EXEC_CNT
+     , A.CONTS
+     , A.ERR_MSG
+  FROM SCM0055L A
+  LEFT OUTER JOIN SYS0013M B ON (A.IF_TYPE = B.CODE AND B.CODE_MASTER_ID = 352) /* CODE_MASTER_ID = 352 : SCM Interface Type */
+  LEFT OUTER JOIN SYS0013M C ON (A.IF_STATUS = C.CODE AND C.CODE_MASTER_ID = 405) /* CODE_MASTER_ID = 405 : SCM Interface Status */
+  LEFT OUTER JOIN SYS0013M D ON (A.IF_CYCLE = D.CODE AND D.CODE_MASTER_ID = 404) /* CODE_MASTER_ID = 352 : SCM Interface Cycle */
+ WHERE A.IF_DATE BETWEEN #{startDate} AND #{endDate}
+	<if test="scmIfTypeCbBox != null and ! scmIfTypeCbBox.isEmpty">
+   AND A.IF_TYPE IN
+		<foreach item="item" collection="scmIfTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+	<if test="scmIfStatusCbBox != null and ! scmIfStatusCbBox.isEmpty">
+   AND A.IF_STATUS IN
+		<foreach item="item" collection="scmIfStatusCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.IF_DATE DESC, A.IF_TIME DESC, A.IF_SEQ DESC, A.IF_TYPE, A.IF_STATUS
+</select>
+<insert id="scmIf155" parameterType="Map">
+INSERT INTO ITF0155M
+(
+       IF_KEY
+     , SEQ
+     , IF_TYPE
+     , TRAN_STATUS_CD
+     , TRAN_DT
+     , TRAN_TM
+     , RGST_DT
+     , RGST_TM
+     , RGST_ID
+     , PO_ID
+     , PO_NO
+     , PO_ITM_NO
+     , VENDOR
+     , PO_ISSU_DT
+     , CDC
+     , STOCK_CODE
+     , QTY
+     , FOB_AMT
+     , FOB_PRC
+     , PRC_UNIT
+     , CUR
+ )
+SELECT '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || LPAD(A.IF_KEY + A.IF_KEY_SEQ, 7, '0') AS IF_KEY
+     , A.SEQ
+     , '155' AS IF_TYPE
+     , '10' AS TRAN_STATUS_CD
+     , TO_CHAR(SYSDATE, 'YYYYMMDD') AS TRAN_DT
+     , TO_CHAR(SYSDATE, 'HH24MISS') AS TRAN_TM
+     , TO_CHAR(SYSDATE, 'YYYYMMDD') AS RGST_DT
+     , TO_CHAR(SYSDATE, 'HH24MISS') AS RGST_TM
+     , #{crtUserId} AS RGST_ID
+     , A.PO_ID
+     , A.PO_NO
+     , A.PO_ITM_NO
+     , A.VENDOR
+     , A.PO_ISSU_DT
+     , A.CDC
+     , A.STOCK_CODE
+     , A.QTY
+     , A.FOB_AMT
+     , A.FOB_PRC
+     , A.PRC_UNIT
+     , A.CUR
+  FROM (
+        SELECT ROW_NUMBER() OVER (PARTITION BY A.PO_ID ORDER BY B.PO_NO, B.PO_ITEM_NO) AS IF_KEY
+             , ROW_NUMBER() OVER (PARTITION BY B.PO_NO ORDER BY B.PO_ITEM_NO) AS SEQ
+             , (
+                SELECT CASE WHEN MAX(IF_KEY) IS NULL THEN 0
+                            ELSE TO_NUMBER(SUBSTR(MAX(IF_KEY), 11))
+                            END AS IF_KEY_SEQ
+                  FROM ITF0155M
+                 WHERE IF_KEY LIKE '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || '%'
+                ) AS IF_KEY_SEQ
+             , A.PO_ID
+             , B.PO_NO
+             , B.PO_ITEM_NO AS PO_ITM_NO
+             , B.VENDOR
+             , TO_CHAR(A.CRT_DT, 'YYYYMMDD') AS PO_ISSU_DT
+             , A.CDC
+             , B.STOCK_CODE
+             , B.PO_QTY AS QTY
+             , B.FOB_AMT
+             , B.FOB_PRC
+             , B.PRC_UNIT
+             , B.CURR AS CUR
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
+         WHERE B.PO_NO = #{poNo}
+           AND B.PO_ITEM_NO = #{poItemNo}
+        ) A
+</insert>
+<insert id="insertSCM0039M" parameterType="Map">
+INSERT INTO SCM0039M
+(
+       PO_NO
+     , PO_ITEM_NO
+     , STOCK_CODE
+     , PO_DT
+     , PO_QTY
+     , PO_ITEM_STUS_ID
+ )
+VALUES
+(
+       #{poNo}
+     , #{poItemNo}
+     , #{stockCode}
+     , TO_CHAR(SYSDATE, 'YYYYMMDD')
+     , #{poQty}
+     , #{poItemStusId}
+ )
+</insert>
+
+<!-- log -->
+<insert id="insertLog" parameterType="Map">
+INSERT INTO SCM0055L
+(
+       IF_DATE
+     , IF_TYPE
+     , IF_CYCLE
+     , IF_SEQ
+     , IF_TIME
+     , IF_STATUS
+     , EXEC_CNT
+     , FILE_NAME
+     , FILE_SIZE
+     , ERR_MSG
+ )
+VALUES
+(
+       #{ifDate}
+     , #{ifType}
+     , #{ifCycle}
+     , #{ifSeq}
+     , #{ifTime}
+     , #{ifStatus}
+     , #{execCnt}
+     , #{fileName}
+     , #{fileSize}
+     , #{errMsg}
+ )
+</insert>
+
+<!-- Procedure Batch -->
+<resultMap id="executeSP_SCM_0039M_ITF0156Map" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0039M_ITF0156" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0039M_ITF0156(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0039M_ITF0156Map}
+                             , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0039M_ITF0156Map})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0039M_ITF0160Map" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0039M_ITF0160" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call SP_SCM_0039M_ITF0160(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0039M_ITF0160Map}
+                             , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0039M_ITF0160Map})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0050S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0050S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0050S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0050S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0050S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0051S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0051S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0051S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0051S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0051S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0051S_INSERT_CALLMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0051S_INSERT_CALL" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0051S_INSERT_CALL(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0051S_INSERT_CALLMap}
+                                        , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0051S_INSERT_CALLMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0052S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0052S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0052S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0052S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0052S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_SCM_0053S_INSERTMap" type="egovMap"></resultMap>
+<select id="executeSP_SCM_0053S_INSERT" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_SCM_0053S_INSERT(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_SCM_0053S_INSERTMap}
+                                   , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_SCM_0053S_INSERTMap})
+ }
+</select>
+
+<resultMap id="executeSP_MTH_SCM_FILTER_FRCSTMap" type="egovMap"></resultMap>
+<select id="executeSP_MTH_SCM_FILTER_FRCST" parameterType="Map" resultType="egovMap" statementType="CALLABLE">
+{
+     call executeSP_MTH_SCM_FILTER_FRCST(#{status, mode=OUT, jdbcType=DECIMAL, javaType=INTEGER, resultMap=executeSP_MTH_SCM_FILTER_FRCSTMap}
+                                       , #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=executeSP_MTH_SCM_FILTER_FRCSTMap})
+ }
+</select>
+
+
+<!-- FTP Supply Plan RTP Batch -->
+<select id="selectTodayWeekTh" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN SCM_MONTH || SCM_WEEK = '121' THEN SCM_YEAR + 1 ELSE SCM_YEAR END AS SCM_YEAR
+     , CASE WHEN SCM_MONTH || SCM_WEEK = '121' THEN 1 ELSE SCM_MONTH END AS SCM_MONTH
+     , MIN(SCM_WEEK) AS SCM_WEEK
+  FROM SCM0018M
+ WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AND TO_CHAR(SCM_WEEK_END, 'YYYYMMDD')
+ GROUP BY SCM_YEAR, SCM_MONTH, SCM_WEEK
+</select>
+<select id="selectScmIfSeq" parameterType="Map" resultType="egovMap">
+SELECT NVL(MAX(IF_SEQ), 0) + 1 AS SEQ
+  FROM SCM0055L
+ WHERE IF_DATE = #{ifDate}
+   AND IF_TYPE = #{ifType}
+</select>
+<delete id="deleteSupplyPlanRtp" parameterType="Map">
+DELETE FROM SCM0056S
+ WHERE PLAN_YEAR = #{planYear}
+   AND PLAN_WEEK = #{planWeek}
+</delete>
+<insert id="mergeSupplyPlanRtp" parameterType="Map">
+MERGE INTO SCM0056S
+USING DUAL ON (PLAN_YEAR = #{planYear} AND PLAN_WEEK = #{planWeek} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+   SET W01 = #{w01}, W02 = #{w02}, W03 = #{w03}, W04 = #{w04}, W05 = #{w05}, W06 = #{w06}, W07 = #{w07}, W08 = #{w08}, W09 = #{w09}, W10 = #{w10}
+     , W11 = #{w11}, W12 = #{w12}, W13 = #{w13}, W14 = #{w14}, W15 = #{w15}, W16 = #{w16}, W17 = #{w17}, W18 = #{w18}, W19 = #{w19}, W20 = #{w20}
+     , W21 = #{w21}, W22 = #{w22}, W23 = #{w23}, W24 = #{w24}, W25 = #{w25}, W26 = #{w26}, W27 = #{w27}, W28 = #{w28}, W29 = #{w29}, W30 = #{w30}
+     , WS1 = #{ws1}, WS2 = #{ws2}, WS3 = #{ws3}, WS4 = #{ws4}, WS5 = #{ws5}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = 'mergeSupplyPlanRpt'
+WHEN NOT MATCHED THEN
+INSERT
+(PLAN_YEAR, PLAN_WEEK, STOCK_CODE,
+ W01, W02, W03, W04, W05, W06, W07, W08, W09, W10,
+ W11, W12, W13, W14, W15, W16, W17, W18, W19, W20,
+ W21, W22, W23, W24, W25, W26, W27, W28, W29, W30,
+ WS1, WS2, WS3, WS4, WS5,
+ CRT_USER_ID)
+VALUES
+(#{planYear}, #{planWeek}, #{stockCode},
+ #{w01}, #{w02}, #{w03}, #{w04}, #{w05}, #{w06}, #{w07}, #{w08}, #{w09}, #{w10},
+ #{w11}, #{w12}, #{w13}, #{w14}, #{w15}, #{w16}, #{w17}, #{w18}, #{w19}, #{w20},
+ #{w21}, #{w22}, #{w23}, #{w24}, #{w25}, #{w26}, #{w27}, #{w28}, #{w29}, #{w30},
+ #{ws1}, #{ws2}, #{ws3}, #{ws4}, #{ws5},
+ 'mergeSupplyPlanRpt')
+</insert>
+<select id="selectSupplyPlanRtpCommon" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_YEAR, A.PLAN_MONTH, A.PLAN_WEEK, A.START_YEAR, A.START_MONTH, A.START_WEEK
+     , CASE WHEN A.M0_FST_SPLT_YN = 'N' THEN (SELECT COUNT(*) FROM SCM0018M WHERE CAL_ID BETWEEN A.FROM_CAL_ID AND A.TO_CAL_ID)
+            ELSE CASE WHEN A.PLAN_MONTH = 1 THEN (SELECT COUNT(*) FROM SCM0018M WHERE CAL_ID BETWEEN A.FROM_CAL_ID AND A.TO_CAL_ID)
+                      ELSE (SELECT COUNT(*) FROM SCM0018M WHERE CAL_ID BETWEEN A.FROM_CAL_ID + 1 AND A.TO_CAL_ID)
+                      END
+            END AS START_POINT
+     , A.FROM_CAL_ID, A.TO_CAL_ID
+     , A.M0_YEAR, A.M0_MONTH, A.M0_FST_WEEK, A.M0_FST_SPLT_YN, A.M0_WEEK_CNT
+     , A.M1_YEAR, A.M1_MONTH, A.M1_FST_WEEK, A.M1_FST_SPLT_YN, A.M1_WEEK_CNT
+     , A.M2_YEAR, A.M2_MONTH, A.M2_FST_WEEK, A.M2_FST_SPLT_YN, A.M2_WEEK_CNT
+     , A.M3_YEAR, A.M3_MONTH, A.M3_FST_WEEK, A.M3_FST_SPLT_YN, A.M3_WEEK_CNT
+     , A.M4_YEAR, A.M4_MONTH, A.M4_FST_WEEK, A.M4_FST_SPLT_YN, A.M4_WEEK_CNT
+  FROM (
+        SELECT A.PLAN_YEAR, A.PLAN_MONTH, A.PLAN_WEEK, A.START_YEAR, A.START_MONTH, A.START_WEEK
+             , (SELECT MIN(CAL_ID) FROM SCM0018M WHERE SCM_YEAR = A.M0_YEAR AND SCM_WEEK = A.M0_FST_WEEK) AS FROM_CAL_ID
+             , (SELECT MAX(CAL_ID) FROM SCM0018M WHERE SCM_YEAR = A.START_YEAR AND SCM_MONTH = A.START_MONTH AND SCM_WEEK = A.START_WEEK) AS TO_CAL_ID
+             , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = A.M0_YEAR AND SCM_MONTH = A.M0_MONTH) AS M0_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = A.M1_YEAR AND SCM_MONTH = A.M1_MONTH) AS M1_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = A.M2_YEAR AND SCM_MONTH = A.M2_MONTH) AS M2_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = A.M3_YEAR AND SCM_MONTH = A.M3_MONTH) AS M3_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = A.M4_YEAR AND SCM_MONTH = A.M4_MONTH) AS M4_WEEK_CNT
+             , (SELECT DECODE(COUNT(*), 1, 'N', 'Y') FROM SCM0018M WHERE SCM_YEAR = A.M0_YEAR AND SCM_WEEK = A.M0_FST_WEEK) AS M0_FST_SPLT_YN
+             , (SELECT DECODE(COUNT(*), 1, 'N', 'Y') FROM SCM0018M WHERE SCM_YEAR = A.M1_YEAR AND SCM_WEEK = A.M1_FST_WEEK) AS M1_FST_SPLT_YN
+             , (SELECT DECODE(COUNT(*), 1, 'N', 'Y') FROM SCM0018M WHERE SCM_YEAR = A.M2_YEAR AND SCM_WEEK = A.M2_FST_WEEK) AS M2_FST_SPLT_YN
+             , (SELECT DECODE(COUNT(*), 1, 'N', 'Y') FROM SCM0018M WHERE SCM_YEAR = A.M3_YEAR AND SCM_WEEK = A.M3_FST_WEEK) AS M3_FST_SPLT_YN
+             , (SELECT DECODE(COUNT(*), 1, 'N', 'Y') FROM SCM0018M WHERE SCM_YEAR = A.M4_YEAR AND SCM_WEEK = A.M4_FST_WEEK) AS M4_FST_SPLT_YN
+             , A.M0_FST_WEEK, A.M1_FST_WEEK, A.M2_FST_WEEK, A.M3_FST_WEEK, A.M4_FST_WEEK
+             , A.M0_YEAR, A.M1_YEAR, A.M2_YEAR, A.M3_YEAR, A.M4_YEAR
+             , A.M0_MONTH, A.M1_MONTH, A.M2_MONTH, A.M3_MONTH, A.M4_MONTH
+          FROM (
+                SELECT Z.PLAN_YEAR, Z.PLAN_MONTH, Z.PLAN_WEEK, Z.PLAN_YEAR_LAST_WEEK
+                     , CASE WHEN Z.PLAN_WEEK + 5 + 1 <![CDATA[ > ]]> Z.PLAN_YEAR_LAST_WEEK THEN Z.PLAN_YEAR + 1
+                            ELSE Z.PLAN_YEAR
+                            END AS START_YEAR
+                     , CASE WHEN Z.PLAN_WEEK + 5 + 1 <![CDATA[ > ]]> Z.PLAN_YEAR_LAST_WEEK THEN (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = Z.PLAN_YEAR + 1 AND SCM_WEEK = (Z.PLAN_WEEK + 5 + 1 - Z.PLAN_YEAR_LAST_WEEK))
+                            ELSE (SELECT MAX(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = Z.PLAN_YEAR AND SCM_WEEK = (Z.PLAN_WEEK + 5 + 1))
+                            END AS START_MONTH
+                     , CASE WHEN Z.PLAN_WEEK + 5 + 1 <![CDATA[ > ]]> Z.PLAN_YEAR_LAST_WEEK THEN Z.PLAN_WEEK + 5 + 1 - Z.PLAN_YEAR_LAST_WEEK
+                            ELSE Z.PLAN_WEEK + 5 + 1
+                            END AS START_WEEK
+                     , (SELECT MIN(SCM_WEEK) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M0_FST_WEEK
+                     , (SELECT MIN(SCM_WEEK) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M1_FST_WEEK
+                     , (SELECT MIN(SCM_WEEK) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M2_FST_WEEK
+                     , (SELECT MIN(SCM_WEEK) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M3_FST_WEEK
+                     , (SELECT MIN(SCM_WEEK) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M4_FST_WEEK
+                     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M0_MONTH
+                     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M1_MONTH
+                     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M2_MONTH
+                     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M3_MONTH
+                     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M4_MONTH
+                     , (SELECT MIN(SCM_YEAR) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M0_YEAR
+                     , (SELECT MIN(SCM_YEAR) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M1_YEAR
+                     , (SELECT MIN(SCM_YEAR) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M2_YEAR
+                     , (SELECT MIN(SCM_YEAR) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M3_YEAR
+                     , (SELECT MIN(SCM_YEAR) FROM SCM0018M WHERE SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(Z.PLAN_YEAR) || LPAD(Z.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AND SCM_MONTH || SCM_WEEK != '121') AS M4_YEAR
+                  FROM (
+                        SELECT TO_NUMBER(#{scmYearCbBox}) AS PLAN_YEAR
+                             , (SELECT TO_NUMBER(MIN(SCM_MONTH)) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_WEEK = #{scmWeekCbBox}) AS PLAN_MONTH
+                             , TO_NUMBER(#{scmWeekCbBox}) AS PLAN_WEEK
+                             , (SELECT TO_NUMBER(MAX(SCM_WEEK)) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_WEEK_SEQ = 1) AS PLAN_YEAR_LAST_WEEK
+                          FROM DUAL
+                        ) Z
+                ) A
+        ) A
+</select>
+<select id="selectUpdateTarget" parameterType="Map" resultType="egovMap">
+SELECT NVL(B.PLAN_YEAR, 9999) AS PLAN_YEAR
+     , NVL(B.PLAN_WEEK, 99) AS PLAN_WEEK
+     , A.STOCK_CODE
+     , NVL(B.W01, 0) AS W01, NVL(B.W02, 0) AS W02, NVL(B.W03, 0) AS W03, NVL(B.W04, 0) AS W04, NVL(B.W05, 0) AS W05, NVL(B.W06, 0) AS W06
+     , NVL(B.W07, 0) AS W07, NVL(B.W08, 0) AS W08, NVL(B.W09, 0) AS W09, NVL(B.W10, 0) AS W10, NVL(B.W11, 0) AS W11, NVL(B.W12, 0) AS W12
+     , NVL(B.W13, 0) AS W13, NVL(B.W14, 0) AS W14, NVL(B.W14, 0) AS W15, NVL(B.W16, 0) AS W16, NVL(B.W17, 0) AS W17, NVL(B.W18, 0) AS W18
+     , NVL(B.W19, 0) AS W19, NVL(B.W20, 0) AS W20, NVL(B.W21, 0) AS W21, NVL(B.W22, 0) AS W22, NVL(B.W23, 0) AS W23, NVL(B.W24, 0) AS W24
+     , NVL(B.W25, 0) AS W25, NVL(B.W26, 0) AS W26, NVL(B.W27, 0) AS W27, NVL(B.W28, 0) AS W28, NVL(B.W29, 0) AS W29, NVL(B.W30, 0) AS W30
+  FROM (
+        SELECT DISTINCT A.PLAN_YEAR
+             , A.PLAN_WEEK
+             , B.STOCK_CODE
+          FROM SCM0005M A
+          LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+         WHERE A.PLAN_YEAR = #{scmYearCbBox}
+           AND A.PLAN_WEEK = #{scmWeekCbBox}
+           AND B.PSI_ID = 3
+        ) A
+  LEFT OUTER JOIN SCM0056S B ON (A.PLAN_YEAR = B.PLAN_YEAR AND A.PLAN_WEEK = B.PLAN_WEEK AND A.STOCK_CODE = B.STOCK_CODE AND B.EXEC_YN = 'N')
+ ORDER BY A.STOCK_CODE
+</select>
+<select id="selectSupplyPlanPsi3" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_YEAR
+     , A.PLAN_WEEK
+     , B.STOCK_CODE
+     , SUM(NVL(B.M0, 0)) AS M0
+     , SUM(NVL(B.M1, 0)) AS M1
+     , SUM(NVL(B.M2, 0)) AS M2
+     , SUM(NVL(B.M3, 0)) AS M3
+     , SUM(NVL(B.M4, 0)) AS M4
+     , SUM(NVL(B.W01, 0)) AS W01
+     , SUM(NVL(B.W02, 0)) AS W02
+     , SUM(NVL(B.W03, 0)) AS W03
+     , SUM(NVL(B.W04, 0)) AS W04
+     , SUM(NVL(B.W05, 0)) AS W05
+     , SUM(NVL(B.W06, 0)) AS W06
+     , SUM(NVL(B.W07, 0)) AS W07
+     , SUM(NVL(B.W08, 0)) AS W08
+     , SUM(NVL(B.W09, 0)) AS W09
+     , SUM(NVL(B.W10, 0)) AS W10
+     , SUM(NVL(B.W11, 0)) AS W11
+     , SUM(NVL(B.W12, 0)) AS W12
+     , SUM(NVL(B.W13, 0)) AS W13
+     , SUM(NVL(B.W14, 0)) AS W14
+     , SUM(NVL(B.W15, 0)) AS W15
+     , SUM(NVL(B.W16, 0)) AS W16
+     , SUM(NVL(B.W17, 0)) AS W17
+     , SUM(NVL(B.W18, 0)) AS W18
+     , SUM(NVL(B.W19, 0)) AS W19
+     , SUM(NVL(B.W20, 0)) AS W20
+     , SUM(NVL(B.W21, 0)) AS W21
+     , SUM(NVL(B.W22, 0)) AS W22
+     , SUM(NVL(B.W23, 0)) AS W23
+     , SUM(NVL(B.W24, 0)) AS W24
+     , SUM(NVL(B.W25, 0)) AS W25
+     , SUM(NVL(B.W26, 0)) AS W26
+     , SUM(NVL(B.W27, 0)) AS W27
+     , SUM(NVL(B.W28, 0)) AS W28
+     , SUM(NVL(B.W29, 0)) AS W29
+     , SUM(NVL(B.W30, 0)) AS W30
+  FROM SCM0005M A
+  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+   AND B.PSI_ID = 3
+ GROUP BY A.PLAN_YEAR, A.PLAN_WEEK, B.STOCK_CODE
+ ORDER BY B.STOCK_CODE
+</select>
+<update id="updateSupplyPlanRtp" parameterType="Map">
+UPDATE SCM0056S
+   SET EXEC_YN = 'Y'
+     , M0 = #{m0}, M1 = #{m1}, M2 = #{m2}, M3 = #{m3}, M4 = #{m4}
+     , W01 = #{w01}, W02 = #{w02}, W03 = #{w03}, W04 = #{w04}, W05 = #{w05}, W06 = #{w06}, W07 = #{w07}, W08 = #{w08}, W09 = #{w09}, W10 = #{w10}
+     , W11 = #{w11}, W12 = #{w12}, W13 = #{w13}, W14 = #{w14}, W15 = #{w15}, W16 = #{w16}, W17 = #{w17}, W18 = #{w18}, W19 = #{w19}, W20 = #{w20}
+     , W21 = #{w21}, W22 = #{w22}, W23 = #{w23}, W24 = #{w24}, W25 = #{w25}, W26 = #{w26}, W27 = #{w27}, W28 = #{w28}, W29 = #{w29}, W30 = #{w30}
+     , UPD_DT = SYSDATE
+     , UPD_USER_ID = 'updateSupplyPlanRpt'
+ WHERE PLAN_YEAR = #{planYear}
+   AND PLAN_WEEK = #{planWeek}
+   AND STOCK_CODE = #{stockCode}
+</update>
+
+<!-- FTP OTD SO Batch -->
+<update id="updateOtdSo" parameterType="Map">
+UPDATE SCM0039M
+   SET UPD_DT = SYSDATE
+     , UPD_USER_ID = 'updateOtdSo'
+     , SO_NO = #{soNo}
+     , SO_ITEM_NO = #{soItemNo}
+     , SO_DT = #{soDt}
+     , SO_QTY = #{soQty}
+ WHERE PO_NO = #{poNo}
+   AND STOCK_CODE = #{stockCode}
+</update>
+
+<!-- FTP OTD PP Batch -->
+<delete id="deleteOtdPp" parameterType="Map">
+DELETE FROM SCM0014D
+ WHERE PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT IN
+ (
+  SELECT PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT
+    FROM SCM0014D
+   GROUP BY PO_NO || SO_NO || SO_ITEM_NO || STOCK_CODE || PP_PROD_END_DT
+   HAVING COUNT(*) > 1
+  )
+</delete>
+<insert id="mergeOtdPp" parameterType="Map">
+MERGE INTO SCM0014D
+USING DUAL ON (IF_DATE = #{ifDate} AND PP_PROD_END_DT = #{ppProdEndDt} AND PO_NO = #{poNo} AND SO_NO = #{soNo} AND SO_ITEM_NO = #{soItemNo} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+  SET PP_PLAN_QTY = #{ppPlanQty}
+    , PP_PROD_QTY = #{ppProdQty}
+    , PP_PROD_START_DT = CASE WHEN #{ppProdStartDt} = '00000000' THEN PP_PROD_START_DT
+                              ELSE CASE WHEN PP_PROD_START_DT > #{ppProdStartDt} THEN #{ppProdStartDt}
+                                        ELSE PP_PROD_START_DT
+                                        END
+                              END
+WHEN NOT MATCHED THEN
+INSERT
+(
+       IF_DATE
+     , PO_NO
+     , SO_NO
+     , SO_ITEM_NO
+     , STOCK_CODE
+     , PP_PLAN_QTY
+     , PP_PROD_QTY
+     , PP_PROD_START_DT
+     , PP_PROD_END_DT
+ )
+VALUES
+(
+       #{ifDate}
+     , #{poNo}
+     , #{soNo}
+     , #{soItemNo}
+     , #{stockCode}
+     , #{ppPlanQty}
+     , #{ppProdQty}
+     , #{ppProdStartDt}
+     , #{ppProdEndDt}
+ )
+</insert>
+
+<!-- FTP OTD GI Batch -->
+<insert id="mergeOtdGi" parameterType="Map">
+MERGE INTO SCM0013D
+USING DUAL ON (PO_NO = #{poNo} AND SO_NO = #{soNo} AND SO_ITEM_NO = #{soItemNo} AND DELV_NO = #{delvNo} AND DELV_ITEM_NO = #{delvItemNo} AND STOCK_CODE = #{stockCode})
+WHEN MATCHED THEN
+UPDATE
+   SET GI_QTY = #{giQty}
+     , GI_DT = #{giDt}
+WHEN NOT MATCHED THEN
+INSERT
+(
+       PO_NO
+     , SO_NO
+     , SO_ITEM_NO
+     , DELV_NO
+     , DELV_ITEM_NO
+     , STOCK_CODE
+     , GI_QTY
+     , GI_DT
+ )
+VALUES
+(
+       #{poNo}
+     , #{soNo}
+     , #{soItemNo}
+     , #{delvNo}
+     , #{delvItemNo}
+     , #{stockCode}
+     , #{giQty}
+     , #{giDt}
+ )
+</insert>
+
+</mapper>

@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.PreBookingOrderMapper">
+
+<select id="selectPreBookingOrderList" parameterType="Map" resultType="egovMap">
+  SELECT * FROM (
+  SELECT
+  T1.PRE_BOOK_ID ,
+  T1.PRE_BOOK_NO ,
+  TO_CHAR(T1.PRE_BOOK_DT, 'DD/MM/YYYY') AS PRE_BOOK_DT ,
+  T1.CUST_VERIFY_STUS ,
+  T1.MEM_CODE ,
+  T1.CUST_ID ,
+  T2.NAME AS CUST_NAME ,
+  T1.SALES_ORD_ID_OLD ,
+  T3.STK_DESC ,
+  T4.SALES_ORD_NO ,
+  T5.ITM_STK_ID,
+  T6.STK_DESC AS PREV_STK_DESC ,
+  T7.CODE AS STUS_CODE,
+  T1.UPD_DT,
+  T1.DISC_WAIVE
+  ,CASE WHEN T1.CUST_VERIFY_STUS = 'Y' THEN (TO_CHAR(ADD_MONTHS(T1.PRE_BOOK_DT, T1.DISC_WAIVE), 'MM/YYYY'))
+  ELSE '' END AS CONVERT_MTH
+  FROM SAL0404M T1
+  LEFT JOIN SAL0029D T2 ON T1.CUST_ID = T2.CUST_ID
+  JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
+  LEFT JOIN SAL0001D T4 ON T1.SALES_ORD_ID_OLD = T4.SALES_ORD_ID
+  LEFT JOIN SAL0002D T5 ON T4.SALES_ORD_ID = T5.SALES_ORD_ID
+  LEFT JOIN SYS0026M T6 ON T5.ITM_STK_ID = T6.STK_ID
+  LEFT JOIN SYS0038M T7 ON T1.STUS_ID = T7.STUS_CODE_ID
+  LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
+  LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
+  WHERE 1=1
+  AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+  WHERE AA.CODE = BB.CODE
+  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+  <if test='_ordNo != null and _ordNo != ""'>
+    AND T1.PRE_BOOK_NO = #{_ordNo}
+  </if>
+  <if test='_memCode != null and _memCode != ""'>
+    AND T1.MEM_CODE = #{_memCode}
+  </if>
+  <if test='memType != null and memType != ""'>
+    AND T8.MEM_TYPE = #{memType}
+  </if>
+  <if test='verifyStatus != null and verifyStatus != ""'>
+    AND T1.CUST_VERIFY_STUS = #{verifyStatus}
+  </if>
+  <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
+    AND T1.PRE_BOOK_DT BETWEEN TO_DATE(#{_reqstStartDt} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') AND TO_DATE(#{_reqstEndDt} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+  </if>
+  <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
+    AND T1.PRE_BOOK_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')
+    AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
+  </if>
+  <if test='_nric != null and _nric != ""'>
+    AND T2.NRIC = #{_nric}
+  </if>
+  <if test='_name != null and _name != ""'>
+    AND T2.NAME LIKE #{_name}||'%'
+  </if>
+  <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
+    AND T7.CODE IN
+    <foreach item="item" collection="arrPreOrdStusId" index="index" open="(" separator="," close=")">
+      #{item, jdbcType=VARCHAR}
+    </foreach>
+  </if>
+  <if test='arrDiscWaive != null and arrDiscWaive != ""'>
+    AND T1.DISC_WAIVE IN
+    <foreach item="item" collection="arrDiscWaive" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </if>
+  <if test='arrAppType != null and arrAppType != ""'>
+    AND T4.APP_TYPE_ID IN
+    <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </if>
+  <if test="orgCode != '' ">
+    AND T9.ORG_CODE = #{orgCode}
+  </if>
+  <if test="grpCode != '' ">
+    AND T9.GRP_CODE = #{grpCode}
+  </if>
+  <if test="deptCode != '' ">
+    AND T9.DEPT_CODE = #{deptCode}
+  </if>
+  <if test='salesOrdNo != null and salesOrdNo != ""'>
+    AND T4.SALES_ORD_NO = #{salesOrdNo}
+  </if>
+  ORDER BY T1.PRE_BOOK_ID ASC
+  )
+  <if test='eliConvertMth != null and eliConvertMth != ""'>
+    WHERE CONVERT_MTH = #{eliConvertMth}
+  </if>
+
+</select>
+
+   <insert id="insertPreBooking" parameterType="com.coway.trust.biz.sales.order.vo.PreBookingOrderVO">
+       <selectKey keyProperty="preBookOrdId" resultType="Integer" order="BEFORE">
+            SELECT SAL0404M_PRE_BOOK_ID.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO SAL0404M
+        (
+             PRE_BOOK_ID
+             , PRE_BOOK_NO
+             , PRE_BOOK_DT
+             , CUST_ID
+             , CUST_VERIFY_STUS
+             , SALES_ORD_ID_OLD
+             , MEM_CODE
+             , STK_ID
+             , STUS_ID
+             , REM
+             , CRT_USER_ID
+             , CRT_DT
+             , UPD_USER_ID
+             , UPD_DT
+             , DISC_WAIVE
+        )
+        VALUES
+         (
+             #{preBookOrdId}
+             , #{preBookOrdNo}
+             , SYSDATE
+             , #{custId}
+             , #{custVerifyStus}
+             , #{salesOrdIdOld}
+             , #{memCode}
+             , #{stkId}
+             , #{stusId}
+             , #{rem}
+             , #{crtUserId}
+             , SYSDATE
+             , #{updUserId}
+             , SYSDATE
+             , #{discWaive}
+         )
+    </insert>
+
+   <select id="selectNextPreBookingNo" resultType="String">
+        SELECT DOC_NO_PREFIX || DOC_NO AS PREBOOKINGNO
+        FROM SYS0022C
+        WHERE DOC_NO_PREFIX = 'PB'
+    </select>
+
+    <update id="updatePreBookingNo" parameterType="Map">
+       UPDATE SYS0022C
+       SET DOC_NO = LPAD(TO_CHAR(TO_NUMBER(#{preBookingNo}) + 1) ,LENGTH(#{preBookingNo}),'0')
+       WHERE DOC_NO_PREFIX = 'PB'
+    </update>
+
+    <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
+          SELECT T1.SALES_ORD_NO
+                   , T4.CODE_NAME AS APP_TYPE
+                   , T3.STK_CODE
+                   , T3.STK_DESC
+                   , T1.PROMO_ID
+                   , T1.SALES_ORD_ID
+                   , (
+                          SELECT SYS3.IND
+                          FROM SYS0026M SYS1,
+                          SYS0013M SYS2,
+                          SYS0094M SYS3
+                          WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID
+                          AND SYS2.CODE_MASTER_ID = 11
+                          AND SYS2.CODE = SYS3.CODE(+) AND SYS1.STK_id = T2.ITM_STK_ID
+                     ) BUS_TYPE
+          FROM SAL0001D T1
+          JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+          JOIN SYS0026M T3 ON T3.STK_ID = T2.ITM_STK_ID
+          JOIN SYS0013M T4 ON T4.CODE_ID = T1.APP_TYPE_ID
+          LEFT JOIN SAL0095D T5 ON T5.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SALES_ORD_ID,'1')
+           WHERE T1.CUST_ID = #{custId}
+           AND T1.STUS_CODE_ID = 4
+           AND T1.APP_TYPE_ID IN (66,67,68,1412)
+       	   AND MONTHS_BETWEEN(
+       	   FN_GET_FIRST_DAY_MONTH(ADD_MONTHS(SRV_EXPR_DT,1)),
+            FN_GET_FIRST_DAY_MONTH(SYSDATE)) BETWEEN 1 AND 4
+    </select>
+
+    <select id="selectPreBookingOrderInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+        T1.PRE_BOOK_ID ,
+        T1.PRE_BOOK_NO ,
+        T1.CUST_VERIFY_STUS ,
+        T1.MEM_CODE ,
+        T1.CUST_ID ,
+        T1.STK_ID ,
+        T1.REM ,
+        T1.SALES_ORD_ID_OLD ,
+        T2.SALES_ORD_NO AS SALES_ORD_NO_OLD ,
+        T3.STK_DESC ,
+        T1.STUS_ID ,
+        T4.CODE AS STUS_CODE
+        FROM SAL0404M T1
+        LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
+        LEFT JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
+        LEFT JOIN SYS0038M T4 ON T1.STUS_ID = T4.STUS_CODE_ID
+        WHERE
+        T3.STK_CTGRY_ID IN (54,55,56,57,59,924,400)
+        AND T1.PRE_BOOK_ID = #{preBookId}
+    </select>
+
+    <select id="selectPreBookOrderCancelStatus" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+    SELECT
+        T2.NAME AS STUS
+        , REM
+        , T3.USER_NAME AS UPD_USER_ID
+        , UPD_DT
+        , CASE WHEN TO_CHAR(UPD_DT, 'HH12') < 12 THEN  TO_CHAR(UPD_DT, 'HH12:MI AM')
+          ELSE TO_CHAR(UPD_DT, 'HH12:MI PM') END AS UPD_TIME
+    FROM SAL0404M T1
+        JOIN SYS0038M T2 on T1.STUS_ID = T2.STUS_CODE_ID
+        JOIN SYS0047M T3 on T1.UPD_USER_ID = T3.USER_ID
+    WHERE
+    T1.PRE_BOOK_ID = #{preBookId}
+    AND T1.STUS_ID = 10
+    ORDER BY UPD_DT DESC
+     ]]>
+    </select>
+
+    <update id="updatePreBookOrderCancel" parameterType="Map">
+        UPDATE SAL0404M SET
+                      UPD_DT = SYSDATE
+                    , UPD_USER_ID  = #{updUserId}
+                    , STUS_ID = #{stusId}
+                    , CUST_VERIFY_STUS = #{custVerifyStus}
+                    , REM = #{rem}
+                  WHERE PRE_BOOK_ID = #{preBookId}
+    </update>
+
+     <select id="selectPreBookSalesPerson" parameterType="Map" resultType="egovMap">
+      SELECT T1.MEM_ID
+             , T1.MEM_CODE
+             , T1.NAME
+             , T1.NRIC
+             , T1.MEM_TYPE
+             , T2.CODE_NAME
+      FROM ORG0001D T1
+      LEFT JOIN SYS0013M T2 ON T1.MEM_TYPE = T2.CODE_ID
+      WHERE 1=1
+      <if test='memId != null and memId !=0'>
+                AND T1.MEM_ID = #{memId}
+      </if>
+      <if test='memCode != null and memCode !=""'>
+                AND T1.MEM_CODE = #{memCode}
+      </if>
+      <if test='memType != null and !memType.isEmpty()'>
+      AND T1.MEM_TYPE IN
+      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+                #{item.paramVal, jdbcType=INTEGER}
+      </foreach>
+      </if>
+    </select>
+
+    <select id="selectPreBookConfigurationPerson" parameterType="Map" resultType="egovMap">
+        SELECT *
+	    FROM ORG1001V Z
+	    WHERE Z.GRP_CODE IN (
+	       SELECT
+	<!--        		T2.MEM_ID -->
+	<!--              , T2.MEM_CODE -->
+	<!--              , T2.NAME -->
+	<!--              , T2.NRIC -->
+	<!--              , T2.MEM_TYPE -->
+	<!--              , T3.CODE_NAME -->
+	<!--              , T5.SALES_ORD_ID -->
+	<!--              , T5.SALES_ORD_NO -->
+	<!--              , T4.SRV_EXPR_DT -->
+		              T6.GRP_CODE
+	      FROM SAL0090D T1
+	      LEFT JOIN ORG0001D T2 ON T1.SRV_CODY_ID = T2.MEM_ID
+	      LEFT JOIN SYS0013M T3 ON T2.MEM_TYPE = T3.CODE_ID
+	      LEFT JOIN SAL0095D T4 ON T4.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T1.SRV_SO_ID,'1')
+	      LEFT JOIN SAL0001D T5 ON T1.SRV_SO_ID = T5.SALES_ORD_ID
+		  LEFT JOIN ORG1001V T6 ON T6.MEM_ID = T2.MEM_ID
+	      WHERE
+	      T1.SRV_STUS_ID = 1
+	      AND T4.SRV_STUS_CODE_ID = 4
+	      <if test='salesOrdId != null and salesOrdId !=0'>
+	                AND T5.SALES_ORD_ID = #{salesOrdId}
+	      </if>
+	      <if test='salesOrdNo != null and salesOrdNo !=""'>
+	                AND T5.SALES_ORD_NO = #{salesOrdNo}
+	      </if>
+<!-- 	      <if test='memId != null and memId !=0'> -->
+<!-- 	                AND T2.MEM_ID = #{memId} -->
+<!-- 	      </if> -->
+<!-- 	      <if test='memCode != null and memCode !=""'> -->
+<!-- 	                AND T2.MEM_CODE = #{memCode} -->
+<!-- 	      </if> -->
+	      <if test='memType != null and !memType.isEmpty()'>
+	      AND T2.MEM_TYPE IN
+	      <foreach item="item" collection="memType" index="index" open="(" separator="," close=")">
+	                #{item.paramVal, jdbcType=INTEGER}
+	      </foreach>
+	      </if>
+	 )
+     <if test='memId != null and memId !=0'>
+               AND Z.MEM_ID = #{memId}
+     </if>
+     <if test='memCode != null and memCode !=""'>
+               AND Z.MEM_CODE = #{memCode}
+     </if>
+    </select>
+
+    <select id="getPreBookingSmsTemplate" parameterType="Map" resultType="String">
+        SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'sales.msg.smsPreBookingExTrade'),
+        '{1}', #{preBookNo}),
+        '{2}', #{postCode}),
+        '{3}', #{memCode}),
+        '{4}', #{salesOrdNoOld})
+        FROM DUAL
+    </select>
+
+    <select id="selectPreBookOrderEligibleInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+        T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO , T1.PRE_BOOK_ID , T1.DISC_WAIVE , T1.STUS_ID ,
+        TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
+        FROM SAL0404M T1
+        LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
+        WHERE 1=1
+        AND T1.STUS_ID IN (1,4)
+        AND T2.STUS_CODE_ID = 4
+        AND T1.CUST_ID = #{custId}
+        AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
+        AND T1.CUST_VERIFY_STUS NOT IN ('N')
+        <![CDATA[
+        AND ROWNUM <= 1
+        ]]>
+  </select>
+
+  <select id="selectPreBookOrdDtlWA" parameterType="Map" resultType="egovMap">
+      SELECT
+        T1.PRE_BOOK_ID ,
+        T1.PRE_BOOK_NO ,
+        TO_CHAR(T1.PRE_BOOK_DT, 'DD/MM/YYYY') AS PRE_BOOK_DT ,
+        T1.CUST_VERIFY_STUS ,
+        T1.MEM_CODE ,
+        T1.CUST_ID ,
+        T2.NAME AS CUST_NAME ,
+        T10.TEL_M1 AS MOBILE_NO,
+        T1.SALES_ORD_ID_OLD ,
+        T3.STK_DESC ,
+        T4.SALES_ORD_NO ,
+        T5.ITM_STK_ID,
+        T6.STK_DESC AS PREV_STK_DESC ,
+        T7.CODE AS STUS_CODE,
+        T1.UPD_DT,
+        T1.DISC_WAIVE,
+        TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD
+        FROM SAL0404M T1
+        LEFT JOIN SAL0029D T2 ON T1.CUST_ID = T2.CUST_ID
+        JOIN SYS0026M T3 ON T1.STK_ID = T3.STK_ID
+        LEFT JOIN SAL0001D T4 ON T1.SALES_ORD_ID_OLD = T4.SALES_ORD_ID
+        LEFT JOIN SAL0002D T5 ON T4.SALES_ORD_ID = T5.SALES_ORD_ID
+        LEFT JOIN SYS0026M T6 ON T5.ITM_STK_ID = T6.STK_ID
+        LEFT JOIN SYS0038M T7 ON T1.STUS_ID = T7.STUS_CODE_ID
+        LEFT JOIN ORG0001D T8 ON T1.MEM_CODE = T8.MEM_CODE
+        LEFT JOIN ORG1001V T9 ON T8.MEM_ID = T9.MEM_ID
+        LEFT JOIN SAL0027D T10 ON T10.CUST_CNTC_ID = T4.CUST_CNT_ID AND T10.CUST_ID = T4.CUST_ID
+        WHERE 1=1
+        AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID
+                                                      FROM SYS0013M AA, SYS0094M BB
+                                                      WHERE AA.CODE = BB.CODE
+                                                      AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+        <![CDATA[
+        AND TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T1.PRE_BOOK_DT , 'DD/MM/YYYY')) <= 3
+        AND T1.STUS_ID = 1
+        AND T1.CUST_VERIFY_STUS <> 'N'
+        ]]>
+        AND T4.STUS_CODE_ID = 4
+       <if test='prebookno != null and prebookno != ""'>
+            AND T1.PRE_BOOK_NO = #{prebookno}
+       </if>
+       <if test='salesOrdNoOld != null and salesOrdNoOld !=""'>
+            AND T4.SALES_ORD_NO = #{salesOrdNoOld}
+       </if>
+       <if test='telno != null and telno !=""'>
+           AND T10.TEL_M1 = SUBSTR(#{telno},2)
+       </if>
+        ORDER BY T1.PRE_BOOK_ID ASC
+  </select>
+
+  <select id="selectPreBookOrdById" parameterType="Map" resultType="int">
+    <![CDATA[
+        SELECT COUNT(*) AS preBookOrder
+          FROM SAL0404M
+         WHERE PRE_BOOK_ID = #{preBookId}
+         AND CUST_VERIFY_STUS = 'ACT'
+         AND STUS_ID = 1
+    ]]>
+    </select>
+
+  <update id="updatePreBookOrderCustVerifyStus" parameterType="Map">
+        UPDATE SAL0404M
+        SET UPD_DT = SYSDATE
+            , UPD_USER_ID  = #{updUserId}
+            , CUST_VERIFY_STUS = #{custVerifyStus}
+        WHERE PRE_BOOK_ID = #{preBookId}
+        <if test='prebookno != null and prebookno != ""'>
+            AND PRE_BOOK_NO = #{prebookno}
+       </if>
+  </update>
+
+    <select id="selectPreBookOrderEligibleCheck" parameterType="Map" resultType="egovMap">
+        SELECT
+		T1.CUST_VERIFY_STUS , T1.PRE_BOOK_NO , T1.PRE_BOOK_ID , T1.DISC_WAIVE , T1.STUS_ID ,
+		TRUNC(TO_DATE(SYSDATE,'DD/MM/YYYY') - TO_DATE(T3.SRV_EXPR_DT , 'DD/MM/YYYY')) AS PRE_BOOK_PERIOD ,
+		CEIL(MONTHS_BETWEEN(TO_DATE(SYSDATE),TO_DATE(LAST_DAY(T3.SRV_EXPR_DT)))) AS MONTH_EXPIRED
+		FROM SAL0404M T1
+		LEFT JOIN SAL0001D T2 ON T1.SALES_ORD_ID_OLD = T2.SALES_ORD_ID
+		LEFT JOIN SAL0095D T3 ON T3.SRV_MEM_ID =  FN_GET_SAL0095D_MAX_ID(T2.SALES_ORD_ID,'1')
+		WHERE 1=1
+
+		AND T2.STUS_CODE_ID = 4
+		AND T1.CUST_ID = #{custId}
+		AND T1.SALES_ORD_ID_OLD = #{salesOrdIdOld}
+		AND T1.CUST_VERIFY_STUS NOT IN ('N','ACT')
+		AND T1.STUS_ID NOT IN (10)
+		AND TO_CHAR(ADD_MONTHS(T1.PRE_BOOK_DT, T1.DISC_WAIVE), 'MM/YYYY') = TO_CHAR(SYSDATE,'MM/YYYY')
+		<![CDATA[
+		AND ROWNUM <= 1
+		]]>
+  </select>
+</mapper>

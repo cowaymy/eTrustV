@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.coway.trust.biz.services.report.impl.ASReportMapper">
+
+  <select id="selectMemberCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_ID CODE_ID  ,
+           Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+           Project1.NAME NAME  ,
+           Project1.NRIC NRIC  ,
+           Project1.MEM_TYPE MEM_TYPE
+      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                    Extent1.MEM_CODE MEM_CODE  ,
+                    Extent1.MEM_TYPE MEM_TYPE  ,
+                    Extent1.NAME NAME  ,
+                    Extent1.NRIC NRIC
+             FROM ORG0001D Extent1
+             JOIN ORG0005D ORG5 ON ORG5.MEM_ID = Extent1.MEM_ID
+             WHERE ( 1 = Extent1.STUS )
+                   AND ( Extent1.MEM_TYPE = 3 )
+                   AND ( ORG5.MEM_LVL in ( '4','3','2') )
+
+                   <!-- By KV link with branch in as log book list jsp -->
+                   <if test="groupCode != null and groupCode !='' ">
+                     AND Extent1.BRNCH = #{groupCode}
+                   </if>
+      ) Project1
+      ORDER BY Project1.MEM_CODE ASC
+  </select>
+
+    <select id="selectMemberCodeList2" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_ID CODE_ID  ,
+           Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+           Project1.NAME NAME  ,
+           Project1.NRIC NRIC  ,
+           Project1.MEM_TYPE MEM_TYPE
+      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                    Extent1.MEM_CODE MEM_CODE  ,
+                    Extent1.MEM_TYPE MEM_TYPE  ,
+                    Extent1.NAME NAME  ,
+                    Extent1.NRIC NRIC
+             FROM ORG0001D Extent1
+             JOIN ORG0005D ORG5 ON ORG5.MEM_ID = Extent1.MEM_ID
+             WHERE ( 1 = Extent1.STUS )
+                   AND ( Extent1.MEM_TYPE in (5758,3) )
+                   AND ( ORG5.MEM_LVL in ( '4','3','2') )
+
+                   <!-- By KV link with branch in as log book list jsp -->
+
+                   <if test="groupCode != null and groupCode !='' ">
+                     AND Extent1.BRNCH IN
+                     <foreach item="item" collection="groupCode" index="index" open="(" separator="," close=")">
+                     #{item}
+                     </foreach>
+                   </if>
+      ) Project1
+      ORDER BY Project1.MEM_CODE ASC
+    </select>
+
+  <select id="selectOrderNum" parameterType="Map" resultType="egovMap">
+    SELECT GroupBy1.A1 C1,
+           GroupBy1.A2 C2
+    FROM ( SELECT MIN(Extent2.SALES_ORD_NO) A1,
+                  MAX(Extent2.SALES_ORD_NO) A2
+           FROM SVC0001D Extent1
+           JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.AS_SO_ID
+    ) GroupBy1
+  </select>
+
+  <select id="selectViewLedger" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+     SELECT Project1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID,
+            Project1.AS_DOC_NO AS_DOC_NO,
+            Project1.CODE_NAME CODE_NAME,
+            Project1.C1 C1,
+            Project1.C2 C2,
+            Project1.C3 C3,
+            Project1.C4 C4
+     FROM ( SELECT Extent1.AS_LDGR_ID AS AS_LDGR_ID,
+                   Extent1.AS_DOC_NO AS_DOC_NO,
+                   Extent1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID,
+                   Extent2.CODE_NAME CODE_NAME,
+                   CASE WHEN ( Extent1.AS_LG_DT IS NOT NULL )
+                        THEN TO_CHAR(Extent1.AS_LG_DT,'DD-MM-YYYY')
+                        ELSE TO_CHAR('1900-01-01','yyyy-mm-dd')
+                        END C1,
+                   CASE WHEN ( Extent1.AS_LG_AMT >0 )
+                        THEN Extent1.AS_LG_AMT
+                        ELSE 0
+                        END C2,
+                   CASE WHEN ( Extent1.AS_LG_AMT <= 0 )
+                        THEN Extent1.AS_LG_AMT
+                        ELSE 0
+                        END C3,
+                   CASE WHEN ( Extent1.AS_ADV_PAY IS NOT NULL )
+                        THEN Extent1.AS_ADV_PAY
+                        ELSE 0
+                        END C4
+            FROM PAY0006D Extent1
+            JOIN SYS0013M Extent2 ON Extent1.AS_LG_DOC_TYPE_ID = Extent2.CODE_ID
+            WHERE Extent1.AS_RESULT_NO IN (SELECT AS_RESULT_NO FROM SVC0004D WHERE AS_ENTRY_ID = (SELECT AS_ID FROM SVC0001D WHERE AS_NO = #{ASNO}))
+     ) Project1
+     ORDER BY Project1.AS_LDGR_ID ASC
+    ]]>
+  </select>
+
+  <select id="selectMemCodeList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.MEM_CODE CODE_ID  ,
+           Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+           Project1.NAME NAME  ,
+           Project1.NRIC NRIC  ,
+           Project1.MEM_TYPE MEM_TYPE
+    FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                  Extent1.MEM_CODE MEM_CODE  ,
+                  Extent1.MEM_TYPE MEM_TYPE  ,
+                  Extent1.NAME NAME  ,
+                  Extent1.NRIC NRIC
+           FROM ORG0001D Extent1
+           WHERE ( 1 = Extent1.STUS )
+             AND ( Extent1.MEM_TYPE = 3 )
+    ) Project1 ORDER BY Project1.MEM_CODE ASC
+  </select>
+
+  <select id="selectAsLogBookTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_LGBKTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsLogBookGrp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_LGBKGRP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsSumTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_SUMTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsSumStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_SUMSTA'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsYsTyp" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_YSTYP'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectAsYsAge" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE_ID,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'AS_YSAGE'
+      AND DISB = '0'
+    ORDER BY LPAD(CODE,4)
+  </select>
+
+  <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+    SELECT *
+    FROM (
+    <choose>
+      <when test="userType == 2">
+        SELECT s005m.brnch_id AS CODE_ID
+             , s005m.code || '-' || s005m.name AS CODE_NAME
+        FROM SYS0005M s005m
+           , SYS0013M s0013m
+        WHERE s005m.type_id = s0013m.code_id
+          AND s005m.type_id IN (42)
+          <choose>
+            <when test="memberLevel == 1">
+              AND S005M.CODE IN ( SELECT DISTINCT C.CODE
+                                  FROM SYS0047M A,
+                                       ORG0001D B,
+                                       SYS0005M C,
+                                       ORG0005D D,
+                                       ORG0005D E,
+                                       ORG0001D F
+                                  WHERE 1=1
+                                    AND A.USER_NAME = B.MEM_CODE
+                                    AND B.MEM_ID = D.MEM_ID
+                                    AND D.DEPT_CODE = E.LAST_ORG_CODE
+                                    AND E.MEM_LVL ='2'
+                                    AND E.MEM_ID = F.MEM_ID
+                                    AND F.BRNCH = C.BRNCH_ID
+                                    AND A.USER_NAME  = #{userName}
+                                )
+            </when>
+            <when test="memberLevel == 2">
+              AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+            </when>
+            <when test="memberLevel == 3">
+              AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+            </when>
+            <when test="memberLevel == 4">
+              AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
+            </when>
+          </choose>
+        ORDER BY s005m.CODE ASC
+      </when>
+      <when test="userType == 4 or userType == 6 ">
+        SELECT s005m.brnch_id AS code_id,
+               s005m.code || '-' || s005m.NAME AS code_name
+        FROM sys0005m s005m ,
+             sys0013m s0013m
+        WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42)
+
+        UNION ALL
+
+        SELECT s005m.brnch_id AS code_id,
+               s005m.code || '-' || s005m.NAME AS code_name
+        FROM sys0005m s005m ,
+             sys0013m s0013m
+        WHERE s005m.type_id = s0013m.code_id
+          AND s005m.code = 'DSC-28'
+      </when>
+      <when test="userType == 3">
+        SELECT S005M.BRNCH_ID AS CODE_ID,
+               S005M.CODE || '-' || S005M.NAME AS CODE_NAME
+        FROM SYS0005M S005M, SYS0013M S0013M
+        WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'
+      </when>
+      <otherwise>
+        SELECT S005M.BRNCH_ID AS CODE_ID
+             , S005M.CODE || '-' || S005M.NAME AS CODE_NAME
+        FROM SYS0005M S005M
+        WHERE S005M.TYPE_ID IN (42)
+
+        UNION ALL
+
+        SELECT s005m.brnch_id AS code_id,
+               s005m.code || '-' || s005m.NAME AS code_name
+        FROM sys0005m s005m, sys0013m s0013m
+        WHERE s005m.type_id = s0013m.code_id
+          AND s005m.code = 'DSC-28'
+      </otherwise>
+    </choose>
+    ) PROJECT
+    ORDER BY PROJECT.CODE_NAME ASC
+  </select>
+
+  <select id="selectProductTypeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              UPPER(CODE_NAME) CODE_ID
+              , CODE_NAME CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0
+           AND CODE_MASTER_ID = '431'
+        ORDER BY CODE_NAME
+  </select>
+
+  <select id="selectProductList" resultType="egovMap">
+    SELECT S.STK_CODE CODE_ID
+         , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+         , C.CODE_NAME GROUP_CD
+    FROM SYS0026M S, SAL0016M P, SYS0013M C
+    WHERE S.STK_ID = P.STK_ID
+      AND S.STK_CTGRY_ID = C.CODE_ID
+      AND S.IS_NCV <![CDATA[<>]]> 1
+      AND S.STUS_CODE_ID = 1
+      AND S.STK_TYPE_ID = 61
+      AND P.AMT <![CDATA[>]]> 0
+      AND UPPER(C.CODE_NAME) NOT IN ('FRAME','MATTRESS')
+    GROUP BY s.STK_ID,
+             s.STK_CODE,
+             s.STK_DESC,
+             c.CODE_NAME
+    ORDER BY c.CODE_NAME,
+             s.STK_DESC
+  </select>
+
+  <select id="selectDefectTypeList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT
+                DEFECT_ID, DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DT'
+                AND DEFECT_STATUS = 1)
+     ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectRmkList" resultType="egovMap">
+    SELECT
+        DEFECT_RMK CODE_ID
+        , DEFECT_RMK CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_RMK
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DP'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectDescList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DP'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectDescSymptomList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DD'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectHCProductCategory" resultType="egovMap">
+
+  SELECT UPPER(AA.CODE_NAME) CODE_ID
+  , AA.CODE_NAME CODE_NAME FROM SYS0013M AA, SYS0094M BB
+  WHERE AA.CODE = BB.CODE
+  AND AA.CODE_MASTER_ID = 11
+  AND AA.DISAB = 0
+  AND BB.IND = 'HOMECARE'
+  ORDER BY CODE_ID
+</select>
+
+  <select id="selectHCProductList" resultType="egovMap">
+    SELECT T1.STK_CODE CODE_ID,
+    T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME
+    FROM SYS0026M T1
+    WHERE 1=1
+    AND T1.STK_TYPE_ID = 61
+    -- AND T1.STUS_CODE_ID = 1
+    AND EXISTS (SELECT M1.STK_CTGRY_ID
+    FROM SYS0026M M1
+    WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+    WHERE AA.CODE = BB.CODE
+    AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+    AND M1.STK_CTGRY_ID = T1.STK_CTGRY_ID
+    )
+    ORDER BY T1.STK_CODE
+  </select>
+
+  <select id="selectHCDefectTypeList" resultType="egovMap">
+  SELECT
+  DEFECT_DESC CODE_ID
+  , DEFECT_DESC CODE_NAME
+  FROM (
+  SELECT
+  UPPER(DEFECT_DESC) DEFECT_DESC
+  FROM SYS0100M
+  WHERE DEFECT_TYP = 'HDT'
+  AND DEFECT_STATUS = 1)
+  ORDER BY CODE_ID
+</select>
+
+  <select id="selectHCDefectRmkList" resultType="egovMap">
+    SELECT
+    DEFECT_RMK CODE_ID
+    , DEFECT_RMK CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_RMK) DEFECT_RMK
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'DP'
+    AND DEFECT_STATUS = 1
+    AND PROD_CAT NOT IN ('WP','AP','BT','BB','JP','POE')
+    )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectHCDefectDescList" resultType="egovMap">
+    SELECT
+    DEFECT_DESC CODE_ID
+    , DEFECT_DESC CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_DESC) DEFECT_DESC
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'DP'
+    AND DEFECT_STATUS = 1
+    AND PROD_CAT NOT IN ('WP','AP','BT','BB','JP','POE')
+    )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectHCDefectDescSymptomList" resultType="egovMap">
+    SELECT
+    DEFECT_DESC CODE_ID
+    , DEFECT_DESC CODE_NAME
+    FROM (
+    SELECT DISTINCT
+    UPPER(DEFECT_DESC) DEFECT_DESC
+    FROM SYS0100M
+    WHERE DEFECT_TYP = 'HDD'
+    AND DEFECT_STATUS = 1
+
+    )
+    ORDER BY CODE_ID
+  </select>
+
+</mapper>

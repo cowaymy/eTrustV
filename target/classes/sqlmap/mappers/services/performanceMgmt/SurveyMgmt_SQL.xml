@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.SurveyMgmtMapper">
+    
+    <select id="selectMemberTypeList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME 
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = 1
+    </select>
+    
+    <select id="selectSurveyStusList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME 
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = 388
+    </select>
+    
+    
+    <select id="selectSurveyEventList" parameterType="Map" resultType="egovMap">
+	<![CDATA[
+	SELECT EVT_TYPE_DESC,MEM_CODE,CODE_DESC,EVT_DT,EVT_ID,
+      CASE WHEN P_CNT/T_CNT*100>=EVT_COMP_RATE THEN 'Complete'
+      ELSE 'In Progress'
+      END AS SURVEY_STATUS
+FROM (
+		SELECT A.EVT_TYPE_DESC, B.MEM_CODE, C.CODE_DESC, A.EVT_DT, A.EVT_ID,X.CNT P_CNT , Y.CNT T_CNT,Z.EVT_COMP_RATE
+        FROM CCR0012M A
+        LEFT OUTER JOIN(
+                        SELECT EVT_ID,COUNT(*) CNT FROM 
+                        (SELECT DISTINCT A.EVT_CONT_ID,B.EVT_ID 
+                          FROM CCR0002D A, CCR0013M B 
+                          WHERE A.EVT_CONT_ID = B.EVT_CONT_ID-- AND B.EVT_ID = 26
+                          ) A
+                        GROUP BY A.EVT_ID
+                        ) X ON A.EVT_ID = X.EVT_ID
+        LEFT OUTER JOIN (
+                        SELECT EVT_ID, COUNT(*) CNT FROM CCR0013M  GROUP BY EVT_ID
+                        ) Y ON A.EVT_ID = Y.EVT_ID
+        LEFT OUTER JOIN (
+                        SELECT EVT_ID,EVT_COMP_RATE FROM CCR0012M
+                        ) Z ON A.EVT_ID = Z.EVT_ID
+        , ORG0001D B, SYS0013M C
+        WHERE A.EVT_TYPE_ID = 2718
+        AND A.EVT_MEM_ID = B.MEM_ID
+        AND B.MEM_TYPE = C.CODE_ID
+        
+		]]>
+		<if test="cmbMemberTypeId != null and cmbMemberTypeId != '' ">
+        AND C.CODE_DESC = #{cmbMemberTypeId}
+        </if>
+		<if test="eventName != null and eventName != '' ">
+		AND A.EVT_TYPE_DESC LIKE '%' || #{eventName} || '%'
+		</if>
+		<if test="eventDate != null and eventDate != '' ">
+		<![CDATA[ AND TO_DATE(TO_CHAR(A.EVT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') = TO_DATE(#{eventDate}, 'DD/MM/YYYY') ]]>
+		</if>
+		<if test="eventMemCode != null and eventMemCode != '' ">
+		AND B.MEM_CODE = #{eventMemCode}
+		</if>
+		)
+	</select>
+	
+	
+    <insert id="addSurveyEventCreate" parameterType="Map">
+        INSERT INTO CCR0012M (
+           EVT_ID
+           , EVT_TYPE_ID
+           , EVT_TYPE_DESC
+           , EVT_MEM_ID
+           , EVT_DT
+           , EVT_COMP_RQST_DATE
+           , EVT_COMP_RATE
+           , CRT_USER_ID
+           , CRT_DT
+           , UPD_USER_ID
+           , UPD_DT
+        )
+       VALUES(
+           CCR0012M_EVT_ID_SEQ.NEXTVAL
+           , 2718
+           , #{evtTypeDesc}
+           , (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE=#{evtMemId})
+           , TO_DATE(#{evtDt}, 'YY/MM/DD')
+           , TO_DATE(#{evtCompRqstDate}, 'YY/MM/DD')
+           , #{evtCompRate}
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
+       )
+    </insert>
+    
+
+    <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
+       SELECT CODE_NAME 
+       FROM SYS0013M 
+       WHERE CODE_MASTER_ID = #{codeId}
+    </select>
+    
+    
+    <insert id="addSurveyEventInfo" parameterType="Map">
+      <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+        SELECT CCR0012M_EVT_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT INTO CCR0012M (
+           EVT_ID
+           , EVT_TYPE_ID
+           , EVT_TYPE_DESC
+           , EVT_MEM_ID
+           , EVT_DT
+           , EVT_COMP_RQST_DATE
+           , EVT_COMP_RATE
+           , CRT_USER_ID
+           , CRT_DT
+           , UPD_USER_ID
+           , UPD_DT
+        )
+       VALUES(
+           #{evtId}
+           , 2718
+           , #{evtTypeDesc}
+           , (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE=#{evtMemId})
+           , TO_DATE(#{evtDt}, 'YY/MM/DD')
+           , TO_DATE(#{evtCompRqstDate}, 'YY/MM/DD')
+           , #{evtCompRate}
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
+       )
+    </insert>
+    
+    <insert id="addSurveyEventTarget" parameterType="Map">
+       INSERT INTO CCR0013M (
+          EVT_ID
+          , EVT_CONT_ID
+          , EVT_TYPE_ID
+          , CONT_NO
+          , SALES_ORD_ID
+          , SALES_ORD_NO
+          , NAME
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , CALL_MEM
+          , EVT_STUS_ID
+       )
+      VALUES(
+          #{evtId}
+          , CCR0013M_EVT_CONT_ID_SEQ.NEXTVAL
+          , (SELECT DISTINCT(EVT_TYPE_ID) FROM CCR0012M)
+          , #{contNo}
+          , (SELECT DISTINCT(SALES_ORD_ID) FROM SAL0001D WHERE SALES_ORD_NO= #{salesOrdNo})
+          , #{salesOrdNo}
+          , #{name}
+          , SYSDATE
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , #{callMem}
+          , 33
+      )
+   </insert>
+   
+   <insert id="addSurveyEventQuestion" parameterType="Map">
+       <selectKey keyProperty="hcDefId" resultType="Integer" order="BEFORE">
+        SELECT CCR0003M_HC_DEF_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+       INSERT INTO CCR0003M (
+          HC_DEF_ID
+          , HC_DEF_TYPE_ID
+          , HC_DEF_ITM_NO
+          , HC_DEF_DESC
+          , HC_DEF_STUS_ID
+          , HC_DEF_CTGRY_ID
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , HC_DEF_QUES_TYPE_ID
+          , PRIOD_FROM
+          , PRIOD_TO
+          , EVT_ID
+       )
+      VALUES(
+          #{hcDefId}
+          , 2718
+          , (CASE WHEN (SELECT MAX(HC_DEF_ITM_NO) FROM CCR0003M WHERE EVT_ID=#{evtId}) IS NULL THEN 1 
+                     WHEN (SELECT MAX(HC_DEF_ITM_NO) FROM CCR0003M WHERE EVT_ID=#{evtId}) IS NOT NULL THEN (SELECT MAX(HC_DEF_ITM_NO)+1 FROM CCR0003M WHERE EVT_ID=#{evtId}) END)
+          , #{hcDefDesc}
+          , 1
+          <if test="hcDefCtgryId == 'Standard'">
+           , 515
+          </if>
+          <if test="hcDefCtgryId == 'Special'">
+           , 516
+          </if>
+          , SYSDATE
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , 0
+          , TO_DATE('00/01/01', 'YY/MM/DD')
+          , TO_DATE('99/12/31', 'YY/MM/DD')
+          , #{evtId}
+      )
+   </insert>
+   
+   <insert id="addSurveyEventAnsSpecial" parameterType="Map">
+       INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          , #{hcDefId}
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Yes'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'No'">
+          , 2
+          </if>
+          , 1
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , SYSDATE
+      )
+    </insert>
+   
+   <insert id="addSurveyEventAnsStandard" parameterType="Map">
+       INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          , #{hcDefId}
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Excellent'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'Good'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Average'">
+          , 3
+          </if>
+          <if test="hcAnsDesc == 'Poor'">
+          , 4
+          </if>
+          <if test="hcAnsDesc == 'Bad'">
+          , 5
+          </if>
+          , 1
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , SYSDATE
+      )
+    </insert>
+   
+	<select id="selectEvtMemIdList" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+		SELECT MEM_CODE
+		FROM ORG0001D
+		WHERE MEM_CODE = #{memId}
+		]]>
+	</select>
+	
+	
+	<select id="selectSalesOrdNotList" parameterType="Map" resultType="egovMap">
+	    <![CDATA[
+	    SELECT SALES_ORD_NO 
+	    FROM SAL0001D 
+	    WHERE 1=1
+        ]]>
+        <if test="null != salesOrdNo and salesOrdNo.length > 0">
+           AND SALES_ORD_NO IN
+           <foreach collection="salesOrdNo" item="item" open="(" separator="," close=")">
+               <if test="null != item">
+               #{item}
+               </if>
+           </foreach>
+        </if>
+    </select>
+    
+    <select id="selectSalesOrdNotList2" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        select b.sales_ord_no,a.NAME, a.TEL_M1  CONT_NO,#{callMem} CALL_MEM
+        from sal0027d a, sal0001d b         
+        WHERE 1=1
+        AND a.CUST_CNTC_ID = b.CUST_CNT_ID
+        AND b.SALES_ORD_NO = #{salesOrdNo}
+        ]]>
+    </select>
+    
+    
+   <select id="selectSurveyEventDisplayInfoList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=2718)AS EVT_TYPE_ID, A.EVT_TYPE_DESC, B.MEM_CODE, A.EVT_DT, TO_CHAR(A.EVT_COMP_RQST_DATE, 'YYYY/MM/DD') AS EVT_COMP_RQST_DATE, A.EVT_COMP_RATE, A.EVT_ID
+        FROM CCR0012M A, ORG0001D B, SYS0013M C
+        WHERE A.EVT_TYPE_ID = 2718
+        AND A.EVT_MEM_ID = B.MEM_ID
+        AND B.MEM_TYPE = C.CODE_ID
+        AND B.MEM_TYPE = 1
+        AND A.EVT_ID = #{popEvtIdView}
+        ]]>
+    </select>
+    
+    <select id="selectSurveyEventDisplayQList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT (CASE WHEN B.HC_DEF_CTGRY_ID=515 THEN 'Standard' WHEN B.HC_DEF_CTGRY_ID=516 THEN 'Special' END)HC_DEF_CTGRY_ID, B.EVT_ID
+        , B.HC_DEF_DESC
+        , B.HC_DEF_ID
+        FROM CCR0012M A, CCR0003M B
+        WHERE A.EVT_ID = B.EVT_ID
+        AND B.EVT_ID = #{popEvtIdView}
+        ]]>
+    </select>
+    
+    
+    <select id="selectSurveyEventDisplayTargetList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT SALES_ORD_NO, NAME, CONT_NO, CALL_MEM, EVT_CONT_ID, EVT_ID
+        FROM CCR0013M 
+        WHERE EVT_ID = #{popEvtIdView}
+        ]]>
+    </select>
+    
+    
+    <update id="udtSurveyEventInfo" parameterType="Map">
+        <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+            SELECT EVT_ID FROM CCR0012M WHERE EVT_ID = #{evtId}
+        </selectKey>
+		UPDATE CCR0012M
+		SET 
+		    EVT_COMP_RQST_DATE = TO_DATE(#{evtCompRqstDate}, 'YYYY/MM/DD')
+            , EVT_COMP_RATE = #{evtCompRate}
+		WHERE EVT_ID = #{evtId}
+	</update>
+	
+ 	<update id="udtSurveyEventQuestion" parameterType="Map">
+        UPDATE CCR0003M
+        SET 
+            HC_DEF_DESC = #{hcDefDesc}
+        WHERE HC_DEF_ID = #{hcDefId}
+    </update>
+    
+    <delete id="deleteSurveyEventTarget" parameterType="Map">
+	   DELETE FROM CCR0013M WHERE EVT_CONT_ID = #{evtContId}
+	</delete>
+	
+	<delete id="deleteSurveyEventQuestion" parameterType="Map">
+       DELETE FROM CCR0003M WHERE HC_DEF_ID = #{hcDefId}
+    </delete>
+    
+    <delete id="deleteSurveyEventAns" parameterType="Map">
+       DELETE FROM CCR0004M WHERE HC_DEF_ID = #{hcDefId}
+    </delete>
+    
+    <update id="udtSurveyEventTarget" parameterType="Map">
+        <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+            SELECT EVT_ID FROM CCR0013M WHERE EVT_ID = #{evtId} AND SALES_ORD_NO = #{salesOrdNo}
+        </selectKey>
+        UPDATE CCR0013M
+        SET 
+            CALL_MEM = #{callMem}
+            ,UPD_USER_ID = #{crtUserId}
+            , UPD_DT = SYSDATE
+        WHERE EVT_ID = #{evtId}
+        AND SALES_ORD_NO = #{salesOrdNo}
+    </update>
+
+
+    <select id="selectSurveyEventTarget"  parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT FROM CCR0013M WHERE EVT_ID = #{evtId} AND SALES_ORD_NO = #{salesOrdNo}
+    </select>
+   
+</mapper>

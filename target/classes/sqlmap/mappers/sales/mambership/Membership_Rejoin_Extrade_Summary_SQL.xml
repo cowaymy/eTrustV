@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipRejoinExtradeSummaryMapper">
+
+
+    <select id="selectRejoinExtradeSummaryList" parameterType="Map" resultType="egovMap">
+
+		SELECT
+            T0.ORG_CODE ,
+            T0.GRP_CODE ,
+            T0.DEPT_CODE ,
+            T0.MEM_CODE ,
+            CASE WHEN T0.MEM_LVL = 1 THEN 'GCM'
+                    WHEN T0.MEM_LVL = 2 THEN 'SCM'
+                    WHEN T0.MEM_LVL = 3 THEN 'CM'
+                    WHEN T0.MEM_LVL = 4 THEN 'Cody'
+                    END MEM_LVL,
+            T0.TOTAL_EXPIRED TOTAL_EXPIRED_TARGET ,
+            T0.TOTAL_FRESH_EXPIRED TOTAL_FRESH_EXPIRED_TARGET,
+            T0.EXTRADE_BY_OWN TOTAL_EARLY_EXTRADE_BY_OWN,
+            T0.EXTRADE_BY_OTHER TOTAL_EARLY_EXTRADE_BY_OTH,
+            T0.FRESH_EXTRADE_OWN TOTAL_FRESH_EXTRADE_BY_OWN,
+            T0.FRESH_EXTRADE_OTHER TOTAL_FRESH_EXTRADE_BY_OTH,
+            T0.EARLY_EXTRADE_OWN TOTAL_EXTRADE_BY_OWN,
+            T0.EARLY_EXTRADE_OTHER TOTAL_EXTRADE_BY_OTH,
+            T0.FRESH_RATE FRESH_EXTRADE,
+            T0.REJOIN_RATE REJOIN_EXTRADE,
+            T0.UPD_DT
+        FROM SAL0419M T0
+        WHERE 1 = 1
+            AND T0.MEM_LVL <![CDATA[<>]]> 0
+            AND T0.REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
+            AND T0.REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
+        <if test="orgCode != null and orgCode != '' ">
+            AND T0.ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+            AND T0.GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+            AND T0.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != '' ">
+            AND T0.MEM_CODE = #{memCode}
+        </if>
+        <if test="memLvl != null and memLvl != '' ">
+            AND T0.MEM_LVL = #{memLvl}
+        </if>
+
+        ORDER BY T0.MEM_LVL ASC
+    </select>
+
+
+</mapper>

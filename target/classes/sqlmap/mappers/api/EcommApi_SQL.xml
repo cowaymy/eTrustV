@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.EcommApiMapper">
+
+<!--
+**************************************
+ * Author                  Date                    Remark
+ * Chew Kah Kit        2020/12/18           API for Ecommerce
+**************************************
+ -->
+
+<insert id="registerOrd" parameterType="Map">
+    <selectKey keyProperty="ecommOrdId" resultType="int" order="BEFORE">
+      SELECT API0005D_ECOMM_ORD_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+  INSERT INTO API0005D
+  (
+      ECOMM_ORD_ID ,
+      TITLE ,
+      CUST_NAME ,
+      NRIC ,
+      NATION ,
+      PASSPORT_EXPR ,
+      VISA_EXPR ,
+      DOB ,
+      GENDER ,
+      RACE ,
+      EMAIL1 ,
+      TELM ,
+      TELO ,
+      TELH ,
+      TELF ,
+      SCNTC_NAME ,
+      EMAIL2 ,
+      TELM2 ,
+      TELO2 ,
+      TELH2 ,
+      TELF2 ,
+      ADDR1 ,
+      ADDR2 ,
+      AREA_ID ,
+      ISSUE_BANK ,
+      CARD_TYPE ,
+      CRC_TYPE ,
+      CARD_NAME ,
+      CARD_NO ,
+      EXPR_DT ,
+      CRC_TOKEN ,
+      APP_TYPE ,
+      SRV_PAC ,
+      REF_NO ,
+      PRODUCT ,
+      PROMO ,
+      SALES_MAN_CODE ,
+      INST_PRIOD ,
+      CPNT_ID ,
+      STUS_CODE_ID ,
+      CRT_DT ,
+      CRT_USER_ID ,
+      UPD_DT ,
+      UPD_USER_ID,
+      BNDL_ID,
+      PROD_CAT,
+      CW_STORE_ID
+  ) VALUES
+  (
+      #{ecommOrdId} ,
+      #{title} ,
+      #{custName} ,
+      #{nric} ,
+      #{nation} ,
+      TO_DATE(#{passportExpr},'DD/MM/YYYY') ,
+      TO_DATE(#{visaExpr},'DD/MM/YYYY') ,
+      TO_DATE(#{dob},'DD/MM/YYYY') ,
+      #{gender} ,
+      #{race} ,
+      #{email1} ,
+      #{telM} ,
+      #{telO} ,
+      #{telH} ,
+      #{telF} ,
+      #{scntcName} ,
+      #{email2} ,
+      #{telM2} ,
+      #{telO2} ,
+      #{telH2} ,
+      #{telF2},
+      #{addr1} ,
+      #{addr2},
+      #{areaId} ,
+      #{issueBank} ,
+      #{cardType} ,
+      #{crcType} ,
+      #{cardName} ,
+      #{cardNo} ,
+      #{exprDt} ,
+      #{crcToken} ,
+      #{appType} ,
+      #{srvPac} ,
+      #{refNo} ,
+      #{product} ,
+      #{promo} ,
+      #{salesmanCode} ,
+      #{instPriod} ,
+      #{cpntId} ,
+      1 ,
+      SYSDATE ,
+      #{apiUserId} ,
+      SYSDATE ,
+      #{apiUserId},
+      #{bndlId},
+      #{prodCat},
+      #{cwStoreId}
+  )
+</insert>
+
+<resultMap id="resultCustomerInfoMap" type="egovMap" />
+  <select id="getCustomerInfo" statementType="CALLABLE" parameterType="Map">
+    { call SP_API_GET_CUST_INFO(#{ecommOrdId} ,#{p1, mode=OUT, jdbcType=CURSOR,javaType=ResultSet,resultMap=resultCustomerInfoMap})}
+  </select>
+
+
+<select id="checkOrderStatus" parameterType="Map" resultType="egovMap">
+    SELECT
+
+        C.NAME ORD_STUS
+      , CASE WHEN CP.CCP_SALES_ORD_ID IS NOT NULL THEN C1.NAME ELSE '-' END  CCP_STUS
+      , CASE WHEN S.STUS_CODE_ID = 1 THEN R.CODE || '-' || R.RESN_DESC ELSE '-' END FEEDBACK_CODE
+
+    FROM SAL0001D S
+    JOIN SAL0029D CM ON CM.CUST_ID = S.CUST_ID
+    JOIN SYS0038M C ON C.STUS_CODE_ID = S.STUS_CODE_ID
+    LEFT JOIN SAL0102D CP ON CP.CCP_SALES_ORD_ID = S.SALES_ORD_ID
+    LEFT JOIN SYS0032M R ON R.RESN_ID = CCP_RESN_ID
+    LEFT JOIN SYS0038M C1 ON C1.STUS_CODE_ID = CP.CCP_STUS_ID
+
+    WHERE S.REF_NO = #{sofNo}
+        AND ROWNUM = 1
+</select>
+
+<select id="cardDiffNRIC" parameterType="Map" resultType="egovMap">
+    SELECT
+        DISTINCT
+          CR.CUST_CRC_TOKEN
+        , C.NRIC
+
+    FROM SAL0028D CR
+    LEFT JOIN SAL0029D C ON C.CUST_ID = CR.CUST_ID AND NRIC = #{nric}
+    LEFT JOIN SAL0074D R ON R.CUST_CRC_ID = CR.CUST_CRC_ID
+    WHERE
+        CUST_CRC_TOKEN = #{cardTokenId}
+        <if test='thrdParty != null and thrdParty != "" '>
+            AND r.is_3rd_party = 1
+        </if>
+</select>
+
+<insert id="insertNewAddr" parameterType="Map">
+
+    <selectKey keyProperty="areaId" resultType="String" order="BEFORE">
+    (SELECT
+        DISTINCT(
+        CASE  WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
+              THEN #{postcode}||'-'||LPAD(0001,4,'0')
+              ELSE (SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode} )
+        END)
+     FROM SYS0064M)
+    </selectKey>
+
+
+    INSERT INTO SYS0064M
+    (
+      AREA_ID
+      , ISO
+      , COUNTRY
+      , LANGUAGE
+      , STATE
+      , CITY
+      , POSTCODE
+      , AREA
+    )
+    VALUES
+    (
+        #{areaId}
+      , (SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= 'Malaysia')
+      , 'Malaysia'
+      , 'EN'
+      , #{state}
+      , #{city}
+      , #{postcode}
+      , #{area}
+    )
+</insert>
+
+<resultMap id="resultOrdCancelMap" type="egovMap" />
+  <select id="cancelOrd" statementType="CALLABLE" parameterType="Map">
+    {call SP_ORD_CANCL_E_COMM(#{sofNo},#{apiUserId}, #{p1, mode=OUT, jdbcType=VARCHAR, javaType=String,resultMap=resultOrdCancelMap})}
+  </select>
+
+<update  id="updateEcommOrderStatus" parameterType="salesOrderMVO">
+    UPDATE API0005D
+    SET
+        SALES_ORD_ID = #{salesOrdId}
+      , STUS_CODE_ID = 4
+    WHERE ECOMM_ORD_ID = #{ecommOrdId}
+</update>
+
+
+<select id="checkDuplicateOrder" parameterType="Map" resultType="int">
+      SELECT count(*) FROM API0005D
+	  WHERE ref_no = #{refNo}
+	  AND BNDL_ID = #{bndlId}
+	  AND STUS_CODE_ID in (1,4)
+</select>
+
+<select id="selectHCProdId" parameterType="Map" resultType="egovMap">
+       SELECT STK_ID
+       FROM SYS0026M
+       WHERE
+       STK_CTGRY_ID IN (
+               SELECT CODE_ID FROM SYS0013M WHERE CODE IN (
+                       SELECT CODE FROM SYS0094M WHERE IND = 'HOMECARE'))
+</select>
+
+<select id="getCustStatusId" parameterType="Map" resultType="egovMap">
+	SELECT IS_EXST_CUST FROM SAL0029D WHERE CUST_ID = #{custid}
+</select>
+
+    <select id="getCustomerCat" parameterType="Map" resultType="egovMap">
+    SELECT
+            CUST.CUST_ID
+            ,CUST_STATUS.CODE_NAME CUST_CAT_NM
+            ,CUST_STATUS.CODE CUST_CAT_CODE
+        FROM SAL0029D CUST
+        LEFT JOIN SYS0013M CUST_STATUS ON CUST_STATUS.CODE_ID = CUST.IS_EXST_CUST
+        WHERE CUST.NRIC = #{custNric}
+  </select>
+<!--
+<select id="isProductUnderBlackArea" parameterType="Map" resultType="int">
+  	SELECT COUNT(*) FROM SYS0064M A
+	JOIN SYS0121D B ON A.AREA_ID = B.AREA_ID AND A.BLCK_AREA_GRP_ID = B.BLCK_AREA_GRP_ID
+	JOIN SYS0026M C ON C.STK_CTGRY_ID = B.CAT_CODE_ID
+	WHERE A.AREA_ID = #{areaId} AND C.STK_ID = #{product} AND B.STUS_CODE_ID = 1
+  </select> -->
+</mapper>
