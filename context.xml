@@ -1,0 +1,21 @@
+<Context>
+    <Resource name="jdbc/eTRUST_DEV"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              driverClassName="oracle.jdbc.OracleDriver"
+              url="jdbc:oracle:thin:@db.dev-etrust.my.coway.dev:1521:gbslcvd"
+              username="GBSLCVAPL1"
+              password="GBSLCVD#2017"
+              maxTotal="50"
+              maxIdle="10"
+              maxWaitMillis="10000"
+              validationQuery="SELECT 1 FROM DUAL"
+              testOnBorrow="true"
+              testWhileIdle="true"
+              timeBetweenEvictionRunsMillis="30000"
+              minEvictableIdleTimeMillis="60000"
+              removeAbandoned="true"
+              removeAbandonedTimeout="60"
+              logAbandoned="true"/>
+</Context>

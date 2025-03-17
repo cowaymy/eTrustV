@@ -52,7 +52,7 @@
 
 		<repository>
 			<id>central</id>
-			<url>http://central.maven.org/maven2/</url>
+			<url>https://central.maven.org/maven2/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -64,7 +64,7 @@
 		<repository>
 			<id>egovframe</id>
 			<!-- no Hazelcast use below -->
-            <url>http://www.egovframe.go.kr/maven/</url>
+            <url>https://www.egovframe.go.kr/maven/</url>
 
             <!-- for Hazelcast use below
             <url>http://maven.egovframe.kr:8080/maven/</url>
@@ -78,7 +78,7 @@
 		</repository>
 		<repository>
 			<id>egovframe2</id>
-			<url>http://maven.egovframe.kr:8080/maven/</url>
+			<url>https://maven.egovframe.kr:8080/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -362,6 +362,8 @@
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc7</artifactId>
             <version>12.1.0.2</version>
+			<scope>system</scope>
+			<systemPath>${webinf-lib}/ojdbc7-12.1.0.2.jar</systemPath>
         </dependency>
 
 
@@ -654,10 +656,10 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-						<encoding>UTF-8</encoding>
+					 <source>1.8</source>  <!-- Java 8로 변경 -->
+					    <target>1.8</target>
 					</configuration>
 				</plugin>
 				<!-- EMMA -->

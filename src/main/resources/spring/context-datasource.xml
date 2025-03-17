@@ -29,12 +29,15 @@
 
     <beans profile="dev">
         <bean id="normal-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="eTRUST_DEV"/>
+            <!-- <property name="jndiName" value="eTRUST_DEV"/> -->
+                 <property name="jndiName" value="java:comp/env/jdbc/eTRUST_DEV"/>
+            
         </bean>
 
         <bean id="long-dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-            <property name="jndiName" value="eTRUST_DEV"/>
-        </bean>
+            <!-- <property name="jndiName" value="eTRUST_DEV"/> -->
+                <property name="jndiName" value="java:comp/env/jdbc/eTRUST_DEV"/>
+        </bean>   
     </beans>
 
     <beans profile="local">
